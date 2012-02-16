@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.springframework.samples.spring</groupId>
+	<artifactId>spring-shell</artifactId>
+	<version>1.0.0.CI-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>Spring Shell</name>
+	<url>http://www.springframework.org</url>
+	<description>
+		<![CDATA[
+      This project is a minimal jar utility with Spring configuration.
+    ]]>
+	</description>
+	
+	<properties>
+	 	<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
+		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+		<spring.framework.version>3.0.6.RELEASE</spring.framework.version>
+	</properties>	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.framework.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+		<!-- 
+		<dependency>
+	        <groupId>org.springframework.roo</groupId>
+	        <artifactId>org.springframework.roo.shell.jline</artifactId>
+	        <version>1.2.0.RELEASE</version>
+		</dependency>
+		-->
+		<dependency>
+	        <groupId>org.springframework.roo</groupId>
+	        <artifactId>org.springframework.roo.shell</artifactId>
+	        <version>1.2.0.RELEASE</version>
+		</dependency>		
+		<!--  consider removing dependency -->
+		<dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
+        
+ 		<!-- External modules -->
+        <dependency>
+            <groupId>net.sourceforge.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>1.0.S2-B</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.roo.wrapping</groupId>
+            <artifactId>org.springframework.roo.wrapping.json-simple</artifactId>
+            <version>1.1.0.0010</version>
+        </dependency>        
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <filters>
+                                    <filter>
+                                      <artifact>*:*</artifact>
+                                      <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                      </excludes>
+                                    </filter>
+                                </filters>
+                                <transformers>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <mainClass>${jar.mainclass}</mainClass>                                        
+                                    </transformer>
+                                    <!-- 
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/spring.handlers</resource>
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/spring.schemas</resource>
+                                    </transformer>
+                                    -->
+                                </transformers>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+		</plugins>
+	</build> 
+	
+	<repositories>
+		<repository>
+		  <id>spring-roo-repository</id>
+		  <name>Spring Roo Maven Repository</name>
+		  <url>http://spring-roo-repository.springsource.org/release</url>
+		</repository>
+	</repositories>
+</project>
