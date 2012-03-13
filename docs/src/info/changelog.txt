@@ -1,0 +1,28 @@
+SPRING HADOOP CHANGELOG
+=======================
+http://www.springsource.org/spring-data/hadoop
+
+Commit changelog: http://github.com/SpringSource/spring-hadoop/tree/[version]
+Issues changelog: http://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10801
+
+
+Changes in version 0.9 RELEASE (2012-02-06)
+-------------------------------------------
+
+Spring XML namespace with support for creating and/or configuring
+ - Hadoop Configuration object
+ - MapReduce and Streaming Jobs
+ - HBase configuration
+ - Hive server and Thrift client
+ - Pig server instances that register and execute scripts either locally or remotely
+ - Hadoop DistributedCache
+Spring XML namespace for executing scripts authored in JSR233 compatible scripting languages
+Support for executing HDFS operations in Groovy, JRuby, Jython or Rhino based on Hadoop Configuration
+Embedded shell API for HDFS
+Spring Batch Integration - tasklets for
+ - Map Reduce and Streaming jobs
+ - Hive
+ - Pig
+ - Script execution
+Sample applications
+Reference documentation

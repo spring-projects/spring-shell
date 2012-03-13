@@ -1,0 +1,176 @@
+apply plugin: 'maven'
+
+// Create a source jar for uploading
+task sourceJar(type: Jar, dependsOn: jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+// Create a javadoc jar for uploading
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar
+    archives javadocJar
+}
+
+// Configuration for SpringSource s3 maven deployer
+configurations {
+    deployerJars
+}
+dependencies {
+    deployerJars "org.springframework.build.aws:org.springframework.build.aws.maven:3.0.0.RELEASE"
+}
+
+task generatePom {
+    group = 'Build'
+    description = 'Generates a Maven POM file suitable for use in building the project'
+
+    generatedPomFileName = "pom.xml"
+
+    // ensure changes in the classpath trigger regeneration of poms
+    inputs.files(project.sourceSets.main.compileClasspath)
+
+    // ensure version changes in gradle.properties trigger regeneration of poms
+    inputs.files(new File(project.rootProject.rootDir, Project.GRADLE_PROPERTIES))
+
+    // enable partial cleaning with `gradle cleanGeneratePom`
+    outputs.files(generatedPomFileName)
+
+    doLast() {
+        // customize the pom creation process
+        p = pom {
+            project {
+                name = project.description
+                properties {
+                    setProperty('project.build.sourceEncoding', 'UTF8')
+                }
+                build {
+                    plugins {
+                        plugin {
+                            groupId = 'org.apache.maven.plugins'
+                            artifactId = 'maven-compiler-plugin'
+                            configuration {
+                                source = '1.6'
+                                target = '1.6'
+                            }
+                        }
+                    }
+               }
+           }
+        }
+
+        // customizing the artifact id is a special case that must be configured
+        // after the pom is fully configured, otherwise it'll be overwritten
+        p.whenConfigured { pom -> pom.artifactId = project.name }
+
+        customizePom(p)
+
+        // write the pom.xml file out to the filesystem
+        p.writeTo(generatedPomFileName)
+    }
+}
+
+
+// Remove the archive configuration from the runtime configuration, so that anything added to archives
+// (such as the source jar) is no longer included in the runtime classpath
+configurations.default.extendsFrom = [configurations.runtime] as Set
+// Add the main jar into the default configuration
+artifacts { 'default' jar }
+
+gradle.taskGraph.whenReady {graph ->
+    if (graph.hasTask(uploadArchives)) {
+        // check properties defined and fail early
+        s3AccessKey
+        s3SecretAccessKey
+    }
+}
+
+def deployer = null
+
+uploadArchives {
+    description = "Maven deploy of archives artifacts to SpringSource Maven repos" // url appended below
+    group = "Distribution"
+    // Maven deployment
+    def releaseRepositoryUrl = "file://${project.properties.mavenSyncRepoDir}"
+    def milestoneRepositoryUrl = 's3://maven.springframework.org/milestone'
+    def snapshotRepositoryUrl = 's3://maven.springframework.org/snapshot'
+
+    // add a configuration with a classpath that includes our s3 maven deployer
+    configurations { deployerJars }
+    dependencies {
+      deployerJars "org.springframework.build.aws:org.springframework.build.aws.maven:3.0.0.RELEASE"
+    }
+
+    deployer = repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+        // releaseBuild
+        if (releaseBuild) {
+            logger.info("Deploying to local Maven repo " + releaseRepositoryUrl)
+            // "mavenSyncRepoDir" should be set in properties
+            repository(url: releaseRepositoryUrl)
+        } else {
+            s3credentials = [userName: project.properties.s3AccessKey, passphrase: project.properties.s3SecretAccessKey]
+            repository(url: milestoneRepositoryUrl) {
+                authentication(s3credentials)
+            }
+            snapshotRepository(url: snapshotRepositoryUrl) {
+                authentication(s3credentials)
+            }
+        }
+    }
+    
+    customizePom(deployer.pom)
+}
+
+install {
+    customizePom(repositories.mavenInstaller.pom)
+}
+
+def customizePom(pom) {
+    def optionalDeps = ['log4j','jsr250-api']
+
+    //pom.scopeMappings.addMapping(10, configurations.provided, 'provided')
+    pom.whenConfigured { p ->
+        // Remove test scope dependencies from published poms
+        //p.dependencies = p.dependencies.findAll {it.scope != 'test'}
+
+        // Flag optional deps
+        def opDeps = configurations.testRuntime.allDependencies.findAll { gradleDep ->
+            gradleDep.asDynamicObject.hasProperty('optional') && gradleDep.optional
+        }
+
+        p.dependencies.findAll { dep ->
+            optionalDeps.contains(dep.artifactId) ||
+            dep.groupId.startsWith('org.slf4j') ||
+            opDeps.any { op ->
+                (dep.groupId == op.group && dep.artifactId == op.name)
+            }
+        }*.optional = true
+        
+        p.groupId = "org.springframework.data"
+    }
+
+    pom.project {
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        
+        // similar to Spring's configuration
+        dependencies {
+            dependency {
+                artifactId = groupId = 'commons-logging'
+                scope = 'compile'
+                optional = 'true'
+                version = '1.1.1'
+            }
+        }
+    }
+}
