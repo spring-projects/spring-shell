@@ -6,21 +6,31 @@ package org.springframework.shell;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 //import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.roo.shell.AbstractShell;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.shell.Converter;
 import org.springframework.roo.shell.ExitShellRequest;
 import org.springframework.roo.shell.Shell;
+import org.springframework.roo.shell.converters.StringConverter;
 import org.springframework.roo.shell.event.ShellStatus;
 import org.springframework.roo.support.logging.HandlerUtils;
 import org.springframework.roo.support.util.Assert;
+import org.springframework.shell.plugin.PluginConfigurationReader;
+import org.springframework.shell.plugin.PluginInfo;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StopWatch;
 
 //import ch.qos.logback.classic.LoggerContext;
@@ -66,7 +76,7 @@ public class Bootstrap {
 
         Assert.hasText(applicationContextLocation, "Application context location required");
 
-        ctx = new ClassPathXmlApplicationContext(applicationContextLocation);
+        createApplicationContext(applicationContextLocation);
 
         
         Map<String, JLineShellComponent> shells = ctx.getBeansOfType(JLineShellComponent.class);
@@ -112,6 +122,54 @@ public class Bootstrap {
         
 
     }
+
+	private void createApplicationContext(String applicationContextLocation) {
+		//ctx = new ClassPathXmlApplicationContext(applicationContextLocation);
+		
+		AnnotationConfigApplicationContext annctx = new AnnotationConfigApplicationContext();
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.StringConverter.class);		
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.AvailableCommandsConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.BigDecimalConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.BigIntegerConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.BooleanConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.CharacterConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.DateConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.DoubleConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.EnumConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.FloatConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.IntegerConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.LocaleConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.LongConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.ShortConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.StaticFieldConverterImpl.class);
+		
+		ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+		PluginConfigurationReader configReader = new PluginConfigurationReader(resourcePatternResolver);
+		PluginInfo[] pluginInfos = configReader.readPluginInfos("classpath*:/META-INF/spring/spring-shell-plugin.xml");
+		for (int i = 0; i < pluginInfos.length; i++) {
+			List<String> configClassNames = pluginInfos[i].getConfigClassNames();
+			for (String configClassName : configClassNames) {
+				try {
+					annctx.register(ClassUtils.forName(configClassName, ClassUtils.getDefaultClassLoader()));
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (LinkageError e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		//annctx.scan("org.springframework.shell");
+		annctx.refresh();
+		ctx = annctx;
+	}
+	
+	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
+		RootBeanDefinition rbd = new RootBeanDefinition();
+		rbd.setBeanClass(clazz);
+		annctx.registerBeanDefinition(clazz.getSimpleName(), rbd);
+	}
 
     protected ExitShellRequest run(String[] executeThenQuit) {
         

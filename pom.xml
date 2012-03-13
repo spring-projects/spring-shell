@@ -18,7 +18,7 @@
 	<properties>
 	 	<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<spring.framework.version>3.0.6.RELEASE</spring.framework.version>
+		<spring.framework.version>3.1.1.RELEASE</spring.framework.version>
 	</properties>	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -37,24 +37,20 @@
 			<artifactId>spring-context</artifactId>
 			<version>${spring.framework.version}</version>
 		</dependency>
+
+                <!-- CGLIB needed for use of @Configuration class based 
+		     extension points -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2.2</version>
+		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
 		</dependency>
-		<!-- 
-		<dependency>
-	        <groupId>org.springframework.roo</groupId>
-	        <artifactId>org.springframework.roo.shell.jline</artifactId>
-	        <version>1.2.0.RELEASE</version>
-		</dependency>
-		-->
-		<dependency>
-	        <groupId>org.springframework.roo</groupId>
-	        <artifactId>org.springframework.roo.shell</artifactId>
-	        <version>1.2.0.RELEASE</version>
-		</dependency>		
-		<!--  consider removing dependency -->
+		<!--  consider removing dependency on commons-io -->
 		<dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -71,12 +67,13 @@
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.roo.wrapping</groupId>
-            <artifactId>org.springframework.roo.wrapping.json-simple</artifactId>
-            <version>1.1.0.0010</version>
         </dependency>        
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>    
 	</dependencies>
 
 	<build>
@@ -128,7 +125,10 @@
                 </plugin>
 		</plugins>
 	</build> 
-	
+
+        <!-- jline 1.0.S2-B is here 
+	http://shrub.appspot.com/spring-roo-repository.springsource.org/release/net/sourceforge/jline/jline/1.0.S2-B/
+	-->
 	<repositories>
 		<repository>
 		  <id>spring-roo-repository</id>
@@ -136,4 +136,5 @@
 		  <url>http://spring-roo-repository.springsource.org/release</url>
 		</repository>
 	</repositories>
+
 </project>
