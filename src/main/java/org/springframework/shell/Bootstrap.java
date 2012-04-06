@@ -91,14 +91,14 @@ public class Bootstrap {
         Map<String, CommandMarker> commands = ctx.getBeansOfType(CommandMarker.class);
 
         for (CommandMarker command : commands.values()) {    
-           System.out.println("Registgering command " + command);
+           System.out.println("Registering command " + command);
            shell.getSimpleParser().add(command);
         }
 
         Map<String, Converter> converters = ctx.getBeansOfType(Converter.class);
 
         for (Converter converter : converters.values()) {
-          System.out.println("Registgering converter " + converter);
+          System.out.println("Registering converter " + converter);
           shell.getSimpleParser().add(converter);
         }  
         
