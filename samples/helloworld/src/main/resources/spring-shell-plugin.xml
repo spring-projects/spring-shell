@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
   <configuration>
-    <class>org.springframework.shell.plugin.HelloWorldPlugin</class>
+    <class>org.springframework.shell.samples.helloworld.HelloWorldPlugin</class>
   </configuration>
 </plugin>

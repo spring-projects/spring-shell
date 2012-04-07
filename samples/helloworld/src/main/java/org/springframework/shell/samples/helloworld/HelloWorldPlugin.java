@@ -1,4 +1,4 @@
-package org.springframework.shell.plugin;
+package org.springframework.shell.samples.helloworld;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

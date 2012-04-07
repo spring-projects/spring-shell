@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.springframework.samples.spring</groupId>
-	<artifactId>spring-shell</artifactId>
-	<version>1.0.0.CI-SNAPSHOT</version>
+	<groupId>org.springframework.shell</groupId>
+	<artifactId>core</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Spring Shell</name>
 	<url>http://www.springframework.org</url>

@@ -1,4 +1,4 @@
-package org.springframework.shell.commands;
+package org.springframework.shell.samples.helloworld.commands;
 
 import org.springframework.roo.shell.CliAvailabilityIndicator;
 import org.springframework.roo.shell.CliCommand;
