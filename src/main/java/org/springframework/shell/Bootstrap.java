@@ -79,13 +79,8 @@ public class Bootstrap {
         createApplicationContext(applicationContextLocation);
 
         
-        Map<String, JLineShellComponent> shells = ctx.getBeansOfType(JLineShellComponent.class);
-
-        //Assert.isTrue(shells.size() == 1, "Exactly one Shell was required, but " + shells.size() + " found");
-        //shell = shells.values().iterator().next();
-        
-        shell = new JLineShellComponent();
-        
+        //shell = new JLineShellComponent();
+        shell = ctx.getBean("shell", JLineShellComponent.class);
 
 
         Map<String, CommandMarker> commands = ctx.getBeansOfType(CommandMarker.class);
@@ -142,6 +137,8 @@ public class Bootstrap {
 		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.LongConverter.class);
 		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.ShortConverter.class);
 		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.StaticFieldConverterImpl.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.JLineShellComponent.class, "shell");
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
 		
 		ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 		PluginConfigurationReader configReader = new PluginConfigurationReader(resourcePatternResolver);
@@ -165,10 +162,19 @@ public class Bootstrap {
 		ctx = annctx;
 	}
 	
-	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
+	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz){
+		createAndRegisterBeanDefinition(annctx,clazz,null);
+	}
+	
+	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz,String name) {
 		RootBeanDefinition rbd = new RootBeanDefinition();
 		rbd.setBeanClass(clazz);
-		annctx.registerBeanDefinition(clazz.getSimpleName(), rbd);
+		if(name != null){
+			annctx.registerBeanDefinition(name, rbd);
+		}
+		else{
+			annctx.registerBeanDefinition(clazz.getSimpleName(), rbd);
+		}
 	}
 
     protected ExitShellRequest run(String[] executeThenQuit) {
