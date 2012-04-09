@@ -157,7 +157,8 @@ public class Bootstrap {
 				}
 			}
 		}
-		//annctx.scan("org.springframework.shell");
+		annctx.scan("org.springframework.shell.commands");
+		annctx.scan("org.springframework.shell.converters");
 		annctx.refresh();
 		ctx = annctx;
 	}
