@@ -11,9 +11,6 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<spring.framework.version>3.1.1.RELEASE</spring.framework.version>
 		<spring.shell.version>1.0.0-SNAPSHOT</spring.shell.version>
 	</properties>
 	
@@ -21,7 +18,7 @@
 				
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>spring-shell</artifactId>
 			<version>${spring.shell.version}</version>
 		</dependency>		
 				
@@ -71,7 +68,63 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>install-spring-shell-core</id>
+                  <phase>validate</phase>
+                  <goals>
+                     <goal>install-file</goal>
+                  </goals>
+                  <configuration>
+                     <file>lib/spring-shell-1.0.0-SNAPSHOT.jar</file>
+                     <groupId>org.springframework.shell</groupId>
+                     <artifactId>spring-shell</artifactId>
+                     <version>${spring.shell.version}</version>
+                     <packaging>jar</packaging>
+                     <generatePom>true</generatePom>
+                  </configuration>
+               </execution>
+             </executions>
+             </plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-install-plugin
+										</artifactId>
+										<versionRange>
+											[2.3.1,)
+										</versionRange>
+										<goals>
+											<goal>install-file</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<!-- jline 1.0.S2-B is here http://shrub.appspot.com/spring-roo-repository.springsource.org/release/net/sourceforge/jline/jline/1.0.S2-B/ -->

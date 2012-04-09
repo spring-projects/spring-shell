@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.shell</groupId>
-	<artifactId>core</artifactId>
+	<artifactId>spring-shell</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Spring Shell</name>
@@ -14,12 +14,13 @@
       This project is a minimal jar utility with Spring configuration.
     ]]>
 	</description>
-	
+
 	<properties>
-	 	<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
+		<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<spring.framework.version>3.1.1.RELEASE</spring.framework.version>
-	</properties>	<dependencies>
+	</properties>
+	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -38,8 +39,7 @@
 			<version>${spring.framework.version}</version>
 		</dependency>
 
-                <!-- CGLIB needed for use of @Configuration class based 
-		     extension points -->
+		<!-- CGLIB needed for use of @Configuration class based extension points -->
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
@@ -50,30 +50,30 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
 		</dependency>
-		<!--  consider removing dependency on commons-io -->
+		<!-- consider removing dependency on commons-io -->
 		<dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.4</version>
-        </dependency>
-        
- 		<!-- External modules -->
-        <dependency>
-            <groupId>net.sourceforge.jline</groupId>
-            <artifactId>jline</artifactId>
-            <version>1.0.S2-B</version>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.jansi</groupId>
-            <artifactId>jansi</artifactId>
-            <version>1.6</version>
-        </dependency>        
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.8.5</version>
-            <scope>test</scope>
-        </dependency>    
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<!-- External modules -->
+		<dependency>
+			<groupId>net.sourceforge.jline</groupId>
+			<artifactId>jline</artifactId>
+			<version>1.0.S2-B</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.5</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -86,54 +86,49 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>shade</goal>
-                            </goals>
-                            <configuration>
-                                <filters>
-                                    <filter>
-                                      <artifact>*:*</artifact>
-                                      <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                      </excludes>
-                                    </filter>
-                                </filters>
-                                <transformers>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                        <mainClass>${jar.mainclass}</mainClass>                                        
-                                    </transformer>
-                                    <!-- 
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                        <resource>META-INF/spring.handlers</resource>
-                                    </transformer>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                        <resource>META-INF/spring.schemas</resource>
-                                    </transformer>
-                                    -->
-                                </transformers>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${jar.mainclass}</mainClass>
+								</transformer>
+								<!-- <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
+									<resource>META-INF/spring.handlers</resource> </transformer> <transformer 
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
+									<resource>META-INF/spring.schemas</resource> </transformer> -->
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-	</build> 
+	</build>
 
-        <!-- jline 1.0.S2-B is here 
-	http://shrub.appspot.com/spring-roo-repository.springsource.org/release/net/sourceforge/jline/jline/1.0.S2-B/
-	-->
+	<!-- jline 1.0.S2-B is here http://shrub.appspot.com/spring-roo-repository.springsource.org/release/net/sourceforge/jline/jline/1.0.S2-B/ -->
 	<repositories>
 		<repository>
-		  <id>spring-roo-repository</id>
-		  <name>Spring Roo Maven Repository</name>
-		  <url>http://spring-roo-repository.springsource.org/release</url>
+			<id>spring-roo-repository</id>
+			<name>Spring Roo Maven Repository</name>
+			<url>http://spring-roo-repository.springsource.org/release</url>
 		</repository>
 	</repositories>
 

@@ -15,7 +15,9 @@ repositories {
 }
 
 dependencies {
-    compile "org.springframework.shell:core:$springShellVersion"    
+    compile "org.springframework.shell:spring-shell:$springShellVersion" 
+    compile "org.springframework:spring-core:$springVersion"   
+    compile "org.springframework:spring-context-support:$springVersion"
 }
 
 
