@@ -1,6 +1,8 @@
 /.classpath
 /.project
 .settings/
+.gradle
+build
 target/
 /log.roo
 

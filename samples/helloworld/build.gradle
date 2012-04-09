@@ -1,0 +1,36 @@
+description = 'Hello World - Spring Shell'
+
+apply plugin: 'base'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    // Public Spring artifacts
+    mavenRepo name: "spring-release", urls: "http://repo.springsource.org/release"
+    mavenRepo name: "spring-milestone", urls: "http://repo.springsource.org/milestone"
+    mavenRepo name: "spring-snapshot", urls: "http://repo.springsource.org/snapshot"
+}
+
+dependencies {
+    compile "org.springframework.shell:core:$springShellVersion"    
+}
+
+
+jar {
+    dependsOn configurations.runtime
+    from { 
+    	configurations.runtime.collect { 
+    		it.isDirectory() ? it : zipTree(it) 
+    	} 
+    }
+    
+    manifest {
+        attributes("Main-Class": "org.springframework.shell.Bootstrap")
+    }
+    
+}
+
+defaultTasks 'build'
