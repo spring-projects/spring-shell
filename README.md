@@ -6,16 +6,16 @@ This is essentially a place holder README file until this project gets its seale
 
 Spring Shell currently uses Maven as its build system.  The build been done using version 3.0.3 (r1075438; 2011-02-28 12:31:09-0500) and the plan is to switch to gradle.
 
-To build the shell that contains a hint, exit and 'hw' (hello world) command, run
+To build Spring Shell, run
 
      mvn package
      
-# Running
+# Running Example
 
-After buldingn, run the shell 
-
-    cd target
-    java -jar spring-shell-1.0.0.CI-SNAPSHOT.jar
+    cd samples/helloworld
+    mvn validate 
+    mvn package
+    java -jar target/helloworld-1.0.0-SNAPSHOT.jar
      
 # Contributing
 
