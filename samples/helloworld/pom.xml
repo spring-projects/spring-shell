@@ -12,6 +12,7 @@
 
 	<properties>
 		<spring.shell.version>1.0.0-SNAPSHOT</spring.shell.version>
+		<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
 	</properties>
 	
 	<dependencies>
