@@ -76,6 +76,7 @@ dependencies {
     testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "org.springframework:spring-test:$springVersion"
     testCompile("javax.annotation:jsr250-api:1.0") { optional = true }
+    testRuntime "org.codehaus.groovy:groovy:$groovyVersion"
 
 }
 

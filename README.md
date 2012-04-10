@@ -2,6 +2,45 @@ The Spring Shell project provides an extensible interactive shell enviornment wi
 
 This is essentially a place holder README file until this project gets its sealegs.
 
+
+* Maven:
+
+~~~~~ xml
+<dependency>
+  <groupId>org.springframework.shell</groupId>
+  <artifactId>spring-shell</artifactId>
+  <version>${version}</version>
+</dependency> 
+
+<!-- used for nightly builds -->
+<repository>
+  <id>spring-maven-snapshot</id>
+  <snapshots><enabled>true</enabled></snapshots>
+  <name>Springframework Maven SNAPSHOT Repository</name>
+  <url>http://maven.springframework.org/snapshot</url>
+</repository> 
+
+<!-- used for milestone/rc releases -->
+<repository>
+  <id>spring-maven-milestone</id>
+  <name>Springframework Maven Milestone Repository</name>
+  <url>http://maven.springframework.org/milestone</url>
+</repository>  
+~~~~~
+
+* Gradle: 
+
+~~~~~ groovy
+repositories {
+   mavenRepo name: "spring-snapshot", urls: "http://maven.springframework.org/snapshot"
+}
+
+dependencies {
+   compile "org.springframework.shell:spring-shell:${version}"
+}
+~~~~~
+current version is 1.0.0.SNAPSHOT
+
 # Building
 
 Spring Shell currently uses Maven as its build system.  The build been done using version 3.0.3 (r1075438; 2011-02-28 12:31:09-0500) and the plan is to switch to gradle.
@@ -13,9 +52,8 @@ To build Spring Shell, run
 # Running Example
 
     cd samples/helloworld
-    mvn validate 
     mvn package
-    java -jar target/helloworld-1.0.0-SNAPSHOT.jar
+    java -jar target/helloworld-1.0.0.SNAPSHOT.jar
      
 # Contributing
 

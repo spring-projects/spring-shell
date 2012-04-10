@@ -1,20 +1,12 @@
 Maven:
 
 1.Build the project
-  $>mvn validate
   $>mvn package
   
 2.run spring shell
-  $>java -jar target/helloworld-1.0.0-SNAPSHOT.jar
+  $>java -jar target/helloworld-1.0.0.SNAPSHOT.jar
   
- 
- 
- 
- 
- 
- 
- 
- 
+
   
 Gradle:
 
