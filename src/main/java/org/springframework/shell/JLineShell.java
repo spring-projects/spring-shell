@@ -25,6 +25,10 @@ import jline.ANSIBuffer.ANSICodes;
 import jline.ConsoleReader;
 import jline.WindowsTerminal;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.roo.shell.AbstractShell;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.shell.ExitShellRequest;
@@ -39,6 +43,7 @@ import org.springframework.roo.support.util.IOUtils;
 import org.springframework.roo.support.util.OsUtils;
 import org.springframework.roo.support.util.StringUtils;
 import org.springframework.shell.commands.HintCommands;
+import org.springframework.shell.plugin.HistoryFileProvider;
 
 
 /**
@@ -51,17 +56,20 @@ import org.springframework.shell.commands.HintCommands;
  * use reflection in order to avoid hard dependencies on Jansi.
  *
  * @author Ben Alex
+ * @author Jarred Li
  * @since 1.0
  */
-public abstract class JLineShell extends AbstractShell implements CommandMarker, Shell, Runnable {
+public abstract class JLineShell extends AbstractShell implements CommandMarker, Shell, Runnable,
+		ApplicationContextAware {
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
-	private static final boolean JANSI_AVAILABLE = ClassUtils.isPresent(ANSI_CONSOLE_CLASSNAME, JLineShell.class.getClassLoader());
+	private static final boolean JANSI_AVAILABLE = ClassUtils.isPresent(ANSI_CONSOLE_CLASSNAME,
+			JLineShell.class.getClassLoader());
 	private static final boolean APPLE_TERMINAL = Boolean.getBoolean("is.apple.terminal");
 	private static final char ESCAPE = 27;
 	private static final String BEL = "\007";
-	
+
 	//TODO make configurable
 	private static final String COMMAND_LINE_PROMPT = "spring>";
 
@@ -76,6 +84,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	/** key: row number, value: eraseLineFromPosition */
 	private final Map<Integer, Integer> rowErasureMap = new HashMap<Integer, Integer>();
 	private boolean shutdownHookFired = false; // ROO-1599
+
+	private ApplicationContext applicatonContext;
 
 	public void run() {
 		try {
@@ -115,7 +125,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 		// Try to build previous command history from the project's log
 		try {
-			String logFileContents = FileCopyUtils.copyToString(new File("log.roo"));
+			String logFileContents = FileCopyUtils.copyToString(new File(getHistoryFileName()));
 			String[] logEntries = logFileContents.split(StringUtils.LINE_SEPARATOR);
 			// LIFO
 			for (String logEntry : logEntries) {
@@ -123,7 +133,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 					reader.getHistory().addToHistory(logEntry);
 				}
 			}
-		} catch (IOException ignored) {}
+		} catch (IOException ignored) {
+		}
 
 		flashMessageRenderer();
 
@@ -131,9 +142,10 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 		flash(Level.FINE, "Spring Roo " + versionInfo(), Shell.WINDOW_TITLE_SLOT);
 
-		
+
 		//TODO make this configurable
-		logger.info("Welcome to Spring Shell. For assistance press " + completionKeys + " or type \"hint\" then hit ENTER.");
+		logger.info("Welcome to Spring Shell. For assistance press " + completionKeys
+				+ " or type \"hint\" then hit ENTER.");
 
 		String startupNotifications = getStartupNotifications();
 		if (StringUtils.hasText(startupNotifications)) {
@@ -161,7 +173,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				exitShellRequest = success ? ExitShellRequest.NORMAL_EXIT : ExitShellRequest.FATAL_EXIT;
 			}
 			setShellStatus(Status.SHUTTING_DOWN);
-		} else {
+		}
+		else {
 			// Normal RPEL processing
 			promptLoop();
 		}
@@ -191,15 +204,18 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			ANSIBuffer ansi = JLineLogHandler.getANSIBuffer();
 			if (path == null || "".equals(path)) {
 				shellPrompt = ansi.yellow(COMMAND_LINE_PROMPT).toString();
-			} else {
+			}
+			else {
 				if (overrideStyle) {
 					ansi.append(path);
-				} else {
+				}
+				else {
 					ansi.cyan(path);
 				}
 				shellPrompt = ansi.yellow(" " + COMMAND_LINE_PROMPT).toString();
 			}
-		} else {
+		}
+		else {
 			// The superclass will do for this non-ANSI terminal
 			super.setPromptPath(path);
 		}
@@ -210,7 +226,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 	private ConsoleReader createAnsiWindowsReader() throws Exception {
 		// Get decorated OutputStream that parses ANSI-codes
-		final PrintStream ansiOut = (PrintStream) ClassUtils.forName(ANSI_CONSOLE_CLASSNAME, JLineShell.class.getClassLoader()).getMethod("out").invoke(null);
+		final PrintStream ansiOut = (PrintStream) ClassUtils.forName(ANSI_CONSOLE_CLASSNAME,
+				JLineShell.class.getClassLoader()).getMethod("out").invoke(null);
 		WindowsTerminal ansiTerminal = new WindowsTerminal() {
 			@Override
 			public boolean isANSISupported() {
@@ -228,9 +245,10 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		};
 		addShellStatusListener(statusListener);
 
-		return new ConsoleReader(new FileInputStream(FileDescriptor.in), new PrintWriter(new OutputStreamWriter(ansiOut,
-			// Default to Cp850 encoding for Windows console output (ROO-439)
-			System.getProperty("jline.WindowsTerminal.output.encoding", "Cp850"))), null, ansiTerminal);
+		return new ConsoleReader(new FileInputStream(FileDescriptor.in), new PrintWriter(new OutputStreamWriter(
+				ansiOut,
+				// Default to Cp850 encoding for Windows console output (ROO-439)
+				System.getProperty("jline.WindowsTerminal.output.encoding", "Cp850"))), null, ansiTerminal);
 	}
 
 	private void flashMessageRenderer() {
@@ -252,7 +270,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 								// Message has expired, so clear it
 								toRemove.add(slot);
 								doAnsiFlash(flashInfo.rowNumber, Level.ALL, "");
-							} else {
+							}
+							else {
 								// The expiration time for this message has not been reached, so preserve it
 								doAnsiFlash(flashInfo.rowNumber, flashInfo.flashLevel, flashInfo.flashMessage);
 							}
@@ -290,7 +309,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				try {
 					reader.printString(stg);
 					reader.flushConsole();
-				} catch (IOException ignored) {}
+				} catch (IOException ignored) {
+				}
 			}
 
 			return;
@@ -309,7 +329,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 					return;
 				}
 				flashInfo.flashMessageUntil = System.currentTimeMillis() + 1500;
-			} else {
+			}
+			else {
 				// Display this message displayed until further notice
 				if (flashInfo == null) {
 					// Find a row for this new slot; we basically take the first line number we discover
@@ -346,7 +367,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		ANSIBuffer buff = JLineLogHandler.getANSIBuffer();
 		if (APPLE_TERMINAL) {
 			buff.append(ESCAPE + "7");
-		} else {
+		}
+		else {
 			buff.append(ANSICodes.save());
 		}
 
@@ -360,7 +382,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 		if (mostFurtherLeftColNumber == Integer.MAX_VALUE) {
 			// There is nothing to erase
-		} else {
+		}
+		else {
 			buff.append(ANSICodes.gotoxy(row, mostFurtherLeftColNumber));
 			buff.append(ANSICodes.clreol()); // Clear what was present on the line
 		}
@@ -369,7 +392,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			// They want the line blank; we've already achieved this if needed via the erasing above
 			// Just need to record we no longer care about this line the next time doAnsiFlash is invoked
 			rowErasureMap.remove(row);
-		} else {
+		}
+		else {
 			if (shutdownHookFired) {
 				return; // ROO-1599
 			}
@@ -385,7 +409,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		}
 		if (APPLE_TERMINAL) {
 			buff.append(ESCAPE + "8");
-		} else {
+		}
+		else {
 			buff.append(ANSICodes.restore());
 		}
 
@@ -393,7 +418,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		try {
 			reader.printString(stg);
 			reader.flushConsole();
-		} catch (IOException ignored) {}
+		} catch (IOException ignored) {
+		}
 	}
 
 	public void promptLoop() {
@@ -430,12 +456,27 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 	private void openFileLogIfPossible() {
 		try {
-			fileLog = new FileWriter("log.roo", true);
+			fileLog = new FileWriter(getHistoryFileName(), true);
 			// First write, so let's record the date and time of the first user command
 			fileLog.write("// Spring Roo " + versionInfo() + " log opened at " + df.format(new Date()) + "\n");
 			fileLog.flush();
 		} catch (IOException ignoreIt) {
 		}
+	}
+
+	private String getHistoryFileName() {
+		String historyFileName = null;
+		Map<String, HistoryFileProvider> historyFileProviders = BeanFactoryUtils.beansOfTypeIncludingAncestors(
+				this.applicatonContext, HistoryFileProvider.class);
+		int order = Integer.MIN_VALUE;
+		for(HistoryFileProvider p : historyFileProviders.values()){
+			if(p.getOrder() > order){
+				order = p.getOrder();
+				historyFileName = p.getHistoryFileName();
+			}
+		}
+		historyFileName = (historyFileName == null)?"spring-shell.log":historyFileName;
+		return historyFileName;
 	}
 
 	@Override
@@ -494,5 +535,9 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		long flashMessageUntil;
 		Level flashLevel;
 		int rowNumber;
+	}
+
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicatonContext = applicationContext;
 	}
 }

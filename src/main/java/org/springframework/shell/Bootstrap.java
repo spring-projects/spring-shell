@@ -124,6 +124,7 @@ public class Bootstrap {
 		
 		annctx.scan("org.springframework.shell.commands");
 		annctx.scan("org.springframework.shell.converters");
+		annctx.scan("org.springframework.shell.plugin.support");
 		annctx.refresh();
 		
 		ctx = initPluginApplicationContext(annctx);
