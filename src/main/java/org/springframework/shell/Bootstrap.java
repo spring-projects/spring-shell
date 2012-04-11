@@ -67,7 +67,7 @@ public class Bootstrap {
         
         //shell = new JLineShellComponent();
         shell = ctx.getBean("shell", JLineShellComponent.class);
-
+        shell.setApplicationContext(ctx);
 
         Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx,CommandMarker.class);
         
@@ -129,6 +129,7 @@ public class Bootstrap {
 		
 		ctx = initPluginApplicationContext(annctx);
 		ctx.refresh();
+		
 
 	}
 

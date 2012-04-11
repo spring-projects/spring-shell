@@ -3,4 +3,6 @@
 .settings/
 target/
 /log.roo
+*.log
+
 

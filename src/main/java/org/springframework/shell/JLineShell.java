@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,8 +60,7 @@ import org.springframework.shell.plugin.HistoryFileProvider;
  * @author Jarred Li
  * @since 1.0
  */
-public abstract class JLineShell extends AbstractShell implements CommandMarker, Shell, Runnable,
-		ApplicationContextAware {
+public abstract class JLineShell extends AbstractShell implements CommandMarker, Shell, Runnable {
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
@@ -469,6 +469,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		Map<String, HistoryFileProvider> historyFileProviders = BeanFactoryUtils.beansOfTypeIncludingAncestors(
 				this.applicatonContext, HistoryFileProvider.class);
 		int order = Integer.MIN_VALUE;
+		System.out.println("history file provider count:" + Arrays.toString(historyFileProviders.keySet().toArray()));
 		for(HistoryFileProvider p : historyFileProviders.values()){
 			if(p.getOrder() > order){
 				order = p.getOrder();
