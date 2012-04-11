@@ -8,7 +8,7 @@ Maven:
   
 
   
-Gradle:
+Gradle (not supported yet):
 
 1.Build the project
   $>../../gradlew build
