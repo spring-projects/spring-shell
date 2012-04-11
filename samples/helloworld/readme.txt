@@ -4,7 +4,7 @@ Maven:
   $>mvn package
   
 2.run spring shell
-  $>java -jar target/helloworld-1.0.0.SNAPSHOT.jar
+  $>java -jar target/helloworld-1.0.0.BUILD-SNAPSHOT.jar
   
 
   
@@ -14,4 +14,4 @@ Gradle:
   $>../../gradlew build
   
 2.run spring shell
-  $>java -jar build/libs/helloworld.jar
+  $>java -jar build/libs/helloworld-1.0.0.BUILD-SNAPSHOT.jar

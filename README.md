@@ -39,7 +39,7 @@ dependencies {
    compile "org.springframework.shell:spring-shell:${version}"
 }
 ~~~~~
-current version is 1.0.0.SNAPSHOT
+current version is 1.0.0.BUILD-SNAPSHOT
 
 # Building
 
@@ -53,7 +53,7 @@ To build Spring Shell, run
 
     cd samples/helloworld
     mvn package
-    java -jar target/helloworld-1.0.0.SNAPSHOT.jar
+    java -jar target/helloworld-1.0.0.BUILD.SNAPSHOT.jar
      
 # Contributing
 
