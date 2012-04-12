@@ -20,6 +20,7 @@ import static org.springframework.roo.support.util.StringUtils.LINE_SEPARATOR;
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.support.util.VersionUtils;
+import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class DefaultBannerProvider implements BannerProvider, CommandMarker{
+public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.core.Ordered#getOrder()
@@ -63,6 +64,13 @@ public class DefaultBannerProvider implements BannerProvider, CommandMarker{
 	 */
 	public String getVersion() {
 		return VersionUtils.versionInfo();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.shell.plugin.BannerProvider#getWelcomMessage()
+	 */
+	public String getWelcomMessage() {
+		return Constant.WELCOME_MESSAGE;
 	}
 
 }

@@ -17,6 +17,7 @@ package org.springframework.shell.samples.helloworld.commands;
 
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CommandMarker;
+import org.springframework.roo.support.util.StringUtils;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.stereotype.Component;
 
@@ -37,9 +38,19 @@ public class MyBannerProvider implements BannerProvider, CommandMarker {
 	/* (non-Javadoc)
 	 * @see org.springframework.shell.plugin.BannerProvider#getBanner()
 	 */
-	@CliCommand(value = { "version" }, help = "Displays shell version")
+	@CliCommand(value = { "version" }, help = "Displays current CLI version")
 	public String getBanner() {
-		return "vHelper. Version: " + this.getVersion();
+		StringBuffer buf = new StringBuffer();
+		buf.append("=======================================" + StringUtils.LINE_SEPARATOR);
+		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
+		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
+		buf.append("*            vHelper                   *" +StringUtils.LINE_SEPARATOR);
+		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
+		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
+		buf.append("=======================================" + StringUtils.LINE_SEPARATOR);
+		buf.append("Verson:" + this.getVersion());
+		return buf.toString();
+
 	}
 
 	/* (non-Javadoc)
@@ -47,6 +58,13 @@ public class MyBannerProvider implements BannerProvider, CommandMarker {
 	 */
 	public String getVersion() {
 		return "1.0.1";
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.shell.plugin.BannerProvider#getWelcomMessage()
+	 */
+	public String getWelcomMessage() {
+		return "Welcome to vHelper CLI";
 	}
 
 }

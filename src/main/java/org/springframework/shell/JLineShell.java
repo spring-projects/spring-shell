@@ -81,6 +81,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private boolean shutdownHookFired = false; // ROO-1599
 
 	private ApplicationContext applicatonContext;
+	private boolean printBanner = true;
+	
 
 	public void run() {
 		try {
@@ -132,15 +134,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		}
 
 		flashMessageRenderer();
-
-		logger.info(version(null));
-
-		flash(Level.FINE, "Spring Roo " + versionInfo(), Shell.WINDOW_TITLE_SLOT);
-
-
-		//TODO make this configurable
-		logger.info("Welcome to Spring Shell. For assistance press " + completionKeys
-				+ " or type \"hint\" then hit ENTER.");
+		flash(Level.FINE, "Spring Shell " + versionInfo(), Shell.WINDOW_TITLE_SLOT);
+		printBannerAndWelcome();
 
 		String startupNotifications = getStartupNotifications();
 		if (StringUtils.hasText(startupNotifications)) {
@@ -175,6 +170,13 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			promptLoop();
 		}
 		
+	}
+	
+	public void printBannerAndWelcome(){
+		if(printBanner){
+			logger.info(version(null));		
+			logger.info(getWelcomeMessage());
+		}
 	}
 
 	public String getStartupNotifications() {
@@ -526,6 +528,12 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		this.applicatonContext = applicationContext;
 	}
 	
+	/**
+	 * get history file name from provider. The provider has highest order 
+	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
+	 * 
+	 * @return history file name 
+	 */
 	private String getHistoryFileName() {
 		String historyFileName = null;
 		Map<String, HistoryFileProvider> historyFileProviders = getBeansInFactory(HistoryFileProvider.class);
@@ -540,6 +548,12 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		return historyFileName;
 	}
 	
+	/**
+	 * get prompt text from provider. The provider has highest order 
+	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
+	 * 
+	 * @return
+	 */
 	private String getPromptText(){
 		String promptText = null;
 		Map<String, PromptProvider> promptProviders = getBeansInFactory(PromptProvider.class);
@@ -554,17 +568,25 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		return promptText;
 	}
 	
-	private String getBannerText(){
-		String bannerText = null;
+	/**
+	 * Get Banner and Welcome Message from provider. The provider has highest order 
+	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
+	 * @return BannerText[0]: Banner
+	 *         BannerText[1]: Welcome Message.
+	 */
+	private String[] getBannerText(){
+		String[] bannerText = new String[2];
 		Map<String, BannerProvider> bannerProviders = getBeansInFactory(BannerProvider.class);
 		int order = Integer.MIN_VALUE;
 		for(BannerProvider p : bannerProviders.values()){
 			if(p.getOrder() > order){
 				order = p.getOrder();
-				bannerText = p.getBanner();
+				bannerText[0] = p.getBanner();
+				bannerText[1] = p.getWelcomMessage();
 			}
 		}
-		bannerText = (bannerText == null)?Constant.COMMAND_LINE_PROMPT:bannerText;
+		bannerText[0] = (bannerText[0] == null)?Constant.COMMAND_LINE_PROMPT:bannerText[0];
+		bannerText[1] = (bannerText[1] == null)?Constant.WELCOME_MESSAGE:bannerText[1];
 		return bannerText;
 	}
 	
@@ -576,7 +598,19 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	}
 	
 	public String version(String text){
-		return getBannerText();
+		return getBannerText()[0];
+	}
+	
+	public String getWelcomeMessage(){
+		return getBannerText()[1];
+	}
+
+
+	/**
+	 * @param printBanner the printBanner to set
+	 */
+	public void setPrintBanner(boolean printBanner) {
+		this.printBanner = printBanner;
 	}
 	
 }

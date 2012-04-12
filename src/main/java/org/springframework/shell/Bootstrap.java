@@ -35,10 +35,11 @@ public class Bootstrap {
     private Thread shellThread;
     private ConfigurableApplicationContext ctx;
     private static StopWatch sw = new StopWatch("Spring Sehll");
+    private static SimpleShellCommandLineOptions options;
 
     public static void main(String[] args) throws IOException {
         sw.start();        
-        SimpleShellCommandLineOptions options = SimpleShellCommandLineOptions.parseCommandLine(args);
+        options = SimpleShellCommandLineOptions.parseCommandLine(args);
 
         for (Map.Entry<String, String> entry : options.extraSystemProperties.entrySet()) {
             System.setProperty(entry.getKey(), entry.getValue());
@@ -68,6 +69,9 @@ public class Bootstrap {
         //shell = new JLineShellComponent();
         shell = ctx.getBean("shell", JLineShellComponent.class);
         shell.setApplicationContext(ctx);
+        if(options.executeThenQuit != null){
+        	shell.setPrintBanner(false);
+        }
 
         Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx,CommandMarker.class);
         
@@ -191,14 +195,15 @@ public class Bootstrap {
                 // shouldn't really happen, but we'll fallback to this anyway
                 exitShellRequest = ExitShellRequest.NORMAL_EXIT;
             }
+            
+            try {
+    			shellThread.join();
+    		} catch (InterruptedException e) {
+    			e.printStackTrace();
+    		}
+            
         }
         
-        try {
-			shellThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
         ctx.close();
         sw.stop();
         if (shell.isDevelopmentMode()) {

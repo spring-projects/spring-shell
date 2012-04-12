@@ -22,7 +22,7 @@ import org.springframework.core.Ordered;
  * <code>getOrder</code> should be > 1 to override default.
  * 
  * @author Jarred Li
- * @since 1.01
+ * @since 1.0
  *
  */
 public interface BannerProvider extends Ordered {
@@ -30,5 +30,7 @@ public interface BannerProvider extends Ordered {
 	String getBanner();
 	
 	String getVersion();
+	
+	String getWelcomMessage();
 	
 }
