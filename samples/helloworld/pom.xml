@@ -65,6 +65,9 @@
 							<classpathPrefix>lib/</classpathPrefix>
 							<mainClass>${jar.mainclass}</mainClass>
 						</manifest>
+						<manifestEntries>
+							<version>${project.version}</version>
+						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>

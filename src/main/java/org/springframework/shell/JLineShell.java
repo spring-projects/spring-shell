@@ -41,6 +41,7 @@ import org.springframework.roo.support.util.FileCopyUtils;
 import org.springframework.roo.support.util.IOUtils;
 import org.springframework.roo.support.util.OsUtils;
 import org.springframework.roo.support.util.StringUtils;
+import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileProvider;
 import org.springframework.shell.plugin.PromptProvider;
 
@@ -553,10 +554,29 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		return promptText;
 	}
 	
+	private String getBannerText(){
+		String bannerText = null;
+		Map<String, BannerProvider> bannerProviders = getBeansInFactory(BannerProvider.class);
+		int order = Integer.MIN_VALUE;
+		for(BannerProvider p : bannerProviders.values()){
+			if(p.getOrder() > order){
+				order = p.getOrder();
+				bannerText = p.getBanner();
+			}
+		}
+		bannerText = (bannerText == null)?Constant.COMMAND_LINE_PROMPT:bannerText;
+		return bannerText;
+	}
+	
+	
 	private <T> Map<String, T> getBeansInFactory(Class<T> t){
 		Map<String, T> result = BeanFactoryUtils.beansOfTypeIncludingAncestors(
 				this.applicatonContext, t);
 		return result;
+	}
+	
+	public String version(String text){
+		return getBannerText();
 	}
 	
 }

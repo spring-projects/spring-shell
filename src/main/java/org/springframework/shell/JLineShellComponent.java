@@ -72,23 +72,5 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 		return null;
 	}
 
-	
-		
-	@CliCommand(value = { "version" }, help = "Displays shell version")
-	public String version(@CliOption(key = "", help = "Special version flags") final String extra) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(" _____            _    ").append(LINE_SEPARATOR);
-		sb.append("/  ___|          (_)").append(LINE_SEPARATOR);
-		sb.append("\\ `--, _ __  _ __ _ _ __   __ _ ").append(LINE_SEPARATOR);
-		sb.append(" `--. \\ '_ \\| '__| | '_ \\ / _` |").append(LINE_SEPARATOR);
-		sb.append("/\\__/ / |_) | |  | | | | | (_| |").append(LINE_SEPARATOR);
-		sb.append("\\____/| .__/|_|  |_|_| |_|\\__, |").append(LINE_SEPARATOR);
-		sb.append("      | |                  __/ |").append(LINE_SEPARATOR);
-		sb.append("      |_|                 |___/ ").append(" ").append(versionInfo()).append(LINE_SEPARATOR);
-		sb.append(LINE_SEPARATOR);
-
-		return sb.toString();
-	
-	}
 
 }

@@ -34,6 +34,7 @@ import org.springframework.roo.support.util.CollectionUtils;
 import org.springframework.roo.support.util.ExceptionUtils;
 import org.springframework.roo.support.util.FileCopyUtils;
 import org.springframework.roo.support.util.StringUtils;
+import org.springframework.roo.support.util.VersionUtils;
 import org.springframework.roo.support.util.XmlElementBuilder;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.CDATASection;
@@ -914,7 +915,7 @@ public class SimpleParser implements Parser {
 			appendix.setAttribute("version", "5.0");
 			appendix.setAttribute("xml:id", "command-index");
 			appendix.appendChild(new XmlElementBuilder("title", document).setText("Command Index").build());
-			appendix.appendChild(new XmlElementBuilder("para", document).setText("This appendix was automatically built from Roo " + AbstractShell.versionInfo() + ".").build());
+			appendix.appendChild(new XmlElementBuilder("para", document).setText("This appendix was automatically built from Roo " + VersionUtils.versionInfo() + ".").build());
 			appendix.appendChild(new XmlElementBuilder("para", document).setText("Commands are listed in alphabetic order, and are shown in monospaced font with any mandatory options you must specify when using the command. Most commands accept a large number of options, and all of the possible options for each command are presented in this appendix.").build());
 
 			for (Element section : builtSections) {

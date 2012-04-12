@@ -13,33 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.plugin.support;
+package org.springframework.shell.samples.helloworld.commands;
 
-import org.springframework.shell.Constant;
-import org.springframework.shell.plugin.HistoryFileProvider;
+import org.springframework.roo.shell.CliCommand;
+import org.springframework.roo.shell.CommandMarker;
+import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.stereotype.Component;
 
 /**
- * Default history file provider. Default file is {@link org.springframework.shell.Constant.HISTORY_FILE_NAME}
- * 
  * @author Jarred Li
  *
  */
 @Component
-public class DefaultHistoryFileProvider implements HistoryFileProvider{
+public class MyBannerProvider implements BannerProvider, CommandMarker {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public int getOrder() {
-		return 0;
+		return 1;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.HistoryFileProvider#getHistoryFileName()
+	 * @see org.springframework.shell.plugin.BannerProvider#getBanner()
 	 */
-	public String getHistoryFileName() {
-		return Constant.HISTORY_FILE_NAME;
+	@CliCommand(value = { "version" }, help = "Displays shell version")
+	public String getBanner() {
+		return "vHelper. Version: " + this.getVersion();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.shell.plugin.BannerProvider#getVersion()
+	 */
+	public String getVersion() {
+		return "1.0.1";
 	}
 
 }

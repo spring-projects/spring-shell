@@ -32,6 +32,7 @@ import org.springframework.roo.support.util.Assert;
 import org.springframework.roo.support.util.IOUtils;
 import org.springframework.roo.support.util.MathUtils;
 import org.springframework.roo.support.util.StringUtils;
+import org.springframework.roo.support.util.VersionUtils;
 
 /**
  * Provides a base {@link Shell} implementation.
@@ -395,47 +396,8 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		return sb.toString();
 	}
 
-	public static String versionInfo() {
-		// Try to determine the bundle version
-		String bundleVersion = null;
-		String gitCommitHash = null;
-		JarFile jarFile = null;
-		try {
-			URL classContainer = AbstractShell.class.getProtectionDomain().getCodeSource().getLocation();
-			if (classContainer.toString().endsWith(".jar")) {
-				// Attempt to obtain the "Bundle-Version" version from the manifest
-				jarFile = new JarFile(new File(classContainer.toURI()), false);
-				ZipEntry manifestEntry = jarFile.getEntry("META-INF/MANIFEST.MF");
-				Manifest manifest = new Manifest(jarFile.getInputStream(manifestEntry));
-				bundleVersion = manifest.getMainAttributes().getValue("Bundle-Version");
-				gitCommitHash = manifest.getMainAttributes().getValue("Git-Commit-Hash");
-			}
-		} catch (IOException ignoreAndMoveOn) {
-		} catch (URISyntaxException ignoreAndMoveOn) {
-		} finally {
-			IOUtils.closeQuietly(jarFile);
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		if (bundleVersion != null) {
-			sb.append(bundleVersion);
-		}
-
-		if (gitCommitHash != null && gitCommitHash.length() > 7) {
-			if (sb.length() > 0) {
-				sb.append(" "); // to separate from version
-			}
-			sb.append("[rev ");
-			sb.append(gitCommitHash.substring(0,7));
-			sb.append("]");
-		}
-
-		if (sb.length() == 0) {
-			sb.append("UNKNOWN VERSION");
-		}
-
-		return sb.toString();
+	public String versionInfo(){
+		return VersionUtils.versionInfo();
 	}
 
 	public String getShellPrompt() {

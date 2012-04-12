@@ -15,31 +15,36 @@
  */
 package org.springframework.shell.plugin.support;
 
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.HistoryFileProvider;
-import org.springframework.stereotype.Component;
 
 /**
- * Default history file provider. Default file is {@link org.springframework.shell.Constant.HISTORY_FILE_NAME}
- * 
  * @author Jarred Li
  *
  */
-@Component
-public class DefaultHistoryFileProvider implements HistoryFileProvider{
+public class DefaultHistoryFileProviderTest {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.core.Ordered#getOrder()
+	private HistoryFileProvider historyFile = new DefaultHistoryFileProvider();
+
+	/**
+	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileProvider#getOrder()}.
 	 */
-	public int getOrder() {
-		return 0;
+	@Test
+	public void testGetOrder() {
+		Assert.assertTrue(historyFile.getOrder() == 0);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.HistoryFileProvider#getHistoryFileName()
+	/**
+	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileProvider#getHistoryFileName()}.
 	 */
-	public String getHistoryFileName() {
-		return Constant.HISTORY_FILE_NAME;
+	@Test
+	public void testGetHistoryFileName() {
+		assertNotNull(historyFile.getHistoryFileName());
+		assertEquals(Constant.HISTORY_FILE_NAME, historyFile.getHistoryFileName());
 	}
 
 }

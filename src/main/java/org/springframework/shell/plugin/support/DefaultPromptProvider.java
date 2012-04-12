@@ -17,11 +17,15 @@ package org.springframework.shell.plugin.support;
 
 import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.PromptProvider;
+import org.springframework.stereotype.Component;
 
 /**
+ * Default prompt provider. The promp text is {@link org.springframework.shell.Constant.COMMAND_LINE_PROMPT}
+ * 
  * @author Jarred Li
  *
  */
+@Component
 public class DefaultPromptProvider implements PromptProvider{
 
 	/* (non-Javadoc)

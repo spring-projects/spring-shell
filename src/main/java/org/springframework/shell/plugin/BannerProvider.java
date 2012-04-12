@@ -18,15 +18,17 @@ package org.springframework.shell.plugin;
 import org.springframework.core.Ordered;
 
 /**
- * Shell prompt provider. Plugin should implements this interface to customize prompt.
- *   
+ * Banner provider. Plugin should implements this interface to replace the version banner.
  * <code>getOrder</code> should be > 1 to override default.
  * 
  * @author Jarred Li
+ * @since 1.01
  *
  */
-public interface PromptProvider extends Ordered {
+public interface BannerProvider extends Ordered {
 
-	String getPromptText();
+	String getBanner();
+	
+	String getVersion();
 	
 }

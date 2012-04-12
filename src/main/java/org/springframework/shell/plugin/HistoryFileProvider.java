@@ -18,7 +18,8 @@ package org.springframework.shell.plugin;
 import org.springframework.core.Ordered;
 
 /**
- * To get history file name
+ * History file name provider. Plugin should implements this interface to customize history file. 
+ * <code>getOrder</code> should be > 1 to override default.
  * 
  * @author Jarred Li
  * @since 1.0
