@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -29,7 +28,6 @@ import jline.WindowsTerminal;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.roo.shell.AbstractShell;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.shell.ExitShellRequest;
@@ -43,8 +41,8 @@ import org.springframework.roo.support.util.FileCopyUtils;
 import org.springframework.roo.support.util.IOUtils;
 import org.springframework.roo.support.util.OsUtils;
 import org.springframework.roo.support.util.StringUtils;
-import org.springframework.shell.commands.HintCommands;
 import org.springframework.shell.plugin.HistoryFileProvider;
+import org.springframework.shell.plugin.PromptProvider;
 
 
 /**
@@ -69,10 +67,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private static final boolean APPLE_TERMINAL = Boolean.getBoolean("is.apple.terminal");
 	private static final char ESCAPE = 27;
 	private static final String BEL = "\007";
-
-	//TODO make configurable
-	private static final String COMMAND_LINE_PROMPT = "spring>";
-
 	// Fields
 	private ConsoleReader reader;
 	private boolean developmentMode = false;
@@ -203,7 +197,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		if (reader.getTerminal().isANSISupported()) {
 			ANSIBuffer ansi = JLineLogHandler.getANSIBuffer();
 			if (path == null || "".equals(path)) {
-				shellPrompt = ansi.yellow(COMMAND_LINE_PROMPT).toString();
+				shellPrompt = ansi.yellow(getPromptText()).toString();
 			}
 			else {
 				if (overrideStyle) {
@@ -212,7 +206,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				else {
 					ansi.cyan(path);
 				}
-				shellPrompt = ansi.yellow(" " + COMMAND_LINE_PROMPT).toString();
+				shellPrompt = ansi.yellow(" " + getPromptText()).toString();
 			}
 		}
 		else {
@@ -464,21 +458,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		}
 	}
 
-	private String getHistoryFileName() {
-		String historyFileName = null;
-		Map<String, HistoryFileProvider> historyFileProviders = BeanFactoryUtils.beansOfTypeIncludingAncestors(
-				this.applicatonContext, HistoryFileProvider.class);
-		int order = Integer.MIN_VALUE;
-		System.out.println("history file provider count:" + Arrays.toString(historyFileProviders.keySet().toArray()));
-		for(HistoryFileProvider p : historyFileProviders.values()){
-			if(p.getOrder() > order){
-				order = p.getOrder();
-				historyFileName = p.getHistoryFileName();
-			}
-		}
-		historyFileName = (historyFileName == null)?"spring-shell.log":historyFileName;
-		return historyFileName;
-	}
+
 
 	@Override
 	protected void logCommandToOutput(final String processedLine) {
@@ -541,4 +521,39 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicatonContext = applicationContext;
 	}
+	
+	private String getHistoryFileName() {
+		String historyFileName = null;
+		Map<String, HistoryFileProvider> historyFileProviders = getBeansInFactory(HistoryFileProvider.class);
+		int order = Integer.MIN_VALUE;
+		for(HistoryFileProvider p : historyFileProviders.values()){
+			if(p.getOrder() > order){
+				order = p.getOrder();
+				historyFileName = p.getHistoryFileName();
+			}
+		}
+		historyFileName = (historyFileName == null)?Constant.HISTORY_FILE_NAME:historyFileName;
+		return historyFileName;
+	}
+	
+	private String getPromptText(){
+		String promptText = null;
+		Map<String, PromptProvider> promptProviders = getBeansInFactory(PromptProvider.class);
+		int order = Integer.MIN_VALUE;
+		for(PromptProvider p : promptProviders.values()){
+			if(p.getOrder() > order){
+				order = p.getOrder();
+				promptText = p.getPromptText();
+			}
+		}
+		promptText = (promptText == null)?Constant.COMMAND_LINE_PROMPT:promptText;
+		return promptText;
+	}
+	
+	private <T> Map<String, T> getBeansInFactory(Class<T> t){
+		Map<String, T> result = BeanFactoryUtils.beansOfTypeIncludingAncestors(
+				this.applicatonContext, t);
+		return result;
+	}
+	
 }

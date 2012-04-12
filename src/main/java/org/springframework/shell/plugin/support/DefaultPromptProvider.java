@@ -16,15 +16,13 @@
 package org.springframework.shell.plugin.support;
 
 import org.springframework.shell.Constant;
-import org.springframework.shell.plugin.HistoryFileProvider;
-import org.springframework.stereotype.Component;
+import org.springframework.shell.plugin.PromptProvider;
 
 /**
  * @author Jarred Li
  *
  */
-@Component
-public class DefaultHistoryFileProvider implements HistoryFileProvider{
+public class DefaultPromptProvider implements PromptProvider{
 
 	/* (non-Javadoc)
 	 * @see org.springframework.core.Ordered#getOrder()
@@ -34,10 +32,10 @@ public class DefaultHistoryFileProvider implements HistoryFileProvider{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.HistoryFileProvider#getHistoryFileName()
+	 * @see org.springframework.shell.plugin.PromptProvider#getPromptText()
 	 */
-	public String getHistoryFileName() {
-		return Constant.HISTORY_FILE_NAME;
+	public String getPromptText() {
+		return Constant.COMMAND_LINE_PROMPT;
 	}
 
 }

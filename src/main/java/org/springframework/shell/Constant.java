@@ -13,31 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.plugin.support;
-
-import org.springframework.shell.Constant;
-import org.springframework.shell.plugin.HistoryFileProvider;
-import org.springframework.stereotype.Component;
+package org.springframework.shell;
 
 /**
  * @author Jarred Li
  *
  */
-@Component
-public class DefaultHistoryFileProvider implements HistoryFileProvider{
+public interface Constant {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.core.Ordered#getOrder()
-	 */
-	public int getOrder() {
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.HistoryFileProvider#getHistoryFileName()
-	 */
-	public String getHistoryFileName() {
-		return Constant.HISTORY_FILE_NAME;
-	}
-
+	String HISTORY_FILE_NAME = "spring-shell.log"; 
+	
+	String COMMAND_LINE_PROMPT = "spring>";
+	
 }

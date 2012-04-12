@@ -31,7 +31,6 @@ import org.springframework.util.StopWatch;
 public class Bootstrap {
 
     private static Bootstrap bootstrap;
-    //TODO using JLineShellComponenet to override and get access to "getSimpleParser" method on the shell - look into autowire...and move back to reference Shell interface.
     private JLineShellComponent shell;
     private ConfigurableApplicationContext ctx;
     private static StopWatch sw = new StopWatch("Spring Sehll");

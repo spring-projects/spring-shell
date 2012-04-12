@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.plugin.support;
+package org.springframework.shell.samples.helloworld.commands;
 
-import org.springframework.shell.Constant;
-import org.springframework.shell.plugin.HistoryFileProvider;
+import org.springframework.shell.plugin.PromptProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,20 +23,20 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class DefaultHistoryFileProvider implements HistoryFileProvider{
+public class MyPromptProvider implements PromptProvider {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public int getOrder() {
-		return 0;
+		return 1;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.HistoryFileProvider#getHistoryFileName()
+	 * @see org.springframework.shell.plugin.PromptProvider#getPromptText()
 	 */
-	public String getHistoryFileName() {
-		return Constant.HISTORY_FILE_NAME;
+	public String getPromptText() {		
+		return "vHelper>";
 	}
 
 }
