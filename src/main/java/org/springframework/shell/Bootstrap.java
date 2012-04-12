@@ -32,6 +32,7 @@ public class Bootstrap {
 
     private static Bootstrap bootstrap;
     private JLineShellComponent shell;
+    private Thread shellThread;
     private ConfigurableApplicationContext ctx;
     private static StopWatch sw = new StopWatch("Spring Sehll");
 
@@ -84,8 +85,11 @@ public class Bootstrap {
         }  
         
         
+        shellThread = new Thread(shell,"Spring Shell");
+        shellThread.start();
         shell.start();
-        //TODO use listener and latch..
+        
+        //TODO use listener and latch..        
         while(true) {
         	//System.out.println("shell status = " + shell.getShellStatus().getStatus());
         	if (shell.getShellStatus().getStatus().equals(ShellStatus.Status.USER_INPUT)) {
@@ -99,6 +103,7 @@ public class Bootstrap {
 				}
         	}
         }
+        
     }
 
 	private void createApplicationContext(String applicationContextLocation) {		
@@ -180,13 +185,19 @@ public class Bootstrap {
                 exitShellRequest = ExitShellRequest.NORMAL_EXIT;
             }
         } else {
-            shell.promptLoop();
+            //shell.promptLoop();
             exitShellRequest = shell.getExitShellRequest();
             if (exitShellRequest == null) {
                 // shouldn't really happen, but we'll fallback to this anyway
                 exitShellRequest = ExitShellRequest.NORMAL_EXIT;
             }
         }
+        
+        try {
+			shellThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
         ctx.close();
         sw.stop();

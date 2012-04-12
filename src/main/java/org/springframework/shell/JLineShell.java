@@ -157,6 +157,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		}, "Spring Roo JLine Shutdown Hook"));
 
 		// Handle any "execute-then-quit" operation
+		
 		String rooArgs = System.getProperty("roo.args");
 		if (rooArgs != null && !"".equals(rooArgs)) {
 			setShellStatus(Status.USER_INPUT);
@@ -172,6 +173,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			// Normal RPEL processing
 			promptLoop();
 		}
+		
 	}
 
 	public String getStartupNotifications() {
@@ -430,11 +432,12 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				}
 
 				executeCommand(line);
+				//System.out.println("executed command:" + line);
 			}
 		} catch (IOException ioe) {
 			throw new IllegalStateException("Shell line reading failure", ioe);
 		}
-
+		System.out.println("shuting down");
 		setShellStatus(Status.SHUTTING_DOWN);
 	}
 

@@ -35,11 +35,11 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 		return parser;
 	}
 	
+	
 	public void start() {		
-		Thread thread = new Thread(this, "Spring Roo JLine Shell");
-		thread.start();
 		running=true;
 	}
+	
 
 	public void stop()  {
 		closeShell();
