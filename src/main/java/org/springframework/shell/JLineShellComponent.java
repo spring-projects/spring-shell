@@ -17,33 +17,48 @@ import org.springframework.roo.shell.SimpleParser;
 public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 	private volatile boolean running = false;
-		 
+	private Thread shellThread;
+
 	// Fields
 	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.		
 	private SimpleParser parser = new SimpleParser();
-	
+
 	// Dont' need this, used to get twitter status.
 	//@Reference private UrlInputStreamService urlInputStreamService;
 	//
 
-	
+
 	public SimpleParser getSimpleParser() {
 		return parser;
 	}
-	
-	
-	public void start() {		
-		running=true;
-	}
-	
 
-	public void stop()  {
-		closeShell();
-		running=false;
+
+	public void start() {
+		shellThread = new Thread(this, "Spring Shell");
+		shellThread.start();
+		running = true;
 	}
-	
+
+
+	public void stop() {
+		closeShell();
+		running = false;
+	}
+
 	public boolean isRunning() {
 		return running;
+	}
+
+	/**
+	 * wait the shell command to complete by typing "quit" or "exit" 
+	 * 
+	 */
+	public void waitForComplete() {
+		try {
+			shellThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
