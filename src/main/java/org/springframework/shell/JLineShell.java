@@ -82,6 +82,10 @@ public abstract class JLineShell extends AbstractShell
 
 	private ApplicationContext applicatonContext;
 	private boolean printBanner = true;
+	private String historyFileName;
+	private String promptText;
+	private String version;
+	private String welcomeMessage;
 	
 
 	public void run() {
@@ -122,7 +126,7 @@ public abstract class JLineShell extends AbstractShell
 
 		// Try to build previous command history from the project's log
 		try {
-			String logFileContents = FileCopyUtils.copyToString(new File(getHistoryFileName()));
+			String logFileContents = FileCopyUtils.copyToString(new File(this.historyFileName));
 			String[] logEntries = logFileContents.split(StringUtils.LINE_SEPARATOR);
 			// LIFO
 			for (String logEntry : logEntries) {
@@ -174,7 +178,7 @@ public abstract class JLineShell extends AbstractShell
 	
 	public void printBannerAndWelcome(){
 		if(printBanner){
-			logger.info(version(null));		
+			logger.info(this.version);		
 			logger.info(getWelcomeMessage());
 		}
 	}
@@ -202,7 +206,7 @@ public abstract class JLineShell extends AbstractShell
 		if (reader.getTerminal().isANSISupported()) {
 			ANSIBuffer ansi = JLineLogHandler.getANSIBuffer();
 			if (path == null || "".equals(path)) {
-				shellPrompt = ansi.yellow(getPromptText()).toString();
+				shellPrompt = ansi.yellow(this.promptText).toString();
 			}
 			else {
 				if (overrideStyle) {
@@ -211,7 +215,7 @@ public abstract class JLineShell extends AbstractShell
 				else {
 					ansi.cyan(path);
 				}
-				shellPrompt = ansi.yellow(" " + getPromptText()).toString();
+				shellPrompt = ansi.yellow(" " + this.promptText).toString();
 			}
 		}
 		else {
@@ -456,7 +460,7 @@ public abstract class JLineShell extends AbstractShell
 
 	private void openFileLogIfPossible() {
 		try {
-			fileLog = new FileWriter(getHistoryFileName(), true);
+			fileLog = new FileWriter(this.historyFileName, true);
 			// First write, so let's record the date and time of the first user command
 			fileLog.write("// Spring Roo " + versionInfo() + " log opened at " + df.format(new Date()) + "\n");
 			fileLog.flush();
@@ -528,6 +532,12 @@ public abstract class JLineShell extends AbstractShell
 		this.applicatonContext = applicationContext;
 	}
 	
+	public void costomizePlugin(){
+		this.historyFileName = getHistoryFileName();
+		this.promptText = getPromptText();
+		this.version = getBannerText()[0];
+		this.welcomeMessage = getBannerText()[1];
+	}
 	
 	/**
 	 * get history file name from provider. The provider has highest order 
@@ -538,9 +548,9 @@ public abstract class JLineShell extends AbstractShell
 	private String getHistoryFileName() {
 		String historyFileName = null;
 		Map<String, HistoryFileNameProvider> historyFileProviders = getBeansInFactory(HistoryFileNameProvider.class);
-		int order = Integer.MIN_VALUE;
+		int order = Integer.MAX_VALUE;
 		for(HistoryFileNameProvider p : historyFileProviders.values()){
-			if(p.getOrder() > order){
+			if(p.getOrder() < order){
 				order = p.getOrder();
 				historyFileName = p.getHistoryFileName();
 			}
@@ -557,9 +567,9 @@ public abstract class JLineShell extends AbstractShell
 	private String getPromptText(){
 		String promptText = null;
 		Map<String, PromptProvider> promptProviders = getBeansInFactory(PromptProvider.class);
-		int order = Integer.MIN_VALUE;
+		int order = Integer.MAX_VALUE;
 		for(PromptProvider p : promptProviders.values()){
-			if(p.getOrder() > order){
+			if(p.getOrder() < order){
 				order = p.getOrder();
 				promptText = p.getPromptText();
 			}
@@ -576,9 +586,9 @@ public abstract class JLineShell extends AbstractShell
 	private String[] getBannerText(){
 		String[] bannerText = new String[2];
 		Map<String, BannerProvider> bannerProviders = getBeansInFactory(BannerProvider.class);
-		int order = Integer.MIN_VALUE;
+		int order = Integer.MAX_VALUE;
 		for(BannerProvider p : bannerProviders.values()){
-			if(p.getOrder() > order){
+			if(p.getOrder() < order){
 				order = p.getOrder();
 				bannerText[0] = p.getBanner();
 				bannerText[1] = p.getWelcomMessage();
@@ -594,12 +604,13 @@ public abstract class JLineShell extends AbstractShell
 		return result;
 	}
 	
+	@Override
 	public String version(String text){
-		return getBannerText()[0];
+		return this.version;
 	}
 	
 	public String getWelcomeMessage(){
-		return getBannerText()[1];
+		return this.welcomeMessage;
 	}
 
 

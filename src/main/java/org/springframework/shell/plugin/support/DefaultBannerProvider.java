@@ -17,7 +17,6 @@ package org.springframework.shell.plugin.support;
 
 import static org.springframework.roo.support.util.StringUtils.LINE_SEPARATOR;
 
-import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.support.util.VersionUtils;
 import org.springframework.shell.Constant;
@@ -37,7 +36,7 @@ public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public int getOrder() {
-		return 0;
+		return Integer.MAX_VALUE;
 	}
 
 	/* (non-Javadoc)

@@ -78,8 +78,6 @@ public class Bootstrap {
 			//System.out.println("Registering converter " + converter);
 			shell.getSimpleParser().add(converter);
 		}
-
-
 		shell.start();
 
 		//TODO use listener and latch..        
@@ -125,6 +123,7 @@ public class Bootstrap {
 		annctx.refresh();
 
 		ctx = initPluginApplicationContext(annctx);
+		
 		ctx.refresh();
 
 

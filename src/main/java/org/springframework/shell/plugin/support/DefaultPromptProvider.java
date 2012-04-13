@@ -32,7 +32,7 @@ public class DefaultPromptProvider implements PromptProvider{
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public int getOrder() {
-		return 0;
+		return Integer.MAX_VALUE;
 	}
 
 	/* (non-Javadoc)

@@ -34,6 +34,8 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 
 	public void start() {
+		//customizePlug must run before start thread to take plugin's configuration into effect
+		super.costomizePlugin();
 		shellThread = new Thread(this, "Spring Shell");
 		shellThread.start();
 		running = true;

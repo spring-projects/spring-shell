@@ -19,7 +19,7 @@ import org.springframework.core.Ordered;
 
 /**
  * Banner provider. Plugin should implements this interface to replace the version banner.
- * <code>getOrder</code> should be > 1 to override default.
+ * <code>getOrder</code> indicate the priority, higher values can be interpreted as lower priority
  * 
  * @author Jarred Li
  * @since 1.0
