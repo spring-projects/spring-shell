@@ -1,13 +1,9 @@
 package org.springframework.shell;
 
-import static org.springframework.roo.support.util.StringUtils.LINE_SEPARATOR;
-
 import java.net.URL;
 import java.util.Collection;
 
 import org.springframework.context.Lifecycle;
-import org.springframework.roo.shell.CliCommand;
-import org.springframework.roo.shell.CliOption;
 import org.springframework.roo.shell.ExecutionStrategy;
 import org.springframework.roo.shell.Parser;
 import org.springframework.roo.shell.SimpleParser;

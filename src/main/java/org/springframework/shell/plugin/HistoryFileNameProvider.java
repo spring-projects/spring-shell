@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.shell.plugin;
 
-package org.springframework.shell.samples.helloworld.commands;
-
-import org.springframework.shell.plugin.HistoryFileProvider;
-import org.springframework.stereotype.Component;
+import org.springframework.core.Ordered;
 
 /**
+ * History file name provider. Plugin should implements this interface to customize history file. 
+ * <code>getOrder</code> should be > 1 to override default.
  * 
  * @author Jarred Li
+ * @since 1.0
  *
  */
-@Component
-public class MyHistoryFileProvider implements HistoryFileProvider {
+public interface HistoryFileNameProvider extends Ordered{
 
-	public int getOrder() {
-		return 1;
-	}
-
-	public String getHistoryFileName() {
-		return "my.log";
-	}
-
+	/**
+	 * get history file name
+	 * 
+	 * @return history file name
+	 */
+	String getHistoryFileName();
+	
 }

@@ -148,7 +148,7 @@ public class Bootstrap {
 	 * @return new ApplicationContext in the plugin with core spring shell's context as parent
 	 */
 	private ConfigurableApplicationContext initPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
-		ClassPathXmlApplicationContext subContext = new ClassPathXmlApplicationContext("spring-shell-beans.xml");
+		ClassPathXmlApplicationContext subContext = new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");
 		subContext.setParent(annctx);
 		return subContext;
 	}
@@ -189,7 +189,6 @@ public class Bootstrap {
                 exitShellRequest = ExitShellRequest.NORMAL_EXIT;
             }
         } else {
-            //shell.promptLoop();
             exitShellRequest = shell.getExitShellRequest();
             if (exitShellRequest == null) {
                 // shouldn't really happen, but we'll fallback to this anyway

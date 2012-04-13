@@ -43,7 +43,7 @@ public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 	/* (non-Javadoc)
 	 * @see org.springframework.shell.plugin.BannerProvider#getBanner()
 	 */
-	@CliCommand(value = { "shell-version" }, help = "Displays shell version")
+	//@CliCommand(value = { "shell-version" }, help = "Displays shell version")
 	public String getBanner() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" _____            _    ").append(LINE_SEPARATOR);

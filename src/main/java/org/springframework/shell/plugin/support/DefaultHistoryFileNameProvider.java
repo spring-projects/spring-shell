@@ -16,7 +16,7 @@
 package org.springframework.shell.plugin.support;
 
 import org.springframework.shell.Constant;
-import org.springframework.shell.plugin.HistoryFileProvider;
+import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class DefaultHistoryFileProvider implements HistoryFileProvider{
+public class DefaultHistoryFileNameProvider implements HistoryFileNameProvider{
 
 	/* (non-Javadoc)
 	 * @see org.springframework.core.Ordered#getOrder()

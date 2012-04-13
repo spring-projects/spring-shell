@@ -10,7 +10,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +41,7 @@ import org.springframework.roo.support.util.IOUtils;
 import org.springframework.roo.support.util.OsUtils;
 import org.springframework.roo.support.util.StringUtils;
 import org.springframework.shell.plugin.BannerProvider;
-import org.springframework.shell.plugin.HistoryFileProvider;
+import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.shell.plugin.PromptProvider;
 
 
@@ -59,7 +58,8 @@ import org.springframework.shell.plugin.PromptProvider;
  * @author Jarred Li
  * @since 1.0
  */
-public abstract class JLineShell extends AbstractShell implements CommandMarker, Shell, Runnable {
+public abstract class JLineShell extends AbstractShell 
+				implements CommandMarker, Shell, Runnable {
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
@@ -528,6 +528,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		this.applicatonContext = applicationContext;
 	}
 	
+	
 	/**
 	 * get history file name from provider. The provider has highest order 
 	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
@@ -536,15 +537,14 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 */
 	private String getHistoryFileName() {
 		String historyFileName = null;
-		Map<String, HistoryFileProvider> historyFileProviders = getBeansInFactory(HistoryFileProvider.class);
+		Map<String, HistoryFileNameProvider> historyFileProviders = getBeansInFactory(HistoryFileNameProvider.class);
 		int order = Integer.MIN_VALUE;
-		for(HistoryFileProvider p : historyFileProviders.values()){
+		for(HistoryFileNameProvider p : historyFileProviders.values()){
 			if(p.getOrder() > order){
 				order = p.getOrder();
 				historyFileName = p.getHistoryFileName();
 			}
 		}
-		historyFileName = (historyFileName == null)?Constant.HISTORY_FILE_NAME:historyFileName;
 		return historyFileName;
 	}
 	
@@ -564,7 +564,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				promptText = p.getPromptText();
 			}
 		}
-		promptText = (promptText == null)?Constant.COMMAND_LINE_PROMPT:promptText;
 		return promptText;
 	}
 	
@@ -585,8 +584,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				bannerText[1] = p.getWelcomMessage();
 			}
 		}
-		bannerText[0] = (bannerText[0] == null)?Constant.COMMAND_LINE_PROMPT:bannerText[0];
-		bannerText[1] = (bannerText[1] == null)?Constant.WELCOME_MESSAGE:bannerText[1];
 		return bannerText;
 	}
 	

@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.shell.Constant;
-import org.springframework.shell.plugin.HistoryFileProvider;
+import org.springframework.shell.plugin.HistoryFileNameProvider;
 
 /**
  * @author Jarred Li
@@ -28,10 +28,10 @@ import org.springframework.shell.plugin.HistoryFileProvider;
  */
 public class DefaultHistoryFileProviderTest {
 
-	private HistoryFileProvider historyFile = new DefaultHistoryFileProvider();
+	private HistoryFileNameProvider historyFile = new DefaultHistoryFileNameProvider();
 
 	/**
-	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileProvider#getOrder()}.
+	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileNameProvider#getOrder()}.
 	 */
 	@Test
 	public void testGetOrder() {
@@ -39,7 +39,7 @@ public class DefaultHistoryFileProviderTest {
 	}
 
 	/**
-	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileProvider#getHistoryFileName()}.
+	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileNameProvider#getHistoryFileName()}.
 	 */
 	@Test
 	public void testGetHistoryFileName() {

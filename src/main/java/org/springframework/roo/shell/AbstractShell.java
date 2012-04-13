@@ -332,7 +332,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL).format(new Date());
 	}
 
-	@CliCommand(value = { "flash test" }, help = "Tests message flashing")
+	//@CliCommand(value = { "flash test" }, help = "Tests message flashing")
 	public void flashCustom() throws Exception {
 		flash(Level.FINE, "Hello world", "a");
 		Thread.sleep(150);
@@ -357,7 +357,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		flash(Level.FINE, "", "b");
 	}
 
-	@CliCommand(value = { "version" }, help = "Displays shell version")
+	//@CliCommand(value = { "version" }, help = "Displays shell version")
 	public String version(@CliOption(key = "", help = "Special version flags") final String extra) {
 		StringBuilder sb = new StringBuilder();
 
