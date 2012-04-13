@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.plugin;
 
-import org.springframework.core.Ordered;
 
 /**
  * History file name provider. Plugin should implements this interface to customize history file. 
@@ -25,7 +24,7 @@ import org.springframework.core.Ordered;
  * @since 1.0
  *
  */
-public interface HistoryFileNameProvider extends Ordered{
+public interface HistoryFileNameProvider extends PluginProvider{
 
 	/**
 	 * get history file name

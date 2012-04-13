@@ -15,24 +15,27 @@
  */
 package org.springframework.shell.plugin.support;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.PromptProvider;
 import org.springframework.stereotype.Component;
 
 /**
- * Default prompt provider. The promp text is {@link org.springframework.shell.Constant.COMMAND_LINE_PROMPT}
+ * Default prompt provider. The prompt text is {@link org.springframework.shell.Constant.COMMAND_LINE_PROMPT}
  * 
  * @author Jarred Li
  *
  */
 @Component
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultPromptProvider implements PromptProvider{
 
 	/* (non-Javadoc)
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public int getOrder() {
-		return Integer.MAX_VALUE;
+		return Ordered.LOWEST_PRECEDENCE;
 	}
 
 	/* (non-Javadoc)
@@ -40,6 +43,14 @@ public class DefaultPromptProvider implements PromptProvider{
 	 */
 	public String getPromptText() {
 		return Constant.COMMAND_LINE_PROMPT;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.springframework.shell.plugin.PluginProvider#name()
+	 */
+	@Override
+	public String name() {
+		return "default banner provider";
 	}
 
 }

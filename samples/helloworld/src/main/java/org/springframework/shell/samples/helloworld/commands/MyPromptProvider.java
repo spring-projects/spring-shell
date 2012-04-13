@@ -15,7 +15,9 @@
  */
 package org.springframework.shell.samples.helloworld.commands;
 
-import org.springframework.shell.plugin.PromptProvider;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.shell.plugin.support.DefaultPromptProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,20 +25,19 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class MyPromptProvider implements PromptProvider {
-
-	/* (non-Javadoc)
-	 * @see org.springframework.core.Ordered#getOrder()
-	 */
-	public int getOrder() {
-		return 1;
-	}
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class MyPromptProvider extends DefaultPromptProvider {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.shell.plugin.PromptProvider#getPromptText()
 	 */
 	public String getPromptText() {		
 		return "vHelper>";
+	}
+	
+	@Override
+	public String name() {
+		return "my banner provider";
 	}
 
 }

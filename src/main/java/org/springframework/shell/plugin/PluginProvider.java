@@ -13,30 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.springframework.shell.samples.helloworld.commands;
-
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.shell.plugin.support.DefaultHistoryFileNameProvider;
-import org.springframework.stereotype.Component;
+package org.springframework.shell.plugin;
 
 /**
- * 
  * @author Jarred Li
  *
  */
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
-public class MyHistoryFileNameProvider extends DefaultHistoryFileNameProvider{
+public interface PluginProvider {
 
-	public String getHistoryFileName() {
-		return "my.log";
-	}
-
-	@Override
-	public String name() {
-		return "my banner provider";
-	}
+	String name();
 	
 }

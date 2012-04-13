@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.plugin;
 
-import org.springframework.core.Ordered;
 
 /**
  * Banner provider. Plugin should implements this interface to replace the version banner.
@@ -25,7 +24,7 @@ import org.springframework.core.Ordered;
  * @since 1.0
  *
  */
-public interface BannerProvider extends Ordered {
+public interface BannerProvider extends PluginProvider{
 
 	String getBanner();
 	

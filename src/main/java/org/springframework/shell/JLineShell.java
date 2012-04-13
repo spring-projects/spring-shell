@@ -10,9 +10,12 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Handler;
@@ -27,6 +30,7 @@ import jline.WindowsTerminal;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.roo.shell.AbstractShell;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.shell.ExitShellRequest;
@@ -42,6 +46,7 @@ import org.springframework.roo.support.util.OsUtils;
 import org.springframework.roo.support.util.StringUtils;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
+import org.springframework.shell.plugin.PluginProvider;
 import org.springframework.shell.plugin.PromptProvider;
 
 
@@ -82,6 +87,9 @@ public abstract class JLineShell extends AbstractShell
 
 	private ApplicationContext applicatonContext;
 	private boolean printBanner = true;
+	
+	private static AnnotationAwareOrderComparator annocationOrderComparator = new AnnotationAwareOrderComparator();
+	
 	private String historyFileName;
 	private String promptText;
 	private String version;
@@ -545,17 +553,8 @@ public abstract class JLineShell extends AbstractShell
 	 * 
 	 * @return history file name 
 	 */
-	private String getHistoryFileName() {
-		String historyFileName = null;
-		Map<String, HistoryFileNameProvider> historyFileProviders = getBeansInFactory(HistoryFileNameProvider.class);
-		int order = Integer.MAX_VALUE;
-		for(HistoryFileNameProvider p : historyFileProviders.values()){
-			if(p.getOrder() < order){
-				order = p.getOrder();
-				historyFileName = p.getHistoryFileName();
-			}
-		}
-		return historyFileName;
+	private String getHistoryFileName() {		
+		return getHighestPriorityProvider(HistoryFileNameProvider.class).getHistoryFileName();
 	}
 	
 	/**
@@ -565,16 +564,7 @@ public abstract class JLineShell extends AbstractShell
 	 * @return
 	 */
 	private String getPromptText(){
-		String promptText = null;
-		Map<String, PromptProvider> promptProviders = getBeansInFactory(PromptProvider.class);
-		int order = Integer.MAX_VALUE;
-		for(PromptProvider p : promptProviders.values()){
-			if(p.getOrder() < order){
-				order = p.getOrder();
-				promptText = p.getPromptText();
-			}
-		}
-		return promptText;
+		return getHighestPriorityProvider(PromptProvider.class).getPromptText();
 	}
 	
 	/**
@@ -585,23 +575,20 @@ public abstract class JLineShell extends AbstractShell
 	 */
 	private String[] getBannerText(){
 		String[] bannerText = new String[2];
-		Map<String, BannerProvider> bannerProviders = getBeansInFactory(BannerProvider.class);
-		int order = Integer.MAX_VALUE;
-		for(BannerProvider p : bannerProviders.values()){
-			if(p.getOrder() < order){
-				order = p.getOrder();
-				bannerText[0] = p.getBanner();
-				bannerText[1] = p.getWelcomMessage();
-			}
-		}
+		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
+		bannerText[0] = provider.getBanner();
+		bannerText[1] = provider.getWelcomMessage();
 		return bannerText;
 	}
 	
 	
-	private <T> Map<String, T> getBeansInFactory(Class<T> t){
-		Map<String, T> result = BeanFactoryUtils.beansOfTypeIncludingAncestors(
+	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t){
+		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(
 				this.applicatonContext, t);
-		return result;
+		List<T> sortedProviders = new ArrayList<T>(providers.values());
+		Collections.sort(sortedProviders, annocationOrderComparator);
+		T highestPriorityProvider = sortedProviders.get(0);
+		return highestPriorityProvider;
 	}
 	
 	@Override

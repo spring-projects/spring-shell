@@ -17,6 +17,8 @@ package org.springframework.shell.plugin.support;
 
 import static org.springframework.roo.support.util.StringUtils.LINE_SEPARATOR;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.support.util.VersionUtils;
 import org.springframework.shell.Constant;
@@ -30,13 +32,14 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public int getOrder() {
-		return Integer.MAX_VALUE;
+		return Ordered.LOWEST_PRECEDENCE;
 	}
 
 	/* (non-Javadoc)
@@ -70,6 +73,14 @@ public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 	 */
 	public String getWelcomMessage() {
 		return Constant.WELCOME_MESSAGE;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.shell.plugin.PluginProvider#name()
+	 */
+	@Override
+	public String name() {
+		return "default banner provider";
 	}
 
 }

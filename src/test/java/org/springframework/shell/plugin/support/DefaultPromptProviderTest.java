@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.plugin.support;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -47,13 +47,6 @@ public class DefaultPromptProviderTest {
 		prompt = null;
 	}
 
-	/**
-	 * Test method for {@link org.springframework.shell.plugin.support.DefaultPromptProvider#getOrder()}.
-	 */
-	@Test
-	public void testGetOrder() {
-		assertEquals(0, prompt.getOrder());
-	}
 
 	/**
 	 * Test method for {@link org.springframework.shell.plugin.support.DefaultPromptProvider#getPromptText()}.

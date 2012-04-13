@@ -15,9 +15,9 @@
  */
 package org.springframework.shell.plugin.support;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
@@ -29,14 +29,6 @@ import org.springframework.shell.plugin.HistoryFileNameProvider;
 public class DefaultHistoryFileProviderTest {
 
 	private HistoryFileNameProvider historyFile = new DefaultHistoryFileNameProvider();
-
-	/**
-	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileNameProvider#getOrder()}.
-	 */
-	@Test
-	public void testGetOrder() {
-		Assert.assertTrue(historyFile.getOrder() == 0);
-	}
 
 	/**
 	 * Test method for {@link org.springframework.shell.plugin.support.DefaultHistoryFileNameProvider#getHistoryFileName()}.

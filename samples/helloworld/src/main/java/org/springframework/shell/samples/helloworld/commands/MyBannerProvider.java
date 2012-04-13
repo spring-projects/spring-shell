@@ -15,10 +15,12 @@
  */
 package org.springframework.shell.samples.helloworld.commands;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.support.util.StringUtils;
-import org.springframework.shell.plugin.BannerProvider;
+import org.springframework.shell.plugin.support.DefaultBannerProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,14 +28,9 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class MyBannerProvider implements BannerProvider, CommandMarker {
-
-	/* (non-Javadoc)
-	 * @see org.springframework.core.Ordered#getOrder()
-	 */
-	public int getOrder() {
-		return 1;
-	}
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class MyBannerProvider extends DefaultBannerProvider 
+				implements CommandMarker {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.shell.plugin.BannerProvider#getBanner()
@@ -66,5 +63,11 @@ public class MyBannerProvider implements BannerProvider, CommandMarker {
 	public String getWelcomMessage() {
 		return "Welcome to vHelper CLI";
 	}
+	
+	@Override
+	public String name() {
+		return "my banner provider";
+	}
+	
 
 }

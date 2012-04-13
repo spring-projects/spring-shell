@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.plugin;
 
-import org.springframework.core.Ordered;
 
 /**
  * Shell prompt provider. Plugin should implements this interface to customize prompt.
@@ -24,7 +23,7 @@ import org.springframework.core.Ordered;
  * @author Jarred Li
  *
  */
-public interface PromptProvider extends Ordered {
+public interface PromptProvider extends PluginProvider{
 
 	String getPromptText();
 	
