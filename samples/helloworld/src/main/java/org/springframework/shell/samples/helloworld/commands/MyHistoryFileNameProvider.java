@@ -36,7 +36,7 @@ public class MyHistoryFileNameProvider extends DefaultHistoryFileNameProvider{
 
 	@Override
 	public String name() {
-		return "my banner provider";
+		return "my history file name provider";
 	}
 	
 }

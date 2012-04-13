@@ -37,7 +37,7 @@ public class MyPromptProvider extends DefaultPromptProvider {
 	
 	@Override
 	public String name() {
-		return "my banner provider";
+		return "my prompt provider";
 	}
 
 }
