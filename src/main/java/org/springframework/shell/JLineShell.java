@@ -27,6 +27,7 @@ import jline.ANSIBuffer.ANSICodes;
 import jline.ConsoleReader;
 import jline.WindowsTerminal;
 
+import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
@@ -40,7 +41,6 @@ import org.springframework.roo.shell.event.ShellStatus.Status;
 import org.springframework.roo.shell.event.ShellStatusListener;
 import org.springframework.roo.support.util.Assert;
 import org.springframework.roo.support.util.ClassUtils;
-import org.springframework.roo.support.util.FileCopyUtils;
 import org.springframework.roo.support.util.IOUtils;
 import org.springframework.roo.support.util.OsUtils;
 import org.springframework.roo.support.util.StringUtils;
@@ -63,8 +63,7 @@ import org.springframework.shell.plugin.PromptProvider;
  * @author Jarred Li
  * @since 1.0
  */
-public abstract class JLineShell extends AbstractShell 
-				implements CommandMarker, Shell, Runnable {
+public abstract class JLineShell extends AbstractShell implements CommandMarker, Shell, Runnable {
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
@@ -87,14 +86,14 @@ public abstract class JLineShell extends AbstractShell
 
 	private ApplicationContext applicatonContext;
 	private boolean printBanner = true;
-	
+
 	private static AnnotationAwareOrderComparator annocationOrderComparator = new AnnotationAwareOrderComparator();
-	
+
 	private String historyFileName;
 	private String promptText;
 	private String version;
 	private String welcomeMessage;
-	
+
 	private int historySize;
 
 	public void run() {
@@ -134,21 +133,10 @@ public abstract class JLineShell extends AbstractShell
 		openFileLogIfPossible();
 
 		// Try to build previous command history from the project's log
-		try {
-			String logFileContents = FileCopyUtils.copyToString(new File(this.historyFileName));
-			String[] logEntries = logFileContents.split(StringUtils.LINE_SEPARATOR);
-			// LIFO
-			int size = 0;
-			for (String logEntry : logEntries) {
-				if (!logEntry.startsWith("//")) {
-					reader.getHistory().addToHistory(logEntry);
-					size++;
-					if(size > historySize){
-						break;
-					}
-				}
-			}
-		} catch (IOException ignored) {
+
+		String[] filteredLogEntries = filterLogEntry();
+		for (String logEntry : filteredLogEntries) {
+			reader.getHistory().addToHistory(logEntry);
 		}
 
 		flashMessageRenderer();
@@ -171,7 +159,7 @@ public abstract class JLineShell extends AbstractShell
 		}, "Spring Roo JLine Shutdown Hook"));
 
 		// Handle any "execute-then-quit" operation
-		
+
 		String rooArgs = System.getProperty("roo.args");
 		if (rooArgs != null && !"".equals(rooArgs)) {
 			setShellStatus(Status.USER_INPUT);
@@ -187,12 +175,41 @@ public abstract class JLineShell extends AbstractShell
 			// Normal RPEL processing
 			promptLoop();
 		}
-		
+
 	}
-	
-	public void printBannerAndWelcome(){
-		if(printBanner){
-			logger.info(this.version);		
+
+	/**
+	 * read history commands from history log. the history size if determined by --histsize options. 
+	 * 
+	 * @return history commands
+	 */
+	private String[] filterLogEntry() {
+		ArrayList<String> entries = new ArrayList<String>();		
+		try {
+			ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(this.historyFileName));
+			int size = 0;
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				if (!line.startsWith("//")) {
+					size++;
+					if (size > historySize) {
+						break;
+					}
+					else {
+						entries.add(line);
+					}
+				}
+			}
+		} catch (IOException e) {
+			logger.warning("read history file failed");
+		}
+		Collections.reverse(entries);
+		return entries.toArray(new String[0]);
+	}
+
+	public void printBannerAndWelcome() {
+		if (printBanner) {
+			logger.info(this.version);
 			logger.info(getWelcomeMessage());
 		}
 	}
@@ -545,73 +562,72 @@ public abstract class JLineShell extends AbstractShell
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicatonContext = applicationContext;
 	}
-	
-	public void costomizePlugin(){
+
+	public void costomizePlugin() {
 		this.historyFileName = getHistoryFileName();
 		this.promptText = getPromptText();
 		this.version = getBannerText()[0];
 		this.welcomeMessage = getBannerText()[1];
 	}
-	
+
 	/**
 	 * get history file name from provider. The provider has highest order 
 	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
 	 * 
 	 * @return history file name 
 	 */
-	private String getHistoryFileName() {		
+	private String getHistoryFileName() {
 		return getHighestPriorityProvider(HistoryFileNameProvider.class).getHistoryFileName();
 	}
-	
+
 	/**
 	 * get prompt text from provider. The provider has highest order 
 	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
 	 * 
 	 * @return prompt text
 	 */
-	private String getPromptText(){
+	private String getPromptText() {
 		return getHighestPriorityProvider(PromptProvider.class).getPromptText();
 	}
-	
+
 	/**
 	 * Get Banner and Welcome Message from provider. The provider has highest order 
 	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
 	 * @return BannerText[0]: Banner
 	 *         BannerText[1]: Welcome Message.
 	 */
-	private String[] getBannerText(){
+	private String[] getBannerText() {
 		String[] bannerText = new String[2];
 		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
 		bannerText[0] = provider.getBanner();
 		bannerText[1] = provider.getWelcomMessage();
 		return bannerText;
 	}
-	
-	
-	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t){
-		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(
-				this.applicatonContext, t);
+
+
+	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t) {
+		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicatonContext, t);
 		List<T> sortedProviders = new ArrayList<T>(providers.values());
 		Collections.sort(sortedProviders, annocationOrderComparator);
 		T highestPriorityProvider = sortedProviders.get(0);
 		return highestPriorityProvider;
 	}
-	
+
 	/**
 	 * get the version information
 	 * 
 	 */
 	@Override
-	public String version(String text){
+	public String version(String text) {
 		return this.version;
 	}
-	
+
 	/**
 	 * get the welcome message at start.
 	 * 
 	 * @return welcome message
 	 */
-	public String getWelcomeMessage(){
+	public String getWelcomeMessage() {
 		return this.welcomeMessage;
 	}
 
@@ -636,5 +652,5 @@ public abstract class JLineShell extends AbstractShell
 	public void setHistorySize(int historySize) {
 		this.historySize = historySize;
 	}
-	
+
 }
