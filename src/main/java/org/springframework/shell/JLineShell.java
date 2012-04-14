@@ -475,7 +475,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		} catch (IOException ioe) {
 			throw new IllegalStateException("Shell line reading failure", ioe);
 		}
-		System.out.println("shuting down");
+		System.out.println("shutting down ...");
 		setShellStatus(Status.SHUTTING_DOWN);
 	}
 

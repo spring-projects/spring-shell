@@ -63,6 +63,41 @@ public class SimpleParser implements Parser {
 		return availabilityIndicators.get(command);
 	}
 
+	/**
+	 * get all mandatory options key. For the options with multiple keys, the
+	 * first key will be returned.
+	 * 
+	 * @param cliOptions options
+	 * @return mandatory options key
+	 */
+	private String[] getMandatoryOptions(Set<CliOption> cliOptions) {
+		return getMandatoryOptions(cliOptions, false);
+	}
+
+	/**
+	 * get all mandatory options key.
+	 * 
+	 * @param cliOptions options
+	 * @param includeMultipleKey If the options has multiple keys, whether return
+	 * 							 all of them or only the first one
+	 * @return mandatory options key
+	 */
+	private String[] getMandatoryOptions(Set<CliOption> cliOptions, boolean includeMultipleKey) {
+		List<String> mandatoryOptions = new ArrayList<String>();
+		for (CliOption option : cliOptions) {
+			if (option.mandatory()) {
+				if (includeMultipleKey) {
+					mandatoryOptions.addAll(Arrays.asList(option.key()));
+				}
+				else {
+					mandatoryOptions.add(option.key()[0]);
+				}
+			}
+		}
+		return mandatoryOptions.toArray(new String[0]);
+	}
+
+
 	public ParseResult parse(final String rawInput) {
 		synchronized (mutex) {
 			Assert.notNull(rawInput, "Raw input required");
@@ -76,13 +111,17 @@ public class SimpleParser implements Parser {
 				CollectionUtils.populate(matchingTargets, locateTargets(input, true, false));
 				if (matchingTargets.isEmpty()) {
 					commandNotFound(LOGGER, input);
-				} else {
-					LOGGER.warning("Command '" + input + "' was found but is not currently available (type 'help' then ENTER to learn about this command)");
+				}
+				else {
+					LOGGER.warning("Command '"
+							+ input
+							+ "' was found but is not currently available (type 'help' then ENTER to learn about this command)");
 				}
 				return null;
 			}
 			if (matchingTargets.size() > 1) {
-				LOGGER.warning("Ambigious command '" + input + "' (for assistance press " + AbstractShell.completionKeys + " or type \"hint\" then hit ENTER)");
+				LOGGER.warning("Ambigious command '" + input + "' (for assistance press "
+						+ AbstractShell.completionKeys + " or type \"hint\" then hit ENTER)");
 				return null;
 			}
 			MethodTarget methodTarget = matchingTargets.iterator().next();
@@ -114,7 +153,8 @@ public class SimpleParser implements Parser {
 					Object result;
 					if (SimpleParser.class.isAssignableFrom(requiredType)) {
 						result = this;
-					} else {
+					}
+					else {
 						LOGGER.warning("Parameter type '" + requiredType + "' is not system provided");
 						return null;
 					}
@@ -128,7 +168,8 @@ public class SimpleParser implements Parser {
 				for (String possibleKey : cliOption.key()) {
 					if (options.containsKey(possibleKey)) {
 						if (sourcedFrom != null) {
-							LOGGER.warning("You cannot specify option '" + possibleKey + "' when you have also specified '" + sourcedFrom + "' in the same command");
+							LOGGER.warning("You cannot specify option '" + possibleKey
+									+ "' when you have also specified '" + sourcedFrom + "' in the same command");
 							return null;
 						}
 						sourcedFrom = possibleKey;
@@ -145,8 +186,26 @@ public class SimpleParser implements Parser {
 						}
 						message.append("for this command");
 						LOGGER.warning(message.toString());
-					} else {
-						LOGGER.warning("You must specify option '" + cliOption.key()[0] + "' for this command");
+					}
+					else {
+						if (sourcedFrom != null) {
+							LOGGER.warning("You must specify value for option '" + cliOption.key()[0]
+									+ "' for this command");
+						}
+						else {
+							StringBuilder builder = new StringBuilder();
+							builder.append("You must specify option (");
+							String[] mandatoryOptions = getMandatoryOptions(cliOptions);
+							for (int i = 0, j = mandatoryOptions.length; i < j; i++) {
+								builder.append("--");
+								builder.append(mandatoryOptions[i]);
+								if (i < j - 1) {
+									builder.append(", ");
+								}
+							}
+							builder.append(") for this command");
+							LOGGER.warning(builder.toString());
+						}
 					}
 					return null;
 				}
@@ -164,7 +223,8 @@ public class SimpleParser implements Parser {
 				// Special token that denotes a null value is sought (useful for default values)
 				if ("__NULL__".equals(value)) {
 					if (requiredType.isPrimitive()) {
-						LOGGER.warning("Nulls cannot be presented to primitive type " + requiredType.getSimpleName() + " for option '" + StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
+						LOGGER.warning("Nulls cannot be presented to primitive type " + requiredType.getSimpleName()
+								+ " for option '" + StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
 						return null;
 					}
 					arguments.add(null);
@@ -200,7 +260,9 @@ public class SimpleParser implements Parser {
 					}
 					arguments.add(result);
 				} catch (RuntimeException e) {
-					LOGGER.warning(e.getClass().getName() + ": Failed to convert '" + value + "' to type " + requiredType.getSimpleName() + " for option '" + StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
+					LOGGER.warning(e.getClass().getName() + ": Failed to convert '" + value + "' to type "
+							+ requiredType.getSimpleName() + " for option '"
+							+ StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
 					if (StringUtils.hasText(e.getMessage())) {
 						LOGGER.warning(e.getMessage());
 					}
@@ -216,9 +278,13 @@ public class SimpleParser implements Parser {
 			if (!unavailableOptions.isEmpty()) {
 				StringBuilder message = new StringBuilder();
 				if (unavailableOptions.size() == 1) {
-					message.append("Option '").append(unavailableOptions.iterator().next()).append("' is not available for this command. ");
-				} else {
-					message.append("Options ").append(StringUtils.collectionToDelimitedString(unavailableOptions, ", ", "'", "'")).append(" are not available for this command. ");
+					message.append("Option '").append(unavailableOptions.iterator().next()).append(
+							"' is not available for this command. ");
+				}
+				else {
+					message.append("Options ").append(
+							StringUtils.collectionToDelimitedString(unavailableOptions, ", ", "'", "'")).append(
+							" are not available for this command. ");
 				}
 				message.append("Use tab assist or the \"help\" command to see the legal options");
 				LOGGER.warning(message.toString());
@@ -290,7 +356,8 @@ public class SimpleParser implements Parser {
 						for (String value : cmd.value()) {
 							MethodTarget mt = getAvailabilityIndicator(value);
 							if (mt != null) {
-								Assert.isNull(available, "More than one availability indicator is defined for '" + method.toGenericString() + "'");
+								Assert.isNull(available, "More than one availability indicator is defined for '"
+										+ method.toGenericString() + "'");
 								try {
 									available = (Boolean) mt.getMethod().invoke(mt.getTarget());
 									// We should "break" here, but we loop over all to ensure no conflicting availability indicators are defined
@@ -440,7 +507,7 @@ public class SimpleParser implements Parser {
 					if (stopAt == -1) {
 						stopAt = target.getKey().length();
 					}
-					
+
 					results.add(new Completion(target.getKey().substring(0, stopAt) + " "));
 				}
 				candidates.addAll(results);
@@ -568,7 +635,8 @@ public class SimpleParser implements Parser {
 			}
 
 			// Handle suggesting an option key if they haven't got one presently specified (or they've completed a full option key/value pair)
-			if (lastOptionKey == null || (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" "))) {
+			if (lastOptionKey == null
+					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" "))) {
 				// We have either NEVER specified an option key/value pair
 				// OR we have specified a full option key/value pair
 
@@ -604,7 +672,8 @@ public class SimpleParser implements Parser {
 							} catch (RuntimeException notYetReady) {
 								if (translated.endsWith(" ")) {
 									results.add(new Completion(translated + "--" + value + " "));
-								} else {
+								}
+								else {
 									results.add(new Completion(translated + " --" + value + " "));
 								}
 								continue;
@@ -615,7 +684,8 @@ public class SimpleParser implements Parser {
 						if (!"".equals(value) && include.mandatory()) {
 							if (translated.endsWith(" ")) {
 								results.add(new Completion(translated + "--" + value + " "));
-							} else {
+							}
+							else {
 								results.add(new Completion(translated + " --" + value + " "));
 							}
 						}
@@ -635,8 +705,11 @@ public class SimpleParser implements Parser {
 
 				for (CliOption option : cliOptions) {
 					for (String value : option.key()) {
-						if (value != null && lastOptionKey != null && value.regionMatches(true, 0, lastOptionKey, 0, lastOptionKey.length())) {
-							String completionValue = translated.substring(0, (translated.length() - lastOptionKey.length())) + value + " ";
+						if (value != null && lastOptionKey != null
+								&& value.regionMatches(true, 0, lastOptionKey, 0, lastOptionKey.length())) {
+							String completionValue = translated.substring(0,
+									(translated.length() - lastOptionKey.length()))
+									+ value + " ";
 							results.add(new Completion(completionValue));
 						}
 					}
@@ -663,7 +736,8 @@ public class SimpleParser implements Parser {
 							for (Converter<?> candidate : converters) {
 								if (candidate.supports(parameterType, option.optionContext())) {
 									// Found a usable converter
-									boolean addSpace = candidate.getAllPossibleValues(allValues, parameterType, lastOptionValue, option.optionContext(), methodTarget);
+									boolean addSpace = candidate.getAllPossibleValues(allValues, parameterType,
+											lastOptionValue, option.optionContext(), methodTarget);
 									if (!addSpace) {
 										suffix = "";
 									}
@@ -675,7 +749,8 @@ public class SimpleParser implements Parser {
 								// Doesn't appear to be a custom Converter, so let's go and provide defaults for simple types
 
 								// Provide some simple options for common types
-								if (Boolean.class.isAssignableFrom(parameterType) || Boolean.TYPE.isAssignableFrom(parameterType)) {
+								if (Boolean.class.isAssignableFrom(parameterType)
+										|| Boolean.TYPE.isAssignableFrom(parameterType)) {
 									allValues.add(new Completion("true"));
 									allValues.add(new Completion("false"));
 								}
@@ -704,11 +779,18 @@ public class SimpleParser implements Parser {
 								// We only provide a suggestion if the lastOptionValue == ""
 								if (StringUtils.isBlank(lastOptionValue)) {
 									// We should add the result, as they haven't typed anything yet
-									results.add(new Completion(prefix + currentValue.getValue() + suffix, currentValue.getFormattedValue(), currentValue.getHeading(), currentValue.getOrder()));
-								} else {
+									results.add(new Completion(prefix + currentValue.getValue() + suffix,
+											currentValue.getFormattedValue(), currentValue.getHeading(),
+											currentValue.getOrder()));
+								}
+								else {
 									// Only add the result **if** what they've typed is compatible *AND* they haven't already typed it in full
-									if (currentValue.getValue().toLowerCase().startsWith(lastOptionValue.toLowerCase()) && !lastOptionValue.equalsIgnoreCase(currentValue.getValue()) && lastOptionValue.length() < currentValue.getValue().length()) {
-										results.add(new Completion(prefix + currentValue.getValue() + suffix, currentValue.getFormattedValue(), currentValue.getHeading(), currentValue.getOrder()));
+									if (currentValue.getValue().toLowerCase().startsWith(lastOptionValue.toLowerCase())
+											&& !lastOptionValue.equalsIgnoreCase(currentValue.getValue())
+											&& lastOptionValue.length() < currentValue.getValue().length()) {
+										results.add(new Completion(prefix + currentValue.getValue() + suffix,
+												currentValue.getFormattedValue(), currentValue.getHeading(),
+												currentValue.getOrder()));
 									}
 								}
 							}
@@ -719,21 +801,28 @@ public class SimpleParser implements Parser {
 							help.append(option.mandatory() ? "required --" : "optional --");
 							if ("".equals(option.help())) {
 								help.append(lastOptionKey).append(": ").append("No help available");
-							} else {
+							}
+							else {
 								help.append(lastOptionKey).append(": ").append(option.help());
 							}
 							if (option.specifiedDefaultValue().equals(option.unspecifiedDefaultValue())) {
 								if (option.specifiedDefaultValue().equals("__NULL__")) {
 									help.append("; no default value");
-								} else {
+								}
+								else {
 									help.append("; default: '").append(option.specifiedDefaultValue()).append("'");
 								}
-							} else {
-								if (!"".equals(option.specifiedDefaultValue()) && !"__NULL__".equals(option.specifiedDefaultValue())) {
-									help.append("; default if option present: '").append(option.specifiedDefaultValue()).append("'");
+							}
+							else {
+								if (!"".equals(option.specifiedDefaultValue())
+										&& !"__NULL__".equals(option.specifiedDefaultValue())) {
+									help.append("; default if option present: '").append(option.specifiedDefaultValue()).append(
+											"'");
 								}
-								if (!"".equals(option.unspecifiedDefaultValue()) && !"__NULL__".equals(option.unspecifiedDefaultValue())) {
-									help.append("; default if option not present: '").append(option.unspecifiedDefaultValue()).append("'");
+								if (!"".equals(option.unspecifiedDefaultValue())
+										&& !"__NULL__".equals(option.unspecifiedDefaultValue())) {
+									help.append("; default if option not present: '").append(
+											option.unspecifiedDefaultValue()).append("'");
 								}
 							}
 							LOGGER.info(help.toString());
@@ -844,21 +933,29 @@ public class SimpleParser implements Parser {
 									StringBuilder help = new StringBuilder();
 									if ("".equals(option.help())) {
 										help.append("No help available");
-									} else {
+									}
+									else {
 										help.append(option.help());
 									}
 									if (option.specifiedDefaultValue().equals(option.unspecifiedDefaultValue())) {
 										if (option.specifiedDefaultValue().equals("__NULL__")) {
 											help.append("; no default value");
-										} else {
-											help.append("; default: '").append(option.specifiedDefaultValue()).append("'");
 										}
-									} else {
-										if (!"".equals(option.specifiedDefaultValue()) && !"__NULL__".equals(option.specifiedDefaultValue())) {
-											help.append("; default if option present: '").append(option.specifiedDefaultValue()).append("'");
+										else {
+											help.append("; default: '").append(option.specifiedDefaultValue()).append(
+													"'");
 										}
-										if (!"".equals(option.unspecifiedDefaultValue()) && !"__NULL__".equals(option.unspecifiedDefaultValue())) {
-											help.append("; default if option not present: '").append(option.unspecifiedDefaultValue()).append("'");
+									}
+									else {
+										if (!"".equals(option.specifiedDefaultValue())
+												&& !"__NULL__".equals(option.specifiedDefaultValue())) {
+											help.append("; default if option present: '").append(
+													option.specifiedDefaultValue()).append("'");
+										}
+										if (!"".equals(option.unspecifiedDefaultValue())
+												&& !"__NULL__".equals(option.unspecifiedDefaultValue())) {
+											help.append("; default if option not present: '").append(
+													option.unspecifiedDefaultValue()).append("'");
 										}
 									}
 									help.append(option.mandatory() ? " (mandatory) " : "");
@@ -882,17 +979,26 @@ public class SimpleParser implements Parser {
 						for (String optionKey : optionKeys) {
 							anyVars = true;
 							String help = optionDetails.get(optionKey);
-							variableListElement.appendChild(new XmlElementBuilder("varlistentry", document).addChild(new XmlElementBuilder("term", document).setText(optionKey).build()).addChild(new XmlElementBuilder("listitem", document).addChild(new XmlElementBuilder("para", document).setText(help).build()).build()).build());
+							variableListElement.appendChild(new XmlElementBuilder("varlistentry", document).addChild(
+									new XmlElementBuilder("term", document).setText(optionKey).build()).addChild(
+									new XmlElementBuilder("listitem", document).addChild(
+											new XmlElementBuilder("para", document).setText(help).build()).build()).build());
 						}
 
 						if (!anyVars) {
-							variableListElement = new XmlElementBuilder("para", document).setText("This command does not accept any options.").build();
+							variableListElement = new XmlElementBuilder("para", document).setText(
+									"This command does not accept any options.").build();
 						}
 
 						// Now we've figured out the options, store this individual command
 						CDATASection progList = document.createCDATASection(cmdSyntax.toString());
 						String safeName = cmd.value()[0].replace("\\", "BCK").replace("/", "FWD").replace("*", "ASX");
-						Element element = new XmlElementBuilder("section", document).addAttribute("xml:id", "command-index-" + safeName.toLowerCase().replace(' ', '-')).addChild(new XmlElementBuilder("title", document).setText(cmd.value()[0]).build()).addChild(new XmlElementBuilder("para", document).setText(cmd.help()).build()).addChild(new XmlElementBuilder("programlisting", document).addChild(progList).build()).addChild(variableListElement).build();
+						Element element = new XmlElementBuilder("section", document).addAttribute("xml:id",
+								"command-index-" + safeName.toLowerCase().replace(' ', '-')).addChild(
+								new XmlElementBuilder("title", document).setText(cmd.value()[0]).build()).addChild(
+								new XmlElementBuilder("para", document).setText(cmd.help()).build()).addChild(
+								new XmlElementBuilder("programlisting", document).addChild(progList).build()).addChild(
+								variableListElement).build();
 
 						individualCommands.put(cmdSyntax.toString(), element);
 					}
@@ -901,7 +1007,8 @@ public class SimpleParser implements Parser {
 				Element topSection = document.createElement("section");
 				topSection.setAttribute("xml:id", "command-index-" + section.toLowerCase().replace(' ', '-'));
 				topSection.appendChild(new XmlElementBuilder("title", document).setText(section).build());
-				topSection.appendChild(new XmlElementBuilder("para", document).setText(section + " are contained in " + target.getClass().getName() + ".").build());
+				topSection.appendChild(new XmlElementBuilder("para", document).setText(
+						section + " are contained in " + target.getClass().getName() + ".").build());
 
 				for (final Element value : individualCommands.values()) {
 					topSection.appendChild(value);
@@ -915,8 +1022,10 @@ public class SimpleParser implements Parser {
 			appendix.setAttribute("version", "5.0");
 			appendix.setAttribute("xml:id", "command-index");
 			appendix.appendChild(new XmlElementBuilder("title", document).setText("Command Index").build());
-			appendix.appendChild(new XmlElementBuilder("para", document).setText("This appendix was automatically built from Roo " + VersionUtils.versionInfo() + ".").build());
-			appendix.appendChild(new XmlElementBuilder("para", document).setText("Commands are listed in alphabetic order, and are shown in monospaced font with any mandatory options you must specify when using the command. Most commands accept a large number of options, and all of the possible options for each command are presented in this appendix.").build());
+			appendix.appendChild(new XmlElementBuilder("para", document).setText(
+					"This appendix was automatically built from Roo " + VersionUtils.versionInfo() + ".").build());
+			appendix.appendChild(new XmlElementBuilder("para", document).setText(
+					"Commands are listed in alphabetic order, and are shown in monospaced font with any mandatory options you must specify when using the command. Most commands accept a large number of options, and all of the possible options for each command are presented in this appendix.").build());
 
 			for (Element section : builtSections) {
 				appendix.appendChild(section);
@@ -977,18 +1086,24 @@ public class SimpleParser implements Parser {
 									if ("".equals(key)) {
 										key = "** default **";
 									}
-									sb.append(" Keyword:                  ").append(key).append(StringUtils.LINE_SEPARATOR);
+									sb.append(" Keyword:                  ").append(key).append(
+											StringUtils.LINE_SEPARATOR);
 								}
 
-								sb.append("   Help:                   ").append(cliOption.help()).append(StringUtils.LINE_SEPARATOR);
-								sb.append("   Mandatory:              ").append(cliOption.mandatory()).append(StringUtils.LINE_SEPARATOR);
-								sb.append("   Default if specified:   '").append(cliOption.specifiedDefaultValue()).append("'").append(StringUtils.LINE_SEPARATOR);
-								sb.append("   Default if unspecified: '").append(cliOption.unspecifiedDefaultValue()).append("'").append(StringUtils.LINE_SEPARATOR);
+								sb.append("   Help:                   ").append(cliOption.help()).append(
+										StringUtils.LINE_SEPARATOR);
+								sb.append("   Mandatory:              ").append(cliOption.mandatory()).append(
+										StringUtils.LINE_SEPARATOR);
+								sb.append("   Default if specified:   '").append(cliOption.specifiedDefaultValue()).append(
+										"'").append(StringUtils.LINE_SEPARATOR);
+								sb.append("   Default if unspecified: '").append(cliOption.unspecifiedDefaultValue()).append(
+										"'").append(StringUtils.LINE_SEPARATOR);
 								sb.append(StringUtils.LINE_SEPARATOR);
 							}
 
 						}
-						Assert.notNull(cliOption, "CliOption not found for parameter '" + Arrays.toString(annotations) + "'");
+						Assert.notNull(cliOption, "CliOption not found for parameter '" + Arrays.toString(annotations)
+								+ "'");
 					}
 				}
 				// Only a single argument, so default to the normal help operation
@@ -1001,7 +1116,8 @@ public class SimpleParser implements Parser {
 					for (String value : cmd.value()) {
 						if ("".equals(cmd.help())) {
 							result.add("* " + value);
-						} else {
+						}
+						else {
 							result.add("* " + value + " - " + cmd.help());
 						}
 					}
@@ -1013,7 +1129,8 @@ public class SimpleParser implements Parser {
 			}
 
 			LOGGER.info(sb.toString());
-			LOGGER.warning("** Type 'hint' (without the quotes) and hit ENTER for step-by-step guidance **" + StringUtils.LINE_SEPARATOR);
+			LOGGER.warning("** Type 'hint' (without the quotes) and hit ENTER for step-by-step guidance **"
+					+ StringUtils.LINE_SEPARATOR);
 		}
 	}
 
@@ -1039,10 +1156,17 @@ public class SimpleParser implements Parser {
 			for (final Method method : command.getClass().getMethods()) {
 				CliAvailabilityIndicator availability = method.getAnnotation(CliAvailabilityIndicator.class);
 				if (availability != null) {
-					Assert.isTrue(method.getParameterTypes().length == 0, "CliAvailabilityIndicator is only legal for 0 parameter methods (" + method.toGenericString() + ")");
-					Assert.isTrue(method.getReturnType().equals(Boolean.TYPE), "CliAvailabilityIndicator is only legal for primitive boolean return types (" + method.toGenericString() + ")");
+					Assert.isTrue(
+							method.getParameterTypes().length == 0,
+							"CliAvailabilityIndicator is only legal for 0 parameter methods ("
+									+ method.toGenericString() + ")");
+					Assert.isTrue(
+							method.getReturnType().equals(Boolean.TYPE),
+							"CliAvailabilityIndicator is only legal for primitive boolean return types ("
+									+ method.toGenericString() + ")");
 					for (String cmd : availability.value()) {
-						Assert.isTrue(!availabilityIndicators.containsKey(cmd), "Cannot specify an availability indicator for '" + cmd + "' more than once");
+						Assert.isTrue(!availabilityIndicators.containsKey(cmd),
+								"Cannot specify an availability indicator for '" + cmd + "' more than once");
 						availabilityIndicators.put(cmd, new MethodTarget(method, command));
 					}
 				}
