@@ -64,38 +64,24 @@ public class SimpleParser implements Parser {
 	}
 
 	/**
-	 * get all mandatory options key. For the options with multiple keys, the
-	 * first key will be returned.
+	 * get all mandatory options key. For the options with multiple keys, the 
+	 * keys will be in one row.
 	 * 
 	 * @param cliOptions options
 	 * @return mandatory options key
 	 */
-	private String[] getMandatoryOptions(Set<CliOption> cliOptions) {
-		return getMandatoryOptions(cliOptions, false);
-	}
-
-	/**
-	 * get all mandatory options key.
-	 * 
-	 * @param cliOptions options
-	 * @param includeMultipleKey If the options has multiple keys, whether return
-	 * 							 all of them or only the first one
-	 * @return mandatory options key
-	 */
-	private String[] getMandatoryOptions(Set<CliOption> cliOptions, boolean includeMultipleKey) {
-		List<String> mandatoryOptions = new ArrayList<String>();
+	private List<List<String>> getMandatoryOptions(Set<CliOption> cliOptions) {
+		List<List<String>> mandatoryOptions = new ArrayList<List<String>>();
 		for (CliOption option : cliOptions) {
 			if (option.mandatory()) {
-				if (includeMultipleKey) {
-					mandatoryOptions.addAll(Arrays.asList(option.key()));
-				}
-				else {
-					mandatoryOptions.add(option.key()[0]);
-				}
+				List<String> keys = new ArrayList<String>();
+				keys.addAll(Arrays.asList(option.key()));
+				mandatoryOptions.add(keys);
 			}
 		}
-		return mandatoryOptions.toArray(new String[0]);
+		return mandatoryOptions;
 	}
+
 
 
 	public ParseResult parse(final String rawInput) {
@@ -188,24 +174,7 @@ public class SimpleParser implements Parser {
 						LOGGER.warning(message.toString());
 					}
 					else {
-						if (sourcedFrom != null) {
-							LOGGER.warning("You must specify value for option '" + cliOption.key()[0]
-									+ "' for this command");
-						}
-						else {
-							StringBuilder builder = new StringBuilder();
-							builder.append("You must specify option (");
-							String[] mandatoryOptions = getMandatoryOptions(cliOptions);
-							for (int i = 0, j = mandatoryOptions.length; i < j; i++) {
-								builder.append("--");
-								builder.append(mandatoryOptions[i]);
-								if (i < j - 1) {
-									builder.append(", ");
-								}
-							}
-							builder.append(") for this command");
-							LOGGER.warning(builder.toString());
-						}
+						printHintMessage(cliOptions, options);
 					}
 					return null;
 				}
@@ -293,6 +262,51 @@ public class SimpleParser implements Parser {
 
 			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), arguments.toArray());
 		}
+	}
+
+	/**
+	 * @param cliOptions
+	 * @param options
+	 */
+	private void printHintMessage(final Set<CliOption> cliOptions, Map<String, String> options) {
+		boolean hintForOptions = true;
+
+		StringBuilder optionBuilder = new StringBuilder();
+		optionBuilder.append("You must specify option (");
+
+		StringBuilder valueBuilder = new StringBuilder();
+		valueBuilder.append("You must specify value for option '");
+
+		List<List<String>> mandatoryOptions = getMandatoryOptions(cliOptions);
+		for (List<String> keys : mandatoryOptions) {
+			boolean found = false;
+			for (String key : keys) {
+				if (options.containsKey(key)) {
+					if (StringUtils.isBlank(options.get(key))) {
+						valueBuilder.append(key);
+						valueBuilder.append("' for this command");
+						hintForOptions = false;
+					}
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				optionBuilder.append("--");
+				optionBuilder.append(keys.get(0));
+				optionBuilder.append(", ");
+			}
+		}
+		//remove the ", " in the end.
+		String hintForOption = optionBuilder.toString();
+		hintForOption = hintForOption.substring(0,hintForOption.length()-2);
+		if (hintForOptions) {
+			LOGGER.warning(hintForOption + ") for this command");
+		}
+		else {
+			LOGGER.warning(valueBuilder.toString());
+		}
+
 	}
 
 	/**
