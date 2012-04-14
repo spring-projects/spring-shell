@@ -17,7 +17,9 @@ public class HelloWorldCommands implements CommandMarker {
 	
 	@CliCommand(value = "hw echo", help = "Print a hello world message")
 	public void config(
-		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message) {		
-		System.out.println("Hello world " + message);
+		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
+		@CliOption(key = { "name" }, mandatory = true, help = "The hello world name ") final String name,
+		@CliOption(key = { "time" }, mandatory = false, help = "The hello world time ") final String time) {		
+		System.out.println("Hello world " + message + "," + name + ". time:" + time);
 	}
 }

@@ -270,7 +270,7 @@ public class SimpleParser implements Parser {
 	}
 
 	protected void commandNotFound(final Logger logger, final String buffer) {
-		logger.warning("Command '" + buffer + "' not found (for assistance press " + AbstractShell.completionKeys + " or type \"hint\" then hit ENTER)");
+		logger.warning("Command '" + buffer + "' not found (for assistance press " + AbstractShell.completionKeys + ")");
 	}
 
 	private Collection<MethodTarget> locateTargets(final String buffer, final boolean strictMatching, final boolean checkAvailabilityIndicators) {

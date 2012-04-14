@@ -45,7 +45,7 @@ public class Bootstrap {
 		}
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(options.applicationContextLocation);
+			bootstrap = new Bootstrap(null);
 			exitShellRequest = bootstrap.run(options.executeThenQuit);
 		} catch (RuntimeException t) {
 			throw t;
@@ -57,12 +57,11 @@ public class Bootstrap {
 	}
 
 	public Bootstrap(String applicationContextLocation) throws IOException {
-		//setupLogging();
-		Assert.hasText(applicationContextLocation, "Application context location required");
-		createApplicationContext(applicationContextLocation);
+		createApplicationContext();
 
 		shell = ctx.getBean("shell", JLineShellComponent.class);
 		shell.setApplicationContext(ctx);
+		shell.setHistorySize(options.historySize);
 		if (options.executeThenQuit != null) {
 			shell.setPrintBanner(false);
 		}
@@ -96,7 +95,7 @@ public class Bootstrap {
 
 	}
 
-	private void createApplicationContext(String applicationContextLocation) {
+	private void createApplicationContext() {
 		AnnotationConfigApplicationContext annctx = new AnnotationConfigApplicationContext();
 		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.StringConverter.class);
 		createAndRegisterBeanDefinition(annctx,

@@ -88,7 +88,7 @@
 			<id>spring-maven-snapshot</id>
 			<snapshots>
 				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
+				<!-- <updatePolicy>always</updatePolicy>  -->
 			</snapshots>
 			<name>Springframework Maven SNAPSHOT Repository</name>
 			<url>http://maven.springframework.org/snapshot</url>

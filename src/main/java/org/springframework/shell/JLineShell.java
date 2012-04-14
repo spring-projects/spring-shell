@@ -95,6 +95,7 @@ public abstract class JLineShell extends AbstractShell
 	private String version;
 	private String welcomeMessage;
 	
+	private int historySize;
 
 	public void run() {
 		try {
@@ -137,9 +138,14 @@ public abstract class JLineShell extends AbstractShell
 			String logFileContents = FileCopyUtils.copyToString(new File(this.historyFileName));
 			String[] logEntries = logFileContents.split(StringUtils.LINE_SEPARATOR);
 			// LIFO
+			int size = 0;
 			for (String logEntry : logEntries) {
 				if (!logEntry.startsWith("//")) {
 					reader.getHistory().addToHistory(logEntry);
+					size++;
+					if(size > historySize){
+						break;
+					}
 				}
 			}
 		} catch (IOException ignored) {
@@ -561,7 +567,7 @@ public abstract class JLineShell extends AbstractShell
 	 * get prompt text from provider. The provider has highest order 
 	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
 	 * 
-	 * @return
+	 * @return prompt text
 	 */
 	private String getPromptText(){
 		return getHighestPriorityProvider(PromptProvider.class).getPromptText();
@@ -591,11 +597,20 @@ public abstract class JLineShell extends AbstractShell
 		return highestPriorityProvider;
 	}
 	
+	/**
+	 * get the version information
+	 * 
+	 */
 	@Override
 	public String version(String text){
 		return this.version;
 	}
 	
+	/**
+	 * get the welcome message at start.
+	 * 
+	 * @return welcome message
+	 */
 	public String getWelcomeMessage(){
 		return this.welcomeMessage;
 	}
@@ -606,6 +621,20 @@ public abstract class JLineShell extends AbstractShell
 	 */
 	public void setPrintBanner(boolean printBanner) {
 		this.printBanner = printBanner;
+	}
+
+	/**
+	 * @return the historySize
+	 */
+	public int getHistorySize() {
+		return historySize;
+	}
+
+	/**
+	 * @param historySize the historySize to set
+	 */
+	public void setHistorySize(int historySize) {
+		this.historySize = historySize;
 	}
 	
 }
