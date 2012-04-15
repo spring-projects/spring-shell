@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -133,7 +134,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		openFileLogIfPossible();
 
 		// Try to build previous command history from the project's log
-
 		String[] filteredLogEntries = filterLogEntry();
 		for (String logEntry : filteredLogEntries) {
 			reader.getHistory().addToHistory(logEntry);
@@ -186,7 +186,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private String[] filterLogEntry() {
 		ArrayList<String> entries = new ArrayList<String>();		
 		try {
-			ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(this.historyFileName));
+			ReversedLinesFileReader reader = new ReversedLinesFileReader(
+					new File(this.historyFileName),4096,Charset.forName("UTF-8"));
 			int size = 0;
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -201,7 +202,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				}
 			}
 		} catch (IOException e) {
-			logger.warning("read history file failed");
+			logger.warning("read history file failed. Reason:"+ e.getMessage());
 		}
 		Collections.reverse(entries);
 		return entries.toArray(new String[0]);
