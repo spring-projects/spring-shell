@@ -652,6 +652,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 */
 	public void setHistorySize(int historySize) {
 		this.historySize = historySize;
+		this.reader.getHistory().setMaxSize(this.historySize);
 	}
 
 }
