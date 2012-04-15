@@ -70,7 +70,7 @@ public class SimpleParser implements Parser {
 	 * @param cliOptions options
 	 * @return mandatory options key
 	 */
-	private List<List<String>> getMandatoryOptions(Set<CliOption> cliOptions) {
+	private List<List<String>> getMandatoryOptions(Collection<CliOption> cliOptions) {
 		List<List<String>> mandatoryOptions = new ArrayList<List<String>>();
 		for (CliOption option : cliOptions) {
 			if (option.mandatory()) {
@@ -299,7 +299,7 @@ public class SimpleParser implements Parser {
 		}
 		//remove the ", " in the end.
 		String hintForOption = optionBuilder.toString();
-		hintForOption = hintForOption.substring(0,hintForOption.length()-2);
+		hintForOption = hintForOption.substring(0, hintForOption.length() - 2);
 		if (hintForOptions) {
 			LOGGER.warning(hintForOption + ") for this command");
 		}
@@ -696,12 +696,7 @@ public class SimpleParser implements Parser {
 
 						// Handle normal mandatory options
 						if (!"".equals(value) && include.mandatory()) {
-							if (translated.endsWith(" ")) {
-								results.add(new Completion(translated + "--" + value + " "));
-							}
-							else {
-								results.add(new Completion(translated + " --" + value + " "));
-							}
+							handleMandatoryCompletion(translated, unspecified, value, results);
 						}
 					}
 				}
@@ -716,7 +711,7 @@ public class SimpleParser implements Parser {
 			// Handle completing the option key they're presently typing
 			if ((lastOptionValue == null || "".equals(lastOptionValue)) && !translated.endsWith(" ")) {
 				// Given we haven't got an option value of any form, and there's no space at the buffer end, we must still be typing an option key
-
+				//System.out.println("completing an option");
 				for (CliOption option : cliOptions) {
 					for (String value : option.key()) {
 						if (value != null && lastOptionKey != null
@@ -865,6 +860,35 @@ public class SimpleParser implements Parser {
 
 			return 0;
 		}
+	}
+
+	/**
+	 * populate completion for mandatory options
+	 * 
+	 * @param translated user's input
+	 * @param unspecified unspecified options
+	 * @param value the option key
+	 * @param results completion list
+	 */
+	private void handleMandatoryCompletion(String translated, List<CliOption> unspecified, 
+			String value, SortedSet<Completion> results) {
+		StringBuilder strBuilder = new StringBuilder(translated);
+		if (!translated.endsWith(" ")) {
+			strBuilder.append(" ");
+		}
+		// Plan change for SHL-20. But usability is bad.
+		/*
+		List<List<String>> mandatoryOptions = getMandatoryOptions(unspecified);
+		for (List<String> option : mandatoryOptions) {
+			strBuilder.append("--");
+			strBuilder.append(option.get(0));
+			strBuilder.append(" ");
+		}
+		*/
+		strBuilder.append("--");
+		strBuilder.append(value);
+		strBuilder.append(" ");
+		results.add(new Completion(strBuilder.toString()));
 	}
 
 	public void helpReferenceGuide() {
