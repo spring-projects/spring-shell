@@ -132,7 +132,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		// reader.setDebug(new PrintWriter(new FileWriter("writer.debug", true)));
 
 		openFileLogIfPossible();
-
+		this.reader.getHistory().setMaxSize(this.historySize);
 		// Try to build previous command history from the project's log
 		String[] filteredLogEntries = filterLogEntry();
 		for (String logEntry : filteredLogEntries) {
@@ -652,7 +652,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 */
 	public void setHistorySize(int historySize) {
 		this.historySize = historySize;
-		this.reader.getHistory().setMaxSize(this.historySize);
 	}
 
 }
