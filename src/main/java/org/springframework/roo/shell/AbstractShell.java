@@ -14,6 +14,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
@@ -325,7 +326,9 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	@CliCommand(value = { "date" }, help = "Displays the local date and time")
 	public String date() {
-		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL).format(new Date());
+		return DateFormat.getDateTimeInstance(
+				DateFormat.FULL, DateFormat.FULL,Locale.US)
+				.format(new Date());
 	}
 
 	//@CliCommand(value = { "flash test" }, help = "Tests message flashing")
