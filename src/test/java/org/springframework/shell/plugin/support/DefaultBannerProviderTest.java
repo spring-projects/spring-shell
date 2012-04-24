@@ -33,7 +33,7 @@ public class DefaultBannerProviderTest {
 	 */
 	@Test
 	public void testGetOrder() {
-		Assert.assertTrue(banner.getOrder() == 0);
+		Assert.assertTrue(banner.getOrder() == Integer.MAX_VALUE);
 	}
 
 	/**
