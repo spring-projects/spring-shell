@@ -64,24 +64,39 @@ public class SimpleParser implements Parser {
 	}
 
 	/**
-	 * get all mandatory options key. For the options with multiple keys, the 
+	 * get all mandatory options keys. For the options with multiple keys, the 
 	 * keys will be in one row.
 	 * 
 	 * @param cliOptions options
-	 * @return mandatory options key
+	 * @return mandatory options keys
 	 */
-	private List<List<String>> getMandatoryOptions(Collection<CliOption> cliOptions) {
-		List<List<String>> mandatoryOptions = new ArrayList<List<String>>();
-		for (CliOption option : cliOptions) {
-			if (option.mandatory()) {
-				List<String> keys = new ArrayList<String>();
-				keys.addAll(Arrays.asList(option.key()));
-				mandatoryOptions.add(keys);
-			}
-		}
-		return mandatoryOptions;
+	private List<List<String>> getMandatoryOptionsKeys(Collection<CliOption> cliOptions) {
+		return getOptionsKeys(cliOptions, false);
 	}
 
+	/**
+	 * get all options key.
+	 * 
+	 * @param cliOptions
+	 * @param includeOptionalOptions
+	 * @return options keys
+	 */
+	private List<List<String>> getOptionsKeys(Collection<CliOption> cliOptions, boolean includeOptionalOptions) {
+		List<List<String>> optionsKeys = new ArrayList<List<String>>();
+		for (CliOption option : cliOptions) {
+			if (includeOptionalOptions) {
+				List<String> keys = new ArrayList<String>();
+				keys.addAll(Arrays.asList(option.key()));
+				optionsKeys.add(keys);
+			}
+			else if (option.mandatory()) {
+				List<String> keys = new ArrayList<String>();
+				keys.addAll(Arrays.asList(option.key()));
+				optionsKeys.add(keys);
+			}
+		}
+		return optionsKeys;
+	}
 
 
 	public ParseResult parse(final String rawInput) {
@@ -163,8 +178,11 @@ public class SimpleParser implements Parser {
 					}
 				}
 
-				// Ensure the user specified a value if the value is mandatory
-				if (StringUtils.isBlank(value) && cliOption.mandatory()) {
+				// Ensure the user specified a value if the value is mandatory or
+				// key and value must appear in pair 
+				boolean mandatory = StringUtils.isBlank(value) && cliOption.mandatory();
+				boolean inPair = StringUtils.isBlank(value) && options.containsKey(sourcedFrom);
+				if (mandatory || inPair) {
 					if ("".equals(cliOption.key()[0])) {
 						StringBuilder message = new StringBuilder("You must specify a default option ");
 						if (cliOption.key().length > 1) {
@@ -277,8 +295,8 @@ public class SimpleParser implements Parser {
 		StringBuilder valueBuilder = new StringBuilder();
 		valueBuilder.append("You must specify value for option '");
 
-		List<List<String>> mandatoryOptions = getMandatoryOptions(cliOptions);
-		for (List<String> keys : mandatoryOptions) {
+		List<List<String>> optionsKeys = getOptionsKeys(cliOptions,true);
+		for (List<String> keys : optionsKeys) {
 			boolean found = false;
 			for (String key : keys) {
 				if (options.containsKey(key)) {
@@ -870,8 +888,7 @@ public class SimpleParser implements Parser {
 	 * @param value the option key
 	 * @param results completion list
 	 */
-	private void handleMandatoryCompletion(String translated, List<CliOption> unspecified, 
-			String value, SortedSet<Completion> results) {
+	private void handleMandatoryCompletion(String translated, List<CliOption> unspecified, String value, SortedSet<Completion> results) {
 		StringBuilder strBuilder = new StringBuilder(translated);
 		if (!translated.endsWith(" ")) {
 			strBuilder.append(" ");
