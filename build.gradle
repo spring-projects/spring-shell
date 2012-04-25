@@ -1,73 +1,35 @@
-// used for artifact names, building doc upload urls, etc.
-description = 'Spring Shell'
-abbreviation = 'SPSH'
-
 apply plugin: 'base'
-
-buildscript {
-    repositories {
-        add(new org.apache.ivy.plugins.resolver.URLResolver()) {
-            name = "GitHub"
-            addIvyPattern 'http://cloud.github.com/downloads/costin/gradle-stuff/[organization].[module]-[artifact]-[revision].[ext]'
-            addArtifactPattern 'http://cloud.github.com/downloads/costin/gradle-stuff/[organization].[module]-[revision].[ext]'
-        }
-        mavenCentral()
-        mavenLocal()
-        mavenRepo name: "springsource-org-release", urls: "http://repository.springsource.com/maven/bundles/release"
-        mavenRepo name: "springsource-org-external", urls: "http://repository.springsource.com/maven/bundles/external"
-        
-    }
-
-    dependencies {
-        classpath 'org.springframework:gradle-stuff:0.1-20110421'
-        classpath 'net.sf.docbook:docbook-xsl:1.75.2:ns-resources@zip'
-    }
-}
+apply plugin: "java"
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 allprojects {
     group = 'org.springframework.shell'
     version = "$springShellVersion"
-    
-    releaseBuild = version.endsWith('RELEASE')
-    snapshotBuild = version.endsWith('SNAPSHOT')
-
 
     repositories {
         mavenLocal()
         mavenCentral()
-        // Public Spring artefacts
-        mavenRepo name: "springsource-org-release", urls: "http://repository.springsource.com/maven/bundles/release"
-        mavenRepo name: "spring-release", urls: "http://maven.springframework.org/release"
-        mavenRepo name: "spring-milestone", urls: "http://maven.springframework.org/milestone"
-        mavenRepo name: "spring-snapshot", urls: "http://maven.springframework.org/snapshot"
-        mavenRepo name: "sonatype-snapshot", urls: "http://oss.sonatype.org/content/repositories/snapshots"
-        mavenRepo name: "ext-snapshots", urls: "http://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"
-        mavenRepo name: "data-nucleus", urls: "http://www.datanucleus.org/downloads/maven2/"
-        mavenRepo name: "conjars.org", urls: "http://conjars.org/repo"
+        maven{
+        	url "http://repository.springsource.com/maven/bundles/release"
+        	url "http://maven.springframework.org/release"
+        	url "http://maven.springframework.org/milestone"
+        	url "http://maven.springframework.org/snapshot"
+        	url "http://oss.sonatype.org/content/repositories/snapshots"
+        	url "http://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"
+        	url "http://www.datanucleus.org/downloads/maven2/"
+        	url "http://conjars.org/repo"
+        }
 	}
 }
 
-apply plugin: "java"
-apply plugin: "maven"
-apply plugin: 'eclipse'  // `gradle eclipse` to generate .classpath/.project
-apply plugin: 'idea'     // `gradle idea` to generate .ipr/.iml
-apply plugin: 'docbook'
-
-
-// Common dependencies
 dependencies {
-
-    // Logging
     runtime "log4j:log4j:$log4jVersion"
-    
-    // Spring Framework
     compile "org.springframework:spring-core:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile "commons-io:commons-io:$commonsioVersion"
     compile "net.sourceforge.jline:jline:$jlineVersion"
     compile "org.fusesource.jansi:jansi:$jansiVersion"
-
-    // needed for use of @Configuration extension points.
     compile "cglib:cglib:$cglibVersion"
 
     
@@ -75,137 +37,12 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "org.springframework:spring-test:$springVersion"
-    testCompile("javax.annotation:jsr250-api:1.0") { optional = true }
+    testCompile "javax.annotation:jsr250-api:1.0"
     testRuntime "org.codehaus.groovy:groovy:$groovyVersion"
 
 }
 
-javaprojects = rootProject
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6 
-
-javadoc {
-  srcDir = file("${projectDir}/docs/src/api")
-  destinationDir = file("${buildDir}/api")
-  tmpDir = file("${buildDir}/api-work")
-  
-  configure(options) {
-      stylesheetFile = file("${srcDir}/spring-javadoc.css")
-      overview = "${srcDir}/overview.html"
-      docFilesSubDirs = true
-      outputLevel = org.gradle.external.javadoc.JavadocOutputLevel.QUIET
-      breakIterator = true
-      author = true
-      showFromProtected()
-      
-//      groups = [
-//        'Spring Data Hadoop' : ['org.springframework.data.hadoop*'],
-//      ]
-  
-     links = [
-        "http://static.springframework.org/spring/docs/3.0.x/javadoc-api",
-        "http://download.oracle.com/javase/6/docs/api",
-        "http://logging.apache.org/log4j/docs/api/",
-     ]
-     
-     exclude "org/springframework/data/hadoop/config/**"
-  }
-    
-  title = "${rootProject.description} ${version} API"
-
-  // collect all the sources that will be included in the javadoc output
-  source javaprojects.collect {project ->
-      project.sourceSets.main.allJava
-  }
-
-  // collect all main classpaths to be able to resolve @see refs, etc.
-  // this collection also determines the set of projects that this
-  // task dependsOn, thus the runtimeClasspath is used to ensure all
-  // projects are included, not just *dependencies* of all classes.
-  // this is awkward and took me a while to figure out.
-  classpath = files(javaprojects.collect {project ->
-      project.sourceSets.main.runtimeClasspath
-  })
-
-  // copy the images from the doc-files dir over to the target
-  doLast { task ->
-      copy {
-          from file("${task.srcDir}/doc-files")
-          into file("${task.destinationDir}/doc-files")
-      }
-  }
-}
-
-ideaProject {
-	withXml { provider ->
-		provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
-	}
-}
-
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-3'
-    description = "Generate the Gradle wrapper"
-    group = "Distribution"
 }
-
-apply from: "$rootDir/maven.gradle"
-
-// Distribution tasks
-task dist(type: Zip) {
-    description = "Generate the ZIP Distribution"
-    group = "Distribution"
-    dependsOn assemble, subprojects*.tasks*.matching { task -> task.name == 'assemble' }
-
-//    evaluationDependsOn(':docs')
-
-    def zipRootDir = "${project.name}-$version"
-    into(zipRootDir) {
-        from('/docs/src/info') {
-            include '*.txt'
-        }
-        from('/docs/build/') {
-            into 'docs'
-            include 'reference/**/*'
-        }
-        from('samples/') {
-            into 'samples'
-            exclude '**/build/**'
-            exclude '**/bin/**'
-            exclude '**/.settings/**'
-            exclude '**/.gradle/**'
-            exclude '**/.*'
-        }
-        from('build/') {
-            into 'docs'
-            include 'api/**/*'
-        }
-            into('dist') {
-            from javaprojects.collect {project -> project.libsDir }
-        }
-    }
-    doLast {
-        ant.checksum(file: archivePath, algorithm: 'SHA1', fileext: '.sha1')
-    }
-}
-
-task uploadDist(type: org.springframework.gradle.tasks.S3DistroUpload, dependsOn: dist) {
-    description = "Upload the ZIP Distribution"
-    group = "Distribution"
-    archiveFile = dist.archivePath
-    projectKey = 'SHDP'
-    projectName = 'Spring Data Hadoop'
-}
-
-assemble.dependsOn = ['jar', 'sourceJar', 'javadocJar']
-
-task run(type: JavaExec) {
-       description = 'Runs the application'
-       main = "org.springframework.shell.Bootstrap"
-       classpath = sourceSets.main.runtimeClasspath
-}
-
-//defaultTasks 'run'
-
 
 defaultTasks 'build'
