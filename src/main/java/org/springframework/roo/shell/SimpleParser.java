@@ -181,10 +181,17 @@ public class SimpleParser implements Parser {
 				// Ensure the user specified a value if the value is mandatory or
 				// key and value must appear in pair 
 				boolean mandatory = StringUtils.isBlank(value) && cliOption.mandatory();
-				boolean inPair = StringUtils.isBlank(value) && options.containsKey(sourcedFrom);
-				if (mandatory || inPair) {
+				boolean specifiedKey = StringUtils.isBlank(value) && options.containsKey(sourcedFrom);
+				boolean specifiedKeyWithoutValue = false;
+				if(specifiedKey){
+					value = cliOption.specifiedDefaultValue();
+					if("__NULL__".equals(value)){
+						specifiedKeyWithoutValue = true;
+					}
+				}
+				if (mandatory || specifiedKeyWithoutValue) {
 					if ("".equals(cliOption.key()[0])) {
-						StringBuilder message = new StringBuilder("You must specify a default option ");
+						StringBuilder message = new StringBuilder("You should specify a default option ");
 						if (cliOption.key().length > 1) {
 							message.append("(otherwise known as option '").append(cliOption.key()[1]).append("') ");
 						}
@@ -290,10 +297,10 @@ public class SimpleParser implements Parser {
 		boolean hintForOptions = true;
 
 		StringBuilder optionBuilder = new StringBuilder();
-		optionBuilder.append("You must specify option (");
+		optionBuilder.append("You should specify option (");
 
 		StringBuilder valueBuilder = new StringBuilder();
-		valueBuilder.append("You must specify value for option '");
+		valueBuilder.append("You should specify value for option '");
 
 		List<List<String>> optionsKeys = getOptionsKeys(cliOptions,true);
 		for (List<String> keys : optionsKeys) {
