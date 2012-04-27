@@ -74,7 +74,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private static final char ESCAPE = 27;
 	private static final String BEL = "\007";
 	// Fields
-	private ConsoleReader reader;
+	protected ConsoleReader reader;
 	private boolean developmentMode = false;
 	private FileWriter fileLog;
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -98,22 +98,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private int historySize;
 
 	public void run() {
-		try {
-			if (JANSI_AVAILABLE && OsUtils.isWindows()) {
-				try {
-					reader = createAnsiWindowsReader();
-				} catch (Exception e) {
-					// Try again using default ConsoleReader constructor
-					logger.warning("Can't initialize jansi AnsiConsole, falling back to default: " + e);
-				}
-			}
-			if (reader == null) {
-				reader = new ConsoleReader();
-			}
-		} catch (IOException ioe) {
-			throw new IllegalStateException("Cannot start console class", ioe);
-		}
-
+		reader = createConsoleReader();
+	    	
 		setPromptPath(null);
 
 		JLineLogHandler handler = new JLineLogHandler(reader, this);
@@ -207,6 +193,34 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		Collections.reverse(entries);
 		return entries.toArray(new String[0]);
 	}
+	
+	/**
+	 * Creates new jline ConsoleReader. On Windows if jansi is available, uses 
+	 * createAnsiWindowsReader(). Otherwise, always creates a default ConsoleReader.
+	 * Sub-classes of this class can plug in their version of ConsoleReader 
+	 * by overriding this method, if required.  
+	 * 
+	 * @return a jline ConsoleReader instance
+	 */
+	protected ConsoleReader createConsoleReader() {
+		ConsoleReader consoleReader = null;
+		try {
+			if (JANSI_AVAILABLE && OsUtils.isWindows()) {
+				try {
+				    consoleReader = createAnsiWindowsReader();
+				} catch (Exception e) {
+					// Try again using default ConsoleReader constructor
+					logger.warning("Can't initialize jansi AnsiConsole, falling back to default: " + e);
+				}
+			}
+			if (consoleReader == null) {
+			    consoleReader = new ConsoleReader();
+			}
+		} catch (IOException ioe) {
+			throw new IllegalStateException("Cannot start console class", ioe);
+		}
+		return consoleReader;
+	}
 
 	public void printBannerAndWelcome() {
 		if (printBanner) {
@@ -259,7 +273,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		reader.setDefaultPrompt(JLineShell.shellPrompt);
 	}
 
-	private ConsoleReader createAnsiWindowsReader() throws Exception {
+	protected ConsoleReader createAnsiWindowsReader() throws Exception {
 		// Get decorated OutputStream that parses ANSI-codes
 		final PrintStream ansiOut = (PrintStream) ClassUtils.forName(ANSI_CONSOLE_CLASSNAME,
 				JLineShell.class.getClassLoader()).getMethod("out").invoke(null);
