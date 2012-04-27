@@ -189,7 +189,7 @@ public class JLineLogHandler extends Handler {
 	 *
 	 * @return new patched ANSIBuffer
 	 */
-	static ANSIBuffer getANSIBuffer() {
+	public static ANSIBuffer getANSIBuffer() {
 		final char esc = (char) 27;
 		return new ANSIBuffer() {
 			@Override
