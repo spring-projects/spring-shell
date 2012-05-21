@@ -1191,8 +1191,8 @@ public class SimpleParser implements Parser {
 			}
 
 			LOGGER.info(sb.toString());
-			LOGGER.warning("** Type 'hint' (without the quotes) and hit ENTER for step-by-step guidance **"
-					+ StringUtils.LINE_SEPARATOR);
+//			LOGGER.warning("** Type 'hint' (without the quotes) and hit ENTER for step-by-step guidance **"
+//					+ StringUtils.LINE_SEPARATOR);
 		}
 	}
 
