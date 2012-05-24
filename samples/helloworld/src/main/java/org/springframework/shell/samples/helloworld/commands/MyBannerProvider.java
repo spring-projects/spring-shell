@@ -66,7 +66,7 @@ public class MyBannerProvider extends DefaultBannerProvider
 	
 	@Override
 	public String name() {
-		return "my banner provider";
+		return "vHelper";
 	}
 	
 

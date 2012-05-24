@@ -92,6 +92,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 	private String historyFileName;
 	private String promptText;
+	private String productName;
+	private String banner;
 	private String version;
 	private String welcomeMessage;
 
@@ -126,7 +128,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		}
 
 		flashMessageRenderer();
-		flash(Level.FINE, "Spring Shell " + versionInfo(), Shell.WINDOW_TITLE_SLOT);
+		flash(Level.FINE, this.productName + " " + this.version, Shell.WINDOW_TITLE_SLOT);
 		printBannerAndWelcome();
 
 		String startupNotifications = getStartupNotifications();
@@ -224,7 +226,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 	public void printBannerAndWelcome() {
 		if (printBanner) {
-			logger.info(this.version);
+			logger.info(this.banner);
 			logger.info(getWelcomeMessage());
 		}
 	}
@@ -581,8 +583,11 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	public void costomizePlugin() {
 		this.historyFileName = getHistoryFileName();
 		this.promptText = getPromptText();
-		this.version = getBannerText()[0];
-		this.welcomeMessage = getBannerText()[1];
+		String[] banner = getBannerText();
+		this.banner = banner[0];
+		this.welcomeMessage = banner[1];
+		this.version = banner[2];
+		this.productName = banner[3];
 	}
 
 	/**
@@ -609,13 +614,17 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 * Get Banner and Welcome Message from provider. The provider has highest order 
 	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
 	 * @return BannerText[0]: Banner
-	 *         BannerText[1]: Welcome Message.
+	 *         BannerText[1]: Welcome Message
+	 *         BannerText[2]: Version
+	 *         BannerText[3]: Product Name
 	 */
 	private String[] getBannerText() {
-		String[] bannerText = new String[2];
+		String[] bannerText = new String[4];
 		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
 		bannerText[0] = provider.getBanner();
 		bannerText[1] = provider.getWelcomMessage();
+		bannerText[2] = provider.getVersion();
+		bannerText[3] = provider.name();
 		return bannerText;
 	}
 
@@ -628,14 +637,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		return highestPriorityProvider;
 	}
 
-	/**
-	 * get the version information
-	 * 
-	 */
-	@Override
-	public String version(String text) {
-		return this.version;
-	}
 
 	/**
 	 * get the welcome message at start.
