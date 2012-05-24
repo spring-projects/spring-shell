@@ -1,4 +1,4 @@
-The Spring Shell project provides an extensible interactive shell enviornment with a simple Spring based plugin model.
+The Spring Shell project provides an extensible interactive shell enviornment with a simple Spring based plugin model. 
 
 This is essentially a place holder README file until this project gets its sealegs.
 
