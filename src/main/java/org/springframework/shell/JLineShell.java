@@ -622,7 +622,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		String[] bannerText = new String[4];
 		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
 		bannerText[0] = provider.getBanner();
-		bannerText[1] = provider.getWelcomMessage();
+		bannerText[1] = provider.getWelcomeMessage();
 		bannerText[2] = provider.getVersion();
 		bannerText[3] = provider.name();
 		return bannerText;

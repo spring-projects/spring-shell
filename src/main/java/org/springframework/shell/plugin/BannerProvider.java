@@ -30,6 +30,6 @@ public interface BannerProvider extends PluginProvider{
 	
 	String getVersion();
 	
-	String getWelcomMessage();
+	String getWelcomeMessage();
 	
 }

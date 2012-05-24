@@ -69,9 +69,9 @@ public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.BannerProvider#getWelcomMessage()
+	 * @see org.springframework.shell.plugin.BannerProvider#getWelcomeMessage()
 	 */
-	public String getWelcomMessage() {
+	public String getWelcomeMessage() {
 		return Constant.WELCOME_MESSAGE;
 	}
 
