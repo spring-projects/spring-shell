@@ -46,5 +46,10 @@ dependencies {
 task wrapper(type: Wrapper) {
 }
 
+jar {
+	manifest {
+		attributes("version": "$version")
+	}
+}
 
 defaultTasks 'build'
