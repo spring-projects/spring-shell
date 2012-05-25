@@ -9,18 +9,17 @@ allprojects {
     version = "$springShellVersion"
 
     repositories {
-        mavenLocal()
         mavenCentral()
-        maven{
-        	url "http://repository.springsource.com/maven/bundles/release"
-        	url "http://maven.springframework.org/release"
-        	url "http://maven.springframework.org/milestone"
-        	url "http://maven.springframework.org/snapshot"
-        	url "http://oss.sonatype.org/content/repositories/snapshots"
-        	url "http://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"
-        	url "http://www.datanucleus.org/downloads/maven2/"
-        	url "http://conjars.org/repo"
-        }
+        maven{ url "http://mvnrepository.com/artifact" }      
+        maven{ url "http://maven.springframework.org/release" }
+        maven{ url "http://maven.springframework.org/milestone" }
+        maven{ url "http://maven.springframework.org/snapshot" }
+        maven{ url "http://maven.springframework.org.s3.amazonaws.com/external" }
+        maven{ url "http://repository.springsource.com/maven/bundles/release" }
+        maven{ url "http://oss.sonatype.org/content/repositories/snapshots" }
+        maven{ url "http://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/" }
+        maven{ url "http://www.datanucleus.org/downloads/maven2/" }
+        maven{ url "http://conjars.org/repo" }  
 	}
 }
 
