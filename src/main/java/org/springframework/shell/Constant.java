@@ -25,6 +25,7 @@ public interface Constant {
 	
 	String COMMAND_LINE_PROMPT = "spring>";
 	
-	String WELCOME_MESSAGE = "Welcome to Spring Shell. For assistance press or type \"hint\" then hit ENTER.";
+	String PRODUCT_NAME = "Spring Shell";
 	
+	String WELCOME_MESSAGE = "Welcome to " + PRODUCT_NAME + ". For assistance press or type \"hint\" then hit ENTER.";
 }

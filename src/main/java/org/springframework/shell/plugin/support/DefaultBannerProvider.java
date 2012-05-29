@@ -80,7 +80,7 @@ public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 	 */
 	@Override
 	public String name() {
-		return "default banner provider";
+		return Constant.PRODUCT_NAME;
 	}
 
 }

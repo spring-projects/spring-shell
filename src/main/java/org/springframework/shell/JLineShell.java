@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Handler;
@@ -29,10 +28,6 @@ import jline.ConsoleReader;
 import jline.WindowsTerminal;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.roo.shell.AbstractShell;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.shell.ExitShellRequest;
@@ -45,10 +40,7 @@ import org.springframework.roo.support.util.ClassUtils;
 import org.springframework.roo.support.util.IOUtils;
 import org.springframework.roo.support.util.OsUtils;
 import org.springframework.roo.support.util.StringUtils;
-import org.springframework.shell.plugin.BannerProvider;
-import org.springframework.shell.plugin.HistoryFileNameProvider;
-import org.springframework.shell.plugin.PluginProvider;
-import org.springframework.shell.plugin.PromptProvider;
+import org.springframework.roo.support.util.VersionUtils;
 
 
 /**
@@ -85,18 +77,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private final Map<Integer, Integer> rowErasureMap = new HashMap<Integer, Integer>();
 	private boolean shutdownHookFired = false; // ROO-1599
 
-	private ApplicationContext applicatonContext;
-	private boolean printBanner = true;
-
-	private static AnnotationAwareOrderComparator annocationOrderComparator = new AnnotationAwareOrderComparator();
-
-	private String historyFileName;
-	private String promptText;
-	private String productName;
-	private String banner;
-	private String version;
-	private String welcomeMessage;
-
 	private int historySize;
 
 	public void run() {
@@ -120,7 +100,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		// reader.setDebug(new PrintWriter(new FileWriter("writer.debug", true)));
 
 		openFileLogIfPossible();
-		this.reader.getHistory().setMaxSize(this.historySize);
+		this.reader.getHistory().setMaxSize(getHistorySize());
 		// Try to build previous command history from the project's log
 		String[] filteredLogEntries = filterLogEntry();
 		for (String logEntry : filteredLogEntries) {
@@ -128,7 +108,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		}
 
 		flashMessageRenderer();
-		flash(Level.FINE, this.productName + " " + this.version, Shell.WINDOW_TITLE_SLOT);
+		flash(Level.FINE, this.getProductName() + " " + this.getVersion(), Shell.WINDOW_TITLE_SLOT);
 		printBannerAndWelcome();
 
 		String startupNotifications = getStartupNotifications();
@@ -144,7 +124,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				shutdownHookFired = true;
 				// We don't need to closeShell(), as the shutdown hook in o.s.r.bootstrap.Main calls stop() which calls JLineShellComponent.deactivate() and that calls closeShell()
 			}
-		}, "Spring Roo JLine Shutdown Hook"));
+		}, getProductName() + " JLine Shutdown Hook"));
 
 		// Handle any "execute-then-quit" operation
 
@@ -175,7 +155,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		ArrayList<String> entries = new ArrayList<String>();		
 		try {
 			ReversedLinesFileReader reader = new ReversedLinesFileReader(
-					new File(this.historyFileName),4096,Charset.forName("UTF-8"));
+					new File(getHistoryFileName()),4096,Charset.forName("UTF-8"));
 			int size = 0;
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -225,10 +205,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	}
 
 	public void printBannerAndWelcome() {
-		if (printBanner) {
-			logger.info(this.banner);
-			logger.info(getWelcomeMessage());
-		}
 	}
 
 	public String getStartupNotifications() {
@@ -254,7 +230,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		if (reader.getTerminal().isANSISupported()) {
 			ANSIBuffer ansi = JLineLogHandler.getANSIBuffer();
 			if (path == null || "".equals(path)) {
-				shellPrompt = ansi.yellow(this.promptText).toString();
+				shellPrompt = ansi.yellow(getPromptText()).toString();
 			}
 			else {
 				if (overrideStyle) {
@@ -263,7 +239,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				else {
 					ansi.cyan(path);
 				}
-				shellPrompt = ansi.yellow(" " + this.promptText).toString();
+				shellPrompt = ansi.yellow(" " + getPromptText()).toString();
 			}
 		}
 		else {
@@ -337,7 +313,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 					}
 				}
 			}
-		}, "Spring Roo JLine Flash Message Manager");
+		}, getProductName() + " JLine Flash Message Manager");
 		t.start();
 	}
 
@@ -508,9 +484,9 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 	private void openFileLogIfPossible() {
 		try {
-			fileLog = new FileWriter(this.historyFileName, true);
+			fileLog = new FileWriter(getHistoryFileName(), true);
 			// First write, so let's record the date and time of the first user command
-			fileLog.write("// Spring Roo " + versionInfo() + " log opened at " + df.format(new Date()) + "\n");
+			fileLog.write("// " + getProductName() + " " + versionInfo() + " log opened at " + df.format(new Date()) + "\n");
 			fileLog.flush();
 		} catch (IOException ignoreIt) {
 		}
@@ -532,7 +508,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			fileLog.flush(); // So tail -f will show it's working
 			if (getExitShellRequest() != null) {
 				// Shutting down, so close our file (we can always reopen it later if needed)
-				fileLog.write("// Spring Roo " + versionInfo() + " log closed at " + df.format(new Date()) + "\n");
+				fileLog.write("// " + getProductName() + " " + versionInfo() + " log closed at " + df.format(new Date()) + "\n");
 				IOUtils.closeQuietly(fileLog);
 				fileLog = null;
 			}
@@ -576,28 +552,14 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		int rowNumber;
 	}
 
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicatonContext = applicationContext;
-	}
-
-	public void costomizePlugin() {
-		this.historyFileName = getHistoryFileName();
-		this.promptText = getPromptText();
-		String[] banner = getBannerText();
-		this.banner = banner[0];
-		this.welcomeMessage = banner[1];
-		this.version = banner[2];
-		this.productName = banner[3];
-	}
-
 	/**
 	 * get history file name from provider. The provider has highest order 
 	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
 	 * 
 	 * @return history file name 
 	 */
-	private String getHistoryFileName() {
-		return getHighestPriorityProvider(HistoryFileNameProvider.class).getHistoryFileName();
+	protected String getHistoryFileName() {
+		return Constant.HISTORY_FILE_NAME;
 	}
 
 	/**
@@ -606,53 +568,16 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 * 
 	 * @return prompt text
 	 */
-	private String getPromptText() {
-		return getHighestPriorityProvider(PromptProvider.class).getPromptText();
+	protected String getPromptText() {
+		return Constant.COMMAND_LINE_PROMPT;
 	}
-
-	/**
-	 * Get Banner and Welcome Message from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * @return BannerText[0]: Banner
-	 *         BannerText[1]: Welcome Message
-	 *         BannerText[2]: Version
-	 *         BannerText[3]: Product Name
-	 */
-	private String[] getBannerText() {
-		String[] bannerText = new String[4];
-		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
-		bannerText[0] = provider.getBanner();
-		bannerText[1] = provider.getWelcomeMessage();
-		bannerText[2] = provider.getVersion();
-		bannerText[3] = provider.name();
-		return bannerText;
+	
+	protected String getProductName() {
+		return Constant.PRODUCT_NAME;
 	}
-
-
-	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t) {
-		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicatonContext, t);
-		List<T> sortedProviders = new ArrayList<T>(providers.values());
-		Collections.sort(sortedProviders, annocationOrderComparator);
-		T highestPriorityProvider = sortedProviders.get(0);
-		return highestPriorityProvider;
-	}
-
-
-	/**
-	 * get the welcome message at start.
-	 * 
-	 * @return welcome message
-	 */
-	public String getWelcomeMessage() {
-		return this.welcomeMessage;
-	}
-
-
-	/**
-	 * @param printBanner the printBanner to set
-	 */
-	public void setPrintBanner(boolean printBanner) {
-		this.printBanner = printBanner;
+	
+	protected String getVersion() {
+		return VersionUtils.versionInfo();
 	}
 
 	/**
