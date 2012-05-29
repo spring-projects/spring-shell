@@ -209,12 +209,8 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 					exitShellRequest = (ExitShellRequest) result;
 					// Give ProcessManager a chance to close down its threads before the overall OSGi framework is terminated (ROO-1938)
 					executionStrategy.terminate();
-				} else if (result instanceof Iterable<?>) {
-					for (Object o : (Iterable<?>) result) {
-						logger.info(o.toString());
-					}
 				} else {
-					logger.info(result.toString());
+					handleExecutionResult(result);
 				}
 			}
 
@@ -444,6 +440,26 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		Assert.hasText(slot, "Slot name must be specified for a flash message");
 		if (!("".equals(message))) {
 			logger.log(level, message);
+		}
+	}
+	
+	/**
+	 * Handles the result of execution of a command. Given <i>result</i> is
+	 * expected to be not <code>null</code>. If <i>result</i> is a
+	 * {@link java.lang.Iterable} object, it will be iterated through to print
+	 * the output of <i>toString</i>. For other type of objects, simply output 
+	 * of <i>toString</i> is shown. Subclasses can alter this implementation
+	 * to handle the <i>result</i> differently.
+	 * 
+	 * @param result not <code>null</code> result of execution of a command.
+	 */
+	protected void handleExecutionResult(Object result) {
+		if (result instanceof Iterable<?>) {
+			for (Object o : (Iterable<?>) result) {
+				logger.info(o.toString());
+			}
+		} else {
+			logger.info(result.toString());
 		}
 	}
 }
