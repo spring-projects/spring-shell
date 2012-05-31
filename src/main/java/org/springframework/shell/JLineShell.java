@@ -558,9 +558,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 * 
 	 * @return history file name 
 	 */
-	protected String getHistoryFileName() {
-		return Constant.HISTORY_FILE_NAME;
-	}
+	abstract protected String getHistoryFileName();
 
 	/**
 	 * get prompt text from provider. The provider has highest order 
@@ -568,14 +566,20 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 * 
 	 * @return prompt text
 	 */
-	protected String getPromptText() {
-		return Constant.COMMAND_LINE_PROMPT;
-	}
+	abstract protected String getPromptText();
 	
-	protected String getProductName() {
-		return Constant.PRODUCT_NAME;
-	}
+	/**
+	 * get product name
+	 * 
+	 * @return Product Name
+	 */
+	abstract protected String getProductName();
 	
+	/**
+	 * get version information
+	 * 
+	 * @return Version
+	 */
 	protected String getVersion() {
 		return VersionUtils.versionInfo();
 	}

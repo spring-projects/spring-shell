@@ -43,7 +43,6 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	private String version;
 	private String welcomeMessage;
 
-	private int historySize;
 
 	// Fields
 	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.		
@@ -205,20 +204,6 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	 */
 	public void setPrintBanner(boolean printBanner) {
 		this.printBanner = printBanner;
-	}
-
-	/**
-	 * @return the historySize
-	 */
-	public int getHistorySize() {
-		return historySize;
-	}
-
-	/**
-	 * @param historySize the historySize to set
-	 */
-	public void setHistorySize(int historySize) {
-		this.historySize = historySize;
 	}
 	
 	protected String getProductName() {
