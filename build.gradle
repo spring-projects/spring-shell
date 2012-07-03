@@ -148,7 +148,7 @@ task schemaZip(type: Zip) {
     }
 }
 
-task distZip(type: Zip, dependsOn: [jar, docsZip, schemaZip, sourcesJar, javadocJar]) {
+task distZip(type: Zip, dependsOn: [jar, docsZip, sourcesJar, javadocJar]) {
     group = 'Distribution'
     classifier = 'dist'
     description = "Builds -${classifier} archive, containing all jars and docs, " +
@@ -172,9 +172,9 @@ task distZip(type: Zip, dependsOn: [jar, docsZip, schemaZip, sourcesJar, javadoc
             into "docs"
         }
 
-        from(zipTree(schemaZip.archivePath)) {
-            into "schema"
-        }
+//        from(zipTree(schemaZip.archivePath)) {
+//            into "schema"
+//        }
         into ("dist") {
             from rootProject.collect { project -> project.libsDir }
         }
@@ -186,7 +186,7 @@ artifacts {
     archives javadocJar
 
     archives docsZip
-    archives schemaZip
+//    archives schemaZip
     archives distZip
 }
 
