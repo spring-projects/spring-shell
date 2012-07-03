@@ -32,7 +32,8 @@ This is essentially a place holder README file until this project gets its seale
 
 ~~~~~ groovy
 repositories {
-   mavenRepo name: "spring-snapshot", urls: "http://maven.springframework.org/snapshot"
+   maven { url "http://repo.springsource.org/libs-milestone" }
+   maven { url "http://repo.springsource.org/libs-snapshot" }
 }
 
 dependencies {
