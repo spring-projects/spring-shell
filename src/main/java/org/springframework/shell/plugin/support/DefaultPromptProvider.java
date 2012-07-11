@@ -30,10 +30,6 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultPromptProvider implements PromptProvider {
 
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
-	}
-
 	public String getPrompt() {
 		return "spring-shell>";
 	}

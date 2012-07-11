@@ -34,10 +34,6 @@ import static org.springframework.roo.support.util.StringUtils.*;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
-	}
-
 	//@CliCommand(value = { "shell-version" }, help = "Displays shell version")
 	public String getBanner() {
 		StringBuilder sb = new StringBuilder();

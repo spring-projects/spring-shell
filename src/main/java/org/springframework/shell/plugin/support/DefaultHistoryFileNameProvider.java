@@ -30,10 +30,6 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultHistoryFileNameProvider implements HistoryFileNameProvider {
 
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
-	}
-
 	public String getHistoryFileName() {
 		return "spring-shell.log";
 	}
