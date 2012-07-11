@@ -15,10 +15,9 @@
  */
 package org.springframework.shell.plugin.support;
 
-import static org.junit.Assert.*;
-
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Jarred Li
@@ -27,14 +26,6 @@ import org.junit.Test;
 public class DefaultBannerProviderTest {
 
 	private DefaultBannerProvider banner = new DefaultBannerProvider();
-
-	/**
-	 * Test method for {@link org.springframework.shell.plugin.support.DefaultBannerProvider#getOrder()}.
-	 */
-	@Test
-	public void testGetOrder() {
-		Assert.assertTrue(banner.getOrder() == Integer.MAX_VALUE);
-	}
 
 	/**
 	 * Test method for {@link org.springframework.shell.plugin.support.DefaultBannerProvider#getBanner()}.

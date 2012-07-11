@@ -5,6 +5,7 @@ package org.springframework.shell;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -17,7 +18,6 @@ import org.springframework.roo.shell.Converter;
 import org.springframework.roo.shell.ExitShellRequest;
 import org.springframework.roo.shell.event.ShellStatus;
 import org.springframework.roo.support.logging.HandlerUtils;
-import org.springframework.roo.support.util.Assert;
 import org.springframework.util.StopWatch;
 
 
@@ -30,10 +30,12 @@ import org.springframework.util.StopWatch;
  */
 public class Bootstrap {
 
+	private static final Logger logger = HandlerUtils.getLogger(Bootstrap.class);
+
 	private static Bootstrap bootstrap;
 	private JLineShellComponent shell;
 	private ConfigurableApplicationContext ctx;
-	private static StopWatch sw = new StopWatch("Spring Sehll");
+	private static StopWatch sw = new StopWatch("Spring Shell");
 	private static SimpleShellCommandLineOptions options;
 
 	public static void main(String[] args) throws IOException {
@@ -57,6 +59,7 @@ public class Bootstrap {
 	}
 
 	public Bootstrap(String applicationContextLocation) throws IOException {
+		setupLogging();
 		createApplicationContext();
 
 		shell = ctx.getBean("shell", JLineShellComponent.class);
@@ -96,6 +99,7 @@ public class Bootstrap {
 	}
 
 	private void createApplicationContext() {
+		// create parent/base ctx
 		AnnotationConfigApplicationContext annctx = new AnnotationConfigApplicationContext();
 		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.StringConverter.class);
 		createAndRegisterBeanDefinition(annctx,
@@ -122,26 +126,21 @@ public class Bootstrap {
 		annctx.refresh();
 
 		ctx = initPluginApplicationContext(annctx);
-		
 		ctx.refresh();
 
 
 	}
 
 	/**
-	 * init plugin ApplicactionContext
+	 * Init plugin ApplicationContext
 	 * 
 	 * @param annctx parent ApplicationContext in core spring shell
 	 * @return new ApplicationContext in the plugin with core spring shell's context as parent
 	 */
 	private ConfigurableApplicationContext initPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
-		ClassPathXmlApplicationContext subContext = new ClassPathXmlApplicationContext(
-				"classpath*:/META-INF/spring/spring-shell-plugin.xml");
-		subContext.setParent(annctx);
-		return subContext;
+		return new ClassPathXmlApplicationContext(
+				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, true, annctx);
 	}
-
-
 
 	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
 		createAndRegisterBeanDefinition(annctx, clazz, null);
@@ -157,6 +156,22 @@ public class Bootstrap {
 			annctx.registerBeanDefinition(clazz.getSimpleName(), rbd);
 		}
 	}
+
+	private void setupLogging() {
+		// Ensure all JDK log messages are deferred until a target is registered
+		Logger rootLogger = Logger.getLogger("");
+		HandlerUtils.wrapWithDeferredLogHandler(rootLogger, Level.SEVERE);
+
+		// Set a suitable priority level on Spring Framework log messages
+		Logger sfwLogger = Logger.getLogger("org.springframework");
+		sfwLogger.setLevel(Level.WARNING);
+
+		// Set a suitable priority level on Roo log messages
+		// (see ROO-539 and HandlerUtils.getLogger(Class))
+		Logger rooLogger = Logger.getLogger("org.springframework.roo");
+		rooLogger.setLevel(Level.FINE);
+	}
+
 
 	protected ExitShellRequest run(String[] executeThenQuit) {
 
@@ -193,5 +208,4 @@ public class Bootstrap {
 		}
 		return exitShellRequest;
 	}
-
 }
