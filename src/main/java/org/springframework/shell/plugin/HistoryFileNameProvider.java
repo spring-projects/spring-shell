@@ -17,14 +17,15 @@ package org.springframework.shell.plugin;
 
 
 /**
- * History file name provider. Plugin should implements this interface to customize history file. 
+ * History file name provider. 
+ * Plugin should implement this interface to customize history file. 
  * <code>getOrder</code> indicate the priority, higher values can be interpreted as lower priority
  * 
  * @author Jarred Li
  * @since 1.0
  *
  */
-public interface HistoryFileNameProvider extends PluginProvider{
+public interface HistoryFileNameProvider extends PluginProvider {
 
 	/**
 	 * get history file name
@@ -32,5 +33,5 @@ public interface HistoryFileNameProvider extends PluginProvider{
 	 * @return history file name
 	 */
 	String getHistoryFileName();
-	
+
 }

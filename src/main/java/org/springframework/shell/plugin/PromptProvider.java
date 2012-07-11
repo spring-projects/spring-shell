@@ -17,14 +17,19 @@ package org.springframework.shell.plugin;
 
 
 /**
- * Shell prompt provider. Plugin should implements this interface to customize prompt.
+ * Shell prompt provider.
+ * Plugins should implement this interface to customize prompt.
  * <code>getOrder</code> indicate the priority, higher values can be interpreted as lower priority
  * 
  * @author Jarred Li
  *
  */
-public interface PromptProvider extends PluginProvider{
+public interface PromptProvider extends PluginProvider {
 
-	String getPromptText();
-	
+	/**
+	 * Returns the prompt text.
+	 * 
+	 * @return prompt
+	 */
+	String getPrompt();
 }

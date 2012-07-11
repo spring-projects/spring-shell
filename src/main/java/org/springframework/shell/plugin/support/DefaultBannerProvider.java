@@ -15,15 +15,14 @@
  */
 package org.springframework.shell.plugin.support;
 
-import static org.springframework.roo.support.util.StringUtils.LINE_SEPARATOR;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.support.util.VersionUtils;
-import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.roo.support.util.StringUtils.*;
 
 /**
  * Default Banner provider.
@@ -35,16 +34,10 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.core.Ordered#getOrder()
-	 */
 	public int getOrder() {
 		return Ordered.LOWEST_PRECEDENCE;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.BannerProvider#getBanner()
-	 */
 	//@CliCommand(value = { "shell-version" }, help = "Displays shell version")
 	public String getBanner() {
 		StringBuilder sb = new StringBuilder();
@@ -61,26 +54,16 @@ public class DefaultBannerProvider implements BannerProvider, CommandMarker {
 		return sb.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.BannerProvider#getVersion()
-	 */
+
 	public String getVersion() {
 		return VersionUtils.versionInfo();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.BannerProvider#getWelcomeMessage()
-	 */
 	public String getWelcomeMessage() {
-		return Constant.WELCOME_MESSAGE;
+		return "Welcome to " + name() + ". For assistance press or type \"hint\" then hit ENTER.";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.PluginProvider#name()
-	 */
-	@Override
 	public String name() {
-		return Constant.PRODUCT_NAME;
+		return "Spring Shell";
 	}
-
 }

@@ -17,19 +17,34 @@ package org.springframework.shell.plugin;
 
 
 /**
- * Banner provider. Plugin should implements this interface to replace the version banner.
+ * Banner provider. Plugin should implement this interface to replace the version banner.
  * <code>getOrder</code> indicate the priority, higher values can be interpreted as lower priority
  * 
  * @author Jarred Li
  * @since 1.0
  *
  */
-public interface BannerProvider extends PluginProvider{
+public interface BannerProvider extends PluginProvider {
 
+	/**
+	 * Returns the banner.
+	 * 
+	 * @return
+	 */
 	String getBanner();
-	
+
+	/**
+	 * Returns the associated version.
+	 * 
+	 * @return
+	 */
 	String getVersion();
-	
+
+	/**
+	 * Returns the welcome message.
+	 * 
+	 * @return
+	 */
 	String getWelcomeMessage();
-	
+
 }

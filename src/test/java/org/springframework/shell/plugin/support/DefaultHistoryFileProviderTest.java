@@ -15,12 +15,10 @@
  */
 package org.springframework.shell.plugin.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
-import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Jarred Li
@@ -36,7 +34,7 @@ public class DefaultHistoryFileProviderTest {
 	@Test
 	public void testGetHistoryFileName() {
 		assertNotNull(historyFile.getHistoryFileName());
-		assertEquals(Constant.HISTORY_FILE_NAME, historyFile.getHistoryFileName());
+		assertEquals("spring-shell.log", historyFile.getHistoryFileName());
 	}
 
 }

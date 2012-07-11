@@ -16,11 +16,16 @@
 package org.springframework.shell.plugin;
 
 /**
+ * Generic plugin provider.
+ * 
  * @author Jarred Li
- *
  */
 public interface PluginProvider {
 
+	/**
+	 * Returns the name of the plugin.
+	 * 
+	 * @return
+	 */
 	String name();
-	
 }

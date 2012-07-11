@@ -15,13 +15,12 @@
  */
 package org.springframework.shell.plugin.support;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.PromptProvider;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Jarred Li
@@ -49,11 +48,10 @@ public class DefaultPromptProviderTest {
 
 
 	/**
-	 * Test method for {@link org.springframework.shell.plugin.support.DefaultPromptProvider#getPromptText()}.
+	 * Test method for {@link org.springframework.shell.plugin.support.DefaultPromptProvider#getPrompt()}.
 	 */
 	@Test
 	public void testGetPromptText() {
-		assertEquals(Constant.COMMAND_LINE_PROMPT, prompt.getPromptText());
+		assertEquals("spring-shell>", prompt.getPrompt());
 	}
-
 }

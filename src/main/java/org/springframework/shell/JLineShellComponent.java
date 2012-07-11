@@ -146,7 +146,7 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	 * @return prompt text
 	 */
 	protected String getPromptText() {
-		String providerPromptText = getHighestPriorityProvider(PromptProvider.class).getPromptText();
+		String providerPromptText = getHighestPriorityProvider(PromptProvider.class).getPrompt();
 		if (providerPromptText != null) {
 			return providerPromptText;
 		} else {

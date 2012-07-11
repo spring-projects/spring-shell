@@ -28,7 +28,7 @@ public class VersionUtils {
 	 * or <code>null</code> if it cannot be determined.
 	 * @see java.lang.Package#getImplementationVersion()
 	 */
-	public static String getVersion() {
+	public static String versionInfo() {
 		Package pkg = SpringVersion.class.getPackage();
 		return (pkg != null ? pkg.getImplementationVersion() : "Unknown Version");
 	}

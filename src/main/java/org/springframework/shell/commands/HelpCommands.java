@@ -31,11 +31,7 @@ public class HelpCommands implements CommandMarker, ApplicationContextAware {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-	 */
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.ctx = applicationContext;
-
 	}
 }

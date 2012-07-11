@@ -17,7 +17,6 @@ package org.springframework.shell.plugin.support;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.shell.Constant;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.stereotype.Component;
 
@@ -29,28 +28,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class DefaultHistoryFileNameProvider implements HistoryFileNameProvider{
+public class DefaultHistoryFileNameProvider implements HistoryFileNameProvider {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.core.Ordered#getOrder()
-	 */
 	public int getOrder() {
 		return Ordered.LOWEST_PRECEDENCE;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.HistoryFileProvider#getHistoryFileName()
-	 */
 	public String getHistoryFileName() {
-		return Constant.HISTORY_FILE_NAME;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.PluginProvider#name()
-	 */
-	@Override
-	public String name() {
-		return "default banner provider";
+		return "spring-shell.log";
 	}
 
+	public String name() {
+		return "default history provider";
+	}
 }
