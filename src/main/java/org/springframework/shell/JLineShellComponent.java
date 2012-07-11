@@ -1,5 +1,6 @@
 package org.springframework.shell;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.Lifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.core.io.Resource;
 import org.springframework.roo.shell.ExecutionStrategy;
 import org.springframework.roo.shell.Parser;
 import org.springframework.roo.shell.SimpleParser;
@@ -31,7 +33,7 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	private volatile boolean running = false;
 	private Thread shellThread;
 
-	private ApplicationContext applicatonContext;
+	private ApplicationContext applicationContext;
 	private boolean printBanner = true;
 
 	private static AnnotationAwareOrderComparator annotationOrderComparator = new AnnotationAwareOrderComparator();
@@ -90,9 +92,18 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 	@Override
 	protected Collection<URL> findResources(final String path) {
-		// For an OSGi bundle search, we add the root prefix to the given path
-		throw new UnsupportedOperationException("TODO: need to use standard classpath search");
-		//return OSGiUtils.findEntriesByPath(context.getBundleContext(), OSGiUtils.ROOT_PATH + path);
+		try {
+			Resource[] resources = applicationContext.getResources(path);
+			Collection<URL> list = new ArrayList<URL>(resources.length);
+			for (Resource resource : resources) {
+				list.add(resource.getURL());
+			}
+			return list;
+		} catch (IOException ex) {
+			logger.fine("Cannot find path " + path);
+			// return Collections.emptyList();
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
@@ -111,7 +122,7 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	}
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicatonContext = applicationContext;
+		this.applicationContext = applicationContext;
 	}
 
 	public void customizePlugin() {
@@ -174,7 +185,7 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 
 	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t) {
-		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicatonContext, t);
+		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext, t);
 		List<T> sortedProviders = new ArrayList<T>(providers.values());
 		Collections.sort(sortedProviders, annotationOrderComparator);
 		T highestPriorityProvider = sortedProviders.get(0);
