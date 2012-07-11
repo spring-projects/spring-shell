@@ -15,52 +15,21 @@
  */
 package org.springframework.roo.support.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-import java.util.zip.ZipEntry;
+import org.springframework.core.SpringVersion;
 
 
 /**
  * @author Jarred Li
- *
  */
 public class VersionUtils {
 
-	public static String versionInfo() {
-		// Try to determine the bundle version
-		String bundleVersion = null;
-		JarFile jarFile = null;
-		try {
-			URL classContainer = VersionUtils.class.getProtectionDomain().getCodeSource().getLocation();
-			if (classContainer.toString().endsWith(".jar")) {
-				// Attempt to obtain the "Bundle-Version" version from the manifest
-				jarFile = new JarFile(new File(classContainer.toURI()), false);
-				ZipEntry manifestEntry = jarFile.getEntry("META-INF/MANIFEST.MF");
-				Manifest manifest = new Manifest(jarFile.getInputStream(manifestEntry));
-				bundleVersion = manifest.getMainAttributes().getValue("version");
-			}
-		} catch (IOException ignoreAndMoveOn) {
-		} catch (URISyntaxException ignoreAndMoveOn) {
-		} finally {
-			IOUtils.closeQuietly(jarFile);
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		if (bundleVersion != null) {
-			sb.append(bundleVersion);
-		}
-
-
-		if (sb.length() == 0) {
-			sb.append("UNKNOWN VERSION");
-		}
-
-		return sb.toString();
+	/**
+	 * Returns the full version string of the present Spring codebase,
+	 * or <code>null</code> if it cannot be determined.
+	 * @see java.lang.Package#getImplementationVersion()
+	 */
+	public static String getVersion() {
+		Package pkg = SpringVersion.class.getPackage();
+		return (pkg != null ? pkg.getImplementationVersion() : "Unknown Version");
 	}
-
 }
