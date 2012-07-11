@@ -15,7 +15,6 @@
  */
 package org.springframework.roo.support.util;
 
-import org.springframework.core.SpringVersion;
 
 
 /**
@@ -24,12 +23,12 @@ import org.springframework.core.SpringVersion;
 public class VersionUtils {
 
 	/**
-	 * Returns the full version string of the present Spring codebase,
+	 * Returns the full version string of the present Spring Shell codebase,
 	 * or <code>null</code> if it cannot be determined.
 	 * @see java.lang.Package#getImplementationVersion()
 	 */
 	public static String versionInfo() {
-		Package pkg = SpringVersion.class.getPackage();
+		Package pkg = VersionUtils.class.getPackage();
 		return (pkg != null ? pkg.getImplementationVersion() : "Unknown Version");
 	}
 }
