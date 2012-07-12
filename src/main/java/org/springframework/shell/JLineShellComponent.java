@@ -50,10 +50,6 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.		
 	private SimpleParser parser = new SimpleParser();
 
-	// Dont' need this, used to get twitter status.
-	//@Reference private UrlInputStreamService urlInputStreamService;
-	//
-
 
 	public SimpleParser getSimpleParser() {
 		return parser;
@@ -224,6 +220,4 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	protected String getVersion() {
 		return version;
 	}
-
-
 }

@@ -16,21 +16,17 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.shell.Converter;
 import org.springframework.roo.shell.ExitShellRequest;
-import org.springframework.roo.shell.event.ShellStatus;
 import org.springframework.roo.support.logging.HandlerUtils;
 import org.springframework.util.StopWatch;
 
-
-
 /**
- * Main class, needs some cleanup
+ * Loads a {@link Shell} using Spring IoC container.
  * 
- * @author vnagaraja
- * @author Jarred Li
+ * @author Ben Alex
+ * @since 1.0
+ *
  */
 public class Bootstrap {
-
-	private static final Logger logger = HandlerUtils.getLogger(Bootstrap.class);
 
 	private static Bootstrap bootstrap;
 	private JLineShellComponent shell;
@@ -59,7 +55,7 @@ public class Bootstrap {
 	}
 
 	public Bootstrap(String applicationContextLocation) throws IOException {
-		setupLogging();
+		//setupLogging();
 		createApplicationContext();
 
 		shell = ctx.getBean("shell", JLineShellComponent.class);
@@ -71,31 +67,15 @@ public class Bootstrap {
 
 		Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx, CommandMarker.class);
 		for (CommandMarker command : commands.values()) {
-			//System.out.println("Registering command " + command);
 			shell.getSimpleParser().add(command);
 		}
 
 		Map<String, Converter> converters = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx, Converter.class);
 		for (Converter converter : converters.values()) {
-			//System.out.println("Registering converter " + converter);
 			shell.getSimpleParser().add(converter);
 		}
+
 		shell.start();
-
-		//TODO use listener and latch..        
-		while (true) {
-			if (shell.getShellStatus().getStatus().equals(ShellStatus.Status.USER_INPUT)) {
-				break;
-			}
-			else {
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
 	}
 
 	private void createApplicationContext() {
@@ -127,8 +107,6 @@ public class Bootstrap {
 
 		ctx = initPluginApplicationContext(annctx);
 		ctx.refresh();
-
-
 	}
 
 	/**
@@ -157,6 +135,7 @@ public class Bootstrap {
 		}
 	}
 
+	// seems on JDK 1.6.0_18 or higher causes the output to disappear
 	private void setupLogging() {
 		// Ensure all JDK log messages are deferred until a target is registered
 		Logger rootLogger = Logger.getLogger("");
@@ -168,7 +147,7 @@ public class Bootstrap {
 
 		// Set a suitable priority level on Roo log messages
 		// (see ROO-539 and HandlerUtils.getLogger(Class))
-		Logger rooLogger = Logger.getLogger("org.springframework.roo");
+		Logger rooLogger = Logger.getLogger("org.springframework.shell");
 		rooLogger.setLevel(Level.FINE);
 	}
 
@@ -193,6 +172,7 @@ public class Bootstrap {
 			}
 		}
 		else {
+			shell.promptLoop();
 			exitShellRequest = shell.getExitShellRequest();
 			if (exitShellRequest == null) {
 				// shouldn't really happen, but we'll fallback to this anyway

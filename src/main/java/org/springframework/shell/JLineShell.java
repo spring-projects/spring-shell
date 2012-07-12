@@ -454,7 +454,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		String line;
 
 		try {
-			while (exitShellRequest == null && ((line = reader.readLine()) != null)) {
+			while (exitShellRequest == null && (reader != null && ((line = reader.readLine()) != null))) {
 				JLineLogHandler.resetMessageTracking();
 				setShellStatus(Status.USER_INPUT);
 
