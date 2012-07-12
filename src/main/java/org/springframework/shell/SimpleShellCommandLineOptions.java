@@ -34,21 +34,27 @@ public class SimpleShellCommandLineOptions {
 		int i = 0;
 		while (i < args.length) {
 			String arg = args[i++];
-			if (arg.equals("--environment")) {
-				String environment = args[i++];
-				options.extraSystemProperties.put("napa.application.profile", environment);
+			if (arg.equals("--profiles")) {
+				try {
+					String profiles = args[i++];
+					options.extraSystemProperties.put("spring.profiles.active", profiles);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					LOGGER.warning("No value specified for --profiles option");
+				}
 			}
 			else if (arg.equals("--cmdfile")) {
-				File f = new File(args[i++]);
 				try {
+					File f = new File(args[i++]);
 				  commands.addAll(FileUtils.readLines(f));
 				} catch (IOException e) {
 					LOGGER.warning("Could not read lines from command file: " +  e.getMessage());
+				} catch (ArrayIndexOutOfBoundsException e) {
+					LOGGER.warning("No value specified for --cmdfile option");
 				}
 			}
-			else if (arg.equals("--histsize")) {
-				String histSizeArg = args[i++];				
+			else if (arg.equals("--histsize")) {		
 				try {				
+					String histSizeArg = args[i++];		
 					int histSize = Integer.parseInt(histSizeArg);
 					if (histSize <= 0) {
 						LOGGER.warning("histsize option must be > 0, using default value of " + DEFAULT_HISTORY_SIZE);
@@ -56,7 +62,9 @@ public class SimpleShellCommandLineOptions {
 					  options.historySize = histSize;
 					}
 				} catch (NumberFormatException e) {
-          LOGGER.warning("Unable to parse histsize value [" + histSizeArg + "] to an integer ");
+          LOGGER.warning("Unable to parse histsize value to an integer ");
+				} catch (ArrayIndexOutOfBoundsException ae) {
+					LOGGER.warning("No value specified for --histsize option");
 				}
 			}
 			else if (arg.equals("--help")) {
@@ -92,7 +100,6 @@ public class SimpleShellCommandLineOptions {
 	}
 	
 	private static void printUsage(){
-		System.out.println("Usage:");
-		System.out.println("java -jar {jarname} --help --histsize {size} --cmdfile {file}");
+		System.out.println("Usage:  --help --histsize [size] --cmdfile [file name] --profiles [comma-separated list of profile names]");
 	}
 }
