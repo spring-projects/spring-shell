@@ -37,9 +37,19 @@ public interface ExecutionProcessor extends CommandMarker {
 	ParseResult beforeInvocation(ParseResult invocationContext);
 
 	/**
-	 * Method called after invoking the target command (described by {@link ParseResult}).
+	 * Method called after successfully invoking the target command (described by {@link ParseResult}).
 	 * 
 	 * @param invocationContext target command context
+	 * @param result the invocation result
 	 */
-	void afterInvocation(ParseResult invocationContext);
+	void afterReturningInvocation(ParseResult invocationContext, Object result);
+
+	/**
+	 * Method called after invoking the target command (described by {@link ParseResult}) had thrown an exception .
+	 * 
+	 * @param invocationContext target command context
+	 * @param thrown the thrown object
+	 */
+	void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown);
+
 }

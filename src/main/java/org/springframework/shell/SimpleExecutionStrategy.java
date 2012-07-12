@@ -27,9 +27,18 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 				ExecutionProcessor processor = ((ExecutionProcessor) target);
 				parseResult = processor.beforeInvocation(parseResult);
 				try {
-					return invoke(parseResult);
-				} finally {
-					processor.afterInvocation(parseResult);
+					Object result = invoke(parseResult);
+					processor.afterReturningInvocation(parseResult, result);
+					return result;
+				} catch (Throwable th) {
+					processor.afterThrowingInvocation(parseResult, th);
+					if (th instanceof Error) {
+						throw ((Error) th);
+					}
+					if (th instanceof RuntimeException) {
+						throw ((RuntimeException) th);
+					}
+					throw new RuntimeException(th);
 				}
 			}
 			else {

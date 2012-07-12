@@ -46,8 +46,12 @@ public class SimpleExecutionStrategyTest {
 			return (beforeReturn == null ? invocationContext : beforeReturn);
 		}
 
-		public void afterInvocation(ParseResult invocationContext) {
+		public void afterReturningInvocation(ParseResult invocationContext, Object result) {
 			after = invocationContext;
+		}
+
+		public void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown) {
+			//
 		}
 	}
 
