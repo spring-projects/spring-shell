@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.roo.support.logging.HandlerUtils;
+import org.springframework.shell.commands.OsCommands;
 
 /**
  * Not really used much, but keeping for future use
@@ -18,9 +21,12 @@ import org.apache.commons.io.FileUtils;
  * @author vnagaraja
  */
 public class SimpleShellCommandLineOptions {
+	
+  private static final Logger LOGGER = HandlerUtils.getLogger(SimpleShellCommandLineOptions.class);
+  private static final int DEFAULT_HISTORY_SIZE = 3000;
 	String[] executeThenQuit = null;
 	Map<String, String> extraSystemProperties = new HashMap<String, String>();
-	int historySize = 3000;
+	int historySize = DEFAULT_HISTORY_SIZE;
 
 	public static SimpleShellCommandLineOptions parseCommandLine(String[] args) throws IOException {
 		SimpleShellCommandLineOptions options = new SimpleShellCommandLineOptions();
@@ -34,10 +40,24 @@ public class SimpleShellCommandLineOptions {
 			}
 			else if (arg.equals("--cmdfile")) {
 				File f = new File(args[i++]);
-				commands.addAll(FileUtils.readLines(f));
+				try {
+				  commands.addAll(FileUtils.readLines(f));
+				} catch (IOException e) {
+					LOGGER.warning("Could not read lines from command file: " +  e.getMessage());
+				}
 			}
 			else if (arg.equals("--histsize")) {
-				options.historySize = Integer.parseInt(args[i++]);
+				String histSizeArg = args[i++];				
+				try {				
+					int histSize = Integer.parseInt(histSizeArg);
+					if (histSize <= 0) {
+						LOGGER.warning("histsize option must be > 0, using default value of " + DEFAULT_HISTORY_SIZE);
+					} else {
+					  options.historySize = histSize;
+					}
+				} catch (NumberFormatException e) {
+          LOGGER.warning("Unable to parse histsize value [" + histSizeArg + "] to an integer ");
+				}
 			}
 			else if (arg.equals("--help")) {
 				printUsage();
