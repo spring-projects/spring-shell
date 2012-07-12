@@ -122,13 +122,14 @@ public class JLineLogHandler extends Handler {
 
 			// This ensures nothing is ever displayed when redrawing the line
 			reader.setDefaultPrompt("");
-			reader.printString(toDisplay);
-
+			reader.redrawLine();
 			// Now restore the line formatting settings back to their original
 			reader.setDefaultPrompt(shellPromptAccessor.getShellPrompt());
 
 			reader.getCursorBuffer().setBuffer(buffer);
 			reader.getCursorBuffer().cursor = cursor;
+
+			reader.printString(toDisplay);
 
 			Boolean prohibitingRedraw = redrawProhibit.get();
 			if (prohibitingRedraw == null) {
