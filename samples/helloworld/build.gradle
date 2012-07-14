@@ -2,6 +2,7 @@ description = 'Spring Shell Example'
 apply plugin: 'base'
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'application'
 
 repositories {
 	mavenCentral()
@@ -15,24 +16,6 @@ dependencies {
 	compile "org.springframework.shell:spring-shell:$springShellVersion"
 	testCompile "junit:junit:$junitVersion"
 }
+mainClassName = "org.springframework.shell.Bootstrap"
 
-task copyDependency(type: Copy) {
-	into "$buildDir/libs/dependency"
-	from configurations.runtime	
-}
-
-project.ext.springShellJar = configurations.runtime.find { file -> file.name.contains("spring-shell")}
-//println("spring shell name is:" + project.ext.springShellJar.name)
-
-project.ext.manifestClasspath = "dependency/" + springShellJar.name + " "
-project.ext.manifestClasspath = project.ext.manifestClasspath + configurations.runtime.collect{ File file -> "dependency/"+file.name}.join(' ')
-
-jar {
-	baseName "helloworld"
-	manifest {
-		attributes 'Main-Class' : 'org.springframework.shell.Bootstrap', "Class-Path" : project.ext.manifestClasspath
-	}	
-}
-
-
-defaultTasks 'clean', 'build', 'copyDependency'
+defaultTasks 'clean', 'build'
