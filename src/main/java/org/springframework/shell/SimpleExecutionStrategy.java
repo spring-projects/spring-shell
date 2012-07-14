@@ -2,7 +2,7 @@ package org.springframework.shell;
 
 import org.springframework.roo.shell.CommandMarker;
 import org.springframework.roo.shell.ExecutionStrategy;
-import org.springframework.roo.shell.ParseResult;
+import org.springframework.roo.shell.event.ParseResult;
 import org.springframework.roo.support.util.Assert;
 import org.springframework.roo.support.util.ReflectionUtils;
 

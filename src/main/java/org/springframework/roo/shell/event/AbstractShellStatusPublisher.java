@@ -3,7 +3,6 @@ package org.springframework.roo.shell.event;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.springframework.roo.shell.ParseResult;
 import org.springframework.roo.shell.event.ShellStatus.Status;
 import org.springframework.roo.support.util.Assert;
 

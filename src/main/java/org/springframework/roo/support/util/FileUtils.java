@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import org.springframework.roo.support.ant.AntPathMatcher;
-import org.springframework.roo.support.ant.PathMatcher;
 
 /**
  * Utilities for handling {@link File} instances.

@@ -1,5 +1,7 @@
 package org.springframework.roo.shell;
 
+import org.springframework.roo.shell.event.ParseResult;
+
 /**
  * Strategy interface to permit the controlled execution of methods.
  *

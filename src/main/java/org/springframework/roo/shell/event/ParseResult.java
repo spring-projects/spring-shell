@@ -1,8 +1,9 @@
-package org.springframework.roo.shell;
+package org.springframework.roo.shell.event;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import org.springframework.roo.shell.Converter;
 import org.springframework.roo.support.style.ToStringCreator;
 import org.springframework.roo.support.util.Assert;
 import org.springframework.roo.support.util.StringUtils;

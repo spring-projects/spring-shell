@@ -1,10 +1,8 @@
-package org.springframework.roo.support.ant;
+package org.springframework.roo.support.util;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.roo.support.util.Assert;
-import org.springframework.roo.support.util.StringUtils;
 
 /**
  * PathMatcher implementation for Ant-style path patterns.

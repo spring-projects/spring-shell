@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.roo.shell.event.AbstractShellStatusPublisher;
+import org.springframework.roo.shell.event.ParseResult;
 import org.springframework.roo.shell.event.ShellStatus;
 import org.springframework.roo.shell.event.ShellStatus.Status;
 import org.springframework.roo.support.logging.HandlerUtils;

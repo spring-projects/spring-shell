@@ -1,6 +1,5 @@
 package org.springframework.roo.shell.event;
 
-import org.springframework.roo.shell.ParseResult;
 
 /**
  * Represents the different states that a shell can legally be in.

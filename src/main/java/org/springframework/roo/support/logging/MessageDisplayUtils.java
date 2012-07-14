@@ -1,4 +1,4 @@
-package org.springframework.roo.support.util;
+package org.springframework.roo.support.logging;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.roo.support.logging.HandlerUtils;
+import org.springframework.roo.support.util.FileCopyUtils;
+import org.springframework.roo.support.util.IOUtils;
 
 /**
  * Retrieves text files from the classloader and displays them on-screen.

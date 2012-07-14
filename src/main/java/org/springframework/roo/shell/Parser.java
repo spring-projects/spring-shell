@@ -2,6 +2,8 @@ package org.springframework.roo.shell;
 
 import java.util.List;
 
+import org.springframework.roo.shell.event.ParseResult;
+
 /**
  * Interface for {@link SimpleParser}.
  *

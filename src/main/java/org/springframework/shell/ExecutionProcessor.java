@@ -16,7 +16,7 @@
 package org.springframework.shell;
 
 import org.springframework.roo.shell.CommandMarker;
-import org.springframework.roo.shell.ParseResult;
+import org.springframework.roo.shell.event.ParseResult;
 
 /**
  * Extension interface allowing command provider to be called
