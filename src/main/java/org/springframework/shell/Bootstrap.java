@@ -13,10 +13,12 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.roo.shell.CommandMarker;
-import org.springframework.roo.shell.Converter;
-import org.springframework.roo.shell.ExitShellRequest;
-import org.springframework.roo.support.logging.HandlerUtils;
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.Converter;
+import org.springframework.shell.core.ExitShellRequest;
+import org.springframework.shell.core.JLineShellComponent;
+import org.springframework.shell.core.Shell;
+import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.util.StopWatch;
 
 /**
@@ -81,23 +83,23 @@ public class Bootstrap {
 	private void createApplicationContext() {
 		// create parent/base ctx
 		AnnotationConfigApplicationContext annctx = new AnnotationConfigApplicationContext();
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.StringConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
 		createAndRegisterBeanDefinition(annctx,
-				org.springframework.roo.shell.converters.AvailableCommandsConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.BigDecimalConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.BigIntegerConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.BooleanConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.CharacterConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.DateConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.DoubleConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.EnumConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.FloatConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.IntegerConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.LocaleConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.LongConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.ShortConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.roo.shell.converters.StaticFieldConverterImpl.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.JLineShellComponent.class, "shell");
+				org.springframework.shell.converters.AvailableCommandsConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigDecimalConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigIntegerConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BooleanConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.CharacterConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DateConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DoubleConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.EnumConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.FloatConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.IntegerConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LocaleConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LongConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.ShortConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
 
 		annctx.scan("org.springframework.shell.commands");

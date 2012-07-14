@@ -15,14 +15,13 @@
  */
 package org.springframework.shell.plugin.support;
 
+import static org.springframework.shell.support.util.StringUtils.LINE_SEPARATOR;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.roo.shell.CommandMarker;
-import org.springframework.roo.support.util.VersionUtils;
 import org.springframework.shell.plugin.BannerProvider;
+import org.springframework.shell.support.util.VersionUtils;
 import org.springframework.stereotype.Component;
-
-import static org.springframework.roo.support.util.StringUtils.*;
 
 /**
  * Default Banner provider.
@@ -32,9 +31,8 @@ import static org.springframework.roo.support.util.StringUtils.*;
  */
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class DefaultBannerProvider implements BannerProvider, CommandMarker {
+public class DefaultBannerProvider implements BannerProvider {
 
-	//@CliCommand(value = { "shell-version" }, help = "Displays shell version")
 	public String getBanner() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" _____            _    ").append(LINE_SEPARATOR);

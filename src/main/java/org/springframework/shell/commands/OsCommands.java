@@ -3,10 +3,10 @@ package org.springframework.shell.commands;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import org.springframework.roo.shell.CliCommand;
-import org.springframework.roo.shell.CliOption;
-import org.springframework.roo.shell.CommandMarker;
-import org.springframework.roo.support.logging.HandlerUtils;
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.annotation.CliCommand;
+import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 /**
