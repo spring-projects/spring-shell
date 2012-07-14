@@ -3,11 +3,11 @@ package org.springframework.shell.commands;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.roo.shell.CliCommand;
-import org.springframework.roo.shell.CliOption;
-import org.springframework.roo.shell.CommandMarker;
-import org.springframework.roo.shell.SimpleParser;
-import org.springframework.shell.JLineShellComponent;
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.JLineShellComponent;
+import org.springframework.shell.core.SimpleParser;
+import org.springframework.shell.core.annotation.CliCommand;
+import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
 /**

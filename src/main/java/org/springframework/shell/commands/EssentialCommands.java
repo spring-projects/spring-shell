@@ -1,8 +1,8 @@
 package org.springframework.shell.commands;
 
-import org.springframework.roo.shell.CliCommand;
-import org.springframework.roo.shell.CommandMarker;
-import org.springframework.roo.shell.ExitShellRequest;
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.ExitShellRequest;
+import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -7,7 +7,7 @@ import java.io.Reader;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.roo.support.logging.HandlerUtils;
+import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 /**

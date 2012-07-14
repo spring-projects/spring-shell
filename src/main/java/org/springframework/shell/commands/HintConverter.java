@@ -3,9 +3,9 @@ package org.springframework.shell.commands;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.roo.shell.Completion;
-import org.springframework.roo.shell.Converter;
-import org.springframework.roo.shell.MethodTarget;
+import org.springframework.shell.core.Completion;
+import org.springframework.shell.core.Converter;
+import org.springframework.shell.core.MethodTarget;
 import org.springframework.stereotype.Component;
 
 /**

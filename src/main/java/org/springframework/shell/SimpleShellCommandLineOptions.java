@@ -12,11 +12,10 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.roo.support.logging.HandlerUtils;
-import org.springframework.shell.commands.OsCommands;
+import org.springframework.shell.support.logging.HandlerUtils;
 
 /**
- * Not really used much, but keeping for future use
+ * Used to pass in command line options to customize the shell on launch
  * 
  * @author vnagaraja
  */

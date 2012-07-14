@@ -6,8 +6,8 @@ import java.util.ResourceBundle;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.springframework.roo.shell.AbstractShell;
-import org.springframework.roo.support.util.StringUtils;
+import org.springframework.shell.core.AbstractShell;
+import org.springframework.shell.support.util.StringUtils;
 import org.springframework.stereotype.Component;
 
 @Component
