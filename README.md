@@ -43,18 +43,15 @@ dependencies {
 current version is 1.0.0.BUILD-SNAPSHOT
 
 # Building
+Spring Shell is built with Gradle. To build Spring Shell, run
 
-Spring Shell currently uses Maven as its build system.  The build been done using version 3.0.3 (r1075438; 2011-02-28 12:31:09-0500) and the plan is to switch to gradle.
-
-To build Spring Shell, run
-
-     mvn package
+     ./gradlew 
      
 # Running Example
 
     cd samples/helloworld
-    mvn package
-    java -jar target/helloworld-1.0.0.BUILD.SNAPSHOT.jar
+    ../../gradlew 
+    java -jar build/libs/helloworld-1.0.0.BUILD-SNAPSHOT.jar
      
 # Contributing
 
