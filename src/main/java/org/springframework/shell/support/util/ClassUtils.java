@@ -1,5 +1,3 @@
-package org.springframework.shell.support.util;
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -15,6 +13,7 @@ package org.springframework.shell.support.util;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.shell.support.util;
 
 import java.beans.Introspector;
 import java.lang.reflect.Array;
