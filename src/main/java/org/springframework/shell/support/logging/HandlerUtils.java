@@ -48,7 +48,7 @@ public abstract class HandlerUtils {
 	public static Logger getLogger(final Class<?> clazz) {
 		Assert.notNull(clazz, "Class required");
 		Logger logger = Logger.getLogger(clazz.getName());
-		if (logger.getLevel() == null && clazz.getName().startsWith("org.springframework.roo")) {
+		if (logger.getLevel() == null && clazz.getName().startsWith("org.springframework.shell")) {
 			logger.setLevel(Level.FINE);
 		}
 		return logger;
