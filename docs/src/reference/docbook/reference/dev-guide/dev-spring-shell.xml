@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="dev-shell"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns5="http://www.w3.org/1999/xhtml"
+         xmlns:ns4="http://www.w3.org/2000/svg"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Developing Spring Shell Applications</title>
+
+  <para>The commands are </para>
+
+  <para/>
+
+  <para/>
+
+  <para/>
+
+  <section>
+    <title>Marker Interface</title>
+
+    <para>The marker interface....</para>
+  </section>
+
+  <section>
+    <title>CLI Annotations</title>
+
+    <para>annotations</para>
+  </section>
+
+  <section>
+    <title>Logging</title>
+
+    <para/>
+  </section>
+
+  <section>
+    <title>Building and running the shell</title>
+
+    <para/>
+  </section>
+</chapter>

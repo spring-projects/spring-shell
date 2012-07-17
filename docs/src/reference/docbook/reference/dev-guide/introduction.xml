@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partintro>
+  <para>This section provides some guidance on how one can create commands for
+  the Spring Shell.</para>
+</partintro>
