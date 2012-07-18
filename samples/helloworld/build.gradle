@@ -5,9 +5,8 @@ apply plugin: 'eclipse'
 apply plugin: 'application'
 
 repositories {
-	mavenCentral()
 	maven { url "http://repo.springsource.org/snapshot" }
-	maven { url "http://repo.springsource.org/release" }
+	maven { url "http://repo.springsource.org/libs-snapshot" }
 	maven { url "http://repo.springsource.org/milestone" }
 	maven { url "http://spring-roo-repository.springsource.org/release" }
 }
@@ -19,4 +18,4 @@ dependencies {
 
 mainClassName = "org.springframework.shell.Bootstrap"
 
-defaultTasks 'clean', 'build', 'copyDependency'
+defaultTasks 'installApp'
