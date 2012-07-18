@@ -209,31 +209,31 @@ public class HelloWorldCommands implements CommandMarker {
 
     <programlisting>public interface ExecutionProcessor extends CommandMarker {
 
-	/**
-	 * Method called before invoking the target command (described by {@link ParseResult}).
-	 * Additionally, for advanced cases, the parse result itself effectively changing the invocation
-	 * calling site.
-	 * 
-	 * @param invocationContext target command context
-	 * @return the invocation target 
-	 */
-	ParseResult beforeInvocation(ParseResult invocationContext);
+ /**
+  * Method called before invoking the target command (described by {@link ParseResult}).
+  * Additionally, for advanced cases, the parse result itself effectively changing the invocation
+  * calling site.
+  * 
+  * @param invocationContext target command context
+  * @return the invocation target 
+  */
+ ParseResult beforeInvocation(ParseResult invocationContext);
 
-	/**
-	 * Method called after successfully invoking the target command (described by {@link ParseResult}).
-	 * 
-	 * @param invocationContext target command context
-	 * @param result the invocation result
-	 */
-	void afterReturningInvocation(ParseResult invocationContext, Object result);
+ /**
+  * Method called after successfully invoking the target command (described by {@link ParseResult}).
+  * 
+  * @param invocationContext target command context
+  * @param result the invocation result
+  */
+ void afterReturningInvocation(ParseResult invocationContext, Object result);
 
-	/**
-	 * Method called after invoking the target command (described by {@link ParseResult}) had thrown an exception .
-	 * 
-	 * @param invocationContext target command context
-	 * @param thrown the thrown object
-	 */
-	void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown);
+ /**
+  * Method called after invoking the target command (described by {@link ParseResult}) had thrown an exception .
+  * 
+  * @param invocationContext target command context
+  * @param thrown the thrown object
+  */
+ void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown);
 
 }</programlisting>
   </section>

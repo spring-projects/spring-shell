@@ -100,7 +100,8 @@ public class HelloWorldCommands implements CommandMarker {
   @CliCommand(value = "hw simple", help = "Print a simple hello world message")
   public void simple(
     @CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
-    @CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello", specifiedDefaultValue="At work") final String location) {
+    @CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello", specifiedDefaultValue="At work") 
+                 final String location) {
 
     LOG.info("Message = [" + message + "] Location = [" + location + "]");
 
@@ -126,13 +127,14 @@ public class HelloWorldCommands implements CommandMarker {
     key message is required and a help message is provided to give guidance to
     the user when tabbing to get completion for the command. </para>
 
-    <para>The implementation of the 'simple' method is trivial, just a log
-    statement, but this is where you would typically call other collaborating
-    objects that were injected into the class via Spring.</para>
+    <para>The implementation of the '<methodname>simple</methodname>' method
+    is trivial, just a log statement, but this is where you would typically
+    call other collaborating objects that were injected into the class via
+    Spring.</para>
 
     <para>The method argument types in this example are
     <classname>String</classname>, which doesn't present any issue with type
-    conversion. You can specify methods with any rich object type including
+    conversion. You can specify methods with any rich object type as well as
     basic primitive types such as int, float etc. For all types other than
     those handled by the shell by default (basic types,
     <classname>Date</classname>, <classname>File</classname>) you will need to
