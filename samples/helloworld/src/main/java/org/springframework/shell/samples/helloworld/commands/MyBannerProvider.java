@@ -32,9 +32,6 @@ import org.springframework.stereotype.Component;
 public class MyBannerProvider extends DefaultBannerProvider 
 				implements CommandMarker {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.BannerProvider#getBanner()
-	 */
 	@CliCommand(value = { "version" }, help = "Displays current CLI version")
 	public String getBanner() {
 		StringBuffer buf = new StringBuffer();
@@ -43,21 +40,15 @@ public class MyBannerProvider extends DefaultBannerProvider
 		buf.append("*            HelloWorld               *" +StringUtils.LINE_SEPARATOR);
 		buf.append("*                                     *"+ StringUtils.LINE_SEPARATOR);
 		buf.append("=======================================" + StringUtils.LINE_SEPARATOR);
-		buf.append("Verson:" + this.getVersion());
+		buf.append("Version:" + this.getVersion());
 		return buf.toString();
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.BannerProvider#getVersion()
-	 */
 	public String getVersion() {
-		return "1.0.1";
+		return "1.2.3";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.BannerProvider#getWelcomeMessage()
-	 */
 	public String getWelcomeMessage() {
 		return "Welcome to HelloWorld CLI";
 	}
@@ -66,6 +57,4 @@ public class MyBannerProvider extends DefaultBannerProvider
 	public String name() {
 		return "helloworld";
 	}
-	
-
 }
