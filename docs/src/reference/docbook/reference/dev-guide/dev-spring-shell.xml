@@ -92,8 +92,6 @@ public class HelloWorldCommands implements CommandMarker {
     <programlisting language="java">@Component
 public class HelloWorldCommands implements CommandMarker {
 
-  protected final Logger LOG = Logger.getLogger(getClass().getName());
-
   @CliAvailabilityIndicator({"hw simple"})
   public boolean isCommandAvailable() {
     return true;
