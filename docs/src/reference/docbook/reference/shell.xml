@@ -22,15 +22,30 @@
     started. The essential boostrapping code that looks for your contributions
     looks like this<programlisting>new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");</programlisting></para>
 
-    <para> In the <literal>spring-shell-plugin.xml</literal> file you should
-    declare the commands and any collaboration objects that support the
-    commands actions. An easy way to declare the commands is to use Spring's
-    component scanning functionality. </para>
+    <para>In the <literal>spring-shell-plugin.xml</literal> file you should
+    define the command classes and any other collaboration objects that
+    support the commands actions. The plugin model is depicted in the
+    following diagram</para>
 
-    <para>Here is an example <literal>spring-shell-plugin.xml </literal>that
-    from the sample application. </para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../images/shell-arch-overview.png"/>
+      </imageobject>
+    </mediaobject>
 
-    <programlisting language="xml">&lt;beans xmlns="http://www.springframework.org/schema/beans"
+    <para>Note that the current plugin model loads all plugins under the same
+    class loader. An open JIRA issus is to provide a classloader per plugin to
+    provide isolation.</para>
+
+    <section>
+      <title>Commands</title>
+
+      <para>An easy way to declare the commands is to use Spring's component
+      scanning functionality.Here is an example
+      <literal>spring-shell-plugin.xml </literal>that from the sample
+      application.</para>
+
+      <programlisting language="xml">&lt;beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -40,25 +55,26 @@
 
 &lt;/beans&gt;</programlisting>
 
-    <para>The commands are Spring components, demarcated as such using the
-    <literal>@Component</literal> annotation. For example, the
-    <classname>HelloWorldCommands</classname> class from the sample
-    application looks like this</para>
+      <para>The commands are Spring components, demarcated as such using the
+      <literal>@Component</literal> annotation. For example, the
+      <classname>HelloWorldCommands</classname> class from the sample
+      application looks like this</para>
 
-    <programlisting language="java">@Component
+      <programlisting language="java">@Component
 public class HelloWorldCommands implements CommandMarker {
-
-  // methods with @Cli annotations go here
 
   // use any Spring annotations for Dependency Injection or other Spring interfaces as required.
 
+  // methods with @Cli annotations go here
+
 }</programlisting>
 
-    <para>One the commands are registered and instantiated by the Spring
-    container, they are registered with the core shell parser so that the
-    <literal>@Cli</literal> annotationscan be processed. The way the commands
-    are identified is through the use of the
-    <interfacename>CommandMarker</interfacename> interface. </para>
+      <para>One the commands are registered and instantiated by the Spring
+      container, they are registered with the core shell parser so that the
+      <literal>@Cli</literal> annotations can be processed. The way the
+      commands are identified is through the use of the
+      <interfacename>CommandMarker</interfacename> interface.</para>
+    </section>
 
     <section>
       <title>Converters</title>
@@ -67,7 +83,7 @@ public class HelloWorldCommands implements CommandMarker {
       <interfacename>org.springframework.shell.core.Converter</interfacename>
       interface provides the contract to convert the strings that are entered
       in the command to rich Java types passed into the arguments of
-      <classname>@Cli</classname>-annotated methods. </para>
+      <classname>@Cli</classname>-annotated methods.</para>
 
       <para>By default converters for common types are registered. These cover
       primitive types (boolean, int, float...) as well as Date, Character, and
@@ -106,7 +122,94 @@ public class HelloWorldCommands implements CommandMarker {
         executed.</para>
       </listitem>
     </itemizedlist>
+  </section>
 
-    <para/>
+  <section>
+    <title>Customizing the shell</title>
+
+    <para>There are a few extension points that allow you to customize the
+    shell. The extension points are the interfaces</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><interfacename>BannerProvider</interfacename> - Specifies the
+        banner text , welcome message, and version number that will be
+        displayed when the shell is started</para>
+      </listitem>
+
+      <listitem>
+        <para><interfacename>PromptProvider</interfacename> - Specifies the
+        command prompt text</para>
+      </listitem>
+
+      <listitem>
+        <para><interfacename>HistoryFileNameProvider</interfacename> -
+        Specifies the name of the command history file</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>There is a default implementation for these interfaces but you
+    should create your own implementations for your own shell application. Use
+    Spring's <literal>@Ordered</literal> annotation to set the priority of the
+    provider. This allows your provider implementations to take precidence
+    over any other implementations that maybe present on the classpath from
+    other plugins. </para>
+
+    <para>To make cool "<link
+    xlink:href="http://en.wikipedia.org/wiki/ASCII_art">ASCII art</link>"
+    banners the website <link
+    xlink:href="http://patorjk.com/software/taag">http://patorjk.com/software/taag</link>
+    is quite neat! </para>
+  </section>
+
+  <section>
+    <title>Communicating between plugins</title>
+
+    <para>As this is a standard Spring application you can use Spring's
+    ApplicationContext event infrastructure to communicate across
+    plugins.</para>
+  </section>
+
+  <section>
+    <title>Command method interception</title>
+
+    <para>It has shown to be useful to provide a simple form of interception
+    around the invocation of a command method. This enables the command class
+    to check for updates to state, such as configuration information modified
+    by other plugins, before the command is executed. The interface
+    <interfacename>ExecutionProcess</interfacename> should be implemented
+    instead of <interfacename>CommandMarker</interfacename> to access this
+    functionlatiy. The <interfacename>ExecutionProcess</interfacename>
+    interface is shown below</para>
+
+    <programlisting>public interface ExecutionProcessor extends CommandMarker {
+
+	/**
+	 * Method called before invoking the target command (described by {@link ParseResult}).
+	 * Additionally, for advanced cases, the parse result itself effectively changing the invocation
+	 * calling site.
+	 * 
+	 * @param invocationContext target command context
+	 * @return the invocation target 
+	 */
+	ParseResult beforeInvocation(ParseResult invocationContext);
+
+	/**
+	 * Method called after successfully invoking the target command (described by {@link ParseResult}).
+	 * 
+	 * @param invocationContext target command context
+	 * @param result the invocation result
+	 */
+	void afterReturningInvocation(ParseResult invocationContext, Object result);
+
+	/**
+	 * Method called after invoking the target command (described by {@link ParseResult}) had thrown an exception .
+	 * 
+	 * @param invocationContext target command context
+	 * @param thrown the thrown object
+	 */
+	void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown);
+
+}</programlisting>
   </section>
 </chapter>

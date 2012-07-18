@@ -9,18 +9,19 @@
          xmlns:ns="http://docbook.org/ns/docbook">
   <title>Developing Spring Shell Applications</title>
 
-  <para>The commands are </para>
-
-  <para/>
-
-  <para/>
-
-  <para/>
+  <para>Contributing commands to the shell is very easy. There are only a few
+  annotations you need to learn. The implementation style of the command is in
+  the style of developing an application that uses dependency injection as you
+  can leverage all the features of the Spring container.</para>
 
   <section>
     <title>Marker Interface</title>
 
-    <para>The marker interface....</para>
+    <para>The first step to creating a command is to implement the market
+    interface CommandMarker and to annotate your class with Spring's
+    @Component annotation. (Note there is an open JIRA issue to provide a
+    @CliCommand meta-annotation to avoid having to use a market interface)
+    Taking the </para>
   </section>
 
   <section>

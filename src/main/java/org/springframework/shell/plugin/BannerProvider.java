@@ -16,9 +16,11 @@
 package org.springframework.shell.plugin;
 
 
+
 /**
- * Banner provider. Plugin should implement this interface to replace the version banner.
- * <code>getOrder</code> indicate the priority, higher values can be interpreted as lower priority
+ * Banner provider. Plugins should implement this interface to replace the version banner.
+ * Use the @Order annotation to specify the priority of the banner to be display, higher 
+ * values can be interpreted as lower priority
  * 
  * @author Jarred Li
  * @since 1.0
