@@ -4,14 +4,14 @@
 
 	<groupId>org.springframework.shell.samples</groupId>
 	<artifactId>helloworld</artifactId>
-	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<version>1.0.0.M1</version>
 	<packaging>jar</packaging>
 
 	<name>helloworld</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<spring.shell.version>1.0.0.BUILD-SNAPSHOT</spring.shell.version>
+		<spring.shell.version>1.0.0.M1</spring.shell.version>
 		<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
 	</properties>
 
@@ -88,16 +88,10 @@
 			<id>spring-maven-snapshot</id>
 			<snapshots>
 				<enabled>true</enabled>
-				<!-- <updatePolicy>always</updatePolicy>  -->
 			</snapshots>
 			<name>Springframework Maven SNAPSHOT Repository</name>
-			<url>http://maven.springframework.org/snapshot</url>
+			<url>http://repo.springsource.org/libs-snapshot</url>
 		</repository>
-
-		<repository>
-			<id>spring-maven-milestone</id>
-			<name>Springframework Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
 		</repository>
 	</repositories>
 </project>
