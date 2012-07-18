@@ -40,8 +40,10 @@ public class HelloWorldCommands implements CommandMarker {
   <section>
     <title>Logging</title>
 
-    <para>Logging is done using JDK logging. Simply add a LOG declaration as
-    shown below to use a logger.</para>
+    <para>Logging is currently done using JDK logging. Due to the intrincacies of console, JLine and Ansi
+    handling, it is generally advised to display messages as return values to the method commands. However,
+    when logging is required, the typical JDK logger declaration should suffice.
+    </para>
 
     <programlisting language="java">@Component
 public class HelloWorldCommands implements CommandMarker {
@@ -98,12 +100,12 @@ public class HelloWorldCommands implements CommandMarker {
   }
 
   @CliCommand(value = "hw simple", help = "Print a simple hello world message")
-  public void simple(
+  public String simple(
     @CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
     @CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello", specifiedDefaultValue="At work") 
                  final String location) {
 
-    LOG.info("Message = [" + message + "] Location = [" + location + "]");
+    return "Message = [" + message + "] Location = [" + location + "]";
 
   }
 }</programlisting>
@@ -141,6 +143,10 @@ public class HelloWorldCommands implements CommandMarker {
     register your own implementation of the
     <interfacename>org.springframework.shell.core.Converter</interfacename>
     interface with the container in your plugin.</para>
+    
+    <para>Note that the the method return argument can be non-void - in our example, it is the actual
+    message we want to display. Whenever an object is returned, the shell will display its toString()
+    representation.</para>
   </section>
 
   <section>
