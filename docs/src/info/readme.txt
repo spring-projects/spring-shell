@@ -1,11 +1,10 @@
-SPRING DATA HADOOP
+SPRING SHELL
 ------------------
-http://www.springsource.org/spring-data/hadoop
+http://www.springsource.org/spring-shell
 
 1. INTRODUCTION
 
-Spring Hadoop is a framework extension for writing Hadoop jobs that
-benefit from the features of Spring, Spring Batch and Spring Integration.
+Spring Shell is an interactive shell that can be easily extended with commands using a Spring based programming model.
 
 2. RELEASE NOTES
 
@@ -14,7 +13,7 @@ details, consult the provided javadoc for specific packages and classes.
 
 3. DISTRIBUTION JAR FILES
 
-The Spring Hadoop jars files can be found in the 'dist' directory. 
+The Spring Shell jars files can be found in the 'dist' directory. 
 
 4. GETTING STARTED
 
@@ -23,5 +22,4 @@ Additionally the blog at http://blog.springsource.com as well
 as sections of interest in the reference documentation.
 
 ADDITIONAL RESOURCES
-Spring Hadoop Homepage: http://www.springsource.org/spring-data/hadoop
-Hadoop Homepage: http://hadoop.apache.org
+Spring Shell Homepage: http://www.springsource.org/spring-shell
