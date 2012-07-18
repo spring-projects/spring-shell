@@ -163,6 +163,8 @@ task distroZip(type: Zip, dependsOn: [jar, docsZip, sourcesJar, javadocJar]) {
 
         from('samples/') {
             into 'samples'
+            exclude .gradle
+            exclude build
         }
         
         from(zipTree(docsZip.archivePath)) {
