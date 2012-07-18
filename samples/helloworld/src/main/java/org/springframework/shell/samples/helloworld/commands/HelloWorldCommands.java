@@ -23,7 +23,7 @@ public class HelloWorldCommands implements CommandMarker {
 	}
 	
 	@CliAvailabilityIndicator({"hw complex", "hw enum"})
-	public boolean isComplexCommandAvailable() {
+	public boolean isComplexAvailable() {
 		if (simpleCommandExecuted) {
 			return true;
 		} else {
