@@ -53,6 +53,9 @@ public class HelloWorldCommands implements CommandMarker {
   // methods with @Cli annotations go here  
 
 }</programlisting>
+
+    <warning>Note it's the packager/developer responsability to handle logging for third-party libraries. Typically one wants
+    to reduce the logging level so the console/shell does not get affected by logging messages.</warning>
   </section>
 
   <section>

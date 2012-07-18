@@ -26,7 +26,6 @@ apply plugin: 'application'
 [compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:-serial"]
 
 dependencies {
-    runtime "log4j:log4j:$log4jVersion"
     compile "org.springframework:spring-core:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile "commons-io:commons-io:$commonsioVersion"
@@ -38,10 +37,6 @@ dependencies {
     // Testing
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
-    testCompile "org.springframework:spring-test:$springVersion"
-    testCompile "javax.annotation:jsr250-api:1.0"
-    testRuntime "org.codehaus.groovy:groovy:$groovyVersion"
-
 }
 
 sourceCompatibility = 1.5
@@ -77,6 +72,7 @@ javadoc {
 jar {
     manifest.attributes['Implementation-Title'] = 'spring-shell'
     manifest.attributes['Implementation-Version'] = project.version
+    manifest.attributes['Main-Class'] = 'org.springframework.shell.Bootstrap'
 
     from("$rootDir/docs/src/info") {
         include "license.txt"
