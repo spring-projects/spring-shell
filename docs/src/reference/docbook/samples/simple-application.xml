@@ -119,7 +119,7 @@ public class HelloWorldCommands implements CommandMarker {
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../images/shell-example.jpg"/>
+        <imagedata fileref="images/shell-example.jpg"/>
       </imageobject>
     </mediaobject>
 
@@ -128,7 +128,7 @@ public class HelloWorldCommands implements CommandMarker {
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../images/shell-example-enum.jpg"/>
+        <imagedata fileref="images/shell-example-enum.jpg"/>
       </imageobject>
     </mediaobject>
   </section>

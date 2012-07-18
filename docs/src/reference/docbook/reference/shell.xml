@@ -29,7 +29,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../images/shell-arch-overview.png"/>
+        <imagedata fileref="images/shell-arch-overview.png"/>
       </imageobject>
     </mediaobject>
 
@@ -207,7 +207,7 @@ public class HelloWorldCommands implements CommandMarker {
     functionality. The <interfacename>ExecutionProcess</interfacename>
     interface is shown below</para>
 
-    <programlisting>public interface ExecutionProcessor extends CommandMarker {
+    <programlisting language="java">public interface ExecutionProcessor extends CommandMarker {
 
  /**
   * Method called before invoking the target command (described by {@link ParseResult}).

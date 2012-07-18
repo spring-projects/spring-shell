@@ -27,7 +27,7 @@
     application, the shell of a <classname>HelloWorldCommands</classname>
     class is shown below </para>
 
-    <programlisting>@Component
+    <programlisting  language="java">@Component
 public class HelloWorldCommands implements CommandMarker {
  
   // use any Spring annotations for Dependency Injection or other Spring interfaces as required.
@@ -43,7 +43,7 @@ public class HelloWorldCommands implements CommandMarker {
     <para>Logging is done using JDK logging. Simply add a LOG declaration as
     shown below to use a logger.</para>
 
-    <programlisting>@Component
+    <programlisting language="java">@Component
 public class HelloWorldCommands implements CommandMarker {
  
   protected final Logger LOG = Logger.getLogger(getClass().getName());
