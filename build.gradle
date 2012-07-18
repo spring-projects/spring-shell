@@ -72,7 +72,6 @@ javadoc {
 jar {
     manifest.attributes['Implementation-Title'] = 'spring-shell'
     manifest.attributes['Implementation-Version'] = project.version
-    manifest.attributes['Main-Class'] = 'org.springframework.shell.Bootstrap'
 
     from("$rootDir/docs/src/info") {
         include "license.txt"
