@@ -39,7 +39,10 @@ import org.springframework.shell.support.util.StringUtils;
 public class JLineLogHandler extends Handler {
 
 	// Constants
-	private static final boolean BRIGHT_COLORS = Boolean.getBoolean("roo.bright");
+	private static final boolean ROO_BRIGHT_COLORS = Boolean.getBoolean("roo.bright");
+	private static final boolean SHELL_BRIGHT_COLORS = Boolean.getBoolean("spring.shell.bright");
+	private static final boolean BRIGHT_COLORS = ROO_BRIGHT_COLORS || SHELL_BRIGHT_COLORS;
+
 
 	// Fields
 	private ConsoleReader reader;
