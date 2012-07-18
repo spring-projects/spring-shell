@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="simple-application" xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="simple-application"
+         xmlns="http://docbook.org/ns/docbook"
          xmlns:xlink="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:ns5="http://www.w3.org/1998/Math/MathML"
@@ -8,12 +9,127 @@
          xmlns:ns="http://docbook.org/ns/docbook">
   <title>Simple sample application using the Spring Shell</title>
 
-  <section id="shell:simple-application">
+  <section>
     <title>Introduction</title>
 
-    This sample demonstrates how to execute a MapReduce application and a script that interacts with HDFS inside a Spring based application. It does not use spring Batch or Spring Integration.
+    <para>The sample application named 'helloworld' contains three
+    '<literal>hw</literal>' commands, they are '<literal>hw simple</literal>',
+    '<literal>hw complex</literal>' and '<literal>hw enum</literal>' and
+    demonstrate simple to intermediate level usage of the
+    <literal>@Cli</literal> annotation classes for creating commands.</para>
 
     <para>The example code is located in the distribution directory
-    <literal>&lt;spring-hadoop-install-dir&gt;/samples/wordcount</literal>.</para>
+    <literal>&lt;spring-shell-install-dir&gt;/samples/helloworld</literal>.</para>
+
+    <para>To build the example cd to the helloworld directory and execute
+    <literal>..\..\gradlew installApp</literal>. To run the application cd to
+    <literal>build\install\helloworld\bin</literal> and execute the helloworld
+    script.</para>
+  </section>
+
+  <section>
+    <title>HelloWorldCommands</title>
+
+    <para>The <classname>HelloWorldCommands</classname> class is show
+    below</para>
+
+    <programlisting language="java">package org.springframework.shell.samples.helloworld.commands;
+
+
+import java.util.logging.Logger;
+
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
+import org.springframework.shell.core.annotation.CliCommand;
+import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.stereotype.Component;
+
+@Component
+public class HelloWorldCommands implements CommandMarker {
+	
+	protected final Logger LOG = Logger.getLogger(getClass().getName());
+	
+	private boolean simpleCommandExecuted = false;
+	
+	@CliAvailabilityIndicator({"hw simple"})
+	public boolean isSimpleAvailable() {
+		//always available
+		return true;
+	}
+	
+	@CliAvailabilityIndicator({"hw complex", "hw enum"})
+	public boolean isComplexAvailable() {
+		if (simpleCommandExecuted) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+		
+	@CliCommand(value = "hw simple", help = "Print a simple hello world message")
+	public void simple(
+		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
+		@CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello", specifiedDefaultValue="At work") final String location) {		
+		LOG.info("Message = [" + message + "] Location = [" + location + "]");
+		simpleCommandExecuted = true;
+	}
+	
+	@CliCommand(value = "hw complex", help = "Print a complex hello world message")
+	public void hello(
+		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
+		@CliOption(key = { "name1"}, mandatory = true, help = "Say hello to the first name") final String name1,
+		@CliOption(key = { "name2" }, mandatory = true, help = "Say hello to a second name") final String name2,
+		@CliOption(key = { "time" }, mandatory = false, specifiedDefaultValue="now", help = "When you are saying hello") final String time,
+		@CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello") final String location) {		
+		LOG.info("Hello " + name1 + " and " + name2 + ". Your special message is "  + message + ". time=[" + time + "] location=[" + location + "]");
+	}
+	
+	@CliCommand(value = "hw enum", help = "Print a simple hello world message from an enumerated value")
+	public void eenum(
+		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final MessageType message){		
+		LOG.info("Hello.  You special enumerated message is " + message);
+	}
+	
+	enum MessageType {		
+		Type1("type1"),
+		Type2("type2"),
+		Type3("type3");
+		
+		private String type;
+		
+		private MessageType(String type){
+			this.type = type;
+		}
+		
+		public String getType(){
+			return type;
+		}
+	}
+}
+</programlisting>
+
+    <para>The use of the <classname>@CliAvailabilityIndicator</classname>
+    annotation on two methods, <methodname>isSimpleAvailable</methodname> and
+    <methodname>isComplexAvailable</methodname> shows how you can enable the
+    presence of the '<literal>hw complex</literal>' and '<literal>hw
+    enum</literal>' commands only if the '<literal>hw simple</literal>'
+    command was executed.</para>
+
+    <para>Here is an example session showing the behavior.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../images/shell-example.jpg"/>
+      </imageobject>
+    </mediaobject>
+
+    <para>The '<literal>hw enum</literal>' command shows how the shell
+    supports the use of Enumeration as command method arguments.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../images/shell-example-enum.jpg"/>
+      </imageobject>
+    </mediaobject>
   </section>
 </chapter>

@@ -17,14 +17,14 @@
                 <affiliation>SpringSource</affiliation>
             </author>
             <author>
-                <firstname>Jarred</firstname>
-                <surname>Li</surname>
-                <affiliation>VMware</affiliation>
-            </author>
-            <author>
                 <firstname>Costin</firstname>
                 <surname>Leau</surname>
                 <affiliation>SpringSource</affiliation>
+            </author>
+            <author>
+                <firstname>Jarred</firstname>
+                <surname>Li</surname>
+                <affiliation>VMware</affiliation>
             </author>
         </authorgroup>
 
@@ -63,7 +63,7 @@
     <part id="samples">
       <title>Spring Shell Sample application</title>
       <xi:include href="samples/introduction.xml"/>
-      <xi:include href="samples/sample-application.xml"/>
+      <xi:include href="samples/simple-application.xml"/>
     </part>
 
 </book>

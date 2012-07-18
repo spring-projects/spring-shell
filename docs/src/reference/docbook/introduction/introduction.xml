@@ -6,7 +6,7 @@
            xmlns:ns2="http://www.w3.org/1999/xlink"
            xmlns:ns="http://docbook.org/ns/docbook">
   <para>The Spring Shell provides an interactive shell that lets you
-  contribute commands using a simple POJO based programming model.</para>
+  contribute commands using a simple Spring based programming model.</para>
 
   <para>This document is the reference guide for the Spring Shell and covers
   the key classes that are part of the Shell infrastructure, the plugin model,

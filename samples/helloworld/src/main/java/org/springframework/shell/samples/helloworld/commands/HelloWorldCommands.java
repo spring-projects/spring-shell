@@ -11,13 +11,32 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HelloWorldCommands implements CommandMarker {
-
 	
 	protected final Logger LOG = Logger.getLogger(getClass().getName());
 	
-	@CliAvailabilityIndicator({"hw echo"})
-	public boolean isCommandAvailable() {
+	private boolean simpleCommandExecuted = false;
+	
+	@CliAvailabilityIndicator({"hw simple"})
+	public boolean isSimpleAvailable() {
+		//always available
 		return true;
+	}
+	
+	@CliAvailabilityIndicator({"hw complex", "hw enum"})
+	public boolean isComplexCommandAvailable() {
+		if (simpleCommandExecuted) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+		
+	@CliCommand(value = "hw simple", help = "Print a simple hello world message")
+	public void simple(
+		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
+		@CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello", specifiedDefaultValue="At work") final String location) {		
+		LOG.info("Message = [" + message + "] Location = [" + location + "]");
+		simpleCommandExecuted = true;
 	}
 	
 	@CliCommand(value = "hw complex", help = "Print a complex hello world message")

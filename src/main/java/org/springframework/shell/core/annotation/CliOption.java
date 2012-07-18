@@ -22,7 +22,13 @@ import java.lang.annotation.Target;
 
 import org.springframework.shell.core.Converter;
 
-
+/**
+ * Annotates the arguments of a command methods, allowing it to declare the argument value as mandatory or optional with a default value.
+ * 
+ * @author Ben Alex
+ * @since 1.0
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface CliOption {

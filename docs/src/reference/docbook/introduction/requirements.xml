@@ -8,11 +8,7 @@
          xmlns:ns="http://docbook.org/ns/docbook">
   <title>Requirements</title>
 
-  <para>The Spring Shell requires JDK level 6.0 (just like Hadoop) and above
-  and the Spring <ulink
-  url="http://www.springsource.org/about">Framework</ulink> 3.0 (3.1
-  recommended) and above.<ulink
-  url="http://www.gemstone.com/products/gemfire"/><ulink
-  url="http://hbase.apache.org/"/><ulink url="http://hive.apache.org/"/><ulink
-  url="http://pig.apache.org/"/></para>
+  <para>The Spring Shell requires JDK level 6.0 and above as well as the
+  Spring <ulink url="http://www.springsource.org/about">Framework</ulink> 3.0
+  (3.1 recommended) and above.</para>
 </chapter>

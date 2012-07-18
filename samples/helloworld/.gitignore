@@ -5,4 +5,4 @@ target/
 /log.roo
 *.log
 
-
+/bin/

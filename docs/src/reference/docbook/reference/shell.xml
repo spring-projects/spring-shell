@@ -23,8 +23,8 @@
     looks like this<programlisting>new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");</programlisting></para>
 
     <para>In the <literal>spring-shell-plugin.xml</literal> file you should
-    define the command classes and any other collaboration objects that
-    support the commands actions. The plugin model is depicted in the
+    define the command classes and any other collaborating objects that
+    support the command's actions. The plugin model is depicted in the
     following diagram</para>
 
     <mediaobject>
@@ -41,7 +41,7 @@
       <title>Commands</title>
 
       <para>An easy way to declare the commands is to use Spring's component
-      scanning functionality.Here is an example
+      scanning functionality. Here is an example
       <literal>spring-shell-plugin.xml </literal>that from the sample
       application.</para>
 
@@ -56,7 +56,7 @@
 &lt;/beans&gt;</programlisting>
 
       <para>The commands are Spring components, demarcated as such using the
-      <literal>@Component</literal> annotation. For example, the
+      <literal>@Component</literal> annotation. For example, the shell of the
       <classname>HelloWorldCommands</classname> class from the sample
       application looks like this</para>
 
@@ -82,7 +82,7 @@ public class HelloWorldCommands implements CommandMarker {
       <para>The
       <interfacename>org.springframework.shell.core.Converter</interfacename>
       interface provides the contract to convert the strings that are entered
-      in the command to rich Java types passed into the arguments of
+      on the command line to rich Java types passed into the arguments of
       <classname>@Cli</classname>-annotated methods.</para>
 
       <para>By default converters for common types are registered. These cover
@@ -122,6 +122,30 @@ public class HelloWorldCommands implements CommandMarker {
         executed.</para>
       </listitem>
     </itemizedlist>
+
+    <para>There are also a few commands that are provided by the
+    <classname>AbstractShell</classname> class, these are</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><literal>date</literal> - Displays the local date and
+        time</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>script</literal> - Parses the specified resource file
+        and executes its commands</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>system properties</literal> - Shows the shell's
+        properties</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>version</literal> - Displays current CLI version</para>
+      </listitem>
+    </itemizedlist>
   </section>
 
   <section>
@@ -133,13 +157,14 @@ public class HelloWorldCommands implements CommandMarker {
     <itemizedlist>
       <listitem>
         <para><interfacename>BannerProvider</interfacename> - Specifies the
-        banner text , welcome message, and version number that will be
+        banner text, welcome message, and version number that will be
         displayed when the shell is started</para>
       </listitem>
 
       <listitem>
         <para><interfacename>PromptProvider</interfacename> - Specifies the
-        command prompt text</para>
+        command prompt text, eg. "<literal>shell&gt;</literal>" or
+        "<literal>#</literal>" or "<literal>$</literal>"</para>
       </listitem>
 
       <listitem>
@@ -176,10 +201,10 @@ public class HelloWorldCommands implements CommandMarker {
     <para>It has shown to be useful to provide a simple form of interception
     around the invocation of a command method. This enables the command class
     to check for updates to state, such as configuration information modified
-    by other plugins, before the command is executed. The interface
+    by other plugins, before the command method is executed. The interface
     <interfacename>ExecutionProcess</interfacename> should be implemented
     instead of <interfacename>CommandMarker</interfacename> to access this
-    functionlatiy. The <interfacename>ExecutionProcess</interfacename>
+    functionality. The <interfacename>ExecutionProcess</interfacename>
     interface is shown below</para>
 
     <programlisting>public interface ExecutionProcessor extends CommandMarker {
@@ -211,5 +236,44 @@ public class HelloWorldCommands implements CommandMarker {
 	void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown);
 
 }</programlisting>
+  </section>
+
+  <section>
+    <title>Command line options</title>
+
+    <para>There are a few command line options that can be specified when
+    starting the shell. They are </para>
+
+    <itemizedlist>
+      <listitem>
+        <para><literal>--profiles</literal> - Specifies values for the system
+        property spring.profiles.active so that Spring 3.1 and greater <link
+        xlink:href="http://blog.springsource.com/2011/02/11/spring-framework-3-1-m1-released/">profile
+        support </link>is enabled.</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>--cmdfile</literal> - Specifies a file to read that
+        contains shell commands</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>--histsize</literal> - Specifies the maximum number of
+        lines to store in the command history file. Default value is
+        3000.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Scripts and comments</title>
+
+    <para>Scripts can be executed either by passing in the
+    <literal>--cmdfile</literal> argument at startup or by executing the
+    <literal>script</literal> command inside the shell. When using scripts it
+    helps to add comments and this can be done using block comments that start
+    and end with <literal>/*</literal> and <literal>*/</literal> or an inline
+    one line command using <literal>//</literal> or <literal>;</literal>
+    characters.</para>
   </section>
 </chapter>
