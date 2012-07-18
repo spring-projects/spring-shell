@@ -39,11 +39,9 @@ public class MyBannerProvider extends DefaultBannerProvider
 	public String getBanner() {
 		StringBuffer buf = new StringBuffer();
 		buf.append("=======================================" + StringUtils.LINE_SEPARATOR);
-		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
-		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
-		buf.append("*            vHelper                   *" +StringUtils.LINE_SEPARATOR);
-		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
-		buf.append("*                                      *"+ StringUtils.LINE_SEPARATOR);
+		buf.append("*                                     *"+ StringUtils.LINE_SEPARATOR);
+		buf.append("*            HelloWorld               *" +StringUtils.LINE_SEPARATOR);
+		buf.append("*                                     *"+ StringUtils.LINE_SEPARATOR);
 		buf.append("=======================================" + StringUtils.LINE_SEPARATOR);
 		buf.append("Verson:" + this.getVersion());
 		return buf.toString();
@@ -61,12 +59,12 @@ public class MyBannerProvider extends DefaultBannerProvider
 	 * @see org.springframework.shell.plugin.BannerProvider#getWelcomeMessage()
 	 */
 	public String getWelcomeMessage() {
-		return "Welcome to vHelper CLI";
+		return "Welcome to HelloWorld CLI";
 	}
 	
 	@Override
 	public String name() {
-		return "vHelper";
+		return "helloworld";
 	}
 	
 

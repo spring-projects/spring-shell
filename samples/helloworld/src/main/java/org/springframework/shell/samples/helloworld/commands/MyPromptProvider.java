@@ -28,12 +28,11 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MyPromptProvider extends DefaultPromptProvider {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.shell.plugin.PromptProvider#getPromptText()
-	 */
-	public String getPromptText() {		
-		return "vHelper>";
+	@Override
+	public String getPrompt() {
+		return "hw-shell>";
 	}
+
 	
 	@Override
 	public String name() {
