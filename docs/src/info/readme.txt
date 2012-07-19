@@ -1,5 +1,5 @@
 SPRING SHELL
-------------------
+------------
 http://www.springsource.org/spring-shell
 
 1. INTRODUCTION
