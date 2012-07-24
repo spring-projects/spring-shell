@@ -15,9 +15,12 @@
  */
 package org.springframework.shell.support.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
@@ -32,7 +35,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public final class FileUtils {
-	
+
 	// Constants
 	private static final String BACKSLASH = "\\";
 	private static final String ESCAPED_BACKSLASH = "\\\\";
@@ -42,14 +45,14 @@ public final class FileUtils {
 	 * platforms that Roo supports.
 	 */
 	public static final String CURRENT_DIRECTORY = ".";
-	
+
 	private static final String WINDOWS_DRIVE_PREFIX = "^[A-Za-z]:";
 
 	// Doesn't check for backslash after the colon, since Java has no issues with paths like c:/Windows
 	private static final Pattern WINDOWS_DRIVE_PATH = Pattern.compile(WINDOWS_DRIVE_PREFIX + ".*");
-	
+
 	private static final PathMatcher PATH_MATCHER;
-	
+
 	static {
 		PATH_MATCHER = new AntPathMatcher();
 		((AntPathMatcher) PATH_MATCHER).setPathSeparator(File.separator);
@@ -103,7 +106,8 @@ public final class FileUtils {
 		Assert.isTrue(source.isDirectory(), "Source directory '" + source + "' must be a directory");
 		if (destination.exists()) {
 			Assert.isTrue(destination.isDirectory(), "Destination directory '" + destination + "' must be a directory");
-		} else {
+		}
+		else {
 			destination.mkdirs();
 			if (deleteDestinationOnExit) {
 				destination.deleteOnExit();
@@ -120,7 +124,8 @@ public final class FileUtils {
 				} catch (IOException ioe) {
 					return false;
 				}
-			} else {
+			}
+			else {
 				// It's a sub-directory, so copy it
 				d.mkdir();
 				if (!copyRecursively(s, d, deleteDestinationOnExit)) {
@@ -192,7 +197,7 @@ public final class FileUtils {
 		}
 		return path;
 	}
-	
+
 	/**
 	 * Indicates whether the given canonical path matches the given Ant-style pattern
 	 * 
@@ -238,7 +243,7 @@ public final class FileUtils {
 		Assert.notNull(path);
 		return removeTrailingSeparator(path) + File.separatorChar;
 	}
-	
+
 	/**
 	 * Returns an operating-system-dependent path consisting of the given
 	 * elements, separated by {@link File#separator}.
@@ -250,7 +255,7 @@ public final class FileUtils {
 	public static String getSystemDependentPath(final String... pathElements) {
 		return getSystemDependentPath(Arrays.asList(pathElements));
 	}
-	
+
 	/**
 	 * Returns an operating-system-dependent path consisting of the given
 	 * elements, separated by {@link File#separator}.
@@ -263,7 +268,7 @@ public final class FileUtils {
 		Assert.notEmpty(pathElements);
 		return StringUtils.collectionToDelimitedString(pathElements, File.separator);
 	}
-	
+
 	/**
 	 * Returns the canonical path of the given {@link File}.
 	 *
@@ -281,7 +286,7 @@ public final class FileUtils {
 			throw new IllegalStateException("Cannot determine canonical path for '" + file + "'", ioe);
 		}
 	}
-	
+
 	/**
 	 * Returns the platform-specific file separator as a regular expression.
 	 * 
@@ -296,7 +301,7 @@ public final class FileUtils {
 		}
 		return fileSeparator;
 	}
-	
+
 	/**
 	 * Determines the path to the requested file, relative to the given class.
 	 *
@@ -312,7 +317,7 @@ public final class FileUtils {
 		// Slashes instead of File.separatorChar is correct here, as these are classloader paths (not file system paths)
 		return "/" + loadingClass.getPackage().getName().replace('.', '/') + "/" + relativeFilename;
 	}
-	
+
 	/**
 	 * Loads the given file from the classpath.
 	 *
@@ -330,7 +335,7 @@ public final class FileUtils {
 			throw new IllegalArgumentException(e);
 		}
 	}
-	
+
 	/**
 	 * Loads the given file from the classpath.
 	 *
@@ -344,7 +349,30 @@ public final class FileUtils {
 		Assert.notNull(inputStream, "Could not locate '" + filename + "' in classpath of " + loadingClass.getName());
 		return inputStream;
 	}
-	
+
+	/**
+	 * Reads a banner from the given resource. Performs conversion of any line separator contained by the source to that of the running platform.
+	 * 
+	 * @return platform-compatible banner as a String
+	 */
+	public static String readBanner(Reader reader) {
+		try {
+			String content = FileCopyUtils.copyToString(new BufferedReader(reader));
+			return content.replaceAll("(\\r|\\n)+", StringUtils.LINE_SEPARATOR);
+		} catch (Exception ex) {
+			throw new IllegalStateException("Cannot read stream", ex);
+		}
+	}
+
+	/**
+	 * Reads a banner from the given resource. Performs conversion of any line separator contained by the source to that of the running platform.
+	 * 
+	 * @return platform-compatible banner as a String
+	 */
+	public static String readBanner(final Class<?> loadingClass, String resourceName) {
+		return readBanner(new InputStreamReader(getInputStream(loadingClass, resourceName)));
+	}
+
 	/**
 	 * Returns the contents of the given File as a String.
 	 *
@@ -360,11 +388,12 @@ public final class FileUtils {
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
 	/**
 	 * Constructor is private to prevent instantiation
 	 * 
 	 * @since 1.2.0
 	 */
-	private FileUtils() {}
+	private FileUtils() {
+	}
 }

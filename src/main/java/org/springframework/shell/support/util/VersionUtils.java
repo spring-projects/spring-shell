@@ -16,7 +16,6 @@
 package org.springframework.shell.support.util;
 
 
-
 /**
  * @author Jarred Li
  */
@@ -29,6 +28,10 @@ public class VersionUtils {
 	 */
 	public static String versionInfo() {
 		Package pkg = VersionUtils.class.getPackage();
-		return (pkg != null ? pkg.getImplementationVersion() : "Unknown Version");
+		String version = null;
+		if (pkg != null) {
+			version = pkg.getImplementationVersion();
+		}
+		return (version != null ? version : "Unknown Version");
 	}
 }

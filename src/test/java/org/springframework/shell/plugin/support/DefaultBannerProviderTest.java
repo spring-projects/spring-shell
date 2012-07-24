@@ -32,7 +32,9 @@ public class DefaultBannerProviderTest {
 	 */
 	@Test
 	public void testGetBanner() {
-		assertNotNull(banner.getBanner());
+		String bnr = banner.getBanner();
+		System.out.println(bnr);
+		assertNotNull(bnr);
 	}
 
 }

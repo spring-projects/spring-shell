@@ -15,19 +15,20 @@
  */
 package org.springframework.shell.plugin.support;
 
-import static org.springframework.shell.support.util.StringUtils.LINE_SEPARATOR;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.plugin.BannerProvider;
+import org.springframework.shell.support.util.FileUtils;
 import org.springframework.shell.support.util.VersionUtils;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.shell.support.util.StringUtils.*;
 
 /**
  * Default Banner provider.
  * 
  * @author Jarred Li
- *
+ * @author Costin Leau
  */
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
@@ -35,14 +36,8 @@ public class DefaultBannerProvider implements BannerProvider {
 
 	public String getBanner() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(" _____            _    ").append(LINE_SEPARATOR);
-		sb.append("/  ___|          (_)").append(LINE_SEPARATOR);
-		sb.append("\\ `--, _ __  _ __ _ _ __   __ _ ").append(LINE_SEPARATOR);
-		sb.append(" `--. \\ '_ \\| '__| | '_ \\ / _` |").append(LINE_SEPARATOR);
-		sb.append("/\\__/ / |_) | |  | | | | | (_| |").append(LINE_SEPARATOR);
-		sb.append("\\____/| .__/|_|  |_|_| |_|\\__, |").append(LINE_SEPARATOR);
-		sb.append("      | |                  __/ |").append(LINE_SEPARATOR);
-		sb.append("      |_|                 |___/ ").append(" ").append(this.getVersion()).append(LINE_SEPARATOR);
+		sb.append(FileUtils.readBanner(DefaultBannerProvider.class, "banner.txt"));
+		sb.append(getVersion()).append(LINE_SEPARATOR);
 		sb.append(LINE_SEPARATOR);
 
 		return sb.toString();
