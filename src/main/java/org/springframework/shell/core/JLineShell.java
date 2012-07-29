@@ -44,14 +44,15 @@ import jline.WindowsTerminal;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.springframework.shell.event.ShellStatus;
-import org.springframework.shell.event.ShellStatusListener;
 import org.springframework.shell.event.ShellStatus.Status;
+import org.springframework.shell.event.ShellStatusListener;
 import org.springframework.shell.support.util.Assert;
 import org.springframework.shell.support.util.ClassUtils;
 import org.springframework.shell.support.util.IOUtils;
 import org.springframework.shell.support.util.OsUtils;
 import org.springframework.shell.support.util.StringUtils;
 import org.springframework.shell.support.util.VersionUtils;
+import org.springframework.util.ObjectUtils;
 
 
 /**
@@ -463,6 +464,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	public void promptLoop() {
 		setShellStatus(Status.USER_INPUT);
 		String line;
+		String prompt = getPromptText();
 
 		try {
 			while (exitShellRequest == null && (reader != null && ((line = reader.readLine()) != null))) {
@@ -474,6 +476,12 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 				}
 
 				executeCommand(line);
+
+				String newPrmpt = getPromptText();
+				if (!ObjectUtils.nullSafeEquals(prompt, newPrmpt)) {
+					prompt = newPrmpt;
+					setPromptPath(null);
+				}
 				//System.out.println("executed command:" + line);
 			}
 		} catch (IOException ioe) {

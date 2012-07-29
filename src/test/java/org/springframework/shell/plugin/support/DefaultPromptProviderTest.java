@@ -52,6 +52,6 @@ public class DefaultPromptProviderTest {
 	 */
 	@Test
 	public void testGetPromptText() {
-		assertEquals("spring-shell>", prompt.getPrompt());
+		assertTrue(prompt.getPrompt().startsWith("spring-shell>"));
 	}
 }
