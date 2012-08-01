@@ -15,7 +15,7 @@
   ns2:href="http://www.springsource.org/spring-roo/">Spring Roo
   project</link>, giving it a strong foundation and rich feature set. One
   significant change from Spring Roo is that the plugin model is no longer
-  based on OSGi but instead uses Spring IoC container to discover commands
+  based on OSGi but instead uses the Spring IoC container to discover commands
   through classpath scanning. There is currently no classloader isolation
   between plugins, however that maybe added in future versions.</para>
 
@@ -28,7 +28,7 @@
     </listitem>
 
     <listitem>
-      <para>Use of Spring's classpath scanning functionality asthe basis for a
+      <para>Use of Spring's classpath scanning functionality as the basis for a
       command plugin strategy and command develoment</para>
     </listitem>
 
