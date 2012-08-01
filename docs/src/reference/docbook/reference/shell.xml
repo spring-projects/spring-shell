@@ -9,18 +9,19 @@
   <title>Spring Shell</title>
 
   <para>The core components of the shell are its plugin model, built-in
-  commands, and converters</para>
+  commands, and converters.</para>
 
   <section>
     <title>Plugin Model</title>
 
-    <para>The plugin model is based Spring. Each plugin jar is required to
+    <para>The plugin model is based on Spring. Each plugin jar is required to
     contain the file
     <literal>META-INF/spring/spring-shell-plugin.xml</literal>. These files
     will be loaded to bootstrap a Spring
     <interfacename>ApplicationContext</interfacename> when the shell is
     started. The essential boostrapping code that looks for your contributions
-    looks like this<programlisting>new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");</programlisting></para>
+    looks like this:
+    <programlisting>new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");</programlisting></para>
 
     <para>In the <literal>spring-shell-plugin.xml</literal> file you should
     define the command classes and any other collaborating objects that
@@ -34,16 +35,16 @@
     </mediaobject>
 
     <para>Note that the current plugin model loads all plugins under the same
-    class loader. An open JIRA issus is to provide a classloader per plugin to
-    provide isolation.</para>
+    class loader. An open <link xlink:href="https://jira.springsource.org/browse/SHL-37">JIRA issue</link>
+    suggests providing a classloader per plugin to provide isolation.</para>
 
     <section>
       <title>Commands</title>
 
       <para>An easy way to declare the commands is to use Spring's component
       scanning functionality. Here is an example
-      <literal>spring-shell-plugin.xml </literal>that from the sample
-      application.</para>
+      <literal>spring-shell-plugin.xml </literal> from the sample
+      application:</para>
 
       <programlisting language="xml">&lt;beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -69,7 +70,7 @@ public class HelloWorldCommands implements CommandMarker {
 
 }</programlisting>
 
-      <para>One the commands are registered and instantiated by the Spring
+      <para>Once the commands are registered and instantiated by the Spring
       container, they are registered with the core shell parser so that the
       <literal>@Cli</literal> annotations can be processed. The way the
       commands are identified is through the use of the
@@ -202,9 +203,9 @@ public class HelloWorldCommands implements CommandMarker {
     around the invocation of a command method. This enables the command class
     to check for updates to state, such as configuration information modified
     by other plugins, before the command method is executed. The interface
-    <interfacename>ExecutionProcess</interfacename> should be implemented
+    <interfacename>ExecutionProcessor</interfacename> should be implemented
     instead of <interfacename>CommandMarker</interfacename> to access this
-    functionality. The <interfacename>ExecutionProcess</interfacename>
+    functionality. The <interfacename>ExecutionProcessor</interfacename>
     interface is shown below</para>
 
     <programlisting language="java">public interface ExecutionProcessor extends CommandMarker {
@@ -273,7 +274,7 @@ public class HelloWorldCommands implements CommandMarker {
     <literal>script</literal> command inside the shell. When using scripts it
     helps to add comments and this can be done using block comments that start
     and end with <literal>/*</literal> and <literal>*/</literal> or an inline
-    one line command using <literal>//</literal> or <literal>;</literal>
+    one line comment using the <literal>//</literal> or <literal>;</literal>
     characters.</para>
   </section>
 </chapter>

@@ -22,7 +22,8 @@
     <literal>&lt;spring-shell-install-dir&gt;/samples/helloworld</literal>.</para>
 
     <para>To build the example cd to the helloworld directory and execute
-    <literal>..\..\gradlew installApp</literal>. To run the application cd to
+    <literal>gradlew installApp</literal> (you first need to add the <literal>gradlew</literal>
+    gradle wrapper to your path). To run the application cd to
     <literal>build\install\helloworld\bin</literal> and execute the helloworld
     script.</para>
   </section>
@@ -119,7 +120,7 @@ public class HelloWorldCommands implements CommandMarker {
     </mediaobject>
 
     <para>The '<literal>hw enum</literal>' command shows how the shell
-    supports the use of Enumeration as command method arguments.</para>
+    supports the use of an enumeration as command method arguments.</para>
 
     <mediaobject>
       <imageobject>
