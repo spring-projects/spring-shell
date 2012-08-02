@@ -1,12 +1,12 @@
 /*
  * Copyright 2011-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,13 +46,13 @@ import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.springframework.shell.event.ShellStatus;
 import org.springframework.shell.event.ShellStatus.Status;
 import org.springframework.shell.event.ShellStatusListener;
-import org.springframework.shell.support.util.Assert;
-import org.springframework.shell.support.util.ClassUtils;
 import org.springframework.shell.support.util.IOUtils;
 import org.springframework.shell.support.util.OsUtils;
-import org.springframework.shell.support.util.StringUtils;
 import org.springframework.shell.support.util.VersionUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -93,7 +93,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 	public void run() {
 		reader = createConsoleReader();
-	    	
+
 		setPromptPath(null);
 
 		JLineLogHandler handler = new JLineLogHandler(reader, this);
@@ -161,12 +161,12 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	}
 
 	/**
-	 * read history commands from history log. the history size if determined by --histsize options. 
-	 * 
+	 * read history commands from history log. the history size if determined by --histsize options.
+	 *
 	 * @return history commands
 	 */
 	private String[] filterLogEntry() {
-		ArrayList<String> entries = new ArrayList<String>();		
+		ArrayList<String> entries = new ArrayList<String>();
 		try {
 			ReversedLinesFileReader reader = new ReversedLinesFileReader(
 					new File(getHistoryFileName()),4096,Charset.forName("UTF-8"));
@@ -189,13 +189,13 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		Collections.reverse(entries);
 		return entries.toArray(new String[0]);
 	}
-	
+
 	/**
-	 * Creates new jline ConsoleReader. On Windows if jansi is available, uses 
+	 * Creates new jline ConsoleReader. On Windows if jansi is available, uses
 	 * createAnsiWindowsReader(). Otherwise, always creates a default ConsoleReader.
-	 * Sub-classes of this class can plug in their version of ConsoleReader 
-	 * by overriding this method, if required.  
-	 * 
+	 * Sub-classes of this class can plug in their version of ConsoleReader
+	 * by overriding this method, if required.
+	 *
 	 * @return a jline ConsoleReader instance
 	 */
 	protected ConsoleReader createConsoleReader() {
@@ -340,7 +340,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		if (Shell.WINDOW_TITLE_SLOT.equals(slot)) {
 			if (reader != null && reader.getTerminal().isANSISupported()) {
 				// We can probably update the window title, as requested
-				if (StringUtils.isBlank(message)) {
+				if (!StringUtils.hasText(message)) {
 					System.out.println("No text");
 				}
 
@@ -573,31 +573,31 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	}
 
 	/**
-	 * get history file name from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * 
-	 * @return history file name 
+	 * get history file name from provider. The provider has highest order
+	 * <link>org.springframework.core.Ordered.getOder</link> will win.
+	 *
+	 * @return history file name
 	 */
 	abstract protected String getHistoryFileName();
 
 	/**
-	 * get prompt text from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * 
+	 * get prompt text from provider. The provider has highest order
+	 * <link>org.springframework.core.Ordered.getOder</link> will win.
+	 *
 	 * @return prompt text
 	 */
 	abstract protected String getPromptText();
-	
+
 	/**
 	 * get product name
-	 * 
+	 *
 	 * @return Product Name
 	 */
 	abstract protected String getProductName();
-	
+
 	/**
 	 * get version information
-	 * 
+	 *
 	 * @return Version
 	 */
 	protected String getVersion() {

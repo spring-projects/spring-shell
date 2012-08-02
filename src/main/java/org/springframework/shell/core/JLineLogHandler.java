@@ -1,12 +1,12 @@
 /*
  * Copyright 2011-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.springframework.shell.core;
+
+import static org.springframework.shell.support.util.OsUtils.LINE_SEPARATOR;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -25,10 +27,9 @@ import java.util.logging.LogRecord;
 import jline.ANSIBuffer;
 import jline.ConsoleReader;
 
-import org.springframework.shell.support.util.Assert;
 import org.springframework.shell.support.util.IOUtils;
 import org.springframework.shell.support.util.OsUtils;
-import org.springframework.shell.support.util.StringUtils;
+import org.springframework.util.Assert;
 
 /**
  * JDK logging {@link Handler} that emits log messages to a JLine {@link ConsoleReader}.
@@ -67,7 +68,7 @@ public class JLineLogHandler extends Handler {
 			public String format(final LogRecord record) {
 				StringBuffer sb = new StringBuffer();
 				if (record.getMessage() != null) {
-					sb.append(record.getMessage()).append(StringUtils.LINE_SEPARATOR);
+					sb.append(record.getMessage()).append(LINE_SEPARATOR);
 				}
 				if (record.getThrown() != null) {
 					PrintWriter pw = null;
@@ -173,7 +174,7 @@ public class JLineLogHandler extends Handler {
 				lineSeparatorAndIndentingString.append(" ");
 			}
 
-			eventString = " " + getFormatter().format(event).replace(StringUtils.LINE_SEPARATOR, StringUtils.LINE_SEPARATOR + lineSeparatorAndIndentingString.toString());
+			eventString = " " + getFormatter().format(event).replace(LINE_SEPARATOR, LINE_SEPARATOR + lineSeparatorAndIndentingString.toString());
 			if (eventString.endsWith(lineSeparatorAndIndentingString.toString())) {
 				eventString = eventString.substring(0, eventString.length() - lineSeparatorAndIndentingString.length());
 			}

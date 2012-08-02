@@ -1,12 +1,12 @@
 /*
  * Copyright 2011-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,10 +15,6 @@
  */
 package org.springframework.shell.core;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -30,36 +26,21 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.Transformer;
 
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.support.logging.HandlerUtils;
-import org.springframework.shell.support.util.Assert;
-import org.springframework.shell.support.util.CollectionUtils;
 import org.springframework.shell.support.util.ExceptionUtils;
-import org.springframework.shell.support.util.FileCopyUtils;
 import org.springframework.shell.support.util.NaturalOrderComparator;
-import org.springframework.shell.support.util.StringUtils;
-import org.springframework.shell.support.util.VersionUtils;
-import org.springframework.shell.support.util.XmlElementBuilder;
-import org.springframework.shell.support.util.XmlUtils;
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.springframework.shell.support.util.OsUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of {@link Parser}.
@@ -84,9 +65,9 @@ public class SimpleParser implements Parser {
 	}
 
 	/**
-	 * get all mandatory options keys. For the options with multiple keys, the 
+	 * get all mandatory options keys. For the options with multiple keys, the
 	 * keys will be in one row.
-	 * 
+	 *
 	 * @param cliOptions options
 	 * @return mandatory options keys
 	 */
@@ -96,7 +77,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * get all options key.
-	 * 
+	 *
 	 * @param cliOptions
 	 * @param includeOptionalOptions
 	 * @return options keys
@@ -129,7 +110,7 @@ public class SimpleParser implements Parser {
 			if (matchingTargets.isEmpty()) {
 				// Before we just give up, let's see if we can offer a more informative message to the user
 				// by seeing the command is simply unavailable at this point in time
-				CollectionUtils.populate(matchingTargets, locateTargets(input, true, false));
+				matchingTargets.addAll(locateTargets(input, true, false));
 				if (matchingTargets.isEmpty()) {
 					commandNotFound(LOGGER, input);
 				}
@@ -199,9 +180,9 @@ public class SimpleParser implements Parser {
 				}
 
 				// Ensure the user specified a value if the value is mandatory or
-				// key and value must appear in pair 
-				boolean mandatory = StringUtils.isBlank(value) && cliOption.mandatory();
-				boolean specifiedKey = StringUtils.isBlank(value) && options.containsKey(sourcedFrom);
+				// key and value must appear in pair
+				boolean mandatory = !StringUtils.hasText(value) && cliOption.mandatory();
+				boolean specifiedKey = !StringUtils.hasText(value) && options.containsKey(sourcedFrom);
 				boolean specifiedKeyWithoutValue = false;
 				if(specifiedKey){
 					value = cliOption.specifiedDefaultValue();
@@ -327,7 +308,7 @@ public class SimpleParser implements Parser {
 			boolean found = false;
 			for (String key : keys) {
 				if (options.containsKey(key)) {
-					if (StringUtils.isBlank(options.get(key))) {
+					if (!StringUtils.hasText(options.get(key))) {
 						valueBuilder.append(key);
 						valueBuilder.append("' for this command");
 						hintForOptions = false;
@@ -540,7 +521,7 @@ public class SimpleParser implements Parser {
 
 			// Replace all multiple spaces with a single space
 			while (buffer.contains("  ")) {
-				buffer = StringUtils.replaceFirst(buffer, "  ", " ");
+				buffer = buffer.replaceFirst("  ", " ");
 				cursor--;
 			}
 
@@ -831,7 +812,7 @@ public class SimpleParser implements Parser {
 							// Only include in the candidates those results which are compatible with the present buffer
 							for (Completion currentValue : allValues) {
 								// We only provide a suggestion if the lastOptionValue == ""
-								if (StringUtils.isBlank(lastOptionValue)) {
+								if (!StringUtils.hasText(lastOptionValue)) {
 									// We should add the result, as they haven't typed anything yet
 									results.add(new Completion(prefix + currentValue.getValue() + suffix,
 											currentValue.getFormattedValue(), currentValue.getHeading(),
@@ -851,7 +832,7 @@ public class SimpleParser implements Parser {
 
 							// ROO-389: give inline options given there's multiple choices available and we want to help the user
 							StringBuilder help = new StringBuilder();
-							help.append(StringUtils.LINE_SEPARATOR);
+							help.append(OsUtils.LINE_SEPARATOR);
 							help.append(option.mandatory() ? "required --" : "optional --");
 							if ("".equals(option.help())) {
 								help.append(lastOptionKey).append(": ").append("No help available");
@@ -909,7 +890,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * populate completion for mandatory options
-	 * 
+	 *
 	 * @param translated user's input
 	 * @param unspecified unspecified options
 	 * @param value the option key
@@ -935,201 +916,6 @@ public class SimpleParser implements Parser {
 		results.add(new Completion(strBuilder.toString()));
 	}
 
-	public void helpReferenceGuide() {
-		synchronized (mutex) {
-			File f = new File(".");
-			File[] existing = f.listFiles(new FileFilter() {
-				public boolean accept(final File pathname) {
-					return pathname.getName().startsWith("appendix_");
-				}
-			});
-			for (File e : existing) {
-				e.delete();
-			}
-
-			// Compute the sections we'll be outputting, and get them into a nice order
-			SortedMap<String, Object> sections = new TreeMap<String, Object>(COMPARATOR);
-			next_target: for (Object target : commands) {
-				Method[] methods = target.getClass().getMethods();
-				for (Method m : methods) {
-					CliCommand cmd = m.getAnnotation(CliCommand.class);
-					if (cmd != null) {
-						String sectionName = target.getClass().getSimpleName();
-						Pattern p = Pattern.compile("[A-Z][^A-Z]*");
-						Matcher matcher = p.matcher(sectionName);
-						StringBuilder string = new StringBuilder();
-						while (matcher.find()) {
-							string.append(matcher.group()).append(" ");
-						}
-						sectionName = string.toString().trim();
-						if (sections.containsKey(sectionName)) {
-							throw new IllegalStateException("Section name '" + sectionName + "' not unique");
-						}
-						sections.put(sectionName, target);
-						continue next_target;
-					}
-				}
-			}
-
-			// Build each section of the appendix
-			DocumentBuilder builder = XmlUtils.getDocumentBuilder();
-			Document document = builder.newDocument();
-			List<Element> builtSections = new ArrayList<Element>();
-
-			for (final Entry<String, Object> entry : sections.entrySet()) {
-				final String section = entry.getKey();
-				final Object target = entry.getValue();
-				SortedMap<String, Element> individualCommands = new TreeMap<String, Element>(COMPARATOR);
-
-				Method[] methods = target.getClass().getMethods();
-				for (Method m : methods) {
-					CliCommand cmd = m.getAnnotation(CliCommand.class);
-					if (cmd != null) {
-						StringBuilder cmdSyntax = new StringBuilder();
-						cmdSyntax.append(cmd.value()[0]);
-
-						// Build the syntax list
-
-						// Store the order options appear
-						List<String> optionKeys = new ArrayList<String>();
-						// key: option key, value: help text
-						Map<String, String> optionDetails = new HashMap<String, String>();
-						for (Annotation[] ann : m.getParameterAnnotations()) {
-							for (Annotation a : ann) {
-								if (a instanceof CliOption) {
-									CliOption option = (CliOption) a;
-									// Figure out which key we want to use (use first non-empty string, or make it "(default)" if needed)
-									String key = option.key()[0];
-									if ("".equals(key)) {
-										for (String otherKey : option.key()) {
-											if (!"".equals(otherKey)) {
-												key = otherKey;
-												break;
-											}
-										}
-										if ("".equals(key)) {
-											key = "[default]";
-										}
-									}
-
-									StringBuilder help = new StringBuilder();
-									if ("".equals(option.help())) {
-										help.append("No help available");
-									}
-									else {
-										help.append(option.help());
-									}
-									if (option.specifiedDefaultValue().equals(option.unspecifiedDefaultValue())) {
-										if (option.specifiedDefaultValue().equals("__NULL__")) {
-											help.append("; no default value");
-										}
-										else {
-											help.append("; default: '").append(option.specifiedDefaultValue()).append(
-													"'");
-										}
-									}
-									else {
-										if (!"".equals(option.specifiedDefaultValue())
-												&& !"__NULL__".equals(option.specifiedDefaultValue())) {
-											help.append("; default if option present: '").append(
-													option.specifiedDefaultValue()).append("'");
-										}
-										if (!"".equals(option.unspecifiedDefaultValue())
-												&& !"__NULL__".equals(option.unspecifiedDefaultValue())) {
-											help.append("; default if option not present: '").append(
-													option.unspecifiedDefaultValue()).append("'");
-										}
-									}
-									help.append(option.mandatory() ? " (mandatory) " : "");
-
-									// Store details for later
-									key = "--" + key;
-									optionKeys.add(key);
-									optionDetails.put(key, help.toString());
-
-									// Include it in the mandatory syntax
-									if (option.mandatory()) {
-										cmdSyntax.append(" ").append(key);
-									}
-								}
-							}
-						}
-
-						// Make a variable list element
-						Element variableListElement = document.createElement("variablelist");
-						boolean anyVars = false;
-						for (String optionKey : optionKeys) {
-							anyVars = true;
-							String help = optionDetails.get(optionKey);
-							variableListElement.appendChild(new XmlElementBuilder("varlistentry", document).addChild(
-									new XmlElementBuilder("term", document).setText(optionKey).build()).addChild(
-									new XmlElementBuilder("listitem", document).addChild(
-											new XmlElementBuilder("para", document).setText(help).build()).build()).build());
-						}
-
-						if (!anyVars) {
-							variableListElement = new XmlElementBuilder("para", document).setText(
-									"This command does not accept any options.").build();
-						}
-
-						// Now we've figured out the options, store this individual command
-						CDATASection progList = document.createCDATASection(cmdSyntax.toString());
-						String safeName = cmd.value()[0].replace("\\", "BCK").replace("/", "FWD").replace("*", "ASX");
-						Element element = new XmlElementBuilder("section", document).addAttribute("xml:id",
-								"command-index-" + safeName.toLowerCase().replace(' ', '-')).addChild(
-								new XmlElementBuilder("title", document).setText(cmd.value()[0]).build()).addChild(
-								new XmlElementBuilder("para", document).setText(cmd.help()).build()).addChild(
-								new XmlElementBuilder("programlisting", document).addChild(progList).build()).addChild(
-								variableListElement).build();
-
-						individualCommands.put(cmdSyntax.toString(), element);
-					}
-				}
-
-				Element topSection = document.createElement("section");
-				topSection.setAttribute("xml:id", "command-index-" + section.toLowerCase().replace(' ', '-'));
-				topSection.appendChild(new XmlElementBuilder("title", document).setText(section).build());
-				topSection.appendChild(new XmlElementBuilder("para", document).setText(
-						section + " are contained in " + target.getClass().getName() + ".").build());
-
-				for (final Element value : individualCommands.values()) {
-					topSection.appendChild(value);
-				}
-
-				builtSections.add(topSection);
-			}
-
-			Element appendix = document.createElement("appendix");
-			appendix.setAttribute("xmlns", "http://docbook.org/ns/docbook");
-			appendix.setAttribute("version", "5.0");
-			appendix.setAttribute("xml:id", "command-index");
-			appendix.appendChild(new XmlElementBuilder("title", document).setText("Command Index").build());
-			appendix.appendChild(new XmlElementBuilder("para", document).setText(
-					"This appendix was automatically built from Roo " + VersionUtils.versionInfo() + ".").build());
-			appendix.appendChild(new XmlElementBuilder("para", document).setText(
-					"Commands are listed in alphabetic order, and are shown in monospaced font with any mandatory options you must specify when using the command. Most commands accept a large number of options, and all of the possible options for each command are presented in this appendix.").build());
-
-			for (Element section : builtSections) {
-				appendix.appendChild(section);
-			}
-			document.appendChild(appendix);
-
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-			Transformer transformer = XmlUtils.createIndentingTransformer();
-			// Causes an "Error reported by XML parser: Multiple notations were used which had the name 'linespecific', but which were not determined to be duplicates." when creating the DocBook
-			// transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//OASIS//DTD DocBook XML V4.5//EN");
-			// transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd");
-
-			XmlUtils.writeXml(transformer, byteArrayOutputStream, document);
-			try {
-				File output = new File(f, "appendix-command-index.xml");
-				FileCopyUtils.copy(byteArrayOutputStream.toByteArray(), output);
-			} catch (IOException ioe) {
-				throw new IllegalStateException(ioe);
-			}
-		}
-	}
 
 	public void obtainHelp(@CliOption(key = { "", "command" }, optionContext = "availableCommands", help = "Command name to provide help for") String buffer) {
 		synchronized (mutex) {
@@ -1153,10 +939,10 @@ public class SimpleParser implements Parser {
 					Assert.notNull(cmd, "CliCommand not found");
 
 					for (String value : cmd.value()) {
-						sb.append("Keyword:                   ").append(value).append(StringUtils.LINE_SEPARATOR);
+						sb.append("Keyword:                   ").append(value).append(OsUtils.LINE_SEPARATOR);
 					}
 
-					sb.append("Description:               ").append(cmd.help()).append(StringUtils.LINE_SEPARATOR);
+					sb.append("Description:               ").append(cmd.help()).append(OsUtils.LINE_SEPARATOR);
 
 					for (Annotation[] annotations : parameterAnnotations) {
 						CliOption cliOption = null;
@@ -1169,18 +955,18 @@ public class SimpleParser implements Parser {
 										key = "** default **";
 									}
 									sb.append(" Keyword:                  ").append(key).append(
-											StringUtils.LINE_SEPARATOR);
+											OsUtils.LINE_SEPARATOR);
 								}
 
 								sb.append("   Help:                   ").append(cliOption.help()).append(
-										StringUtils.LINE_SEPARATOR);
+										OsUtils.LINE_SEPARATOR);
 								sb.append("   Mandatory:              ").append(cliOption.mandatory()).append(
-										StringUtils.LINE_SEPARATOR);
+										OsUtils.LINE_SEPARATOR);
 								sb.append("   Default if specified:   '").append(cliOption.specifiedDefaultValue()).append(
-										"'").append(StringUtils.LINE_SEPARATOR);
+										"'").append(OsUtils.LINE_SEPARATOR);
 								sb.append("   Default if unspecified: '").append(cliOption.unspecifiedDefaultValue()).append(
-										"'").append(StringUtils.LINE_SEPARATOR);
-								sb.append(StringUtils.LINE_SEPARATOR);
+										"'").append(OsUtils.LINE_SEPARATOR);
+								sb.append(OsUtils.LINE_SEPARATOR);
 							}
 
 						}
@@ -1207,7 +993,7 @@ public class SimpleParser implements Parser {
 			}
 
 			for (String s : result) {
-				sb.append(s).append(StringUtils.LINE_SEPARATOR);
+				sb.append(s).append(OsUtils.LINE_SEPARATOR);
 			}
 
 			LOGGER.info(sb.toString());
