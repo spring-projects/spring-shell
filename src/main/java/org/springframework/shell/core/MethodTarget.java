@@ -1,12 +1,12 @@
 /*
  * Copyright 2011-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,10 @@ package org.springframework.shell.core;
 
 import java.lang.reflect.Method;
 
-import org.springframework.shell.support.style.ToStringCreator;
-import org.springframework.shell.support.util.Assert;
-import org.springframework.shell.support.util.ObjectUtils;
-import org.springframework.shell.support.util.StringUtils;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * A method that can be executed via a shell command.
@@ -36,7 +36,7 @@ public class MethodTarget {
 	private final Object target;
 	private final String remainingBuffer;
 	private final String key;
-	
+
 	/**
 	 * Constructor for a <code>null remainingBuffer</code> and <code>key</code>
 	 *
@@ -60,9 +60,9 @@ public class MethodTarget {
 	public MethodTarget(final Method method, final Object target, final String remainingBuffer, final String key) {
 		Assert.notNull(method, "Method is required");
 		Assert.notNull(target, "Target is required");
-		this.key = StringUtils.trimToEmpty(key);
+		this.key = StringUtils.trimWhitespace(key);
 		this.method = method;
-		this.remainingBuffer = StringUtils.trimToEmpty(remainingBuffer);
+		this.remainingBuffer = StringUtils.trimWhitespace(remainingBuffer);
 		this.target = target;
 	}
 
@@ -77,10 +77,10 @@ public class MethodTarget {
 		final MethodTarget otherMethodTarget = (MethodTarget) other;
 		return this.method.equals(otherMethodTarget.getMethod()) && this.target.equals(otherMethodTarget.getTarget());
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(method, target);
+		return ObjectUtils.nullSafeHashCode(method) + ObjectUtils.nullSafeHashCode(target);
 	}
 
 	@Override

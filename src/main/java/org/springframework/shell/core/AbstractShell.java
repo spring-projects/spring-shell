@@ -1,12 +1,12 @@
 /*
  * Copyright 2011-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.core;
 
-import static org.springframework.shell.support.util.StringUtils.LINE_SEPARATOR;
+import static org.springframework.shell.support.util.OsUtils.LINE_SEPARATOR;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -43,11 +43,11 @@ import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.event.ShellStatus;
 import org.springframework.shell.event.ShellStatus.Status;
 import org.springframework.shell.support.logging.HandlerUtils;
-import org.springframework.shell.support.util.Assert;
 import org.springframework.shell.support.util.IOUtils;
 import org.springframework.shell.support.util.MathUtils;
-import org.springframework.shell.support.util.StringUtils;
 import org.springframework.shell.support.util.VersionUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Provides a base {@link Shell} implementation.
@@ -58,7 +58,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	// Constants
 	private static final String MY_SLOT = AbstractShell.class.getName();
-	
+
 	//TODO Abstract out to make configurable.
 	protected static final String ROO_PROMPT = "spring> ";
 
@@ -74,7 +74,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	/**
 	 * Returns any classpath resources with the given path
-	 * 
+	 *
 	 * @param path the path for which to search (never null)
 	 * @return <code>null</code> if the search can't be performed
 	 * @since 1.2.0
@@ -89,7 +89,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	@CliCommand(value = { "script" }, help = "Parses the specified resource file and executes its commands")
 	public void script(
-		@CliOption(key = { "", "file" }, help = "The file to locate and execute", mandatory = true) final File script, 
+		@CliOption(key = { "", "file" }, help = "The file to locate and execute", mandatory = true) final File script,
 		@CliOption(key = "lineNumbers", mandatory = false, specifiedDefaultValue = "true", unspecifiedDefaultValue = "false", help = "Display line numbers when executing the script") final boolean lineNumbers) {
 
 		Assert.notNull(script, "Script file to parse is required");
@@ -129,7 +129,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	/**
 	 * Opens the given script for reading
-	 * 
+	 *
 	 * @param script the script to read (required)
 	 * @return a non-<code>null</code> input stream
 	 */
@@ -301,7 +301,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	/**
 	 * Default implementation of {@link Shell#setPromptPath(String, boolean))} method to satisfy STS compatibility.
-	 * 
+	 *
 	 * @param path to set (can be null or empty)
 	 * @param overrideStyle
 	 */
@@ -460,15 +460,15 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			logger.log(level, message);
 		}
 	}
-	
+
 	/**
 	 * Handles the result of execution of a command. Given <i>result</i> is
 	 * expected to be not <code>null</code>. If <i>result</i> is a
 	 * {@link java.lang.Iterable} object, it will be iterated through to print
-	 * the output of <i>toString</i>. For other type of objects, simply output 
+	 * the output of <i>toString</i>. For other type of objects, simply output
 	 * of <i>toString</i> is shown. Subclasses can alter this implementation
 	 * to handle the <i>result</i> differently.
-	 * 
+	 *
 	 * @param result not <code>null</code> result of execution of a command.
 	 */
 	protected void handleExecutionResult(Object result) {

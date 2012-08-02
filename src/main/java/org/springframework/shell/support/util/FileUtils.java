@@ -1,12 +1,12 @@
 /*
  * Copyright 2011-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@ package org.springframework.shell.support.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +27,12 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
+
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.PathMatcher;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -157,8 +164,8 @@ public final class FileUtils {
 	/**
 	 * Returns the part of the given path that represents a directory, in other
 	 * words the given path if it's already a directory, or the parent directory
-	 * if it's a file. 
-	 * 
+	 * if it's a file.
+	 *
 	 * @param fileIdentifier the path to parse (required)
 	 * @return see above
 	 * @since 1.2.0
@@ -173,7 +180,7 @@ public final class FileUtils {
 
 	/**
 	 * Returns the given file system path minus its last element
-	 * 
+	 *
 	 * @param fileIdentifier
 	 * @return
 	 * @since 1.2.0
@@ -186,21 +193,21 @@ public final class FileUtils {
 
 	/**
 	 * Removes any trailing {@link File#separator}s from the given path
-	 * 
+	 *
 	 * @param path the path to modify (can be <code>null</code>)
 	 * @return the modified path
 	 * @since 1.2.0
 	 */
 	public static String removeTrailingSeparator(String path) {
 		while (path != null && path.endsWith(File.separator)) {
-			path = StringUtils.removeSuffix(path, File.separator);
+			path = path.substring(0, path.length() - File.separator.length());
 		}
 		return path;
 	}
 
 	/**
 	 * Indicates whether the given canonical path matches the given Ant-style pattern
-	 * 
+	 *
 	 * @param antPattern the pattern to check against (can't be blank)
 	 * @param canonicalPath the path to check (can't be blank)
 	 * @return see above
@@ -214,27 +221,27 @@ public final class FileUtils {
 
 	/**
 	 * Removes any leading or trailing {@link File#separator}s from the given path.
-	 * 
+	 *
 	 * @param path the path to modify (can be <code>null</code>)
 	 * @return the path, modified as above, or <code>null</code> if <code>null</code> was given
 	 * @since 1.2.0
 	 */
 	public static String removeLeadingAndTrailingSeparators(String path) {
-		if (StringUtils.isBlank(path)) {
+		if (!StringUtils.hasText(path)) {
 			return path;
 		}
 		while (path.endsWith(File.separator)) {
-			path = StringUtils.removeSuffix(path, File.separator);
+			path = path.substring(0, path.length() - File.separator.length());
 		}
 		while (path.startsWith(File.separator)) {
-			path = StringUtils.removePrefix(path, File.separator);
+			path = path.substring(File.separator.length());
 		}
 		return path;
 	}
 
 	/**
 	 * Ensures that the given path has exactly one trailing {@link File#separator}
-	 * 
+	 *
 	 * @param path the path to modify (can't be <code>null</code>)
 	 * @return the normalised path
 	 * @since 1.2.0
@@ -247,7 +254,7 @@ public final class FileUtils {
 	/**
 	 * Returns an operating-system-dependent path consisting of the given
 	 * elements, separated by {@link File#separator}.
-	 * 
+	 *
 	 * @param pathElements the path elements from uppermost downwards (can't be empty)
 	 * @return a non-blank string
 	 * @since 1.2.0
@@ -259,7 +266,7 @@ public final class FileUtils {
 	/**
 	 * Returns an operating-system-dependent path consisting of the given
 	 * elements, separated by {@link File#separator}.
-	 * 
+	 *
 	 * @param pathElements the path elements from uppermost downwards (can't be empty)
 	 * @return a non-blank string
 	 * @since 1.2.0
@@ -289,7 +296,7 @@ public final class FileUtils {
 
 	/**
 	 * Returns the platform-specific file separator as a regular expression.
-	 * 
+	 *
 	 * @return a non-blank regex
 	 * @since 1.2.0
 	 */
@@ -352,13 +359,13 @@ public final class FileUtils {
 
 	/**
 	 * Reads a banner from the given resource. Performs conversion of any line separator contained by the source to that of the running platform.
-	 * 
+	 *
 	 * @return platform-compatible banner as a String
 	 */
 	public static String readBanner(Reader reader) {
 		try {
 			String content = FileCopyUtils.copyToString(new BufferedReader(reader));
-			return content.replaceAll("(\\r|\\n)+", StringUtils.LINE_SEPARATOR);
+			return content.replaceAll("(\\r|\\n)+", OsUtils.LINE_SEPARATOR);
 		} catch (Exception ex) {
 			throw new IllegalStateException("Cannot read stream", ex);
 		}
@@ -366,7 +373,7 @@ public final class FileUtils {
 
 	/**
 	 * Reads a banner from the given resource. Performs conversion of any line separator contained by the source to that of the running platform.
-	 * 
+	 *
 	 * @return platform-compatible banner as a String
 	 */
 	public static String readBanner(final Class<?> loadingClass, String resourceName) {
@@ -383,7 +390,7 @@ public final class FileUtils {
 	 */
 	public static String read(final File file) {
 		try {
-			return FileCopyUtils.copyToString(file);
+			return FileCopyUtils.copyToString(new FileReader(file));
 		} catch (final IOException e) {
 			throw new IllegalStateException(e);
 		}
@@ -391,7 +398,7 @@ public final class FileUtils {
 
 	/**
 	 * Constructor is private to prevent instantiation
-	 * 
+	 *
 	 * @since 1.2.0
 	 */
 	private FileUtils() {
