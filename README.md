@@ -1,33 +1,45 @@
-The Spring Shell project provides an extensible interactive shell enviornment with a simple Spring based plugin model. 
+Spring Shell is an interactive shell that can be easily extended with commands using a Spring based programming model.  The latest release is 1.0 M1
 
-# Docs
+# Useful links
 
-You can find out more details from the [user documentation](http://static.springsource.org/spring-shell/docs/current/reference/) or by browsing the [javadocs](http://static.springsource.org/spring-shell/docs/current/api/). If you have ideas about how to improve or extend the scope, please feel free to contribute.
+* [User documeantation](http://static.springsource.org/spring-shell/docs/current/reference/)
+* [Issue Tracker](https://jira.springsource.org/browse/SHL)
 
+More information can be found on the [project home page](http://www.springsource.org/spring-shell)
+
+If you have ideas about how to improve or extend the scope, please feel free to contribute.
 
 # Artifacts
 
 ~~~~~ xml
+<!-- used for milestone/rc releases -->
+<repository>
+ <id>spring-milestone</id>
+ <name>Spring Maven MILESTONE Repository</name>
+ <url>http://repo.springframework.org/libs-milestone</url>
+</repository>
+
 <dependency>
-  <groupId>org.springframework.shell</groupId>
-  <artifactId>spring-shell</artifactId>
-  <version>${version}</version>
+ <groupId>org.springframework.data</groupId>
+ <artifactId>spring-shell</artifactId>
+ <version>1.0.0.M1</version>
 </dependency> 
 
 <!-- used for nightly builds -->
 <repository>
-  <id>spring-maven-snapshot</id>
-  <snapshots><enabled>true</enabled></snapshots>
-  <name>Springframework Maven SNAPSHOT Repository</name>
-  <url>http://maven.springframework.org/snapshot</url>
-</repository> 
+ <-- Snapshots -->
+ <id>spring-snapshot</id>
+ <name>Spring Maven SNAPSHOT Repository</name>
+ <url>http://repo.springframework.org/libs-snapshot</url>
+</repository>
 
-<!-- used for milestone/rc releases -->
-<repository>
-  <id>spring-maven-milestone</id>
-  <name>Springframework Maven Milestone Repository</name>
-  <url>http://maven.springframework.org/milestone</url>
-</repository>  
+
+<dependency>
+  <groupId>org.springframework.shell</groupId>
+  <artifactId>spring-shell</artifactId>
+  <version>1.0.0.SNAPSHOT</version>
+</dependency> 
+
 ~~~~~
 
 * Gradle: 
@@ -39,13 +51,10 @@ repositories {
 }
 
 dependencies {
-   compile "org.springframework.shell:spring-shell:${version}"
+   compile "org.springframework.shell:spring-shell:1.0.0.M1"
 }
 ~~~~~
 
-The latest milestone is _1.0.0.M1_
-
-The latest nightly is _1.0.0.BUILD-SNAPSHOT_
 
 # Building
 Spring Shell is built with Gradle. To build Spring Shell, run
