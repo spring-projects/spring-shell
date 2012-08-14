@@ -87,7 +87,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private final Map<String, FlashInfo> flashInfoMap = new HashMap<String, FlashInfo>();
 	/** key: row number, value: eraseLineFromPosition */
 	private final Map<Integer, Integer> rowErasureMap = new HashMap<Integer, Integer>();
-	private boolean shutdownHookFired = false; // ROO-1599
 
 	private int historySize;
 
@@ -130,13 +129,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 		setShellStatus(Status.STARTED);
 
-		// Monitor CTRL+C initiated shutdowns (ROO-1599)
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				shutdownHookFired = true;
-				// We don't need to closeShell(), as the shutdown hook in o.s.r.bootstrap.Main calls stop() which calls JLineShellComponent.deactivate() and that calls closeShell()
-			}
-		}, getProductName() + " JLine Shutdown Hook"));
+
 
 		// Handle any "execute-then-quit" operation
 
@@ -297,7 +290,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		// Setup a thread to ensure flash messages are displayed and cleared correctly
 		Thread t = new Thread(new Runnable() {
 			public void run() {
-				while (!shellStatus.getStatus().equals(Status.SHUTTING_DOWN) && !shutdownHookFired) {
+				while (!shellStatus.getStatus().equals(Status.SHUTTING_DOWN)) {
 					synchronized (flashInfoMap) {
 						long now = System.currentTimeMillis();
 
@@ -433,9 +426,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			rowErasureMap.remove(row);
 		}
 		else {
-			if (shutdownHookFired) {
-				return; // ROO-1599
-			}
 			// They want some message displayed
 			int startFrom = reader.getTermwidth() - message.length() + 1;
 			if (startFrom < 1) {

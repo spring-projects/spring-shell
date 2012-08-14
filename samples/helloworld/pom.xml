@@ -77,7 +77,6 @@
 
 
 	<repositories>
-		<!-- jline 1.0.S2-B is here http://shrub.appspot.com/spring-roo-repository.springsource.org/release/net/sourceforge/jline/jline/1.0.S2-B/ -->
 		<repository>
 			<id>spring-roo-repository</id>
 			<name>Spring Roo Maven Repository</name>
@@ -91,7 +90,6 @@
 			</snapshots>
 			<name>Springframework Maven SNAPSHOT Repository</name>
 			<url>http://repo.springsource.org/libs-snapshot</url>
-		</repository>
 		</repository>
 	</repositories>
 </project>
