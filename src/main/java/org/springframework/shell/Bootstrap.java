@@ -88,8 +88,6 @@ public class Bootstrap {
 		for (Converter converter : converters.values()) {
 			shell.getSimpleParser().add(converter);
 		}
-
-		shell.start();
 	}
 
 	private void createApplicationContext() {
@@ -186,6 +184,7 @@ public class Bootstrap {
 			}
 		}
 		else {
+			shell.start();
 			shell.promptLoop();
 			exitShellRequest = shell.getExitShellRequest();
 			if (exitShellRequest == null) {
