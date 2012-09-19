@@ -20,8 +20,7 @@
     will be loaded to bootstrap a Spring
     <interfacename>ApplicationContext</interfacename> when the shell is
     started. The essential boostrapping code that looks for your contributions
-    looks like this:
-    <programlisting>new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");</programlisting></para>
+    looks like this: <programlisting>new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");</programlisting></para>
 
     <para>In the <literal>spring-shell-plugin.xml</literal> file you should
     define the command classes and any other collaborating objects that
@@ -35,7 +34,8 @@
     </mediaobject>
 
     <para>Note that the current plugin model loads all plugins under the same
-    class loader. An open <link xlink:href="https://jira.springsource.org/browse/SHL-37">JIRA issue</link>
+    class loader. An open <link
+    xlink:href="https://jira.springsource.org/browse/SHL-37">JIRA issue</link>
     suggests providing a classloader per plugin to provide isolation.</para>
 
     <section>
@@ -49,10 +49,13 @@
       <programlisting language="xml">&lt;beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd"&gt;
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd"&gt;
 
-  &lt;context:component-scan base-package="org.springframework.shell.samples.helloworld.commands" /&gt;
+  &lt;context:component-scan 
+           base-package="org.springframework.shell.samples.helloworld.commands" /&gt;
 
 &lt;/beans&gt;</programlisting>
 
@@ -64,7 +67,8 @@
       <programlisting language="java">@Component
 public class HelloWorldCommands implements CommandMarker {
 
-  // use any Spring annotations for Dependency Injection or other Spring interfaces as required.
+  // use any Spring annotations for Dependency Injection or other Spring 
+  // interfaces as required.
 
   // methods with @Cli annotations go here
 
@@ -165,7 +169,9 @@ public class HelloWorldCommands implements CommandMarker {
       <listitem>
         <para><interfacename>PromptProvider</interfacename> - Specifies the
         command prompt text, eg. "<literal>shell&gt;</literal>" or
-        "<literal>#</literal>" or "<literal>$</literal>"</para>
+        "<literal>#</literal>" or "<literal>$</literal>". This will be called
+        after every command execution so it does not need to be a static
+        string.</para>
       </listitem>
 
       <listitem>
@@ -177,23 +183,23 @@ public class HelloWorldCommands implements CommandMarker {
     <para>There is a default implementation for these interfaces but you
     should create your own implementations for your own shell application. Use
     Spring's <literal>@Ordered</literal> annotation to set the priority of the
-    provider. This allows your provider implementations to take precidence
+    provider. This allows your provider implementations to take precedence
     over any other implementations that maybe present on the classpath from
-    other plugins. </para>
+    other plugins.</para>
 
     <para>To make cool "<link
     xlink:href="http://en.wikipedia.org/wiki/ASCII_art">ASCII art</link>"
     banners the website <link
     xlink:href="http://patorjk.com/software/taag">http://patorjk.com/software/taag</link>
-    is quite neat! </para>
+    is quite neat!</para>
   </section>
 
   <section>
     <title>Communicating between plugins</title>
 
     <para>As this is a standard Spring application you can use Spring's
-    ApplicationContext event infrastructure to communicate across
-    plugins.</para>
+    <classname>ApplicationContext</classname> event infrastructure to
+    communicate across plugins.</para>
   </section>
 
   <section>
@@ -212,8 +218,8 @@ public class HelloWorldCommands implements CommandMarker {
 
  /**
   * Method called before invoking the target command (described by {@link ParseResult}).
-  * Additionally, for advanced cases, the parse result itself effectively changing the invocation
-  * calling site.
+  * Additionally, for advanced cases, the parse result itself effectively changing the 
+  * invocation calling site.
   * 
   * @param invocationContext target command context
   * @return the invocation target 
@@ -221,7 +227,8 @@ public class HelloWorldCommands implements CommandMarker {
  ParseResult beforeInvocation(ParseResult invocationContext);
 
  /**
-  * Method called after successfully invoking the target command (described by {@link ParseResult}).
+  * Method called after successfully invoking the target command (described by 
+  * {@link ParseResult}).
   * 
   * @param invocationContext target command context
   * @param result the invocation result
@@ -229,7 +236,8 @@ public class HelloWorldCommands implements CommandMarker {
  void afterReturningInvocation(ParseResult invocationContext, Object result);
 
  /**
-  * Method called after invoking the target command (described by {@link ParseResult}) had thrown an exception .
+  * Method called after invoking the target command (described by {@link ParseResult}) 
+  * had thrown an exception .
   * 
   * @param invocationContext target command context
   * @param thrown the thrown object
@@ -243,7 +251,7 @@ public class HelloWorldCommands implements CommandMarker {
     <title>Command line options</title>
 
     <para>There are a few command line options that can be specified when
-    starting the shell. They are </para>
+    starting the shell. They are</para>
 
     <itemizedlist>
       <listitem>

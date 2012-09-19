@@ -28,8 +28,8 @@
     </listitem>
 
     <listitem>
-      <para>Use of Spring's classpath scanning functionality as the basis for a
-      command plugin strategy and command develoment</para>
+      <para>Use of Spring's classpath scanning functionality as the basis for
+      a command plugin strategy and command development</para>
     </listitem>
 
     <listitem>
