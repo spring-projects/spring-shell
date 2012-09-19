@@ -114,7 +114,10 @@ public class HelloWorldCommands implements CommandMarker {
     <para>Here is an example session showing the behavior.</para>
 
     <mediaobject>
-      <imageobject>
+      <imageobject role="fo">
+        <imagedata fileref="../images/shell-example.jpg"/>
+      </imageobject>
+      <imageobject role="html">
         <imagedata fileref="images/shell-example.jpg"/>
       </imageobject>
     </mediaobject>
@@ -123,7 +126,10 @@ public class HelloWorldCommands implements CommandMarker {
     supports the use of an enumeration as command method arguments.</para>
 
     <mediaobject>
-      <imageobject>
+      <imageobject role="fo">
+        <imagedata fileref="../images/shell-example-enum.jpg"/>
+      </imageobject>
+      <imageobject role="html">
         <imagedata fileref="images/shell-example-enum.jpg"/>
       </imageobject>
     </mediaobject>

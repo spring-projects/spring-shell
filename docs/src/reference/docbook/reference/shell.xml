@@ -28,7 +28,10 @@
     following diagram</para>
 
     <mediaobject>
-      <imageobject>
+      <imageobject role="pdf">
+        <imagedata fileref="../images/shell-arch-overview.png"/>
+      </imageobject>
+      <imageobject role="html">
         <imagedata fileref="images/shell-arch-overview.png"/>
       </imageobject>
     </mediaobject>
