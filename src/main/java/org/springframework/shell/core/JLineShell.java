@@ -201,7 +201,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	protected ConsoleReader createConsoleReader() {
 		ConsoleReader consoleReader = null;
 		try {
-			if (JANSI_AVAILABLE && OsUtils.isWindows()) {
+			if (isJansiAvailable()) {
 				try {
 				    consoleReader = createAnsiWindowsReader();
 				} catch (Exception e) {
@@ -216,6 +216,10 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			throw new IllegalStateException("Cannot start console class", ioe);
 		}
 		return consoleReader;
+	}
+
+	private boolean isJansiAvailable() {
+		return JANSI_AVAILABLE && OsUtils.isWindows() && System.getProperty("jline.terminal") == null;
 	}
 
 	public void printBannerAndWelcome() {
