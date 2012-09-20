@@ -6,6 +6,29 @@ Commit changelog: http://github.com/SpringSource/spring-shell/tree/[version]
 Issues changelog: http://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10361
 
 
+Changes in version 1.0 RC1 (2012-09-20)
+---------------------------------------
+
+** Bug
+* [SHL-14] - History from previous session is not loaded into JLine history buffer
+* [SHL-48] - Remove duplicated classes from Spring Framework and old Roo code base in util package
+* [SHL-52] - Missing Maven dependency JLine
+* [SHL-60] - Jansi terminal support not working under cygwin
+* [SHL-61] - Remove unused Hint classes
+
+** Improvement
+* [SHL-53] - Documentation Corrections
+* [SHL-54] - Dynamic prompt
+* [SHL-57] - Miscellaneous documentation cleanup
+
+** New Feature
+* [SHL-55] - ascii art/text should be loaded from a file
+* [SHL-56] - SHL contains a lot of duplicated classes from Spring
+
+** Task
+* [SHL-51] - Correct Maven groupId
+
+
 Changes in version 1.0 M1 (2012-07-18)
 --------------------------------------
 
@@ -36,7 +59,3 @@ Changes in version 1.0 M1 (2012-07-18)
 * [SHL-23] - Create docbook based reference guide
 * [SHL-25] - Enable unit test on CI build
 * [SHL-50] - Add sample application
-
-
-
-
