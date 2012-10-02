@@ -1,4 +1,4 @@
-Spring Shell is an interactive shell that can be easily extended with commands using a Spring based programming model.  The latest release is 1.0 M1
+Spring Shell is an interactive shell that can be easily extended with commands using a Spring based programming model.  The latest release is 1.0.0.RELEASE
 
 # Useful links
 
@@ -15,6 +15,12 @@ If you have ideas about how to improve or extend the scope, please feel free to 
 <!-- used for milestone/rc releases -->
 <repository>
  <id>spring-milestone</id>
+ <name>Spring Maven RELEASE Repository</name>
+ <url>http://repo.springframework.org/release</url>
+</repository>
+
+<repository>
+ <id>spring-milestone</id>
  <name>Spring Maven MILESTONE Repository</name>
  <url>http://repo.springframework.org/libs-milestone</url>
 </repository>
@@ -22,7 +28,7 @@ If you have ideas about how to improve or extend the scope, please feel free to 
 <dependency>
  <groupId>org.springframework.data</groupId>
  <artifactId>spring-shell</artifactId>
- <version>1.0.0.M1</version>
+ <version>1.0.0.RELEASE</version>
 </dependency> 
 
 <!-- used for nightly builds -->
@@ -33,11 +39,10 @@ If you have ideas about how to improve or extend the scope, please feel free to 
  <url>http://repo.springframework.org/libs-snapshot</url>
 </repository>
 
-
 <dependency>
   <groupId>org.springframework.shell</groupId>
   <artifactId>spring-shell</artifactId>
-  <version>1.0.0.SNAPSHOT</version>
+  <version>1.0.1.SNAPSHOT</version>
 </dependency> 
 
 ~~~~~
@@ -46,12 +51,11 @@ If you have ideas about how to improve or extend the scope, please feel free to 
 
 ~~~~~ groovy
 repositories {
-   maven { url "http://repo.springsource.org/libs-milestone" }
    maven { url "http://repo.springsource.org/libs-snapshot" }
 }
 
 dependencies {
-   compile "org.springframework.shell:spring-shell:1.0.0.M1"
+   compile "org.springframework.shell:spring-shell:1.0.0.RELEASE"
 }
 ~~~~~
 
@@ -64,7 +68,7 @@ Spring Shell is built with Gradle. To build Spring Shell, run
 # Running Example
 
     cd samples/helloworld
-    ../../gradlew installApp
+    ./gradlew installApp
     cd build/install/helloworld/bin
     helloworld
     
