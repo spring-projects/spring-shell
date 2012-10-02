@@ -4,14 +4,14 @@
 
 	<groupId>org.springframework.shell.samples</groupId>
 	<artifactId>helloworld</artifactId>
-	<version>1.0.0.M1</version>
+	<version>1.0.0.RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>helloworld</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<spring.shell.version>1.0.0.M1</spring.shell.version>
+		<spring.shell.version>1.0.0.RELEASE</spring.shell.version>
 		<jar.mainclass>org.springframework.shell.Bootstrap</jar.mainclass>
 	</properties>
 
@@ -77,12 +77,6 @@
 
 
 	<repositories>
-		<repository>
-			<id>spring-roo-repository</id>
-			<name>Spring Roo Maven Repository</name>
-			<url>http://spring-roo-repository.springsource.org/release</url>
-		</repository>
-
 		<repository>
 			<id>spring-maven-snapshot</id>
 			<snapshots>
