@@ -6,6 +6,9 @@ Commit changelog: http://github.com/SpringSource/spring-shell/tree/[version]
 Issues changelog: http://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10361
 
 
+Changes in version 1.0 RELEASE (2012-10-02)
+-------------------------------------------
+
 Changes in version 1.0 RC1 (2012-09-20)
 ---------------------------------------
 
