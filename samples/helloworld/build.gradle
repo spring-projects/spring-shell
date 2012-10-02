@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
 	compile "org.springframework.shell:spring-shell:$springShellVersion"
-	testCompile "junit:junit:$junitVersion"
+	runtime "log4j:log4j:$log4jVersion"
 }
 
 mainClassName = "org.springframework.shell.Bootstrap"
