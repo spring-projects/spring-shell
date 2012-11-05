@@ -26,7 +26,7 @@ import java.util.Map;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.Lifecycle;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.plugin.BannerProvider;
@@ -40,7 +40,7 @@ import org.springframework.shell.plugin.PromptProvider;
  * @author Ben Alex
  * @since 1.1
  */
-public class JLineShellComponent extends JLineShell implements Lifecycle, ApplicationContextAware {
+public class JLineShellComponent extends JLineShell implements SmartLifecycle, ApplicationContextAware {
 
   private volatile boolean running = false;
   private Thread shellThread;
@@ -67,6 +67,18 @@ public class JLineShellComponent extends JLineShell implements Lifecycle, Applic
     return parser;
   }
 
+  public boolean isAutoStartup() {
+    return false;
+  }
+
+  public void stop(Runnable callback) {
+    stop();
+    callback.run();
+  }
+
+  public int getPhase() {
+    return 1;
+  }
 
   public void start() {
     //customizePlug must run before start thread to take plugin's configuration into effect
@@ -75,7 +87,6 @@ public class JLineShellComponent extends JLineShell implements Lifecycle, Applic
     shellThread.start();
     running = true;
   }
-
 
   public void stop() {
     closeShell();
