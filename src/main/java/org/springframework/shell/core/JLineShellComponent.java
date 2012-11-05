@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.Lifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
@@ -40,196 +40,197 @@ import org.springframework.shell.plugin.PromptProvider;
  * @author Ben Alex
  * @since 1.1
  */
-public class JLineShellComponent extends JLineShell implements Lifecycle {
+public class JLineShellComponent extends JLineShell implements Lifecycle, ApplicationContextAware {
 
-	private volatile boolean running = false;
-	private Thread shellThread;
+  private volatile boolean running = false;
+  private Thread shellThread;
 
-	private ApplicationContext applicationContext;
-	private boolean printBanner = true;
+  private ApplicationContext applicationContext;
+  private boolean printBanner = true;
 
-	private static AnnotationAwareOrderComparator annotationOrderComparator = new AnnotationAwareOrderComparator();
+  private static AnnotationAwareOrderComparator annotationOrderComparator = new AnnotationAwareOrderComparator();
 
-	private String historyFileName;
-	private String promptText;
-	private String productName;
-	private String banner;
-	private String version;
-	private String welcomeMessage;
-
-
-	// Fields
-	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.		
-	private SimpleParser parser = new SimpleParser();
+  private String historyFileName;
+  private String promptText;
+  private String productName;
+  private String banner;
+  private String version;
+  private String welcomeMessage;
 
 
-	public SimpleParser getSimpleParser() {
-		return parser;
-	}
+  // Fields
+  private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.
+  private SimpleParser      parser            = new SimpleParser();
 
 
-	public void start() {
-		//customizePlug must run before start thread to take plugin's configuration into effect
-		customizePlugin();
-		shellThread = new Thread(this, "Spring Shell");
-		shellThread.start();
-		running = true;
-	}
+  public SimpleParser getSimpleParser() {
+    return parser;
+  }
 
 
-	public void stop() {
-		closeShell();
-		running = false;
-	}
-
-	public boolean isRunning() {
-		return running;
-	}
-
-	/**
-	 * wait the shell command to complete by typing "quit" or "exit" 
-	 * 
-	 */
-	public void waitForComplete() {
-		try {
-			shellThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	protected Collection<URL> findResources(final String path) {
-		try {
-			Resource[] resources = applicationContext.getResources(path);
-			Collection<URL> list = new ArrayList<URL>(resources.length);
-			for (Resource resource : resources) {
-				list.add(resource.getURL());
-			}
-			return list;
-		} catch (IOException ex) {
-			logger.fine("Cannot find path " + path);
-			// return Collections.emptyList();
-			throw new RuntimeException(ex);
-		}
-	}
-
-	@Override
-	protected ExecutionStrategy getExecutionStrategy() {
-		return executionStrategy;
-	}
-
-	@Override
-	protected Parser getParser() {
-		return parser;
-	}
-
-	@Override
-	public String getStartupNotifications() {
-		return null;
-	}
-
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-
-	public void customizePlugin() {
-		this.historyFileName = getHistoryFileName();
-		this.promptText = getPromptText();
-		String[] banner = getBannerText();
-		this.banner = banner[0];
-		this.welcomeMessage = banner[1];
-		this.version = banner[2];
-		this.productName = banner[3];
-	}
-
-	/**
-	 * get history file name from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * 
-	 * @return history file name 
-	 */
-	protected String getHistoryFileName() {
-		String providerHistoryFileName = getHighestPriorityProvider(HistoryFileNameProvider.class).getHistoryFileName();
-		if (providerHistoryFileName != null) {
-			return providerHistoryFileName;
-		} else {
-			return historyFileName;
-		}
-	}
-
-	/**
-	 * get prompt text from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * 
-	 * @return prompt text
-	 */
-	protected String getPromptText() {
-		String providerPromptText = getHighestPriorityProvider(PromptProvider.class).getPrompt();
-		if (providerPromptText != null) {
-			return providerPromptText;
-		} else {
-			return promptText;
-		}
-	}
-
-	/**
-	 * Get Banner and Welcome Message from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * @return BannerText[0]: Banner
-	 *         BannerText[1]: Welcome Message
-	 *         BannerText[2]: Version
-	 *         BannerText[3]: Product Name
-	 */
-	private String[] getBannerText() {
-		String[] bannerText = new String[4];
-		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
-		bannerText[0] = provider.getBanner();
-		bannerText[1] = provider.getWelcomeMessage();
-		bannerText[2] = provider.getVersion();
-		bannerText[3] = provider.name();
-		return bannerText;
-	}
+  public void start() {
+    //customizePlug must run before start thread to take plugin's configuration into effect
+    customizePlugin();
+    shellThread = new Thread(this, "Spring Shell");
+    shellThread.start();
+    running = true;
+  }
 
 
-	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t) {
-		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext, t);
-		List<T> sortedProviders = new ArrayList<T>(providers.values());
-		Collections.sort(sortedProviders, annotationOrderComparator);
-		T highestPriorityProvider = sortedProviders.get(0);
-		return highestPriorityProvider;
-	}
-	
-	public void printBannerAndWelcome() {
-	    	if (printBanner) {
-			logger.info(this.banner);
-			logger.info(getWelcomeMessage());
-		}
-	}
+  public void stop() {
+    closeShell();
+    running = false;
+  }
+
+  public boolean isRunning() {
+    return running;
+  }
+
+  /**
+   * wait the shell command to complete by typing "quit" or "exit"
+   */
+  public void waitForComplete() {
+    try {
+      shellThread.join();
+    } catch(InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  protected Collection<URL> findResources(final String path) {
+    try {
+      Resource[] resources = applicationContext.getResources(path);
+      Collection<URL> list = new ArrayList<URL>(resources.length);
+      for(Resource resource : resources) {
+        list.add(resource.getURL());
+      }
+      return list;
+    } catch(IOException ex) {
+      logger.fine("Cannot find path " + path);
+      // return Collections.emptyList();
+      throw new RuntimeException(ex);
+    }
+  }
+
+  @Override
+  protected ExecutionStrategy getExecutionStrategy() {
+    return executionStrategy;
+  }
+
+  @Override
+  protected Parser getParser() {
+    return parser;
+  }
+
+  @Override
+  public String getStartupNotifications() {
+    return null;
+  }
+
+  public void setApplicationContext(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
+
+  public void customizePlugin() {
+    this.historyFileName = getHistoryFileName();
+    this.promptText = getPromptText();
+    String[] banner = getBannerText();
+    this.banner = banner[0];
+    this.welcomeMessage = banner[1];
+    this.version = banner[2];
+    this.productName = banner[3];
+  }
+
+  /**
+   * get history file name from provider. The provider has highest order
+   * <link>org.springframework.core.Ordered.getOder</link> will win.
+   *
+   * @return history file name
+   */
+  protected String getHistoryFileName() {
+    String providerHistoryFileName = getHighestPriorityProvider(HistoryFileNameProvider.class).getHistoryFileName();
+    if(providerHistoryFileName != null) {
+      return providerHistoryFileName;
+    } else {
+      return historyFileName;
+    }
+  }
+
+  /**
+   * get prompt text from provider. The provider has highest order
+   * <link>org.springframework.core.Ordered.getOder</link> will win.
+   *
+   * @return prompt text
+   */
+  protected String getPromptText() {
+    String providerPromptText = getHighestPriorityProvider(PromptProvider.class).getPrompt();
+    if(providerPromptText != null) {
+      return providerPromptText;
+    } else {
+      return promptText;
+    }
+  }
+
+  /**
+   * Get Banner and Welcome Message from provider. The provider has highest order
+   * <link>org.springframework.core.Ordered.getOder</link> will win.
+   *
+   * @return BannerText[0]: Banner
+   *         BannerText[1]: Welcome Message
+   *         BannerText[2]: Version
+   *         BannerText[3]: Product Name
+   */
+  private String[] getBannerText() {
+    String[] bannerText = new String[4];
+    BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
+    bannerText[0] = provider.getBanner();
+    bannerText[1] = provider.getWelcomeMessage();
+    bannerText[2] = provider.getVersion();
+    bannerText[3] = provider.name();
+    return bannerText;
+  }
 
 
-	/**
-	 * get the welcome message at start.
-	 * 
-	 * @return welcome message
-	 */
-	public String getWelcomeMessage() {
-		return this.welcomeMessage;
-	}
+  private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t) {
+    Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext, t);
+    List<T> sortedProviders = new ArrayList<T>(providers.values());
+    Collections.sort(sortedProviders, annotationOrderComparator);
+    T highestPriorityProvider = sortedProviders.get(0);
+    return highestPriorityProvider;
+  }
+
+  public void printBannerAndWelcome() {
+    if(printBanner) {
+      logger.info(this.banner);
+      logger.info(getWelcomeMessage());
+    }
+  }
 
 
-	/**
-	 * @param printBanner the printBanner to set
-	 */
-	public void setPrintBanner(boolean printBanner) {
-		this.printBanner = printBanner;
-	}
-	
-	protected String getProductName() {
-		return productName;
-	}
-	
-	protected String getVersion() {
-		return version;
-	}
+  /**
+   * get the welcome message at start.
+   *
+   * @return welcome message
+   */
+  public String getWelcomeMessage() {
+    return this.welcomeMessage;
+  }
+
+
+  /**
+   * @param printBanner
+   *     the printBanner to set
+   */
+  public void setPrintBanner(boolean printBanner) {
+    this.printBanner = printBanner;
+  }
+
+  protected String getProductName() {
+    return productName;
+  }
+
+  protected String getVersion() {
+    return version;
+  }
 }
