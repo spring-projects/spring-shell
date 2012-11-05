@@ -1,4 +1,4 @@
-package org.springframework.shell.plugin;
+package org.springframework.shell.context;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
