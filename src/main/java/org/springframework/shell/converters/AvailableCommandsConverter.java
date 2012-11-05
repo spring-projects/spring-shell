@@ -21,6 +21,7 @@ import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
 import org.springframework.shell.core.SimpleParser;
+import org.springframework.stereotype.Component;
 
 /**
  * Available commands converter.
@@ -28,6 +29,7 @@ import org.springframework.shell.core.SimpleParser;
  * @author Ben Alex
  * @since 1.0
  */
+@Component
 public class AvailableCommandsConverter implements Converter<String> {
 
 	public String convertFromText(final String text, final Class<?> requiredType, final String optionContext) {

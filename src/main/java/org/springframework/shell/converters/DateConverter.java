@@ -24,6 +24,7 @@ import java.util.Locale;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link Date}.
@@ -31,6 +32,7 @@ import org.springframework.shell.core.MethodTarget;
  * @author Stefan Schmidt
  * @since 1.0
  */
+@Component
 public class DateConverter implements Converter<Date> {
 
 	// Fields
