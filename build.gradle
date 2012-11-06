@@ -1,10 +1,10 @@
 buildscript {
-    repositories {
-        maven { url 'http://repo.springsource.org/plugins-release' }
-    }
-    dependencies {
-        classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.1.5'
-    }
+  repositories {
+    maven { url 'http://repo.springsource.org/plugins-release' }
+  }
+  dependencies {
+    classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.1.5'
+  }
 }
 
 description = 'Spring Shell'
@@ -23,175 +23,192 @@ apply from: "$rootDir/maven.gradle"
 apply plugin: 'docbook-reference'
 apply plugin: 'application'
 
-[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:-serial", "-Xlint:unchecked", "-Xlint:rawtypes"]
+[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:-serial", "-Xlint:unchecked"]
+
+configurations.all {
+  exclude group: "commons-logging"
+}
+configurations {
+  compile.extendsFrom providedCompile
+}
 
 dependencies {
-    compile "org.springframework:spring-core:$springVersion"
-    compile "org.springframework:spring-context-support:$springVersion"
-    compile "commons-io:commons-io:$commonsioVersion"
-    compile "net.sourceforge.jline:jline:$jlineVersion"
-    compile "org.fusesource.jansi:jansi:$jansiVersion"
-    compile "cglib:cglib:$cglibVersion"
+  // Logging
+  compile "org.slf4j:slf4j-api:$slf4jVersion"
+  runtime "org.slf4j:jcl-over-slf4j:$slf4jVersion"
 
-    
-    // Testing
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
+  // Spring
+  compile "org.springframework:spring-core:$springVersion"
+  compile "org.springframework:spring-context-support:$springVersion"
+
+  // Supporting libraries
+  compile "commons-io:commons-io:$commonsioVersion"
+  compile "net.sourceforge.jline:jline:$jlineVersion"
+  compile "org.fusesource.jansi:jansi:$jansiVersion"
+  compile "cglib:cglib:$cglibVersion"
+
+  // Testing
+  testCompile "junit:junit-dep:$junitVersion"
+  testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
+  testCompile "org.springframework:spring-test:$springVersion"
+  testCompile "org.mockito:mockito-core:$mockitoVersion"
+  testRuntime "ch.qos.logback:logback-classic:$logbackVersion"
+
 }
 
 sourceCompatibility = 1.5
-targetCompatibility = 1.5 
+targetCompatibility = 1.5
 
 javadoc {
   ext.srcDir = file("${projectDir}/docs/src/api")
   destinationDir = file("${buildDir}/api")
   ext.tmpDir = file("${buildDir}/api-work")
-  
+
   configure(options) {
-      stylesheetFile = file("${srcDir}/spring-javadoc.css")
-      overview = "${srcDir}/overview.html"
-      docFilesSubDirs = true
-      outputLevel = org.gradle.external.javadoc.JavadocOutputLevel.QUIET
-      breakIterator = true
-      showFromProtected()
-      groups = [
-        'Spring Shell' : ['org.springframework.shell*'],
-      ]
-  
-     links = [
+    stylesheetFile = file("${srcDir}/spring-javadoc.css")
+    overview = "${srcDir}/overview.html"
+    docFilesSubDirs = true
+    outputLevel = org.gradle.external.javadoc.JavadocOutputLevel.QUIET
+    breakIterator = true
+    showFromProtected()
+    groups = [
+        'Spring Shell': ['org.springframework.shell*'],
+    ]
+
+    links = [
         "http://static.springframework.org/spring/docs/3.1.x/javadoc-api",
         "http://download.oracle.com/javase/6/docs/api",
-     ]
-     
-     //exclude "org/springframework/data/redis/config/**"
+    ]
+
+    //exclude "org/springframework/data/redis/config/**"
   }
-    
+
   title = "${rootProject.description} ${version} API"
 }
 
 jar {
-    manifest.attributes['Implementation-Title'] = 'spring-shell'
-    manifest.attributes['Implementation-Version'] = project.version
+  manifest.attributes['Implementation-Title'] = 'spring-shell'
+  manifest.attributes['Implementation-Version'] = project.version
 
-    from("$rootDir/docs/src/info") {
-        include "license.txt"
-        include "notice.txt"
-        into "META-INF"
-        expand(copyright: new Date().format('yyyy'), version: project.version)
-    }
+  from("$rootDir/docs/src/info") {
+    include "license.txt"
+    include "notice.txt"
+    into "META-INF"
+    expand(copyright: new Date().format('yyyy'), version: project.version)
+  }
 }
 
-task sourcesJar(type: Jar, dependsOn:classes) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allJava
 }
 
 task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
+  classifier = 'javadoc'
+  from javadoc
 }
 
 reference {
-    sourceDir = file('docs/src/reference/docbook')
+  sourceDir = file('docs/src/reference/docbook')
 }
 
 
 task docsZip(type: Zip) {
-    group = 'Distribution'
-    classifier = 'docs'
-    description = "Builds -${classifier} archive containing api and reference for deployment"
+  group = 'Distribution'
+  classifier = 'docs'
+  description = "Builds -${classifier} archive containing api and reference for deployment"
 
-    from('docs/src/info') {
-        include 'changelog.txt'
-    }
+  from('docs/src/info') {
+    include 'changelog.txt'
+  }
 
-    from (javadoc) {
-        into 'api'
-    }
+  from(javadoc) {
+    into 'api'
+  }
 
-    from (reference) {
-        into 'reference'
-    }
+  from(reference) {
+    into 'reference'
+  }
 }
 
 task schemaZip(type: Zip) {
-    group = 'Distribution'
-    classifier = 'schema'
-    description = "Builds -${classifier} archive containing all XSDs for deployment"
+  group = 'Distribution'
+  classifier = 'schema'
+  description = "Builds -${classifier} archive containing all XSDs for deployment"
 
-    def Properties schemas = new Properties();
-    
-    sourceSets.main.resources.find {
-        it.path.endsWith('META-INF' + File.separator + 'spring.schemas')
-    }?.withInputStream { schemas.load(it) }
+  def Properties schemas = new Properties();
 
-    ext.paths = [] as Set
-    
-    for (def key : schemas.keySet()) {
-        def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
-        assert shortName != key
-        File xsdFile = sourceSets.main.resources.find {
-            it.path.replace('\\', '/').endsWith(schemas.get(key))
-        }
-        assert xsdFile != null
-        def input = xsdFile.path
+  sourceSets.main.resources.find {
+    it.path.endsWith('META-INF' + File.separator + 'spring.schemas')
+  }?.withInputStream { schemas.load(it) }
 
-        if (!paths.contains(input)) {
-            paths.add(input)
-            into (shortName) {
-               from input
-            }
-        }
+  ext.paths = [] as Set
+
+  for (def key : schemas.keySet()) {
+    def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
+    assert shortName != key
+    File xsdFile = sourceSets.main.resources.find {
+      it.path.replace('\\', '/').endsWith(schemas.get(key))
     }
+    assert xsdFile != null
+    def input = xsdFile.path
+
+    if (!paths.contains(input)) {
+      paths.add(input)
+      into(shortName) {
+        from input
+      }
+    }
+  }
 }
 
 task distroZip(type: Zip, dependsOn: [jar, docsZip, sourcesJar, javadocJar]) {
-    group = 'Distribution'
-    classifier = 'dist'
-    description = "Builds -${classifier} archive, containing all jars and docs, " +
-                  "suitable for community download page."
+  group = 'Distribution'
+  classifier = 'dist'
+  description = "Builds -${classifier} archive, containing all jars and docs, " +
+      "suitable for community download page."
 
-    ext.zipRootDir = "${project.name}-${project.version}"
+  ext.zipRootDir = "${project.name}-${project.version}"
 
-    into (zipRootDir) {
-        from('docs/src/info') {
-            include 'readme.txt'
-            include 'license.txt'
-            include 'notice.txt'
-            expand(copyright: new Date().format('yyyy'), version: project.version)
-        }
-
-        from('samples/') {
-            into 'samples'
-            exclude '.gradle/'
-            exclude 'build/'
-        }
-        
-        from(zipTree(docsZip.archivePath)) {
-            into "docs"
-        }
-
-//        from(zipTree(schemaZip.archivePath)) {
-//            into "schema"
-//        }
-        into ("dist") {
-            from rootProject.collect { project -> project.libsDir }
-        }
+  into(zipRootDir) {
+    from('docs/src/info') {
+      include 'readme.txt'
+      include 'license.txt'
+      include 'notice.txt'
+      expand(copyright: new Date().format('yyyy'), version: project.version)
     }
+
+    from('samples/') {
+      into 'samples'
+      exclude '.gradle/'
+      exclude 'build/'
+    }
+
+    from(zipTree(docsZip.archivePath)) {
+      into "docs"
+    }
+
+    //        from(zipTree(schemaZip.archivePath)) {
+    //            into "schema"
+    //        }
+    into("dist") {
+      from rootProject.collect { project -> project.libsDir }
+    }
+  }
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocJar
+  archives sourcesJar
+  archives javadocJar
 
-    archives docsZip
-//    archives schemaZip
-    archives distroZip
+  archives docsZip
+  //    archives schemaZip
+  archives distroZip
 }
 
 task wrapper(type: Wrapper) {
-    description = 'Generates gradlew[.bat] scripts'
-    gradleVersion = '1.2'
+  description = 'Generates gradlew[.bat] scripts'
+  gradleVersion = '1.2'
 }
 
 
