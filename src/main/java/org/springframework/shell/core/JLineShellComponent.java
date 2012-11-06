@@ -89,8 +89,10 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
   }
 
   public void stop() {
-    closeShell();
-    running = false;
+    if(running) {
+      closeShell();
+      running = false;
+    }
   }
 
   public boolean isRunning() {
