@@ -66,9 +66,10 @@ public class Bootstrap {
   public Bootstrap() throws IOException {
     //setupLogging();
     ctx = new AnnotationConfigApplicationContext(
-        ShellConfig.class,
-        PluginConfig.class
+        ShellConfig.class
     );
+    AnnotationConfigApplicationContext pluginCtx = new AnnotationConfigApplicationContext(PluginConfig.class);
+    pluginCtx.setParent(ctx);
 
     shell = ctx.getBean(JLineShellComponent.class);
     shell.setHistorySize(options.historySize);
