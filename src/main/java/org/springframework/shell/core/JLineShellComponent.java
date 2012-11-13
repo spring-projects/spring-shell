@@ -1,12 +1,12 @@
 /*
  * Copyright 2011-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,19 +19,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.Lifecycle;
-import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
-import org.springframework.shell.plugin.PluginProvider;
+import org.springframework.shell.plugin.PluginUtils;
 import org.springframework.shell.plugin.PromptProvider;
 
 /**
@@ -48,8 +43,6 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	private ApplicationContext applicationContext;
 	private boolean printBanner = true;
 
-	private static AnnotationAwareOrderComparator annotationOrderComparator = new AnnotationAwareOrderComparator();
-
 	private String historyFileName;
 	private String promptText;
 	private String productName;
@@ -59,7 +52,7 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 
 	// Fields
-	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.		
+	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.
 	private SimpleParser parser = new SimpleParser();
 
 
@@ -87,8 +80,8 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	}
 
 	/**
-	 * wait the shell command to complete by typing "quit" or "exit" 
-	 * 
+	 * wait the shell command to complete by typing "quit" or "exit"
+	 *
 	 */
 	public void waitForComplete() {
 		try {
@@ -144,13 +137,13 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	}
 
 	/**
-	 * get history file name from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * 
-	 * @return history file name 
+	 * get history file name from provider. The provider has highest order
+	 * <link>org.springframework.core.Ordered.getOder</link> will win.
+	 *
+	 * @return history file name
 	 */
 	protected String getHistoryFileName() {
-		String providerHistoryFileName = getHighestPriorityProvider(HistoryFileNameProvider.class).getHistoryFileName();
+		String providerHistoryFileName = PluginUtils.getHighestPriorityProvider(this.applicationContext, HistoryFileNameProvider.class).getHistoryFileName();
 		if (providerHistoryFileName != null) {
 			return providerHistoryFileName;
 		} else {
@@ -159,13 +152,13 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	}
 
 	/**
-	 * get prompt text from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
-	 * 
+	 * get prompt text from provider. The provider has highest order
+	 * <link>org.springframework.core.Ordered.getOder</link> will win.
+	 *
 	 * @return prompt text
 	 */
 	protected String getPromptText() {
-		String providerPromptText = getHighestPriorityProvider(PromptProvider.class).getPrompt();
+		String providerPromptText = PluginUtils.getHighestPriorityProvider(this.applicationContext, PromptProvider.class).getPrompt();
 		if (providerPromptText != null) {
 			return providerPromptText;
 		} else {
@@ -174,8 +167,8 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	}
 
 	/**
-	 * Get Banner and Welcome Message from provider. The provider has highest order 
-	 * <link>org.springframework.core.Ordered.getOder</link> will win. 
+	 * Get Banner and Welcome Message from provider. The provider has highest order
+	 * <link>org.springframework.core.Ordered.getOder</link> will win.
 	 * @return BannerText[0]: Banner
 	 *         BannerText[1]: Welcome Message
 	 *         BannerText[2]: Version
@@ -183,7 +176,7 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	 */
 	private String[] getBannerText() {
 		String[] bannerText = new String[4];
-		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
+		BannerProvider provider = PluginUtils.getHighestPriorityProvider(this.applicationContext, BannerProvider.class);
 		bannerText[0] = provider.getBanner();
 		bannerText[1] = provider.getWelcomeMessage();
 		bannerText[2] = provider.getVersion();
@@ -191,15 +184,6 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 		return bannerText;
 	}
 
-
-	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t) {
-		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext, t);
-		List<T> sortedProviders = new ArrayList<T>(providers.values());
-		Collections.sort(sortedProviders, annotationOrderComparator);
-		T highestPriorityProvider = sortedProviders.get(0);
-		return highestPriorityProvider;
-	}
-	
 	public void printBannerAndWelcome() {
 	    	if (printBanner) {
 			logger.info(this.banner);
@@ -210,7 +194,7 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 	/**
 	 * get the welcome message at start.
-	 * 
+	 *
 	 * @return welcome message
 	 */
 	public String getWelcomeMessage() {
@@ -224,11 +208,11 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 	public void setPrintBanner(boolean printBanner) {
 		this.printBanner = printBanner;
 	}
-	
+
 	protected String getProductName() {
 		return productName;
 	}
-	
+
 	protected String getVersion() {
 		return version;
 	}
