@@ -12,17 +12,19 @@ If you have ideas about how to improve or extend the scope, please feel free to 
 # Artifacts
 
 ~~~~~ xml
-<!-- used for milestone/rc releases -->
+<!-- used for Spring GA Releases releases, artifacts are also in maven central -->
 <repository>
- <id>spring-milestone</id>
+ <-- Release -->
+ <id>spring-release</id>
  <name>Spring Maven RELEASE Repository</name>
  <url>http://repo.springframework.org/release</url>
 </repository>
 
+<-- libs-release for JLine fork, artifacts may not be in maven central -->
 <repository>
- <id>spring-milestone</id>
- <name>Spring Maven MILESTONE Repository</name>
- <url>http://repo.springframework.org/libs-milestone</url>
+ <id>libs-release</id>
+ <name>Spring Maven libs-release Repository</name>
+ <url>http://repo.springframework.org/libs-release</url>
 </repository>
 
 <dependency>
@@ -51,7 +53,7 @@ If you have ideas about how to improve or extend the scope, please feel free to 
 
 ~~~~~ groovy
 repositories {
-   maven { url "http://repo.springsource.org/libs-snapshot" }
+   maven { url "http://repo.springsource.org/lib-release" }
 }
 
 dependencies {
