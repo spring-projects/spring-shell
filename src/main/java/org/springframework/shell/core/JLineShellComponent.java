@@ -78,8 +78,10 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 
 	public void stop() {
-		closeShell();
-		running = false;
+		if (running) {
+			closeShell();
+			running = false;
+		}
 	}
 
 	public boolean isRunning() {
