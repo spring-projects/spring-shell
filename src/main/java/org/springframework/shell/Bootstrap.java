@@ -44,9 +44,11 @@ public class Bootstrap {
 
 	private static Bootstrap bootstrap;
 	private JLineShellComponent shell;
-	private ConfigurableApplicationContext ctx;
+	private AnnotationConfigApplicationContext parentApplicationContext;
 	private static StopWatch sw = new StopWatch("Spring Shell");
-	private static SimpleShellCommandLineOptions options;
+	
+	//Initialize to empty option to facilitate testing of Bootstrap class
+	private static SimpleShellCommandLineOptions options = new SimpleShellCommandLineOptions();
 
 	public static void main(String[] args) throws IOException {
 		sw.start();
@@ -69,30 +71,24 @@ public class Bootstrap {
 	}
 
 	public Bootstrap(String applicationContextLocation) throws IOException {
-		//setupLogging();
-		createApplicationContext();
-
-		shell = ctx.getBean("shell", JLineShellComponent.class);
-		shell.setApplicationContext(ctx);
+		AnnotationConfigApplicationContext parentApplicationContext = new AnnotationConfigApplicationContext();
+		configureParentApplicationContext(parentApplicationContext);		
+		
+		ConfigurableApplicationContext childPluginApplicationContext = createChildPluginApplicationContext(parentApplicationContext);			
+		
+		parentApplicationContext.refresh();
+		childPluginApplicationContext.refresh();
+		
+		shell = childPluginApplicationContext.getBean("shell", JLineShellComponent.class);
 		shell.setHistorySize(options.historySize);
 		if (options.executeThenQuit != null) {
 			shell.setPrintBanner(false);
 		}
-
-		Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx, CommandMarker.class);
-		for (CommandMarker command : commands.values()) {
-			shell.getSimpleParser().add(command);
-		}
-
-		Map<String, Converter> converters = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx, Converter.class);
-		for (Converter converter : converters.values()) {
-			shell.getSimpleParser().add(converter);
-		}
 	}
 
-	private void createApplicationContext() {
-		// create parent/base ctx
-		AnnotationConfigApplicationContext annctx = new AnnotationConfigApplicationContext();
+	private void configureParentApplicationContext(AnnotationConfigApplicationContext annctx) {
+		// create parent/base childPluginApplicationContext
+
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
 		createAndRegisterBeanDefinition(annctx,
 				org.springframework.shell.converters.AvailableCommandsConverter.class);
@@ -115,10 +111,7 @@ public class Bootstrap {
 		annctx.scan("org.springframework.shell.commands");
 		annctx.scan("org.springframework.shell.converters");
 		annctx.scan("org.springframework.shell.plugin.support");
-		annctx.refresh();
 
-		ctx = initPluginApplicationContext(annctx);
-		ctx.refresh();
 	}
 
 	/**
@@ -127,9 +120,9 @@ public class Bootstrap {
 	 * @param annctx parent ApplicationContext in core spring shell
 	 * @return new ApplicationContext in the plugin with core spring shell's context as parent
 	 */
-	private ConfigurableApplicationContext initPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
+	private ConfigurableApplicationContext createChildPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
 		return new ClassPathXmlApplicationContext(
-				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, true, annctx);
+				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, false, annctx);
 	}
 
 	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
@@ -194,11 +187,15 @@ public class Bootstrap {
 			shell.waitForComplete();
 		}
 
-		ctx.close();
+		parentApplicationContext.close();
 		sw.stop();
 		if (shell.isDevelopmentMode()) {
 			System.out.println("Total execution time: " + sw.getLastTaskTimeMillis() + " ms");
 		}
 		return exitShellRequest;
+	}
+	
+	JLineShellComponent getJLineShellComponent() {
+		return shell;
 	}
 }

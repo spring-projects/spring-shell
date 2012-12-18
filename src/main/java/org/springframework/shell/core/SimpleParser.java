@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1041,6 +1042,12 @@ public class SimpleParser implements Parser {
 			}
 		}
 	}
+	
+	public final Set<CommandMarker> getCommandMarkers() {
+		synchronized (mutex) {
+			return Collections.unmodifiableSet(commands);
+		}
+	}
 
 	public final void remove(final CommandMarker command) {
 		synchronized (mutex) {
@@ -1065,6 +1072,12 @@ public class SimpleParser implements Parser {
 	public final void remove(final Converter<?> converter) {
 		synchronized (mutex) {
 			converters.remove(converter);
+		}
+	}
+	
+	public final Set<Converter<?>> getConverters() {
+		synchronized (mutex) {
+			return Collections.unmodifiableSet(converters);
 		}
 	}
 }

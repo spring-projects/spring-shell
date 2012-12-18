@@ -25,8 +25,12 @@ import java.util.Map;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.Lifecycle;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.plugin.BannerProvider;
@@ -40,7 +44,7 @@ import org.springframework.shell.plugin.PromptProvider;
  * @author Ben Alex
  * @since 1.1
  */
-public class JLineShellComponent extends JLineShell implements Lifecycle {
+public class JLineShellComponent extends JLineShell implements SmartLifecycle, ApplicationContextAware, InitializingBean {
 
 	private volatile boolean running = false;
 	private Thread shellThread;
@@ -59,15 +63,26 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 
 	// Fields
-	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy(); //ProcessManagerHostedExecutionStrategy is not what i think we need outside of Roo.		
+	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy();
 	private SimpleParser parser = new SimpleParser();
-
 
 	public SimpleParser getSimpleParser() {
 		return parser;
 	}
 
-
+	public boolean isAutoStartup() {
+		return false;
+	}
+	
+	public void stop(Runnable callback) {
+		stop();
+		callback.run();
+	}
+	
+	public int getPhase() {
+		return 1;
+	}
+	
 	public void start() {
 		//customizePlug must run before start thread to take plugin's configuration into effect
 		customizePlugin();
@@ -86,6 +101,19 @@ public class JLineShellComponent extends JLineShell implements Lifecycle {
 
 	public boolean isRunning() {
 		return running;
+	}
+	
+	public void afterPropertiesSet() {
+
+		Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, CommandMarker.class);
+		for (CommandMarker command : commands.values()) {
+			getSimpleParser().add(command);
+		}
+
+		Map<String, Converter> converters = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, Converter.class);
+		for (Converter converter : converters.values()) {
+			getSimpleParser().add(converter);
+		}
 	}
 
 	/**
