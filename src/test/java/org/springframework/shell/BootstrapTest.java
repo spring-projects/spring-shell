@@ -16,8 +16,9 @@ public class BootstrapTest {
 		try {
 			Bootstrap bootstrap = new Bootstrap(null);
 			JLineShellComponent shell = bootstrap.getJLineShellComponent();
-			System.out.println("about to start shell...");
-			Assert.assertEquals("Number of CommandMarkers is incorrect", 4, shell.getSimpleParser().getCommandMarkers().size());
+			
+			//This is a brittle assertion - as additiona 'test' commands are added to the suite, this number will increase.
+			Assert.assertEquals("Number of CommandMarkers is incorrect", 5, shell.getSimpleParser().getCommandMarkers().size());
 			Assert.assertEquals("Number of Converters is incorrect", 16, shell.getSimpleParser().getConverters().size());			
 		} catch (RuntimeException t) {
 			throw t;
