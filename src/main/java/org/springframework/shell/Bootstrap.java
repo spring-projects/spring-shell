@@ -39,7 +39,6 @@ import org.springframework.util.StopWatch;
 public class Bootstrap {
 
 	private static Bootstrap bootstrap;
-	private JLineShellComponent shell;
 	private AnnotationConfigApplicationContext parentApplicationContext;
 	private static StopWatch sw = new StopWatch("Spring Shell");
 	private static CommandLine commandLine;
@@ -49,7 +48,7 @@ public class Bootstrap {
 		sw.start();
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(args);
+			bootstrap = new Bootstrap(args);			
 			exitShellRequest = bootstrap.run();
 		} catch (RuntimeException t) {
 			throw t;
@@ -152,6 +151,8 @@ public class Bootstrap {
 	protected ExitShellRequest run() {
 
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
+		// The shell is used 
+		JLineShellComponent shell = parentApplicationContext.getBean("shell", JLineShellComponent.class);
 		ExitShellRequest exitShellRequest;
 
 		if (null != commandsToExecuteAndThenQuit) {
@@ -189,6 +190,6 @@ public class Bootstrap {
 	}
 	
 	JLineShellComponent getJLineShellComponent() {
-		return shell;
+		return parentApplicationContext.getBean("shell", JLineShellComponent.class);
 	}
 }
