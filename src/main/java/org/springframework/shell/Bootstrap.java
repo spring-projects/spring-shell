@@ -16,17 +16,13 @@
 package org.springframework.shell;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.shell.core.CommandMarker;
-import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.shell.core.Shell;
@@ -36,8 +32,8 @@ import org.springframework.util.StopWatch;
 /**
  * Loads a {@link Shell} using Spring IoC container.
  * 
- * @author Ben Alex
- * @since 1.0
+ * @author Ben Alex (original Roo code)
+ * @author Mark Pollack 
  *
  */
 public class Bootstrap {
@@ -46,21 +42,15 @@ public class Bootstrap {
 	private JLineShellComponent shell;
 	private AnnotationConfigApplicationContext parentApplicationContext;
 	private static StopWatch sw = new StopWatch("Spring Shell");
-	
-	//Initialize to empty option to facilitate testing of Bootstrap class
-	private static SimpleShellCommandLineOptions options = new SimpleShellCommandLineOptions();
+	private static CommandLine commandLine;
+		
 
 	public static void main(String[] args) throws IOException {
 		sw.start();
-		options = SimpleShellCommandLineOptions.parseCommandLine(args);
-
-		for (Map.Entry<String, String> entry : options.extraSystemProperties.entrySet()) {
-			System.setProperty(entry.getKey(), entry.getValue());
-		}
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(null);
-			exitShellRequest = bootstrap.run(options.executeThenQuit);
+			bootstrap = new Bootstrap(args);
+			exitShellRequest = bootstrap.run();
 		} catch (RuntimeException t) {
 			throw t;
 		} finally {
@@ -70,8 +60,10 @@ public class Bootstrap {
 		System.exit(exitShellRequest.getExitCode());
 	}
 
-	public Bootstrap(String applicationContextLocation) throws IOException {
-		AnnotationConfigApplicationContext parentApplicationContext = new AnnotationConfigApplicationContext();
+	public Bootstrap(String[] args) throws IOException {	
+		commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
+	
+		parentApplicationContext = new AnnotationConfigApplicationContext();
 		configureParentApplicationContext(parentApplicationContext);		
 		
 		ConfigurableApplicationContext childPluginApplicationContext = createChildPluginApplicationContext(parentApplicationContext);			
@@ -79,11 +71,10 @@ public class Bootstrap {
 		parentApplicationContext.refresh();
 		childPluginApplicationContext.refresh();
 		
-		shell = childPluginApplicationContext.getBean("shell", JLineShellComponent.class);
-		shell.setHistorySize(options.historySize);
-		if (options.executeThenQuit != null) {
-			shell.setPrintBanner(false);
-		}
+	}
+	
+	public AnnotationConfigApplicationContext getParentApplicationContext() {
+		return parentApplicationContext;
 	}
 
 	private void configureParentApplicationContext(AnnotationConfigApplicationContext annctx) {
@@ -107,7 +98,8 @@ public class Bootstrap {
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
-
+		
+		annctx.getBeanFactory().registerSingleton("commandLine", commandLine);
 		annctx.scan("org.springframework.shell.commands");
 		annctx.scan("org.springframework.shell.converters");
 		annctx.scan("org.springframework.shell.plugin.support");
@@ -157,15 +149,16 @@ public class Bootstrap {
 	}
 
 
-	protected ExitShellRequest run(String[] executeThenQuit) {
+	protected ExitShellRequest run() {
 
+		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		ExitShellRequest exitShellRequest;
 
-		if (null != executeThenQuit) {
+		if (null != commandsToExecuteAndThenQuit) {
 			boolean successful = false;
 			exitShellRequest = ExitShellRequest.FATAL_EXIT;
 
-			for (String cmd : executeThenQuit) {
+			for (String cmd : commandsToExecuteAndThenQuit) {
 				successful = shell.executeCommand(cmd);
 				if (!successful)
 					break;

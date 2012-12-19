@@ -33,6 +33,7 @@ import org.springframework.context.Lifecycle;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
+import org.springframework.shell.CommandLine;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.shell.plugin.PluginProvider;
@@ -46,6 +47,9 @@ import org.springframework.shell.plugin.PromptProvider;
  */
 public class JLineShellComponent extends JLineShell implements SmartLifecycle, ApplicationContextAware, InitializingBean {
 
+	@Autowired
+	private CommandLine commandLine;
+	
 	private volatile boolean running = false;
 	private Thread shellThread;
 
@@ -61,8 +65,6 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	private String version;
 	private String welcomeMessage;
 
-
-	// Fields
 	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy();
 	private SimpleParser parser = new SimpleParser();
 
@@ -113,6 +115,11 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		Map<String, Converter> converters = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, Converter.class);
 		for (Converter converter : converters.values()) {
 			getSimpleParser().add(converter);
+		}
+		
+		setHistorySize(commandLine.getHistorySize());
+		if (commandLine.getShellCommandsToExecute() != null) {
+			setPrintBanner(false);
 		}
 	}
 
@@ -231,7 +238,7 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	}
 	
 	public void printBannerAndWelcome() {
-	    	if (printBanner) {
+	    if (printBanner) {
 			logger.info(this.banner);
 			logger.info(getWelcomeMessage());
 		}
