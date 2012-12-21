@@ -14,7 +14,7 @@ public class BootstrapTest {
 	@Test
 	public void test() throws IOException {
 		try {
-			Bootstrap bootstrap = new Bootstrap(null);
+			Bootstrap bootstrap = new Bootstrap();
 			JLineShellComponent shell = bootstrap.getJLineShellComponent();
 			System.out.println("about to start shell...");
 			Assert.assertEquals("Number of CommandMarkers is incorrect", 4, shell.getSimpleParser().getCommandMarkers().size());
