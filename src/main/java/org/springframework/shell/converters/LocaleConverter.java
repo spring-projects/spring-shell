@@ -21,7 +21,6 @@ import java.util.Locale;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
-import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link Locale}. Supports locales
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Component;
  * @author Stefan Schmidt
  * @since 1.1
  */
-@Component
 public class LocaleConverter implements Converter<Locale> {
 
 	public Locale convertFromText(final String value, final Class<?> requiredType, final String optionContext) {

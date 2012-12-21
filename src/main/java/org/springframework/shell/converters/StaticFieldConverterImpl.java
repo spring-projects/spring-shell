@@ -24,7 +24,6 @@ import java.util.Map;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -36,7 +35,6 @@ import org.springframework.util.StringUtils;
  * @author Ben Alex
  * @since 1.0
  */
-@Component
 public class StaticFieldConverterImpl implements StaticFieldConverter {
 
 	// Fields
