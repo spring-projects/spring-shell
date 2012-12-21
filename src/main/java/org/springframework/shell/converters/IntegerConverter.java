@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link Integer}.
@@ -12,6 +13,7 @@ import org.springframework.shell.core.MethodTarget;
  * @author Stefan Schmidt
  * @since 1.0
  */
+@Component
 public class IntegerConverter implements Converter<Integer> {
 
 	public Integer convertFromText(final String value, final Class<?> requiredType, final String optionContext) {

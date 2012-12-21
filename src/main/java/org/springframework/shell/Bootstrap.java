@@ -35,7 +35,7 @@ import org.springframework.util.StopWatch;
 
 /**
  * Loads a {@link Shell} using Spring IoC container.
- * 
+ *
  * @author Ben Alex
  * @since 1.0
  *
@@ -46,7 +46,7 @@ public class Bootstrap {
 	private JLineShellComponent shell;
 	private AnnotationConfigApplicationContext parentApplicationContext;
 	private static StopWatch sw = new StopWatch("Spring Shell");
-	
+
 	//Initialize to empty option to facilitate testing of Bootstrap class
 	private static SimpleShellCommandLineOptions options = new SimpleShellCommandLineOptions();
 
@@ -59,7 +59,7 @@ public class Bootstrap {
 		}
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(null);
+			bootstrap = new Bootstrap();
 			exitShellRequest = bootstrap.run(options.executeThenQuit);
 		} catch (RuntimeException t) {
 			throw t;
@@ -70,16 +70,21 @@ public class Bootstrap {
 		System.exit(exitShellRequest.getExitCode());
 	}
 
-	public Bootstrap(String applicationContextLocation) throws IOException {
-		AnnotationConfigApplicationContext parentApplicationContext = new AnnotationConfigApplicationContext();
-		configureParentApplicationContext(parentApplicationContext);		
-		
-		ConfigurableApplicationContext childPluginApplicationContext = createChildPluginApplicationContext(parentApplicationContext);			
-		
-		parentApplicationContext.refresh();
+	public Bootstrap() throws IOException {
+		parentApplicationContext = new AnnotationConfigApplicationContext();
+    parentApplicationContext.register(BootstrapConfig.class);
+
+    ConfigurableApplicationContext childPluginApplicationContext = new ClassPathXmlApplicationContext(
+    				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" },
+            false,
+            parentApplicationContext
+    );
+
+    parentApplicationContext.refresh();
 		childPluginApplicationContext.refresh();
-		
+
 		shell = childPluginApplicationContext.getBean("shell", JLineShellComponent.class);
+    shell.setPluginApplicationContext(childPluginApplicationContext);
 		shell.setHistorySize(options.historySize);
 		if (options.executeThenQuit != null) {
 			shell.setPrintBanner(false);
@@ -89,24 +94,24 @@ public class Bootstrap {
 	private void configureParentApplicationContext(AnnotationConfigApplicationContext annctx) {
 		// create parent/base childPluginApplicationContext
 
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
-		createAndRegisterBeanDefinition(annctx,
-				org.springframework.shell.converters.AvailableCommandsConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigDecimalConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigIntegerConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BooleanConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.CharacterConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DateConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DoubleConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.EnumConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.FloatConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.IntegerConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LocaleConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LongConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.ShortConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
+//		createAndRegisterBeanDefinition(annctx,
+//				org.springframework.shell.converters.AvailableCommandsConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigDecimalConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigIntegerConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BooleanConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.CharacterConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DateConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DoubleConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.EnumConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.FloatConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.IntegerConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LocaleConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LongConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.ShortConverter.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
+//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
 
 		annctx.scan("org.springframework.shell.commands");
 		annctx.scan("org.springframework.shell.converters");
@@ -116,13 +121,13 @@ public class Bootstrap {
 
 	/**
 	 * Init plugin ApplicationContext
-	 * 
+	 *
 	 * @param annctx parent ApplicationContext in core spring shell
 	 * @return new ApplicationContext in the plugin with core spring shell's context as parent
 	 */
 	private ConfigurableApplicationContext createChildPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
 		return new ClassPathXmlApplicationContext(
-				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, false, annctx);
+				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, true, annctx);
 	}
 
 	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
@@ -194,7 +199,7 @@ public class Bootstrap {
 		}
 		return exitShellRequest;
 	}
-	
+
 	JLineShellComponent getJLineShellComponent() {
 		return shell;
 	}
