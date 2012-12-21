@@ -4,7 +4,7 @@
 
 	<groupId>org.springframework.shell.samples</groupId>
 	<artifactId>helloworld</artifactId>
-	<version>1.0.0.RELEASE</version>
+	<version>1.0.1.RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>helloworld</name>
@@ -82,14 +82,10 @@
 	</build>
 
 
-	<repositories>
-		<repository>
-			<id>spring-maven-snapshot</id>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<name>Springframework Maven SNAPSHOT Repository</name>
-			<url>http://repo.springsource.org/libs-snapshot</url>
-		</repository>
-	</repositories>
+	  <repositories>
+	    <repository>
+	      <id>libs-release</id>
+	      <url>http://repo.springsource.org/libs-release/</url>
+	    </repository>
+	  </repositories>
 </project>

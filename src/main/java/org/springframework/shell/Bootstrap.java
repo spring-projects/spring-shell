@@ -37,6 +37,7 @@ import org.springframework.util.StopWatch;
  */
 public class Bootstrap {
 
+<<<<<<< HEAD
   private static Bootstrap                      bootstrap;
   private        JLineShellComponent            shell;
   private        ConfigurableApplicationContext ctx;
@@ -132,4 +133,162 @@ public class Bootstrap {
     }
     return exitShellRequest;
   }
+=======
+	private static Bootstrap bootstrap;
+	private JLineShellComponent shell;
+	private AnnotationConfigApplicationContext parentApplicationContext;
+	private static StopWatch sw = new StopWatch("Spring Shell");
+	
+	//Initialize to empty option to facilitate testing of Bootstrap class
+	private static SimpleShellCommandLineOptions options = new SimpleShellCommandLineOptions();
+
+	public static void main(String[] args) throws IOException {
+		sw.start();
+		options = SimpleShellCommandLineOptions.parseCommandLine(args);
+
+		for (Map.Entry<String, String> entry : options.extraSystemProperties.entrySet()) {
+			System.setProperty(entry.getKey(), entry.getValue());
+		}
+		ExitShellRequest exitShellRequest;
+		try {
+			bootstrap = new Bootstrap(null);
+			exitShellRequest = bootstrap.run(options.executeThenQuit);
+		} catch (RuntimeException t) {
+			throw t;
+		} finally {
+			HandlerUtils.flushAllHandlers(Logger.getLogger(""));
+		}
+
+		System.exit(exitShellRequest.getExitCode());
+	}
+
+	public Bootstrap(String applicationContextLocation) throws IOException {
+		AnnotationConfigApplicationContext parentApplicationContext = new AnnotationConfigApplicationContext();
+		configureParentApplicationContext(parentApplicationContext);		
+		
+		ConfigurableApplicationContext childPluginApplicationContext = createChildPluginApplicationContext(parentApplicationContext);			
+		
+		parentApplicationContext.refresh();
+		childPluginApplicationContext.refresh();
+		
+		shell = childPluginApplicationContext.getBean("shell", JLineShellComponent.class);
+		shell.setHistorySize(options.historySize);
+		if (options.executeThenQuit != null) {
+			shell.setPrintBanner(false);
+		}
+	}
+
+	private void configureParentApplicationContext(AnnotationConfigApplicationContext annctx) {
+		// create parent/base childPluginApplicationContext
+
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
+		createAndRegisterBeanDefinition(annctx,
+				org.springframework.shell.converters.AvailableCommandsConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigDecimalConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigIntegerConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BooleanConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.CharacterConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DateConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DoubleConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.EnumConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.FloatConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.IntegerConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LocaleConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LongConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.ShortConverter.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
+		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
+
+		annctx.scan("org.springframework.shell.commands");
+		annctx.scan("org.springframework.shell.converters");
+		annctx.scan("org.springframework.shell.plugin.support");
+
+	}
+
+	/**
+	 * Init plugin ApplicationContext
+	 * 
+	 * @param annctx parent ApplicationContext in core spring shell
+	 * @return new ApplicationContext in the plugin with core spring shell's context as parent
+	 */
+	private ConfigurableApplicationContext createChildPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
+		return new ClassPathXmlApplicationContext(
+				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, false, annctx);
+	}
+
+	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
+		createAndRegisterBeanDefinition(annctx, clazz, null);
+	}
+
+	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz, String name) {
+		RootBeanDefinition rbd = new RootBeanDefinition();
+		rbd.setBeanClass(clazz);
+		if (name != null) {
+			annctx.registerBeanDefinition(name, rbd);
+		}
+		else {
+			annctx.registerBeanDefinition(clazz.getSimpleName(), rbd);
+		}
+	}
+
+	// seems on JDK 1.6.0_18 or higher causes the output to disappear
+	private void setupLogging() {
+		// Ensure all JDK log messages are deferred until a target is registered
+		Logger rootLogger = Logger.getLogger("");
+		HandlerUtils.wrapWithDeferredLogHandler(rootLogger, Level.SEVERE);
+
+		// Set a suitable priority level on Spring Framework log messages
+		Logger sfwLogger = Logger.getLogger("org.springframework");
+		sfwLogger.setLevel(Level.WARNING);
+
+		// Set a suitable priority level on Roo log messages
+		// (see ROO-539 and HandlerUtils.getLogger(Class))
+		Logger rooLogger = Logger.getLogger("org.springframework.shell");
+		rooLogger.setLevel(Level.FINE);
+	}
+
+
+	protected ExitShellRequest run(String[] executeThenQuit) {
+
+		ExitShellRequest exitShellRequest;
+
+		if (null != executeThenQuit) {
+			boolean successful = false;
+			exitShellRequest = ExitShellRequest.FATAL_EXIT;
+
+			for (String cmd : executeThenQuit) {
+				successful = shell.executeCommand(cmd);
+				if (!successful)
+					break;
+			}
+
+			//if all commands were successful, set the normal exit status
+			if (successful) {
+				exitShellRequest = ExitShellRequest.NORMAL_EXIT;
+			}
+		}
+		else {
+			shell.start();
+			shell.promptLoop();
+			exitShellRequest = shell.getExitShellRequest();
+			if (exitShellRequest == null) {
+				// shouldn't really happen, but we'll fallback to this anyway
+				exitShellRequest = ExitShellRequest.NORMAL_EXIT;
+			}
+			shell.waitForComplete();
+		}
+
+		parentApplicationContext.close();
+		sw.stop();
+		if (shell.isDevelopmentMode()) {
+			System.out.println("Total execution time: " + sw.getLastTaskTimeMillis() + " ms");
+		}
+		return exitShellRequest;
+	}
+	
+	JLineShellComponent getJLineShellComponent() {
+		return shell;
+	}
+>>>>>>> f317d21f04d7df7033c475d6b3c655b04e9203da
 }

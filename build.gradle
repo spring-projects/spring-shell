@@ -211,7 +211,6 @@ task wrapper(type: Wrapper) {
   gradleVersion = '1.2'
 }
 
-
 mainClassName = "org.springframework.shell.Bootstrap"
 
 assemble.dependsOn = ['jar', 'sourcesJar']
