@@ -17,3 +17,8 @@ dependencies {
 mainClassName = "org.springframework.shell.Bootstrap"
 
 defaultTasks 'installApp'
+task wrapper(type: Wrapper) {
+    description = 'Generates gradlew[.bat] scripts'
+    gradleVersion = '1.3'
+}
+
