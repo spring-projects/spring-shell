@@ -116,11 +116,11 @@ public class Bootstrap {
 				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, false, annctx);
 	}
 
-	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
+	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class<?> clazz) {
 		createAndRegisterBeanDefinition(annctx, clazz, null);
 	}
 
-	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz, String name) {
+	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class<?> clazz, String name) {
 		RootBeanDefinition rbd = new RootBeanDefinition();
 		rbd.setBeanClass(clazz);
 		if (name != null) {

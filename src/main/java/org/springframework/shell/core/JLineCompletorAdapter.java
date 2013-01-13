@@ -38,7 +38,7 @@ public class JLineCompletorAdapter implements Completor {
 		this.parser = parser;
 	}
 
-	@SuppressWarnings("all")
+	@SuppressWarnings({"rawtypes","unchecked"})
 	public int complete(final String buffer, final int cursor, final List candidates) {
 		int result;
 		try {
