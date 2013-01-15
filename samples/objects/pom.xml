@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.shell.samples</groupId>
-	<artifactId>helloworld</artifactId>
+	<artifactId>objects</artifactId>
 	<version>1.0.0.RELEASE</version>
 	<packaging>jar</packaging>
 
-	<name>helloworld</name>
+	<name>objects</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
