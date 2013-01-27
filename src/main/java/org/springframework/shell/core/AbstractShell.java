@@ -36,6 +36,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.shell.commands.support.CommentDefinition;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.event.AbstractShellStatusPublisher;
@@ -54,7 +55,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Ben Alex
  */
-public abstract class AbstractShell extends AbstractShellStatusPublisher implements Shell {
+public abstract class AbstractShell extends AbstractShellStatusPublisher implements Shell, CommentDefinition {
 
 	// Constants
 	private static final String MY_SLOT = AbstractShell.class.getName();
@@ -69,7 +70,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	// Instance fields
 	protected final Logger logger = HandlerUtils.getLogger(getClass());
-	protected boolean inBlockComment;
+
 	protected ExitShellRequest exitShellRequest;
 
 	/**
@@ -186,27 +187,33 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		ParseResult parseResult = null;
 		try {
 			// We support simple block comments; ie a single pair per line
-			if (!inBlockComment && line.contains("/*") && line.contains("*/")) {
+			if (areCommentsSupported() && !isInBlockComment() && line.contains(getStartCommentBlock()) && line.contains(getEndCommentBlock())) {
 				blockCommentBegin();
-				String lhs = line.substring(0, line.lastIndexOf("/*"));
-				if (line.contains("*/")) {
-					line = lhs + line.substring(line.lastIndexOf("*/") + 2);
+				String lhs = line.substring(0, line.lastIndexOf(getStartCommentBlock()));
+				if (line.contains(getEndCommentBlock())) {
+					line = lhs + line.substring(line.lastIndexOf(getEndCommentBlock()) + 2);
 					blockCommentFinish();
 				} else {
 					line = lhs;
 				}
 			}
-			if (inBlockComment) {
-				if (!line.contains("*/")) {
+			if (areCommentsSupported() && isInBlockComment()) {
+				if (!line.contains(getEndCommentBlock())) {
 					return true;
 				}
 				blockCommentFinish();
-				line = line.substring(line.lastIndexOf("*/") + 2);
+				line = line.substring(line.lastIndexOf(getEndCommentBlock()) + 2);
 			}
-			// We also support inline comments (but only at start of line, otherwise valid
-			// command options like http://www.helloworld.com will fail as per ROO-517)
-			if (!inBlockComment && (line.trim().startsWith("//") || line.trim().startsWith("#"))) { // # support in ROO-1116
-				line = "";
+
+            // Support line comments (at start of line only)
+			if (areCommentsSupported() && !isInBlockComment()) {
+                for(String commentStarter : getLineCommentStarters()){
+                    String trimmedLine = line.trim();
+                    if(trimmedLine.startsWith(commentStarter)){
+                        line = "";
+                        break;
+                    }
+                }
 			}
 			// Convert any TAB characters to whitespace (ROO-527)
 			line = line.replace('\t', ' ');
@@ -247,7 +254,17 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		}
 	}
 
-	/**
+    /**
+     * Override this method in the implementing Spring Bean which delegates comment support to the appropriate
+     * Command Provider.
+     *
+     * @return indicator of whether a Comment scheme is supported or not
+     */
+    protected boolean areCommentsSupported() {
+        return false;
+    }
+
+    /**
 	 * Allows a subclass to log the execution of a well-formed command. This is invoked after a command
 	 * has completed, and indicates whether the command returned normally or returned an exception. Note
 	 * that attempted commands that are not well-formed (eg they are missing a mandatory argument) will
@@ -311,21 +328,6 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	public ExitShellRequest getExitShellRequest() {
 		return exitShellRequest;
-	}
-
-	@CliCommand(value = { "//", ";" }, help = "Inline comment markers (start of line only)")
-	public void inlineComment() {}
-
-	@CliCommand(value = { "/*" }, help = "Start of block comment")
-	public void blockCommentBegin() {
-		Assert.isTrue(!inBlockComment, "Cannot open a new block comment when one already active");
-		inBlockComment = true;
-	}
-
-	@CliCommand(value = { "*/" }, help = "End of block comment")
-	public void blockCommentFinish() {
-		Assert.isTrue(inBlockComment, "Cannot close a block comment when it has not been opened");
-		inBlockComment = false;
 	}
 
 	@CliCommand(value = { "system properties" }, help = "Shows the shell's properties")

@@ -29,15 +29,16 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.Lifecycle;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.CommandLine;
+import org.springframework.shell.commands.support.CommentDefinition;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.shell.plugin.PluginProvider;
 import org.springframework.shell.plugin.PromptProvider;
+import org.springframework.util.Assert;
 
 /**
  * Launcher for {@link JLineShell}.
@@ -47,8 +48,11 @@ import org.springframework.shell.plugin.PromptProvider;
  */
 public class JLineShellComponent extends JLineShell implements SmartLifecycle, ApplicationContextAware, InitializingBean {
 
-	@Autowired
+    @Autowired
 	private CommandLine commandLine;
+
+    @Autowired(required = false)
+    private CommentDefinition commentDefinition;
 	
 	private volatile boolean running = false;
 	private Thread shellThread;
@@ -161,7 +165,50 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		return parser;
 	}
 
-	@Override
+    @Override
+    protected boolean areCommentsSupported() {
+        return commentDefinition != null;
+    }
+
+    public static final String COMMENTS_NOT_SUPPORTED_ERROR = "Cannot retrieve comment meta information if a definition has not been provided.";
+
+    @Override
+    public String getStartCommentBlock() {
+        Assert.isTrue(areCommentsSupported(), COMMENTS_NOT_SUPPORTED_ERROR);
+        return commentDefinition.getStartCommentBlock();
+    }
+
+    @Override
+    public String getEndCommentBlock() {
+        Assert.isTrue(areCommentsSupported(), COMMENTS_NOT_SUPPORTED_ERROR);
+        return commentDefinition.getStartCommentBlock();
+    }
+
+    @Override
+    public void blockCommentBegin() {
+        Assert.isTrue(areCommentsSupported(), COMMENTS_NOT_SUPPORTED_ERROR);
+        commentDefinition.blockCommentBegin();
+    }
+
+    @Override
+    public void blockCommentFinish() {
+        Assert.isTrue(areCommentsSupported(), COMMENTS_NOT_SUPPORTED_ERROR);
+        commentDefinition.blockCommentFinish();
+    }
+
+    @Override
+    public boolean isInBlockComment() {
+        Assert.isTrue(areCommentsSupported(), COMMENTS_NOT_SUPPORTED_ERROR);
+        return commentDefinition.isInBlockComment();
+    }
+
+    @Override
+    public List<String> getLineCommentStarters() {
+        Assert.isTrue(areCommentsSupported(), COMMENTS_NOT_SUPPORTED_ERROR);
+        return commentDefinition.getLineCommentStarters();
+    }
+
+    @Override
 	public String getStartupNotifications() {
 		return null;
 	}

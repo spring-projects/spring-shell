@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.commands;
+package org.springframework.shell.commands.support;
 
 import java.io.File;
 import java.io.IOException;
