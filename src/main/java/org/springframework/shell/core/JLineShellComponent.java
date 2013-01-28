@@ -15,14 +15,6 @@
  */
 package org.springframework.shell.core;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,7 +23,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
-import org.springframework.core.io.Resource;
 import org.springframework.shell.CommandLine;
 import org.springframework.shell.commands.support.CommentDefinition;
 import org.springframework.shell.plugin.BannerProvider;
@@ -39,6 +30,11 @@ import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.shell.plugin.PluginProvider;
 import org.springframework.shell.plugin.PromptProvider;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Launcher for {@link JLineShell}.
