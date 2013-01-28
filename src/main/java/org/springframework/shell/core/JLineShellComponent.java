@@ -140,22 +140,6 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	}
 
 	@Override
-	protected Collection<URL> findResources(final String path) {
-		try {
-			Resource[] resources = applicationContext.getResources(path);
-			Collection<URL> list = new ArrayList<URL>(resources.length);
-			for (Resource resource : resources) {
-				list.add(resource.getURL());
-			}
-			return list;
-		} catch (IOException ex) {
-			logger.fine("Cannot find path " + path);
-			// return Collections.emptyList();
-			throw new RuntimeException(ex);
-		}
-	}
-
-	@Override
 	protected ExecutionStrategy getExecutionStrategy() {
 		return executionStrategy;
 	}
