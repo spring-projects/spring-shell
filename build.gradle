@@ -170,7 +170,7 @@ task distroZip(type: Zip, dependsOn: [jar, docsZip, sourcesJar, javadocJar]) {
         from(zipTree(docsZip.archivePath)) {
             into "docs"
         }
-
+5
 //        from(zipTree(schemaZip.archivePath)) {
 //            into "schema"
 //        }

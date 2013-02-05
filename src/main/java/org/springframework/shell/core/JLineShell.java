@@ -68,7 +68,7 @@ import org.springframework.util.StringUtils;
  * @author Jarred Li
  * @since 1.0
  */
-public abstract class JLineShell extends AbstractShell implements CommandMarker, Shell, Runnable {
+public abstract class JLineShell extends AbstractShell implements Shell, Runnable {
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";

@@ -18,6 +18,8 @@ package org.springframework.shell.commands;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import org.springframework.shell.commands.support.OsOperations;
+import org.springframework.shell.commands.support.OsOperationsImpl;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;

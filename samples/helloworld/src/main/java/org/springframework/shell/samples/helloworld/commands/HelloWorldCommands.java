@@ -29,7 +29,7 @@ public class HelloWorldCommands implements CommandMarker {
 	@CliCommand(value = "hw simple", help = "Print a simple hello world message")
 	public String simple(
 		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
-		@CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello", specifiedDefaultValue="At work") final String location) {		
+		@CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello", specifiedDefaultValue="At work") final String location) {
 		simpleCommandExecuted = true;
 		return "Message = [" + message + "] Location = [" + location + "]";
 	}
@@ -40,13 +40,13 @@ public class HelloWorldCommands implements CommandMarker {
 		@CliOption(key = { "name1"}, mandatory = true, help = "Say hello to the first name") final String name1,
 		@CliOption(key = { "name2" }, mandatory = true, help = "Say hello to a second name") final String name2,
 		@CliOption(key = { "time" }, mandatory = false, specifiedDefaultValue="now", help = "When you are saying hello") final String time,
-		@CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello") final String location) {		
+		@CliOption(key = { "location" }, mandatory = false, help = "Where you are saying hello") final String location) {
 		return "Hello " + name1 + " and " + name2 + ". Your special message is "  + message + ". time=[" + time + "] location=[" + location + "]";
 	}
 	
 	@CliCommand(value = "hw enum", help = "Print a simple hello world message from an enumerated value")
 	public String eenum(
-		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final MessageType message){		
+		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final MessageType message){
 		return "Hello.  Your special enumerated message is " + message;
 	}
 	

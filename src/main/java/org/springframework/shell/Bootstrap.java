@@ -23,6 +23,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.shell.commands.support.DefaultCommentDefinitionImpl;
 import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.shell.core.Shell;
@@ -95,8 +96,9 @@ public class Bootstrap {
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LongConverter.class);
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.ShortConverter.class);
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
+        createAndRegisterBeanDefinition(annctx, DefaultCommentDefinitionImpl.class, "commentDefinition");
+        createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
+        createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
 		
 		annctx.getBeanFactory().registerSingleton("commandLine", commandLine);
 		annctx.scan("org.springframework.shell.commands");
