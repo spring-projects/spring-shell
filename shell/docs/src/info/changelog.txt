@@ -1,0 +1,64 @@
+SPRING SHELL CHANGELOG
+======================
+http://www.springsource.org/spring-shell
+
+Commit changelog: http://github.com/SpringSource/spring-shell/tree/[version]
+Issues changelog: http://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10361
+
+
+Changes in version 1.0 RELEASE (2012-10-02)
+-------------------------------------------
+
+Changes in version 1.0 RC1 (2012-09-20)
+---------------------------------------
+
+** Bug
+* [SHL-14] - History from previous session is not loaded into JLine history buffer
+* [SHL-48] - Remove duplicated classes from Spring Framework and old Roo code base in util package
+* [SHL-52] - Missing Maven dependency JLine
+* [SHL-60] - Jansi terminal support not working under cygwin
+* [SHL-61] - Remove unused Hint classes
+
+** Improvement
+* [SHL-53] - Documentation Corrections
+* [SHL-54] - Dynamic prompt
+* [SHL-57] - Miscellaneous documentation cleanup
+
+** New Feature
+* [SHL-55] - ascii art/text should be loaded from a file
+* [SHL-56] - SHL contains a lot of duplicated classes from Spring
+
+** Task
+* [SHL-51] - Correct Maven groupId
+
+
+Changes in version 1.0 M1 (2012-07-18)
+--------------------------------------
+
+* Moved Spring Roo code into Spring Shell, removing OSGi dependency
+
+** New Feature
+* [SHL-12] - Allow shell comnand prompt text to be customized by plugins
+* [SHL-13] - Allow name of history file to be customized by plugins
+* [SHL-40] - Provide an interception mechanism for the command class to intercept invocation of command methods
+
+** Improvement
+* [SHL-24] - Should not ignore the optional parameter if no parameter value is set in the command 
+* [SHL-31] - Move providers & ApplicationContext to JLineShellComponent from JLineShell.
+* [SHL-32] - Sub-classes of AbstractShell should be able to handle results of execution as required.
+* [SHL-39] - Remove NAPA specific environment option, replace with Spring 3.1 profile support
+* [SHL-41] - Improve error handling for command line options when staring shell
+
+** Bug
+* [SHL-6] - Spring Shell does not support "help"
+* [SHL-19] - When running spring shell in the script mode, the output shout not include the Spring Shell interative information
+* [SHL-35] - Improve the parsing command line options to gracefully handle invalid values.
+
+** Task
+* [SHL-1] - Change build system to use gradle
+* [SHL-4] - Adding a constructor in JlineShell to provide ConsoleReader.
+* [SHL-9] - Create Bamboo build project on CI farm
+* [SHL-10] - Publish CI builds to springsource maven snapshot repository
+* [SHL-23] - Create docbook based reference guide
+* [SHL-25] - Enable unit test on CI build
+* [SHL-50] - Add sample application

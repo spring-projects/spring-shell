@@ -1,0 +1,32 @@
+======================================================================
+DEBUGGING VIA ECLIPSE
+======================================================================
+
+Most of the time we just use the spring-shell line tool directly
+from the command line. This we have found is the fastest approach and
+also lets us see exactly what a user would see, including the TAB
+completion features. Still, sometimes you have a tricky issue you'd
+prefer to work through via the STS/Eclipse debugger. When you do this
+you need to be aware that you lose the full capabilities of the shell,
+as the JLine library (used for command line parsing) is unable to
+fully hook into your operating system's keyboard and ANSI services.
+Anyhow, for some issues a debugger is worth the minor price of losing
+your full keyboard and colour services! :-)
+
+To setup debugging, open org.springframework.shell.Bootstrap.
+Note it has a Java "main" method. Execute the class using Run As >
+Java Application. Note the "Console" tab in Eclipse/STS will open.
+Type "quit" then hit enter. Now select Run > Debug Configurations.
+Select the Java Application > Bootstrap entry. Click on Arguments
+and then add the following VM Arguments:
+
+*nix machines:
+  -Djline.terminal=org.springframework.shell.core.IdeTerminal
+
+Windows machines:
+  -Djline.WindowsTerminal.directConsole=false
+  -Djline.terminal=jline.UnsupportedTerminal
+
+Finally, set the working directory to "Other" and a location on your
+disk where you'd like the spring-shell to be loaded. This is usually a
+project you're intending to test with. 

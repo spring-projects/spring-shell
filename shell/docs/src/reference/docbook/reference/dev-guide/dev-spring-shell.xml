@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="dev-shell"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns5="http://www.w3.org/1999/xhtml"
+         xmlns:ns4="http://www.w3.org/2000/svg"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Developing Spring Shell Applications</title>
+
+  <para>Contributing commands to the shell is very easy. There are only a few
+  annotations you need to learn. The implementation style of the command is
+  the same as developing classes for an application that uses dependency
+  injection. You can leverage all the features of the Spring container to
+  implement your command classes.</para>
+
+  <section>
+    <title>Marker Interface</title>
+
+    <para>The first step to creating a command is to implement the marker
+    interface <interfacename>CommandMarker</interfacename> and to annotate
+    your class with Spring's <classname>@Component </classname>annotation.
+    (Note there is an open JIRA issue to provide a
+    <classname>@CliCommand</classname> meta-annotation to avoid having to use
+    a marker interface). Using the code from the helloworld sample
+    application, the code of a <classname>HelloWorldCommands</classname> class
+    is shown below:</para>
+
+    <programlisting language="java">@Component
+public class HelloWorldCommands implements CommandMarker {
+ 
+  // use any Spring annotations for Dependency Injection or other Spring interfaces 
+  // as required.
+
+  // methods with @Cli annotations go here  
+
+}</programlisting>
+  </section>
+
+  <section>
+    <title>Logging</title>
+
+    <para>Logging is currently done using JDK logging. Due to the intricacies
+    of console, JLine and Ansi handling, it is generally advised to display
+    messages as return values to the method commands. However, when logging is
+    required, the typical JDK logger declaration should suffice.</para>
+
+    <programlisting language="java">@Component
+public class HelloWorldCommands implements CommandMarker {
+ 
+  protected final Logger LOG = Logger.getLogger(getClass().getName());
+
+  // methods with @Cli annotations go here  
+
+}</programlisting>
+
+    <warning>
+       Note: it is the responsibility of the packager/developer to handle logging for third-party libraries. Typically one wants to reduce the logging level so the console/shell does not get affected by logging messages. 
+    </warning>
+  </section>
+
+  <section>
+    <title>CLI Annotations</title>
+
+    <para>There are three annotations used on methods and method arguments
+    that define the main contract for interacting with the shell. These
+    are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><classname>CliAvailabilityIndicator</classname> - Placed on a
+        method that returns a boolean value and indicates if a particular
+        command can be presented in the shell. This decision is usually based
+        on the history of commands that have been executed previously. It
+        prevents extraneous commands being presented until some preconditions
+        are met, for example the execution of a 'configuration'
+        command.</para>
+      </listitem>
+
+      <listitem>
+        <para><classname>CliCommand</classname> - Placed on a method that
+        provides a command to the shell. Its value provides one or more
+        strings that serve as the start of a particular command name. These
+        must be unique within the entire application, across all
+        plugins.</para>
+      </listitem>
+
+      <listitem>
+        <para><classname>CliOptions</classname> - Placed on the arguments of a
+        command method, allowing it to declare the argument value as mandatory
+        or optional with a default value.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Here is a simple use of these annotations in a command class</para>
+
+    <programlisting language="java">@Component
+public class HelloWorldCommands implements CommandMarker {
+
+  @CliAvailabilityIndicator({"hw simple"})
+  public boolean isCommandAvailable() {
+    return true;
+  }
+
+  @CliCommand(value = "hw simple", help = "Print a simple hello world message")
+  public String simple(
+    @CliOption(key = { "message" }, mandatory = true, help = "The hello world message") 
+    final String message,
+    
+    @CliOption(key = { "location" }, mandatory = false, 
+               help = "Where you are saying hello", specifiedDefaultValue="At work") 
+    final String location) {
+
+    return "Message = [" + message + "] Location = [" + location + "]";
+
+  }
+}</programlisting>
+
+    <para>The method annotated with <classname>@CliAvailabilityIndicator
+    </classname>is returning true so that the one and only command in this
+    class is exposed to the shell to be invoked. If there were more commands
+    in the class, you would list them as comma separated value.</para>
+
+    <para>The <classname>@CliCommand</classname> annotation is creating the
+    command '<literal>hw simple</literal>' in the shell. The help message is
+    what will be printed if you use the build in <literal>help</literal>
+    command. The method name is '<methodname>simple</methodname>' but it could
+    just have been any other name.</para>
+
+    <para>The <classname>@CliOption</classname> annotation on each of the
+    command arguments is where you will spend most of your time authoring
+    commands. You need to decide which arguments are required, which are
+    optional, and if they are optional is there a default value. In this case
+    there are two arguments or options to the command: message and location.
+    The message option is required and a help message is provided to give
+    guidance to the user when tabbing to get completion for the
+    command.</para>
+
+    <para>The implementation of the '<methodname>simple</methodname>' method
+    is trivial, just a log statement, but this is where you would typically
+    call other collaborating objects that were injected into the class via
+    Spring.</para>
+
+    <para>The method argument types in this example are
+    <classname>String</classname>, which doesn't present any issue with type
+    conversion. You can specify methods with any rich object type as well as
+    basic primitive types such as int, float etc. For all types other than
+    those handled by the shell by default (basic types,
+    <classname>Date</classname>, <classname>File</classname>) you will need to
+    register your own implementation of the
+    <interfacename>org.springframework.shell.core.Converter</interfacename>
+    interface with the container in your plugin.</para>
+
+    <para>Note that the method return argument can be non-void - in our
+    example, it is the actual message we want to display. Whenever an object
+    is returned, the shell will display its <literal>toString()</literal>
+    representation.</para>
+  </section>
+
+  <section>
+    <title>Building and running the shell</title>
+
+    <para>In our opinion, the easiest way to build and execute the shell is to
+    cut-n-paste the gradle script in the example application. This uses the
+    application plugin from gradle to create a bin directory with a startup
+    script for windows and Unix and places all dependent jars in a lib
+    directory. Maven has a similar plugin - the <link
+    xlink:href="http://mojo.codehaus.org/appassembler/appassembler-maven-plugin/">AppAssembler</link>
+    plugin.</para>
+
+    <para>The main class of the shell is
+    <classname>org.springframework.shell.Bootstrap</classname>. As long as you
+    place other plugins, perhaps developed independently, on the classpath,
+    the Bootstrap class will incorporate them into the shell.</para>
+  </section>
+</chapter>

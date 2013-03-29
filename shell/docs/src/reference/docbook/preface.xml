@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preface version="5.0" xml:id="preface" xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns2="http://www.w3.org/1999/xlink"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Preface</title>
+
+  <para>The Spring Shell provides an interactive shell that allows you to
+  plugin your own custom commands using a Spring based programming
+  model.</para>
+
+  <para>The shell has been extracted from the <link
+  ns2:href="http://www.springsource.org/spring-roo/">Spring Roo
+  project</link>, giving it a strong foundation and rich feature set. One
+  significant change from Spring Roo is that the plugin model is no longer
+  based on OSGi but instead uses the Spring IoC container to discover commands
+  through classpath scanning. There is currently no classloader isolation
+  between plugins, however that maybe added in future versions.</para>
+
+  <para>Spring Shell's features include</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>A simple, annotation driven, programming model to contribute
+      custom commands</para>
+    </listitem>
+
+    <listitem>
+      <para>Use of Spring's classpath scanning functionality as the basis for
+      a command plugin strategy and command development</para>
+    </listitem>
+
+    <listitem>
+      <para>Inheritance of the <link
+      ns2:href="http://static.springsource.org/spring-roo/reference/html-single/index.html#usage-shell">Roo
+      Shell features</link>, most notably tab completion, colorization, and
+      script execution.</para>
+    </listitem>
+
+    <listitem>
+      <para>Customization of command prompt, banner, shell history file
+      name.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>This document assumes that the reader already has a basic familiarity
+  with the Spring Framework.</para>
+
+  <para>While every effort has been made to ensure that this documentation is
+  comprehensive and there are no errors, nevertheless some topics might
+  require more explanation and some typos might have crept in. If you do spot
+  any mistakes or even more serious errors and you can spare a few cycles
+  during lunch, please do bring the error to the attention of the Spring Shell
+  team by <link ns2:href="https://jira.springsource.org/browse/SHL">raising an
+  issue</link>.</para>
+</preface>

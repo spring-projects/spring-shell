@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partintro version="5.0" xmlns="http://docbook.org/ns/docbook"
+           xmlns:ns5="http://www.w3.org/2000/svg"
+           xmlns:ns4="http://www.w3.org/1999/xhtml"
+           xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+           xmlns:ns2="http://www.w3.org/1999/xlink"
+           xmlns:ns="http://docbook.org/ns/docbook">
+  <para>The Spring Shell provides an interactive shell that lets you
+  contribute commands using a simple Spring based programming model.</para>
+
+  <para>This document is the reference guide for the Spring Shell and covers
+  the key classes that are part of the Shell infrastructure, the plugin model,
+  how to create commands for the shell as well as discussion of the sample
+  application.</para>
+</partintro>

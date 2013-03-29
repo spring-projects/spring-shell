@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="shell" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns5="http://www.w3.org/1999/xhtml"
+         xmlns:ns4="http://www.w3.org/2000/svg"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Spring Shell</title>
+
+  <para>The core components of the shell are its plugin model, built-in
+  commands, and converters.</para>
+
+  <section>
+    <title>Plugin Model</title>
+
+    <para>The plugin model is based on Spring. Each plugin jar is required to
+    contain the file
+    <literal>META-INF/spring/spring-shell-plugin.xml</literal>. These files
+    will be loaded to bootstrap a Spring
+    <interfacename>ApplicationContext</interfacename> when the shell is
+    started. The essential boostrapping code that looks for your contributions
+    looks like this: <programlisting>new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/spring-shell-plugin.xml");</programlisting></para>
+
+    <para>In the <literal>spring-shell-plugin.xml</literal> file you should
+    define the command classes and any other collaborating objects that
+    support the command's actions. The plugin model is depicted in the
+    following diagram</para>
+
+    <mediaobject>
+      <imageobject role="pdf">
+        <imagedata fileref="../images/shell-arch-overview.png"/>
+      </imageobject>
+      <imageobject role="html">
+        <imagedata fileref="images/shell-arch-overview.png"/>
+      </imageobject>
+    </mediaobject>
+
+    <para>Note that the current plugin model loads all plugins under the same
+    class loader. An open <link
+    xlink:href="https://jira.springsource.org/browse/SHL-37">JIRA issue</link>
+    suggests providing a classloader per plugin to provide isolation.</para>
+
+    <section>
+      <title>Commands</title>
+
+      <para>An easy way to declare the commands is to use Spring's component
+      scanning functionality. Here is an example
+      <literal>spring-shell-plugin.xml </literal> from the sample
+      application:</para>
+
+      <programlisting language="xml">&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd"&gt;
+
+  &lt;context:component-scan 
+           base-package="org.springframework.shell.samples.helloworld.commands" /&gt;
+
+&lt;/beans&gt;</programlisting>
+
+      <para>The commands are Spring components, demarcated as such using the
+      <literal>@Component</literal> annotation. For example, the shell of the
+      <classname>HelloWorldCommands</classname> class from the sample
+      application looks like this</para>
+
+      <programlisting language="java">@Component
+public class HelloWorldCommands implements CommandMarker {
+
+  // use any Spring annotations for Dependency Injection or other Spring 
+  // interfaces as required.
+
+  // methods with @Cli annotations go here
+
+}</programlisting>
+
+      <para>Once the commands are registered and instantiated by the Spring
+      container, they are registered with the core shell parser so that the
+      <literal>@Cli</literal> annotations can be processed. The way the
+      commands are identified is through the use of the
+      <interfacename>CommandMarker</interfacename> interface.</para>
+    </section>
+
+    <section>
+      <title>Converters</title>
+
+      <para>The
+      <interfacename>org.springframework.shell.core.Converter</interfacename>
+      interface provides the contract to convert the strings that are entered
+      on the command line to rich Java types passed into the arguments of
+      <classname>@Cli</classname>-annotated methods.</para>
+
+      <para>By default converters for common types are registered. These cover
+      primitive types (boolean, int, float...) as well as Date, Character, and
+      File.</para>
+
+      <para>If you need to register any additional
+      <interfacename>Converter</interfacename> instances, register them with
+      the Spring container in the
+      <classname>spring-shell-plugin.xml</classname> file and they will be
+      picked up automatically.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Built in commands</title>
+
+    <para>There are a few built in commands. Here is a listing of their class
+    name and functionality</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><classname>EssentialCommands</classname> -
+        <literal>exit</literal> and <literal>quit</literal> - to exit the
+        shell.</para>
+      </listitem>
+
+      <listitem>
+        <para><classname>HelpCommands</classname> - <literal>help</literal> -
+        list all commands and their usage</para>
+      </listitem>
+
+      <listitem>
+        <para><classname>OsCommands</classname> - the keyword for this command
+        is the exclamation point, <literal>!</literal>. After the exclamation
+        point you can pass in a unix/windows command string to be
+        executed.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>There are also a few commands that are provided by the
+    <classname>AbstractShell</classname> class, these are</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><literal>date</literal> - Displays the local date and
+        time</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>script</literal> - Parses the specified resource file
+        and executes its commands</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>system properties</literal> - Shows the shell's
+        properties</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>version</literal> - Displays current CLI version</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Customizing the shell</title>
+
+    <para>There are a few extension points that allow you to customize the
+    shell. The extension points are the interfaces</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><interfacename>BannerProvider</interfacename> - Specifies the
+        banner text, welcome message, and version number that will be
+        displayed when the shell is started</para>
+      </listitem>
+
+      <listitem>
+        <para><interfacename>PromptProvider</interfacename> - Specifies the
+        command prompt text, eg. "<literal>shell&gt;</literal>" or
+        "<literal>#</literal>" or "<literal>$</literal>". This will be called
+        after every command execution so it does not need to be a static
+        string.</para>
+      </listitem>
+
+      <listitem>
+        <para><interfacename>HistoryFileNameProvider</interfacename> -
+        Specifies the name of the command history file</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>There is a default implementation for these interfaces but you
+    should create your own implementations for your own shell application. Use
+    Spring's <literal>@Ordered</literal> annotation to set the priority of the
+    provider. This allows your provider implementations to take precedence
+    over any other implementations that maybe present on the classpath from
+    other plugins.</para>
+
+    <para>To make cool "<link
+    xlink:href="http://en.wikipedia.org/wiki/ASCII_art">ASCII art</link>"
+    banners the website <link
+    xlink:href="http://patorjk.com/software/taag">http://patorjk.com/software/taag</link>
+    is quite neat!</para>
+  </section>
+
+  <section>
+    <title>Communicating between plugins</title>
+
+    <para>As this is a standard Spring application you can use Spring's
+    <classname>ApplicationContext</classname> event infrastructure to
+    communicate across plugins.</para>
+  </section>
+
+  <section>
+    <title>Command method interception</title>
+
+    <para>It has shown to be useful to provide a simple form of interception
+    around the invocation of a command method. This enables the command class
+    to check for updates to state, such as configuration information modified
+    by other plugins, before the command method is executed. The interface
+    <interfacename>ExecutionProcessor</interfacename> should be implemented
+    instead of <interfacename>CommandMarker</interfacename> to access this
+    functionality. The <interfacename>ExecutionProcessor</interfacename>
+    interface is shown below</para>
+
+    <programlisting language="java">public interface ExecutionProcessor extends CommandMarker {
+
+ /**
+  * Method called before invoking the target command (described by {@link ParseResult}).
+  * Additionally, for advanced cases, the parse result itself effectively changing the 
+  * invocation calling site.
+  * 
+  * @param invocationContext target command context
+  * @return the invocation target 
+  */
+ ParseResult beforeInvocation(ParseResult invocationContext);
+
+ /**
+  * Method called after successfully invoking the target command (described by 
+  * {@link ParseResult}).
+  * 
+  * @param invocationContext target command context
+  * @param result the invocation result
+  */
+ void afterReturningInvocation(ParseResult invocationContext, Object result);
+
+ /**
+  * Method called after invoking the target command (described by {@link ParseResult}) 
+  * had thrown an exception .
+  * 
+  * @param invocationContext target command context
+  * @param thrown the thrown object
+  */
+ void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown);
+
+}</programlisting>
+  </section>
+
+  <section>
+    <title>Command line options</title>
+
+    <para>There are a few command line options that can be specified when
+    starting the shell. They are</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><literal>--profiles</literal> - Specifies values for the system
+        property spring.profiles.active so that Spring 3.1 and greater <link
+        xlink:href="http://blog.springsource.com/2011/02/11/spring-framework-3-1-m1-released/">profile
+        support </link>is enabled.</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>--cmdfile</literal> - Specifies a file to read that
+        contains shell commands</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>--histsize</literal> - Specifies the maximum number of
+        lines to store in the command history file. Default value is
+        3000.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Scripts and comments</title>
+
+    <para>Scripts can be executed either by passing in the
+    <literal>--cmdfile</literal> argument at startup or by executing the
+    <literal>script</literal> command inside the shell. When using scripts it
+    helps to add comments and this can be done using block comments that start
+    and end with <literal>/*</literal> and <literal>*/</literal> or an inline
+    one line comment using the <literal>//</literal> or <literal>;</literal>
+    characters.</para>
+  </section>
+</chapter>

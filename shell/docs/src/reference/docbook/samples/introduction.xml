@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partintro>
+  <para>This part of the reference documentation covers the sample
+  applications included with Spring Shell that demonstrate the features in a
+  code centric manner.</para>
+
+  <para><xref linkend="simple-application"/>Describes a simple Spring Shell
+  application that echo's the command parameters to the console.</para>
+</partintro>

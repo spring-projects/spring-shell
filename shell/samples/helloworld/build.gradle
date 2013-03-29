@@ -1,0 +1,19 @@
+description = 'Spring Shell Example'
+apply plugin: 'base'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+repositories {
+	maven { url "http://repo.springsource.org/libs-release" }
+	mavenLocal()
+}
+
+dependencies {
+	compile "org.springframework.shell:spring-shell:$springShellVersion"
+	runtime "log4j:log4j:$log4jVersion"
+}
+
+mainClassName = "org.springframework.shell.Bootstrap"
+
+defaultTasks 'installApp'
