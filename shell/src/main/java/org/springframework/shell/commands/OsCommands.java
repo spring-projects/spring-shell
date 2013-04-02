@@ -34,8 +34,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OsCommands implements CommandMarker {
 
-    private static final Logger LOGGER = HandlerUtils
-            .getLogger(OsCommands.class);
+    private static final Logger LOGGER = HandlerUtils.getLogger(OsCommands.class);
 
     private OsOperations osOperations = new OsOperationsImpl();
 
@@ -47,11 +46,11 @@ public class OsCommands implements CommandMarker {
         if (command != null && command.length() > 0) {
             try {
                 osOperations.executeCommand(command);
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 LOGGER.severe("Unable to execute command " + command + " ["
                         + e.getMessage() + "]");
             }
         }
     }
+    
 }

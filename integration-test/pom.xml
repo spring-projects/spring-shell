@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.shell</groupId>
         <artifactId>spring-shell-parent</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.0.0.M1</version>
     </parent>
     
     <artifactId>shell-integration-test</artifactId>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.springframework.shell</groupId>
             <artifactId>spring-shell</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
+            <version>2.0.0.M1</version>
             <scope>provided</scope>
         </dependency>
     

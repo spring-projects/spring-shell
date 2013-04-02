@@ -23,10 +23,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SimpleFileConverter extends FileConverter {
-	@Autowired private Shell shell;
+	
+    private final Shell shell;
+    
+    @Autowired
+    public SimpleFileConverter(Shell shell) {
+        this.shell = shell;
+    }
 
 	@Override
 	protected File getWorkingDirectory() {
 		return shell.getHome();
 	}
+	
 }
