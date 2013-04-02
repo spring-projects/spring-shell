@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell;
+package org.springframework.shell.core;
+
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -21,11 +23,14 @@ package org.springframework.shell;
  * 
  * @author Mark Pollack
  */
+@Component
 public class CommandLine {
 	
 	private String[] args;
 	private int historySize;
 	private String[] shellCommandsToExecute;
+
+	public CommandLine() {}
 
 	/**
 	 * Construct a new CommandLine  
@@ -47,6 +52,10 @@ public class CommandLine {
 		return args;
 	}
 
+    public void setArgs(String[] args) {
+        this.args = args;
+    }
+
 	/**
 	 * @return the historySize
 	 */
@@ -54,11 +63,19 @@ public class CommandLine {
 		return historySize;
 	}
 
+    public void setHistorySize(int historySize) {
+        this.historySize = historySize;
+    }
+
 	/**
 	 * @return the shellCommandsToExecute
 	 */
 	public String[] getShellCommandsToExecute() {
 		return shellCommandsToExecute;
 	}
+
+    public void setShellCommandsToExecute(String[] shellCommandsToExecute) {
+        this.shellCommandsToExecute = shellCommandsToExecute;
+    }
 
 }

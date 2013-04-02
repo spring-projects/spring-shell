@@ -25,20 +25,18 @@ import java.util.Map;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.Lifecycle;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
-import org.springframework.shell.CommandLine;
+import org.springframework.shell.Bootstrap;
 import org.springframework.shell.converter.Converter;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.shell.plugin.PluginProvider;
 import org.springframework.shell.plugin.PromptProvider;
+import org.springframework.stereotype.Component;
 
 /**
  * Launcher for {@link JLineShell}.
@@ -46,9 +44,10 @@ import org.springframework.shell.plugin.PromptProvider;
  * @author Ben Alex
  * @since 1.1
  */
-public class JLineShellComponent extends JLineShell implements SmartLifecycle, ApplicationContextAware, InitializingBean {
+@Component(Bootstrap.SHELL_BEAN_NAME)
+public class JLineShellComponent extends JLineShell implements SmartLifecycle, ApplicationContextAware { 
 
-	@Autowired
+    // needs to be set at startup
 	private CommandLine commandLine;
 	
 	private volatile boolean running = false;
@@ -68,7 +67,11 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 
 	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy();
 	private SimpleParser parser = new SimpleParser();
-
+	
+	public void setCommandLine(CommandLine commandLine) {
+	    this.commandLine = commandLine;
+	}
+	
 	public SimpleParser getSimpleParser() {
 		return parser;
 	}
@@ -76,7 +79,25 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	public boolean isAutoStartup() {
 		return false;
 	}
-	
+
+   public void init() {
+        Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, CommandMarker.class);
+        for (CommandMarker command : commands.values()) {
+            getSimpleParser().add(command);
+        }
+
+        @SuppressWarnings("rawtypes")
+        Map<String, Converter> converters = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, Converter.class);
+        for (Converter<?> converter : converters.values()) {
+            getSimpleParser().add(converter);
+        }
+        
+        setHistorySize(commandLine.getHistorySize());
+        if (commandLine.getShellCommandsToExecute() != null) {
+            setPrintBanner(false);
+        }
+    }
+
 	public void stop(Runnable callback) {
 		stop();
 		callback.run();
@@ -106,24 +127,6 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		return running;
 	}
 	
-	public void afterPropertiesSet() {
-
-		Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, CommandMarker.class);
-		for (CommandMarker command : commands.values()) {
-			getSimpleParser().add(command);
-		}
-
-		Map<String, Converter> converters = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, Converter.class);
-		for (Converter converter : converters.values()) {
-			getSimpleParser().add(converter);
-		}
-		
-		setHistorySize(commandLine.getHistorySize());
-		if (commandLine.getShellCommandsToExecute() != null) {
-			setPrintBanner(false);
-		}
-	}
-
 	/**
 	 * wait the shell command to complete by typing "quit" or "exit" 
 	 * 

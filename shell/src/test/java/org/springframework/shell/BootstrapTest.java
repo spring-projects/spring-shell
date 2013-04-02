@@ -1,13 +1,11 @@
 package org.springframework.shell;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 import org.springframework.shell.core.JLineShellComponent;
-import org.springframework.shell.support.logging.HandlerUtils;
 
 public class BootstrapTest {
 
@@ -22,10 +20,7 @@ public class BootstrapTest {
 			Assert.assertEquals("Number of Converters is incorrect", 16, shell.getSimpleParser().getConverters().size());			
 		} catch (RuntimeException t) {
 			throw t;
-		} finally {
-			HandlerUtils.flushAllHandlers(Logger.getLogger(""));
 		}
-		
 	}
 
 }

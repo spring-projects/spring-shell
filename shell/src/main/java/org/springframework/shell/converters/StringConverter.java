@@ -20,6 +20,7 @@ import java.util.List;
 import org.springframework.shell.converter.Converter;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link String}.
@@ -27,6 +28,7 @@ import org.springframework.shell.core.MethodTarget;
  * @author Ben Alex
  * @since 1.0
  */
+@Component
 public class StringConverter implements Converter<String> {
 
 	public String convertFromText(final String value, final Class<?> requiredType, final String optionContext) {

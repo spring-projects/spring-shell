@@ -1,7 +1,7 @@
 package org.springframework.shell.commands.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.CommandLine;
+import org.springframework.shell.core.CommandLine;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;

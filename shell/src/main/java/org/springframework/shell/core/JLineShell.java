@@ -98,6 +98,8 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 
 		JLineLogHandler handler = new JLineLogHandler(reader, this);
 		JLineLogHandler.prohibitRedraw(); // Affects this thread only
+		
+		// generates color coded banner
 		Logger mainLogger = Logger.getLogger("");
 		removeHandlers(mainLogger);
 		mainLogger.addHandler(handler);

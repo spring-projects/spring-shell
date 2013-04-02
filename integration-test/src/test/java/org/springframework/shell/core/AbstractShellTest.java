@@ -58,7 +58,7 @@ public abstract class AbstractShellTest {
      * Executes the shell.
      */
     protected String exec() throws IOException {
-        return exec(StringUtils.EMPTY);
+        return exec(new String[]{});
     }
     
     /**

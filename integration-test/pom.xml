@@ -10,7 +10,7 @@
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     
-    <artifactId>integration-test</artifactId>
+    <artifactId>shell-integration-test</artifactId>
     <name>Integration Test</name>
     <description>Spring Shell Integration Test</description>
 
