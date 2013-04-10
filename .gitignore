@@ -1,10 +1,11 @@
-/.classpath
-/.project
-.settings/
+.classpath
+.project
+.settings
 .gradle
 build
 target/
 /log.roo
 
 /bin/
-/*.log
+*.log
+.DS_Store
