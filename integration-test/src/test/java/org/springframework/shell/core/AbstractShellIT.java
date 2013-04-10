@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Start shell jar test.
  */
-public abstract class AbstractShellTest {
+public abstract class AbstractShellIT {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -45,7 +45,7 @@ public abstract class AbstractShellTest {
     
     private final String shellJarPath;
     
-    public AbstractShellTest() {
+    public AbstractShellIT() {
         File shellJar = new File(SHELL_JAR_PATH);
         shellJarPath = shellJar.getAbsolutePath();
 

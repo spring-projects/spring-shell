@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core;
+package org.springframework.shell.commands;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.shell.core.CommandConstants.DATE_COMMAND;
 
@@ -27,26 +28,33 @@ import java.util.Date;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.shell.AbstractShellTest;
+import org.springframework.shell.CommandResult;
 
 
 /**
- * Start shell jar test.
+ * Date command test.
+ * 
+ * @author David Winterfeldt
  */
-public class DateTest extends AbstractShellIT {
+public class DateTest extends AbstractShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final static String PATTERN = "E, MMM d, yyyy h:mm:ss a zzz";
 
     @Test
-    public void testShellStart() throws IOException, ParseException {
+    public void testDateCommand() throws IOException, ParseException {
         Date now = new Date();
         
         // wait one second to guarantee dates don't match
         try { Thread.sleep(1000); } catch (InterruptedException e) {}
         
-        String result = exec(DATE_COMMAND);
-        result = result.substring(6);
+        CommandResult cr = shell.exec(DATE_COMMAND);
+        
+        String result = (String) cr.getCommandOutput().get("org.springframework.shell.TestableShell." + DATE_COMMAND);
+
+        assertNotNull("Output for 'date' command shouldn't be null.", result);
         
         DateFormat formatter = new SimpleDateFormat(PATTERN);
         

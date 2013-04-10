@@ -6,6 +6,14 @@
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.springframework.shell.core,org.springframework.shell.commands,org.springframework.shell.converters,org.springframework.shell.plugin.support"/>
+    <bean class="org.springframework.shell.Bootstrap">
+        <constructor-arg>
+            <list>
+                <value>classpath:/META-INF/spring/shell/default-spring-shell-context.xml</value>
+                <value>classpath:/jline-shell-test-context.xml</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg><value>false</value></constructor-arg>
+    </bean>
 
 </beans>

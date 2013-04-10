@@ -271,7 +271,8 @@
                                     <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                         <mainClass>${jar.mainclass}</mainClass>
                                         <manifestEntries>
-                                            <Implementation-Build>${BUILD_NUMBER}</Implementation-Build>
+                                            <Implementation-Title>${project.name}</Implementation-Title>
+                                            <Implementation-Version>${project.version}</Implementation-Version>
                                         </manifestEntries>
                                     </transformer>
                                     <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">

@@ -30,13 +30,11 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
-import org.springframework.shell.Bootstrap;
 import org.springframework.shell.converter.Converter;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.shell.plugin.PluginProvider;
 import org.springframework.shell.plugin.PromptProvider;
-import org.springframework.stereotype.Component;
 
 /**
  * Launcher for {@link JLineShell}.
@@ -44,7 +42,6 @@ import org.springframework.stereotype.Component;
  * @author Ben Alex
  * @since 1.1
  */
-@Component(Bootstrap.SHELL_BEAN_NAME)
 public class JLineShellComponent extends JLineShell implements SmartLifecycle, ApplicationContextAware { 
 
     // needs to be set at startup

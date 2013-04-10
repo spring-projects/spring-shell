@@ -42,7 +42,6 @@ public class DefaultBannerProvider implements BannerProvider {
 		return sb.toString();
 	}
 
-
 	public String getVersion() {
 		return VersionUtils.versionInfo();
 	}

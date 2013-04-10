@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.core;
 
+import static org.springframework.shell.core.CommandConstants.DATE_COMMAND;
+import static org.springframework.shell.core.CommandConstants.SCRIPT_COMMAND;
 import static org.springframework.shell.support.util.OsUtils.LINE_SEPARATOR;
 
 import java.io.BufferedInputStream;
@@ -55,9 +57,6 @@ import org.springframework.util.StringUtils;
  * @author Ben Alex
  */
 public abstract class AbstractShell extends AbstractShellStatusPublisher implements Shell {
-
-    protected static final String DATE_COMMAND = "date";
-    protected static final String SCRIPT_COMMAND = "script";
 
     // Constants
 	private static final String MY_SLOT = AbstractShell.class.getName();

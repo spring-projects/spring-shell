@@ -16,6 +16,7 @@
 package org.springframework.shell.core;
 
 import static org.junit.Assert.assertTrue;
+import static org.springframework.shell.core.CommandConstants.SCRIPT_COMMAND;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Start shell jar test.
  */
-public class ScriptTest extends AbstractShellTest {
+public class ScriptTest extends AbstractShellIT {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -46,7 +47,7 @@ public class ScriptTest extends AbstractShellTest {
         // wait one second to guarantee dates don't match
         try { Thread.sleep(1000); } catch (InterruptedException e) {}
         
-        String result = exec(new String[] { AbstractShell.SCRIPT_COMMAND, "../../integration-test/src/test/resources/date.script" });
+        String result = exec(new String[] { SCRIPT_COMMAND, "../../integration-test/src/test/resources/date.script" });
         result = result.substring(6);
         
         DateFormat formatter = new SimpleDateFormat(PATTERN);

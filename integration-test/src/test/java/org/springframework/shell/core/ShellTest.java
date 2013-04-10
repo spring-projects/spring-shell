@@ -28,7 +28,7 @@ import org.springframework.shell.plugin.support.DefaultBannerProvider;
 /**
  * Start shell jar test.
  */
-public class ShellTest extends AbstractShellTest {
+public class ShellTest extends AbstractShellIT {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
     

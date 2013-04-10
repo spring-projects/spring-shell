@@ -6,6 +6,6 @@
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.springframework.shell.core,org.springframework.shell.commands,org.springframework.shell.converters,org.springframework.shell.plugin.support"/>
+    <bean id="shell" class="org.springframework.shell.core.JLineShellComponent" />
 
 </beans>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2013 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.converter;
+package jline;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+
+import jline.ConsoleReader;
 
 /**
- * Converts between Strings (as displayed by and entered via the shell) and Java objects
- *
- * @author David Winterfeldt
  * 
- * @param 	<T> 	The type being converted to/from.
+ * Console reader wrapper.
+ * 
+ * @author tushark
  */
-public interface ContextConverter<T> extends GenericConverter<T, ShellContext> {
+public class ConsoleReaderWrapper extends ConsoleReader {
 
-	T convertFromText(String value, Class<?> targetType, ShellContext context);
+    public ConsoleReaderWrapper() throws IOException {
+        super();        
+    }
+    
+    public ConsoleReaderWrapper(InputStream eis, Writer out)throws IOException {
+        super(eis,out);
+    }
+
+    public Writer getOut(){
+        return out;
+    }
 
 }

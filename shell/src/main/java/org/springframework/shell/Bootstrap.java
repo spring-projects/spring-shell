@@ -18,19 +18,15 @@ package org.springframework.shell;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.shell.converter.Converter;
 import org.springframework.shell.core.CommandLine;
-import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.shell.core.Shell;
@@ -51,17 +47,15 @@ import ch.qos.logback.core.util.StatusPrinter;
  */
 public class Bootstrap {
 
-    public static final String SHELL_BEAN_NAME = "shell";
+//    public static final String SHELL_BEAN_NAME = "shell";
     
     private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/shell/**/*-context.xml" };
-//    private static final String CHILD_CONTEXT_PATH = "classpath*:/META-INF/spring/spring-shell-plugin.xml";
     
     private static Bootstrap bootstrap;
 	private static StopWatch sw = new StopWatch("Spring Shell");
 	private static CommandLine commandLine;
 	
 	private AbstractApplicationContext ctx;
-//	private AnnotationConfigApplicationContext parentApplicationContext;
 	private JLineShellComponent shell;
 		
 
@@ -81,14 +75,28 @@ public class Bootstrap {
 	}
 
 	public Bootstrap(String[] args) throws IOException {
-	    configureLogging();
+	    this(args, CONTEXT_PATH, true);
+	}
+	
+	public Bootstrap(String[] contextPath, boolean configureLogging) {
+	    this(null, contextPath, configureLogging);
+	}
+	
+	public Bootstrap(String[] args, String[] contextPath, boolean configureLogging) {
+	    if (configureLogging) {
+	        configureLogging();
+	    }
 	    
-	    commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
+	    try {
+            commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
 	    
 	    ctx = new ClassPathXmlApplicationContext();
+	    ctx.registerShutdownHook();
 	    ctx.refresh();
-//	    ctx.getBeanFactory().registerSingleton("commandLine", commandLine);
-	    ((AbstractXmlApplicationContext)ctx).setConfigLocations(CONTEXT_PATH);
+	    ((AbstractXmlApplicationContext)ctx).setConfigLocations(contextPath);
 	    ctx.refresh();
 	    
 	    CommandLine cl = ctx.getBean(CommandLine.class);
@@ -100,28 +108,10 @@ public class Bootstrap {
 	    shell.setCommandLine(commandLine);
 	    shell.init();
 	}
-	
-//	public Bootstrap(String[] args) throws IOException {
-//	    configureLogging();
-//	    
-//		commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
-//
-//		parentApplicationContext = new AnnotationConfigApplicationContext();
-//		configureParentApplicationContext(parentApplicationContext);
-//		
-//		// FIXME: create multiple child contexts for each spring-shell-plugin.xml
-//		
-//		ConfigurableApplicationContext childPluginApplicationContext = createChildPluginApplicationContext(parentApplicationContext);			
-//		
-//		parentApplicationContext.refresh();
-//		childPluginApplicationContext.refresh();
-//
-//		shell = parentApplicationContext.getBean(SHELL_BEAN_NAME, JLineShellComponent.class);
-//		        
-////	    initShell(parentApplicationContext);
-//	    initShell(childPluginApplicationContext);
-//	}
 
+	/**
+	 * Suppress initial logging on startup until main logging config loads.
+	 */
     private void configureLogging() {
         URL defaultShellLogbackConfig = ClassUtils.getDefaultClassLoader().getResource("default_shell_logback_config.xml");
 
@@ -144,74 +134,6 @@ public class Bootstrap {
 	public ApplicationContext getApplicationContext() {
 		return ctx;
 	}
-
-//	private void configureParentApplicationContext(AnnotationConfigApplicationContext annctx) {
-//		// create parent/base childPluginApplicationContext
-//
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.AvailableCommandsConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigDecimalConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigIntegerConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BooleanConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.CharacterConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DateConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DoubleConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.EnumConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.FloatConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.IntegerConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LocaleConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LongConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.ShortConverter.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, SHELL_BEAN_NAME);
-//		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
-//		
-//		annctx.getBeanFactory().registerSingleton("commandLine", commandLine);
-//		annctx.scan("org.springframework.shell.commands");
-//		annctx.scan("org.springframework.shell.converters");
-//		annctx.scan("org.springframework.shell.plugin.support");
-//	}
-
-	/**
-	 * Init plugin ApplicationContext
-	 * 
-	 * @param annctx parent ApplicationContext in core spring shell
-	 * @return new ApplicationContext in the plugin with core spring shell's context as parent
-	 */
-//	private ConfigurableApplicationContext createChildPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
-//		return new ClassPathXmlApplicationContext(new String[] { CHILD_CONTEXT_PATH }, false, annctx);
-//	}
-//
-//	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
-//		createAndRegisterBeanDefinition(annctx, clazz, null);
-//	}
-//
-//	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz, String name) {
-//		RootBeanDefinition rbd = new RootBeanDefinition();
-//		rbd.setBeanClass(clazz);
-//		if (name != null) {
-//			annctx.registerBeanDefinition(name, rbd);
-//		} else {
-//			annctx.registerBeanDefinition(clazz.getSimpleName(), rbd);
-//		}
-//	}
-
-	// seems on JDK 1.6.0_18 or higher causes the output to disappear
-//	private void setupLogging() {
-//		// Ensure all JDK log messages are deferred until a target is registered
-//		Logger rootLogger = Logger.getLogger("");
-//		HandlerUtils.wrapWithDeferredLogHandler(rootLogger, Level.SEVERE);
-//
-//		// Set a suitable priority level on Spring Framework log messages
-//		Logger sfwLogger = Logger.getLogger("org.springframework");
-//		sfwLogger.setLevel(Level.WARNING);
-//
-//		// Set a suitable priority level on Roo log messages
-//		// (see ROO-539 and HandlerUtils.getLogger(Class))
-//		Logger rooLogger = Logger.getLogger("org.springframework.shell");
-//		rooLogger.setLevel(Level.FINE);
-//	}
-
 
 	protected ExitShellRequest run() {
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();

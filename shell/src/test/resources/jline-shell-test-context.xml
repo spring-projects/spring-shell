@@ -6,6 +6,9 @@
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.springframework.shell.core,org.springframework.shell.commands,org.springframework.shell.converters,org.springframework.shell.plugin.support"/>
+    <bean id="shell" class="org.springframework.shell.TestableShell">
+        <constructor-arg><value>Test Shell</value></constructor-arg>
+        <constructor-arg><value>true</value></constructor-arg>
+    </bean>
 
 </beans>
