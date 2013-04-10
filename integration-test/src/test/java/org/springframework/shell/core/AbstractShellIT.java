@@ -41,7 +41,7 @@ public abstract class AbstractShellIT {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
     
-    private final static String SHELL_JAR_PATH = "../shell/target/spring-shell.jar";
+    private final static String SHELL_JAR_PATH = "../shell-exec/target/spring-shell.jar";
     
     private final String shellJarPath;
     
