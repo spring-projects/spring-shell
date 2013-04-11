@@ -31,6 +31,7 @@ import org.springframework.context.SmartLifecycle;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.converter.Converter;
+import org.springframework.shell.lang.ShellException;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
 import org.springframework.shell.plugin.PluginProvider;
@@ -148,12 +149,12 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		} catch (IOException ex) {
 			logger.fine("Cannot find path " + path);
 			// return Collections.emptyList();
-			throw new RuntimeException(ex);
+			throw new ShellException(ex);
 		}
 	}
 
 	@Override
-	protected ExecutionStrategy getExecutionStrategy() {
+	protected ExecutionStrategy getExecutionStrategy(String line) {
 		return executionStrategy;
 	}
 

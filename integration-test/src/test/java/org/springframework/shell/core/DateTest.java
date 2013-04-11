@@ -30,7 +30,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Start shell jar test.
+ * Date command test.
+ * 
+ * @author David Winterfeldt
  */
 public class DateTest extends AbstractShellIT {
     

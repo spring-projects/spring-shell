@@ -18,6 +18,7 @@ package org.springframework.shell.core;
 import java.util.logging.Logger;
 
 import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.lang.ShellException;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
@@ -75,7 +76,7 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 		if (th instanceof RuntimeException) {
 			throw ((RuntimeException) th);
 		}
-		throw new RuntimeException(th);
+		throw new ShellException(th);
 	}
 
 	public boolean isReadyForCommands() {

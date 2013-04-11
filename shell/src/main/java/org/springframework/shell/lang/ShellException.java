@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell;
+package org.springframework.shell.lang;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Basic shell test.
+ * Shell exception.
  * 
- * @author David Winterfeldt
+ * @author David Wintefeldt
  */
-public class ShellTest extends AbstractShellTest {
+public class ShellException extends RuntimeException {
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Test
-	public void testShell() {
-        int expectedCompletionCount = 10;
-        
-	    CommandResult cr = shell.exec("\t");
-
-	    assertEquals("Expected " + expectedCompletionCount +" default completions.", expectedCompletionCount, cr.getCompletorOutput().get("").size());
-	    
-	    verifyShellOperational();
+    private static final long serialVersionUID = 1123895874463364743L;
+    
+    public ShellException() {}
+    
+    public ShellException(String message) {
+        super(message);
     }
-	
+
+    public ShellException(Throwable t) {
+        super(t);
+    }
+
+    public ShellException(String message, Throwable t) {
+        super(message, t);
+    }
+
 }

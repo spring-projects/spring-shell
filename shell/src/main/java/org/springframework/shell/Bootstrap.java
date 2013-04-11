@@ -30,6 +30,7 @@ import org.springframework.shell.core.CommandLine;
 import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.shell.core.Shell;
+import org.springframework.shell.lang.ShellException;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StopWatch;
@@ -47,8 +48,6 @@ import ch.qos.logback.core.util.StatusPrinter;
  */
 public class Bootstrap {
 
-//    public static final String SHELL_BEAN_NAME = "shell";
-    
     private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/shell/**/*-context.xml" };
     
     private static Bootstrap bootstrap;
@@ -90,7 +89,7 @@ public class Bootstrap {
 	    try {
             commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new ShellException(e.getMessage(), e);
         }
 	    
 	    ctx = new ClassPathXmlApplicationContext();
@@ -172,7 +171,7 @@ public class Bootstrap {
 		return exitShellRequest;
 	}
 	
-	JLineShellComponent getJLineShellComponent() {
+	JLineShellComponent getShell() {
 		return shell;
 	}
 	

@@ -19,7 +19,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.shell.core.CommandConstants.DATE_COMMAND;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,14 +36,12 @@ import org.springframework.shell.CommandResult;
  * 
  * @author David Winterfeldt
  */
-public class DateTest extends AbstractShellTest {
+public class DateCommandTest extends AbstractShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final static String PATTERN = "E, MMM d, yyyy h:mm:ss a zzz";
-
     @Test
-    public void testDateCommand() throws IOException, ParseException {
+    public void testDateCommand() throws ParseException {
         Date now = new Date();
         
         // wait one second to guarantee dates don't match
@@ -52,7 +49,7 @@ public class DateTest extends AbstractShellTest {
         
         CommandResult cr = shell.exec(DATE_COMMAND);
         
-        String result = (String) cr.getCommandOutput().get("org.springframework.shell.TestableShell." + DATE_COMMAND);
+        String result = (String) cr.getCommandOutput().get(DATE_COMMAND);
 
         assertNotNull("Output for 'date' command shouldn't be null.", result);
         

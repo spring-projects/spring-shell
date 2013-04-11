@@ -46,6 +46,7 @@ import org.springframework.shell.core.Parser;
 import org.springframework.shell.core.Shell;
 import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.event.ShellStatus.Status;
+import org.springframework.shell.lang.ShellException;
 import org.springframework.util.StringUtils;
 
 
@@ -171,10 +172,10 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         try {
             addChars(command).newline();
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new ShellException(e.getMessage(), e);
         }
         
-        waitForOutput();
+//        waitForOutput();
         
         // FIXME: why isn't waitForOutput working?
         try { Thread.sleep(100); } catch (InterruptedException e) {}
@@ -192,7 +193,8 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         }
         
         return new CommandResult(outputText, commandOutput, completorOutput);
-   }
+    }
+    
     protected void addError(String string, Exception e) {
         if (e != null) {
             logger.error(string, e);
@@ -209,17 +211,17 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
     }
 
     @Override
-    protected ExecutionStrategy getExecutionStrategy() {
-
-        final ExecutionStrategy oldStrategy = super.getExecutionStrategy();
+    protected ExecutionStrategy getExecutionStrategy(final String line) {
+        final ExecutionStrategy oldStrategy = super.getExecutionStrategy(line);
+        
         return new ExecutionStrategy() {
             public Object execute(ParseResult parseResult) throws RuntimeException {
                 Object obj = null;
-                String command = null;
+                String command = line;
                 try {
                     String method = parseResult.getMethod().getName();
                     String className = parseResult.getInstance().getClass().getCanonicalName();
-                    command = className + "." + method;
+//                    command = className + "." + method;
                     long l1 = System.currentTimeMillis();
                     obj = oldStrategy.execute(parseResult);
                     long l2 = System.currentTimeMillis();
@@ -231,7 +233,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
                     }
                 } catch (Exception e) {
                     addError("Error running command ", e);
-                    throw new RuntimeException(e);
+                    throw new ShellException(e);
                 }
                 logger.debug("Adding outuut and notifying threads ..");
                 addOutput(command, obj);
@@ -474,7 +476,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
 
     public void addOutput(String command, Object object) {
         commandOutput.put(command, object);
-        // resultLatch.countDown();
+        resultLatch.countDown();
     }
 
     public void waitForOutput() {
@@ -514,18 +516,18 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
 //        try {
 //            logger.info("Executing auto-complete command " + command + " with command Mgr " + CommandManager.getInstance());
 //        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
+//            throw new ShellException(e);
 //        } catch (IOException e) {
-//            throw new RuntimeException(e);
+//            throw new ShellException(e);
 //        }
         try {
             shell.addChars(command).addChars("\t").newline();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ShellException(e);
         }
         shell.waitForOutput();
         if (shell.hasError()) {
-            throw new RuntimeException("Command " + command + " failed with error " + shell.getError());
+            throw new ShellException("Command " + command + " failed with error " + shell.getError());
         } else {
             List<jline.Completion> completorOutput = shell.getCompletorOutput().get(command);
             String outputText = shell.getOutputText();
@@ -542,18 +544,18 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
 //        try {
 //            logger.info("Executing command " + command + " with command Mgr " + CommandManager.getInstance());
 //        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
+//            throw new ShellException(e);
 //        } catch (IOException e) {
-//            throw new RuntimeException(e);
+//            throw new ShellException(e);
 //        }
         try {
             shell.addChars(command).addChars(";").newline();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ShellException(e);
         }
         shell.waitForOutput();
         if (shell.hasError()) {
-            throw new RuntimeException("Command " + command + " failed with error " + shell.getError());
+            throw new ShellException("Command " + command + " failed with error " + shell.getError());
         } else {
             Map<String, List> completorOutput = shell.getCompletorOutput();
             String outputText = shell.getOutputText();
@@ -602,18 +604,18 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
 //        try {
 //            logger.info("Executing command " + command + " with command Mgr " + CommandManager.getInstance());
 //        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
+//            throw new ShellException(e);
 //        } catch (IOException e) {
-//            throw new RuntimeException(e);
+//            throw new ShellException(e);
 //        }
         try {
             shell.addChars(command).addChars(";").newline();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ShellException(e);
         }
         shell.waitForOutput();
         if (shell.hasError()) {
-            throw new RuntimeException("Command " + command + " failed with error " + shell.getError());
+            throw new ShellException("Command " + command + " failed with error " + shell.getError());
         } else {
             Map<String, List> completorOutput = shell.getCompletorOutput();
             String outputText = shell.getOutputText();

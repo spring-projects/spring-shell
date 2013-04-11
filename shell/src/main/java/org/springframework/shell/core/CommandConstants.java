@@ -23,6 +23,13 @@ package org.springframework.shell.core;
 public class CommandConstants {
 
     public static final String DATE_COMMAND = "date";
+    public static final String HELP_COMMAND = "help";
+    public static final String INLINE_COMMENT_COMMAND = "//";
+    public static final String BLOCK_COMMENT_BEGIN01_COMMAND = "/*";
+    public static final String BLOCK_COMMENT_BEGIN02_COMMAND = "/**";
+    public static final String BLOCK_COMMENT_END_COMMAND = "*/";
+    public static final String SYSTEM_COMMAND = "!";
+    public static final String SYSTEM_PROPS_COMMAND = "system properties";
     public static final String SCRIPT_COMMAND = "script";
 
     private CommandConstants() {}

@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.commands;
 
+import static org.springframework.shell.core.CommandConstants.HELP_COMMAND;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -38,7 +40,7 @@ public class HelpCommands implements CommandMarker, ApplicationContextAware {
 
 	private ApplicationContext ctx;
 
-	@CliCommand(value = "help", help = "list all commands usage")
+	@CliCommand(value = HELP_COMMAND, help = "list all commands usage")
 	public void obtainHelp(@CliOption(key = { "", "command" }, optionContext = "availableCommands", help = "Command name to provide help for") String buffer) {
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
 		SimpleParser parser = shell.getSimpleParser();

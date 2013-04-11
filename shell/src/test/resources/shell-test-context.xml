@@ -6,14 +6,21 @@
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean class="org.springframework.shell.Bootstrap">
-        <constructor-arg>
-            <list>
-                <value>classpath:/META-INF/spring/shell/default-spring-shell-context.xml</value>
-                <value>classpath:/jline-shell-test-context.xml</value>
-            </list>
-        </constructor-arg>
-        <constructor-arg><value>false</value></constructor-arg>
+    <bean id="shell" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject">
+            <bean class="org.springframework.shell.Bootstrap">
+                <constructor-arg>
+                    <list>
+                        <value>classpath:/META-INF/spring/shell/default-spring-shell-context.xml</value>
+                        <value>classpath:/jline-shell-test-context.xml</value>
+                    </list>
+                </constructor-arg>
+                <constructor-arg><value>false</value></constructor-arg>
+            </bean>        
+        </property>
+        <property name="targetMethod">
+            <value>getShell</value>
+        </property>
     </bean>
-
+         
 </beans>

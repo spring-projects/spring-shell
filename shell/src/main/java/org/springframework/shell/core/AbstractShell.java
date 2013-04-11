@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.core;
 
-import static org.springframework.shell.core.CommandConstants.DATE_COMMAND;
+import static org.springframework.shell.core.CommandConstants.*;
 import static org.springframework.shell.core.CommandConstants.SCRIPT_COMMAND;
 import static org.springframework.shell.support.util.OsUtils.LINE_SEPARATOR;
 
@@ -85,7 +85,12 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	protected abstract String getHomeAsString();
 
-	protected abstract ExecutionStrategy getExecutionStrategy();
+	/**
+	 * <p>Gets exection strategy.</p>
+	 * 
+	 * <p><strong>Note</strong>: The line method parameter was added for testing.</p>
+	 */
+	protected abstract ExecutionStrategy getExecutionStrategy(String line);
 
 	protected abstract Parser getParser();
 
@@ -169,7 +174,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		// Another command was attempted
 		setShellStatus(ShellStatus.Status.PARSING);
 
-		final ExecutionStrategy executionStrategy = getExecutionStrategy();
+		final ExecutionStrategy executionStrategy = getExecutionStrategy(line);
 		boolean flashedMessage = false;
 		while (executionStrategy == null || !executionStrategy.isReadyForCommands()) {
 			// Wait
@@ -315,22 +320,22 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		return exitShellRequest;
 	}
 
-	@CliCommand(value = { "//", ";" }, help = "Inline comment markers (start of line only)")
+	@CliCommand(value = { INLINE_COMMENT_COMMAND }, help = "Inline comment markers (start of line only)")
 	public void inlineComment() {}
 
-	@CliCommand(value = { "/*" }, help = "Start of block comment")
+	@CliCommand(value = { BLOCK_COMMENT_BEGIN01_COMMAND, BLOCK_COMMENT_BEGIN02_COMMAND }, help = "Start of block comment")
 	public void blockCommentBegin() {
 		Assert.isTrue(!inBlockComment, "Cannot open a new block comment when one already active");
 		inBlockComment = true;
 	}
 
-	@CliCommand(value = { "*/" }, help = "End of block comment")
+	@CliCommand(value = { BLOCK_COMMENT_END_COMMAND }, help = "End of block comment")
 	public void blockCommentFinish() {
 		Assert.isTrue(inBlockComment, "Cannot close a block comment when it has not been opened");
 		inBlockComment = false;
 	}
 
-	@CliCommand(value = { "system properties" }, help = "Shows the shell's properties")
+	@CliCommand(value = { SYSTEM_PROPS_COMMAND }, help = "Shows the shell's properties")
 	public String props() {
 		final Set<String> data = new TreeSet<String>(); // For repeatability
 		for (final Entry<Object, Object> entry : System.getProperties().entrySet()) {
@@ -345,70 +350,6 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		return DateFormat.getDateTimeInstance(
 				DateFormat.FULL, DateFormat.FULL,Locale.US)
 				.format(new Date());
-	}
-
-	//@CliCommand(value = { "flash test" }, help = "Tests message flashing")
-	public void flashCustom() throws Exception {
-		flash(Level.FINE, "Hello world", "a");
-		Thread.sleep(150);
-		flash(Level.FINE, "Short world", "a");
-		Thread.sleep(150);
-		flash(Level.FINE, "Small", "a");
-		Thread.sleep(150);
-		flash(Level.FINE, "Downloading xyz", "b");
-		Thread.sleep(150);
-		flash(Level.FINE, "", "a");
-		Thread.sleep(150);
-		flash(Level.FINE, "Downloaded xyz", "b");
-		Thread.sleep(150);
-		flash(Level.FINE, "System online", "c");
-		Thread.sleep(150);
-		flash(Level.FINE, "System ready", "c");
-		Thread.sleep(150);
-		flash(Level.FINE, "System farewell", "c");
-		Thread.sleep(150);
-		flash(Level.FINE, "", "c");
-		Thread.sleep(150);
-		flash(Level.FINE, "", "b");
-	}
-
-	//@CliCommand(value = { "version" }, help = "Displays shell version")
-	public String version(@CliOption(key = "", help = "Special version flags") final String extra) {
-		StringBuilder sb = new StringBuilder();
-
-		if ("jaime".equals(extra)) {
-			sb.append("               /\\ /l").append(LINE_SEPARATOR);
-			sb.append("               ((.Y(!").append(LINE_SEPARATOR);
-			sb.append("                \\ |/").append(LINE_SEPARATOR);
-			sb.append("                /  6~6,").append(LINE_SEPARATOR);
-			sb.append("                \\ _    +-.").append(LINE_SEPARATOR);
-			sb.append("                 \\`-=--^-' \\").append(LINE_SEPARATOR);
-			sb.append("                  \\   \\     |\\--------------------------+").append(LINE_SEPARATOR);
-			sb.append("                 _/    \\    |  Thanks for loading Roo!  |").append(LINE_SEPARATOR);
-			sb.append("                (  .    Y   +---------------------------+").append(LINE_SEPARATOR);
-			sb.append("               /\"\\ `---^--v---.").append(LINE_SEPARATOR);
-			sb.append("              / _ `---\"T~~\\/~\\/").append(LINE_SEPARATOR);
-			sb.append("             / \" ~\\.      !").append(LINE_SEPARATOR);
-			sb.append("       _    Y      Y.~~~ /'").append(LINE_SEPARATOR);
-			sb.append("      Y^|   |      | Roo 7").append(LINE_SEPARATOR);
-			sb.append("      | l   |     / .   /'").append(LINE_SEPARATOR);
-			sb.append("      | `L  | Y .^/   ~T").append(LINE_SEPARATOR);
-			sb.append("      |  l  ! | |/  | |               ____  ____  ____").append(LINE_SEPARATOR);
-			sb.append("      | .`\\/' | Y   | !              / __ \\/ __ \\/ __ \\").append(LINE_SEPARATOR);
-			sb.append("      l  \"~   j l   j L______       / /_/ / / / / / / /").append(LINE_SEPARATOR);
-			sb.append("       \\,____{ __\"\" ~ __ ,\\_,\\_    / _, _/ /_/ / /_/ /").append(LINE_SEPARATOR);
-			sb.append("    ~~~~~~~~~~~~~~~~~~~~~~~~~~~   /_/ |_|\\____/\\____/").append(" ").append(versionInfo()).append(LINE_SEPARATOR);
-			return sb.toString();
-		}
-
-		sb.append("    ____  ____  ____  ").append(LINE_SEPARATOR);
-		sb.append("   / __ \\/ __ \\/ __ \\ ").append(LINE_SEPARATOR);
-		sb.append("  / /_/ / / / / / / / ").append(LINE_SEPARATOR);
-		sb.append(" / _, _/ /_/ / /_/ /  ").append(LINE_SEPARATOR);
-		sb.append("/_/ |_|\\____/\\____/   ").append(" ").append(versionInfo()).append(LINE_SEPARATOR);
-		sb.append(LINE_SEPARATOR);
-
-		return sb.toString();
 	}
 
 	public String versionInfo(){

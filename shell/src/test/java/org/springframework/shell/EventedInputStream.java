@@ -26,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.shell.lang.ShellException;
 
 /**
  * Input stream class for simulating shell events
@@ -70,11 +71,6 @@ public class EventedInputStream extends InputStream implements ShellEvent {
      *         stream has been reached.
      */
     public int read() {
-        /*
-         * try { latch.await(); } catch (InterruptedException e) {
-         * logger.error(e); e.printStackTrace(); throw new RuntimeException(e); }
-         */
-
         lock.lock();
         try {
             logger.debug("Waiting for new events to arrive and complete events " + events.get());
@@ -124,7 +120,7 @@ public class EventedInputStream extends InputStream implements ShellEvent {
                     } else if (events.get() == -1) {
                         return -1;
                     } else {
-                        RuntimeException e = new RuntimeException("you should not reach here without any events !!!! Events " + events.get() + 
+                        ShellException e = new ShellException("you should not reach here without any events !!!! Events " + events.get() + 
                                                                   " streamClsoed " + streamClosed.get());
                         logger.error(e.getMessage(), e);
                         throw e;
@@ -132,60 +128,12 @@ public class EventedInputStream extends InputStream implements ShellEvent {
                 } else
                     return EOF;
             } else {
-                // logger.debug("Returning char " + charRead);
                 bufferFormdAfterReading.append((char) charRead);
                 return charRead;
             }
-        }/*
-          * catch (InterruptedException e) { logger.error(e);
-          * throw new RuntimeException(e); }
-          */
-        finally {
+        } finally {
             lock.unlock();
         }
-
-        /*-
-          if (!streamClosed.get()) {
-          int i = -1;
-          if (bis == null) {
-            try {
-              wait();
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-              throw new RuntimeException(e);
-            }
-            logger.debug(">>>Got Notified due to command Event end");
-            if (bis != null) {
-              i = bis.read();
-              return i;
-            } else
-              return -1;
-          } else {
-            i = bis.read();
-            if (i == -1) {
-              // All input characters have been consumed so wait again
-              if (!streamClosed.get()) {
-                try {
-                  wait();
-                } catch (InterruptedException e) {
-                  throw new RuntimeException(e);
-                }
-                if (events.get() > 0) {
-                  i = bis.read();
-                  return i;
-                } else if (events.get() == -1) {
-                  return -1;
-                } else {
-                  RuntimeException e = new RuntimeException("you should not reach here without any events !!!! Events "
-                      + events.get() + " streamClsoed " + streamClosed.get());
-                  logger.error(e);
-                  throw e;
-                }
-              } else
-                return -1;
-            }
-            return i;
-          }*/
     }
 
     /**
@@ -330,12 +278,11 @@ public class EventedInputStream extends InputStream implements ShellEvent {
             if (streamClosed.get())
                 return;
             try {
-                throw new RuntimeException();
+                throw new ShellException();
             } catch (Exception e) {
                 logger.debug("End not called ");
             }
-            throw new RuntimeException(
-                    "Event End not marked use end() method to end events before calling InputStream methods.");
+            throw new ShellException("Event End not marked use end() method to end events before calling InputStream methods.");
         }
     }
 
