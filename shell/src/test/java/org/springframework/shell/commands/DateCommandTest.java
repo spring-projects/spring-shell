@@ -62,7 +62,7 @@ public class DateCommandTest extends AbstractDefaultShellTest {
         
         assertTrue("Shell date should be before date test was started.", now.before(shellDate));
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
     
 }

@@ -65,7 +65,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
     private EventedInputStream eis = null;
     private ByteArrayOutputStream output = null;
     private JLineCompletorAdapter completorAdaptor = null;
-    private Map<String, List> completorOutput = new HashMap<String, List>();
+    private Map<String, List<jline.Completion>> completorOutput = new HashMap<String, List<jline.Completion>>();
     private Map<String, Object> commandOutput = new HashMap<String, Object>();
     private ConsoleReader newConsoleReader = null;
     private String name = null;
@@ -183,7 +183,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         String outputText = getOutputText();
         Map<String, Object> commandOutput = getCommandOutput();
         @SuppressWarnings("rawtypes")
-        Map<String, List> completorOutput = getCompletorOutput();
+        Map<String, List<jline.Completion>> completorOutput = getCompletorOutput();
         boolean errors = hasError();
 
         if (errors) {
@@ -206,7 +206,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         resultLatch.countDown();
     }
 
-    public void addCompletorOutput(String buffer, List<?> candidates) {
+    public void addCompletorOutput(String buffer, List<jline.Completion> candidates) {
         completorOutput.put(buffer, candidates);
         resultLatch.countDown();
     }
@@ -470,8 +470,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         return Collections.unmodifiableMap(commandOutput);
     }
 
-    @SuppressWarnings("rawtypes")
-    public Map<String, List> getCompletorOutput() {
+    public Map<String, List<jline.Completion>> getCompletorOutput() {
         return Collections.unmodifiableMap(completorOutput);
     }
 
@@ -558,7 +557,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         if (shell.hasError()) {
             throw new ShellException("Command " + command + " failed with error " + shell.getError());
         } else {
-            Map<String, List> completorOutput = shell.getCompletorOutput();
+            Map<String, List<jline.Completion>> completorOutput = shell.getCompletorOutput();
             String outputText = shell.getOutputText();
             Map<String, Object> commandOutput = shell.getCommandOutput();
 
@@ -595,7 +594,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
 
             logCommandOutput(shell, commandOutputFile, command, presentationStr, errStr);
             commandOutput = (Map<String, Object>) copyMap(commandOutput);
-            completorOutput = (Map<String, List>) copyMap(completorOutput);
+            completorOutput = (Map<String, List<jline.Completion>>) copyMap(completorOutput);
             shell.clearEvents();
             return new Object[] { commandOutput, completorOutput, presentationStr, errStr };
         }
@@ -618,7 +617,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         if (shell.hasError()) {
             throw new ShellException("Command " + command + " failed with error " + shell.getError());
         } else {
-            Map<String, List> completorOutput = shell.getCompletorOutput();
+            Map<String, List<jline.Completion>> completorOutput = shell.getCompletorOutput();
             String outputText = shell.getOutputText();
             Map<String, Object> commandOutput = shell.getCommandOutput();
             String[] tmpArr = getPresentationString(shell);
@@ -626,7 +625,7 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
             String errStr = tmpArr[1];
 
             commandOutput = (Map<String, Object>) copyMap(commandOutput);
-            completorOutput = (Map<String, List>) copyMap(completorOutput);
+            completorOutput = (Map<String, List<jline.Completion>>) copyMap(completorOutput);
             shell.clearEvents();
             return new Object[] { commandOutput, completorOutput, presentationStr, errStr };
         }

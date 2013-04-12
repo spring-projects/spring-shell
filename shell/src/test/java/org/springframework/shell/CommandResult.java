@@ -28,17 +28,19 @@ public class CommandResult {
 
     private final String outputText;
     private final Map<String, Object> commandOutput;
-    @SuppressWarnings("rawtypes")
-    private final Map<String, List> completorOutput;
+    private final Map<String, List<jline.Completion>> completorOutput;
     private final boolean errors;
 
     @SuppressWarnings("rawtypes")
     public CommandResult(String outputText, Map<String, Object> commandOutput,
-                         Map<String, List> completorOutput,
+                         Map<String, List<jline.Completion>> completorOutput,
                          boolean errors) {
         this.outputText = outputText;
+        
+        // copying so if values change/clear during processing this result is indepenent
         this.commandOutput = new HashMap<String, Object>(commandOutput);
-        this.completorOutput = new HashMap<String, List>(completorOutput);
+        this.completorOutput = new HashMap<String, List<jline.Completion>>(completorOutput);
+        
         this.errors = errors;
     }
 
@@ -60,7 +62,7 @@ public class CommandResult {
      * Gets completor output <code>Map</code>.
      */
     @SuppressWarnings("rawtypes")
-    public Map<String, List> getCompletorOutput() {
+    public Map<String, List<jline.Completion>> getCompletorOutput() {
         return completorOutput;
     }
 

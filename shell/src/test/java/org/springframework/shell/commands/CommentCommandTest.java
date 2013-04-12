@@ -47,7 +47,7 @@ public class CommentCommandTest extends AbstractDefaultShellTest {
         assertNotNull("Output text for '" + command + "' command shouldn't be null.", outputText);
         assertTrue(outputText.contains(command));
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
     
 }

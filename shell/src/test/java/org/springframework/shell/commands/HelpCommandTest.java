@@ -49,7 +49,7 @@ public class HelpCommandTest extends AbstractDefaultShellTest {
         
         // FIXME: commandOutput result is 'VOID', where is result
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
     
 }

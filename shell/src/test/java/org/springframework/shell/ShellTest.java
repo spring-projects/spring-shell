@@ -38,7 +38,7 @@ public class ShellTest extends AbstractDefaultShellTest {
 
 	    assertEquals("Expected " + expectedCompletionCount +" default completions.", expectedCompletionCount, cr.getCompletorOutput().get("").size());
 	    
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
 	
 }

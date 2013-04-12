@@ -15,9 +15,14 @@
  */
 package org.springframework.shell.custom.commands;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.shell.commands.CustomCommandConstants.REVERSE_STRING_COMMAND;
+
+import java.util.List;
+
+import jline.Completion;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -44,12 +49,12 @@ public class ReverseStringCommandTest extends AbstractCustomShellTest {
         
         String result = (String) cr.getCommandOutput().get(command);
         
-        assertNotNull("Output text for '" + command + "' command shouldn't be null.", result);
+        assertNotNull("Result for '" + command + "' command shouldn't be null.", result);
 
         String reversedValue = new StringBuilder(value).reverse().toString();
         assertTrue(reversedValue.equals(result));
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
 
     @Test
@@ -60,5 +65,26 @@ public class ReverseStringCommandTest extends AbstractCustomShellTest {
         
         assertTrue("Command should have error, required param missing.", cr.hasErrors());
     }
-    
+
+    @Test
+    public void testAutocomplete() {
+        String command = REVERSE_STRING_COMMAND + " --v";
+        
+        CommandResult cr = shell.exec(command + TAB);
+        
+        int expectedSize = 1;
+        List<Completion> completions = cr.getCompletorOutput().get(command);
+        assertEquals("Expected one completion.", expectedSize, completions.size());
+        
+        Completion completion = completions.get(0);
+
+        assertNotNull("Completion shouldn't be null.", completion);
+        
+        verifyFailure(cr);
+        
+        String expectedCompletion = REVERSE_STRING_COMMAND + " --value ";
+        assertEquals(expectedCompletion, completion.getFormattedValue());
+        
+    }
+
 }

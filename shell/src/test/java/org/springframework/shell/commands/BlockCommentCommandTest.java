@@ -41,7 +41,7 @@ public class BlockCommentCommandTest extends AbstractDefaultShellTest {
         
         CommandResult cr = shell.exec(command);
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class BlockCommentCommandTest extends AbstractDefaultShellTest {
         
         CommandResult cr = shell.exec(BLOCK_COMMENT_END_COMMAND);
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class BlockCommentCommandTest extends AbstractDefaultShellTest {
         
         CommandResult cr = shell.exec(command);
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class BlockCommentCommandTest extends AbstractDefaultShellTest {
         
         CommandResult cr = shell.exec(BLOCK_COMMENT_END_COMMAND);
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
     
     private void execComments() {

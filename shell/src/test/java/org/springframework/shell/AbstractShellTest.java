@@ -17,6 +17,7 @@ package org.springframework.shell;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.shell.core.CommandConstants.DATE_COMMAND;
 
 import java.text.DateFormat;
@@ -46,6 +47,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public abstract class AbstractShellTest {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    protected final static String TAB = "\t";
     
     protected final static String PATTERN = "E, MMM d, yyyy h:mm:ss a zzz";
     
@@ -79,10 +82,17 @@ public abstract class AbstractShellTest {
 	}
 
 	/**
+	 * Check is the command doesn't have any errors.
+	 */
+	protected void verifySuccess(CommandResult cr) {
+	    assertFalse("Command has errors.", cr.hasErrors());
+	}
+
+	/**
 	 * Check is the command has any errors.
 	 */
-	protected void verifyCommandStatus(CommandResult cr) {
-	    assertFalse("Command has errors.", cr.hasErrors());
+	protected void verifyFailure(CommandResult cr) {
+	    assertTrue("Command doesn't have errors.", cr.hasErrors());
 	}
 	
 	/**

@@ -55,7 +55,7 @@ public class SystemPropertiesCommandTest extends AbstractDefaultShellTest {
             assertTrue("Expected '" + key + "' to be available in '" + command + "' output.", result.contains(key));
         }
         
-        verifyCommandStatus(cr);
+        verifySuccess(cr);
     }
     
 }
