@@ -7,5 +7,5 @@ target/
 /log.roo
 
 /bin/
-*.log
+/foo/*.log
 .DS_Store
