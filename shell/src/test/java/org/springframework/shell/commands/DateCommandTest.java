@@ -27,7 +27,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.shell.AbstractShellTest;
+import org.springframework.shell.AbstractDefaultShellTest;
 import org.springframework.shell.CommandResult;
 
 
@@ -36,7 +36,7 @@ import org.springframework.shell.CommandResult;
  * 
  * @author David Winterfeldt
  */
-public class DateCommandTest extends AbstractShellTest {
+public class DateCommandTest extends AbstractDefaultShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -61,6 +61,8 @@ public class DateCommandTest extends AbstractShellTest {
         logger.info("shell date='{}'", shellDate);
         
         assertTrue("Shell date should be before date test was started.", now.before(shellDate));
+        
+        verifyCommandStatus(cr);
     }
     
 }

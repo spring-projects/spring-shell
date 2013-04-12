@@ -13,50 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.commands;
+package org.springframework.shell.custom.commands;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.shell.core.CommandConstants.SYSTEM_COMMAND;
+import static org.springframework.test.shell.commands.CustomCommandConstants.REVERSE_STRING_COMMAND;
 
-import org.apache.commons.lang.SystemUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.shell.AbstractDefaultShellTest;
 import org.springframework.shell.CommandResult;
+import org.springframework.shell.custom.AbstractCustomShellTest;
 
 
 /**
- * System command test.
+ * Reverse <code>String</code> command test.
  * 
  * @author David Winterfeldt
  */
-public class SystemCommandTest extends AbstractDefaultShellTest {
+public class ReverseStringCommandTest extends AbstractCustomShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
-    public void testSystemCommand() {
-        String command = SYSTEM_COMMAND + " ";
+    public void testReverseCommand() {
+        String value ="Reversable String!";
+        String command = REVERSE_STRING_COMMAND + " --value \"" + value + "\"";
         
-        if (SystemUtils.IS_OS_WINDOWS) {
-            command += "dir";
-        } else {
-            command += "ls";
-        }
-
         CommandResult cr = shell.exec(command);
         
-        String outputText = cr.getOutputText();
-
-        // no real operation, just check that the command was processed in the shell
-        assertNotNull("Output text for '" + command + "' command shouldn't be null.", outputText);
-        assertTrue(outputText.contains(command));
+        String result = (String) cr.getCommandOutput().get(command);
         
-        // FIXME: commandOutput result is 'VOID', where is result
+        assertNotNull("Output text for '" + command + "' command shouldn't be null.", result);
+
+        String reversedValue = new StringBuilder(value).reverse().toString();
+        assertTrue(reversedValue.equals(result));
         
         verifyCommandStatus(cr);
+    }
+
+    @Test
+    public void testRequiredFailureCommand() {
+        String command = REVERSE_STRING_COMMAND;
+        
+        CommandResult cr = shell.exec(command);
+        
+        assertTrue("Command should have error, required param missing.", cr.hasErrors());
     }
     
 }

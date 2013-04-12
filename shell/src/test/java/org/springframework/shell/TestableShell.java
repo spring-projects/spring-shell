@@ -184,15 +184,16 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
         Map<String, Object> commandOutput = getCommandOutput();
         @SuppressWarnings("rawtypes")
         Map<String, List> completorOutput = getCompletorOutput();
+        boolean errors = hasError();
 
-        if (hasError()) {
+        if (errors) {
             logger.info("Command failed with error " + getError());
         } else {
             logger.info("Executed '{}'.  completorOutput='{}'  outputText='{}'  commandOutput='{}'", 
                         new Object[] { command, completorOutput, outputText, commandOutput });
         }
         
-        return new CommandResult(outputText, commandOutput, completorOutput);
+        return new CommandResult(outputText, commandOutput, completorOutput, errors);
     }
     
     protected void addError(String string, Exception e) {

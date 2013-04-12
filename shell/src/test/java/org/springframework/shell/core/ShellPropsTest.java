@@ -30,7 +30,7 @@ import org.springframework.shell.core.AbstractShell;
  * @author Andrew Swan
  * @since 1.2.0
  */
-public class AbstractShellTest {
+public class ShellPropsTest {
 
 	@Test
 	public void testProps() {

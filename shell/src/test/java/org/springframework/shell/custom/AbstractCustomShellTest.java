@@ -13,32 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell;
+package org.springframework.shell.custom;
 
-import static org.junit.Assert.assertEquals;
+import org.springframework.shell.AbstractShellTest;
+import org.springframework.test.context.ContextConfiguration;
 
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Basic shell test.
+ * Abstract shell test for custom shell configuration.
  * 
  * @author David Winterfeldt
  */
-public class ShellTest extends AbstractDefaultShellTest {
+@ContextConfiguration({ "classpath:/custom-shell-path-test-context.xml" })
+public abstract class AbstractCustomShellTest extends AbstractShellTest {
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Test
-	public void testShell() {
-        int expectedCompletionCount = 10;
-        
-	    CommandResult cr = shell.exec("\t");
-
-	    assertEquals("Expected " + expectedCompletionCount +" default completions.", expectedCompletionCount, cr.getCompletorOutput().get("").size());
-	    
-        verifyCommandStatus(cr);
-    }
-	
 }

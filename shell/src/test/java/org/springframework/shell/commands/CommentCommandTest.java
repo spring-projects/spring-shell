@@ -22,7 +22,7 @@ import static org.springframework.shell.core.CommandConstants.INLINE_COMMENT_COM
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.shell.AbstractShellTest;
+import org.springframework.shell.AbstractDefaultShellTest;
 import org.springframework.shell.CommandResult;
 
 
@@ -31,7 +31,7 @@ import org.springframework.shell.CommandResult;
  * 
  * @author David Winterfeldt
  */
-public class CommentCommandTest extends AbstractShellTest {
+public class CommentCommandTest extends AbstractDefaultShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -47,7 +47,7 @@ public class CommentCommandTest extends AbstractShellTest {
         assertNotNull("Output text for '" + command + "' command shouldn't be null.", outputText);
         assertTrue(outputText.contains(command));
         
-        verifyShellOperational();
+        verifyCommandStatus(cr);
     }
     
 }

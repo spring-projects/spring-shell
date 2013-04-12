@@ -15,12 +15,14 @@
  */
 package org.springframework.shell;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.shell.core.CommandConstants.DATE_COMMAND;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,8 +35,9 @@ import org.springframework.shell.lang.ShellException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+
 /**
- * Abstract shell test.
+ * Abstract shell test for shell configuration.
  * 
  * @author David Winterfeldt
  */
@@ -70,16 +73,27 @@ public abstract class AbstractShellTest {
      */
 	@After
 	public void reset() {
+	    verifyShellOperational();
+	    
 	    shell.clear();
 	}
 
 	/**
+	 * Check is the command has any errors.
+	 */
+	protected void verifyCommandStatus(CommandResult cr) {
+	    assertFalse("Command has errors.", cr.hasErrors());
+	}
+	
+	/**
 	 * Run a command just to verify the shell is still operational after other tests.
 	 */
 	protected void verifyShellOperational() {
-        CommandResult cr = shell.exec(DATE_COMMAND);
+	    // create unique command to look up (UUID after command ignored in processing)
+	    String command = DATE_COMMAND + " " + UUID.randomUUID();
+        CommandResult cr = shell.exec(command);
         
-        String result = (String) cr.getCommandOutput().get(DATE_COMMAND);
+        String result = (String) cr.getCommandOutput().get(command);
         
         assertNotNull("Output for 'date' command shouldn't be null.", result);	    
 

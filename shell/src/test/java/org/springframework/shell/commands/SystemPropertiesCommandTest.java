@@ -22,7 +22,7 @@ import static org.springframework.shell.core.CommandConstants.SYSTEM_PROPS_COMMA
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.shell.AbstractShellTest;
+import org.springframework.shell.AbstractDefaultShellTest;
 import org.springframework.shell.CommandResult;
 
 
@@ -31,7 +31,7 @@ import org.springframework.shell.CommandResult;
  * 
  * @author David Winterfeldt
  */
-public class SystemPropertiesCommandTest extends AbstractShellTest {
+public class SystemPropertiesCommandTest extends AbstractDefaultShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,7 +55,7 @@ public class SystemPropertiesCommandTest extends AbstractShellTest {
             assertTrue("Expected '" + key + "' to be available in '" + command + "' output.", result.contains(key));
         }
         
-        verifyShellOperational();
+        verifyCommandStatus(cr);
     }
     
 }

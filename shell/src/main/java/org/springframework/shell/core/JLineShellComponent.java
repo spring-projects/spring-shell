@@ -104,7 +104,7 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	public int getPhase() {
 		return 1;
 	}
-	
+
 	public void start() {
 		//customizePlug must run before start thread to take plugin's configuration into effect
 		customizePlugin();
@@ -112,7 +112,6 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		shellThread.start();
 		running = true;
 	}
-
 
 	public void stop() {
 		if (running) {

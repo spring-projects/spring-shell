@@ -15,30 +15,15 @@
  */
 package org.springframework.shell;
 
-import static org.junit.Assert.assertEquals;
+import org.springframework.test.context.ContextConfiguration;
 
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Basic shell test.
+ * Abstract shell test for default shell configuration.
  * 
  * @author David Winterfeldt
  */
-public class ShellTest extends AbstractDefaultShellTest {
+@ContextConfiguration({ "classpath:/shell-path-test-context.xml" })
+public abstract class AbstractDefaultShellTest extends AbstractShellTest {
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Test
-	public void testShell() {
-        int expectedCompletionCount = 10;
-        
-	    CommandResult cr = shell.exec("\t");
-
-	    assertEquals("Expected " + expectedCompletionCount +" default completions.", expectedCompletionCount, cr.getCompletorOutput().get("").size());
-	    
-        verifyCommandStatus(cr);
-    }
-	
 }

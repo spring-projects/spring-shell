@@ -22,7 +22,7 @@ import static org.springframework.shell.core.CommandConstants.HELP_COMMAND;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.shell.AbstractShellTest;
+import org.springframework.shell.AbstractDefaultShellTest;
 import org.springframework.shell.CommandResult;
 
 
@@ -31,7 +31,7 @@ import org.springframework.shell.CommandResult;
  * 
  * @author David Winterfeldt
  */
-public class HelpCommandTest extends AbstractShellTest {
+public class HelpCommandTest extends AbstractDefaultShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -49,7 +49,7 @@ public class HelpCommandTest extends AbstractShellTest {
         
         // FIXME: commandOutput result is 'VOID', where is result
         
-        verifyShellOperational();
+        verifyCommandStatus(cr);
     }
     
 }

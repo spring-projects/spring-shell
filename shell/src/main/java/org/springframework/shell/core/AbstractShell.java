@@ -347,9 +347,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	@CliCommand(value = { DATE_COMMAND }, help = "Displays the local date and time")
 	public String date() {
-		return DateFormat.getDateTimeInstance(
-				DateFormat.FULL, DateFormat.FULL,Locale.US)
-				.format(new Date());
+		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,Locale.US).format(new Date());
 	}
 
 	public String versionInfo(){

@@ -30,13 +30,16 @@ public class CommandResult {
     private final Map<String, Object> commandOutput;
     @SuppressWarnings("rawtypes")
     private final Map<String, List> completorOutput;
+    private final boolean errors;
 
     @SuppressWarnings("rawtypes")
     public CommandResult(String outputText, Map<String, Object> commandOutput,
-                         Map<String, List> completorOutput) {
+                         Map<String, List> completorOutput,
+                         boolean errors) {
         this.outputText = outputText;
         this.commandOutput = new HashMap<String, Object>(commandOutput);
         this.completorOutput = new HashMap<String, List>(completorOutput);
+        this.errors = errors;
     }
 
     /**
@@ -61,4 +64,11 @@ public class CommandResult {
         return completorOutput;
     }
 
+    /**
+     * Whether or not the command has any errors. 
+     */
+    public boolean hasErrors() {
+        return errors;
+    }
+    
 }

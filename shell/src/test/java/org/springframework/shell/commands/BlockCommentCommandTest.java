@@ -22,7 +22,8 @@ import static org.springframework.shell.core.CommandConstants.BLOCK_COMMENT_END_
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.shell.AbstractShellTest;
+import org.springframework.shell.AbstractDefaultShellTest;
+import org.springframework.shell.CommandResult;
 
 
 /**
@@ -30,7 +31,7 @@ import org.springframework.shell.AbstractShellTest;
  * 
  * @author David Winterfeldt
  */
-public class BlockCommentCommandTest extends AbstractShellTest {
+public class BlockCommentCommandTest extends AbstractDefaultShellTest {
     
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,9 +39,9 @@ public class BlockCommentCommandTest extends AbstractShellTest {
     public void testBlockComment01SingleCommand() {
         String command = BLOCK_COMMENT_BEGIN01_COMMAND + " testing 1..2..3 " + BLOCK_COMMENT_END_COMMAND; 
         
-        shell.exec(command);
+        CommandResult cr = shell.exec(command);
         
-        verifyShellOperational();
+        verifyCommandStatus(cr);
     }
 
     @Test
@@ -49,18 +50,18 @@ public class BlockCommentCommandTest extends AbstractShellTest {
         
         execComments();
         
-        shell.exec(BLOCK_COMMENT_END_COMMAND);
+        CommandResult cr = shell.exec(BLOCK_COMMENT_END_COMMAND);
         
-        verifyShellOperational();
+        verifyCommandStatus(cr);
     }
 
     @Test
     public void testBlockComment02SingleCommand() {
         String command = BLOCK_COMMENT_BEGIN02_COMMAND + " testing 1..2..3 " + BLOCK_COMMENT_END_COMMAND; 
         
-        shell.exec(command);
+        CommandResult cr = shell.exec(command);
         
-        verifyShellOperational();
+        verifyCommandStatus(cr);
     }
 
     @Test
@@ -69,9 +70,9 @@ public class BlockCommentCommandTest extends AbstractShellTest {
         
         execComments();
         
-        shell.exec(BLOCK_COMMENT_END_COMMAND);
+        CommandResult cr = shell.exec(BLOCK_COMMENT_END_COMMAND);
         
-        verifyShellOperational();
+        verifyCommandStatus(cr);
     }
     
     private void execComments() {
