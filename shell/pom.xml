@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.shell</groupId>
         <artifactId>spring-shell-parent</artifactId>
-        <version>2.0.0.M1.1</version>
+        <version>2.0.0.M2</version>
     </parent>
     
     <artifactId>spring-shell</artifactId>
@@ -59,18 +59,44 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>attach-sources</id>
                         <goals>
+                            <goal>jar</goal>
                             <goal>test-jar</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<id>spring-shell-test-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+						<configuration>
+							<classifier>tests</classifier>
+							<includes>
+                                <include>shell-test-context.xml</include>
+                                <include>jline-shell-test-context.xml</include>
+                                <include>jline/*</include>
+                                <include>org/springframework/shell/*</include>
+                                <include>org/springframework/shell/custom/*</include>
+							</includes>
+                            <excludes>
+                                <exclude>org/springframework/shell/BootstrapTest.class</exclude>
+                                <exclude>org/springframework/shell/ShellTest.class</exclude>
+                            </excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
     </build>
     
