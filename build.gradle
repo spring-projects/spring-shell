@@ -11,6 +11,8 @@ description = 'Spring Shell'
 group = 'org.springframework.shell'
 
 repositories {
+  mavenLocal()
+  mavenCentral()
   maven { url "http://repo.springsource.org/libs-snapshot" }
   maven { url "http://repo.springsource.org/plugins-release" }
   maven { url "http://spring-roo-repository.springsource.org/release" }
