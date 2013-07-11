@@ -292,6 +292,12 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>springbyexample.org</id>
+            <name>Spring by Example</name>
+            <url>http://www.springbyexample.org/maven/repo</url>
+        </repository>
+
     	<repository>
     		<id>ext-release-local</id>
     		<url>http://repo.springsource.org/simple/ext-release-local</url>

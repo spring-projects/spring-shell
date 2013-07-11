@@ -9,13 +9,14 @@
                            http://www.springframework.org/schema/util 
                            http://www.springframework.org/schema/util/spring-util.xsd">
 
+    <!-- some tests using the shell test framework may need access to internal ApplicationContext -->
+    <bean id="bootstrap" class="org.springframework.shell.Bootstrap">
+        <constructor-arg ref="bootstrapContextPaths" />
+        <constructor-arg><value>false</value></constructor-arg>
+    </bean>        
+
     <bean id="shell" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject">
-            <bean class="org.springframework.shell.Bootstrap">
-                <constructor-arg ref="bootstrapContextPaths" />
-                <constructor-arg><value>false</value></constructor-arg>
-            </bean>        
-        </property>
+        <property name="targetObject" ref="bootstrap" />
         <property name="targetMethod">
             <value>getShell</value>
         </property>

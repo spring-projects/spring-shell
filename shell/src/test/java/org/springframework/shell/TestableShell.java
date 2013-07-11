@@ -111,11 +111,11 @@ public class TestableShell extends JLineShellComponent implements ShellEvent {
                 try {
                     result = oldParser.parse(buffer);
                 } catch (Exception e) {
-                    String reason = e.getMessage() != null ? " Reason: " + e.getMessage() + " Exception: "
-                            + String.valueOf(e) : " Exception: " + String.valueOf(e);
-                    addError(
-                            "Parsing failed...." + reason + " buffer returned by EIS "
-                                    + eis.getBufferFormdAfterReading(), e);
+                    String reason = e.getMessage() != null ? " Reason: " + e.getMessage() + 
+                                                             " Exception: " + String.valueOf(e) : " Exception: " + String.valueOf(e);
+                    
+                    addError("Parsing failed...." + reason + " buffer returned by EIS " + eis.getBufferFormdAfterReading(), e);
+                    
                     return null;
                 }
                 
