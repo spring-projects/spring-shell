@@ -37,6 +37,7 @@ import org.springframework.util.StopWatch;
  * 
  * @author Ben Alex (original Roo code)
  * @author Mark Pollack 
+ * @author David Winterfeldt
  *
  */
 public class Bootstrap {
