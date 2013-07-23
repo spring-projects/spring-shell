@@ -145,7 +145,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 		String rooArgs = System.getProperty("roo.args");
 		if (rooArgs != null && !"".equals(rooArgs)) {
 			setShellStatus(Status.USER_INPUT);
-			boolean success = executeCommand(rooArgs);
+			boolean success = executeCommand(rooArgs).isSuccess();
 			if (exitShellRequest == null) {
 				// The command itself did not specify an exit shell code, so we'll fall back to something sensible here
 				executeCommand("quit"); // ROO-839

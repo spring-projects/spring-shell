@@ -39,6 +39,7 @@ dependencies {
     // Testing
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "uk.co.modular-it:hamcrest-date:$hamcrestDateVersion"
 }
 
 sourceCompatibility = 1.5

@@ -160,10 +160,10 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 	 * This method can be overridden by sub-classes to pre-process script lines.
 	 */
 	protected boolean executeScriptLine(final String line) {
-		return executeCommand(line);
+		return executeCommand(line).isSuccess();
 	}
 
-	public boolean executeCommand(String line) {
+	public CommandResult executeCommand(String line) {
 		// Another command was attempted
 		setShellStatus(ShellStatus.Status.PARSING);
 
@@ -198,7 +198,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			}
 			if (inBlockComment) {
 				if (!line.contains("*/")) {
-					return true;
+					return new CommandResult(true);
 				}
 				blockCommentFinish();
 				line = line.substring(line.lastIndexOf("*/") + 2);
@@ -212,11 +212,11 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			line = line.replace('\t', ' ');
 			if ("".equals(line.trim())) {
 				setShellStatus(Status.EXECUTION_SUCCESS);
-				return true;
+				return new CommandResult(true);
 			}
 			parseResult = getParser().parse(line);
 			if (parseResult == null) {
-				return false;
+				return new CommandResult(false);
 			}
 
 			setShellStatus(Status.EXECUTING);
@@ -234,14 +234,14 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 			logCommandIfRequired(line, true);
 			setShellStatus(Status.EXECUTION_SUCCESS, line, parseResult);
-			return true;
+			return new CommandResult(true, result, null);
 		} catch (RuntimeException e) {
 			setShellStatus(Status.EXECUTION_FAILED, line, parseResult);
 			// We rely on execution strategy to log it
 			try {
 				logCommandIfRequired(line, false);
 			} catch (Exception ignored) {}
-			return false;
+			return new CommandResult(false, null, e);
 		} finally {
 			setShellStatus(Status.USER_INPUT);
 		}
@@ -340,8 +340,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	@CliCommand(value = { "date" }, help = "Displays the local date and time")
 	public String date() {
-		return DateFormat.getDateTimeInstance(
-				DateFormat.FULL, DateFormat.FULL,Locale.US)
+		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,Locale.US)
 				.format(new Date());
 	}
 

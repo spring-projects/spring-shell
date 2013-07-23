@@ -66,6 +66,10 @@ public class Bootstrap {
 		System.exit(exitShellRequest.getExitCode());
 	}
 
+	public Bootstrap() {
+		this(null, CONTEXT_PATH);
+	}
+	
 	public Bootstrap(String[] args) throws IOException {	
 		this(args, CONTEXT_PATH);
 	}
@@ -150,7 +154,7 @@ public class Bootstrap {
 	}
 
 
-	protected ExitShellRequest run() {
+	public ExitShellRequest run() {
 
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		// The shell is used 
@@ -162,7 +166,7 @@ public class Bootstrap {
 			exitShellRequest = ExitShellRequest.FATAL_EXIT;
 
 			for (String cmd : commandsToExecuteAndThenQuit) {
-				successful = shell.executeCommand(cmd);
+				successful = shell.executeCommand(cmd).isSuccess();
 				if (!successful)
 					break;
 			}
@@ -191,7 +195,7 @@ public class Bootstrap {
 		return exitShellRequest;
 	}
 	
-	JLineShellComponent getJLineShellComponent() {
+	public JLineShellComponent getJLineShellComponent() {
 		return ctx.getBean("shell", JLineShellComponent.class);
 	}
 }

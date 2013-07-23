@@ -58,7 +58,7 @@ public interface Shell extends ShellStatusProvider, ShellPromptAccessor {
 	 * @param line to execute (required)
 	 * @return true if the command was successful, false if there was an exception
 	 */
-	boolean executeCommand(String line);
+	CommandResult executeCommand(String line);
 
 	/**
 	 * Indicates the shell should switch into a lower-level development mode. The exact meaning varies by
