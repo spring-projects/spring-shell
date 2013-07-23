@@ -48,10 +48,10 @@ public class DefaultBannerProvider implements BannerProvider {
 	}
 
 	public String getWelcomeMessage() {
-		return "Welcome to " + name() + ". For assistance press or type \"hint\" then hit ENTER.";
+		return "Welcome to " + getProviderName() + ". For assistance press or type \"hint\" then hit ENTER.";
 	}
 
-	public String name() {
+	public String getProviderName() {
 		return "Spring Shell";
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2013 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.plugin;
+package org.springframework.shell;
 
 
 /**
- * Shell prompt provider.
- * Plugins should implement this interface to customize prompt.
- * <code>getOrder</code> indicate the priority, higher values can be interpreted as lower priority
+ * Shell exception.
  * 
- * @author Jarred Li
- *
+ * @author David Wintefeldt
  */
-public interface PromptProvider extends NamedProvider {
+public class ShellException extends RuntimeException {
 
-	/**
-	 * Returns the prompt text.
-	 * 
-	 * @return prompt
-	 */
-	String getPrompt();
+    private static final long serialVersionUID = 1123895874463364743L;
+    
+    public ShellException() {}
+    
+    public ShellException(String message) {
+        super(message);
+    }
+
+    public ShellException(Throwable t) {
+        super(t);
+    }
+
+    public ShellException(String message, Throwable t) {
+        super(message, t);
+    }
+
 }

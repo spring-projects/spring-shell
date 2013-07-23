@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -36,8 +38,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.shell.CommandLine;
 import org.springframework.shell.plugin.BannerProvider;
 import org.springframework.shell.plugin.HistoryFileNameProvider;
-import org.springframework.shell.plugin.PluginProvider;
+import org.springframework.shell.plugin.NamedProvider;
 import org.springframework.shell.plugin.PromptProvider;
+import org.springframework.shell.support.logging.HandlerUtils;
 
 /**
  * Launcher for {@link JLineShell}.
@@ -187,7 +190,9 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	 * @return history file name 
 	 */
 	protected String getHistoryFileName() {
-		String providerHistoryFileName = getHighestPriorityProvider(HistoryFileNameProvider.class).getHistoryFileName();
+		HistoryFileNameProvider historyFileNameProvider = getHighestPriorityProvider(HistoryFileNameProvider.class);
+		this.logger.log(Level.FINE, "Using HistoryFileName Provider Class " + historyFileNameProvider.getClass());
+		String providerHistoryFileName = historyFileNameProvider.getHistoryFileName();
 		if (providerHistoryFileName != null) {
 			return providerHistoryFileName;
 		} else {
@@ -202,7 +207,9 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	 * @return prompt text
 	 */
 	protected String getPromptText() {
-		String providerPromptText = getHighestPriorityProvider(PromptProvider.class).getPrompt();
+		PromptProvider promptProvider = getHighestPriorityProvider(PromptProvider.class);
+		this.logger.log(Level.FINE, "Using Prompt Provider Class " + promptProvider.getClass());
+		String providerPromptText = promptProvider.getPrompt();
 		if (providerPromptText != null) {
 			return providerPromptText;
 		} else {
@@ -221,15 +228,16 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	private String[] getBannerText() {
 		String[] bannerText = new String[4];
 		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
+		this.logger.log(Level.FINE, "Using BannerProvider class " + provider.getClass());
 		bannerText[0] = provider.getBanner();
 		bannerText[1] = provider.getWelcomeMessage();
 		bannerText[2] = provider.getVersion();
-		bannerText[3] = provider.name();
+		bannerText[3] = provider.getProviderName();
 		return bannerText;
 	}
 
 
-	private <T extends PluginProvider> T getHighestPriorityProvider(Class<T> t) {
+	private <T extends NamedProvider> T getHighestPriorityProvider(Class<T> t) {
 		Map<String, T> providers = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.applicationContext, t);
 		List<T> sortedProviders = new ArrayList<T>(providers.values());
 		Collections.sort(sortedProviders, annotationOrderComparator);

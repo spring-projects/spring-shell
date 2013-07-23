@@ -34,7 +34,7 @@ public class DefaultHistoryFileNameProvider implements HistoryFileNameProvider {
 		return "spring-shell.log";
 	}
 
-	public String name() {
+	public String getProviderName() {
 		return "default history provider";
 	}
 }

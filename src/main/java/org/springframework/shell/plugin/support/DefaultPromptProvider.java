@@ -34,7 +34,7 @@ public class DefaultPromptProvider implements PromptProvider {
 		return "spring-shell>";
 	}
 
-	public String name() {
+	public String getProviderName() {
 		return "default prompt provider";
 	}
 }

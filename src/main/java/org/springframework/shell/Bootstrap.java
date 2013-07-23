@@ -19,10 +19,13 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.shell.core.Shell;
@@ -38,10 +41,13 @@ import org.springframework.util.StopWatch;
  */
 public class Bootstrap {
 
+	private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
+	 
 	private static Bootstrap bootstrap;
-	private AnnotationConfigApplicationContext parentApplicationContext;
 	private static StopWatch sw = new StopWatch("Spring Shell");
 	private static CommandLine commandLine;
+	
+	private GenericApplicationContext ctx;
 		
 
 	public static void main(String[] args) throws IOException {
@@ -60,25 +66,34 @@ public class Bootstrap {
 	}
 
 	public Bootstrap(String[] args) throws IOException {	
-		commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
-	
-		parentApplicationContext = new AnnotationConfigApplicationContext();
-		configureParentApplicationContext(parentApplicationContext);		
-		
-		ConfigurableApplicationContext childPluginApplicationContext = createChildPluginApplicationContext(parentApplicationContext);			
-		
-		parentApplicationContext.refresh();
-		childPluginApplicationContext.refresh();
-		
+		this(args, CONTEXT_PATH);
 	}
 	
-	public AnnotationConfigApplicationContext getParentApplicationContext() {
-		return parentApplicationContext;
+	public Bootstrap(String[] args, String[] contextPath) {
+		try {
+			commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
+        } catch (IOException e) {
+            throw new ShellException(e.getMessage(), e);
+        }
+		
+		ctx = new GenericApplicationContext();
+		ctx.registerShutdownHook();
+		configureApplicationContext(ctx);		
+		//built-in commands and converters
+		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(ctx);
+		scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters", "org.springframework.shell.plugin.support");
+		//user contributed commands
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) ctx);
+		reader.loadBeanDefinitions(contextPath);
+		ctx.refresh();
+	}
+	
+	
+	public ApplicationContext getApplicationContext() {
+		return ctx;
 	}
 
-	private void configureParentApplicationContext(AnnotationConfigApplicationContext annctx) {
-		// create parent/base childPluginApplicationContext
-
+	private void configureApplicationContext(GenericApplicationContext annctx) {
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
 		createAndRegisterBeanDefinition(annctx,
 				org.springframework.shell.converters.AvailableCommandsConverter.class);
@@ -99,35 +114,21 @@ public class Bootstrap {
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
 		
 		annctx.getBeanFactory().registerSingleton("commandLine", commandLine);
-		annctx.scan("org.springframework.shell.commands");
-		annctx.scan("org.springframework.shell.converters");
-		annctx.scan("org.springframework.shell.plugin.support");
-
 	}
 
-	/**
-	 * Init plugin ApplicationContext
-	 * 
-	 * @param annctx parent ApplicationContext in core spring shell
-	 * @return new ApplicationContext in the plugin with core spring shell's context as parent
-	 */
-	private ConfigurableApplicationContext createChildPluginApplicationContext(AnnotationConfigApplicationContext annctx) {
-		return new ClassPathXmlApplicationContext(
-				new String[] { "classpath*:/META-INF/spring/spring-shell-plugin.xml" }, false, annctx);
-	}
-
-	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz) {
+	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class clazz) {
 		createAndRegisterBeanDefinition(annctx, clazz, null);
 	}
 
-	protected void createAndRegisterBeanDefinition(AnnotationConfigApplicationContext annctx, Class clazz, String name) {
+	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class clazz, String name) {
 		RootBeanDefinition rbd = new RootBeanDefinition();
 		rbd.setBeanClass(clazz);
+		DefaultListableBeanFactory bf = (DefaultListableBeanFactory)annctx.getBeanFactory();
 		if (name != null) {
-			annctx.registerBeanDefinition(name, rbd);
+			bf.registerBeanDefinition(name, rbd);
 		}
 		else {
-			annctx.registerBeanDefinition(clazz.getSimpleName(), rbd);
+			bf.registerBeanDefinition(clazz.getSimpleName(), rbd);
 		}
 	}
 
@@ -152,7 +153,7 @@ public class Bootstrap {
 
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		// The shell is used 
-		JLineShellComponent shell = parentApplicationContext.getBean("shell", JLineShellComponent.class);
+		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
 		ExitShellRequest exitShellRequest;
 
 		if (null != commandsToExecuteAndThenQuit) {
@@ -181,7 +182,7 @@ public class Bootstrap {
 			shell.waitForComplete();
 		}
 
-		parentApplicationContext.close();
+		ctx.close();
 		sw.stop();
 		if (shell.isDevelopmentMode()) {
 			System.out.println("Total execution time: " + sw.getLastTaskTimeMillis() + " ms");
@@ -190,6 +191,6 @@ public class Bootstrap {
 	}
 	
 	JLineShellComponent getJLineShellComponent() {
-		return parentApplicationContext.getBean("shell", JLineShellComponent.class);
+		return ctx.getBean("shell", JLineShellComponent.class);
 	}
 }

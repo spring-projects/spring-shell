@@ -25,7 +25,7 @@ package org.springframework.shell.plugin;
  * @since 1.0
  *
  */
-public interface HistoryFileNameProvider extends PluginProvider {
+public interface HistoryFileNameProvider extends NamedProvider {
 
 	/**
 	 * get history file name

@@ -54,7 +54,7 @@ public class MyBannerProvider extends DefaultBannerProvider
 	}
 	
 	@Override
-	public String name() {
-		return "helloworld";
+	public String getProviderName() {
+		return "Hello World Banner";
 	}
 }

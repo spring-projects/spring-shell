@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.plugin;
+package org.springframework.shell.samples.helloworld;
+
+import java.io.IOException;
+
+import org.springframework.shell.Bootstrap;
 
 /**
- * Generic plugin provider.
+ * Driver class to run the helloworld example. 
  * 
- * @author Jarred Li
+ * @author Mark Pollack
+ *
  */
-public interface PluginProvider {
+public class Main {
 
 	/**
-	 * Returns the name of the plugin.
-	 * 
-	 * @return
+	 * Main class that delegates to Spring Shell's Bootstrap class in order to simplify debugging inside an IDE
+	 * @param args
+	 * @throws IOException 
 	 */
-	String name();
+	public static void main(String[] args) throws IOException {
+		Bootstrap.main(args);
+
+	}
+
 }

@@ -28,15 +28,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class MyHistoryFileNameProvider extends DefaultHistoryFileNameProvider{
+public class MyHistoryFileNameProvider extends DefaultHistoryFileNameProvider {
 
 	public String getHistoryFileName() {
 		return "my.log";
 	}
 
 	@Override
-	public String name() {
-		return "my history file name provider";
+	public String getProviderName() {
+		return "My history file name provider";
 	}
 	
 }

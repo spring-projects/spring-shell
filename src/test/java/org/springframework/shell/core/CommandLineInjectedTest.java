@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.shell.Bootstrap;
 import org.springframework.shell.commands.test.OptionsInjectedDummyCommand;
 import org.springframework.shell.support.logging.HandlerUtils;
@@ -33,7 +33,7 @@ public class CommandLineInjectedTest {
 	public void commandLineInjected() throws IOException {
 		try {
 			Bootstrap bootstrap = new Bootstrap(null);
-			AnnotationConfigApplicationContext ctx = bootstrap.getParentApplicationContext();
+			ApplicationContext ctx = bootstrap.getApplicationContext();
 			OptionsInjectedDummyCommand dummyCommand = ctx.getBean(OptionsInjectedDummyCommand.class);
 			Assert.assertNotNull("commandLine was not injected into a command", dummyCommand.getCommandLine());
 		} catch (RuntimeException t) {

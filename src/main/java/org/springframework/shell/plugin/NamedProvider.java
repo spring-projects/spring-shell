@@ -15,38 +15,20 @@
  */
 package org.springframework.shell.plugin;
 
-
-
 /**
- * Banner provider. Plugins should implement this interface to replace the version banner.
- * Use the @Order annotation to specify the priority of the banner to be display, higher 
- * values can be interpreted as lower priority
+ * Returns the name of the provider.  Providers customize features of the shell such as the banner and command line prompt.
+ *  
  * 
  * @author Jarred Li
- * @since 1.0
- *
+ * @author Mark Pollack
+ * @see BannerProvider
+ * @see PromptProvider
+ * @see HistoryFileNameProvider
  */
-public interface BannerProvider extends NamedProvider {
+public interface NamedProvider {
 
 	/**
-	 * Returns the banner.
-	 * 
-	 * @return
+	 * Return the name of the provider.
 	 */
-	String getBanner();
-
-	/**
-	 * Returns the associated version.
-	 * 
-	 * @return
-	 */
-	String getVersion();
-
-	/**
-	 * Returns the welcome message.
-	 * 
-	 * @return
-	 */
-	String getWelcomeMessage();
-
+	String getProviderName();
 }
