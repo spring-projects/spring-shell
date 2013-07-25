@@ -25,8 +25,7 @@ import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Command type to allow execution of native OS commands from the Spring Roo
- * shell.
+ * Command type to allow execution of native OS commands from the Spring Shell.
  * 
  * @author Stefan Schmidt
  * @since 1.2.0

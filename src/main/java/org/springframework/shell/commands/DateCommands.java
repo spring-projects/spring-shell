@@ -15,17 +15,25 @@
  */
 package org.springframework.shell.commands;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.springframework.shell.core.CommandMarker;
-import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
 
+/**
+ * Commands related to the dates
+ *
+ */
 @Component
-public class EssentialCommands implements CommandMarker { 
+public class DateCommands implements CommandMarker { 
 	
-	@CliCommand(value={"exit", "quit"}, help="Exits the shell")
-	public ExitShellRequest quit() {
-		return ExitShellRequest.NORMAL_EXIT;
+	@CliCommand(value = { "date" }, help = "Displays the local date and time")
+	public String date() {
+		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,Locale.US)
+				.format(new Date());
 	}
 
 }
