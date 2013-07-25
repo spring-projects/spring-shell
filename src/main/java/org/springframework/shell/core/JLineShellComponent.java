@@ -191,7 +191,6 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	 */
 	protected String getHistoryFileName() {
 		HistoryFileNameProvider historyFileNameProvider = getHighestPriorityProvider(HistoryFileNameProvider.class);
-		this.logger.log(Level.FINE, "Using HistoryFileName Provider Class " + historyFileNameProvider.getClass());
 		String providerHistoryFileName = historyFileNameProvider.getHistoryFileName();
 		if (providerHistoryFileName != null) {
 			return providerHistoryFileName;
@@ -208,7 +207,6 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	 */
 	protected String getPromptText() {
 		PromptProvider promptProvider = getHighestPriorityProvider(PromptProvider.class);
-		this.logger.log(Level.FINE, "Using Prompt Provider Class " + promptProvider.getClass());
 		String providerPromptText = promptProvider.getPrompt();
 		if (providerPromptText != null) {
 			return providerPromptText;
@@ -228,7 +226,6 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	private String[] getBannerText() {
 		String[] bannerText = new String[4];
 		BannerProvider provider = getHighestPriorityProvider(BannerProvider.class);
-		this.logger.log(Level.FINE, "Using BannerProvider class " + provider.getClass());
 		bannerText[0] = provider.getBanner();
 		bannerText[1] = provider.getWelcomeMessage();
 		bannerText[2] = provider.getVersion();

@@ -7,10 +7,12 @@ apply plugin: 'application'
 repositories {
 	maven { url "http://repo.springsource.org/libs-release" }
 	mavenLocal()
+	mavenCentral()
 }
 
 dependencies {
 	compile "org.springframework.shell:spring-shell:$springShellVersion"
+	testCompile "junit:junit:$junitVersion"
 	runtime "log4j:log4j:$log4jVersion"
 }
 
