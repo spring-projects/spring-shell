@@ -87,7 +87,7 @@ public class HelloWorldCommands implements CommandMarker {
       </listitem>
 
       <listitem>
-        <para><classname>CliOptions</classname> - Placed on the arguments of a
+        <para><classname>CliOption</classname> - Placed on the arguments of a
         command method, allowing it to declare the argument value as mandatory
         or optional with a default value.</para>
       </listitem>

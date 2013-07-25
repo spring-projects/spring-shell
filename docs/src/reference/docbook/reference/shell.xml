@@ -184,8 +184,10 @@ public class HelloWorldCommands implements CommandMarker {
     </itemizedlist>
 
     <para>There is a default implementation for these interfaces but you
-    should create your own implementations for your own shell application. Use
-    Spring's <literal>@Ordered</literal> annotation to set the priority of the
+    should create your own implementations for your own shell application.
+    All of these interfaces extend from 
+    <interfacename>NamedProvider</interfacename>.  Use
+    Spring's <literal>@Order</literal> annotation to set the priority of the
     provider. This allows your provider implementations to take precedence
     over any other implementations that maybe present on the classpath from
     other plugins.</para>
