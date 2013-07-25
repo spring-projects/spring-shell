@@ -148,16 +148,16 @@ public class HelloWorldCommands implements CommandMarker {
         <para><classname>SystemPropertyCommands</classname> - <literal>system properties</literal>- shows the shell's system properties</para>
       </listitem>
 
+      <listitem>
+        <para><classname>VersionCommands</classname> - <literal>version</literal>- shows the shell's version</para>
+      </listitem>
+
     </itemizedlist>
 
-    <para>There are also a few commands that are provided by the
-    <classname>AbstractShell</classname> class, these are</para>
+    <para>There are two commands in provided by the
+    <classname>AbstractShell</classname> class related to useage of block comments</para>
 
     <itemizedlist>
-      <listitem>
-        <para><literal>script</literal> - Parses the specified resource file
-        and executes its commands</para>
-      </listitem>
 
       <listitem>
         <para><literal>/*</literal> and <literal>*/</literal>- The begin and end characters for block comments</para>

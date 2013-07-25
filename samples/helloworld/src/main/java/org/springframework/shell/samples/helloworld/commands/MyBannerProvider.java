@@ -29,10 +29,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class MyBannerProvider extends DefaultBannerProvider 
-				implements CommandMarker {
+public class MyBannerProvider extends DefaultBannerProvider  {
 
-	@CliCommand(value = { "version" }, help = "Displays current CLI version")
 	public String getBanner() {
 		StringBuffer buf = new StringBuffer();
 		buf.append("=======================================" + OsUtils.LINE_SEPARATOR);
@@ -42,7 +40,6 @@ public class MyBannerProvider extends DefaultBannerProvider
 		buf.append("=======================================" + OsUtils.LINE_SEPARATOR);
 		buf.append("Version:" + this.getVersion());
 		return buf.toString();
-
 	}
 
 	public String getVersion() {
