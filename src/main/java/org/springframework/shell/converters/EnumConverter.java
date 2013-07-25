@@ -29,16 +29,24 @@ import org.springframework.shell.core.MethodTarget;
  * @since 1.0
  */
 @SuppressWarnings("all")
-public class EnumConverter implements Converter<Enum> {
+public class EnumConverter implements Converter<Enum<?>> {
 
-	public Enum convertFromText(final String value, final Class<?> requiredType, final String optionContext) {
-		Class<Enum> enumClass = (Class<Enum>) requiredType;
-		return Enum.valueOf(enumClass, value);
+	@SuppressWarnings("unchecked")
+	public Enum<?> convertFromText(final String value, final Class<?> requiredType, final String optionContext) {
+        if(!Enum.class.isAssignableFrom(requiredType)) {
+    	    return null;
+	    } 
+        Class<Enum> enumClass = (Class<Enum>) requiredType;
+        return Enum.valueOf(enumClass, value);
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType, final String existingData, final String optionContext, final MethodTarget target) {
+		if(!Enum.class.isAssignableFrom(requiredType)) {
+			return false;
+		} 
 		Class<Enum> enumClass = (Class<Enum>) requiredType;
-		for (Enum enumValue : enumClass.getEnumConstants()) {
+		for (Enum<?> enumValue : enumClass.getEnumConstants()) {
 			String candidate = enumValue.name();
 			if ("".equals(existingData) || candidate.startsWith(existingData) || existingData.startsWith(candidate) || candidate.toUpperCase().startsWith(existingData.toUpperCase()) || existingData.toUpperCase().startsWith(candidate.toUpperCase())) {
 				completions.add(new Completion(candidate));

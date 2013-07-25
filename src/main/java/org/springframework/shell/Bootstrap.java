@@ -121,11 +121,11 @@ public class Bootstrap {
 		annctx.getBeanFactory().registerSingleton("commandLine", commandLine);
 	}
 
-	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class clazz) {
+	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class<?> clazz) {
 		createAndRegisterBeanDefinition(annctx, clazz, null);
 	}
 
-	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class clazz, String name) {
+	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class<?> clazz, String name) {
 		RootBeanDefinition rbd = new RootBeanDefinition();
 		rbd.setBeanClass(clazz);
 		DefaultListableBeanFactory bf = (DefaultListableBeanFactory)annctx.getBeanFactory();

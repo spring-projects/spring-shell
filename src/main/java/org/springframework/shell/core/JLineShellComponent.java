@@ -94,6 +94,7 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		return running;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void afterPropertiesSet() {
 
 		Map<String, CommandMarker> commands = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, CommandMarker.class);
@@ -102,7 +103,7 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		}
 
 		Map<String, Converter> converters = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, Converter.class);
-		for (Converter converter : converters.values()) {
+		for (Converter<?> converter : converters.values()) {
 			getSimpleParser().add(converter);
 		}
 		
