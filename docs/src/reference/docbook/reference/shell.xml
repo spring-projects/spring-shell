@@ -113,7 +113,17 @@ public class HelloWorldCommands implements CommandMarker {
 
     <itemizedlist>
       <listitem>
-        <para><classname>EssentialCommands</classname> -
+        <para><classname>ConsoleCommands</classname> -
+        <literal>clr</literal> and <literal>clear</literal> - to clear the console.</para>
+      </listitem>
+
+      <listitem>
+        <para><classname>DateCommands</classname> -
+        <literal>date</literal> - show the current date and time.</para>
+      </listitem>
+
+      <listitem>
+        <para><classname>ExitCommands</classname> -
         <literal>exit</literal> and <literal>quit</literal> - to exit the
         shell.</para>
       </listitem>
@@ -124,11 +134,20 @@ public class HelloWorldCommands implements CommandMarker {
       </listitem>
 
       <listitem>
+        <para><classname>InlineCommentCommands</classname> - <literal>//</literal> and <literal>;</literal> shows the valid characters to use for inline comments</para>
+      </listitem>
+
+      <listitem>
         <para><classname>OsCommands</classname> - the keyword for this command
         is the exclamation point, <literal>!</literal>. After the exclamation
         point you can pass in a unix/windows command string to be
         executed.</para>
       </listitem>
+
+      <listitem>
+        <para><classname>SystemPropertyCommands</classname> - <literal>system properties</literal>- shows the shell's system properties</para>
+      </listitem>
+
     </itemizedlist>
 
     <para>There are also a few commands that are provided by the
@@ -136,23 +155,14 @@ public class HelloWorldCommands implements CommandMarker {
 
     <itemizedlist>
       <listitem>
-        <para><literal>date</literal> - Displays the local date and
-        time</para>
-      </listitem>
-
-      <listitem>
         <para><literal>script</literal> - Parses the specified resource file
         and executes its commands</para>
       </listitem>
 
       <listitem>
-        <para><literal>system properties</literal> - Shows the shell's
-        properties</para>
+        <para><literal>/*</literal> and <literal>*/</literal>- The begin and end characters for block comments</para>
       </listitem>
 
-      <listitem>
-        <para><literal>version</literal> - Displays current CLI version</para>
-      </listitem>
     </itemizedlist>
   </section>
 

@@ -19,6 +19,10 @@ import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
 
+/**
+ * Commands relating to inline comments
+ *
+ */
 @Component
 public class InlineCommentCommands implements CommandMarker { 
 	
