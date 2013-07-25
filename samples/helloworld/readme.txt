@@ -16,4 +16,6 @@ Gradle:
 2.run spring shell
   $>./build/install/helloworld/bin/helloworld
 
+or
+  $>./gradlew -q run
 
