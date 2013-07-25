@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.core;
 
-import static org.springframework.shell.support.util.OsUtils.LINE_SEPARATOR;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,13 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +39,6 @@ import org.springframework.shell.support.util.IOUtils;
 import org.springframework.shell.support.util.MathUtils;
 import org.springframework.shell.support.util.VersionUtils;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * Provides a base {@link Shell} implementation.

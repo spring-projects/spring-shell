@@ -74,7 +74,6 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
 	private static final boolean JANSI_AVAILABLE = ClassUtils.isPresent(ANSI_CONSOLE_CLASSNAME,
 			JLineShell.class.getClassLoader());
-	private static final boolean APPLE_TERMINAL = Boolean.getBoolean("is.apple.terminal");
 	private static final char ESCAPE = 27;
 	private static final String BEL = "\007";
 	// Fields
@@ -410,7 +409,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	// Externally synchronized via the two calling methods having a mutex on flashInfoMap
 	private void doAnsiFlash(final int row, final Level level, final String message) {
 		ANSIBuffer buff = JLineLogHandler.getANSIBuffer();
-		if (APPLE_TERMINAL) {
+		if (isAppleTerminal()) {
 			buff.append(ESCAPE + "7");
 		}
 		else {
@@ -452,7 +451,7 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 			// Record we want to erase from this positioning next time (so we clean up after ourselves)
 			rowErasureMap.put(row, startFrom);
 		}
-		if (APPLE_TERMINAL) {
+		if (isAppleTerminal()) {
 			buff.append(ESCAPE + "8");
 		}
 		else {
@@ -620,6 +619,12 @@ public abstract class JLineShell extends AbstractShell implements CommandMarker,
 	 */
 	public void setHistorySize(int historySize) {
 		this.historySize = historySize;
+	}
+	
+	private static boolean isAppleTerminal()
+	{        
+	  final String terminalName = System.getenv( "TERM_PROGRAM" );
+	  return ("Apple_Terminal".equalsIgnoreCase( terminalName ) || Boolean.getBoolean("is.apple.terminal"));
 	}
 
 }
