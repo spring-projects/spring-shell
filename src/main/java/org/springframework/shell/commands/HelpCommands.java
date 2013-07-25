@@ -38,7 +38,7 @@ public class HelpCommands implements CommandMarker, ApplicationContextAware {
 
 	private ApplicationContext ctx;
 
-	@CliCommand(value = "help", help = "list all commands usage")
+	@CliCommand(value = "help", help = "List all commands usage")
 	public void obtainHelp(@CliOption(key = { "", "command" }, optionContext = "availableCommands", help = "Command name to provide help for") String buffer) {
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
 		SimpleParser parser = shell.getSimpleParser();
