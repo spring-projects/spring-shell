@@ -157,7 +157,55 @@ public class HelloWorldCommands implements CommandMarker {
     is returned, the shell will display its <literal>toString()</literal>
     representation.</para>
   </section>
+  
+  <section>
+    <title>Testing shell commands</title>
 
+    <para>To perform a test of the shell commands you can instantiate the shell inside a test case,
+    execute the command and then perform assertions on the return value CommandResult.
+    A simple base class to set this up is shown below.</para>
+    <programlisting language="java">public abstract class AbstractShellIntegrationTest {
+
+	private static JLineShellComponent shell;
+	
+	@BeforeClass
+	public static void startUp() throws InterruptedException {
+		Bootstrap bootstrap = new Bootstrap();		
+		shell = bootstrap.getJLineShellComponent();
+	}
+	
+	@AfterClass
+	public static void shutdown() {
+		shell.stop();
+	}
+
+	public static JLineShellComponent getShell() {
+		return shell;
+	}
+
+}</programlisting>
+    <para>Here is an example testing the Date command</para>
+    <programlisting language="java">public class BuiltInCommandTests extends AbstractShellIntegrationTest {
+	
+	@Test
+	public void dateTest() throws ParseException {
+		
+		//Execute command
+		CommandResult cr = getShell().executeCommand("date");
+		
+		//Get result   
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,Locale.US);
+		Date result = df.parse(cr.getResult().toString());
+		
+		//Make assertions - DateMaters is an external dependency not shown here.
+		Date now = new Date();
+		MatcherAssert.assertThat(now, DateMatchers.within(5, TimeUnit.SECONDS, result));		
+	}
+}</programlisting>
+    <para>The java.lang.Class of CommandResult's getResult method will match that of the return value of
+    the method annotated with @CliCommand.  You should cast to the appropriate type to help perform your assertions.
+    </para>
+  </section>
   <section>
     <title>Building and running the shell</title>
 

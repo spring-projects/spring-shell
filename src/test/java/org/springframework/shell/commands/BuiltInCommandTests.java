@@ -23,29 +23,24 @@ import java.util.concurrent.TimeUnit;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.springframework.shell.Bootstrap;
 import org.springframework.shell.core.CommandResult;
-import org.springframework.shell.core.JLineShellComponent;
 
 import uk.co.it.modular.hamcrest.date.DateMatchers;
 
-public class BuiltInCommandTests {
+public class BuiltInCommandTests extends AbstractShellIntegrationTest {
 	
 	@Test
 	public void dateTest() throws ParseException {
-		Bootstrap bootstrap = new Bootstrap();
 		
-		JLineShellComponent shell = bootstrap.getJLineShellComponent();
+		//Execute command
+		CommandResult cr = getShell().executeCommand("date");
 		
-		CommandResult cr = shell.executeCommand("date");
-		
+		//Get result   
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,Locale.US);
 		Date result = df.parse(cr.getResult().toString());
+		
+		//Make assertions
 		Date now = new Date();
 		MatcherAssert.assertThat(now, DateMatchers.within(5, TimeUnit.SECONDS, result));		
-		
 	}
-	
-
-
 }
