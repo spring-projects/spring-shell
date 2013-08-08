@@ -39,7 +39,10 @@
     <para>Note that the current plugin model loads all plugins under the same
     class loader. An open <link
     xlink:href="https://jira.springsource.org/browse/SHL-37">JIRA issue</link>
-    suggests providing a classloader per plugin to provide isolation.</para>
+    suggests providing a classloader per plugin to provide isolation. If Spring Shell
+    is embedded in your application as a dependency, you main also launch plugins
+    using JavaConfig based configuration, see <literal>MainJavaConfig.java</literal> in samples
+    for example.</para>
 
     <section>
       <title>Commands</title>
