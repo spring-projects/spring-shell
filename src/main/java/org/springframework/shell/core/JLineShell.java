@@ -475,18 +475,11 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 			while (exitShellRequest == null && (reader != null && ((line = reader.readLine()) != null))) {
 				JLineLogHandler.resetMessageTracking();
 				setShellStatus(Status.USER_INPUT);
-
+				generatePromptUpdate(prompt);
 				if ("".equals(line)) {
 					continue;
 				}
-
 				executeCommand(line);
-
-				String newPrmpt = getPromptText();
-				if (!ObjectUtils.nullSafeEquals(prompt, newPrmpt)) {
-					prompt = newPrmpt;
-					setPromptPath(null);
-				}
 				//System.out.println("executed command:" + line);
 			}
 		} catch (IOException ioe) {
@@ -514,8 +507,13 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		} catch (IOException ignoreIt) {
 		}
 	}
-
-
+	
+	private void generatePromptUpdate(String existingPrompt) {
+		String newPrmpt = getPromptText();
+		if (!ObjectUtils.nullSafeEquals(existingPrompt, newPrmpt)) {
+			setPromptPath(null);
+		}
+	}
 
 	@Override
 	protected void logCommandToOutput(final String processedLine) {
