@@ -2,7 +2,7 @@ Spring Shell is an interactive shell that can be easily extended with commands u
 
 # Useful links
 
-* [User documeantation](http://static.springsource.org/spring-shell/docs/current/reference/)
+* [User documentation](http://static.springsource.org/spring-shell/docs/current/reference/)
 * [Issue Tracker](https://jira.springsource.org/browse/SHL)
 
 More information can be found on the [project home page](http://www.springsource.org/spring-shell)
