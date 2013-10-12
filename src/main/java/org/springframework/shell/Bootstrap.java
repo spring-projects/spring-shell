@@ -24,12 +24,15 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.shell.core.Shell;
 import org.springframework.shell.support.logging.HandlerUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 /**
@@ -38,6 +41,7 @@ import org.springframework.util.StopWatch;
  * @author Ben Alex (original Roo code)
  * @author Mark Pollack 
  * @author David Winterfeldt
+ * @author Daniel Ling
  *
  */
 public class Bootstrap {
@@ -49,23 +53,36 @@ public class Bootstrap {
 	private static CommandLine commandLine;
 	
 	private GenericApplicationContext ctx;
-		
 
+	
 	public static void main(String[] args) throws IOException {
 		sw.start();
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(args);			
+			bootstrap = new Bootstrap(args);
 			exitShellRequest = bootstrap.run();
 		} catch (RuntimeException t) {
 			throw t;
 		} finally {
 			HandlerUtils.flushAllHandlers(Logger.getLogger(""));
 		}
-
 		System.exit(exitShellRequest.getExitCode());
 	}
-
+	
+	public static void main(String[] args, Object... contextObjects) throws IOException {
+		sw.start();
+		ExitShellRequest exitShellRequest;
+		try {
+			bootstrap = new Bootstrap(args, contextObjects);
+			exitShellRequest = bootstrap.run();
+		} catch (RuntimeException t) {
+			throw t;
+		} finally {
+			HandlerUtils.flushAllHandlers(Logger.getLogger(""));
+		}
+		System.exit(exitShellRequest.getExitCode());
+	}
+	
 	public Bootstrap() {
 		this(null, CONTEXT_PATH);
 	}
@@ -74,25 +91,46 @@ public class Bootstrap {
 		this(args, CONTEXT_PATH);
 	}
 	
+	public Bootstrap(String[] args, Object... contextObjects) throws IOException {	
+		initialize(args);
+		//user contributed commands as @Configuration annotated classes
+		load(ctx, contextObjects);
+		ctx.refresh();
+	}
+	
 	public Bootstrap(String[] args, String[] contextPath) {
+		initialize(args);
+		//user contributed commands from Spring XML bean configurations
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) ctx);
+		reader.loadBeanDefinitions(contextPath);
+		ctx.refresh();
+	}
+	
+	private void initialize(String[] args) {
 		try {
 			commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
         } catch (IOException e) {
             throw new ShellException(e.getMessage(), e);
         }
-		
 		ctx = new GenericApplicationContext();
 		ctx.registerShutdownHook();
 		configureApplicationContext(ctx);		
 		//built-in commands and converters
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(ctx);
 		scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters", "org.springframework.shell.plugin.support");		
-		//user contributed commands
-		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) ctx);
-		reader.loadBeanDefinitions(contextPath);
-		ctx.refresh();
 	}
-	
+
+	private void load(ApplicationContext context, Object... sources) {
+		BeanDefinitionRegistry registry = (BeanDefinitionRegistry) context;
+		AnnotatedBeanDefinitionReader annotatedReader = new AnnotatedBeanDefinitionReader(registry);
+		for (Object source : sources) {
+			if (source instanceof Class<?>) {
+				if (AnnotationUtils.findAnnotation((Class<?>)source, Component.class) != null) {
+					annotatedReader.register((Class<?>)source);
+				}
+			}
+		}
+	}
 	
 	public ApplicationContext getApplicationContext() {
 		return ctx;
