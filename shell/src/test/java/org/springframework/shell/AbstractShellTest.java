@@ -23,6 +23,7 @@ import static org.springframework.shell.core.CommandConstants.DATE_COMMAND;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.junit.After;
@@ -107,7 +108,7 @@ public abstract class AbstractShellTest {
         
         assertNotNull("Output for 'date' command shouldn't be null.", result);	    
 
-        DateFormat formatter = new SimpleDateFormat(PATTERN);
+        DateFormat formatter = new SimpleDateFormat(PATTERN, Locale.US);
         
         try {
             // date is parseable or exception would be thrown
