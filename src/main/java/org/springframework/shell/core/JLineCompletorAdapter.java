@@ -18,17 +18,17 @@ package org.springframework.shell.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import jline.Completor;
+import jline.console.completer.Completer;
 
 import org.springframework.util.Assert;
 
 /**
  * An implementation of JLine's {@link Completor} interface that delegates to a {@link Parser}.
- *
+ * 
  * @author Ben Alex
  * @since 1.0
  */
-public class JLineCompletorAdapter implements Completor {
+public class JLineCompletorAdapter implements Completer {
 
 	// Fields
 	private final Parser parser;
@@ -38,7 +38,7 @@ public class JLineCompletorAdapter implements Completor {
 		this.parser = parser;
 	}
 
-	@SuppressWarnings({"rawtypes","unchecked"})
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int complete(final String buffer, final int cursor, final List candidates) {
 		int result;
 		try {
@@ -46,9 +46,12 @@ public class JLineCompletorAdapter implements Completor {
 			List<Completion> completions = new ArrayList<Completion>();
 			result = parser.completeAdvanced(buffer, cursor, completions);
 			for (Completion completion : completions) {
-				candidates.add(new jline.Completion(completion.getValue(), completion.getFormattedValue(), completion.getHeading()));
+				// candidates.add(new jline.Completion(completion.getValue(), completion.getFormattedValue(), completion
+				// .getHeading()));
+				candidates.add(completion.getValue());
 			}
-		} finally {
+		}
+		finally {
 			JLineLogHandler.prohibitRedraw();
 		}
 		return result;

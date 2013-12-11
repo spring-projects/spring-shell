@@ -15,14 +15,15 @@
  */
 package org.springframework.shell.core;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -37,12 +38,16 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jline.ANSIBuffer;
-import jline.ANSIBuffer.ANSICodes;
-import jline.ConsoleReader;
 import jline.WindowsTerminal;
+import jline.console.ConsoleReader;
+import jline.console.history.MemoryHistory;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.Ansi.Attribute;
+import org.fusesource.jansi.Ansi.Color;
+import org.fusesource.jansi.Ansi.Erase;
+import org.fusesource.jansi.AnsiConsole;
 import org.springframework.shell.event.ShellStatus;
 import org.springframework.shell.event.ShellStatus.Status;
 import org.springframework.shell.event.ShellStatusListener;
@@ -54,16 +59,16 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-
 /**
- * Uses the feature-rich <a href="http://sourceforge.net/projects/jline/">JLine</a> library to provide an interactive shell.
- *
+ * Uses the feature-rich <a href="http://sourceforge.net/projects/jline/">JLine</a> library to provide an interactive
+ * shell.
+ * 
  * <p>
  * Due to Windows' lack of color ANSI services out-of-the-box, this implementation automatically detects the classpath
  * presence of <a href="http://jansi.fusesource.org/">Jansi</a> and uses it if present. This library is not necessary
- * for *nix machines, which support colour ANSI without any special effort. This implementation has been written to
- * use reflection in order to avoid hard dependencies on Jansi.
- *
+ * for *nix machines, which support colour ANSI without any special effort. This implementation has been written to use
+ * reflection in order to avoid hard dependencies on Jansi.
+ * 
  * @author Ben Alex
  * @author Jarred Li
  * @since 1.0
@@ -72,20 +77,31 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
+
 	private static final boolean JANSI_AVAILABLE = ClassUtils.isPresent(ANSI_CONSOLE_CLASSNAME,
 			JLineShell.class.getClassLoader());
+
 	private static final char ESCAPE = 27;
+
 	private static final String BEL = "\007";
+
 	// Fields
 	protected ConsoleReader reader;
+
 	private boolean developmentMode = false;
+
 	private FileWriter fileLog;
+
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	protected ShellStatusListener statusListener; // ROO-836
+
 	/** key: slot name, value: flashInfo instance */
 	private final Map<String, FlashInfo> flashInfoMap = new HashMap<String, FlashInfo>();
+
 	/** key: row number, value: eraseLineFromPosition */
 	private final Map<Integer, Integer> rowErasureMap = new HashMap<Integer, Integer>();
+
 	private boolean shutdownHookFired = false; // ROO-1599
 
 	private int historySize;
@@ -101,7 +117,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		removeHandlers(mainLogger);
 		mainLogger.addHandler(handler);
 
-		reader.addCompletor(new JLineCompletorAdapter(getParser()));
+		reader.addCompleter(new JLineCompletorAdapter(getParser()));
 
 		reader.setBellEnabled(true);
 		if (Boolean.getBoolean("jline.nobell")) {
@@ -111,11 +127,11 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		// reader.setDebug(new PrintWriter(new FileWriter("writer.debug", true)));
 
 		openFileLogIfPossible();
-		this.reader.getHistory().setMaxSize(getHistorySize());
+		((MemoryHistory) this.reader.getHistory()).setMaxSize(getHistorySize());
 		// Try to build previous command history from the project's log
 		String[] filteredLogEntries = filterLogEntry();
 		for (String logEntry : filteredLogEntries) {
-			reader.getHistory().addToHistory(logEntry);
+			reader.getHistory().add(logEntry);
 		}
 
 		flashMessageRenderer();
@@ -136,7 +152,8 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 					shutdownHookFired = true;
 				}
 			}, getProductName() + " JLine Shutdown Hook"));
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 		}
 
 		// Handle any "execute-then-quit" operation
@@ -161,14 +178,14 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 
 	/**
 	 * read history commands from history log. the history size if determined by --histsize options.
-	 *
+	 * 
 	 * @return history commands
 	 */
 	private String[] filterLogEntry() {
 		ArrayList<String> entries = new ArrayList<String>();
 		try {
-			ReversedLinesFileReader reader = new ReversedLinesFileReader(
-					new File(getHistoryFileName()),4096,Charset.forName("UTF-8"));
+			ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(getHistoryFileName()), 4096,
+					Charset.forName("UTF-8"));
 			int size = 0;
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -182,19 +199,19 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 					}
 				}
 			}
-		} catch (IOException e) {
-			logger.warning("read history file failed. Reason:"+ e.getMessage());
+		}
+		catch (IOException e) {
+			logger.warning("read history file failed. Reason:" + e.getMessage());
 		}
 		Collections.reverse(entries);
 		return entries.toArray(new String[0]);
 	}
 
 	/**
-	 * Creates new jline ConsoleReader. On Windows if jansi is available, uses
-	 * createAnsiWindowsReader(). Otherwise, always creates a default ConsoleReader.
-	 * Sub-classes of this class can plug in their version of ConsoleReader
-	 * by overriding this method, if required.
-	 *
+	 * Creates new jline ConsoleReader. On Windows if jansi is available, uses createAnsiWindowsReader(). Otherwise,
+	 * always creates a default ConsoleReader. Sub-classes of this class can plug in their version of ConsoleReader by
+	 * overriding this method, if required.
+	 * 
 	 * @return a jline ConsoleReader instance
 	 */
 	protected ConsoleReader createConsoleReader() {
@@ -202,16 +219,18 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		try {
 			if (isJansiAvailable()) {
 				try {
-				    consoleReader = createAnsiWindowsReader();
-				} catch (Exception e) {
+					consoleReader = createAnsiWindowsReader();
+				}
+				catch (Exception e) {
 					// Try again using default ConsoleReader constructor
 					logger.warning("Can't initialize jansi AnsiConsole, falling back to default: " + e);
 				}
 			}
 			if (consoleReader == null) {
-			    consoleReader = new ConsoleReader();
+				consoleReader = new ConsoleReader();
 			}
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			throw new IllegalStateException("Cannot start console class", ioe);
 		}
 		return consoleReader;
@@ -244,19 +263,20 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 
 	@Override
 	public void setPromptPath(final String path, final boolean overrideStyle) {
-		if (reader.getTerminal().isANSISupported()) {
-			ANSIBuffer ansi = JLineLogHandler.getANSIBuffer();
+		if (reader.getTerminal().isAnsiSupported()) {
+			// ANSIBuffer ansi = JLineLogHandler.getANSIBuffer();
+			Ansi ansi = ansi();
 			if (path == null || "".equals(path)) {
-				shellPrompt = ansi.yellow(getPromptText()).toString();
+				shellPrompt = ansi.fg(Color.YELLOW).a(getPromptText()).reset().toString();
 			}
 			else {
 				if (overrideStyle) {
-					ansi.append(path);
+					ansi.a(path);
 				}
 				else {
-					ansi.cyan(path);
+					ansi.fg(Color.CYAN).a(path).reset();
 				}
-				shellPrompt = ansi.yellow(" " + getPromptText()).toString();
+				shellPrompt = ansi.fg(Color.YELLOW).a(" " + getPromptText()).toString();
 			}
 		}
 		else {
@@ -265,20 +285,20 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		}
 
 		// The shellPrompt is now correct; let's ensure it now gets used
-		reader.setDefaultPrompt(JLineShell.shellPrompt);
+		reader.setPrompt(AbstractShell.shellPrompt);
 	}
 
 	protected ConsoleReader createAnsiWindowsReader() throws Exception {
 		// Get decorated OutputStream that parses ANSI-codes
-		final PrintStream ansiOut = (PrintStream) ClassUtils.forName(ANSI_CONSOLE_CLASSNAME,
-				JLineShell.class.getClassLoader()).getMethod("out").invoke(null);
+		final PrintStream ansiOut = (PrintStream) ClassUtils
+				.forName(ANSI_CONSOLE_CLASSNAME, JLineShell.class.getClassLoader()).getMethod("out").invoke(null);
 		WindowsTerminal ansiTerminal = new WindowsTerminal() {
 			@Override
-			public boolean isANSISupported() {
+			public synchronized boolean isAnsiSupported() {
 				return true;
 			}
 		};
-		ansiTerminal.initializeTerminal();
+		ansiTerminal.init();
 		// Make sure to reset the original shell's colors on shutdown by closing the stream
 		statusListener = new ShellStatusListener() {
 			public void onShellStatusChange(final ShellStatus oldStatus, final ShellStatus newStatus) {
@@ -289,14 +309,17 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		};
 		addShellStatusListener(statusListener);
 
-		return new ConsoleReader(new FileInputStream(FileDescriptor.in), new PrintWriter(new OutputStreamWriter(
-				ansiOut,
-				// Default to Cp850 encoding for Windows console output (ROO-439)
-				System.getProperty("jline.WindowsTerminal.output.encoding", "Cp850"))), null, ansiTerminal);
+		// return new ConsoleReader(new FileInputStream(FileDescriptor.in), new PrintWriter(new OutputStreamWriter(
+		// ansiOut,
+		// // Default to Cp850 encoding for Windows console output (ROO-439)
+		// System.getProperty("jline.WindowsTerminal.output.encoding", "Cp850"))), null, ansiTerminal);
+
+		OutputStream out = AnsiConsole.wrapOutputStream(ansiOut);
+		return new ConsoleReader(new FileInputStream(FileDescriptor.in), out, ansiTerminal);
 	}
 
 	private void flashMessageRenderer() {
-		if (!reader.getTerminal().isANSISupported()) {
+		if (!reader.getTerminal().isAnsiSupported()) {
 			return;
 		}
 		// Setup a thread to ensure flash messages are displayed and cleared correctly
@@ -326,7 +349,8 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 					}
 					try {
 						Thread.sleep(200);
-					} catch (InterruptedException ignore) {
+					}
+					catch (InterruptedException ignore) {
 					}
 				}
 			}
@@ -341,25 +365,25 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		Assert.hasText(slot, "Slot name must be specified for a flash message");
 
 		if (Shell.WINDOW_TITLE_SLOT.equals(slot)) {
-			if (reader != null && reader.getTerminal().isANSISupported()) {
+			if (reader != null && reader.getTerminal().isAnsiSupported()) {
 				// We can probably update the window title, as requested
 				if (!StringUtils.hasText(message)) {
 					System.out.println("No text");
 				}
 
-				ANSIBuffer buff = JLineLogHandler.getANSIBuffer();
-				buff.append(ESCAPE + "]0;").append(message).append(BEL);
-				String stg = buff.toString();
+				Ansi ansi = ansi();
+				ansi.a(ESCAPE + "]0;").a(message).a(BEL);
 				try {
-					reader.printString(stg);
-					reader.flushConsole();
-				} catch (IOException ignored) {
+					reader.print(ansi.toString());
+					reader.flush();
+				}
+				catch (IOException ignored) {
 				}
 			}
 
 			return;
 		}
-		if ((reader != null && !reader.getTerminal().isANSISupported())) {
+		if ((reader != null && !reader.getTerminal().isAnsiSupported())) {
 			super.flash(level, message, slot);
 			return;
 		}
@@ -408,12 +432,12 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 
 	// Externally synchronized via the two calling methods having a mutex on flashInfoMap
 	private void doAnsiFlash(final int row, final Level level, final String message) {
-		ANSIBuffer buff = JLineLogHandler.getANSIBuffer();
+		Ansi ansi = ansi();
 		if (isAppleTerminal()) {
-			buff.append(ESCAPE + "7");
+			ansi.a(ESCAPE + "7");
 		}
 		else {
-			buff.append(ANSICodes.save());
+			ansi.saveCursorPosition();
 		}
 
 		// Figure out the longest line we're presently displaying (or were) and erase the line from that position
@@ -428,8 +452,8 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 			// There is nothing to erase
 		}
 		else {
-			buff.append(ANSICodes.gotoxy(row, mostFurtherLeftColNumber));
-			buff.append(ANSICodes.clreol()); // Clear what was present on the line
+			ansi.cursor(row, mostFurtherLeftColNumber);
+			ansi.eraseLine(Erase.FORWARD); // Clear what was present on the line
 		}
 
 		if (("".equals(message))) {
@@ -442,27 +466,27 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 				return; // ROO-1599
 			}
 			// They want some message displayed
-			int startFrom = reader.getTermwidth() - message.length() + 1;
+			int startFrom = reader.getTerminal().getWidth() - message.length() + 1;
 			if (startFrom < 1) {
 				startFrom = 1;
 			}
-			buff.append(ANSICodes.gotoxy(row, startFrom));
-			buff.reverse(message);
+			ansi.cursor(row, startFrom);
+			ansi.a(Attribute.NEGATIVE_ON).a(message).a(Attribute.NEGATIVE_OFF);
 			// Record we want to erase from this positioning next time (so we clean up after ourselves)
 			rowErasureMap.put(row, startFrom);
 		}
 		if (isAppleTerminal()) {
-			buff.append(ESCAPE + "8");
+			ansi.a(ESCAPE + "8");
 		}
 		else {
-			buff.append(ANSICodes.restore());
+			ansi.reset();
 		}
 
-		String stg = buff.toString();
 		try {
-			reader.printString(stg);
-			reader.flushConsole();
-		} catch (IOException ignored) {
+			reader.print(ansi.toString());
+			reader.flush();
+		}
+		catch (IOException ignored) {
 		}
 	}
 
@@ -487,9 +511,10 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 					prompt = newPrmpt;
 					setPromptPath(null);
 				}
-				//System.out.println("executed command:" + line);
+				// System.out.println("executed command:" + line);
 			}
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			throw new IllegalStateException("Shell line reading failure", ioe);
 		}
 		setShellStatus(Status.SHUTTING_DOWN);
@@ -497,7 +522,8 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 
 	public void setDevelopmentMode(final boolean developmentMode) {
 		JLineLogHandler.setIncludeThreadName(developmentMode);
-		JLineLogHandler.setSuppressDuplicateMessages(!developmentMode); // We want to see duplicate messages during development time (ROO-1873)
+		JLineLogHandler.setSuppressDuplicateMessages(!developmentMode); // We want to see duplicate messages during
+																		// development time (ROO-1873)
 		this.developmentMode = developmentMode;
 	}
 
@@ -509,13 +535,13 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		try {
 			fileLog = new FileWriter(getHistoryFileName(), true);
 			// First write, so let's record the date and time of the first user command
-			fileLog.write("// " + getProductName() + " " + versionInfo() + " log opened at " + df.format(new Date()) + "\n");
+			fileLog.write("// " + getProductName() + " " + versionInfo() + " log opened at " + df.format(new Date())
+					+ "\n");
 			fileLog.flush();
-		} catch (IOException ignoreIt) {
+		}
+		catch (IOException ignoreIt) {
 		}
 	}
-
-
 
 	@Override
 	protected void logCommandToOutput(final String processedLine) {
@@ -531,17 +557,19 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 			fileLog.flush(); // So tail -f will show it's working
 			if (getExitShellRequest() != null) {
 				// Shutting down, so close our file (we can always reopen it later if needed)
-				fileLog.write("// " + getProductName() + " " + versionInfo() + " log closed at " + df.format(new Date()) + "\n");
+				fileLog.write("// " + getProductName() + " " + versionInfo() + " log closed at "
+						+ df.format(new Date()) + "\n");
 				IOUtils.closeQuietly(fileLog);
 				fileLog = null;
 			}
-		} catch (IOException ignoreIt) {
+		}
+		catch (IOException ignoreIt) {
 		}
 	}
 
 	/**
 	 * Obtains the "roo.home" from the system property, falling back to the current working directory if missing.
-	 *
+	 * 
 	 * @return the 'roo.home' system property
 	 */
 	@Override
@@ -550,7 +578,8 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		if (rooHome == null) {
 			try {
 				rooHome = new File(".").getCanonicalPath();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new IllegalStateException(e);
 			}
 		}
@@ -561,7 +590,8 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	 * Should be called by a subclass before deactivating the shell.
 	 */
 	protected void closeShell() {
-		// Notify we're closing down (normally our status is already shutting_down, but if it was a CTRL+C via the o.s.r.bootstrap.Main hook)
+		// Notify we're closing down (normally our status is already shutting_down, but if it was a CTRL+C via the
+		// o.s.r.bootstrap.Main hook)
 		setShellStatus(Status.SHUTTING_DOWN);
 		if (statusListener != null) {
 			removeShellStatusListener(statusListener);
@@ -570,15 +600,18 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 
 	private static class FlashInfo {
 		String flashMessage;
+
 		long flashMessageUntil;
+
 		Level flashLevel;
+
 		int rowNumber;
 	}
 
 	/**
 	 * get history file name from provider. The provider has highest order
 	 * <link>org.springframework.core.Ordered.getOder</link> will win.
-	 *
+	 * 
 	 * @return history file name
 	 */
 	abstract protected String getHistoryFileName();
@@ -586,21 +619,21 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	/**
 	 * get prompt text from provider. The provider has highest order
 	 * <link>org.springframework.core.Ordered.getOder</link> will win.
-	 *
+	 * 
 	 * @return prompt text
 	 */
 	abstract protected String getPromptText();
 
 	/**
 	 * get product name
-	 *
+	 * 
 	 * @return Product Name
 	 */
 	abstract protected String getProductName();
 
 	/**
 	 * get version information
-	 *
+	 * 
 	 * @return Version
 	 */
 	protected String getVersion() {
@@ -620,11 +653,10 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	public void setHistorySize(int historySize) {
 		this.historySize = historySize;
 	}
-	
-	private static boolean isAppleTerminal()
-	{        
-	  final String terminalName = System.getenv( "TERM_PROGRAM" );
-	  return ("Apple_Terminal".equalsIgnoreCase( terminalName ) || Boolean.getBoolean("is.apple.terminal"));
+
+	private static boolean isAppleTerminal() {
+		final String terminalName = System.getenv("TERM_PROGRAM");
+		return ("Apple_Terminal".equalsIgnoreCase(terminalName) || Boolean.getBoolean("is.apple.terminal"));
 	}
 
 }

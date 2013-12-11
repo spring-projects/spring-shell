@@ -15,8 +15,9 @@
  */
 package org.springframework.shell.commands;
 
-import jline.ANSIBuffer;
+import static org.fusesource.jansi.Ansi.ansi;
 
+import org.fusesource.jansi.AnsiConsole;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
@@ -25,15 +26,14 @@ import org.springframework.stereotype.Component;
  * Commands related to the manipulation of the jline console
  * 
  * @author Mark Pollack
- *
+ * 
  */
 @Component
-public class ConsoleCommands implements CommandMarker { 
-	
-	@CliCommand(value = {"cls", "clear"}, help = "Clears the console")
+public class ConsoleCommands implements CommandMarker {
+
+	@CliCommand(value = { "cls", "clear" }, help = "Clears the console")
 	public void clear() {
-		System.out.print(ANSIBuffer.ANSICodes.clrscr());
-		System.out.print(ANSIBuffer.ANSICodes.gotoxy(0, 0));
+		AnsiConsole.out().println(ansi().eraseScreen().cursor(0, 0));
 	}
 
 }
