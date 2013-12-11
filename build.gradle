@@ -31,7 +31,8 @@ dependencies {
     compile "org.springframework:spring-core:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile "commons-io:commons-io:$commonsioVersion"
-    compile "net.sourceforge.jline:jline:$jlineVersion"
+    //compile "net.sourceforge.jline:jline:$jlineVersion"
+    compile "jline:jline:2.11"
     compile "org.fusesource.jansi:jansi:$jansiVersion"
     compile "cglib:cglib:$cglibVersion"
 
