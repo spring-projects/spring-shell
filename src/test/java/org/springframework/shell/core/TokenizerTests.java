@@ -112,6 +112,15 @@ public class TokenizerTests {
 		assertEquals(singletonMap("foo", "bar \"fizz"), result);
 	}
 
+	@Test
+	public void testValueQuotationAllowUnfinished() {
+		Map<String, String> result = new Tokenizer("--foo \"bar bazz\" --bizz \"unfinished bizness ", true).getTokens();
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("foo", "bar bazz");
+		expected.put("bizz", "unfinished bizness ");
+		assertEquals(expected, result);
+	}
+
 	private Map<String, String> tokenize(String what) {
 		return new Tokenizer(what).getTokens();
 	}

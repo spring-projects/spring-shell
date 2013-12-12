@@ -46,8 +46,16 @@ public class Tokenizer {
 
 	private final Map<String, String> result = new LinkedHashMap<String, String>();
 
+	/** Useful when trying to do auto complete. */
+	private boolean allowUnbalancedLastQuotedValue;
+
 	public Tokenizer(String text) {
+		this(text, false);
+	}
+
+	public Tokenizer(String text, boolean allowUnbalancedLastQuotedValue) {
 		this.buffer = text.toCharArray();
+		this.allowUnbalancedLastQuotedValue = allowUnbalancedLastQuotedValue;
 		tokenize();
 	}
 
@@ -110,7 +118,12 @@ public class Tokenizer {
 		}
 		// When here, we either ran out of input, or encountered our delim, or both
 		if (endDelimiter == '"' && pos == buffer.length && buffer[pos - 1] != '"') {
-			throw new IllegalArgumentException("Cannot have an unbalanced number of quotation marks");
+			if (allowUnbalancedLastQuotedValue) {
+				return sb.toString();
+			}
+			else {
+				throw new IllegalArgumentException("Cannot have an unbalanced number of quotation marks");
+			}
 		}
 		// Eat our delim
 		pos++;

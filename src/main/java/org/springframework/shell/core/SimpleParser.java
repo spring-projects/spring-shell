@@ -573,15 +573,7 @@ public class SimpleParser implements Parser {
 			Assert.notNull(cmd, "CliCommand unavailable for '" + methodTarget.getMethod().toGenericString() + "'");
 
 			// Make a reasonable attempt at parsing the remainingBuffer
-			Map<String, String> options;
-			try {
-				options = new Tokenizer(methodTarget.getRemainingBuffer()).getTokens();
-			}
-			catch (IllegalArgumentException ex) {
-				// Assume any IllegalArgumentException is due to a quotation mark mismatch
-				candidates.add(new Completion(translated + "\""));
-				return 0;
-			}
+			Map<String, String> options = new Tokenizer(methodTarget.getRemainingBuffer(), true).getTokens();
 
 			// Lookup arguments for this target
 			Annotation[][] parameterAnnotations = methodTarget.getMethod().getParameterAnnotations();
