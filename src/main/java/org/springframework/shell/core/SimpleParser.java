@@ -45,7 +45,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of {@link Parser}.
- *
+ * 
  * @author Ben Alex
  * @since 1.0
  */
@@ -53,12 +53,16 @@ public class SimpleParser implements Parser {
 
 	// Constants
 	private static final Logger LOGGER = HandlerUtils.getLogger(SimpleParser.class);
+
 	private static final Comparator<Object> COMPARATOR = new NaturalOrderComparator<Object>();
 
 	// Fields
 	private final Object mutex = new Object();
+
 	private final Set<Converter<?>> converters = new HashSet<Converter<?>>();
+
 	private final Set<CommandMarker> commands = new HashSet<CommandMarker>();
+
 	private final Map<String, MethodTarget> availabilityIndicators = new HashMap<String, MethodTarget>();
 
 	private MethodTarget getAvailabilityIndicator(final String command) {
@@ -66,9 +70,8 @@ public class SimpleParser implements Parser {
 	}
 
 	/**
-	 * get all mandatory options keys. For the options with multiple keys, the
-	 * keys will be in one row.
-	 *
+	 * get all mandatory options keys. For the options with multiple keys, the keys will be in one row.
+	 * 
 	 * @param cliOptions options
 	 * @return mandatory options keys
 	 */
@@ -78,7 +81,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * get all options key.
-	 *
+	 * 
 	 * @param cliOptions
 	 * @param includeOptionalOptions
 	 * @return options keys
@@ -99,7 +102,6 @@ public class SimpleParser implements Parser {
 		}
 		return optionsKeys;
 	}
-
 
 	public ParseResult parse(final String rawInput) {
 		synchronized (mutex) {
@@ -142,8 +144,9 @@ public class SimpleParser implements Parser {
 			// Attempt to parse
 			Map<String, String> options = null;
 			try {
-				options = ParserUtils.tokenize(methodTarget.getRemainingBuffer());
-			} catch (IllegalArgumentException e) {
+				options = new Tokenizer(methodTarget.getRemainingBuffer()).getTokens();
+			}
+			catch (IllegalArgumentException e) {
 				LOGGER.warning(ExceptionUtils.extractRootCause(e).getMessage());
 				return null;
 			}
@@ -185,9 +188,9 @@ public class SimpleParser implements Parser {
 				boolean mandatory = !StringUtils.hasText(value) && cliOption.mandatory();
 				boolean specifiedKey = !StringUtils.hasText(value) && options.containsKey(sourcedFrom);
 				boolean specifiedKeyWithoutValue = false;
-				if(specifiedKey){
+				if (specifiedKey) {
 					value = cliOption.specifiedDefaultValue();
-					if("__NULL__".equals(value)){
+					if ("__NULL__".equals(value)) {
 						specifiedKeyWithoutValue = true;
 					}
 				}
@@ -255,7 +258,8 @@ public class SimpleParser implements Parser {
 						throw new IllegalStateException();
 					}
 					arguments.add(result);
-				} catch (RuntimeException e) {
+				}
+				catch (RuntimeException e) {
 					LOGGER.warning(e.getClass().getName() + ": Failed to convert '" + value + "' to type "
 							+ requiredType.getSimpleName() + " for option '"
 							+ StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
@@ -263,7 +267,8 @@ public class SimpleParser implements Parser {
 						LOGGER.warning(e.getMessage());
 					}
 					return null;
-				} finally {
+				}
+				finally {
 					CliOptionContext.resetOptionContext();
 					CliSimpleParserContext.resetSimpleParserContext();
 				}
@@ -274,13 +279,13 @@ public class SimpleParser implements Parser {
 			if (!unavailableOptions.isEmpty()) {
 				StringBuilder message = new StringBuilder();
 				if (unavailableOptions.size() == 1) {
-					message.append("Option '").append(unavailableOptions.iterator().next()).append(
-							"' is not available for this command. ");
+					message.append("Option '").append(unavailableOptions.iterator().next())
+							.append("' is not available for this command. ");
 				}
 				else {
-					message.append("Options ").append(
-							StringUtils.collectionToDelimitedString(unavailableOptions, ", ", "'", "'")).append(
-							" are not available for this command. ");
+					message.append("Options ")
+							.append(StringUtils.collectionToDelimitedString(unavailableOptions, ", ", "'", "'"))
+							.append(" are not available for this command. ");
 				}
 				message.append("Use tab assist or the \"help\" command to see the legal options");
 				LOGGER.warning(message.toString());
@@ -304,7 +309,7 @@ public class SimpleParser implements Parser {
 		StringBuilder valueBuilder = new StringBuilder();
 		valueBuilder.append("You should specify value for option '");
 
-		List<List<String>> optionsKeys = getOptionsKeys(cliOptions,true);
+		List<List<String>> optionsKeys = getOptionsKeys(cliOptions, true);
 		for (List<String> keys : optionsKeys) {
 			boolean found = false;
 			for (String key : keys) {
@@ -324,7 +329,7 @@ public class SimpleParser implements Parser {
 				optionBuilder.append(", ");
 			}
 		}
-		//remove the ", " in the end.
+		// remove the ", " in the end.
 		String hintForOption = optionBuilder.toString();
 		hintForOption = hintForOption.substring(0, hintForOption.length() - 2);
 		if (hintForOptions) {
@@ -338,7 +343,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * Normalises the given raw user input string ready for parsing
-	 *
+	 * 
 	 * @param rawInput the string to normalise; can't be <code>null</code>
 	 * @return a non-<code>null</code> string
 	 */
@@ -347,7 +352,8 @@ public class SimpleParser implements Parser {
 		return rawInput.replaceAll(" +", " ").trim();
 	}
 
-	private Set<String> getSpecifiedUnavailableOptions(final Set<CliOption> cliOptions, final Map<String, String> options) {
+	private Set<String> getSpecifiedUnavailableOptions(final Set<CliOption> cliOptions,
+			final Map<String, String> options) {
 		Set<String> cliOptionKeySet = new LinkedHashSet<String>();
 		for (CliOption cliOption : cliOptions) {
 			for (String key : cliOption.key()) {
@@ -380,7 +386,8 @@ public class SimpleParser implements Parser {
 		logger.warning("Command '" + buffer + "' not found (for assistance press " + AbstractShell.completionKeys + ")");
 	}
 
-	private Collection<MethodTarget> locateTargets(final String buffer, final boolean strictMatching, final boolean checkAvailabilityIndicators) {
+	private Collection<MethodTarget> locateTargets(final String buffer, final boolean strictMatching,
+			final boolean checkAvailabilityIndicators) {
 		Assert.notNull(buffer, "Buffer required");
 		final Collection<MethodTarget> result = new HashSet<MethodTarget>();
 
@@ -401,8 +408,10 @@ public class SimpleParser implements Parser {
 										+ method.toGenericString() + "'");
 								try {
 									available = (Boolean) mt.getMethod().invoke(mt.getTarget());
-									// We should "break" here, but we loop over all to ensure no conflicting availability indicators are defined
-								} catch (Exception e) {
+									// We should "break" here, but we loop over all to ensure no conflicting
+									// availability indicators are defined
+								}
+								catch (Exception e) {
 									available = false;
 								}
 							}
@@ -455,7 +464,8 @@ public class SimpleParser implements Parser {
 				for (int candidate = lastCommandWordUsed; candidate < commandWords.length; candidate++) {
 					if (lastWord != null && lastWord.length() > 0 && commandWords[candidate].startsWith(lastWord)) {
 						if (bufferToReturn == null) {
-							// This is the first match, so ensure the intended match really represents the start of a command and not a later word within it
+							// This is the first match, so ensure the intended match really represents the start of a
+							// command and not a later word within it
 							if (lastCommandWordUsed == 0 && candidate > 0) {
 								// This is not a valid match
 								break next_buffer_loop;
@@ -565,8 +575,9 @@ public class SimpleParser implements Parser {
 			// Make a reasonable attempt at parsing the remainingBuffer
 			Map<String, String> options;
 			try {
-				options = ParserUtils.tokenize(methodTarget.getRemainingBuffer());
-			} catch (IllegalArgumentException ex) {
+				options = new Tokenizer(methodTarget.getRemainingBuffer()).getTokens();
+			}
+			catch (IllegalArgumentException ex) {
 				// Assume any IllegalArgumentException is due to a quotation mark mismatch
 				candidates.add(new Completion(translated + "\""));
 				return 0;
@@ -579,7 +590,8 @@ public class SimpleParser implements Parser {
 			if (parameterAnnotations.length == 0) {
 				for (String value : cmd.value()) {
 					if (buffer.startsWith(value) || value.startsWith(buffer)) {
-						results.add(new Completion(value)); // no space at the end, as there's no need to continue the command further
+						results.add(new Completion(value)); // no space at the end, as there's no need to continue the
+															// command further
 					}
 				}
 				candidates.addAll(results);
@@ -606,7 +618,8 @@ public class SimpleParser implements Parser {
 				}
 			}
 
-			// To get this far, we know there are arguments required for this CliCommand, and they specified a valid command name
+			// To get this far, we know there are arguments required for this CliCommand, and they specified a valid
+			// command name
 
 			// Record all the CliOptions applicable to this command
 			List<CliOption> cliOptions = new ArrayList<CliOption>();
@@ -675,16 +688,19 @@ public class SimpleParser implements Parser {
 				return 0;
 			}
 
-			// Handle suggesting an option key if they haven't got one presently specified (or they've completed a full option key/value pair)
+			// Handle suggesting an option key if they haven't got one presently specified (or they've completed a full
+			// option key/value pair)
 			if (lastOptionKey == null
 					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" "))) {
 				// We have either NEVER specified an option key/value pair
 				// OR we have specified a full option key/value pair
 
-				// Let's list some other options the user might want to try (naturally skip the "" option, as that's the default)
+				// Let's list some other options the user might want to try (naturally skip the "" option, as that's the
+				// default)
 				for (CliOption include : unspecified) {
 					for (String value : include.key()) {
-						// Manually determine if this non-mandatory but unspecifiedDefaultValue=* requiring option is able to be bound
+						// Manually determine if this non-mandatory but unspecifiedDefaultValue=* requiring option is
+						// able to be bound
 						if (!include.mandatory() && "*".equals(include.unspecifiedDefaultValue()) && !"".equals(value)) {
 							try {
 								for (Converter<?> candidate : converters) {
@@ -706,11 +722,13 @@ public class SimpleParser implements Parser {
 									if (paramType != null && candidate.supports(paramType, include.optionContext())) {
 										// Try to invoke this usable converter
 										candidate.convertFromText("*", paramType, include.optionContext());
-										// If we got this far, the converter is happy with "*" so we need not bother the user with entering the data in themselves
+										// If we got this far, the converter is happy with "*" so we need not bother the
+										// user with entering the data in themselves
 										break;
 									}
 								}
-							} catch (RuntimeException notYetReady) {
+							}
+							catch (RuntimeException notYetReady) {
 								if (translated.endsWith(" ")) {
 									results.add(new Completion(translated + "--" + value + " "));
 								}
@@ -728,7 +746,8 @@ public class SimpleParser implements Parser {
 					}
 				}
 
-				// Only abort at this point if we have some suggestions; otherwise we might want to try to complete the "" option
+				// Only abort at this point if we have some suggestions; otherwise we might want to try to complete the
+				// "" option
 				if (results.size() > 0) {
 					candidates.addAll(results);
 					return 0;
@@ -737,8 +756,9 @@ public class SimpleParser implements Parser {
 
 			// Handle completing the option key they're presently typing
 			if ((lastOptionValue == null || "".equals(lastOptionValue)) && !translated.endsWith(" ")) {
-				// Given we haven't got an option value of any form, and there's no space at the buffer end, we must still be typing an option key
-				//System.out.println("completing an option");
+				// Given we haven't got an option value of any form, and there's no space at the buffer end, we must
+				// still be typing an option key
+				// System.out.println("completing an option");
 				for (CliOption option : cliOptions) {
 					for (String value : option.key()) {
 						if (value != null && lastOptionKey != null
@@ -782,7 +802,8 @@ public class SimpleParser implements Parser {
 							}
 
 							if (allValues.isEmpty()) {
-								// Doesn't appear to be a custom Converter, so let's go and provide defaults for simple types
+								// Doesn't appear to be a custom Converter, so let's go and provide defaults for simple
+								// types
 
 								// Provide some simple options for common types
 								if (Boolean.class.isAssignableFrom(parameterType)
@@ -815,12 +836,12 @@ public class SimpleParser implements Parser {
 								// We only provide a suggestion if the lastOptionValue == ""
 								if (!StringUtils.hasText(lastOptionValue)) {
 									// We should add the result, as they haven't typed anything yet
-									results.add(new Completion(prefix + currentValue.getValue() + suffix,
-											currentValue.getFormattedValue(), currentValue.getHeading(),
-											currentValue.getOrder()));
+									results.add(new Completion(prefix + currentValue.getValue() + suffix, currentValue
+											.getFormattedValue(), currentValue.getHeading(), currentValue.getOrder()));
 								}
 								else {
-									// Only add the result **if** what they've typed is compatible *AND* they haven't already typed it in full
+									// Only add the result **if** what they've typed is compatible *AND* they haven't
+									// already typed it in full
 									if (currentValue.getValue().toLowerCase().startsWith(lastOptionValue.toLowerCase())
 											&& !lastOptionValue.equalsIgnoreCase(currentValue.getValue())
 											&& lastOptionValue.length() < currentValue.getValue().length()) {
@@ -831,7 +852,8 @@ public class SimpleParser implements Parser {
 								}
 							}
 
-							// ROO-389: give inline options given there's multiple choices available and we want to help the user
+							// ROO-389: give inline options given there's multiple choices available and we want to help
+							// the user
 							StringBuilder help = new StringBuilder();
 							help.append(OsUtils.LINE_SEPARATOR);
 							help.append(option.mandatory() ? "required --" : "optional --");
@@ -852,13 +874,13 @@ public class SimpleParser implements Parser {
 							else {
 								if (!"".equals(option.specifiedDefaultValue())
 										&& !"__NULL__".equals(option.specifiedDefaultValue())) {
-									help.append("; default if option present: '").append(option.specifiedDefaultValue()).append(
-											"'");
+									help.append("; default if option present: '")
+											.append(option.specifiedDefaultValue()).append("'");
 								}
 								if (!"".equals(option.unspecifiedDefaultValue())
 										&& !"__NULL__".equals(option.unspecifiedDefaultValue())) {
-									help.append("; default if option not present: '").append(
-											option.unspecifiedDefaultValue()).append("'");
+									help.append("; default if option not present: '")
+											.append(option.unspecifiedDefaultValue()).append("'");
 								}
 							}
 							LOGGER.info(help.toString());
@@ -866,7 +888,8 @@ public class SimpleParser implements Parser {
 							if (results.size() == 1) {
 								String suggestion = results.iterator().next().getValue().trim();
 								if (suggestion.equals(lastOptionValue)) {
-									// They have pressed TAB in the default value, and the default value has already been provided as an explicit option
+									// They have pressed TAB in the default value, and the default value has already
+									// been provided as an explicit option
 									return 0;
 								}
 							}
@@ -891,34 +914,32 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * populate completion for mandatory options
-	 *
+	 * 
 	 * @param translated user's input
 	 * @param unspecified unspecified options
 	 * @param value the option key
 	 * @param results completion list
 	 */
-	private void handleMandatoryCompletion(String translated, List<CliOption> unspecified, String value, SortedSet<Completion> results) {
+	private void handleMandatoryCompletion(String translated, List<CliOption> unspecified, String value,
+			SortedSet<Completion> results) {
 		StringBuilder strBuilder = new StringBuilder(translated);
 		if (!translated.endsWith(" ")) {
 			strBuilder.append(" ");
 		}
 		// Plan change for SHL-20. But usability is bad.
 		/*
-		List<List<String>> mandatoryOptions = getMandatoryOptions(unspecified);
-		for (List<String> option : mandatoryOptions) {
-			strBuilder.append("--");
-			strBuilder.append(option.get(0));
-			strBuilder.append(" ");
-		}
-		*/
+		 * List<List<String>> mandatoryOptions = getMandatoryOptions(unspecified); for (List<String> option :
+		 * mandatoryOptions) { strBuilder.append("--"); strBuilder.append(option.get(0)); strBuilder.append(" "); }
+		 */
 		strBuilder.append("--");
 		strBuilder.append(value);
 		strBuilder.append(" ");
 		results.add(new Completion(strBuilder.toString()));
 	}
 
-
-	public void obtainHelp(@CliOption(key = { "", "command" }, optionContext = "availableCommands", help = "Command name to provide help for") String buffer) {
+	public void obtainHelp(
+			@CliOption(key = { "", "command" }, optionContext = "availableCommands", help = "Command name to provide help for")
+			String buffer) {
 		synchronized (mutex) {
 			if (buffer == null) {
 				buffer = "";
@@ -955,18 +976,17 @@ public class SimpleParser implements Parser {
 									if ("".equals(key)) {
 										key = "** default **";
 									}
-									sb.append(" Keyword:                  ").append(key).append(
-											OsUtils.LINE_SEPARATOR);
+									sb.append(" Keyword:                  ").append(key).append(OsUtils.LINE_SEPARATOR);
 								}
 
-								sb.append("   Help:                   ").append(cliOption.help()).append(
-										OsUtils.LINE_SEPARATOR);
-								sb.append("   Mandatory:              ").append(cliOption.mandatory()).append(
-										OsUtils.LINE_SEPARATOR);
-								sb.append("   Default if specified:   '").append(cliOption.specifiedDefaultValue()).append(
-										"'").append(OsUtils.LINE_SEPARATOR);
-								sb.append("   Default if unspecified: '").append(cliOption.unspecifiedDefaultValue()).append(
-										"'").append(OsUtils.LINE_SEPARATOR);
+								sb.append("   Help:                   ").append(cliOption.help())
+										.append(OsUtils.LINE_SEPARATOR);
+								sb.append("   Mandatory:              ").append(cliOption.mandatory())
+										.append(OsUtils.LINE_SEPARATOR);
+								sb.append("   Default if specified:   '").append(cliOption.specifiedDefaultValue())
+										.append("'").append(OsUtils.LINE_SEPARATOR);
+								sb.append("   Default if unspecified: '").append(cliOption.unspecifiedDefaultValue())
+										.append("'").append(OsUtils.LINE_SEPARATOR);
 								sb.append(OsUtils.LINE_SEPARATOR);
 							}
 
@@ -998,8 +1018,8 @@ public class SimpleParser implements Parser {
 			}
 
 			LOGGER.info(sb.toString());
-//			LOGGER.warning("** Type 'hint' (without the quotes) and hit ENTER for step-by-step guidance **"
-//					+ StringUtils.LINE_SEPARATOR);
+			// LOGGER.warning("** Type 'hint' (without the quotes) and hit ENTER for step-by-step guidance **"
+			// + StringUtils.LINE_SEPARATOR);
 		}
 	}
 
@@ -1042,7 +1062,7 @@ public class SimpleParser implements Parser {
 			}
 		}
 	}
-	
+
 	public final Set<CommandMarker> getCommandMarkers() {
 		synchronized (mutex) {
 			return Collections.unmodifiableSet(commands);
@@ -1074,7 +1094,7 @@ public class SimpleParser implements Parser {
 			converters.remove(converter);
 		}
 	}
-	
+
 	public final Set<Converter<?>> getConverters() {
 		synchronized (mutex) {
 			return Collections.unmodifiableSet(converters);
