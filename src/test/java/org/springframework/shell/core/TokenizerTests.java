@@ -113,6 +113,17 @@ public class TokenizerTests {
 	}
 
 	@Test
+	public void testAllowKeyOnlyIfAtTheEnd() {
+		Map<String, String> result = tokenize("--foo bar fizz --bozz ");
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("", "fizz");
+		expected.put("foo", "bar");
+		expected.put("bozz", "");
+		assertEquals(expected, result);
+
+	}
+
+	@Test
 	public void testValueQuotationAllowUnfinished() {
 		Map<String, String> result = new Tokenizer("--foo \"bar bazz\" --bizz \"unfinished bizness ", true).getTokens();
 		Map<String, String> expected = new HashMap<String, String>();

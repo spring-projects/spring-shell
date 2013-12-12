@@ -130,10 +130,20 @@ public class Tokenizer {
 		return sb.toString();
 	}
 
+	/**
+	 * Consume a full @code{--key value} pair *unless* we're at the very end, in which case allow for @code {--key},
+	 * using "" for the value.
+	 */
 	private void eatKeyEqualsValue() {
 		String key = eatKey();
 		eatWhiteSpace();
-		String value = eatValue();
+		String value;
+		if (pos < buffer.length) {
+			value = eatValue();
+		}
+		else {
+			value = "";
+		}
 		store(key, value);
 	}
 
