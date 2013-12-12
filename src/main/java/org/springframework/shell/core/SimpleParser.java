@@ -573,7 +573,8 @@ public class SimpleParser implements Parser {
 			Assert.notNull(cmd, "CliCommand unavailable for '" + methodTarget.getMethod().toGenericString() + "'");
 
 			// Make a reasonable attempt at parsing the remainingBuffer
-			Map<String, String> options = new Tokenizer(methodTarget.getRemainingBuffer(), true).getTokens();
+			Tokenizer tokenizer = new Tokenizer(methodTarget.getRemainingBuffer(), true);
+			Map<String, String> options = tokenizer.getTokens();
 
 			// Lookup arguments for this target
 			Annotation[][] parameterAnnotations = methodTarget.getMethod().getParameterAnnotations();
@@ -683,7 +684,8 @@ public class SimpleParser implements Parser {
 			// Handle suggesting an option key if they haven't got one presently specified (or they've completed a full
 			// option key/value pair)
 			if (lastOptionKey == null
-					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" "))) {
+					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" ") && !tokenizer
+							.lastValueHadQuote())) {
 				// We have either NEVER specified an option key/value pair
 				// OR we have specified a full option key/value pair
 
@@ -819,8 +821,12 @@ public class SimpleParser implements Parser {
 							}
 
 							String prefix = "";
-							if (!translated.endsWith(" ")) {
+							if (!tokenizer.lastValueHadQuote() && !translated.endsWith(" ")) {
 								prefix = " ";
+							}
+							else if (tokenizer.lastValueHadQuote()) {
+								// Re-install opening quote if there was one
+								prefix = " \"";
 							}
 
 							// Only include in the candidates those results which are compatible with the present buffer
@@ -888,11 +894,12 @@ public class SimpleParser implements Parser {
 
 							if (results.size() > 0) {
 								candidates.addAll(results);
-								// Values presented from the last space onwards
-								if (translated.endsWith(" ")) {
-									return translated.lastIndexOf(" ") + 1;
+								if (tokenizer.lastValueHadQuote()) {
+									return translated.lastIndexOf(" \"");
 								}
-								return translated.trim().lastIndexOf(" ");
+								else {
+									return translated.lastIndexOf(" ");
+								}
 							}
 							return 0;
 						}

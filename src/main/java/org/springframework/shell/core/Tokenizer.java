@@ -49,6 +49,11 @@ public class Tokenizer {
 	/** Useful when trying to do auto complete. */
 	private boolean allowUnbalancedLastQuotedValue;
 
+	/**
+	 * Used to indicate that the last value was indeed half enclosed in quotes. Useful so that parser can re-add it.
+	 */
+	private boolean lastValueHadQuote;
+
 	public Tokenizer(String text) {
 		this(text, false);
 	}
@@ -119,6 +124,7 @@ public class Tokenizer {
 		// When here, we either ran out of input, or encountered our delim, or both
 		if (endDelimiter == '"' && pos == buffer.length && buffer[pos - 1] != '"') {
 			if (allowUnbalancedLastQuotedValue) {
+				lastValueHadQuote = true;
 				return sb.toString();
 			}
 			else {
@@ -128,6 +134,10 @@ public class Tokenizer {
 		// Eat our delim
 		pos++;
 		return sb.toString();
+	}
+
+	public boolean lastValueHadQuote() {
+		return lastValueHadQuote;
 	}
 
 	/**
