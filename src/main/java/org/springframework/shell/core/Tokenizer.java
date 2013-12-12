@@ -35,6 +35,8 @@ import java.util.Map;
  * Any token without an option marker is considered the default. The default is returned in the Map as an element with
  * an empty string key (""). There can only be a single default.
  * 
+ * @author Eric Bottard
+ * @since 1.1
  */
 public class Tokenizer {
 
@@ -46,8 +48,21 @@ public class Tokenizer {
 
 	private final Map<String, String> result = new LinkedHashMap<String, String>();
 
+	/** Useful when trying to do auto complete. */
+	private boolean allowUnbalancedLastQuotedValue;
+
+	/**
+	 * Used to indicate that the last value was indeed half enclosed in quotes. Useful so that parser can re-add it.
+	 */
+	private boolean lastValueHadQuote;
+
 	public Tokenizer(String text) {
+		this(text, false);
+	}
+
+	public Tokenizer(String text, boolean allowUnbalancedLastQuotedValue) {
 		this.buffer = text.toCharArray();
+		this.allowUnbalancedLastQuotedValue = allowUnbalancedLastQuotedValue;
 		tokenize();
 	}
 
@@ -109,19 +124,46 @@ public class Tokenizer {
 			pos++;
 		}
 		// When here, we either ran out of input, or encountered our delim, or both
-		if (endDelimiter == '"' && pos == buffer.length && buffer[pos - 1] != '"') {
-			throw new IllegalArgumentException("Cannot have an unbalanced number of quotation marks");
+		// Fail, unless we allow an unfinished quoted string to be reported
+		if (endDelimiter == '"' && // we're using quotes
+				pos == buffer.length && // we ran of input
+				(buffer[pos - 1] != '"' || // quotes are not properly closed
+				sb.length() == 0)) { // BUT it's ok if consumed nothing (pos-1 is *opening* quote then)
+			if (allowUnbalancedLastQuotedValue) {
+				lastValueHadQuote = true;
+				return sb.toString();
+			}
+			else {
+				throw new IllegalArgumentException("Cannot have an unbalanced number of quotation marks");
+			}
 		}
 		// Eat our delim
 		pos++;
 		return sb.toString();
 	}
 
+	public boolean lastValueHadQuote() {
+		return lastValueHadQuote;
+	}
+
+	/**
+	 * Consume a full @code{--key value} pair *unless* we're at the very end, in which case allow for @code {--key},
+	 * using "" for the value.
+	 */
 	private void eatKeyEqualsValue() {
 		String key = eatKey();
 		eatWhiteSpace();
-		String value = eatValue();
-		store(key, value);
+		String value;
+		if (pos < buffer.length) {
+			value = eatValue();
+		}
+		else {
+			value = "";
+		}
+		if (!key.equals("") || !key.equals(value)) {
+			// Don't store the ""="" that would result from having a pending " --" at the end
+			store(key, value);
+		}
 	}
 
 	private String eatKey() {

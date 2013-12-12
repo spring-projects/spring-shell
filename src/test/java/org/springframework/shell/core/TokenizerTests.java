@@ -19,6 +19,7 @@ package org.springframework.shell.core;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -110,6 +111,45 @@ public class TokenizerTests {
 	public void testValueQuotationEscaped() {
 		Map<String, String> result = tokenize("--foo \"bar \\\"fizz\"");
 		assertEquals(singletonMap("foo", "bar \"fizz"), result);
+	}
+
+	@Test
+	public void testAllowKeyOnlyIfAtTheEnd() {
+		Map<String, String> result = tokenize("--foo bar fizz --bozz ");
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("", "fizz");
+		expected.put("foo", "bar");
+		expected.put("bozz", "");
+		assertEquals(expected, result);
+
+	}
+
+	@Test
+	public void testValueQuotationAllowUnfinished() {
+		Tokenizer tokenizer = new Tokenizer("--foo \"bar bazz\" --bizz \"unfinished bizness ", true);
+		Map<String, String> result = tokenizer.getTokens();
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("foo", "bar bazz");
+		expected.put("bizz", "unfinished bizness ");
+		assertEquals(expected, result);
+		assertTrue(tokenizer.lastValueHadQuote());
+	}
+
+	@Test
+	public void testValueQuotationAllowUnfinishedEvenWithEmptyContent() {
+		Tokenizer tokenizer = new Tokenizer("--foo \"bar bazz\" --bizz \"", true);
+		Map<String, String> result = tokenizer.getTokens();
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("foo", "bar bazz");
+		expected.put("bizz", "");
+		assertEquals(expected, result);
+		assertTrue(tokenizer.lastValueHadQuote());
+	}
+
+	@Test
+	public void testPendingDashDash() {
+		Map<String, String> result = tokenize("--foo bar --");
+		assertEquals(singletonMap("foo", "bar"), result);
 	}
 
 	private Map<String, String> tokenize(String what) {

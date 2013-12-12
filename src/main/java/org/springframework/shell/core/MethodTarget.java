@@ -26,20 +26,23 @@ import org.springframework.util.StringUtils;
  * A method that can be executed via a shell command.
  * <p>
  * Immutable since 1.2.0.
- *
+ * 
  * @author Ben Alex
  */
 public class MethodTarget {
 
 	// Fields
 	private final Method method;
+
 	private final Object target;
+
 	private final String remainingBuffer;
+
 	private final String key;
 
 	/**
 	 * Constructor for a <code>null remainingBuffer</code> and <code>key</code>
-	 *
+	 * 
 	 * @param method the method to invoke (required)
 	 * @param target the object on which the method is to be invoked (required)
 	 * @since 1.2.0
@@ -50,7 +53,7 @@ public class MethodTarget {
 
 	/**
 	 * Constructor that allows all fields to be set
-	 *
+	 * 
 	 * @param method the method to invoke (required)
 	 * @param target the object on which the method is to be invoked (required)
 	 * @param remainingBuffer can be blank
@@ -62,7 +65,7 @@ public class MethodTarget {
 		Assert.notNull(target, "Target is required");
 		this.key = StringUtils.trimWhitespace(key);
 		this.method = method;
-		this.remainingBuffer = StringUtils.trimWhitespace(remainingBuffer);
+		this.remainingBuffer = remainingBuffer;
 		this.target = target;
 	}
 

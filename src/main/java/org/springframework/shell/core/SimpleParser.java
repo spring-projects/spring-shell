@@ -573,15 +573,8 @@ public class SimpleParser implements Parser {
 			Assert.notNull(cmd, "CliCommand unavailable for '" + methodTarget.getMethod().toGenericString() + "'");
 
 			// Make a reasonable attempt at parsing the remainingBuffer
-			Map<String, String> options;
-			try {
-				options = new Tokenizer(methodTarget.getRemainingBuffer()).getTokens();
-			}
-			catch (IllegalArgumentException ex) {
-				// Assume any IllegalArgumentException is due to a quotation mark mismatch
-				candidates.add(new Completion(translated + "\""));
-				return 0;
-			}
+			Tokenizer tokenizer = new Tokenizer(methodTarget.getRemainingBuffer(), true);
+			Map<String, String> options = tokenizer.getTokens();
 
 			// Lookup arguments for this target
 			Annotation[][] parameterAnnotations = methodTarget.getMethod().getParameterAnnotations();
@@ -665,7 +658,7 @@ public class SimpleParser implements Parser {
 
 			// Handle if they are trying to find out the available option keys; always present option keys in order
 			// of their declaration on the method signature, thus we can stop when mandatory options are filled in
-			if (methodTarget.getRemainingBuffer().endsWith("--")) {
+			if (methodTarget.getRemainingBuffer().endsWith("--") && !tokenizer.lastValueHadQuote()) {
 				boolean showAllRemaining = true;
 				for (CliOption include : unspecified) {
 					if (include.mandatory()) {
@@ -691,7 +684,8 @@ public class SimpleParser implements Parser {
 			// Handle suggesting an option key if they haven't got one presently specified (or they've completed a full
 			// option key/value pair)
 			if (lastOptionKey == null
-					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" "))) {
+					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" ") && !tokenizer
+							.lastValueHadQuote())) {
 				// We have either NEVER specified an option key/value pair
 				// OR we have specified a full option key/value pair
 
@@ -755,7 +749,8 @@ public class SimpleParser implements Parser {
 			}
 
 			// Handle completing the option key they're presently typing
-			if ((lastOptionValue == null || "".equals(lastOptionValue)) && !translated.endsWith(" ")) {
+			if ((lastOptionValue == null || "".equals(lastOptionValue))
+					&& !(translated.endsWith(" ") || translated.endsWith(" \""))) {
 				// Given we haven't got an option value of any form, and there's no space at the buffer end, we must
 				// still be typing an option key
 				// System.out.println("completing an option");
@@ -827,8 +822,12 @@ public class SimpleParser implements Parser {
 							}
 
 							String prefix = "";
-							if (!translated.endsWith(" ")) {
+							if (!tokenizer.lastValueHadQuote() && !translated.endsWith(" ")) {
 								prefix = " ";
+							}
+							else if (tokenizer.lastValueHadQuote()) {
+								// Re-install opening quote if there was one
+								prefix = " \"";
 							}
 
 							// Only include in the candidates those results which are compatible with the present buffer
@@ -896,11 +895,12 @@ public class SimpleParser implements Parser {
 
 							if (results.size() > 0) {
 								candidates.addAll(results);
-								// Values presented from the last space onwards
-								if (translated.endsWith(" ")) {
+								if (tokenizer.lastValueHadQuote()) {
+									return translated.lastIndexOf(" \"");
+								}
+								else {
 									return translated.lastIndexOf(" ") + 1;
 								}
-								return translated.trim().lastIndexOf(" ");
 							}
 							return 0;
 						}
