@@ -658,7 +658,7 @@ public class SimpleParser implements Parser {
 
 			// Handle if they are trying to find out the available option keys; always present option keys in order
 			// of their declaration on the method signature, thus we can stop when mandatory options are filled in
-			if (methodTarget.getRemainingBuffer().endsWith("--")) {
+			if (methodTarget.getRemainingBuffer().endsWith("--") && !tokenizer.lastValueHadQuote()) {
 				boolean showAllRemaining = true;
 				for (CliOption include : unspecified) {
 					if (include.mandatory()) {
