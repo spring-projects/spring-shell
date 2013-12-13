@@ -899,7 +899,7 @@ public class SimpleParser implements Parser {
 									return translated.lastIndexOf(" \"");
 								}
 								else {
-									return translated.lastIndexOf(" ");
+									return translated.lastIndexOf(" ") + 1;
 								}
 							}
 							return 0;

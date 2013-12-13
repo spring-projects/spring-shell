@@ -146,6 +146,12 @@ public class TokenizerTests {
 		assertTrue(tokenizer.lastValueHadQuote());
 	}
 
+	@Test
+	public void testPendingDashDash() {
+		Map<String, String> result = tokenize("--foo bar --");
+		assertEquals(singletonMap("foo", "bar"), result);
+	}
+
 	private Map<String, String> tokenize(String what) {
 		return new Tokenizer(what).getTokens();
 	}

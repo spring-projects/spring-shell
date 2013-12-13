@@ -158,7 +158,10 @@ public class Tokenizer {
 		else {
 			value = "";
 		}
-		store(key, value);
+		if (!key.equals("") || !key.equals(value)) {
+			// Don't store the ""="" that would result from having a pending " --" at the end
+			store(key, value);
+		}
 	}
 
 	private String eatKey() {
