@@ -19,6 +19,7 @@ package org.springframework.shell.core;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -125,11 +126,24 @@ public class TokenizerTests {
 
 	@Test
 	public void testValueQuotationAllowUnfinished() {
-		Map<String, String> result = new Tokenizer("--foo \"bar bazz\" --bizz \"unfinished bizness ", true).getTokens();
+		Tokenizer tokenizer = new Tokenizer("--foo \"bar bazz\" --bizz \"unfinished bizness ", true);
+		Map<String, String> result = tokenizer.getTokens();
 		Map<String, String> expected = new HashMap<String, String>();
 		expected.put("foo", "bar bazz");
 		expected.put("bizz", "unfinished bizness ");
 		assertEquals(expected, result);
+		assertTrue(tokenizer.lastValueHadQuote());
+	}
+
+	@Test
+	public void testValueQuotationAllowUnfinishedEvenWithEmptyContent() {
+		Tokenizer tokenizer = new Tokenizer("--foo \"bar bazz\" --bizz \"", true);
+		Map<String, String> result = tokenizer.getTokens();
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("foo", "bar bazz");
+		expected.put("bizz", "");
+		assertEquals(expected, result);
+		assertTrue(tokenizer.lastValueHadQuote());
 	}
 
 	private Map<String, String> tokenize(String what) {

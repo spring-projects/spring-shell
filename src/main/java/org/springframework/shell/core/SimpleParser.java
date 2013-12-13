@@ -749,7 +749,8 @@ public class SimpleParser implements Parser {
 			}
 
 			// Handle completing the option key they're presently typing
-			if ((lastOptionValue == null || "".equals(lastOptionValue)) && !translated.endsWith(" ")) {
+			if ((lastOptionValue == null || "".equals(lastOptionValue))
+					&& !(translated.endsWith(" ") || translated.endsWith(" \""))) {
 				// Given we haven't got an option value of any form, and there's no space at the buffer end, we must
 				// still be typing an option key
 				// System.out.println("completing an option");
