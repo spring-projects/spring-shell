@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 
 import jline.WindowsTerminal;
 import jline.console.ConsoleReader;
+import jline.console.history.History;
 import jline.console.history.MemoryHistory;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
@@ -127,7 +128,10 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		// reader.setDebug(new PrintWriter(new FileWriter("writer.debug", true)));
 
 		openFileLogIfPossible();
-		((MemoryHistory) this.reader.getHistory()).setMaxSize(getHistorySize());
+		History history = this.reader.getHistory();
+		if (history instanceof MemoryHistory) {
+			((MemoryHistory)history).setMaxSize(getHistorySize());
+		}
 		// Try to build previous command history from the project's log
 		String[] filteredLogEntries = filterLogEntry();
 		for (String logEntry : filteredLogEntries) {
