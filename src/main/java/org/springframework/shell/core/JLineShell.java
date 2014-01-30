@@ -183,12 +183,13 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	 */
 	private String[] filterLogEntry() {
 		ArrayList<String> entries = new ArrayList<String>();
+		ReversedLinesFileReader reversedReader = null;
 		try {
-			ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(getHistoryFileName()), 4096,
+			reversedReader = new ReversedLinesFileReader(new File(getHistoryFileName()), 4096,
 					Charset.forName("UTF-8"));
 			int size = 0;
 			String line = null;
-			while ((line = reader.readLine()) != null) {
+			while ((line = reversedReader.readLine()) != null) {
 				if (!line.startsWith("//")) {
 					size++;
 					if (size > historySize) {
@@ -202,9 +203,22 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		}
 		catch (IOException e) {
 			logger.warning("read history file failed. Reason:" + e.getMessage());
+		} finally {
+			closeReversedReader(reversedReader);
 		}
 		Collections.reverse(entries);
 		return entries.toArray(new String[0]);
+	}
+
+	private void closeReversedReader(ReversedLinesFileReader reversedReader) {
+		if (reversedReader != null) {
+			try {
+				reversedReader.close();
+			} catch (IOException ex) {
+				logger.warning("Cloud not close ReversedLinesFileReader: " + ex);
+			}
+		}
+		
 	}
 
 	/**
