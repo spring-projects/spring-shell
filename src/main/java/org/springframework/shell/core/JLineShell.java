@@ -117,7 +117,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		removeHandlers(mainLogger);
 		mainLogger.addHandler(handler);
 
-		reader.addCompleter(new JLineCompletorAdapter(getParser()));
+		reader.addCompleter(new ParserCompleter(getParser()));
 
 		reader.setBellEnabled(true);
 		if (Boolean.getBoolean("jline.nobell")) {

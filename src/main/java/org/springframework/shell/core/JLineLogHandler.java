@@ -43,13 +43,6 @@ import org.springframework.util.Assert;
  */
 public class JLineLogHandler extends Handler {
 
-	// Constants
-	private static final boolean ROO_BRIGHT_COLORS = Boolean.getBoolean("roo.bright");
-
-	private static final boolean SHELL_BRIGHT_COLORS = Boolean.getBoolean("spring.shell.bright");
-
-	private static final boolean BRIGHT_COLORS = ROO_BRIGHT_COLORS || SHELL_BRIGHT_COLORS;
-
 	// Fields
 	private ConsoleReader reader;
 
@@ -227,31 +220,4 @@ public class JLineLogHandler extends Handler {
 		return sb.toString();
 	}
 
-	/**
-	 * Makes text brighter if requested through system property 'roo.bright' and works around issue on Windows in using
-	 * reverse() in combination with the Jansi lib, which leaves its 'negative' flag set unless reset explicitly.
-	 * 
-	 * @return new patched ANSIBuffer
-	 */
-	// public static ANSIBuffer getANSIBuffer() {
-	// final char esc = (char) 27;
-	// return new ANSIBuffer() {
-	// @Override
-	// public ANSIBuffer reverse(final String str) {
-	// if (OsUtils.isWindows()) {
-	// return super.reverse(str).append(ANSICodes.attrib(esc));
-	// }
-	// return super.reverse(str);
-	// };
-	//
-	// @Override
-	// public ANSIBuffer attrib(final String str, final int code) {
-	// if (BRIGHT_COLORS && 30 <= code && code <= 37) {
-	// // This is a color code: add a 'bright' code
-	// return append(esc + "[" + code + ";1m").append(str).append(ANSICodes.attrib(0));
-	// }
-	// return super.attrib(str, code);
-	// }
-	// };
-	// }
 }

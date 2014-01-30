@@ -23,17 +23,17 @@ import jline.console.completer.Completer;
 import org.springframework.util.Assert;
 
 /**
- * An implementation of JLine's {@link Completor} interface that delegates to a {@link Parser}.
+ * An implementation of JLine's {@link Completer} interface that delegates to a {@link Parser}.
  * 
  * @author Ben Alex
  * @since 1.0
  */
-public class JLineCompletorAdapter implements Completer {
+public class ParserCompleter implements Completer {
 
 	// Fields
 	private final Parser parser;
 
-	public JLineCompletorAdapter(final Parser parser) {
+	public ParserCompleter(final Parser parser) {
 		Assert.notNull(parser, "Parser required");
 		this.parser = parser;
 	}
@@ -46,8 +46,6 @@ public class JLineCompletorAdapter implements Completer {
 			List<Completion> completions = new ArrayList<Completion>();
 			result = parser.completeAdvanced(buffer, cursor, completions);
 			for (Completion completion : completions) {
-				// candidates.add(new jline.Completion(completion.getValue(), completion.getFormattedValue(), completion
-				// .getHeading()));
 				candidates.add(completion.getValue());
 			}
 		}
