@@ -545,7 +545,7 @@ public class SimpleParser implements Parser {
 
 			if (targets.isEmpty()) {
 				// Nothing matches the buffer they've presented
-				return cursor;
+				return -1;
 			}
 			if (targets.size() > 1) {
 				// Assist them locate a particular target
@@ -658,7 +658,7 @@ public class SimpleParser implements Parser {
 
 			// Handle if they are trying to find out the available option keys; always present option keys in order
 			// of their declaration on the method signature, thus we can stop when mandatory options are filled in
-			if (methodTarget.getRemainingBuffer().endsWith("--") && !tokenizer.lastValueHadQuote()) {
+			if (methodTarget.getRemainingBuffer().endsWith("--") && !tokenizer.lastValueIsStillBeingTyped()) {
 				boolean showAllRemaining = true;
 				for (CliOption include : unspecified) {
 					if (include.mandatory()) {
@@ -685,7 +685,7 @@ public class SimpleParser implements Parser {
 			// option key/value pair)
 			if (lastOptionKey == null
 					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" ") && !tokenizer
-							.lastValueHadQuote())) {
+							.lastValueIsStillBeingTyped())) {
 				// We have either NEVER specified an option key/value pair
 				// OR we have specified a full option key/value pair
 
@@ -749,11 +749,9 @@ public class SimpleParser implements Parser {
 			}
 
 			// Handle completing the option key they're presently typing
-			if ((lastOptionValue == null || "".equals(lastOptionValue))
-					&& !(translated.endsWith(" ") || translated.endsWith(" \""))) {
-				// Given we haven't got an option value of any form, and there's no space at the buffer end, we must
-				// still be typing an option key
-				// System.out.println("completing an option");
+			if ("".equals(lastOptionValue)) {
+				// Given we haven't got an option value of any form, we must
+				// still be typing an option key.
 				for (CliOption option : cliOptions) {
 					for (String value : option.key()) {
 						if (value != null && lastOptionKey != null
@@ -821,21 +819,12 @@ public class SimpleParser implements Parser {
 								}
 							}
 
-							String prefix = "";
-							if (!tokenizer.lastValueHadQuote() && !translated.endsWith(" ")) {
-								prefix = " ";
-							}
-							else if (tokenizer.lastValueHadQuote()) {
-								// Re-install opening quote if there was one
-								prefix = " \"";
-							}
-
 							// Only include in the candidates those results which are compatible with the present buffer
 							for (Completion currentValue : allValues) {
 								// We only provide a suggestion if the lastOptionValue == ""
 								if (!StringUtils.hasText(lastOptionValue)) {
 									// We should add the result, as they haven't typed anything yet
-									results.add(new Completion(prefix + currentValue.getValue() + suffix, currentValue
+									results.add(new Completion(currentValue.getValue() + suffix, currentValue
 											.getFormattedValue(), currentValue.getHeading(), currentValue.getOrder()));
 								}
 								else {
@@ -843,10 +832,12 @@ public class SimpleParser implements Parser {
 									// already typed it in full
 									if (currentValue.getValue().toLowerCase().startsWith(lastOptionValue.toLowerCase())
 											&& !lastOptionValue.equalsIgnoreCase(currentValue.getValue())
-											&& lastOptionValue.length() < currentValue.getValue().length()) {
-										results.add(new Completion(prefix + currentValue.getValue() + suffix,
-												currentValue.getFormattedValue(), currentValue.getHeading(),
-												currentValue.getOrder()));
+											&& lastOptionValue.length() < currentValue.getValue().length()
+											&& (tokenizer.getLastValueDelimiter() == ' ' || tokenizer
+													.lastValueIsStillBeingTyped())) {
+										results.add(new Completion(currentValue.getValue() + suffix, currentValue
+												.getFormattedValue(), currentValue.getHeading(), currentValue
+												.getOrder()));
 									}
 								}
 							}
@@ -889,18 +880,14 @@ public class SimpleParser implements Parser {
 								if (suggestion.equals(lastOptionValue)) {
 									// They have pressed TAB in the default value, and the default value has already
 									// been provided as an explicit option
-									return 0;
+									return -1;
 								}
 							}
 
 							if (results.size() > 0) {
 								candidates.addAll(results);
-								if (tokenizer.lastValueHadQuote()) {
-									return translated.lastIndexOf(" \"");
-								}
-								else {
-									return translated.lastIndexOf(" ") + 1;
-								}
+								return methodTarget.getKey().length() + " ".length()
+										+ tokenizer.getLastValueStartOffset();
 							}
 							return 0;
 						}
@@ -908,7 +895,7 @@ public class SimpleParser implements Parser {
 				}
 			}
 
-			return 0;
+			return -1;
 		}
 	}
 
