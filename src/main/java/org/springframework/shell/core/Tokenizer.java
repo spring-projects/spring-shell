@@ -54,7 +54,11 @@ public class Tokenizer {
 	/**
 	 * Used to indicate that the last value was indeed half enclosed in quotes. Useful so that parser can re-add it.
 	 */
-	private boolean lastValueHadQuote;
+	private boolean lastValueIsStillBeingTyped;
+
+	private char lastValueDelimiter;
+
+	private int lastValueStartOffset;
 
 	public Tokenizer(String text) {
 		this(text, false);
@@ -114,6 +118,9 @@ public class Tokenizer {
 			endDelimiter = '"';
 			pos++;
 		}
+		// So that it can be retrieved later (if this is actually the last value)
+		lastValueDelimiter = endDelimiter;
+		lastValueStartOffset = pos;
 		while (pos < buffer.length && buffer[pos] != endDelimiter) {
 			if (buffer[pos] == ESCAPE_CHAR && pos + 1 < buffer.length && buffer[pos + 1] == endDelimiter) {
 				sb.append(endDelimiter);
@@ -130,7 +137,7 @@ public class Tokenizer {
 				(buffer[pos - 1] != '"' || // quotes are not properly closed
 				sb.length() == 0)) { // BUT it's ok if consumed nothing (pos-1 is *opening* quote then)
 			if (allowUnbalancedLastQuotedValue) {
-				lastValueHadQuote = true;
+				lastValueIsStillBeingTyped = true;
 				return sb.toString();
 			}
 			else {
@@ -142,8 +149,25 @@ public class Tokenizer {
 		return sb.toString();
 	}
 
-	public boolean lastValueHadQuote() {
-		return lastValueHadQuote;
+	/**
+	 * Return the offset at which the last value seen started (NOT including any delimiter).
+	 */
+	public int getLastValueStartOffset() {
+		return lastValueStartOffset;
+	}
+
+	/**
+	 * Return the delimiter (space or quotes) that was (or is being) used for the last value.
+	 */
+	public char getLastValueDelimiter() {
+		return lastValueDelimiter;
+	}
+
+	/**
+	 * Return whether the last value was meant to be enclosed in quotes, but the closing quote has not been typed yet.
+	 */
+	public boolean lastValueIsStillBeingTyped() {
+		return lastValueIsStillBeingTyped;
 	}
 
 	/**
@@ -172,5 +196,15 @@ public class Tokenizer {
 			pos++;
 		}
 		return new String(buffer, start, pos - start);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder().append(buffer).append('\n');
+		for (int i = 0; i < lastValueStartOffset; i++) {
+			result.append(' ');
+		}
+		result.append('^');
+		return result.toString();
 	}
 }

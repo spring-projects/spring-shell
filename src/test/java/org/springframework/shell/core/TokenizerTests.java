@@ -132,7 +132,7 @@ public class TokenizerTests {
 		expected.put("foo", "bar bazz");
 		expected.put("bizz", "unfinished bizness ");
 		assertEquals(expected, result);
-		assertTrue(tokenizer.lastValueHadQuote());
+		assertTrue(tokenizer.lastValueIsStillBeingTyped());
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class TokenizerTests {
 		expected.put("foo", "bar bazz");
 		expected.put("bizz", "");
 		assertEquals(expected, result);
-		assertTrue(tokenizer.lastValueHadQuote());
+		assertTrue(tokenizer.lastValueIsStillBeingTyped());
 	}
 
 	@Test
