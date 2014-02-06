@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
@@ -30,6 +31,7 @@ import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.DiagnosingMatcher;
 import org.hamcrest.Matcher;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
@@ -136,6 +138,100 @@ public class SimpleParserTests {
 		assertThat(candidates, is(empty()));
 	}
 
+	@Test
+	public void testDashDashIntoOption() {
+		parser.add(new MyCommands());
+
+		buffer = "bar --";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 ")))));
+	}
+
+	@Test
+	@Ignore("TODO")
+	public void testArgumentValueWithEscapedQuotes() {
+		parser.add(new MyCommands());
+		parser.add(new StringCompletions(Arrays.asList("he said \"hello\" to me")));
+
+		buffer = "bar --option1 \"he said \\\"he";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"he said \\\"hello\\\" to me")))));
+
+	}
+
+	@Test
+	public void testNoCompletionsFound() {
+		parser.add(new MyCommands());
+
+		buffer = "notthere";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, empty());
+
+	}
+
+	@Test
+	public void testCommandAmbiguity() {
+		parser.add(new MyCommands());
+
+		buffer = "b";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bing ")))));
+
+	}
+
+	@Test
+	public void testUnfinishedCommandThatHasParams() {
+		parser.add(new MyCommands());
+
+		buffer = "ba";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar ")))));
+
+	}
+
+	@Test
+	public void testDontMisinterpretDashDashInArgumentValue() {
+		parser.add(new MyCommands());
+
+		buffer = "bar --option1 \"I end with --";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, empty());
+
+	}
+
+	@Test
+	public void testStopAtFirstWhenMandatory() {
+		parser.add(new MyCommands());
+
+		buffer = "testMandatory --";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testMandatory --option1 ")))));
+		assertThat(candidates, not(hasItem(completionThat(is(equalTo("testMandatory --option2 "))))));
+		assertThat(candidates, not(hasItem(completionThat(is(equalTo("testMandatory --option3 "))))));
+
+	}
+
+	@Test
+	public void testDontStopAtFirstWhenNotMandatory() {
+		parser.add(new MyCommands());
+
+		buffer = "testNotMandatory --";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testNotMandatory --option1 ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testNotMandatory --option2 ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testNotMandatory --option3 ")))));
+
+	}
+
 	/**
 	 * Return a matcher that asserts that a completion, when added to {@link #buffer} at the given {@link #offset},
 	 * indeed matches the provided matcher.
@@ -171,6 +267,27 @@ public class SimpleParserTests {
 		@CliCommand("bar")
 		public void bar(@CliOption(key = "option1")
 		String option1) {
+
+		}
+
+		@CliCommand("bing")
+		public void bang() {
+
+		}
+
+		@CliCommand("testMandatory")
+		public void testMandatory(@CliOption(key = "option1", mandatory = true)
+		String option1, @CliOption(key = "option2", mandatory = true)
+		String option2, @CliOption(key = "option3")
+		String option3) {
+
+		}
+
+		@CliCommand("testNotMandatory")
+		public void testNotMandatory(@CliOption(key = "option1")
+		String option1, @CliOption(key = "option2")
+		String option2, @CliOption(key = "option3")
+		String option3) {
 
 		}
 	}
