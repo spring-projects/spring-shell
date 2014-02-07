@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
@@ -60,7 +61,7 @@ public class SimpleParserTests {
 		buffer = "f";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("foo")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("foo ")))));
 	}
 
 	@Test
@@ -266,6 +267,65 @@ public class SimpleParserTests {
 
 	}
 
+	@Test
+	public void testAtEndOfKeyOption() {
+		parser.add(new MyCommands());
+		parser.add(new StringCompletions(Arrays.asList("abd", "def")));
+
+		buffer = "fileMore";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("fileMore --option ")))));
+
+		// Do it again with a trailing space
+		buffer = "fileMore ";
+		candidates.clear();
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("fileMore --option ")))));
+
+	}
+
+	@Test
+	public void testAtEndOfKeyOptionWithEvenLongerKeyOption() {
+		parser.add(new MyCommands());
+		parser.add(new StringCompletions(Arrays.asList("abd", "def")));
+
+		buffer = "file";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("file ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("fileMore ")))));
+
+		// Do it again with a trailing space
+		buffer = "file ";
+		candidates.clear();
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		// TODO
+		// assertThat(candidates, hasItem(completionThat(is(equalTo("file --option")))));
+		// assertThat(candidates, not(hasItem(completionThat(startsWith("fileMore")))));
+
+	}
+
+	@Test
+	public void testPrefixMatching() {
+		assertThat(SimpleParser.isMatch("hello", "hello", true), is(equalTo("")));
+		assertThat(SimpleParser.isMatch("hello there", "hello", true), is(equalTo("there")));
+		assertThat(SimpleParser.isMatch("hello there", "hello there", true), is(equalTo("")));
+		assertThat(SimpleParser.isMatch("hell", "hello", true), is(equalTo("")));
+
+		assertThat(SimpleParser.isMatch("hello", "hello there", true), is(nullValue()));
+		assertThat(SimpleParser.isMatch("hello", "hello there", false), is(equalTo("")));
+
+		assertThat(SimpleParser.isMatch("hi", "hello", true), is(nullValue()));
+
+		assertThat(SimpleParser.isMatch("hello", "hellothere", false), is(equalTo("")));
+		assertThat(SimpleParser.isMatch("hello", "hellothere", true), is(equalTo("")));
+		// TODO
+		// assertThat(SimpleParser.isMatch("hello ", "hellothere", true), is(nullValue()));
+	}
+
 	/**
 	 * Return a matcher that asserts that a completion, when added to {@link #buffer} at the given {@link #offset},
 	 * indeed matches the provided matcher.
@@ -330,6 +390,18 @@ public class SimpleParserTests {
 		String option1, @CliOption(key = "option2")
 		String option2, @CliOption(key = "option3")
 		String option3) {
+
+		}
+
+		@CliCommand("file")
+		public void file(@CliOption(key = "option", mandatory = true)
+		String option) {
+
+		}
+
+		@CliCommand("fileMore")
+		public void fileMore(@CliOption(key = "option", mandatory = true)
+		String option) {
 
 		}
 	}
