@@ -16,7 +16,9 @@
 
 package org.springframework.shell.core;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
@@ -139,6 +141,17 @@ public class SimpleParserTests {
 	}
 
 	@Test
+	public void testArgumentValueCompletionAlreadyGiven() {
+		parser.add(new MyCommands());
+		parser.add(new StringCompletions(Arrays.asList("abc", "def", "ghi")));
+
+		buffer = "bar --option1 def";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, is(empty()));
+	}
+
+	@Test
 	public void testDashDashIntoOption() {
 		parser.add(new MyCommands());
 
@@ -203,6 +216,27 @@ public class SimpleParserTests {
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
 		assertThat(candidates, empty());
+
+	}
+
+	@Test
+	public void testWithDefaultKey() {
+		parser.add(new MyCommands());
+
+		buffer = "testDefaultKey thevalue --optio";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testDefaultKey thevalue --option2 ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testDefaultKey thevalue --option3 ")))));
+		assertThat(candidates, not(hasItem(completionThat(containsString("option1")))));
+
+		// Let's do it again with default key in the middle
+		candidates.clear();
+		buffer = "testDefaultKey --option3 foo thevalue --optio";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testDefaultKey --option3 foo thevalue --option2 ")))));
+		assertThat(candidates, not(hasItem(completionThat(endsWith("option3 ")))));
 
 	}
 
@@ -285,6 +319,14 @@ public class SimpleParserTests {
 
 		@CliCommand("testNotMandatory")
 		public void testNotMandatory(@CliOption(key = "option1")
+		String option1, @CliOption(key = "option2")
+		String option2, @CliOption(key = "option3")
+		String option3) {
+
+		}
+
+		@CliCommand("testDefaultKey")
+		public void testDefaultKey(@CliOption(key = "")
 		String option1, @CliOption(key = "option2")
 		String option2, @CliOption(key = "option3")
 		String option3) {
