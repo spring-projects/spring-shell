@@ -749,7 +749,8 @@ public class SimpleParser implements Parser {
 			}
 
 			// Handle completing the option key they're presently typing
-			if (lastOptionKey != null && "".equals(lastOptionValue)) {
+			if (lastOptionKey != null && "".equals(lastOptionValue)
+					&& !translated.endsWith("" + tokenizer.getLastValueDelimiter())) {
 				// Given we haven't got an option value of any form, we must
 				// still be typing an option key.
 				for (CliOption option : unspecified) {

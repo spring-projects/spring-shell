@@ -19,6 +19,8 @@ package org.springframework.shell.core;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.util.Assert;
+
 /**
  * Converts a particular buffer into a tokenized structure.
  * 
@@ -58,7 +60,7 @@ public class Tokenizer {
 
 	private char lastValueDelimiter;
 
-	private int lastValueStartOffset;
+	private int lastValueStartOffset = -1;
 
 	public Tokenizer(String text) {
 		this(text, false);
@@ -153,6 +155,7 @@ public class Tokenizer {
 	 * Return the offset at which the last value seen started (NOT including any delimiter).
 	 */
 	public int getLastValueStartOffset() {
+		Assert.isTrue(lastValueStartOffset >= 0, "lastValueStartOffset has not been set yet");
 		return lastValueStartOffset;
 	}
 
@@ -160,6 +163,7 @@ public class Tokenizer {
 	 * Return the delimiter (space or quotes) that was (or is being) used for the last value.
 	 */
 	public char getLastValueDelimiter() {
+		Assert.isTrue(lastValueDelimiter != 0, "lastValueDelimiter has not been set yet");
 		return lastValueDelimiter;
 	}
 
@@ -191,6 +195,8 @@ public class Tokenizer {
 			value = eatValue();
 		}
 		else {
+			lastValueDelimiter = ' ';
+			lastValueStartOffset = pos;
 			value = "";
 		}
 		if (!key.equals("") || !key.equals(value)) {
