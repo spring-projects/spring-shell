@@ -434,6 +434,10 @@ public class SimpleParser implements Parser {
 		return result;
 	}
 
+	/**
+	 * See whether 'buffer' could be an invocation of 'command', and if so, return the remaining part of the buffer.
+	 * @param strictMatching true if ALL words of 'command' need to be matched
+	 */
 	static String isMatch(final String buffer, final String command, final boolean strictMatching) {
 		if ("".equals(buffer.trim())) {
 			return "";
