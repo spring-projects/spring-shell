@@ -658,7 +658,7 @@ public class SimpleParser implements Parser {
 
 			// Handle if they are trying to find out the available option keys; always present option keys in order
 			// of their declaration on the method signature, thus we can stop when mandatory options are filled in
-			if (methodTarget.getRemainingBuffer().endsWith("--") && !tokenizer.lastValueIsStillBeingTyped()) {
+			if (methodTarget.getRemainingBuffer().endsWith("--") && !tokenizer.openingQuotesHaveNotBeenClosed()) {
 				boolean showAllRemaining = true;
 				for (CliOption include : unspecified) {
 					if (include.mandatory()) {
@@ -685,7 +685,7 @@ public class SimpleParser implements Parser {
 			// option key/value pair)
 			if (lastOptionKey == null
 					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" ") && !tokenizer
-							.lastValueIsStillBeingTyped())) {
+							.openingQuotesHaveNotBeenClosed())) {
 				// We have either NEVER specified an option key/value pair
 				// OR we have specified a full option key/value pair
 
@@ -740,8 +740,8 @@ public class SimpleParser implements Parser {
 					}
 				}
 
-				// Only abort at this point if we have some suggestions; otherwise we might want to try to complete the
-				// "" option
+				// Only abort at this point if we have some suggestions;
+				// otherwise we might want to try to complete the "" option
 				if (results.size() > 0) {
 					candidates.addAll(results);
 					return 0;
@@ -749,13 +749,12 @@ public class SimpleParser implements Parser {
 			}
 
 			// Handle completing the option key they're presently typing
-			if ("".equals(lastOptionValue)) {
+			if (lastOptionKey != null && "".equals(lastOptionValue)) {
 				// Given we haven't got an option value of any form, we must
 				// still be typing an option key.
-				for (CliOption option : cliOptions) {
+				for (CliOption option : unspecified) {
 					for (String value : option.key()) {
-						if (value != null && lastOptionKey != null
-								&& value.regionMatches(true, 0, lastOptionKey, 0, lastOptionKey.length())) {
+						if (value != null && value.regionMatches(true, 0, lastOptionKey, 0, lastOptionKey.length())) {
 							String completionValue = translated.substring(0,
 									(translated.length() - lastOptionKey.length()))
 									+ value + " ";
@@ -795,85 +794,26 @@ public class SimpleParser implements Parser {
 							}
 
 							if (allValues.isEmpty()) {
-								// Doesn't appear to be a custom Converter, so let's go and provide defaults for simple
-								// types
-
-								// Provide some simple options for common types
-								if (Boolean.class.isAssignableFrom(parameterType)
-										|| Boolean.TYPE.isAssignableFrom(parameterType)) {
-									allValues.add(new Completion("true"));
-									allValues.add(new Completion("false"));
-								}
-
-								if (Number.class.isAssignableFrom(parameterType)) {
-									allValues.add(new Completion("0"));
-									allValues.add(new Completion("1"));
-									allValues.add(new Completion("2"));
-									allValues.add(new Completion("3"));
-									allValues.add(new Completion("4"));
-									allValues.add(new Completion("5"));
-									allValues.add(new Completion("6"));
-									allValues.add(new Completion("7"));
-									allValues.add(new Completion("8"));
-									allValues.add(new Completion("9"));
-								}
+								// Doesn't appear to be a custom Converter, so let's go and provide defaults
+								// for simple types
+								completeForSimpleTypes(parameterType, allValues);
 							}
 
 							// Only include in the candidates those results which are compatible with the present buffer
 							for (Completion currentValue : allValues) {
-								// We only provide a suggestion if the lastOptionValue == ""
-								if (!StringUtils.hasText(lastOptionValue)) {
-									// We should add the result, as they haven't typed anything yet
+								// Only add the result **if** what they've typed is compatible *AND* they haven't
+								// already typed it in full
+								if (currentValue.getValue().toLowerCase().startsWith(lastOptionValue.toLowerCase())
+										&& lastOptionValue.length() < currentValue.getValue().length()
+										&& (!tokenizer.lastValueIsComplete())) {
 									results.add(new Completion(currentValue.getValue() + suffix, currentValue
 											.getFormattedValue(), currentValue.getHeading(), currentValue.getOrder()));
-								}
-								else {
-									// Only add the result **if** what they've typed is compatible *AND* they haven't
-									// already typed it in full
-									if (currentValue.getValue().toLowerCase().startsWith(lastOptionValue.toLowerCase())
-											&& !lastOptionValue.equalsIgnoreCase(currentValue.getValue())
-											&& lastOptionValue.length() < currentValue.getValue().length()
-											&& (tokenizer.getLastValueDelimiter() == ' ' || tokenizer
-													.lastValueIsStillBeingTyped())) {
-										results.add(new Completion(currentValue.getValue() + suffix, currentValue
-												.getFormattedValue(), currentValue.getHeading(), currentValue
-												.getOrder()));
-									}
 								}
 							}
 
 							// ROO-389: give inline options given there's multiple choices available and we want to help
 							// the user
-							StringBuilder help = new StringBuilder();
-							help.append(OsUtils.LINE_SEPARATOR);
-							help.append(option.mandatory() ? "required --" : "optional --");
-							if ("".equals(option.help())) {
-								help.append(lastOptionKey).append(": ").append("No help available");
-							}
-							else {
-								help.append(lastOptionKey).append(": ").append(option.help());
-							}
-							if (option.specifiedDefaultValue().equals(option.unspecifiedDefaultValue())) {
-								if (option.specifiedDefaultValue().equals("__NULL__")) {
-									help.append("; no default value");
-								}
-								else {
-									help.append("; default: '").append(option.specifiedDefaultValue()).append("'");
-								}
-							}
-							else {
-								if (!"".equals(option.specifiedDefaultValue())
-										&& !"__NULL__".equals(option.specifiedDefaultValue())) {
-									help.append("; default if option present: '")
-											.append(option.specifiedDefaultValue()).append("'");
-								}
-								if (!"".equals(option.unspecifiedDefaultValue())
-										&& !"__NULL__".equals(option.unspecifiedDefaultValue())) {
-									help.append("; default if option not present: '")
-											.append(option.unspecifiedDefaultValue()).append("'");
-								}
-							}
-							LOGGER.info(help.toString());
+							displayHelp(lastOptionKey, option);
 
 							if (results.size() == 1) {
 								String suggestion = results.iterator().next().getValue().trim();
@@ -896,6 +836,56 @@ public class SimpleParser implements Parser {
 			}
 
 			return -1;
+		}
+	}
+
+	private void displayHelp(String lastOptionKey, CliOption option) {
+		StringBuilder help = new StringBuilder();
+		help.append(OsUtils.LINE_SEPARATOR);
+		help.append(option.mandatory() ? "required --" : "optional --");
+		if ("".equals(option.help())) {
+			help.append(lastOptionKey).append(": ").append("No help available");
+		}
+		else {
+			help.append(lastOptionKey).append(": ").append(option.help());
+		}
+		if (option.specifiedDefaultValue().equals(option.unspecifiedDefaultValue())) {
+			if (option.specifiedDefaultValue().equals("__NULL__")) {
+				help.append("; no default value");
+			}
+			else {
+				help.append("; default: '").append(option.specifiedDefaultValue()).append("'");
+			}
+		}
+		else {
+			if (!"".equals(option.specifiedDefaultValue()) && !"__NULL__".equals(option.specifiedDefaultValue())) {
+				help.append("; default if option present: '").append(option.specifiedDefaultValue()).append("'");
+			}
+			if (!"".equals(option.unspecifiedDefaultValue()) && !"__NULL__".equals(option.unspecifiedDefaultValue())) {
+				help.append("; default if option not present: '").append(option.unspecifiedDefaultValue()).append("'");
+			}
+		}
+		LOGGER.info(help.toString());
+	}
+
+	private void completeForSimpleTypes(Class<?> parameterType, List<Completion> allValues) {
+		// Provide some simple options for common types
+		if (Boolean.class.isAssignableFrom(parameterType) || Boolean.TYPE.isAssignableFrom(parameterType)) {
+			allValues.add(new Completion("true"));
+			allValues.add(new Completion("false"));
+		}
+
+		if (Number.class.isAssignableFrom(parameterType)) {
+			allValues.add(new Completion("0"));
+			allValues.add(new Completion("1"));
+			allValues.add(new Completion("2"));
+			allValues.add(new Completion("3"));
+			allValues.add(new Completion("4"));
+			allValues.add(new Completion("5"));
+			allValues.add(new Completion("6"));
+			allValues.add(new Completion("7"));
+			allValues.add(new Completion("8"));
+			allValues.add(new Completion("9"));
 		}
 	}
 

@@ -54,7 +54,7 @@ public class Tokenizer {
 	/**
 	 * Used to indicate that the last value was indeed half enclosed in quotes. Useful so that parser can re-add it.
 	 */
-	private boolean lastValueIsStillBeingTyped;
+	private boolean openingQuotesHaveNotBeenClosed;
 
 	private char lastValueDelimiter;
 
@@ -137,7 +137,7 @@ public class Tokenizer {
 				(buffer[pos - 1] != '"' || // quotes are not properly closed
 				sb.length() == 0)) { // BUT it's ok if consumed nothing (pos-1 is *opening* quote then)
 			if (allowUnbalancedLastQuotedValue) {
-				lastValueIsStillBeingTyped = true;
+				openingQuotesHaveNotBeenClosed = true;
 				return sb.toString();
 			}
 			else {
@@ -166,8 +166,17 @@ public class Tokenizer {
 	/**
 	 * Return whether the last value was meant to be enclosed in quotes, but the closing quote has not been typed yet.
 	 */
-	public boolean lastValueIsStillBeingTyped() {
-		return lastValueIsStillBeingTyped;
+	public boolean openingQuotesHaveNotBeenClosed() {
+		return openingQuotesHaveNotBeenClosed;
+	}
+
+	/**
+	 * Return true if we know for sure that the last value has been typed in full.
+	 */
+	public boolean lastValueIsComplete() {
+		// If using quotes as delim and they're not closed, we know for sure.
+		// Moreover if we're using space as the delimiter, we can't know.
+		return !openingQuotesHaveNotBeenClosed && lastValueDelimiter != ' ';
 	}
 
 	/**
