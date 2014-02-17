@@ -324,6 +324,50 @@ public class SimpleParserTests {
 		// assertThat(SimpleParser.isMatch("hello ", "hellothere", true), is(nullValue()));
 	}
 
+	@Test
+	public void testValueCompletionsThatCanContinue() {
+
+		parser.add(new MyCommands());
+		parser.add(new StringCompletions(Arrays.asList("abd", "def"), false));
+
+		// With space as delimiter
+		buffer = "bar --option1 ";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 abd")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 def")))));
+
+		// With quotes as delimiter
+		buffer = "bar --option1 \"";
+		candidates.clear();
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"abd")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"def")))));
+	}
+
+	@Test
+	public void testValueCompletionsThatCannotContinue() {
+
+		parser.add(new MyCommands());
+		parser.add(new StringCompletions(Arrays.asList("abd", "def"), true));
+
+		// With space as delimiter
+		buffer = "bar --option1 ";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 abd ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 def ")))));
+
+		// With quotes as delimiter
+		buffer = "bar --option1 \"";
+		candidates.clear();
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"abd\" ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"def\" ")))));
+	}
+
 	/**
 	 * Return a matcher that asserts that a completion, when added to {@link #buffer} at the given {@link #offset},
 	 * indeed matches the provided matcher.
@@ -408,8 +452,15 @@ public class SimpleParserTests {
 
 		private final List<String> completions;
 
+		private final boolean canContinue;
+
 		public StringCompletions(List<String> completions) {
+			this(completions, false);
+		}
+
+		public StringCompletions(List<String> completions, boolean canContinue) {
 			this.completions = completions;
+			this.canContinue = canContinue;
 		}
 
 		public boolean supports(Class<?> type, String optionContext) {
@@ -425,7 +476,7 @@ public class SimpleParserTests {
 			for (String s : this.completions) {
 				completions.add(new Completion(s));
 			}
-			return false;
+			return canContinue;
 		}
 
 	}

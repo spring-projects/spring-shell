@@ -783,15 +783,18 @@ public class SimpleParser implements Parser {
 					for (String key : option.key()) {
 						if (key.equals(lastOptionKey)) {
 							List<Completion> allValues = new ArrayList<Completion>();
-							String suffix = " ";
-
+							// We'll append the closing delimiter to proposals
+							String suffix = "" + tokenizer.getLastValueDelimiter();
+							if (!suffix.endsWith(" ")) {
+								suffix += " ";
+							}
 							// Let's use a Converter if one is available
 							for (Converter<?> candidate : converters) {
 								if (candidate.supports(parameterType, option.optionContext())) {
 									// Found a usable converter
-									boolean addSpace = candidate.getAllPossibleValues(allValues, parameterType,
+									boolean allComplete = candidate.getAllPossibleValues(allValues, parameterType,
 											lastOptionValue, option.optionContext(), methodTarget);
-									if (!addSpace) {
+									if (!allComplete) {
 										suffix = "";
 									}
 									break;
