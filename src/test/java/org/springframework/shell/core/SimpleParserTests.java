@@ -34,7 +34,6 @@ import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.DiagnosingMatcher;
 import org.hamcrest.Matcher;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
@@ -163,7 +162,6 @@ public class SimpleParserTests {
 	}
 
 	@Test
-	@Ignore("TODO")
 	public void testArgumentValueWithEscapedQuotes() {
 		parser.add(new MyCommands());
 		parser.add(new StringCompletions(Arrays.asList("he said \"hello\" to me")));

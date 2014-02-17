@@ -808,10 +808,11 @@ public class SimpleParser implements Parser {
 							for (Completion currentValue : allValues) {
 								// Only add the result **if** what they've typed is compatible *AND* they haven't
 								// already typed it in full
-								if (currentValue.getValue().toLowerCase().startsWith(lastOptionValue.toLowerCase())
-										&& lastOptionValue.length() < currentValue.getValue().length()
+								String proposal = currentValue.getValue();
+								if (proposal.toLowerCase().startsWith(lastOptionValue.toLowerCase())
+										&& lastOptionValue.length() < proposal.length()
 										&& (!tokenizer.lastValueIsComplete())) {
-									results.add(new Completion(currentValue.getValue() + suffix, currentValue
+									results.add(new Completion(tokenizer.escape(proposal) + suffix, currentValue
 											.getFormattedValue(), currentValue.getHeading(), currentValue.getOrder()));
 								}
 							}
@@ -822,7 +823,7 @@ public class SimpleParser implements Parser {
 
 							if (results.size() == 1) {
 								String suggestion = results.iterator().next().getValue().trim();
-								if (suggestion.equals(lastOptionValue)) {
+								if (suggestion.equals(tokenizer.escape(lastOptionValue))) {
 									// They have pressed TAB in the default value, and the default value has already
 									// been provided as an explicit option
 									return -1;

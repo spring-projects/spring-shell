@@ -184,6 +184,13 @@ public class Tokenizer {
 	}
 
 	/**
+	 * Apply delimiter escaping to the given string, using the actual delimiter that was used for the last value.
+	 */
+	public String escape(String value) {
+		return value.replace("" + lastValueDelimiter, "" + ESCAPE_CHAR + lastValueDelimiter);
+	}
+
+	/**
 	 * Consume a full @code{--key value} pair *unless* we're at the very end, in which case allow for @code {--key},
 	 * using "" for the value.
 	 */
