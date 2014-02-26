@@ -577,7 +577,15 @@ public class SimpleParser implements Parser {
 			Assert.notNull(cmd, "CliCommand unavailable for '" + methodTarget.getMethod().toGenericString() + "'");
 
 			// Make a reasonable attempt at parsing the remainingBuffer
-			Tokenizer tokenizer = new Tokenizer(methodTarget.getRemainingBuffer(), true);
+			Tokenizer tokenizer = null;
+			try {
+				tokenizer = new Tokenizer(methodTarget.getRemainingBuffer(), true);
+			}
+			catch (IllegalArgumentException e) {
+				// Make sure we don't crash the mail shell loop just
+				// because the user specified some option twice
+				return -1;
+			}
 			Map<String, String> options = tokenizer.getTokens();
 
 			// Lookup arguments for this target
