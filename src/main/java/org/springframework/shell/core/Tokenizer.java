@@ -73,7 +73,7 @@ public class Tokenizer {
 	}
 
 	private void eatWhiteSpace() {
-		while (pos < buffer.length && buffer[pos] == ' ') {
+		while (lookAhead(' ')) {
 			pos++;
 		}
 	}
@@ -92,10 +92,23 @@ public class Tokenizer {
 	}
 
 	/**
-	 * Consume either {@code --key=value} or just {@code value}, eating extra spaces.
+	 * Return true if the remaining buffer matches the given String (return false if there is not enough input).
+	 */
+	private boolean lookAhead(char... toMatch) {
+		for (int i = 0; i < toMatch.length; i++) {
+			if (pos + i >= buffer.length || buffer[pos + i] != toMatch[i]) {
+				return false;
+			}
+		}
+		return true;
+
+	}
+
+	/**
+	 * Consume either {@code --key[=value]} or just {@code value}, eating extra spaces.
 	 */
 	private void eatKeyValuePair() {
-		if (buffer[pos] == '-' && pos + 1 < buffer.length && buffer[pos + 1] == '-') {
+		if (lookAhead('-', '-')) {
 			pos += 2;
 			eatKeyEqualsValue();
 		}
@@ -113,6 +126,9 @@ public class Tokenizer {
 		}
 	}
 
+	/**
+	 * Eat a value that may be enclosed in some delimiters.
+	 */
 	private String eatValue() {
 		StringBuilder sb = new StringBuilder();
 		char endDelimiter = ' ';
@@ -124,7 +140,7 @@ public class Tokenizer {
 		lastValueDelimiter = endDelimiter;
 		lastValueStartOffset = pos;
 		while (pos < buffer.length && buffer[pos] != endDelimiter) {
-			if (buffer[pos] == ESCAPE_CHAR && pos + 1 < buffer.length && buffer[pos + 1] == endDelimiter) {
+			if (lookAhead(ESCAPE_CHAR, endDelimiter)) {
 				sb.append(endDelimiter);
 				pos += 2;
 				continue;
@@ -191,25 +207,32 @@ public class Tokenizer {
 	}
 
 	/**
-	 * Consume a full @code{--key value} pair *unless* we're at the very end, in which case allow for @code {--key},
-	 * using "" for the value.
+	 * Consume a full {@code --key value} pair *unless*
+	 * <ul>
+	 * <li>we're at the very end,</li>
+	 * <li>or the next token starts with {@code --}</li>
+	 * </ul>
+	 * in which case allow for just {@code --key}, using "" for the value.
 	 */
 	private void eatKeyEqualsValue() {
 		String key = eatKey();
 		eatWhiteSpace();
 		String value;
-		if (pos < buffer.length) {
-			value = eatValue();
-		}
-		else {
+		// We're at the very end or it's a valueless option
+		// Make last* fields consistent
+		if (pos >= buffer.length || lookAhead('-', '-')) {
 			lastValueDelimiter = ' ';
 			lastValueStartOffset = pos;
 			value = "";
 		}
-		if (!key.equals("") || !key.equals(value)) {
-			// Don't store the ""="" that would result from having a pending " --" at the end
-			store(key, value);
+		else {
+			value = eatValue();
 		}
+		// Don't store the ""="" that would result from having a pending " --" at the end
+		if (key.equals("") && value.equals("")) {
+			return;
+		}
+		store(key, value);
 	}
 
 	private String eatKey() {
