@@ -152,6 +152,36 @@ public class TokenizerTests {
 		assertEquals(singletonMap("foo", "bar"), result);
 	}
 
+	@Test
+	public void testKeyWithDefaultValueAtEnd() {
+		Map<String, String> result = tokenize("--foo bar --recursive");
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("foo", "bar");
+		expected.put("recursive", "");
+		assertEquals(expected, result);
+	}
+
+	@Test
+	public void testKeyWithDefaultValueNotAtEnd() {
+		Map<String, String> result = tokenize("--foo bar --recursive --wizz blow");
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("foo", "bar");
+		expected.put("recursive", "");
+		expected.put("wizz", "blow");
+		assertEquals(expected, result);
+	}
+
+	@Test
+	public void testValueThatStartsWithDashDashStillSupportedIfQuoted() {
+		Map<String, String> result = tokenize("--foo bar --recursive \"--wizz\" blow");
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("foo", "bar");
+		expected.put("recursive", "--wizz");
+		expected.put("", "blow");
+		assertEquals(expected, result);
+
+	}
+
 	private Map<String, String> tokenize(String what) {
 		return new Tokenizer(what).getTokens();
 	}
