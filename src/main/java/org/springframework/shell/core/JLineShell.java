@@ -130,7 +130,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		openFileLogIfPossible();
 		History history = this.reader.getHistory();
 		if (history instanceof MemoryHistory) {
-			((MemoryHistory)history).setMaxSize(getHistorySize());
+			((MemoryHistory) history).setMaxSize(getHistorySize());
 		}
 		// Try to build previous command history from the project's log
 		String[] filteredLogEntries = filterLogEntry();
@@ -189,8 +189,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		ArrayList<String> entries = new ArrayList<String>();
 		ReversedLinesFileReader reversedReader = null;
 		try {
-			reversedReader = new ReversedLinesFileReader(new File(getHistoryFileName()), 4096,
-					Charset.forName("UTF-8"));
+			reversedReader = new ReversedLinesFileReader(new File(getHistoryFileName()), 4096, Charset.forName("UTF-8"));
 			int size = 0;
 			String line = null;
 			while ((line = reversedReader.readLine()) != null) {
@@ -207,7 +206,8 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		}
 		catch (IOException e) {
 			logger.warning("read history file failed. Reason:" + e.getMessage());
-		} finally {
+		}
+		finally {
 			closeReversedReader(reversedReader);
 		}
 		Collections.reverse(entries);
@@ -218,11 +218,12 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		if (reversedReader != null) {
 			try {
 				reversedReader.close();
-			} catch (IOException ex) {
+			}
+			catch (IOException ex) {
 				logger.warning("Cloud not close ReversedLinesFileReader: " + ex);
 			}
 		}
-		
+
 	}
 
 	/**
@@ -251,6 +252,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		catch (IOException ioe) {
 			throw new IllegalStateException("Cannot start console class", ioe);
 		}
+		consoleReader.setExpandEvents(false);
 		return consoleReader;
 	}
 
