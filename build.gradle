@@ -42,8 +42,8 @@ dependencies {
     testCompile "uk.co.modular-it:hamcrest-date:$hamcrestDateVersion"
 }
 
-sourceCompatibility = 1.5
-targetCompatibility = 1.5 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6 
 
 javadoc {
   ext.srcDir = file("${projectDir}/docs/src/api")

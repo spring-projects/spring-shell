@@ -60,7 +60,7 @@ public class SimpleParserTests {
 		buffer = "f";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("foo ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("foo ")))));
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class SimpleParserTests {
 		buffer = "bar --op";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 ")))));
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class SimpleParserTests {
 		buffer = "bar --option1 a";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 abc")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 abc")))));
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class SimpleParserTests {
 		buffer = "bar --option1 \"a";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"abc")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 \"abc")))));
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class SimpleParserTests {
 		buffer = "bar --optimum";
 		offset = parser.completeAdvanced(buffer, "bar --opti".length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 ")))));
 
 	}
 
@@ -114,7 +114,7 @@ public class SimpleParserTests {
 		buffer = "bar --option1 a";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(startsWith("bar --option1 ab"))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(startsWith("bar --option1 ab"))));
 	}
 
 	@Test
@@ -125,8 +125,8 @@ public class SimpleParserTests {
 		buffer = "bar --option1 \"a";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"abc")))));
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"abd")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 \"abc")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 \"abd")))));
 	}
 
 	@Test
@@ -158,7 +158,7 @@ public class SimpleParserTests {
 		buffer = "bar --";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 ")))));
 	}
 
 	@Test
@@ -169,7 +169,7 @@ public class SimpleParserTests {
 		buffer = "bar --option1 \"he said \\\"he";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"he said \\\"hello\\\" to me")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar --option1 \"he said \\\"hello\\\" to me")))));
 
 	}
 
@@ -191,8 +191,8 @@ public class SimpleParserTests {
 		buffer = "b";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar ")))));
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bing ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bing ")))));
 
 	}
 
@@ -203,7 +203,7 @@ public class SimpleParserTests {
 		buffer = "ba";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("bar ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("bar ")))));
 
 	}
 
@@ -225,17 +225,17 @@ public class SimpleParserTests {
 		buffer = "testDefaultKey thevalue --optio";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("testDefaultKey thevalue --option2 ")))));
-		assertThat(candidates, hasItem(completionThat(is(equalTo("testDefaultKey thevalue --option3 ")))));
-		assertThat(candidates, not(hasItem(completionThat(containsString("option1")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("testDefaultKey thevalue --option2 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("testDefaultKey thevalue --option3 ")))));
+		assertThat(candidates, not(hasItem((Matcher<Completion>)completionThat(containsString("option1")))));
 
 		// Let's do it again with default key in the middle
 		candidates.clear();
 		buffer = "testDefaultKey --option3 foo thevalue --optio";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("testDefaultKey --option3 foo thevalue --option2 ")))));
-		assertThat(candidates, not(hasItem(completionThat(endsWith("option3 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("testDefaultKey --option3 foo thevalue --option2 ")))));
+		assertThat(candidates, not(hasItem((Matcher<Completion>)completionThat(endsWith("option3 ")))));
 
 	}
 
@@ -246,9 +246,9 @@ public class SimpleParserTests {
 		buffer = "testMandatory --";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("testMandatory --option1 ")))));
-		assertThat(candidates, not(hasItem(completionThat(is(equalTo("testMandatory --option2 "))))));
-		assertThat(candidates, not(hasItem(completionThat(is(equalTo("testMandatory --option3 "))))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("testMandatory --option1 ")))));
+		assertThat(candidates, not(hasItem((Matcher<Completion>)completionThat(is(equalTo("testMandatory --option2 "))))));
+		assertThat(candidates, not(hasItem((Matcher<Completion>)completionThat(is(equalTo("testMandatory --option3 "))))));
 
 	}
 
@@ -259,9 +259,9 @@ public class SimpleParserTests {
 		buffer = "testNotMandatory --";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("testNotMandatory --option1 ")))));
-		assertThat(candidates, hasItem(completionThat(is(equalTo("testNotMandatory --option2 ")))));
-		assertThat(candidates, hasItem(completionThat(is(equalTo("testNotMandatory --option3 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("testNotMandatory --option1 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("testNotMandatory --option2 ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("testNotMandatory --option3 ")))));
 
 	}
 
@@ -273,14 +273,14 @@ public class SimpleParserTests {
 		buffer = "fileMore";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("fileMore --option ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("fileMore --option ")))));
 
 		// Do it again with a trailing space
 		buffer = "fileMore ";
 		candidates.clear();
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("fileMore --option ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("fileMore --option ")))));
 
 	}
 
@@ -292,8 +292,8 @@ public class SimpleParserTests {
 		buffer = "file";
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		assertThat(candidates, hasItem(completionThat(is(equalTo("file ")))));
-		assertThat(candidates, hasItem(completionThat(is(equalTo("fileMore ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("file ")))));
+		assertThat(candidates, hasItem((Matcher<Completion>)completionThat(is(equalTo("fileMore ")))));
 
 		// Do it again with a trailing space
 		buffer = "file ";
