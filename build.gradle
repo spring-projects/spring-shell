@@ -38,6 +38,7 @@ dependencies {
     // Testing
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
     testCompile "uk.co.modular-it:hamcrest-date:$hamcrestDateVersion"
 }
 
