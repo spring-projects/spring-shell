@@ -103,6 +103,7 @@ public class SimpleParser implements Parser {
 		return optionsKeys;
 	}
 
+	@Override
 	public ParseResult parse(final String rawInput) {
 		synchronized (mutex) {
 			Assert.notNull(rawInput, "Raw input required");
@@ -124,12 +125,25 @@ public class SimpleParser implements Parser {
 				}
 				return null;
 			}
+			MethodTarget methodTarget = null;
 			if (matchingTargets.size() > 1) {
-				LOGGER.warning("Ambigious command '" + input + "' (for assistance press "
-						+ AbstractShell.completionKeys + " or type \"hint\" then hit ENTER)");
-				return null;
+				// Any prefix of a valid command will do. Don't fail if the user used
+				// the exact key of a command though.
+				for (MethodTarget candidate : matchingTargets) {
+					if (candidate.getKey().equals(input) || input.startsWith(candidate.getKey() + " ")) {
+						methodTarget = candidate;
+						break;
+					}
+				}
+				if (methodTarget == null) {
+					LOGGER.warning("Ambigious command '" + input + "' (for assistance press "
+							+ AbstractShell.completionKeys + " or type \"hint\" then hit ENTER)");
+					return null;
+				}
 			}
-			MethodTarget methodTarget = matchingTargets.iterator().next();
+			else {
+				methodTarget = matchingTargets.iterator().next();
+			}
 
 			// Argument conversion time
 			Annotation[][] parameterAnnotations = methodTarget.getMethod().getParameterAnnotations();
@@ -514,6 +528,7 @@ public class SimpleParser implements Parser {
 		return null; // Not a match
 	}
 
+	@Override
 	public int complete(String buffer, int cursor, final List<String> candidates) {
 		final List<Completion> completions = new ArrayList<Completion>();
 		int result = completeAdvanced(buffer, cursor, completions);
@@ -523,6 +538,7 @@ public class SimpleParser implements Parser {
 		return result;
 	}
 
+	@Override
 	public int completeAdvanced(String buffer, int cursor, final List<Completion> candidates) {
 		synchronized (mutex) {
 			Assert.notNull(buffer, "Buffer required");
