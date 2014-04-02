@@ -34,6 +34,18 @@ public class CommandLine {
 	 * @param historySize the size of this history buffer
 	 * @param shellCommandsToExecute semi-colon delimited list of commands for the shell to execute
 	 */
+	public CommandLine(String[] args, int historySize, String[] shellCommandsToExecute) {
+		this(args,historySize,shellCommandsToExecute, false);
+	}
+
+	
+	/**
+	 * Construct a new CommandLine  
+	 * @param args an array of strings from main(String[] args)
+	 * @param historySize the size of this history buffer
+	 * @param shellCommandsToExecute semi-colon delimited list of commands for the shell to execute
+	 * @param disableInteralCommands if true, do not load the built-in shell commands
+	 */
 	public CommandLine(String[] args, int historySize, String[] shellCommandsToExecute, boolean disableInteralCommands) {
 		this.args = args;
 		this.historySize = historySize;
