@@ -38,6 +38,7 @@ public class SimpleShellCommandLineOptions {
 	String[] executeThenQuit = null;
 	Map<String, String> extraSystemProperties = new HashMap<String, String>();
 	int historySize = DEFAULT_HISTORY_SIZE;
+	boolean disableCommands;
 
 	public static CommandLine parseCommandLine(String[] args)
 			throws IOException {
@@ -79,6 +80,8 @@ public class SimpleShellCommandLineOptions {
 				} catch (ArrayIndexOutOfBoundsException ae) {
 					LOGGER.warning("No value specified for --histsize option");
 				}
+			} else if (arg.equals("--disableInternalCommands")) { 
+				options.disableCommands = true;
 			} else if (arg.equals("--help")) {
 				printUsage();
 				System.exit(0);
@@ -112,7 +115,7 @@ public class SimpleShellCommandLineOptions {
 			System.setProperty(entry.getKey(), entry.getValue());
 		}
 
-		return new CommandLine(args, options.historySize, options.executeThenQuit);
+		return new CommandLine(args, options.historySize, options.executeThenQuit, options.disableCommands);
 	}
 
 	private static void printUsage() {

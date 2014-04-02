@@ -86,7 +86,11 @@ public class Bootstrap {
 		configureApplicationContext(ctx);		
 		//built-in commands and converters
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(ctx);
-		scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters", "org.springframework.shell.plugin.support");		
+		if (commandLine.getDisableInternalCommands()) {
+			scanner.scan("org.springframework.shell.converters", "org.springframework.shell.plugin.support");		
+		} else {
+			scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters", "org.springframework.shell.plugin.support");
+		}
 		//user contributed commands
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) ctx);
 		reader.loadBeanDefinitions(contextPath);

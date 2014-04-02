@@ -286,6 +286,15 @@ public class HelloWorldCommands implements CommandMarker {
         lines to store in the command history file. Default value is
         3000.</para>
       </listitem>
+
+      <listitem>
+        <para><literal>--disableInternalCommands</literal> - Flag that disables all commands that would
+	be pre-registered with the shell.  There is no argument to this option.  You can selectively add
+	back any internal commands by referencing them in your shell plugin file.  Look at the
+	Spring Shell javadocs for specific commands located in the 
+	<literal>org.springframework.shell.commands</literal> package as well as the section in this documentation
+	of Built in commands.</para>
+      </listitem>
     </itemizedlist>
   </section>
 
