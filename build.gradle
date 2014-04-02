@@ -30,6 +30,7 @@ dependencies {
     compile "org.springframework:spring-core:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile "commons-io:commons-io:$commonsioVersion"
+    compile "com.google.guava:guava:15.0"
     compile "jline:jline:$jlineVersion"
     compile "cglib:cglib:$cglibVersion"
 
