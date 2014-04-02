@@ -37,6 +37,7 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell.event.ParseResult;
 
 /**
  * Tests for parsing and completion logic.
@@ -369,12 +370,30 @@ public class SimpleParserTests {
 	}
 
 	/**
+	 * @see https://jira.spring.io/browse/SHL-113
+	 */
+	@Test
+	public void testFalseAmbiguity() {
+		parser.add(new SamePrefixCommands());
+		ParseResult result = parser.parse("foo");
+		assertThat(result.getMethod().getName(), equalTo("foo"));
+	}
+
+	@Test
+	public void testRealAmbiguity() {
+		parser.add(new SamePrefixCommands());
+		ParseResult result = parser.parse("fo");
+		assertThat(result, nullValue(ParseResult.class));
+	}
+
+	/**
 	 * Return a matcher that asserts that a completion, when added to {@link #buffer} at the given {@link #offset},
 	 * indeed matches the provided matcher.
 	 */
 	private Matcher<Completion> completionThat(final Matcher<String> matcher) {
 		return new DiagnosingMatcher<Completion>() {
 
+			@Override
 			public void describeTo(Description description) {
 				description.appendText("a completion that ").appendDescriptionOf(matcher);
 			}
@@ -448,6 +467,20 @@ public class SimpleParserTests {
 		}
 	}
 
+	public static class SamePrefixCommands implements CommandMarker {
+		@CliCommand(value = "foo")
+		public String foo(@CliOption(key = "")
+		String arg) {
+			return "foo " + arg;
+		}
+
+		@CliCommand(value = "fooBar")
+		public String fooBar(@CliOption(key = "")
+		String arg) {
+			return "fooBar " + arg;
+		}
+	}
+
 	public static class StringCompletions implements Converter<String> {
 
 		private final List<String> completions;
@@ -463,14 +496,17 @@ public class SimpleParserTests {
 			this.canContinue = canContinue;
 		}
 
+		@Override
 		public boolean supports(Class<?> type, String optionContext) {
 			return type == String.class;
 		}
 
+		@Override
 		public String convertFromText(String value, Class<?> targetType, String optionContext) {
 			return value;
 		}
 
+		@Override
 		public boolean getAllPossibleValues(List<Completion> completions, Class<?> targetType, String existingData,
 				String optionContext, MethodTarget target) {
 			for (String s : this.completions) {
