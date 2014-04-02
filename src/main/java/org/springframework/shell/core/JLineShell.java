@@ -520,18 +520,18 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 				JLineLogHandler.resetMessageTracking();
 				setShellStatus(Status.USER_INPUT);
 
-				if ("".equals(line)) {
+				if (!StringUtils.hasText(line)) {
+					//generate prompt if empty line, the prompt maybe showing the time or something else that updates 
+					//independent of the lack of a command to execute.
+					generatePromptUpdate(prompt);
 					continue;
 				}
 
 				executeCommand(line);
+				//update the prompt after the command has been executed in case an application event listener in the
+				//command changes state in the prompt provider.
+				generatePromptUpdate(prompt);
 
-				String newPrmpt = getPromptText();
-				if (!ObjectUtils.nullSafeEquals(prompt, newPrmpt)) {
-					prompt = newPrmpt;
-					setPromptPath(null);
-				}
-				// System.out.println("executed command:" + line);
 			}
 		}
 		catch (IOException ioe) {
@@ -540,6 +540,13 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		setShellStatus(Status.SHUTTING_DOWN);
 	}
 
+	public void generatePromptUpdate(String existingPrompt) {
+		String newPrompt = getPromptText();
+		if (!ObjectUtils.nullSafeEquals(existingPrompt, newPrompt)) {
+			setPromptPath(null);
+		}
+	}
+	
 	public void setDevelopmentMode(final boolean developmentMode) {
 		JLineLogHandler.setIncludeThreadName(developmentMode);
 		JLineLogHandler.setSuppressDuplicateMessages(!developmentMode); // We want to see duplicate messages during
