@@ -1,6 +1,6 @@
 SPRING SHELL
 ------------
-http://www.springsource.org/spring-shell
+https://github.com/spring-projects/spring-shell
 
 1. INTRODUCTION
 
@@ -18,7 +18,7 @@ The Spring Shell jar files can be found in the 'dist' directory.
 4. GETTING STARTED
 
 Please see the reference documentation.
-Additionally, consult the blog at http://blog.springsource.com as well
+Additionally, consult the blog at https://spring.io/blog as well
 as sections of interest in the reference documentation.
 
 5. ADDITIONAL RESOURCES

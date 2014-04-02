@@ -5,9 +5,83 @@ http://www.springsource.org/spring-shell
 Commit changelog: http://github.com/SpringSource/spring-shell/tree/[version]
 Issues changelog: http://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10361
 
+Changes in version 1.1 RC1 (2014-4-2)
+-------------------------------------
+
+** Bug
+* [SHL-84] - Shell cannot deal with "-" in CliOption keys
+* [SHL-85] - Argument completion broken when default value present
+* [SHL-107] - Prompt not re-evaluated if the user input is just an "enter" command.
+* [SHL-116] - Support quotes escaping
+* [SHL-119] - Remove unused bright color constants
+* [SHL-120] - Add @Inherited and @Documented to the annotations
+* [SHL-122] - --key --foo thinks "--foo" is a value, even if --key has a default
+
+** Improvement
+* [SHL-74] - Switch JLine dependency to an official JLine version
+* [SHL-80] - ability to disable built-in commands
+* [SHL-91] - Applications built with spring-shell are required to inherit comment commands
+* [SHL-125] - Some documentation fixes
+
+** New Feature
+* [SHL-126] - Add utility classes for rendering ascii based tables
+
+** Task
+* [SHL-118] - Rename JLineCompletorAdapter to ParserCompleter
+* [SHL-128] - Change version of spring shell in hello world application to 1.1 RC1
+* [SHL-130] - Release 1.1 RC1
+
+Release Notes - Spring Shell - Version 1.1 M1
+
+
+Changes in version 1.1 M1 (2013-7-26)
+-------------------------------------
+
+** Bug
+* [SHL-47] - Invesitgate if SimpleFileConverter should be used or incorporated in FileConverter
+* [SHL-72] - DefaultBannerProvider welcome message mentions non-existent 'hint' command
+* [SHL-87] - sample app not working anymore
+* [SHL-114] - After initial creation, the plugin's ApplicationContext is refreshed one time too often
+
+
+
+** Improvement
+* [SHL-68] - Make help for built-in commands consistent
+* [SHL-69] - Extract "version" command from AbstractShell
+* [SHL-70] - Add a command to clear the console
+* [SHL-71] - Reference docs do not mention PluginProvider interface
+* [SHL-73] - Typo in reference docs: CliOptions iso CliOption
+* [SHL-75] - Change repository used to pull in custom jline dependency in sample application
+* [SHL-77] - Update the build to use later versions of JUnit and SLF4J
+* [SHL-78] - Add an if check in JLineShellComponent's stop method. 
+* [SHL-79] - Update gradle wrapper to 1.2
+* [SHL-82] - Improve detection of apple terminal
+* [SHL-86] - Change bootstrapping procedure so JLineShellComponent can resolve its own dependencies.
+* [SHL-92] - Decoupled commands 'date' and 'system properties' from AbstractShell
+* [SHL-93] - Decouple script command from AbstractShell
+* [SHL-100] - Rename PluginProvider to NamedProvider and name() method to getProviderName()
+* [SHL-101] - Add top level ShellException 
+* [SHL-102] - Remove parent/child context hierarchy
+* [SHL-104] - Remove compiler warnings
+* [SHL-105] - Add option to run helloworld example as a gradle run task
+
+** New Feature
+* [SHL-66] - Plugins should have access to command line options
+* [SHL-103] - Create simple way to test the execution of shell commands
+
 
 Changes in version 1.0 RELEASE (2012-10-02)
 -------------------------------------------
+
+** Bug
+* [SHL-62] - customized prompt doesn't works
+
+
+
+** Improvement
+* [SHL-63] - sample moved from Maven to Gradle
+* [SHL-111] - Change prompt during running application
+
 
 Changes in version 1.0 RC1 (2012-09-20)
 ---------------------------------------
