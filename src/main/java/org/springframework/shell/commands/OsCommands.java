@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell.core.annotation.PassThroughOptions;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +40,7 @@ public class OsCommands implements CommandMarker {
     private OsOperations osOperations = new OsOperationsImpl();
 
     @CliCommand(value = "!", help = "Allows execution of operating system (OS) commands")
+    @PassThroughOptions
     public void command(
             @CliOption(key = { "", "command" }, mandatory = false, specifiedDefaultValue = "", unspecifiedDefaultValue = "", help = "The command to execute") final String command) {
 

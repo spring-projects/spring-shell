@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.commands;
 
+import static org.junit.Assert.assertTrue;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -43,4 +45,18 @@ public class BuiltInCommandTests extends AbstractShellIntegrationTest {
 		Date now = new Date();
 		MatcherAssert.assertThat(now, DateMatchers.within(5, TimeUnit.SECONDS, result));		
 	}
+	
+	@Test
+	public void OsCommandTest() throws ParseException {
+		
+		String osName = System.getProperty("os.name").toLowerCase(Locale.US);
+		String pathSep = System.getProperty("path.separator");
+		boolean isUnix = pathSep.equals(":") && osName.endsWith("x");
+		if (isUnix) {
+			CommandResult cr = getShell().executeCommand("! ls /tmp");
+			assertTrue(cr.isSuccess());
+		}
+		
+	}
+	
 }

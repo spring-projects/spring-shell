@@ -28,14 +28,16 @@ import org.springframework.util.Assert;
  * Properly treats double quotes (") as option delimiters.
  * 
  * <p>
- * Expects option names to be preceded by a double dash. We call this an "option marker".
+ * Expects option names to be preceded by a double dash. We call this an
+ * "option marker".
  * 
  * <p>
  * Treats spaces as the default option tokenizer.
  * 
  * <p>
- * Any token without an option marker is considered the default. The default is returned in the Map as an element with
- * an empty string key (""). There can only be a single default.
+ * Any token without an option marker is considered the default. The default is
+ * returned in the Map as an element with an empty string key (""). There can
+ * only be a single default.
  * 
  * @author Eric Bottard
  * @since 1.1
@@ -54,7 +56,14 @@ public class Tokenizer {
 	private boolean allowUnbalancedLastQuotedValue;
 
 	/**
-	 * Used to indicate that the last value was indeed half enclosed in quotes. Useful so that parser can re-add it.
+	 * When processing 'raw' command options, allow them to be aggregated
+	 * together
+	 */
+	private boolean allowMultipleEmptyOptions;
+
+	/**
+	 * Used to indicate that the last value was indeed half enclosed in quotes.
+	 * Useful so that parser can re-add it.
 	 */
 	private boolean openingQuotesHaveNotBeenClosed;
 
@@ -67,8 +76,14 @@ public class Tokenizer {
 	}
 
 	public Tokenizer(String text, boolean allowUnbalancedLastQuotedValue) {
+		this(text, allowUnbalancedLastQuotedValue, false);
+	}
+
+	public Tokenizer(String text, boolean allowUnbalancedLastQuotedValue,
+			boolean allowMultipleEmptyOptions) {
 		this.buffer = text.toCharArray();
 		this.allowUnbalancedLastQuotedValue = allowUnbalancedLastQuotedValue;
+		this.allowMultipleEmptyOptions = allowMultipleEmptyOptions;
 		tokenize();
 	}
 
@@ -92,7 +107,8 @@ public class Tokenizer {
 	}
 
 	/**
-	 * Return true if the remaining buffer matches the given String (return false if there is not enough input).
+	 * Return true if the remaining buffer matches the given String (return
+	 * false if there is not enough input).
 	 */
 	private boolean lookAhead(char... toMatch) {
 		for (int i = 0; i < toMatch.length; i++) {
@@ -105,14 +121,14 @@ public class Tokenizer {
 	}
 
 	/**
-	 * Consume either {@code --key[=value]} or just {@code value}, eating extra spaces.
+	 * Consume either {@code --key[=value]} or just {@code value}, eating extra
+	 * spaces.
 	 */
 	private void eatKeyValuePair() {
 		if (lookAhead('-', '-')) {
 			pos += 2;
 			eatKeyEqualsValue();
-		}
-		else {
+		} else {
 			String value = eatValue();
 			store("", value);
 		}
@@ -120,9 +136,18 @@ public class Tokenizer {
 	}
 
 	private void store(String key, String value) {
-		if (result.put(key, value) != null) {
-			throw new IllegalArgumentException("You cannot specify option '" + key
-					+ "' more than once in a single command");
+		if (this.allowMultipleEmptyOptions) {
+			//collect up all the options and reconstruct the full 'string' by appending
+			//each parsed option together with a space.
+			if (result.containsKey(key)) {
+				String originalValue = result.get(key);
+				result.put(key, originalValue + " " + value);
+			} else {
+				result.put(key, value);
+			}
+		} else if (result.put(key, value) != null) {
+			throw new IllegalArgumentException("You cannot specify option '"
+					+ key + "' more than once in a single command");
 		}
 	}
 
@@ -136,7 +161,8 @@ public class Tokenizer {
 			endDelimiter = '"';
 			pos++;
 		}
-		// So that it can be retrieved later (if this is actually the last value)
+		// So that it can be retrieved later (if this is actually the last
+		// value)
 		lastValueDelimiter = endDelimiter;
 		lastValueStartOffset = pos;
 		while (pos < buffer.length && buffer[pos] != endDelimiter) {
@@ -148,18 +174,20 @@ public class Tokenizer {
 			sb.append(buffer[pos]);
 			pos++;
 		}
-		// When here, we either ran out of input, or encountered our delim, or both
+		// When here, we either ran out of input, or encountered our delim, or
+		// both
 		// Fail, unless we allow an unfinished quoted string to be reported
 		if (endDelimiter == '"' && // we're using quotes
 				pos == buffer.length && // we ran of input
 				(buffer[pos - 1] != '"' || // quotes are not properly closed
-				sb.length() == 0)) { // BUT it's ok if consumed nothing (pos-1 is *opening* quote then)
+				sb.length() == 0)) { // BUT it's ok if consumed nothing (pos-1
+										// is *opening* quote then)
 			if (allowUnbalancedLastQuotedValue) {
 				openingQuotesHaveNotBeenClosed = true;
 				return sb.toString();
-			}
-			else {
-				throw new IllegalArgumentException("Cannot have an unbalanced number of quotation marks");
+			} else {
+				throw new IllegalArgumentException(
+						"Cannot have an unbalanced number of quotation marks");
 			}
 		}
 		// Eat our delim
@@ -168,30 +196,36 @@ public class Tokenizer {
 	}
 
 	/**
-	 * Return the offset at which the last value seen started (NOT including any delimiter).
+	 * Return the offset at which the last value seen started (NOT including any
+	 * delimiter).
 	 */
 	public int getLastValueStartOffset() {
-		Assert.isTrue(lastValueStartOffset >= 0, "lastValueStartOffset has not been set yet");
+		Assert.isTrue(lastValueStartOffset >= 0,
+				"lastValueStartOffset has not been set yet");
 		return lastValueStartOffset;
 	}
 
 	/**
-	 * Return the delimiter (space or quotes) that was (or is being) used for the last value.
+	 * Return the delimiter (space or quotes) that was (or is being) used for
+	 * the last value.
 	 */
 	public char getLastValueDelimiter() {
-		Assert.isTrue(lastValueDelimiter != 0, "lastValueDelimiter has not been set yet");
+		Assert.isTrue(lastValueDelimiter != 0,
+				"lastValueDelimiter has not been set yet");
 		return lastValueDelimiter;
 	}
 
 	/**
-	 * Return whether the last value was meant to be enclosed in quotes, but the closing quote has not been typed yet.
+	 * Return whether the last value was meant to be enclosed in quotes, but the
+	 * closing quote has not been typed yet.
 	 */
 	public boolean openingQuotesHaveNotBeenClosed() {
 		return openingQuotesHaveNotBeenClosed;
 	}
 
 	/**
-	 * Return true if we know for sure that the last value has been typed in full.
+	 * Return true if we know for sure that the last value has been typed in
+	 * full.
 	 */
 	public boolean lastValueIsComplete() {
 		// If using quotes as delim and they're not closed, we know for sure.
@@ -200,10 +234,12 @@ public class Tokenizer {
 	}
 
 	/**
-	 * Apply delimiter escaping to the given string, using the actual delimiter that was used for the last value.
+	 * Apply delimiter escaping to the given string, using the actual delimiter
+	 * that was used for the last value.
 	 */
 	public String escape(String value) {
-		return value.replace("" + lastValueDelimiter, "" + ESCAPE_CHAR + lastValueDelimiter);
+		return value.replace("" + lastValueDelimiter, "" + ESCAPE_CHAR
+				+ lastValueDelimiter);
 	}
 
 	/**
@@ -224,11 +260,11 @@ public class Tokenizer {
 			lastValueDelimiter = ' ';
 			lastValueStartOffset = pos;
 			value = "";
-		}
-		else {
+		} else {
 			value = eatValue();
 		}
-		// Don't store the ""="" that would result from having a pending " --" at the end
+		// Don't store the ""="" that would result from having a pending " --"
+		// at the end
 		if (key.equals("") && value.equals("")) {
 			return;
 		}
