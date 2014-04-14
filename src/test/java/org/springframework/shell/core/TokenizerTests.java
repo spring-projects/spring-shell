@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -81,7 +80,6 @@ public class TokenizerTests {
 		tokenize("--foo bar --foo buzz");
 	}
 
-	@Ignore
 	@Test(expected = IllegalArgumentException.class)
 	public void testTwoOptionsSameEmptyKey() {
 		tokenize("bar buzz");

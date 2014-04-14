@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell.core.annotation.PassThroughOptions;
 import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.shell.support.util.ExceptionUtils;
@@ -159,8 +160,13 @@ public class SimpleParser implements Parser {
 			// Attempt to parse
 			Map<String, String> options = null;
 			
+			// Hint to the parser that options will not be of the form --key=value, but should attempt to parse and
+			// pass through the command option 'as is'
+			PassThroughOptions passThroughOptions = methodTarget.getMethod()
+					.getAnnotation(PassThroughOptions.class);
 			try {
-				options = new Tokenizer(methodTarget.getRemainingBuffer()).getTokens();
+				options = new Tokenizer(methodTarget.getRemainingBuffer(),
+						false, passThroughOptions != null).getTokens();
 			} catch (IllegalArgumentException e) {
 				LOGGER.warning(ExceptionUtils.extractRootCause(e).getMessage());
 				return null;
