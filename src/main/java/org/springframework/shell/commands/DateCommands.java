@@ -21,19 +21,26 @@ import java.util.Locale;
 
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
+import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
 /**
  * Commands related to the dates
- *
+ * 
  */
 @Component
-public class DateCommands implements CommandMarker { 
-	
+public class DateCommands implements CommandMarker {
+
 	@CliCommand(value = { "date" }, help = "Displays the local date and time")
 	public String date() {
-		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,Locale.US)
-				.format(new Date());
+		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US).format(new Date());
 	}
 
+	@CliCommand(value = "stream")
+	public String foo(@CliOption(key = "")
+	String a, @CliOption(key = "def")
+	String def) {
+		System.out.format("name = %s%ndef = %s%n", a, def);
+		return "ok";
+	}
 }
