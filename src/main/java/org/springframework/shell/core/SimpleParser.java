@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -36,7 +35,6 @@ import java.util.logging.Logger;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.shell.core.annotation.PassThroughOptions;
 import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.shell.support.util.ExceptionUtils;
@@ -159,19 +157,14 @@ public class SimpleParser implements Parser {
 
 			// Attempt to parse
 			Map<String, String> options = null;
-			
-			// Hint to the parser that options will not be of the form --key=value, but should attempt to parse and
-			// pass through the command option 'as is'
-			PassThroughOptions passThroughOptions = methodTarget.getMethod()
-					.getAnnotation(PassThroughOptions.class);
 			try {
-				options = new Tokenizer(methodTarget.getRemainingBuffer(),
-						false, passThroughOptions != null).getTokens();
-			} catch (IllegalArgumentException e) {
+				options = new Tokenizer(methodTarget.getRemainingBuffer()).getTokens();
+			}
+			catch (IllegalArgumentException e) {
 				LOGGER.warning(ExceptionUtils.extractRootCause(e).getMessage());
 				return null;
 			}
-		    
+
 			final Set<CliOption> cliOptions = getCliOptions(parameterAnnotations);
 			for (CliOption cliOption : cliOptions) {
 				Class<?> requiredType = methodTarget.getMethod().getParameterTypes()[arguments.size()];
