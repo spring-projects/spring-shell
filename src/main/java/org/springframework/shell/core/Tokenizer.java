@@ -19,6 +19,7 @@ package org.springframework.shell.core;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.shell.support.util.StringUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -56,12 +57,6 @@ public class Tokenizer {
 	private boolean allowUnbalancedLastQuotedValue;
 
 	/**
-	 * When processing 'raw' command options, allow them to be aggregated
-	 * together
-	 */
-	private boolean allowMultipleEmptyOptions;
-
-	/**
 	 * Used to indicate that the last value was indeed half enclosed in quotes.
 	 * Useful so that parser can re-add it.
 	 */
@@ -76,14 +71,8 @@ public class Tokenizer {
 	}
 
 	public Tokenizer(String text, boolean allowUnbalancedLastQuotedValue) {
-		this(text, allowUnbalancedLastQuotedValue, false);
-	}
-
-	public Tokenizer(String text, boolean allowUnbalancedLastQuotedValue,
-			boolean allowMultipleEmptyOptions) {
 		this.buffer = text.toCharArray();
 		this.allowUnbalancedLastQuotedValue = allowUnbalancedLastQuotedValue;
-		this.allowMultipleEmptyOptions = allowMultipleEmptyOptions;
 		tokenize();
 	}
 
@@ -136,9 +125,9 @@ public class Tokenizer {
 	}
 
 	private void store(String key, String value) {
-		if (this.allowMultipleEmptyOptions) {
-			//collect up all the options and reconstruct the full 'string' by appending
-			//each parsed option together with a space.
+		if (key.length() == 0) {
+			// collect up all the value for the empty key, common when
+			// trying to use a default value for a command option.
 			if (result.containsKey(key)) {
 				String originalValue = result.get(key);
 				result.put(key, originalValue + " " + value);
@@ -146,9 +135,12 @@ public class Tokenizer {
 				result.put(key, value);
 			}
 		} else if (result.put(key, value) != null) {
+			//don't allow key value pairs such as --foo bar --foo buzz"
 			throw new IllegalArgumentException("You cannot specify option '"
 					+ key + "' more than once in a single command");
+
 		}
+
 	}
 
 	/**
