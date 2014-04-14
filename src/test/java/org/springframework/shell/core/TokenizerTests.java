@@ -18,7 +18,10 @@ package org.springframework.shell.core;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -80,9 +83,22 @@ public class TokenizerTests {
 		tokenize("--foo bar --foo buzz");
 	}
 
+	@Test
+	public void testAllowTwoOptionsSameEmptyKeyIfNextToEachOther() {
+		Map<String, String> result = tokenize("bar buzz");
+		assertThat(result.keySet(), hasSize(1));
+		assertThat(result.get(""), equalTo("bar buzz"));
+
+		result = tokenize("--foo wizz bar buzz --woot cool");
+		assertThat(result.keySet(), hasSize(3));
+		assertThat(result.get(""), equalTo("bar buzz"));
+		assertThat(result.get("foo"), equalTo("wizz"));
+		assertThat(result.get("woot"), equalTo("cool"));
+	}
+
 	@Test(expected = IllegalArgumentException.class)
-	public void testTwoOptionsSameEmptyKey() {
-		tokenize("bar buzz");
+	public void testDisallowTwoOptionsSameEmptyKeyIfNotNextToEachOther() {
+		tokenize("bar --foo wizz buzz");
 	}
 
 	@Test

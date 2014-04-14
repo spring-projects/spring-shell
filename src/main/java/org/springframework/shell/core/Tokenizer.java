@@ -113,7 +113,7 @@ public class Tokenizer {
 			eatKeyEqualsValue();
 		}
 		else {
-			String value = eatValue();
+			String value = eatValue(true);
 			store("", value);
 		}
 
@@ -128,8 +128,9 @@ public class Tokenizer {
 
 	/**
 	 * Eat a value that may be enclosed in some delimiters.
+	 * @param emptyKey if true, we're currently reading the value for the empty key
 	 */
-	private String eatValue() {
+	private String eatValue(boolean emptyKey) {
 		StringBuilder sb = new StringBuilder();
 		char endDelimiter = ' ';
 		if (buffer[pos] == '"') {
@@ -148,6 +149,20 @@ public class Tokenizer {
 			sb.append(buffer[pos]);
 			pos++;
 		}
+		// If we're grabbing the key-less value, allow additional chunks, as long as
+		// 1) we don't hit '--'
+		// 2) we were not using a quote delimited value
+		if (emptyKey && endDelimiter == ' ') {
+			while (!lookAhead('-', '-') && pos < buffer.length) {
+				sb.append(buffer[pos++]);
+			}
+			// Trim to the right
+			while (Character.isWhitespace(sb.charAt(sb.length() - 1))) {
+				sb.setLength(sb.length() - 1);
+			}
+			return sb.toString();
+		}
+
 		// When here, we either ran out of input, or encountered our delim, or both
 		// Fail, unless we allow an unfinished quoted string to be reported
 		if (endDelimiter == '"' && // we're using quotes
@@ -226,7 +241,7 @@ public class Tokenizer {
 			value = "";
 		}
 		else {
-			value = eatValue();
+			value = eatValue(false);
 		}
 		// Don't store the ""="" that would result from having a pending " --" at the end
 		if (key.equals("") && value.equals("")) {
