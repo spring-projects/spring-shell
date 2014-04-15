@@ -120,9 +120,20 @@ public class Tokenizer {
 	}
 
 	private void store(String key, String value) {
-		if (result.put(key, value) != null) {
-			throw new IllegalArgumentException("You cannot specify option '" + key
-					+ "' more than once in a single command");
+		String alreadyThere = result.put(key, value);
+		if (alreadyThere != null) {
+			if ("".equals(key)) {
+				throw new IllegalArgumentException(String.format(
+						"You cannot specify '%s' as another value for the default ('') option in a single command.%n"
+								+ "You already provided '%s' earlier.%n"
+								+ "Did you forget to add quotes around the value of another option?", value,
+						alreadyThere));
+			}
+			else {
+				throw new IllegalArgumentException(String.format(
+						"You cannot specify '%s' as another value for the '--%s' option in a single command.%n"
+								+ "You already provided '%s' earlier.", value, key, alreadyThere));
+			}
 		}
 	}
 
