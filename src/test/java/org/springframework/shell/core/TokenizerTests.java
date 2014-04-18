@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -195,6 +196,21 @@ public class TokenizerTests {
 		expected.put("recursive", "--wizz");
 		expected.put("", "blow");
 		assertEquals(expected, result);
+
+	}
+
+	@Test
+	public void testEscapeSequences() {
+		Map<String, String> result = tokenize("--foo \\t\\n\\r\\f");
+		assertEquals(Collections.singletonMap("foo", "\t\n\r\f"), result);
+
+		// Unicode and space-escape
+		result = tokenize("--foo \\u65e5\\ \\u672c");
+		assertEquals(Collections.singletonMap("foo", "\u65e5 \u672c"), result);
+
+		// backslash escape
+		result = tokenize("--foo \\\\u\\g");
+		assertEquals(Collections.singletonMap("foo", "\\u\\g"), result);
 
 	}
 
