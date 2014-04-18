@@ -24,26 +24,28 @@ import java.util.Map;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * A simple {@link Converter} for those classes which provide public static fields to represent possible
- * textual values.
- *
+ * A simple {@link Converter} for those classes which provide public static fields to represent possible textual values.
+ * 
  * @author Stefan Schmidt
  * @author Ben Alex
  * @since 1.0
  */
+@Component
 public class StaticFieldConverterImpl implements StaticFieldConverter {
 
 	// Fields
-	private final Map<Class<?>,Map<String,Field>> fields = new HashMap<Class<?>,Map<String,Field>>();
+	private final Map<Class<?>, Map<String, Field>> fields = new HashMap<Class<?>, Map<String, Field>>();
 
+	@Override
 	public void add(final Class<?> clazz) {
 		Assert.notNull(clazz, "A class to provide conversion services is required");
 		Assert.isNull(fields.get(clazz), "Class '" + clazz + "' is already registered for completion services");
-		Map<String,Field> ffields = new HashMap<String, Field>();
+		Map<String, Field> ffields = new HashMap<String, Field>();
 		for (Field field : clazz.getFields()) {
 			int modifier = field.getModifiers();
 			if (Modifier.isStatic(modifier) && Modifier.isPublic(modifier)) {
@@ -54,16 +56,18 @@ public class StaticFieldConverterImpl implements StaticFieldConverter {
 		fields.put(clazz, ffields);
 	}
 
+	@Override
 	public void remove(final Class<?> clazz) {
 		Assert.notNull(clazz, "A class that was providing conversion services is required");
 		fields.remove(clazz);
 	}
 
+	@Override
 	public Object convertFromText(final String value, final Class<?> requiredType, final String optionContext) {
 		if (!StringUtils.hasText(value)) {
 			return null;
 		}
-		Map<String,Field> ffields = fields.get(requiredType);
+		Map<String, Field> ffields = fields.get(requiredType);
 		if (ffields == null) {
 			return null;
 		}
@@ -83,13 +87,17 @@ public class StaticFieldConverterImpl implements StaticFieldConverter {
 		}
 		try {
 			return f.get(null);
-		} catch (Exception ex) {
-			throw new IllegalStateException("Unable to acquire field '" + value + "' from '" + requiredType.getName() + "'", ex);
+		}
+		catch (Exception ex) {
+			throw new IllegalStateException("Unable to acquire field '" + value + "' from '" + requiredType.getName()
+					+ "'", ex);
 		}
 	}
 
-	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType, final String existingData, final String optionContext, final MethodTarget target) {
-		Map<String,Field> ffields = fields.get(requiredType);
+	@Override
+	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType,
+			final String existingData, final String optionContext, final MethodTarget target) {
+		Map<String, Field> ffields = fields.get(requiredType);
 		if (ffields == null) {
 			return true;
 		}
@@ -99,6 +107,7 @@ public class StaticFieldConverterImpl implements StaticFieldConverter {
 		return true;
 	}
 
+	@Override
 	public boolean supports(final Class<?> requiredType, final String optionContext) {
 		return fields.get(requiredType) != null;
 	}

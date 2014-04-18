@@ -20,24 +20,31 @@ import java.util.List;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link String}.
- *
+ * 
  * @author Ben Alex
  * @since 1.0
  */
+@Component
 public class StringConverter implements Converter<String> {
 
+	@Override
 	public String convertFromText(final String value, final Class<?> requiredType, final String optionContext) {
 		return value;
 	}
 
-	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType, final String existingData, final String optionContext, final MethodTarget target) {
+	@Override
+	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType,
+			final String existingData, final String optionContext, final MethodTarget target) {
 		return false;
 	}
 
+	@Override
 	public boolean supports(final Class<?> requiredType, final String optionContext) {
-		return String.class.isAssignableFrom(requiredType) && (optionContext == null || !optionContext.contains("disable-string-converter"));
+		return String.class.isAssignableFrom(requiredType)
+				&& (optionContext == null || !optionContext.contains("disable-string-converter"));
 	}
 }

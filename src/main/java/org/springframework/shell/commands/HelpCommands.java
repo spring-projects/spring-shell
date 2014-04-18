@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  * @author Ben Alex
  * @author Mark Pollack
  * @author Jarred Li
- *
+ * 
  */
 @Component
 public class HelpCommands implements CommandMarker, ApplicationContextAware {
@@ -39,13 +39,15 @@ public class HelpCommands implements CommandMarker, ApplicationContextAware {
 	private ApplicationContext ctx;
 
 	@CliCommand(value = "help", help = "List all commands usage")
-	public void obtainHelp(@CliOption(key = { "", "command" }, optionContext = "availableCommands", help = "Command name to provide help for") String buffer) {
+	public void obtainHelp(
+			@CliOption(key = { "", "command" }, optionContext = "disable-string-converter availableCommands", help = "Command name to provide help for")
+			String buffer) {
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
 		SimpleParser parser = shell.getSimpleParser();
 		parser.obtainHelp(buffer);
 	}
 
-
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.ctx = applicationContext;
 	}

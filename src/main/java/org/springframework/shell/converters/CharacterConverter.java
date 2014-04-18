@@ -20,23 +20,29 @@ import java.util.List;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link Character}.
- *
+ * 
  * @author Stefan Schmidt
  * @since 1.0
  */
+@Component
 public class CharacterConverter implements Converter<Character> {
 
+	@Override
 	public Character convertFromText(final String value, final Class<?> requiredType, final String optionContext) {
 		return value.charAt(0);
 	}
 
-	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType, final String existingData, final String optionContext, final MethodTarget target) {
+	@Override
+	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType,
+			final String existingData, final String optionContext, final MethodTarget target) {
 		return false;
 	}
 
+	@Override
 	public boolean supports(final Class<?> requiredType, final String optionContext) {
 		return Character.class.isAssignableFrom(requiredType) || char.class.isAssignableFrom(requiredType);
 	}
