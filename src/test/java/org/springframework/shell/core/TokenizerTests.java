@@ -211,6 +211,20 @@ public class TokenizerTests {
 		// backslash escape
 		result = tokenize("--foo \\\\u\\g");
 		assertEquals(Collections.singletonMap("foo", "\\u\\g"), result);
+	}
+	
+	public void testSingleAndDoubleQuotingBehavior() {
+		Map<String, String> result = tokenize("--foo 'i have a double \" in me'");
+		assertEquals(Collections.singletonMap("foo", "i have a double \" in me"), result);
+
+		result = tokenize("--foo \"i have a double \\\" in me\"");
+		assertEquals(Collections.singletonMap("foo", "i have a double \" in me"), result);
+
+		result = tokenize("--foo \"i have a single ' in me\"");
+		assertEquals(Collections.singletonMap("foo", "i have a single ' in me"), result);
+
+		result = tokenize("--foo 'i have a single \\' in me'");
+		assertEquals(Collections.singletonMap("foo", "i have a single ' in me"), result);
 
 	}
 
