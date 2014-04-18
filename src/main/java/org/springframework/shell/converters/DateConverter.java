@@ -24,13 +24,15 @@ import java.util.Locale;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link Date}.
- *
+ * 
  * @author Stefan Schmidt
  * @since 1.0
  */
+@Component
 public class DateConverter implements Converter<Date> {
 
 	// Fields
@@ -44,18 +46,23 @@ public class DateConverter implements Converter<Date> {
 		this.dateFormat = dateFormat;
 	}
 
+	@Override
 	public Date convertFromText(final String value, final Class<?> requiredType, final String optionContext) {
 		try {
 			return dateFormat.parse(value);
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			throw new IllegalArgumentException("Could not parse date: " + e.getMessage());
 		}
 	}
 
-	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType, final String existingData, final String optionContext, final MethodTarget target) {
+	@Override
+	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType,
+			final String existingData, final String optionContext, final MethodTarget target) {
 		return false;
 	}
 
+	@Override
 	public boolean supports(final Class<?> requiredType, final String optionContext) {
 		return Date.class.isAssignableFrom(requiredType);
 	}

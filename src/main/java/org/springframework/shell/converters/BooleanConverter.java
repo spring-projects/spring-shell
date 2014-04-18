@@ -20,26 +20,33 @@ import java.util.List;
 import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.MethodTarget;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link Converter} for {@link Boolean}.
- *
+ * 
  * @author Stefan Schmidt
  * @since 1.0
  */
+@Component
 public class BooleanConverter implements Converter<Boolean> {
 
+	@Override
 	public Boolean convertFromText(final String value, final Class<?> requiredType, final String optionContext) {
 		if ("true".equalsIgnoreCase(value) || "1".equals(value) || "yes".equalsIgnoreCase(value)) {
 			return true;
-		} else if ("false".equalsIgnoreCase(value) || "0".equals(value) || "no".equalsIgnoreCase(value)) {
+		}
+		else if ("false".equalsIgnoreCase(value) || "0".equals(value) || "no".equalsIgnoreCase(value)) {
 			return false;
-		} else {
+		}
+		else {
 			throw new IllegalArgumentException("Cannot convert " + value + " to type Boolean.");
 		}
 	}
 
-	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType, final String existingData, final String optionContext, final MethodTarget target) {
+	@Override
+	public boolean getAllPossibleValues(final List<Completion> completions, final Class<?> requiredType,
+			final String existingData, final String optionContext, final MethodTarget target) {
 		completions.add(new Completion("true"));
 		completions.add(new Completion("false"));
 		completions.add(new Completion("yes"));
@@ -49,6 +56,7 @@ public class BooleanConverter implements Converter<Boolean> {
 		return false;
 	}
 
+	@Override
 	public boolean supports(final Class<?> requiredType, final String optionContext) {
 		return Boolean.class.isAssignableFrom(requiredType) || boolean.class.isAssignableFrom(requiredType);
 	}

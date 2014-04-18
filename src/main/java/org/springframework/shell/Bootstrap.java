@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -36,30 +35,33 @@ import org.springframework.util.StopWatch;
  * Loads a {@link Shell} using Spring IoC container.
  * 
  * @author Ben Alex (original Roo code)
- * @author Mark Pollack 
+ * @author Mark Pollack
  * @author David Winterfeldt
- *
+ * 
  */
 public class Bootstrap {
 
 	private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
-	 
+
 	private static Bootstrap bootstrap;
+
 	private static StopWatch sw = new StopWatch("Spring Shell");
+
 	private static CommandLine commandLine;
-	
+
 	private GenericApplicationContext ctx;
-		
 
 	public static void main(String[] args) throws IOException {
 		sw.start();
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(args);			
+			bootstrap = new Bootstrap(args);
 			exitShellRequest = bootstrap.run();
-		} catch (RuntimeException t) {
+		}
+		catch (RuntimeException t) {
 			throw t;
-		} finally {
+		}
+		finally {
 			HandlerUtils.flushAllHandlers(Logger.getLogger(""));
 		}
 
@@ -69,59 +71,43 @@ public class Bootstrap {
 	public Bootstrap() {
 		this(null, CONTEXT_PATH);
 	}
-	
-	public Bootstrap(String[] args) throws IOException {	
+
+	public Bootstrap(String[] args) throws IOException {
 		this(args, CONTEXT_PATH);
 	}
-	
+
 	public Bootstrap(String[] args, String[] contextPath) {
 		try {
 			commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
-        } catch (IOException e) {
-            throw new ShellException(e.getMessage(), e);
-        }
-		
+		}
+		catch (IOException e) {
+			throw new ShellException(e.getMessage(), e);
+		}
+
 		ctx = new GenericApplicationContext();
 		ctx.registerShutdownHook();
-		configureApplicationContext(ctx);		
-		//built-in commands and converters
+		configureApplicationContext(ctx);
+		// built-in commands and converters
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(ctx);
 		if (commandLine.getDisableInternalCommands()) {
-			scanner.scan("org.springframework.shell.converters", "org.springframework.shell.plugin.support");		
-		} else {
-			scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters", "org.springframework.shell.plugin.support");
+			scanner.scan("org.springframework.shell.converters", "org.springframework.shell.plugin.support");
 		}
-		//user contributed commands
-		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) ctx);
+		else {
+			scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters",
+					"org.springframework.shell.plugin.support");
+		}
+		// user contributed commands
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(ctx);
 		reader.loadBeanDefinitions(contextPath);
 		ctx.refresh();
 	}
-	
-	
+
 	public ApplicationContext getApplicationContext() {
 		return ctx;
 	}
 
 	private void configureApplicationContext(GenericApplicationContext annctx) {
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
-		createAndRegisterBeanDefinition(annctx,
-				org.springframework.shell.converters.AvailableCommandsConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigDecimalConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BigIntegerConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.BooleanConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.CharacterConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DateConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.DoubleConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.EnumConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.FloatConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.IntegerConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LocaleConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.LongConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.ShortConverter.class);
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StaticFieldConverterImpl.class);
 		createAndRegisterBeanDefinition(annctx, org.springframework.shell.core.JLineShellComponent.class, "shell");
-		createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.SimpleFileConverter.class);
-		
 		annctx.getBeanFactory().registerSingleton("commandLine", commandLine);
 	}
 
@@ -132,7 +118,7 @@ public class Bootstrap {
 	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class<?> clazz, String name) {
 		RootBeanDefinition rbd = new RootBeanDefinition();
 		rbd.setBeanClass(clazz);
-		DefaultListableBeanFactory bf = (DefaultListableBeanFactory)annctx.getBeanFactory();
+		DefaultListableBeanFactory bf = (DefaultListableBeanFactory) annctx.getBeanFactory();
 		if (name != null) {
 			bf.registerBeanDefinition(name, rbd);
 		}
@@ -157,11 +143,10 @@ public class Bootstrap {
 		rooLogger.setLevel(Level.FINE);
 	}
 
-
 	public ExitShellRequest run() {
 
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
-		// The shell is used 
+		// The shell is used
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
 		ExitShellRequest exitShellRequest;
 
@@ -175,7 +160,7 @@ public class Bootstrap {
 					break;
 			}
 
-			//if all commands were successful, set the normal exit status
+			// if all commands were successful, set the normal exit status
 			if (successful) {
 				exitShellRequest = ExitShellRequest.NORMAL_EXIT;
 			}
@@ -198,7 +183,7 @@ public class Bootstrap {
 		}
 		return exitShellRequest;
 	}
-	
+
 	public JLineShellComponent getJLineShellComponent() {
 		return ctx.getBean("shell", JLineShellComponent.class);
 	}
