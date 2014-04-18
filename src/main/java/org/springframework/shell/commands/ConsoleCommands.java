@@ -23,7 +23,7 @@ import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
 
 /**
- * Commands related to the manipulation of the jline console
+ * Commands related to the manipulation of the jline console.
  * 
  * @author Mark Pollack
  * 
@@ -33,7 +33,7 @@ public class ConsoleCommands implements CommandMarker {
 
 	@CliCommand(value = { "cls", "clear" }, help = "Clears the console")
 	public void clear() {
-		AnsiConsole.out().println(ansi().eraseScreen().cursor(0, 0));
+		AnsiConsole.out().print(ansi().eraseScreen().cursor(0, 0));
 	}
 
 }
