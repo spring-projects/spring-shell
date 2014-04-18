@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
+import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,4 +36,11 @@ public class DateCommands implements CommandMarker {
 		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US).format(new Date());
 	}
 
+	@CliCommand(value = "stream")
+	public String foo(@CliOption(key = "")
+	String a, @CliOption(key = "def")
+	String def) {
+		System.out.format("name = %s%ndef = %s%n", a, def);
+		return "ok";
+	}
 }
