@@ -286,7 +286,12 @@ public class Tokenizer {
 	 * Apply delimiter escaping to the given string, using the actual delimiter that was used for the last value.
 	 */
 	public String escape(String value) {
-		return value.replace("" + lastValueDelimiter, "" + ESCAPE_CHAR + lastValueDelimiter);
+		String result = value.replace("" + lastValueDelimiter, "" + ESCAPE_CHAR + lastValueDelimiter);
+		result = result.replace("\r", "\\r");
+		result = result.replace("\n", "\\n");
+		result = result.replace("\t", "\\t");
+		result = result.replace("\f", "\\f");
+		return result;
 	}
 
 	/**
