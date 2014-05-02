@@ -152,6 +152,10 @@ public class Tokenizer {
 		lastValueDelimiter = endDelimiter;
 		lastValueStartOffset = pos;
 		while (pos < buffer.length && buffer[pos] != endDelimiter) {
+			if (buffer[pos] == ESCAPE_CHAR) {
+				sb.append(maybeUnescape(endDelimiter));
+				continue;
+			}
 			if (lookAhead(ESCAPE_CHAR, endDelimiter)) {
 				sb.append(endDelimiter);
 				pos += 2;
@@ -194,6 +198,59 @@ public class Tokenizer {
 	}
 
 	/**
+	 * When the escape character is encountered, consume and return the escaped sequence. Note that depending on which
+	 * end delimiter is currently in use, not all combinations need to be escaped
+	 * @param endDelimiter the current endDelimiter
+	 */
+	private char maybeUnescape(char endDelimiter) {
+		pos++;
+		if (pos >= buffer.length) {
+			throw new IllegalArgumentException("Ran out of input in escape sequence");
+		}
+		switch (buffer[pos]) {
+		case ESCAPE_CHAR:
+			pos++; // consume the second escape char
+			return ESCAPE_CHAR;
+		case 't':
+			pos++;
+			return '\t';
+		case 'r':
+			pos++;
+			return '\r';
+		case 'n':
+			pos++;
+			return '\n';
+		case 'f':
+			pos++;
+			return '\f';
+		case 'u':
+			if (pos + 5 > buffer.length) {
+				throw new IllegalArgumentException("Ran out input in unicode escape sequence");
+			}
+			String hex = new String(buffer, pos + 1, 4);
+			try {
+				char code = (char) Integer.parseInt(hex, 16);
+				pos += 5;
+				return code;
+			}
+			catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Illegal unicode escape sequence: " + ESCAPE_CHAR + "u" + hex);
+			}
+
+		default:
+			if (buffer[pos] == endDelimiter) {
+				pos++;
+				return endDelimiter;
+			}
+			else {
+				// Not an actual escape. Do not increment pos,
+				// and return the \ we consumed at the very beginning
+				return ESCAPE_CHAR;
+			}
+		}
+	}
+
+	/**
 	 * Return the offset at which the last value seen started (NOT including any delimiter).
 	 */
 	public int getLastValueStartOffset() {
@@ -229,7 +286,12 @@ public class Tokenizer {
 	 * Apply delimiter escaping to the given string, using the actual delimiter that was used for the last value.
 	 */
 	public String escape(String value) {
-		return value.replace("" + lastValueDelimiter, "" + ESCAPE_CHAR + lastValueDelimiter);
+		String result = value.replace("" + lastValueDelimiter, "" + ESCAPE_CHAR + lastValueDelimiter);
+		result = result.replace("\r", "\\r");
+		result = result.replace("\n", "\\n");
+		result = result.replace("\t", "\\t");
+		result = result.replace("\f", "\\f");
+		return result;
 	}
 
 	/**
