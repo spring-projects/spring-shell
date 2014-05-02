@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -195,6 +196,22 @@ public class TokenizerTests {
 		expected.put("recursive", "--wizz");
 		expected.put("", "blow");
 		assertEquals(expected, result);
+
+	}
+
+	@Test
+	public void testSingleAndDoubleQuotingBehavior() {
+		Map<String, String> result = tokenize("--foo 'i have a double \" in me'");
+		assertEquals(Collections.singletonMap("foo", "i have a double \" in me"), result);
+
+		result = tokenize("--foo \"i have a double \\\" in me\"");
+		assertEquals(Collections.singletonMap("foo", "i have a double \" in me"), result);
+
+		result = tokenize("--foo \"i have a single ' in me\"");
+		assertEquals(Collections.singletonMap("foo", "i have a single ' in me"), result);
+
+		result = tokenize("--foo 'i have a single \\' in me'");
+		assertEquals(Collections.singletonMap("foo", "i have a single ' in me"), result);
 
 	}
 
