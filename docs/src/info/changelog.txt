@@ -5,7 +5,18 @@ http://www.springsource.org/spring-shell
 Commit changelog: http://github.com/SpringSource/spring-shell/tree/[version]
 Issues changelog: http://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10361
 
-Changes in version 1.1 RC1 (2014-4-15)
+Changes in version 1.1 RC3 (2014-5-16)
+--------------------------------------
+** Bug
+* [SHL-140] - Fix completions for the "help" builtin command
+
+** Improvement
+* [SHL-134] - Grab the entire input line as parameter to CliCommand
+* [SHL-139] - Add support for common escapes
+* [SHL-143] - Upgrade to gradle 1.11
+* [SHL-149] - Upgrad to Spring Framework 4
+
+Changes in version 1.1 RC2 (2014-4-15)
 --------------------------------------
 ** Bug
 * [SHL-133] - Shell command "! ls /tmp"  fails

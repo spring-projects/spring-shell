@@ -4,7 +4,7 @@ Maven 3:
   $>mvn package
   
 2.run spring shell
-  $>java -jar target/helloworld-1.0.1.RELEASE.jar
+  $>java -jar target/helloworld-1.1.0.RELEASE.jar
   
 
   
