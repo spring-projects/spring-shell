@@ -1,4 +1,4 @@
-Spring Shell is an interactive shell that can be easily extended with commands using a Spring based programming model.  The latest release is 1.0.0.RELEASE
+Spring Shell is an interactive shell that can be easily extended with commands using a Spring based programming model.  The latest GA release is 1.0.0.RELEASE, the latest release candidate is 1.1.0.RC3.
 
 # Useful links
 
