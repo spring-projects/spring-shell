@@ -79,7 +79,7 @@ public class TokenizerTests {
 		assertEquals(expected, result);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = TokenizingException.class)
 	public void testTwoOptionsSameKey() {
 		tokenize("--foo bar --foo buzz");
 	}
@@ -97,7 +97,7 @@ public class TokenizerTests {
 		assertThat(result.get("woot"), equalTo("cool"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = TokenizingException.class)
 	public void testDisallowTwoOptionsSameEmptyKeyIfNotNextToEachOther() {
 		tokenize("bar --foo wizz buzz");
 	}
@@ -118,7 +118,7 @@ public class TokenizerTests {
 		assertEquals(expected, result);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = TokenizingException.class)
 	public void testValueQuotationUnbalanced() {
 		Map<String, String> result = tokenize("--foo \"bar fizz");
 		assertEquals(singletonMap("foo", "bar fizz"), result);

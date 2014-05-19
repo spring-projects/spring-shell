@@ -113,26 +113,35 @@ public class Tokenizer {
 			eatKeyEqualsValue();
 		}
 		else {
+			int offsetInCaseOfFailure = pos;
 			String value = eatValue(true);
-			store("", value);
+			store("", value, offsetInCaseOfFailure);
 		}
 
 	}
 
-	private void store(String key, String value) {
+	/**
+	 * Store a command key/value pair, reporting a failure if a mapping with the same key is already present.
+	 * @param key the command key
+	 * @param value the command value
+	 * @param failureOffset the buffer offset at which the mapping we're trying to store was tokenized
+	 */
+	private void store(String key, String value, int failureOffset) {
 		String alreadyThere = result.put(key, value);
 		if (alreadyThere != null) {
 			if ("".equals(key)) {
-				throw new IllegalArgumentException(String.format(
+				String explanation = String.format(
 						"You cannot specify '%s' as another value for the default ('') option in a single command.%n"
 								+ "You already provided '%s' earlier.%n"
 								+ "Did you forget to add quotes around the value of another option?", value,
-						alreadyThere));
+						alreadyThere);
+				throw new TokenizingException(failureOffset, buffer, explanation);
 			}
 			else {
-				throw new IllegalArgumentException(String.format(
+				String explanation = String.format(
 						"You cannot specify '%s' as another value for the '--%s' option in a single command.%n"
-								+ "You already provided '%s' earlier.", value, key, alreadyThere));
+								+ "You already provided '%s' earlier.", value, key, alreadyThere);
+				throw new TokenizingException(failureOffset, buffer, explanation);
 			}
 		}
 	}
@@ -189,7 +198,7 @@ public class Tokenizer {
 				return sb.toString();
 			}
 			else {
-				throw new IllegalArgumentException("Cannot have an unbalanced number of quotation marks");
+				throw new TokenizingException(pos, buffer, "Cannot have an unbalanced number of quotation marks");
 			}
 		}
 		// Eat our delim
@@ -205,7 +214,7 @@ public class Tokenizer {
 	private char processCharacterEscapeCodes(char endDelimiter) {
 		pos++;
 		if (pos >= buffer.length) {
-			throw new IllegalArgumentException("Ran out of input in escape sequence");
+			throw new TokenizingException(buffer.length, buffer, "Ran out of input in escape sequence");
 		}
 		switch (buffer[pos]) {
 		case ESCAPE_CHAR:
@@ -225,7 +234,7 @@ public class Tokenizer {
 			return '\f';
 		case 'u':
 			if (pos + 5 > buffer.length) {
-				throw new IllegalArgumentException("Ran out input in unicode escape sequence");
+				throw new TokenizingException(buffer.length, buffer, "Ran out of input in unicode escape sequence");
 			}
 			String hex = new String(buffer, pos + 1, 4);
 			try {
@@ -234,7 +243,8 @@ public class Tokenizer {
 				return code;
 			}
 			catch (NumberFormatException e) {
-				throw new IllegalArgumentException("Illegal unicode escape sequence: " + ESCAPE_CHAR + "u" + hex);
+				throw new TokenizingException(pos - 1, buffer, "Illegal unicode escape sequence: " + ESCAPE_CHAR + "u"
+						+ hex);
 			}
 
 		default:
@@ -303,6 +313,8 @@ public class Tokenizer {
 	 * in which case allow for just {@code --key}, using "" for the value.
 	 */
 	private void eatKeyEqualsValue() {
+		// We already consumed '--'
+		int offsetInCaseOfFailure = pos - 2;
 		String key = eatKey();
 		eatWhiteSpace();
 		String value;
@@ -320,7 +332,7 @@ public class Tokenizer {
 		if (key.equals("") && value.equals("")) {
 			return;
 		}
-		store(key, value);
+		store(key, value, offsetInCaseOfFailure);
 	}
 
 	private String eatKey() {
