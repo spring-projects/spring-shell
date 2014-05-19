@@ -160,6 +160,11 @@ public class SimpleParser implements Parser {
 			try {
 				options = new Tokenizer(methodTarget.getRemainingBuffer()).getTokens();
 			}
+			catch (TokenizingException te) {
+				String commandKey = methodTarget.getKey();
+				reportTokenizingException(commandKey, te);
+				return null;
+			}
 			catch (IllegalArgumentException e) {
 				LOGGER.warning(ExceptionUtils.extractRootCause(e).getMessage());
 				return null;
@@ -308,6 +313,16 @@ public class SimpleParser implements Parser {
 
 			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), arguments.toArray());
 		}
+	}
+
+	private void reportTokenizingException(String commandKey, TokenizingException te) {
+		StringBuilder caret = new StringBuilder();
+		for (int i = 0; i < te.getOffendingOffset() + commandKey.length() + 1; i++) {
+			caret.append(" ");
+		}
+		LOGGER.warning(commandKey + " " + te.getBuffer());
+		LOGGER.warning(caret + "^");
+		LOGGER.warning(te.getReason());
 	}
 
 	/**
@@ -597,8 +612,13 @@ public class SimpleParser implements Parser {
 			try {
 				tokenizer = new Tokenizer(methodTarget.getRemainingBuffer(), true);
 			}
+			catch (TokenizingException e) {
+				// Make sure we don't crash the main shell loop just
+				// because the user specified some option twice
+				return -1;
+			}
 			catch (IllegalArgumentException e) {
-				// Make sure we don't crash the mail shell loop just
+				// Make sure we don't crash the main shell loop just
 				// because the user specified some option twice
 				return -1;
 			}
