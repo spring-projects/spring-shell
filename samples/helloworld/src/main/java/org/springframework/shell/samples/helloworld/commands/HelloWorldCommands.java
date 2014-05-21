@@ -34,7 +34,7 @@ public class HelloWorldCommands implements CommandMarker {
 		return "Message = [" + message + "] Location = [" + location + "]";
 	}
 	
-	@CliCommand(value = "hw complex", help = "Print a complex hello world message")
+	@CliCommand(value = "hw complex", help = "Print a complex hello world message (run 'hw simple' once first)")
 	public String hello(
 		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final String message,
 		@CliOption(key = { "name1"}, mandatory = true, help = "Say hello to the first name") final String name1,
@@ -44,7 +44,7 @@ public class HelloWorldCommands implements CommandMarker {
 		return "Hello " + name1 + " and " + name2 + ". Your special message is "  + message + ". time=[" + time + "] location=[" + location + "]";
 	}
 	
-	@CliCommand(value = "hw enum", help = "Print a simple hello world message from an enumerated value")
+	@CliCommand(value = "hw enum", help = "Print a simple hello world message from an enumerated value (run 'hw simple' once first)")
 	public String eenum(
 		@CliOption(key = { "message" }, mandatory = true, help = "The hello world message") final MessageType message){		
 		return "Hello.  Your special enumerated message is " + message;
