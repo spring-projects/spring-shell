@@ -72,6 +72,7 @@ import org.springframework.util.StringUtils;
  * 
  * @author Ben Alex
  * @author Jarred Li
+ * @author Glenn Renfro
  * @since 1.0
  */
 public abstract class JLineShell extends AbstractShell implements Shell, Runnable {
@@ -509,7 +510,9 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		catch (IOException ignored) {
 		}
 	}
-
+	/**
+	 * Awaits user input, executes the command and displays the prompt to the user.
+	 */
 	public void promptLoop() {
 		setShellStatus(Status.USER_INPUT);
 		String line;
@@ -523,14 +526,14 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 				if (!StringUtils.hasText(line)) {
 					//generate prompt if empty line, the prompt maybe showing the time or something else that updates 
 					//independent of the lack of a command to execute.
-					generatePromptUpdate(prompt);
+					prompt = generatePromptUpdate(prompt);
 					continue;
 				}
 
 				executeCommand(line);
 				//update the prompt after the command has been executed in case an application event listener in the
 				//command changes state in the prompt provider.
-				generatePromptUpdate(prompt);
+				prompt = generatePromptUpdate(prompt);
 
 			}
 		}
@@ -539,12 +542,19 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		}
 		setShellStatus(Status.SHUTTING_DOWN);
 	}
-
-	public void generatePromptUpdate(String existingPrompt) {
+	
+	/**
+	 * Retrieves the latest prompt and if the latest prompt is different than the existing prompt,
+	 * the shellPrompt is updated.
+	 * @param existingPrompt The prompt that is recognized as the current prompt.
+	 * @return The prompt that the shellPrompt displays.
+	 */
+	public String generatePromptUpdate(String existingPrompt) {
 		String newPrompt = getPromptText();
 		if (!ObjectUtils.nullSafeEquals(existingPrompt, newPrompt)) {
 			setPromptPath(null);
 		}
+		return newPrompt;
 	}
 	
 	public void setDevelopmentMode(final boolean developmentMode) {
