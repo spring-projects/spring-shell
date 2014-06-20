@@ -32,7 +32,7 @@ public class DateCommands implements CommandMarker {
 
 	@CliCommand(value = { "date" }, help = "Displays the local date and time")
 	public String date() {
-		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US).format(new Date());
+		return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.getDefault()).format(new Date());
 	}
 
 }
