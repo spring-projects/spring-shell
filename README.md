@@ -14,13 +14,13 @@ If you have ideas about how to improve or extend the scope, please feel free to 
 ~~~~~ xml
 <!-- used for Spring GA Releases releases, artifacts are also in maven central -->
 <repository>
- <-- Release -->
+ <!-- Release -->
  <id>spring-release</id>
  <name>Spring Maven RELEASE Repository</name>
  <url>http://repo.springframework.org/release</url>
 </repository>
 
-<-- libs-release for JLine fork, artifacts may not be in maven central -->
+<!-- libs-release for JLine fork, artifacts may not be in maven central -->
 <repository>
  <id>libs-release</id>
  <name>Spring Maven libs-release Repository</name>
@@ -35,7 +35,7 @@ If you have ideas about how to improve or extend the scope, please feel free to 
 
 <!-- used for nightly builds -->
 <repository>
- <-- Snapshots -->
+ <!-- Snapshots -->
  <id>spring-snapshot</id>
  <name>Spring Maven SNAPSHOT Repository</name>
  <url>http://repo.springframework.org/libs-snapshot</url>
