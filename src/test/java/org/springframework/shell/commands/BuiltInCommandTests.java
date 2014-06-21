@@ -36,7 +36,7 @@ public class BuiltInCommandTests extends AbstractShellIntegrationTest {
 		CommandResult cr = getShell().executeCommand("date");
 		
 		//Get result   
-		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,Locale.US);
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.getDefault());
 		Date result = df.parse(cr.getResult().toString());
 		
 		//Make assertions
