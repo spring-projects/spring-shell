@@ -30,10 +30,12 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.hamcrest.Description;
 import org.hamcrest.DiagnosingMatcher;
 import org.hamcrest.Matcher;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
@@ -369,6 +371,46 @@ public class SimpleParserTests {
 		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 \"def\" ")))));
 	}
 
+	@Test
+	public void testSuccessiveInvocationsOfCompletion() {
+
+		parser.add(new MyCommands());
+		parser.add(new ExpertCompletions());
+
+		buffer = "bar --option1 ";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 one ")))));
+		assertThat(candidates, not(hasItem(completionThat(is(equalTo("bar --option1 two "))))));
+		assertThat(candidates, not(hasItem(completionThat(is(equalTo("bar --option1 three "))))));
+
+		candidates.clear();
+		// Simulate <TAB> twice
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 one ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 two ")))));
+		assertThat(candidates, not(hasItem(completionThat(is(equalTo("bar --option1 three "))))));
+
+		candidates.clear();
+		// Simulate <TAB> three times
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 one ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 two ")))));
+		assertThat(candidates, hasItem(completionThat(is(equalTo("bar --option1 three ")))));
+
+		// And now for something completely different
+		buffer = "testMandatory --option2 ";
+		candidates.clear();
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, hasItem(completionThat(is(equalTo("testMandatory --option2 one ")))));
+		assertThat(candidates, not(hasItem(completionThat(is(equalTo("testMandatory --option2 two "))))));
+		assertThat(candidates, not(hasItem(completionThat(is(equalTo("testMandatory --option2 three "))))));
+
+	}
+
 	/**
 	 * @see https://jira.spring.io/browse/SHL-113
 	 */
@@ -513,6 +555,36 @@ public class SimpleParserTests {
 				completions.add(new Completion(s));
 			}
 			return canContinue;
+		}
+
+	}
+
+	public static class ExpertCompletions implements Converter<String> {
+
+		private static final Pattern NUMBER_OF_INVOCATIONS_CAPTURE = Pattern.compile(".*completions-(\\d+).*");
+
+		private static final String[] results = new String[] { "one", "two", "three" };
+
+		@Override
+		public boolean supports(Class<?> type, String optionContext) {
+			return true;
+		}
+
+		@Override
+		public String convertFromText(String value, Class<?> targetType, String optionContext) {
+			return value;
+		}
+
+		@Override
+		public boolean getAllPossibleValues(List<Completion> completions, Class<?> targetType, String existingData,
+				String optionContext, MethodTarget target) {
+			java.util.regex.Matcher m = NUMBER_OF_INVOCATIONS_CAPTURE.matcher(optionContext);
+			Assert.assertTrue(m.matches());
+			int invocations = Integer.parseInt(m.group(1));
+			for (int i = 0; i < invocations; i++) {
+				completions.add(new Completion(results[i]));
+			}
+			return true;
 		}
 
 	}
