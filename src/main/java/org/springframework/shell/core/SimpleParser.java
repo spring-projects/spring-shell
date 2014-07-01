@@ -65,6 +65,16 @@ public class SimpleParser implements Parser {
 
 	private final Map<String, MethodTarget> availabilityIndicators = new HashMap<String, MethodTarget>();
 
+	/**
+	 * The last buffer when completion was requested.
+	 */
+	private String previousCompletionBuffer;
+
+	/**
+	 * The number of times completion has been requested with the same buffer.
+	 */
+	private int successiveCompletionRequests = 1;
+
 	private MethodTarget getAvailabilityIndicator(final String command) {
 		return availabilityIndicators.get(command);
 	}
@@ -108,6 +118,8 @@ public class SimpleParser implements Parser {
 		synchronized (mutex) {
 			Assert.notNull(rawInput, "Raw input required");
 			final String input = normalise(rawInput);
+
+			resetCompletionInvocations();
 
 			// Locate the applicable targets which match this buffer
 			final Collection<MethodTarget> matchingTargets = locateTargets(input, true, true);
@@ -313,6 +325,15 @@ public class SimpleParser implements Parser {
 
 			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), arguments.toArray());
 		}
+	}
+
+	/**
+	 * We're being asked to execute a command, so the next completion invocation will definitely refer to a different
+	 * buffer.
+	 */
+	private void resetCompletionInvocations() {
+		previousCompletionBuffer = null;
+		successiveCompletionRequests = 1;
 	}
 
 	private void reportTokenizingException(String commandKey, TokenizingException te) {
@@ -565,14 +586,10 @@ public class SimpleParser implements Parser {
 				cursor--;
 			}
 
-			// Replace all multiple spaces with a single space
-			while (buffer.contains("  ")) {
-				buffer = buffer.replaceFirst("  ", " ");
-				cursor--;
-			}
-
 			// Begin by only including the portion of the buffer represented to the present cursor position
 			String translated = buffer.substring(0, cursor);
+
+			String successiveInvocationContext = trackSuccessiveCompletionRequests(translated);
 
 			// Start by locating a method that matches
 			final Collection<MethodTarget> targets = locateTargets(translated, false, true);
@@ -834,10 +851,11 @@ public class SimpleParser implements Parser {
 							}
 							// Let's use a Converter if one is available
 							for (Converter<?> candidate : converters) {
-								if (candidate.supports(parameterType, option.optionContext())) {
+								String optionContext = successiveInvocationContext + " " + option.optionContext();
+								if (candidate.supports(parameterType, optionContext)) {
 									// Found a usable converter
 									boolean allComplete = candidate.getAllPossibleValues(allValues, parameterType,
-											lastOptionValue, option.optionContext(), methodTarget);
+											lastOptionValue, optionContext, methodTarget);
 									if (!allComplete) {
 										suffix = "";
 									}
@@ -890,6 +908,22 @@ public class SimpleParser implements Parser {
 
 			return -1;
 		}
+	}
+
+	/**
+	 * Track the number of times completion has been requested for the same buffer, resetting everytime the buffer
+	 * changes.
+	 * @return the portion of "option context" that indicates the number of invocation
+	 */
+	private String trackSuccessiveCompletionRequests(String translated) {
+		if (translated.equals(previousCompletionBuffer)) {
+			successiveCompletionRequests++;
+		}
+		else {
+			previousCompletionBuffer = translated;
+			successiveCompletionRequests = 1;
+		}
+		return Converter.TAB_COMPLETION_COUNT_PREFIX + successiveCompletionRequests;
 	}
 
 	private void displayHelp(String lastOptionKey, CliOption option) {
