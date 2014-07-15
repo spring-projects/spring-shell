@@ -14,7 +14,6 @@ repositories {
   mavenCentral()
   maven { url "http://repo.springsource.org/libs-snapshot" }
   maven { url "http://repo.springsource.org/plugins-release" }
-  maven { url "http://spring-roo-repository.springsource.org/release" }
 }
 
 apply plugin: "java"
