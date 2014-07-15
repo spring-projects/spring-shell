@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.1.5'
+        classpath 'org.springframework.build.gradle:spring-io-plugin:0.0.3.RELEASE'
     }
 }
 
@@ -23,15 +24,26 @@ apply from: "$rootDir/maven.gradle"
 apply plugin: 'docbook-reference'
 apply plugin: 'application'
 
+if (project.hasProperty('platformVersion')) {
+    apply plugin: 'spring-io'
+
+    repositories {
+        maven { url "https://repo.spring.io/libs-snapshot" }
+    }
+
+    dependencies {
+        springIoVersions "io.spring.platform:platform-versions:${platformVersion}@properties"
+    }
+}
+
 [compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:-serial", "-Xlint:unchecked", "-Xlint:rawtypes"]
 
 dependencies {
     compile "org.springframework:spring-core:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile "commons-io:commons-io:$commonsioVersion"
-    compile "com.google.guava:guava:15.0"
+    compile "com.google.guava:guava:$guavaVersion"
     compile "jline:jline:$jlineVersion"
-    compile "cglib:cglib:$cglibVersion"
 
     
     // Testing
