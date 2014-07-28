@@ -76,6 +76,8 @@ import org.springframework.util.StringUtils;
  * @since 1.0
  */
 public abstract class JLineShell extends AbstractShell implements Shell, Runnable {
+	// Configurable parameters
+	public static boolean enableJLineLogging = Boolean.parseBoolean(System.getProperty("org.springframework.shell.core.JLineShell.enableJLineLogging", "true"));
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
@@ -112,12 +114,14 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		reader = createConsoleReader();
 
 		setPromptPath(null);
-
-		JLineLogHandler handler = new JLineLogHandler(reader, this);
-		JLineLogHandler.prohibitRedraw(); // Affects this thread only
-		Logger mainLogger = Logger.getLogger("");
-		removeHandlers(mainLogger);
-		mainLogger.addHandler(handler);
+		
+		if(enableJLineLogging) {
+			JLineLogHandler handler = new JLineLogHandler(reader, this);
+			JLineLogHandler.prohibitRedraw(); // Affects this thread only
+			Logger mainLogger = Logger.getLogger("");
+			removeHandlers(mainLogger);
+			mainLogger.addHandler(handler);
+		}
 
 		reader.addCompleter(new ParserCompleter(getParser()));
 
