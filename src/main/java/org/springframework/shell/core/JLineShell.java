@@ -85,6 +85,10 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	private static final boolean JANSI_AVAILABLE = ClassUtils.isPresent(ANSI_CONSOLE_CLASSNAME,
 			JLineShell.class.getClassLoader());
 
+	private static final String CONSOLE_LOGGERS[] = {"org.springframework.shell.core.JLineShellComponent",
+							 "org.springframework.shell.core.AbstractShell",
+							 "org.springframework.shell.core.SimpleParser"};
+
 	private static final char ESCAPE = 27;
 
 	private static final String BEL = "\007";
@@ -115,12 +119,17 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 
 		setPromptPath(null);
 		
-		if(enableJLineLogging) {
-			JLineLogHandler handler = new JLineLogHandler(reader, this);
-			JLineLogHandler.prohibitRedraw(); // Affects this thread only
-			Logger mainLogger = Logger.getLogger("");
-			removeHandlers(mainLogger);
-			mainLogger.addHandler(handler);
+		JLineLogHandler handler = new JLineLogHandler(reader, this);
+		JLineLogHandler.prohibitRedraw(); // Affects this thread only
+		String consoleLoggers[] = {""};
+		if(!enableJLineLogging) {
+			consoleLoggers = CONSOLE_LOGGERS;
+		}
+
+		for(String loggerName : consoleLoggers) {
+			Logger logger = Logger.getLogger(loggerName);
+			removeHandlers(logger);
+			logger.addHandler(handler);
 		}
 
 		reader.addCompleter(new ParserCompleter(getParser()));
