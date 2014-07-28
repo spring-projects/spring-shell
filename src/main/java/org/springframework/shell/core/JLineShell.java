@@ -76,12 +76,18 @@ import org.springframework.util.StringUtils;
  * @since 1.0
  */
 public abstract class JLineShell extends AbstractShell implements Shell, Runnable {
+	// Configurable parameters
+	public static boolean enableJLineLogging = Boolean.parseBoolean(System.getProperty("org.springframework.shell.core.JLineShell.enableJLineLogging", "true"));
 
 	// Constants
 	private static final String ANSI_CONSOLE_CLASSNAME = "org.fusesource.jansi.AnsiConsole";
 
 	private static final boolean JANSI_AVAILABLE = ClassUtils.isPresent(ANSI_CONSOLE_CLASSNAME,
 			JLineShell.class.getClassLoader());
+
+	private static final String CONSOLE_LOGGERS[] = {"org.springframework.shell.core.JLineShellComponent",
+							 "org.springframework.shell.core.AbstractShell",
+							 "org.springframework.shell.core.SimpleParser"};
 
 	private static final char ESCAPE = 27;
 
@@ -112,12 +118,19 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		reader = createConsoleReader();
 
 		setPromptPath(null);
-
+		
 		JLineLogHandler handler = new JLineLogHandler(reader, this);
 		JLineLogHandler.prohibitRedraw(); // Affects this thread only
-		Logger mainLogger = Logger.getLogger("");
-		removeHandlers(mainLogger);
-		mainLogger.addHandler(handler);
+		String consoleLoggers[] = {""};
+		if(!enableJLineLogging) {
+			consoleLoggers = CONSOLE_LOGGERS;
+		}
+
+		for(String loggerName : consoleLoggers) {
+			Logger logger = Logger.getLogger(loggerName);
+			removeHandlers(logger);
+			logger.addHandler(handler);
+		}
 
 		reader.addCompleter(new ParserCompleter(getParser()));
 
