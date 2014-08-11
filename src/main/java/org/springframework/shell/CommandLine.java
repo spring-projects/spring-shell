@@ -17,10 +17,7 @@ package org.springframework.shell;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -108,7 +105,6 @@ public class CommandLine {
 	public void removeFromShell (String arg, String val) {
 		List<String> newShellList = new ArrayList<String> ();
 		for (String shellCommand : shellExecuteList) {
-			
 			String cmd = shellCommand.replaceFirst(arg + " " + val, "").trim();
 			if (cmd.length()>0)
 				newShellList.add(cmd);

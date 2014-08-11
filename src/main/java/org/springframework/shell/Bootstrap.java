@@ -16,7 +16,6 @@
 package org.springframework.shell;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,6 +104,11 @@ public class Bootstrap {
 		
 		//try and see if there's additional arguments to be parser form the command line
 		//get the value from the XML bean definition file, bean name extraArguments
+		//The need to parse the arguments again arise since we need access to the extraArguments bean
+		//declared in the spring-shell-plugin.xml and for us to get access to it, we need to instantiate the spring context first. 
+		//However, the need to instantiate the CommandLine instance before creating the spring context.
+		//If we can find a way to somehow get the extraArguments first and the parse the command line, all this code would be cleaner
+		
 		String extraArguments = null;
 		try {
 			extraArguments = ctx.getBean("extraArguments", String.class);
