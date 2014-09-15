@@ -8,3 +8,6 @@ target/
 
 /bin/
 /*.log
+
+/.idea
+/*.iml
