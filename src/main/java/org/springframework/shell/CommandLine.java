@@ -15,17 +15,25 @@
  */
 package org.springframework.shell;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Encapsulates the list of argument passed to the shell.
  * 
  * @author Mark Pollack
+ * @author Rodrigo Meneses
+ * 
  */
 public class CommandLine {
 	
-	private String[] args;
+	private List<String> argList = new ArrayList<String> ();
+	private List<String> shellExecuteList =  new ArrayList<String> ();
+	
 	private int historySize;
-	private String[] shellCommandsToExecute;
+	
 	private boolean disableInteralCommands;
 
 	/**
@@ -39,6 +47,7 @@ public class CommandLine {
 	}
 
 	
+	
 	/**
 	 * Construct a new CommandLine  
 	 * @param args an array of strings from main(String[] args)
@@ -47,9 +56,10 @@ public class CommandLine {
 	 * @param disableInteralCommands if true, do not load the built-in shell commands
 	 */
 	public CommandLine(String[] args, int historySize, String[] shellCommandsToExecute, boolean disableInteralCommands) {
-		this.args = args;
+		this.argList = Arrays.asList(args);
+		if (shellCommandsToExecute!=null)
+			this.shellExecuteList = Arrays.asList(shellCommandsToExecute);
 		this.historySize = historySize;
-		this.shellCommandsToExecute = shellCommandsToExecute;
 		this.disableInteralCommands = disableInteralCommands;
 	}
 
@@ -58,7 +68,9 @@ public class CommandLine {
 	 * @return the command line arguments
 	 */
 	public String[] getArgs() {
-		return args;
+		if (argList.size() == 0)
+			return null;
+		return  argList.toArray(new String[argList.size()]);
 	}
 
 	/**
@@ -72,7 +84,9 @@ public class CommandLine {
 	 * @return the shellCommandsToExecute
 	 */
 	public String[] getShellCommandsToExecute() {
-		return shellCommandsToExecute;
+		if (shellExecuteList.size()==0)
+			return null;
+		return shellExecuteList.toArray(new String[shellExecuteList.size()]);
 	}
 	
 	/**
@@ -82,5 +96,20 @@ public class CommandLine {
 	public boolean getDisableInternalCommands() {
 		return disableInteralCommands;
 	}
-
+	
+	/**
+	 *remove a parameter along with its value from the shell to execute commands list
+	 * @param arg argument name
+	 * @param val argument value
+	 */
+	public void removeFromShell (String arg, String val) {
+		List<String> newShellList = new ArrayList<String> ();
+		for (String shellCommand : shellExecuteList) {
+			String cmd = shellCommand.replaceFirst(arg + " " + val, "").trim();
+			if (cmd.length()>0)
+				newShellList.add(cmd);
+		}
+		this.shellExecuteList = newShellList;
+		
+	}
 }

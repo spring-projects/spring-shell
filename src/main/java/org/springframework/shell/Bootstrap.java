@@ -37,6 +37,7 @@ import org.springframework.util.StopWatch;
  * @author Ben Alex (original Roo code)
  * @author Mark Pollack
  * @author David Winterfeldt
+ * @author Rodrigo Meneses
  * 
  */
 public class Bootstrap {
@@ -100,6 +101,43 @@ public class Bootstrap {
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(ctx);
 		reader.loadBeanDefinitions(contextPath);
 		ctx.refresh();
+		
+		//try and see if there's additional arguments to be parser form the command line
+		//get the value from the XML bean definition file, bean name extraArguments
+		//The need to parse the arguments again arise since we need access to the extraArguments bean
+		//declared in the spring-shell-plugin.xml and for us to get access to it, we need to instantiate the spring context first. 
+		//However, the need to instantiate the CommandLine instance before creating the spring context.
+		//If we can find a way to somehow get the extraArguments first and the parse the command line, all this code would be cleaner
+		
+		String extraArguments = null;
+		try {
+			extraArguments = ctx.getBean("extraArguments", String.class);
+		}
+		catch (Exception ex) {}
+		if (extraArguments != null) {
+			//parse the additional arguments and remove them from the shell execute command list
+			int i=0;
+			while (i<args.length) {
+				String arg = args[i];
+				if (extraArguments.contains(arg)) {
+					String val = "";
+					if (i<args.length-1) {
+						val = args[i+1];
+						if (val.startsWith("--"))
+							val = "";
+					}
+					commandLine.removeFromShell(arg, val);
+					i=i+2;
+				}
+				else
+					i++;
+			}
+			//check and see if we need to show the banner
+			if (commandLine.getShellCommandsToExecute() == null) {
+				ctx.getBean("shell", org.springframework.shell.core.JLineShellComponent.class).setPrintBanner(true);
+			}
+		}
+		
 	}
 
 	public ApplicationContext getApplicationContext() {
