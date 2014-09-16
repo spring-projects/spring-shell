@@ -15,23 +15,6 @@
  */
 package org.springframework.shell.core;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.logging.Logger;
-
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
@@ -42,6 +25,11 @@ import org.springframework.shell.support.util.NaturalOrderComparator;
 import org.springframework.shell.support.util.OsUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Default implementation of {@link Parser}.
@@ -407,12 +395,12 @@ public class SimpleParser implements Parser {
 		Set<String> cliOptionKeySet = new LinkedHashSet<String>();
 		for (CliOption cliOption : cliOptions) {
 			for (String key : cliOption.key()) {
-				cliOptionKeySet.add(key.toLowerCase());
+				cliOptionKeySet.add(key);
 			}
 		}
 		Set<String> unavailableOptions = new LinkedHashSet<String>();
 		for (String suppliedOption : options.keySet()) {
-			if (!cliOptionKeySet.contains(suppliedOption.toLowerCase())) {
+			if (!cliOptionKeySet.contains(suppliedOption)) {
 				unavailableOptions.add(suppliedOption);
 			}
 		}
