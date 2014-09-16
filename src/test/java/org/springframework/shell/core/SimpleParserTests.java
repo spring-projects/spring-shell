@@ -37,6 +37,8 @@ import org.hamcrest.DiagnosingMatcher;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Test;
+
+import org.springframework.shell.converters.StringConverter;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.event.ParseResult;
@@ -428,6 +430,17 @@ public class SimpleParserTests {
 		assertThat(result, nullValue(ParseResult.class));
 	}
 
+	@Test
+	public void testMixedCaseOptions_SHL_98() {
+		parser.add(new MixedCaseOptions());
+		parser.add(new StringConverter());
+		ParseResult result = parser.parse("foo --upPer bar");
+		assertThat(result.getMethod().getName(), equalTo("foo"));
+
+		result = parser.parse("foo --upper fizz");
+		assertThat(result, nullValue());
+	}
+
 	/**
 	 * Return a matcher that asserts that a completion, when added to {@link #buffer} at the given {@link #offset},
 	 * indeed matches the provided matcher.
@@ -522,6 +535,18 @@ public class SimpleParserTests {
 			return "fooBar " + arg;
 		}
 	}
+
+	public static class MixedCaseOptions implements CommandMarker {
+		@CliCommand(value = "foo")
+		public String foo(@CliOption(key = "upPer")
+		String arg) {
+			return "foo " + arg;
+		}
+
+
+	}
+
+
 
 	public static class StringCompletions implements Converter<String> {
 

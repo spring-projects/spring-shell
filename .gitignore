@@ -11,3 +11,5 @@ target/
 
 /.idea
 /*.iml
+/*.ipr
+/*.iws

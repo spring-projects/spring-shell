@@ -45,7 +45,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of {@link Parser}.
- * 
+ *
  * @author Ben Alex
  * @since 1.0
  */
@@ -81,7 +81,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * get all mandatory options keys. For the options with multiple keys, the keys will be in one row.
-	 * 
+	 *
 	 * @param cliOptions options
 	 * @return mandatory options keys
 	 */
@@ -91,7 +91,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * get all options key.
-	 * 
+	 *
 	 * @param cliOptions
 	 * @param includeOptionalOptions
 	 * @return options keys
@@ -393,7 +393,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * Normalises the given raw user input string ready for parsing
-	 * 
+	 *
 	 * @param rawInput the string to normalise; can't be <code>null</code>
 	 * @return a non-<code>null</code> string
 	 */
@@ -407,12 +407,12 @@ public class SimpleParser implements Parser {
 		Set<String> cliOptionKeySet = new LinkedHashSet<String>();
 		for (CliOption cliOption : cliOptions) {
 			for (String key : cliOption.key()) {
-				cliOptionKeySet.add(key.toLowerCase());
+				cliOptionKeySet.add(key);
 			}
 		}
 		Set<String> unavailableOptions = new LinkedHashSet<String>();
 		for (String suppliedOption : options.keySet()) {
-			if (!cliOptionKeySet.contains(suppliedOption.toLowerCase())) {
+			if (!cliOptionKeySet.contains(suppliedOption)) {
 				unavailableOptions.add(suppliedOption);
 			}
 		}
@@ -499,7 +499,8 @@ public class SimpleParser implements Parser {
 		String bufferToReturn = null;
 		String lastWord = null;
 
-		next_buffer_loop: for (int bufferIndex = 0; bufferIndex < buffer.length(); bufferIndex++) {
+		next_buffer_loop:
+		for (int bufferIndex = 0; bufferIndex < buffer.length(); bufferIndex++) {
 			String bufferSoFarIncludingThis = buffer.substring(0, bufferIndex + 1);
 			String bufferRemaining = buffer.substring(bufferIndex + 1);
 
@@ -649,7 +650,7 @@ public class SimpleParser implements Parser {
 				for (String value : cmd.value()) {
 					if (buffer.startsWith(value) || value.startsWith(buffer)) {
 						results.add(new Completion(value)); // no space at the end, as there's no need to continue the
-															// command further
+						// command further
 					}
 				}
 				candidates.addAll(results);
@@ -750,7 +751,7 @@ public class SimpleParser implements Parser {
 			// option key/value pair)
 			if (lastOptionKey == null
 					|| (!"".equals(lastOptionKey) && !"".equals(lastOptionValue) && translated.endsWith(" ") && !tokenizer
-							.openingQuotesHaveNotBeenClosed())) {
+					.openingQuotesHaveNotBeenClosed())) {
 				// We have either NEVER specified an option key/value pair
 				// OR we have specified a full option key/value pair
 
@@ -978,7 +979,7 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * populate completion for mandatory options
-	 * 
+	 *
 	 * @param translated user's input
 	 * @param unspecified unspecified options
 	 * @param value the option key
@@ -1002,7 +1003,7 @@ public class SimpleParser implements Parser {
 	}
 
 	public void obtainHelp(
-			@CliOption(key = { "", "command" }, optionContext = "availableCommands", help = "Command name to provide help for")
+			@CliOption(key = {"", "command"}, optionContext = "availableCommands", help = "Command name to provide help for")
 			String buffer) {
 		synchronized (mutex) {
 			if (buffer == null) {
