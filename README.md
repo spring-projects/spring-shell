@@ -24,7 +24,7 @@ Spring Shell is an interactive shell that can be easily extended with commands u
 </repository>
 
 <dependency>
- <groupId>org.springframework.data</groupId>
+ <groupId>org.springframework.shell</groupId>
  <artifactId>spring-shell</artifactId>
  <version>1.1.0.RELEASE</version>
 </dependency> 
