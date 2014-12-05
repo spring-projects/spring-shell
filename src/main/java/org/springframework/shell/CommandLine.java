@@ -26,7 +26,7 @@ public class CommandLine {
 	private String[] args;
 	private int historySize;
 	private String[] shellCommandsToExecute;
-	private boolean disableInteralCommands;
+	private boolean disableInternalCommands;
 
 	/**
 	 * Construct a new CommandLine  
@@ -44,13 +44,13 @@ public class CommandLine {
 	 * @param args an array of strings from main(String[] args)
 	 * @param historySize the size of this history buffer
 	 * @param shellCommandsToExecute semi-colon delimited list of commands for the shell to execute
-	 * @param disableInteralCommands if true, do not load the built-in shell commands
+	 * @param disableInternalCommands if true, do not load the built-in shell commands
 	 */
-	public CommandLine(String[] args, int historySize, String[] shellCommandsToExecute, boolean disableInteralCommands) {
+	public CommandLine(String[] args, int historySize, String[] shellCommandsToExecute, boolean disableInternalCommands) {
 		this.args = args;
 		this.historySize = historySize;
 		this.shellCommandsToExecute = shellCommandsToExecute;
-		this.disableInteralCommands = disableInteralCommands;
+		this.disableInternalCommands = disableInternalCommands;
 	}
 
 	/**
@@ -77,10 +77,10 @@ public class CommandLine {
 	
 	/**
 	 * 
-	 * @return the disableInteralCommands value
+	 * @return the disableInternalCommands value
 	 */
 	public boolean getDisableInternalCommands() {
-		return disableInteralCommands;
+		return disableInternalCommands;
 	}
 
 }
