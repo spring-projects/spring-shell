@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.core;
 
+import java.util.logging.Level
 import java.util.logging.Logger;
 
 import org.springframework.shell.event.ParseResult;
@@ -63,7 +64,7 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 		try {
 			return ReflectionUtils.invokeMethod(parseResult.getMethod(), parseResult.getInstance(), parseResult.getArguments());
 		} catch (Throwable th) {
-			logger.severe("Command failed " + th);
+			logger.log(Level.SEVERE, th.getMessage(), th);
 			return handleThrowable(th);
 		}
 	}
