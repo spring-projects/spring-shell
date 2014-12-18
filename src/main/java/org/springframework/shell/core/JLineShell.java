@@ -696,4 +696,11 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		return ("Apple_Terminal".equalsIgnoreCase(terminalName) || Boolean.getBoolean("is.apple.terminal"));
 	}
 
+	/**
+	 * @return the console reader
+	 */
+	public ConsoleReader getReader() {
+		return reader;
+	}
+
 }

@@ -300,4 +300,11 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			logger.info(result.toString());
 		}
 	}
+
+	/**
+	 * @return the logger
+	 */
+	public Logger getLogger() {
+		return logger;
+	}
 }
