@@ -13,13 +13,13 @@ import org.springframework.shell.event.ParseResult;
  * @author robin
  *
  */
-public abstract class AbstractStepExecutionProcessor implements ExecutionProcessor {
+public abstract class AbstractStepExecutionProcessor<T> implements ExecutionProcessor {
 	
 	@Autowired
 	@Qualifier("shell")
 	protected JLineShellComponent shell;
 	
-	private Object stepResult;
+	private T stepResult;
 	private Object stepConfig;
 	
 	@Override
@@ -30,11 +30,12 @@ public abstract class AbstractStepExecutionProcessor implements ExecutionProcess
 	@Override
 	public void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown) { }
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void afterReturningInvocation(ParseResult invocationContext, Object result) {
 		// if the command being invoked supports steps...
 		if (isStepCommand(invocationContext)) {
-			stepResult = result;
+			stepResult = (T) result;
 			
 			// display the initial step result
 			outputStepResult();
@@ -85,12 +86,12 @@ public abstract class AbstractStepExecutionProcessor implements ExecutionProcess
 	 * @param stepConfig
 	 * @return
 	 */
-	protected abstract Object processStep(Object stepConfig); 
+	protected abstract T processStep(Object stepConfig); 
 
 	/**
 	 * @return the stepResult
 	 */
-	protected Object getStepResult() {
+	protected T getStepResult() {
 		return stepResult;
 	}
 
