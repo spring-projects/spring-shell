@@ -32,7 +32,7 @@ public class CommandLineInjectedTest {
 	@Test
 	public void commandLineInjected() throws IOException {
 		try {
-			Bootstrap bootstrap = new Bootstrap(null);
+			Bootstrap bootstrap = new Bootstrap(Bootstrap.NO_BASE_PACKAGES);
 			ApplicationContext ctx = bootstrap.getApplicationContext();
 			OptionsInjectedDummyCommand dummyCommand = ctx.getBean(OptionsInjectedDummyCommand.class);
 			Assert.assertNotNull("commandLine was not injected into a command", dummyCommand.getCommandLine());

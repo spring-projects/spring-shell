@@ -33,7 +33,7 @@ public class Main {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		Bootstrap.main(args);
+		Bootstrap.main(args, AppConfig.class.getPackage().getName());
 
 	}
 
