@@ -16,15 +16,7 @@
 
 package org.springframework.shell.core;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -57,6 +49,28 @@ public class SimpleParserTests {
 	private String buffer;
 
 	private ArrayList<Completion> candidates = new ArrayList<Completion>();
+
+	@Test
+	public void testSHL170_ValueMadeOfSpacesOK() {
+		parser.add(new MyCommands());
+		parser.add(new StringConverter());
+
+		// A value made of space(s) is ok
+		ParseResult result = parser.parse("bar --option1 ' '");
+		assertThat(result.getMethod().getName(), equalTo("bar"));
+		assertThat(result.getArguments(), arrayContaining((Object) " "));
+
+		// Ok too with a literal TAB
+		result = parser.parse("bar --option1 '\t'");
+		assertThat(result.getMethod().getName(), equalTo("bar"));
+		assertThat(result.getArguments(), arrayContaining((Object)"\t"));
+
+		// Also Ok when Shell itself does the escaping
+		result = parser.parse("bar --option1 '\\t'");
+		assertThat(result.getMethod().getName(), equalTo("bar"));
+		assertThat(result.getArguments(), arrayContaining((Object)"\t"));
+
+	}
 
 	@Test
 	public void testSimpleCommandNameCompletion() {

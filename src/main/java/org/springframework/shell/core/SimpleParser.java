@@ -216,22 +216,14 @@ public class SimpleParser implements Parser {
 
 				// Ensure the user specified a value if the value is mandatory or
 				// key and value must appear in pair
-				boolean mandatory = !StringUtils.hasText(value) && cliOption.mandatory();
-				boolean specifiedKey = !StringUtils.hasText(value) && options.containsKey(sourcedFrom);
-				boolean specifiedKeyWithoutValue = false;
-				if (specifiedKey) {
-					value = cliOption.specifiedDefaultValue();
-					if ("__NULL__".equals(value)) {
-						specifiedKeyWithoutValue = true;
-					}
-				}
-				if (mandatory || specifiedKeyWithoutValue) {
-					if ("".equals(cliOption.key()[0])) {
-						StringBuilder message = new StringBuilder("You should specify a default option ");
-						if (cliOption.key().length > 1) {
-							message.append("(otherwise known as option '").append(cliOption.key()[1]).append("') ");
-						}
-						message.append("for this command");
+				boolean mandatory = cliOption.mandatory();
+				boolean specifiedKey = options.containsKey(sourcedFrom);
+				boolean specifiedKeyWithoutValue = specifiedKey && "".equals(value);
+				if (mandatory && (!specifiedKey || specifiedKeyWithoutValue)) {
+					if (isDefaultOption(cliOption)) {
+						StringBuilder message = new StringBuilder("You should specify ");
+						message.append(optionAliases(cliOption));
+						message.append(" for this command");
 						LOGGER.warning(message.toString());
 					}
 					else {
@@ -241,12 +233,10 @@ public class SimpleParser implements Parser {
 				}
 
 				// Accept a default if the user specified the option, but didn't provide a value
-				if ("".equals(value)) {
+				if (specifiedKeyWithoutValue) {
 					value = cliOption.specifiedDefaultValue();
-				}
-
+				} else if (!specifiedKey) {
 				// Accept a default if the user didn't specify the option at all
-				if (value == null) {
 					value = cliOption.unspecifiedDefaultValue();
 				}
 
@@ -336,6 +326,42 @@ public class SimpleParser implements Parser {
 		successiveCompletionRequests = 1;
 	}
 
+	/**
+	 * Return true if the given option is the 'default' option, that is, one of its key is the empty String.
+	 */
+	private boolean isDefaultOption(CliOption option) {
+		for (String key : option.key()) {
+			if ("".equals(key)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Return a plain string description of the available aliases for a given option.
+	 */
+	private CharSequence optionAliases(CliOption option) {
+		StringBuilder result = new StringBuilder();
+		if (isDefaultOption(option)) {
+			result.append("a default option");
+		}
+		if (option.key().length > 1) {
+			result.append(", otherwise known as ");
+		}
+		boolean comma = false;
+		for (String key : option.key()) {
+			if (!"".equals(key)) {
+				if (comma) {
+					result.append(", ");
+				}
+				result.append("'").append(key).append("'");
+				comma = true;
+			}
+		}
+		return result;
+	}
+
 	private void reportTokenizingException(String commandKey, TokenizingException te) {
 		StringBuilder caret = new StringBuilder();
 		for (int i = 0; i < te.getOffendingOffset() + commandKey.length() + 1; i++) {
@@ -364,7 +390,7 @@ public class SimpleParser implements Parser {
 			boolean found = false;
 			for (String key : keys) {
 				if (options.containsKey(key)) {
-					if (!StringUtils.hasText(options.get(key))) {
+					if (!StringUtils.hasLength(options.get(key))) {
 						valueBuilder.append(key);
 						valueBuilder.append("' for this command");
 						hintForOptions = false;
