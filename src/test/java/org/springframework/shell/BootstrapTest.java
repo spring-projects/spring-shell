@@ -3,7 +3,7 @@ package org.springframework.shell;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 import org.springframework.shell.core.JLineShellComponent;
@@ -19,7 +19,7 @@ public class BootstrapTest {
 			
 			//This is a brittle assertion - as additiona 'test' commands are added to the suite, this number will increase.
 			Assert.assertEquals("Number of CommandMarkers is incorrect", 10, shell.getSimpleParser().getCommandMarkers().size());
-			Assert.assertEquals("Number of Converters is incorrect", 16, shell.getSimpleParser().getConverters().size());			
+			Assert.assertEquals("Number of Converters is incorrect", 17, shell.getSimpleParser().getConverters().size());
 		} catch (RuntimeException t) {
 			throw t;
 		} finally {
