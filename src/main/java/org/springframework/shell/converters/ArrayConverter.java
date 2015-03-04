@@ -72,9 +72,14 @@ public class ArrayConverter implements Converter<Object[]>{
 	private String inferSplittingRegex(Class<?> targetType, String optionContext) {
 		String regex = extract(optionContext, "splittingRegex");
 		if (regex == null) {
-			String delimiter = File[].class.isAssignableFrom(targetType) ? File.pathSeparator : ",";
-			String escape = "\\";
-			regex = String.format("(?<!\\Q%s\\E)\\Q%s\\E", escape, delimiter);
+			// Default for files is to use system separator with no way to escape
+			if (File[].class.isAssignableFrom(targetType)) {
+				regex = File.pathSeparator;
+			} else {
+				String delimiter = ",";
+				String escape = "\\";
+				regex = String.format("(?<!\\Q%s\\E)\\Q%s\\E", escape, delimiter);
+			}
 		}
 		return regex;
 	}
