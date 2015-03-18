@@ -57,6 +57,8 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	private ExecutionStrategy executionStrategy = new SimpleExecutionStrategy();
 	private SimpleParser parser = new SimpleParser();
 
+	private boolean alreadyHandledExecutionResult;
+
 	public SimpleParser getSimpleParser() {
 		return parser;
 	}
@@ -138,6 +140,19 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	@Override
 	public String getStartupNotifications() {
 		return null;
+	}
+	
+	@Override
+	protected void handleExecutionResult(Object result) {
+		/* 
+		 * CLI Step Commands may have already handled the step execution result(s) in AbstractStepExecutionProcessor,
+		 * therefore do not print the result again and reset the hasAlreadyHandledExecutionResult flag
+		 */
+		if (isAlreadyHandledExecutionResult()) {
+			setAlreadyHandledExecutionResult(false);
+		} else {
+			super.handleExecutionResult(result);
+		}
 	}
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -236,5 +251,20 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 	
 	protected String getVersion() {
 		return version;
+	}
+
+	/**
+	 * @return the alreadyHandledExecutionResult
+	 */
+	public boolean isAlreadyHandledExecutionResult() {
+		return alreadyHandledExecutionResult;
+	}
+
+	/**
+	 * @param alreadyHandledExecutionResult the alreadyHandledExecutionResult to set
+	 */
+	public void setAlreadyHandledExecutionResult(
+			boolean alreadyHandledExecutionResult) {
+		this.alreadyHandledExecutionResult = alreadyHandledExecutionResult;
 	}
 }

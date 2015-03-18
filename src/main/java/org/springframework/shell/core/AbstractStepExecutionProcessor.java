@@ -3,23 +3,33 @@
  */
 package org.springframework.shell.core;
 
+import static java.util.logging.Level.SEVERE;
+
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.core.annotation.CliStepIndicator;
 import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.support.logging.HandlerUtils;
 
 
 /**
+ * An abstract custom {@link ExecutionProcessor} whose implementations can examine if the 
+ * command being invoked has been annotated with @{@link CliStepIndicator} and, if so, 
+ * handles, configures, executes, and displays each of the steps configured for the command.
+ *  
  * @author robin
- *
  */
-public abstract class AbstractStepExecutionProcessor<T> implements ExecutionProcessor {
+public abstract class AbstractStepExecutionProcessor implements ExecutionProcessor {
+	
+	private static final Logger logger = HandlerUtils.getLogger(AbstractStepExecutionProcessor.class);
 	
 	@Autowired
 	@Qualifier("shell")
 	protected JLineShellComponent shell;
 	
-	private T stepResult;
+	private Object stepResult;
 	private Object stepConfig;
 	
 	@Override
@@ -28,28 +38,31 @@ public abstract class AbstractStepExecutionProcessor<T> implements ExecutionProc
 	}
 	
 	@Override
-	public void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown) { }
-	
-	@SuppressWarnings("unchecked")
+	public void afterThrowingInvocation(ParseResult invocationContext, Throwable thrown) {
+		logger.log(SEVERE, "Exception " + thrown.getMessage() + " thrown for " + invocationContext);
+	}
+
 	@Override
 	public void afterReturningInvocation(ParseResult invocationContext, Object result) {
 		// if the command being invoked supports steps...
-		if (isStepCommand(invocationContext)) {
-			stepResult = (T) result;
+		if (isStepCommand(invocationContext)) {			
+			stepResult = result;
 			
 			// display the initial step result
-			outputStepResult();
+			handleStepExecutionResult(invocationContext, stepResult);
+			
+			shell.setAlreadyHandledExecutionResult(true);
 			
 			// while there are more steps
-			while (hasMoreSteps()) {
+			while (hasMoreSteps(stepResult)) {
 				// configure the next step
-				stepConfig = configureStep();
+				stepConfig = configureStep(stepResult);
 				
-				// process the next step in the workflow
-				stepResult = processStep(stepConfig);
+				// execute the next step in the workflow
+				stepResult = executeStep(stepResult, stepConfig);
 				
 				// display the step result
-				outputStepResult();
+				handleStepExecutionResult(invocationContext, stepResult);
 			}
 		}
 	}
@@ -60,38 +73,42 @@ public abstract class AbstractStepExecutionProcessor<T> implements ExecutionProc
 	 * @param invocationContext
 	 * @return
 	 */
-	protected boolean isStepCommand(ParseResult invocationContext) {
+	protected final boolean isStepCommand(ParseResult invocationContext) {
 		return invocationContext.getMethod().isAnnotationPresent(CliStepIndicator.class);		
 	}
 
 	/**
 	 * Print the output of the current step execution
+	 * @param invocationContext 
+	 * @param stepResult 
 	 */
-	protected abstract void outputStepResult();
+	protected abstract void handleStepExecutionResult(ParseResult invocationContext, Object stepResult);
 	
 	/**
 	 * Are there more steps to process
+	 * @param stepResult 
 	 * @return
 	 */
-	protected abstract boolean hasMoreSteps();
+	protected abstract boolean hasMoreSteps(Object stepResult);
 	
 	/**
 	 * Use this method to control if/when and how the step will be processed
+	 * @param stepResult 
 	 * @return
 	 */
-	protected abstract Object configureStep();
+	protected abstract Object configureStep(Object stepResult);
 	
 	/**
 	 * Process the step using the stepConfig
 	 * @param stepConfig
 	 * @return
 	 */
-	protected abstract T processStep(Object stepConfig); 
+	protected abstract Object executeStep(Object stepResult, Object stepConfig); 
 
 	/**
 	 * @return the stepResult
 	 */
-	protected T getStepResult() {
+	protected Object getStepResult() {
 		return stepResult;
 	}
 

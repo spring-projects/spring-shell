@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation that denotes a {@link CliCommand} support Step processing
+ * Annotation that denotes a {@link CliCommand} supports Step processing
  * 
  * @author Robin Howlett
  *
