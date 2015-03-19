@@ -32,9 +32,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import org.springframework.shell.converters.CliPrinterShellConverter;
+import org.springframework.shell.converters.CliPrinterTypeConverter;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell.core.annotation.CliPrinter;
 import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.shell.support.util.ExceptionUtils;
@@ -161,7 +164,7 @@ public class SimpleParser implements Parser {
 			Annotation[][] parameterAnnotations = methodTarget.getMethod().getParameterAnnotations();
 			if (parameterAnnotations.length == 0) {
 				// No args
-				return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), null);
+				return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), null, null);
 			}
 
 			// Oh well, we need to convert some arguments
@@ -304,9 +307,57 @@ public class SimpleParser implements Parser {
 					CliSimpleParserContext.resetSimpleParserContext();
 				}
 			}
+			
+			CliPrinterTypeConverter<?> printer = null;
+			
+			/*
+			 * Attempt a CliPrinter conversion, if such an argument exists.
+			 */
+			final CliPrinter cliPrinter = getCliPrinter(parameterAnnotations);
+			if (cliPrinter != null) {
+				String printerShortName = options.get(cliPrinter.key());
+				
+				// if a value wasn't provided, check for a default value
+				if (printerShortName == null && !cliPrinter.defaultValue().equals(CliPrinter.NULL_VALUE)) {
+					printerShortName = cliPrinter.defaultValue();
+				}
+				try {					
+					if (printerShortName != null) {
+						CliSimpleParserContext.setSimpleParserContext(this);
+						CliPrinterShellConverter c = null;
+						for (Converter<?> candidate : converters) {
+							if (candidate.supports(CliPrinterTypeConverter.class, null)) {
+								// Found a usable converter
+								c = (CliPrinterShellConverter) candidate;
+								break;
+							}
+						}
+						if (c == null) {
+							throw new IllegalStateException("No suitable CliPrinterShellConverter found");
+						}
+		
+						// Use the shell converter to get the type converter
+						printer = c.convertFromText(printerShortName, null, null);
+						
+					}
+					
+					arguments.add(printer);
+				} catch (RuntimeException e) {
+					LOGGER.warning(e.getClass().getName() + ": Failed to convert '" + printerShortName + "' to type "
+							+ CliPrinterTypeConverter.class.getSimpleName() + " for printer '"
+							+ cliPrinter.key() + "'");
+					if (StringUtils.hasText(e.getMessage())) {
+						LOGGER.warning(e.getMessage());
+					}
+					return null;
+				}
+				finally {
+					CliSimpleParserContext.resetSimpleParserContext();
+				}
+			}
 
 			// Check for options specified by the user but are unavailable for the command
-			Set<String> unavailableOptions = getSpecifiedUnavailableOptions(cliOptions, options);
+			Set<String> unavailableOptions = getSpecifiedUnavailableOptions(cliOptions, cliPrinter, options);
 			if (!unavailableOptions.isEmpty()) {
 				StringBuilder message = new StringBuilder();
 				if (unavailableOptions.size() == 1) {
@@ -323,7 +374,7 @@ public class SimpleParser implements Parser {
 				return null;
 			}
 
-			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), arguments.toArray());
+			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), printer, arguments.toArray());
 		}
 	}
 
@@ -403,6 +454,7 @@ public class SimpleParser implements Parser {
 	}
 
 	private Set<String> getSpecifiedUnavailableOptions(final Set<CliOption> cliOptions,
+			final CliPrinter cliPrinter,
 			final Map<String, String> options) {
 		Set<String> cliOptionKeySet = new LinkedHashSet<String>();
 		for (CliOption cliOption : cliOptions) {
@@ -410,10 +462,18 @@ public class SimpleParser implements Parser {
 				cliOptionKeySet.add(key);
 			}
 		}
+		
+		Set<String> cliPrinterKeySet = new LinkedHashSet<String>();
+		if (cliPrinter != null) {
+			cliPrinterKeySet.add(cliPrinter.key());
+		}
+		
 		Set<String> unavailableOptions = new LinkedHashSet<String>();
 		for (String suppliedOption : options.keySet()) {
 			if (!cliOptionKeySet.contains(suppliedOption)) {
-				unavailableOptions.add(suppliedOption);
+				if (!cliPrinterKeySet.contains(suppliedOption)) {
+					unavailableOptions.add(suppliedOption);
+				}
 			}
 		}
 		return unavailableOptions;
@@ -430,6 +490,23 @@ public class SimpleParser implements Parser {
 			}
 		}
 		return cliOptions;
+	}
+	
+	/*
+	 * Check if the command has a parameter annotated with @CliPrinter
+	 */
+	private CliPrinter getCliPrinter(final Annotation[][] parameterAnnotations) {
+		CliPrinter cliPrinter = null;
+		
+		for (Annotation[] annotations : parameterAnnotations) {
+			for (Annotation annotation : annotations) {
+				if (annotation instanceof CliPrinter) {
+					cliPrinter = (CliPrinter) annotation;
+					break;
+				}
+			}
+		}
+		return cliPrinter;
 	}
 
 	protected void commandNotFound(final Logger logger, final String buffer) {

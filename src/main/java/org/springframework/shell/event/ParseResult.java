@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.shell.converters.CliPrinterTypeConverter;
 import org.springframework.shell.core.Converter;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -39,15 +40,17 @@ public class ParseResult {
 	// Fields
 	private final Method method;
 	private final Object instance;
+	private final CliPrinterTypeConverter<?> printer; // may be null for default printing format
 	private final Object[] arguments; // May be null if no arguments needed
 
-	public ParseResult(final Method method, final Object instance, final Object[] arguments) {
+	public ParseResult(final Method method, final Object instance, final CliPrinterTypeConverter<?> printer, final Object[] arguments) {
 		Assert.notNull(method, "Method required");
 		Assert.notNull(instance, "Instance required");
 		int length = arguments == null ? 0 : arguments.length;
 		Assert.isTrue(method.getParameterTypes().length == length, "Required " + method.getParameterTypes().length + " arguments, but received " + length);
 		this.method = method;
 		this.instance = instance;
+		this.printer = printer;
 		this.arguments = arguments;
 	}
 
@@ -59,22 +62,37 @@ public class ParseResult {
 		return instance;
 	}
 
+	/**
+	 * @return the printerShortName
+	 */
+	public CliPrinterTypeConverter<?> getPrinter() {
+		return printer;
+	}
+
 	public Object[] getArguments() {
 		return arguments;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(arguments);
-		result = prime * result + ((instance == null) ? 0 : instance.hashCode());
+		result = prime * result
+				+ ((instance == null) ? 0 : instance.hashCode());
 		result = prime * result + ((method == null) ? 0 : method.hashCode());
+		result = prime * result + ((printer == null) ? 0 : printer.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -94,6 +112,11 @@ public class ParseResult {
 				return false;
 		} else if (!method.equals(other.method))
 			return false;
+		if (printer == null) {
+			if (other.printer != null)
+				return false;
+		} else if (!printer.equals(other.printer))
+			return false;
 		return true;
 	}
 
@@ -102,6 +125,7 @@ public class ParseResult {
 		ToStringCreator tsc = new ToStringCreator(this);
 		tsc.append("method", method);
 		tsc.append("instance", instance);
+		tsc.append("printer", printer);
 		tsc.append("arguments", StringUtils.arrayToCommaDelimitedString(arguments));
 		return tsc.toString();
 	}

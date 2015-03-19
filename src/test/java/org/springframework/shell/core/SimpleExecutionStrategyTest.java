@@ -63,9 +63,9 @@ public class SimpleExecutionStrategyTest {
 	public void testSimpleCommandProcessor() throws Exception {
 		Target target = new Target();
 		Method one = ReflectionUtils.findMethod(target.getClass(), "one");
-		ParseResult result = new ParseResult(one, target, null);
+		ParseResult result = new ParseResult(one, target, null, null);
 
-		assertEquals("one", execution.execute(result));
+		assertEquals("one", execution.execute(result).toString());
 		assertSame(result, target.before);
 		assertSame(result, target.after);
 	}
@@ -75,11 +75,11 @@ public class SimpleExecutionStrategyTest {
 		Target target = new Target();
 		Method one = ReflectionUtils.findMethod(target.getClass(), "one");
 		Method two = ReflectionUtils.findMethod(target.getClass(), "two");
-		ParseResult given = new ParseResult(one, target, null);
-		ParseResult redirect = new ParseResult(two, target, null);
+		ParseResult given = new ParseResult(one, target, null, null);
+		ParseResult redirect = new ParseResult(two, target, null, null);
 		target.beforeReturn = redirect;
 
-		assertEquals("two", execution.execute(given));
+		assertEquals("two", execution.execute(given).toString());
 		assertSame(given, target.before);
 		assertSame(redirect, target.after);
 	}

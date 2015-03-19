@@ -17,6 +17,7 @@ package org.springframework.shell.core;
 
 import java.util.logging.Logger;
 
+import org.springframework.shell.converters.CliPrinterTypeConverter;
 import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.util.Assert;
@@ -36,6 +37,7 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 
 	private final Class<?> mutex = SimpleExecutionStrategy.class;
 
+	@SuppressWarnings("unchecked")
 	public Object execute(ParseResult parseResult) throws RuntimeException {
 		Assert.notNull(parseResult, "Parse result required");
 		synchronized (mutex) {
@@ -47,14 +49,19 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 				try {
 					Object result = invoke(parseResult);
 					processor.afterReturningInvocation(parseResult, result);
-					return result;
+					
+					// return the CliPrinterResult decorator instance so that outputs can be customized
+					return new CliPrinterResult<Object>(result, (CliPrinterTypeConverter<Object>) parseResult.getPrinter());
 				} catch (Throwable th) {
 					processor.afterThrowingInvocation(parseResult, th);
 					return handleThrowable(th);
 				}
 			}
 			else {
-				return invoke(parseResult);
+				Object result = invoke(parseResult);
+				
+				// return the CliPrinterResult decorator instance so that outputs can be customized
+				return new CliPrinterResult<Object>(result, (CliPrinterTypeConverter<Object>) parseResult.getPrinter());
 			}
 		}
 	}
