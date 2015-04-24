@@ -50,8 +50,12 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 					Object result = invoke(parseResult);
 					processor.afterReturningInvocation(parseResult, result);
 					
-					// return the CliPrinterResult decorator instance so that outputs can be customized
-					return new CliPrinterResult<Object>(result, (CliPrinterTypeConverter<Object>) parseResult.getPrinter());
+					if (parseResult.getPrinter() != null) {
+						// return the CliPrinterResult decorator instance so that outputs can be customized
+						return new CliPrinterResult<Object>(result, (CliPrinterTypeConverter<Object>) parseResult.getPrinter());
+					} else {
+						return result;
+					}
 				} catch (Throwable th) {
 					processor.afterThrowingInvocation(parseResult, th);
 					return handleThrowable(th);
@@ -60,8 +64,12 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 			else {
 				Object result = invoke(parseResult);
 				
-				// return the CliPrinterResult decorator instance so that outputs can be customized
-				return new CliPrinterResult<Object>(result, (CliPrinterTypeConverter<Object>) parseResult.getPrinter());
+				if (parseResult.getPrinter() != null) {
+					// return the CliPrinterResult decorator instance so that outputs can be customized
+					return new CliPrinterResult<Object>(result, (CliPrinterTypeConverter<Object>) parseResult.getPrinter());
+				} else {
+					return result;
+				}
 			}
 		}
 	}
