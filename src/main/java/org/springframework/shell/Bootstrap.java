@@ -49,9 +49,10 @@ public class Bootstrap {
 	public final static String[] DEFAULT_BASE_PACKAGE = { "org.springframework.shell" };
 	public final static String[] NO_BASE_PACKAGES = null;
 
-	private static Bootstrap bootstrap;
-	private static CommandLine commandLine;
-	private static StopWatch sw = new StopWatch("Spring Shell");
+    protected static StopWatch sw = new StopWatch("Spring Shell");
+
+    private static Bootstrap bootstrap;
+    private static CommandLine commandLine;
 
 	private GenericApplicationContext ctx;
 
