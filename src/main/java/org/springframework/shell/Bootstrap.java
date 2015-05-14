@@ -45,9 +45,9 @@ import org.springframework.util.StopWatch;
  */
 public class Bootstrap {
 
+	public final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
+	public final static String[] DEFAULT_BASE_PACKAGE = { "org.springframework.shell" };
 	public final static String[] NO_BASE_PACKAGES = null;
-	
-	private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
 
 	private static Bootstrap bootstrap;
 	private static CommandLine commandLine;
@@ -55,11 +55,11 @@ public class Bootstrap {
 
 	private GenericApplicationContext ctx;
 
-	public static void main(String[] args, String... basePackages) throws IOException {
+	public static void main(String[] args) throws IOException {
 		sw.start();
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(args, basePackages);
+			bootstrap = new Bootstrap(args);
 			exitShellRequest = bootstrap.run();
 		}
 		catch (RuntimeException t) {
@@ -73,15 +73,15 @@ public class Bootstrap {
 	}
 	
 	public Bootstrap() {
-		this(null, CONTEXT_PATH, NO_BASE_PACKAGES);
+		this(null, CONTEXT_PATH, DEFAULT_BASE_PACKAGE);
 	}
 
-	public Bootstrap(String... basePackages) {
-		this(null, CONTEXT_PATH, basePackages);
+	public Bootstrap(String[] args) throws IOException {
+		this(args, CONTEXT_PATH, DEFAULT_BASE_PACKAGE);
 	}
 
-	public Bootstrap(String[] args, String... basePackages) throws IOException {
-		this(args, CONTEXT_PATH, basePackages);
+	public Bootstrap(String[] args, String[] contextPath) throws IOException {
+		this(args, contextPath, DEFAULT_BASE_PACKAGE);
 	}
 
 	public Bootstrap(String[] args, String[] contextPath, String... basePackages) {

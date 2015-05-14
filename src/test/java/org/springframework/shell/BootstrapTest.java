@@ -14,7 +14,7 @@ public class BootstrapTest {
 	@Test
 	public void test() throws IOException {
 		try {
-			Bootstrap bootstrap = new Bootstrap(Bootstrap.NO_BASE_PACKAGES);
+			Bootstrap bootstrap = new Bootstrap();
 			JLineShellComponent shell = bootstrap.getJLineShellComponent();
 			
 			//This is a brittle assertion - as additiona 'test' commands are added to the suite, this number will increase.

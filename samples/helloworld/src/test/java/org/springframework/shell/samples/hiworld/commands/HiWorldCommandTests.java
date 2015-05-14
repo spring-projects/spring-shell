@@ -15,33 +15,32 @@
  */
 package org.springframework.shell.samples.hiworld.commands;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.springframework.shell.Bootstrap;
 import org.springframework.shell.core.CommandResult;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.shell.samples.helloworld.AppConfig;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- * Test the Spring Java-based Configuration ({@link AppConfig}) 
- * has scanned {@link HiWorldCommands} and the "hi" command 
+ * Test the Spring Java-based Configuration ({@link AppConfig})
+ * has scanned {@link HiWorldCommands} and the "hi" command
  * can be executed successfully
- * 
- * @author Robin Howlett
  *
+ * @author Robin Howlett
  */
 public class HiWorldCommandTests {
 
-	@Test
-	public void testHiAndHello() {
-		Bootstrap bootstrap = new Bootstrap(AppConfig.class.getPackage().getName());
-		
-		JLineShellComponent shell = bootstrap.getJLineShellComponent();
-		
-		CommandResult cr = shell.executeCommand("hi");
-		assertEquals(true, cr.isSuccess());
-		assertEquals("Hi World!", cr.getResult());
-	}
-	
+    @Test
+    public void testHiAndHello() {
+        Bootstrap bootstrap = new Bootstrap(null, Bootstrap.CONTEXT_PATH, AppConfig.class.getPackage().getName());
+
+        JLineShellComponent shell = bootstrap.getJLineShellComponent();
+
+        CommandResult cr = shell.executeCommand("hi");
+        assertEquals(true, cr.isSuccess());
+        assertEquals("Hi World!", cr.getResult());
+    }
+
 }
