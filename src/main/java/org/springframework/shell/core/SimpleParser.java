@@ -117,7 +117,7 @@ public class SimpleParser implements Parser {
 	public ParseResult parse(final String rawInput) {
 		synchronized (mutex) {
 			Assert.notNull(rawInput, "Raw input required");
-			final String input = normalise(rawInput);
+			final String input = rawInput.trim();
 
 			resetCompletionInvocations();
 
@@ -415,17 +415,6 @@ public class SimpleParser implements Parser {
 			LOGGER.warning(valueBuilder.toString());
 		}
 
-	}
-
-	/**
-	 * Normalises the given raw user input string ready for parsing
-	 *
-	 * @param rawInput the string to normalise; can't be <code>null</code>
-	 * @return a non-<code>null</code> string
-	 */
-	String normalise(final String rawInput) {
-		// Replace all multiple spaces with a single space and then trim
-		return rawInput.replaceAll(" +", " ").trim();
 	}
 
 	private Set<String> getSpecifiedUnavailableOptions(final Set<CliOption> cliOptions,
