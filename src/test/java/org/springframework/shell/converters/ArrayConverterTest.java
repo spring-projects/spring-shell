@@ -93,9 +93,8 @@ public class ArrayConverterTest {
 		List<Completion> completions = new ArrayList<Completion>();
 		arrayConverter.getAllPossibleValues(completions, File[].class, raw, "", null);
 		assertThat(completions, containsInAnyOrder(
-				completionWhoseValue(equalTo("src/test/java/:src/main/java/")),
-				completionWhoseValue(equalTo("src/test/java/:src/main/resources/"))));
-		System.out.println(completions);
+				completionWhoseValue(equalTo("src/test/java/" + File.pathSeparator + "src/main/java/")),
+				completionWhoseValue(equalTo("src/test/java/" + File.pathSeparator +" src/main/resources/"))));
 
 	}
 
