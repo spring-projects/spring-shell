@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -881,10 +882,15 @@ public class SimpleParser implements Parser {
 								String optionContext = successiveInvocationContext + " " + option.optionContext();
 								if (candidate.supports(parameterType, optionContext)) {
 									// Found a usable converter
-									boolean allComplete = candidate.getAllPossibleValues(allValues, parameterType,
-											lastOptionValue, optionContext, methodTarget);
-									if (!allComplete) {
-										suffix = "";
+									try {
+										boolean allComplete = candidate.getAllPossibleValues(allValues, parameterType,
+												lastOptionValue, optionContext, methodTarget);
+										if (!allComplete) {
+											suffix = "";
+										}
+									} // Make sure completer thrown exceptions don't crash the whole process
+									catch (Exception e) {
+										LOGGER.warning(e.getMessage());
 									}
 									break;
 								}
