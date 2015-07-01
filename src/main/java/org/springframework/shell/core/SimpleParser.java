@@ -253,8 +253,6 @@ public class SimpleParser implements Parser {
 
 				// Now we're ready to perform a conversion
 				try {
-					CliOptionContext.setOptionContext(cliOption.optionContext());
-					CliSimpleParserContext.setSimpleParserContext(this);
 					Object result;
 					Converter<?> c = null;
 					for (Converter<?> candidate : converters) {
@@ -288,10 +286,6 @@ public class SimpleParser implements Parser {
 						LOGGER.warning(e.getMessage());
 					}
 					return null;
-				}
-				finally {
-					CliOptionContext.resetOptionContext();
-					CliSimpleParserContext.resetSimpleParserContext();
 				}
 			}
 
