@@ -94,7 +94,7 @@ public class ArrayConverterTest {
 		arrayConverter.getAllPossibleValues(completions, File[].class, raw, "", null);
 		assertThat(completions, containsInAnyOrder(
 				completionWhoseValue(equalTo("src/test/java/" + File.pathSeparator + "src/main/java/")),
-				completionWhoseValue(equalTo("src/test/java/" + File.pathSeparator +" src/main/resources/"))));
+				completionWhoseValue(equalTo("src/test/java/" + File.pathSeparator + "src/main/resources/"))));
 
 	}
 
