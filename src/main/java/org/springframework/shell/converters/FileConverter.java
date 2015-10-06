@@ -70,7 +70,7 @@ public abstract class FileConverter implements Converter<File> {
 
 		for (File file : directory.listFiles()) {
 			if (adjustedUserInput == null || adjustedUserInput.length() == 0 ||
-				file.getName().toLowerCase().startsWith(adjustedUserInput.toLowerCase())) {
+				file.getName().startsWith(adjustedUserInput)) {
 
 				String completion = "";
 				if (directoryData.length() > 0)

@@ -45,7 +45,6 @@ import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of {@link Parser}.
- *
  * @author Ben Alex
  * @since 1.0
  */
@@ -81,7 +80,6 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * get all mandatory options keys. For the options with multiple keys, the keys will be in one row.
-	 *
 	 * @param cliOptions options
 	 * @return mandatory options keys
 	 */
@@ -91,7 +89,6 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * get all options key.
-	 *
 	 * @param cliOptions
 	 * @param includeOptionalOptions
 	 * @return options keys
@@ -235,8 +232,9 @@ public class SimpleParser implements Parser {
 				// Accept a default if the user specified the option, but didn't provide a value
 				if (specifiedKeyWithoutValue) {
 					value = cliOption.specifiedDefaultValue();
-				} else if (!specifiedKey) {
-				// Accept a default if the user didn't specify the option at all
+				}
+				else if (!specifiedKey) {
+					// Accept a default if the user didn't specify the option at all
 					value = cliOption.unspecifiedDefaultValue();
 				}
 
@@ -419,7 +417,6 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * Normalises the given raw user input string ready for parsing
-	 *
 	 * @param rawInput the string to normalise; can't be <code>null</code>
 	 * @return a non-<code>null</code> string
 	 */
@@ -429,7 +426,7 @@ public class SimpleParser implements Parser {
 	}
 
 	private Set<String> getSpecifiedUnavailableOptions(final Set<CliOption> cliOptions,
-			final Map<String, String> options) {
+	                                                   final Map<String, String> options) {
 		Set<String> cliOptionKeySet = new LinkedHashSet<String>();
 		for (CliOption cliOption : cliOptions) {
 			for (String key : cliOption.key()) {
@@ -463,7 +460,7 @@ public class SimpleParser implements Parser {
 	}
 
 	private Collection<MethodTarget> locateTargets(final String buffer, final boolean strictMatching,
-			final boolean checkAvailabilityIndicators) {
+	                                               final boolean checkAvailabilityIndicators) {
 		Assert.notNull(buffer, "Buffer required");
 		final Collection<MethodTarget> result = new HashSet<MethodTarget>();
 
@@ -515,80 +512,44 @@ public class SimpleParser implements Parser {
 	 * @param strictMatching true if ALL words of 'command' need to be matched
 	 */
 	static String isMatch(final String buffer, final String command, final boolean strictMatching) {
+		Assert.isTrue(command.charAt(command.length() - 1) != ' ', "Command must not end with a space");
 		if ("".equals(buffer.trim())) {
 			return "";
 		}
-		String[] commandWords = StringUtils.delimitedListToStringArray(command, " ");
-		int lastCommandWordUsed = 0;
-		Assert.notEmpty(commandWords, "Command required");
 
-		String bufferToReturn = null;
-		String lastWord = null;
-
-		next_buffer_loop:
-		for (int bufferIndex = 0; bufferIndex < buffer.length(); bufferIndex++) {
-			String bufferSoFarIncludingThis = buffer.substring(0, bufferIndex + 1);
-			String bufferRemaining = buffer.substring(bufferIndex + 1);
-
-			int bufferLastIndexOfWord = bufferSoFarIncludingThis.lastIndexOf(" ");
-			String wordSoFarIncludingThis = bufferSoFarIncludingThis;
-			if (bufferLastIndexOfWord != -1) {
-				wordSoFarIncludingThis = bufferSoFarIncludingThis.substring(bufferLastIndexOfWord);
-			}
-
-			if (wordSoFarIncludingThis.equals(" ") || bufferIndex == buffer.length() - 1) {
-				if (bufferIndex == buffer.length() - 1 && !"".equals(wordSoFarIncludingThis.trim())) {
-					lastWord = wordSoFarIncludingThis.trim();
+		if (buffer.length() <= command.length()) {
+			// Buffer is shorter or equal in length to command
+			int lastSpaceIndex = command.lastIndexOf(' ');
+			if (strictMatching && lastSpaceIndex >= 0) {
+				// Check buffer touches last command word
+				if (buffer.length() < lastSpaceIndex + 2) {
+					return null;
 				}
-
-				// At end of word or buffer. Let's see if a word matched or not
-				for (int candidate = lastCommandWordUsed; candidate < commandWords.length; candidate++) {
-					if (lastWord != null && lastWord.length() > 0 && commandWords[candidate].startsWith(lastWord)) {
-						if (bufferToReturn == null) {
-							// This is the first match, so ensure the intended match really represents the start of a
-							// command and not a later word within it
-							if (lastCommandWordUsed == 0 && candidate > 0) {
-								// This is not a valid match
-								break next_buffer_loop;
-							}
-						}
-
-						if (bufferToReturn != null) {
-							// We already matched something earlier, so ensure we didn't skip any word
-							if (candidate != lastCommandWordUsed + 1) {
-								// User has skipped a word
-								bufferToReturn = null;
-								break next_buffer_loop;
-							}
-						}
-
-						bufferToReturn = bufferRemaining;
-						lastCommandWordUsed = candidate;
-						if (candidate + 1 == commandWords.length) {
-							// This was a match for the final word in the command, so abort
-							break next_buffer_loop;
-						}
-						// There are more words left to potentially match, so continue
-						continue next_buffer_loop;
-					}
-				}
-
-				// This word is unrecognised as part of a command, so abort
-				bufferToReturn = null;
-				break next_buffer_loop;
 			}
-
-			lastWord = wordSoFarIncludingThis.trim();
-		}
-
-		// We only consider it a match if ALL words were actually used
-		if (bufferToReturn != null) {
-			if (!strictMatching || lastCommandWordUsed + 1 == commandWords.length) {
-				return bufferToReturn;
+			// Just need to check buffer is a prefix of command
+			if (command.startsWith(buffer)) {
+				return "";
+			}
+			else {
+				return null;
 			}
 		}
+		else {
+			// Buffer is longer than command. Check command is a prefix of buffer.
+			if (!buffer.startsWith(command)) {
+				return null;
+			}
 
-		return null; // Not a match
+			String bufferRemaining = buffer.substring(command.length());
+			if (bufferRemaining.length() > 0) {
+				// Check first char after command is a space
+				if (bufferRemaining.charAt(0) != ' ') {
+					return null;
+				}
+				return bufferRemaining.substring(1);
+			}
+			return bufferRemaining;
+		}
 	}
 
 	@Override
@@ -1010,14 +971,13 @@ public class SimpleParser implements Parser {
 
 	/**
 	 * populate completion for mandatory options
-	 *
-	 * @param translated user's input
+	 * @param translated  user's input
 	 * @param unspecified unspecified options
-	 * @param value the option key
-	 * @param results completion list
+	 * @param value       the option key
+	 * @param results     completion list
 	 */
 	private void handleMandatoryCompletion(String translated, List<CliOption> unspecified, String value,
-			SortedSet<Completion> results) {
+	                                       SortedSet<Completion> results) {
 		StringBuilder strBuilder = new StringBuilder(translated);
 		if (!translated.endsWith(" ")) {
 			strBuilder.append(" ");
