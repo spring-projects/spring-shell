@@ -29,7 +29,7 @@ import java.util.TreeMap;
  * @see TableRenderer
  * 
  * @author Gunnar Hillert
- * 
+ * @deprecated In favor of {@link org.springframework.shell.table.TableBuilder}
  */
 public class Table {
 

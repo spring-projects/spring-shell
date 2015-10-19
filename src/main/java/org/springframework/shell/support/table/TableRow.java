@@ -26,7 +26,8 @@ import java.util.Map;
  * 
  * @author Gunnar Hillert
  * @author Ilayaperumal Gopinathan
- * 
+ * @deprecated In favor of {@link org.springframework.shell.table.TableBuilder}
+ *
  */
 public class TableRow {
 

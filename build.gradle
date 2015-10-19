@@ -78,10 +78,14 @@ javadoc {
      ]
      
      //exclude "org/springframework/data/redis/config/**"
+      if (JavaVersion.current().isJava8Compatible()) {
+          options.addStringOption('Xdoclint:none', '-quiet')
+      }
   }
     
   title = "${rootProject.description} ${version} API"
 }
+
 
 jar {
     manifest.attributes['Implementation-Title'] = 'spring-shell'
