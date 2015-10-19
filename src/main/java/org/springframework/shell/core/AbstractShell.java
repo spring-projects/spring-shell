@@ -19,6 +19,9 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jline.TerminalFactory;
+
+import org.springframework.shell.TerminalSizeAware;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.event.AbstractShellStatusPublisher;
 import org.springframework.shell.event.ParseResult;
@@ -141,6 +144,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			return new CommandResult(true, result, null);
 		} catch (RuntimeException e) {
 			setShellStatus(Status.EXECUTION_FAILED, line, parseResult);
+			e.printStackTrace();
 			// We rely on execution strategy to log it
 			try {
 				logCommandIfRequired(line, false);
@@ -294,8 +298,11 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 	protected void handleExecutionResult(Object result) {
 		if (result instanceof Iterable<?>) {
 			for (Object o : (Iterable<?>) result) {
-				logger.info(o.toString());
+				handleExecutionResult(o);
 			}
+		} else if (result instanceof TerminalSizeAware) {
+			int width = TerminalFactory.get().getWidth();
+			logger.info(((TerminalSizeAware) result).render(width).toString());
 		} else {
 			logger.info(result.toString());
 		}
