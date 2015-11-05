@@ -144,7 +144,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			return new CommandResult(true, result, null);
 		} catch (RuntimeException e) {
 			setShellStatus(Status.EXECUTION_FAILED, line, parseResult);
-			e.printStackTrace();
+			logger.log(Level.WARNING, e.getMessage(), e);
 			// We rely on execution strategy to log it
 			try {
 				logCommandIfRequired(line, false);
