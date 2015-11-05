@@ -92,6 +92,8 @@ public enum BorderStyle {
 
 	private static Map<Long, Character> CORNERS = new HashMap<Long, Character>();
 
+	private static Map<Character, Character> EQUIVALENTS = new HashMap<Character, Character>();
+
 	public char verticalGlyph() {
 		return vertical;
 	}
@@ -155,6 +157,15 @@ public enum BorderStyle {
 		registerCorner('┃', '┃', '─', '─', '╂');
 		registerCorner('║', '║', '─', '─', '╫');
 
+		// Dashed variants crossing others behave like regular corners
+		registerSameCorners(fancy_light_double_dash, fancy_light);
+		registerSameCorners(fancy_light_triple_dash, fancy_light);
+		registerSameCorners(fancy_light_quadruple_dash, fancy_light);
+		registerSameCorners(fancy_heavy_double_dash, fancy_heavy);
+		registerSameCorners(fancy_heavy_triple_dash, fancy_heavy);
+		registerSameCorners(fancy_heavy_quadruple_dash, fancy_heavy);
+
+
 		// Air-style glyphs are easy to combine with others. Register some combinations
 		registerMixedWithAirCombinations(oldschool.vertical, oldschool.horizontal);
 		registerMixedWithAirCombinations(fancy_light.vertical, fancy_light.horizontal);
@@ -167,6 +178,14 @@ public enum BorderStyle {
 		registerMixedWithAirCombinations(fancy_heavy_double_dash.vertical, fancy_heavy_double_dash.horizontal);
 		registerMixedWithAirCombinations(fancy_heavy_triple_dash.vertical, fancy_heavy_triple_dash.horizontal);
 		registerMixedWithAirCombinations(fancy_heavy_quadruple_dash.vertical, fancy_heavy_quadruple_dash.horizontal);
+	}
+
+	/**
+	 * Register the fact that for corner purposes, style1 behaves like style2.
+	 */
+	private static void registerSameCorners(BorderStyle style1, BorderStyle style2) {
+		EQUIVALENTS.put(style1.horizontal, style2.horizontal);
+		EQUIVALENTS.put(style1.vertical, style2.vertical);
 	}
 
 	private static void registerMixedWithAirCombinations(char vertical, char horizontal) {
@@ -203,6 +222,10 @@ public enum BorderStyle {
 	}
 
 	public static char intersection(char above, char below, char left, char right) {
+		above = EQUIVALENTS.get(above) != null ? EQUIVALENTS.get(above) : above;
+		below = EQUIVALENTS.get(below) != null ? EQUIVALENTS.get(below) : below;
+		left = EQUIVALENTS.get(left) != null ? EQUIVALENTS.get(left) : left;
+		right = EQUIVALENTS.get(right) != null ? EQUIVALENTS.get(right) : right;
 		Character character = CORNERS.get(key(above, below, left, right));
 		return character != null ? character : NONE;
 	}

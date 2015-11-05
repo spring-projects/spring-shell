@@ -67,4 +67,13 @@ public class BorderFactory {
 		return table;
 	}
 
+	/**
+	 * Set a border on the inner verticals and horizontals of the table, but not on the outline.
+	 */
+	public static Table inner(Table table, BorderStyle style) {
+		TableModel model = table.getModel();
+		table.withBorder(0, 0, model.getRowCount(), model.getColumnCount(), INNER, style);
+		return table;
+	}
+
 }
