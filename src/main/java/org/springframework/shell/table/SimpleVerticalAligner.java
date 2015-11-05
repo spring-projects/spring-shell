@@ -23,13 +23,9 @@ import java.util.Arrays;
  *
  * @author Eric Bottard
  */
-public class SimpleVerticalAligner implements AlignmentStrategy {
+public enum SimpleVerticalAligner implements AlignmentStrategy {
 
-	private final Align align;
-
-	public SimpleVerticalAligner(Align align) {
-		this.align = align;
-	}
+	top, middle, bottom;
 
 	@Override
 	public String[] align(String[] text, int cellWidth, int cellHeight) {
@@ -59,7 +55,7 @@ public class SimpleVerticalAligner implements AlignmentStrategy {
 		int nonBlankLines = text.length - blanksAfter - blanksBefore;
 		int paddingToDistribute = cellHeight - nonBlankLines;
 
-		switch (align) {
+		switch (this) {
 			case middle: {
 				int carry = paddingToDistribute % 2;
 				paddingToDistribute = paddingToDistribute - carry;
@@ -94,7 +90,4 @@ public class SimpleVerticalAligner implements AlignmentStrategy {
 		return new String(data);
 	}
 
-	public static enum Align {
-		top, middle, bottom;
-	}
 }

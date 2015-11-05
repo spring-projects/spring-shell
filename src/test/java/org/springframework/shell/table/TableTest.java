@@ -18,8 +18,8 @@ package org.springframework.shell.table;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.springframework.shell.table.SimpleHorizontalAligner.Align.*;
-import static org.springframework.shell.table.SimpleVerticalAligner.Align.*;
+import static org.springframework.shell.table.SimpleHorizontalAligner.*;
+import static org.springframework.shell.table.SimpleVerticalAligner.*;
 
 import java.io.IOException;
 
@@ -59,7 +59,7 @@ public class TableTest extends AbstractTestWithSample {
 	@Test
 	public void testRightAlignment() throws IOException {
 		TableModel model = new ArrayModel(new String[][] {{"a\na\na", "bbb"}, {"ccc", "d"}});
-		Table table = new Table(model).align(CellMatchers.column(1), new SimpleHorizontalAligner(right));
+		Table table = new Table(model).align(CellMatchers.column(1), right);
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 	}
@@ -67,7 +67,7 @@ public class TableTest extends AbstractTestWithSample {
 	@Test
 	public void testVerticalAlignment() throws IOException {
 		TableModel model = new ArrayModel(new String[][] {{"a\na\na", "bbb"}, {"ccc", "d"}});
-		Table table = new Table(model).align(CellMatchers.row(0), new SimpleVerticalAligner(middle));
+		Table table = new Table(model).align(CellMatchers.row(0), middle);
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 	}

@@ -21,13 +21,9 @@ package org.springframework.shell.table;
  *
  * @author Eric Bottard
  */
-public class SimpleHorizontalAligner implements AlignmentStrategy {
+public enum SimpleHorizontalAligner implements AlignmentStrategy {
 
-	private final Align align;
-
-	public SimpleHorizontalAligner(Align align) {
-		this.align = align;
-	}
+	left, center, right;
 
 	@Override
 	public String[] align(String[] text, int cellWidth, int cellHeight) {
@@ -40,7 +36,7 @@ public class SimpleHorizontalAligner implements AlignmentStrategy {
 			int padLeft;
 			int padRight;
 
-			switch (align) {
+			switch (this) {
 				case center: {
 					int carry = paddingToDistribute % 2;
 					paddingToDistribute = paddingToDistribute - carry;
@@ -75,7 +71,4 @@ public class SimpleHorizontalAligner implements AlignmentStrategy {
 		return result;
 	}
 
-	public static enum Align {
-		left, center, right;
-	}
 }

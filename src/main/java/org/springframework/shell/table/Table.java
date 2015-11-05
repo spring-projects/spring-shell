@@ -17,7 +17,7 @@
 package org.springframework.shell.table;
 
 import static org.springframework.shell.table.BorderSpecification.*;
-import static org.springframework.shell.table.SimpleHorizontalAligner.Align.*;
+import static org.springframework.shell.table.SimpleHorizontalAligner.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -89,7 +89,7 @@ public class Table implements TerminalSizeAware {
 
 		wrappers.put(CellMatchers.table(), new DelimiterTextWrapper());
 
-		aligners.put(CellMatchers.table(), new SimpleHorizontalAligner(left));
+		aligners.put(CellMatchers.table(), left);
 
 	}
 
