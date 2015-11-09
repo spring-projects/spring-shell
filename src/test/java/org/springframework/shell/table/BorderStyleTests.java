@@ -109,7 +109,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	public void testMixedLightInternalAndHeavy() throws IOException {
 		Table table = new Table(generate(3, 3));
 		BorderFactory.full(table, BorderStyle.fancy_heavy);
-		table.withBorder(1, 1, 2, 2, BorderSpecification.OUTLINE, BorderStyle.fancy_light);
+		table.addBorder(1, 1, 2, 2, BorderSpecification.OUTLINE, BorderStyle.fancy_light);
 		assertThat(table.render(10), is(sample()));
 	}
 
@@ -117,7 +117,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	public void testMixedHeavyInternalAndLight() throws IOException {
 		Table table = new Table(generate(3, 3));
 		BorderFactory.full(table, BorderStyle.fancy_light);
-		table.withBorder(1, 1, 2, 2, BorderSpecification.OUTLINE, BorderStyle.fancy_heavy);
+		table.addBorder(1, 1, 2, 2, BorderSpecification.OUTLINE, BorderStyle.fancy_heavy);
 		assertThat(table.render(10), is(sample()));
 	}
 
@@ -125,9 +125,9 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	public void testHeavyOutlineAndHeader_LightVerticals_AirHorizontals() throws IOException {
 		Table table = new Table(generate(4, 4));
 		BorderFactory.outline(table, BorderStyle.fancy_heavy);
-		table.withBorder(0, 0, 4, 4, BorderSpecification.INNER_VERTICAL, BorderStyle.fancy_light);
-		table.withBorder(0, 0, 4, 4, BorderSpecification.INNER_HORIZONTAL, BorderStyle.air);
-		table.withBorder(0, 0, 1, 4, BorderSpecification.OUTLINE, BorderStyle.fancy_heavy);
+		table.addBorder(0, 0, 4, 4, BorderSpecification.INNER_VERTICAL, BorderStyle.fancy_light);
+		table.addBorder(0, 0, 4, 4, BorderSpecification.INNER_HORIZONTAL, BorderStyle.air);
+		table.addBorder(0, 0, 1, 4, BorderSpecification.OUTLINE, BorderStyle.fancy_heavy);
 		assertThat(table.render(10), is(sample()));
 	}
 }

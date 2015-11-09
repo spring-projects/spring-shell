@@ -34,7 +34,7 @@ public class BorderFactory {
 	 */
 	public static Table outline(Table table, BorderStyle style) {
 		TableModel model = table.getModel();
-		table.withBorder(0, 0, model.getRowCount(), model.getColumnCount(), OUTLINE, style);
+		table.addBorder(0, 0, model.getRowCount(), model.getColumnCount(), OUTLINE, style);
 		return table;
 	}
 
@@ -43,7 +43,7 @@ public class BorderFactory {
 	 */
 	public static Table header(Table table, BorderStyle style) {
 		TableModel model = table.getModel();
-		table.withBorder(0, 0, 1, model.getColumnCount(), OUTLINE, style);
+		table.addBorder(0, 0, 1, model.getColumnCount(), OUTLINE, style);
 		return outline(table, style);
 	}
 
@@ -52,7 +52,7 @@ public class BorderFactory {
 	 */
 	public static Table full(Table table, BorderStyle style) {
 		TableModel model = table.getModel();
-		table.withBorder(0, 0, model.getRowCount(), model.getColumnCount(), FULL, style);
+		table.addBorder(0, 0, model.getRowCount(), model.getColumnCount(), FULL, style);
 		return table;
 	}
 
@@ -62,8 +62,8 @@ public class BorderFactory {
 	 */
 	public static Table headerAndVerticals(Table table, BorderStyle style) {
 		TableModel model = table.getModel();
-		table.withBorder(0, 0, 1, model.getColumnCount(), OUTLINE, style);
-		table.withBorder(0, 0, model.getRowCount(), model.getColumnCount(), OUTLINE | INNER_VERTICAL, style);
+		table.addBorder(0, 0, 1, model.getColumnCount(), OUTLINE, style);
+		table.addBorder(0, 0, model.getRowCount(), model.getColumnCount(), OUTLINE | INNER_VERTICAL, style);
 		return table;
 	}
 
@@ -72,7 +72,7 @@ public class BorderFactory {
 	 */
 	public static Table inner(Table table, BorderStyle style) {
 		TableModel model = table.getModel();
-		table.withBorder(0, 0, model.getRowCount(), model.getColumnCount(), INNER, style);
+		table.addBorder(0, 0, model.getRowCount(), model.getColumnCount(), INNER, style);
 		return table;
 	}
 

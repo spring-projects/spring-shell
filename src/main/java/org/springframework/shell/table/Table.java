@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
  *    much column real estate to allocate to cells</li>
  *    <li>{@link #wrap(CellMatcher, TextWrapper) text wrapping policies} are applied once the column sizes
  *    are known</li>
- *    <li>finally, {@link #align(CellMatcher, AlignmentStrategy) alignment} strategies actually render
+ *    <li>finally, {@link #align(CellMatcher, Aligner) alignment} strategies actually render
  *    text as a series of space-padded strings that draw nicely on screen.</li>
  * </ol>
  * All those customizations are applied selectively on the Table cells thanks to a {@link CellMatcher}: One can
@@ -64,7 +64,7 @@ public class Table implements TerminalSizeAware {
 
 	private Map<CellMatcher, TextWrapper> wrappers = new LinkedHashMap<CellMatcher, TextWrapper>();
 
-	private Map<CellMatcher, AlignmentStrategy> aligners = new LinkedHashMap<CellMatcher, AlignmentStrategy>();
+	private Map<CellMatcher, Aligner> aligners = new LinkedHashMap<CellMatcher, Aligner>();
 
 	private List<BorderSpecification> borderSpecifications = new ArrayList<BorderSpecification>();
 
@@ -97,7 +97,7 @@ public class Table implements TerminalSizeAware {
 		return model;
 	}
 
-	public Table withBorder(int top, int left, int bottom, int right, int match, BorderStyle style) {
+	public Table addBorder(int top, int left, int bottom, int right, int match, BorderStyle style) {
 		Assert.isTrue(top >= 0 && top < rows, "top row must be positive and less than total number of rows");
 		Assert.isTrue(left >= 0 && left < columns, "left column must be positive and less than total number of columns");
 		Assert.isTrue(bottom > top && bottom <= rows, "bottom row must be greater than top and less than total number of rows");
@@ -136,7 +136,7 @@ public class Table implements TerminalSizeAware {
 		}
 
 
-		cellWidths = computeActualColumnWidths(widthAvailableForContents, minCellWidths, maxCellWidths);
+		cellWidths = computeColumnWidths(widthAvailableForContents, minCellWidths, maxCellWidths);
 		// Now that widths are known, apply wrapping & render
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
@@ -144,7 +144,7 @@ public class Table implements TerminalSizeAware {
 				cellHeights[row] = Math.max(cellHeights[row], subLines[row][column].length);
 			}
 			for (int column = 0; column < columns; column++) {
-				for (Map.Entry<CellMatcher, AlignmentStrategy> kv : aligners.entrySet()) {
+				for (Map.Entry<CellMatcher, Aligner> kv : aligners.entrySet()) {
 					if (kv.getKey().matches(row, column, model)) {
 						subLines[row][column] = kv.getValue().align(subLines[row][column], cellWidths[column], cellHeights[row]);
 					}
@@ -194,7 +194,7 @@ public class Table implements TerminalSizeAware {
 		return result.toString();
 	}
 
-	private int[] computeActualColumnWidths(int availableWidth, int[] minCellWidths, int[] maxCellWidths) {
+	private int[] computeColumnWidths(int availableWidth, int[] minCellWidths, int[] maxCellWidths) {
 
 		int[] cellWidths;
 		int minTableWidth = 0, maxTableWidth = 0;
@@ -218,7 +218,6 @@ public class Table implements TerminalSizeAware {
 				cellWidths[column] = minCellWidths[column] + W * (maxCellWidths[column] - minCellWidths[column]) / D;
 			}
 		}
-		// TODO: handle rounding error?
 		return cellWidths;
 	}
 
@@ -227,13 +226,13 @@ public class Table implements TerminalSizeAware {
 		return this;
 	}
 
-	public Table align(CellMatcher cells, AlignmentStrategy aligner) {
-		aligners.put(cells, new AssertingAlignmentStrategy(aligner));
+	public Table align(CellMatcher cells, Aligner aligner) {
+		aligners.put(cells, new DebugAligner(aligner));
 		return this;
 	}
 
 	public Table wrap(CellMatcher cells, TextWrapper wrapper) {
-		wrappers.put(cells, new AssertingTextWrapper(wrapper));
+		wrappers.put(cells, new DebugTextWrapper(wrapper));
 		return this;
 	}
 

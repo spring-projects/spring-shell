@@ -19,24 +19,31 @@ package org.springframework.shell.table;
 import org.springframework.util.Assert;
 
 /**
- * A TextWrapper that delegates to another but makes sure that the contract is not violated.
+ * A TableModel backed by a row-first array.
  *
  * @author Eric Bottard
  */
-public class AssertingTextWrapper implements TextWrapper {
+public class ArrayTableModel extends TableModel {
 
-	private final TextWrapper delegate;
+	private Object[][] data;
 
-	public AssertingTextWrapper(TextWrapper delegate) {
-		this.delegate = delegate;
+	public ArrayTableModel(Object[][] data) {
+		this.data = data;
+		int width = data.length > 0 ? data[0].length : 0;
+		for (int row = 0; row < data.length; row++) {
+			Assert.isTrue(width == data[row].length, "All rows of array data must be of same length");
+		}
 	}
 
-	@Override
-	public String[] wrap(String[] original, int columnWidth) {
-		String[] result = delegate.wrap(original, columnWidth);
-		for (String s : result) {
-			Assert.isTrue(s.length() == columnWidth, String.format("'%s' has the wrong length (%d), expected %d", s, s.length(), columnWidth));
-		}
-		return result;
+	public int getRowCount() {
+		return data.length;
+	}
+
+	public int getColumnCount() {
+		return data.length > 0 ? data[0].length : 0;
+	}
+
+	public Object getValue(int row, int column) {
+		return data[row][column];
 	}
 }

@@ -23,7 +23,7 @@ import java.util.Arrays;
  *
  * @author Eric Bottard
  */
-public enum SimpleVerticalAligner implements AlignmentStrategy {
+public enum SimpleVerticalAligner implements Aligner {
 
 	top, middle, bottom;
 

@@ -56,7 +56,7 @@ public class AbstractTestWithSample {
 				data[row][column] = (char) ('a' + row * columns + column);
 			}
 		}
-		return new ArrayModel(data);
+		return new ArrayTableModel(data);
 	}
 
 }

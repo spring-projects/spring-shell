@@ -16,34 +16,19 @@
 
 package org.springframework.shell.table;
 
-import org.springframework.util.Assert;
-
 /**
- * A TableModel backed by a row-first array.
+ * A strategy interface for performing text alignment.
  *
  * @author Eric Bottard
  */
-public class ArrayModel extends TableModel {
+public interface Aligner {
 
-	private Object[][] data;
-
-	public ArrayModel(Object[][] data) {
-		this.data = data;
-		int width = data.length > 0 ? data[0].length : 0;
-		for (int row = 0; row < data.length; row++) {
-			Assert.isTrue(width == data[row].length, "All rows of array data must be of same length");
-		}
-	}
-
-	public int getRowCount() {
-		return data.length;
-	}
-
-	public int getColumnCount() {
-		return data.length > 0 ? data[0].length : 0;
-	}
-
-	public Object getValue(int row, int column) {
-		return data[row][column];
-	}
+	/**
+	 * Perform text alignment, returning a String array that MUST contain
+	 * {@code cellHeight} lines, each of which MUST be {@code cellWidth} chars in length.
+	 *
+	 * <p>Input array is guaranteed to contain lines that have length equal to {@cellWidth}. There
+	 * is no guarantee on the input number of lines though.</p>
+	 */
+	String[] align(String[] text, int cellWidth, int cellHeight);
 }

@@ -16,31 +16,26 @@
 
 package org.springframework.shell.table;
 
-import java.util.Arrays;
-
 import org.springframework.util.Assert;
 
 /**
- * A decorator AlignmentStrategy, useful for debugging.
+ * A TextWrapper that delegates to another but makes sure that the contract is not violated.
  *
  * @author Eric Bottard
  */
-public class AssertingAlignmentStrategy implements AlignmentStrategy {
+public class DebugTextWrapper implements TextWrapper {
 
-	private final AlignmentStrategy delegate;
+	private final TextWrapper delegate;
 
-	public AssertingAlignmentStrategy(AlignmentStrategy delegate) {
+	public DebugTextWrapper(TextWrapper delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	public String[] align(String[] text, int cellWidth, int cellHeight) {
-		String[] result = delegate.align(text, cellWidth, cellHeight);
-		Assert.isTrue(result.length == cellHeight, String.format("%s had the wrong number of lines (%d), expected %d",
-				Arrays.asList(result), result.length, cellHeight));
+	public String[] wrap(String[] original, int columnWidth) {
+		String[] result = delegate.wrap(original, columnWidth);
 		for (String s : result) {
-			Assert.isTrue(s.length() == cellWidth, String.format("'%s' had wrong length (%d), expected %d", s, s.length(),
-					cellWidth));
+			Assert.isTrue(s.length() == columnWidth, String.format("'%s' has the wrong length (%d), expected %d", s, s.length(), columnWidth));
 		}
 		return result;
 	}

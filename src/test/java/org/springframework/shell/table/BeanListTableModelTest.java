@@ -27,18 +27,18 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * Test for BeanListModel.
+ * Test for BeanListTableModel.
  *
  * @author Eric Bottard
  */
-public class BeanListModelTest extends AbstractTestWithSample {
+public class BeanListTableModelTest extends AbstractTestWithSample {
 
 	@Test
 	public void testSimpleConstructor() throws IOException {
 
 		List<Person> data = data();
 
-		Table table = new Table(new BeanListModel<Person>(Person.class, data));
+		Table table = new Table(new BeanListTableModel<Person>(Person.class, data));
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 
@@ -49,7 +49,7 @@ public class BeanListModelTest extends AbstractTestWithSample {
 
 		List<Person> data = data();
 
-		Table table = new Table(new BeanListModel<Person>(Person.class, data, "lastName", "firstName"));
+		Table table = new Table(new BeanListTableModel<Person>(data, "lastName", "firstName"));
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 
@@ -64,7 +64,7 @@ public class BeanListModelTest extends AbstractTestWithSample {
 		header.put("lastName", "Last Name");
 		header.put("firstName", "First Name");
 
-		Table table = new Table(new BeanListModel<Person>(Person.class, data, header));
+		Table table = new Table(new BeanListTableModel<Person>(data, header));
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 

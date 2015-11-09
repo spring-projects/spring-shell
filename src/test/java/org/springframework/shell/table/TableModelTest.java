@@ -30,7 +30,7 @@ public class TableModelTest {
 
 	@Test
 	public void testTranspose() {
-		TableModel model = new ArrayModel(new String[][] {{"a", "b", "c"}, {"d", "e", "f"}});
+		TableModel model = new ArrayTableModel(new String[][] {{"a", "b", "c"}, {"d", "e", "f"}});
 
 		assertThat(model.transpose().getColumnCount(), equalTo(2));
 		assertThat(model.transpose().getRowCount(), equalTo(3));

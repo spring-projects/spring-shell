@@ -24,7 +24,7 @@ package org.springframework.shell.table;
  *
  * @author Eric Bottard
  */
-public class KeyValueHorizontalAligner implements AlignmentStrategy {
+public class KeyValueHorizontalAligner implements Aligner {
 
 	private final String delimiter;
 

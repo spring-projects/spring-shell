@@ -22,15 +22,15 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * Tests for ArrayModel.
+ * Tests for ArrayTableModel.
  *
  * @author Eric Bottard
  */
-public class ArrayModelTest {
+public class ArrayTableModelTest {
 
 	@Test
 	public void testValid() {
-		TableModel model = new ArrayModel(new String[][] {{"a", "b"}, {"c", "d"}});
+		TableModel model = new ArrayTableModel(new String[][] {{"a", "b"}, {"c", "d"}});
 		assertThat(model.getColumnCount(), equalTo(2));
 		assertThat(model.getRowCount(), equalTo(2));
 		assertThat(model.getValue(0, 1), equalTo((Object) "b"));
@@ -38,14 +38,14 @@ public class ArrayModelTest {
 
 	@Test
 	public void testEmpty() {
-		TableModel model = new ArrayModel(new String[][] {});
+		TableModel model = new ArrayTableModel(new String[][] {});
 		assertThat(model.getColumnCount(), equalTo(0));
 		assertThat(model.getRowCount(), equalTo(0));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidDimensions() {
-		new ArrayModel(new String[][] {{"a", "b"}, {"c", "d", "e"}});
+		new ArrayTableModel(new String[][] {{"a", "b"}, {"c", "d", "e"}});
 	}
 
 }

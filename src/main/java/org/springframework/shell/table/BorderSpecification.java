@@ -57,7 +57,7 @@ public class BorderSpecification {
 	private final BorderStyle style;
 
 	/**
-	 * Specifications are created by {@link Table#withBorder(int, int, int, int, int, BorderStyle)}.
+	 * Specifications are created by {@link Table#addBorder(int, int, int, int, int, BorderStyle)}.
 	 */
 	/*default*/ BorderSpecification(int row1, int column1, int row2, int column2, int match, BorderStyle style) {
 		this.row1 = row1;

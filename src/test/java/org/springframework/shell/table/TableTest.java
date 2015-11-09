@@ -34,7 +34,7 @@ public class TableTest extends AbstractTestWithSample {
 
 	@Test
 	public void testEmptyModel() {
-		TableModel model = new ArrayModel(new Object[0][0]);
+		TableModel model = new ArrayTableModel(new Object[0][0]);
 		Table table = new Table(model);
 		String result = table.render(80);
 		assertThat(result, equalTo(""));
@@ -50,7 +50,7 @@ public class TableTest extends AbstractTestWithSample {
 
 	@Test
 	public void testExpandingColumns() throws IOException {
-		TableModel model = new ArrayModel(new String[][] {{"a", "b"}, {"ccc", "d"}});
+		TableModel model = new ArrayTableModel(new String[][] {{"a", "b"}, {"ccc", "d"}});
 		Table table = new Table(model);
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
@@ -58,7 +58,7 @@ public class TableTest extends AbstractTestWithSample {
 
 	@Test
 	public void testRightAlignment() throws IOException {
-		TableModel model = new ArrayModel(new String[][] {{"a\na\na", "bbb"}, {"ccc", "d"}});
+		TableModel model = new ArrayTableModel(new String[][] {{"a\na\na", "bbb"}, {"ccc", "d"}});
 		Table table = new Table(model).align(CellMatchers.column(1), right);
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
@@ -66,7 +66,7 @@ public class TableTest extends AbstractTestWithSample {
 
 	@Test
 	public void testVerticalAlignment() throws IOException {
-		TableModel model = new ArrayModel(new String[][] {{"a\na\na", "bbb"}, {"ccc", "d"}});
+		TableModel model = new ArrayTableModel(new String[][] {{"a\na\na", "bbb"}, {"ccc", "d"}});
 		Table table = new Table(model).align(CellMatchers.row(0), middle);
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
@@ -74,7 +74,7 @@ public class TableTest extends AbstractTestWithSample {
 
 	@Test
 	public void testAutoWrapping() throws IOException {
-		TableModel model = new ArrayModel(new String[][] {{"this is a long line", "bbb"}, {"ccc", "d"}});
+		TableModel model = new ArrayTableModel(new String[][] {{"this is a long line", "bbb"}, {"ccc", "d"}});
 		Table table = new Table(model);
 		String result = table.render(10);
 		assertThat(result, equalTo(sample()));
@@ -83,7 +83,7 @@ public class TableTest extends AbstractTestWithSample {
 
 	@Test
 	public void testOverflow() throws IOException {
-		TableModel model = new ArrayModel(new String[][] {{"this is a long line", "bbb"}, {"ccc", "d"}});
+		TableModel model = new ArrayTableModel(new String[][] {{"this is a long line", "bbb"}, {"ccc", "d"}});
 		Table table = new Table(model);
 		String result = table.render(3);
 		assertThat(result, equalTo(sample()));

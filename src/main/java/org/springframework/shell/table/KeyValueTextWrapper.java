@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * A TextWrapper implementation tailored for key-value rendering (working in concert
  * with {@link KeyValueSizeConstraints}, {@link KeyValueHorizontalAligner}), that tries its
- * best to vertically align some delimiter character (defautl '=').
+ * best to vertically align some delimiter character (default '=').
  */
 public class KeyValueTextWrapper implements TextWrapper {
 

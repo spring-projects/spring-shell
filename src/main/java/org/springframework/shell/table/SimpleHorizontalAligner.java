@@ -21,7 +21,7 @@ package org.springframework.shell.table;
  *
  * @author Eric Bottard
  */
-public enum SimpleHorizontalAligner implements AlignmentStrategy {
+public enum SimpleHorizontalAligner implements Aligner {
 
 	left, center, right;
 

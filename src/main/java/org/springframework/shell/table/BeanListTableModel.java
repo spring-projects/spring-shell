@@ -34,7 +34,7 @@ import org.springframework.beans.BeanWrapperImpl;
  *
  * @author Eric Bottard
  */
-public class BeanListModel<T> extends TableModel {
+public class BeanListTableModel<T> extends TableModel {
 
 	private final List<BeanWrapper> data;
 
@@ -42,7 +42,7 @@ public class BeanListModel<T> extends TableModel {
 
 	private final List<Object> headerRow;
 
-	public BeanListModel(Class<T> clazz, Iterable<T> list) {
+	public BeanListTableModel(Class<T> clazz, Iterable<T> list) {
 		this.data = new ArrayList<BeanWrapper>();
 		for (T bean : list) {
 			this.data.add(new BeanWrapperImpl(bean));
@@ -57,7 +57,7 @@ public class BeanListModel<T> extends TableModel {
 		}
 	}
 
-	public BeanListModel(Class<T> clazz, Iterable<T> list, String... propertyNames) {
+	public BeanListTableModel(Iterable<T> list, String... propertyNames) {
 		this.data = new ArrayList<BeanWrapper>();
 		for (T bean : list) {
 			this.data.add(new BeanWrapperImpl(bean));
@@ -66,7 +66,7 @@ public class BeanListModel<T> extends TableModel {
 		this.propertyNames = Arrays.asList(propertyNames);
 	}
 
-	public BeanListModel(Class<T> clazz, Iterable<T> list, LinkedHashMap<String, Object> header) {
+	public BeanListTableModel(Iterable<T> list, LinkedHashMap<String, Object> header) {
 		this.data = new ArrayList<BeanWrapper>();
 		for (T bean : list) {
 			this.data.add(new BeanWrapperImpl(bean));
