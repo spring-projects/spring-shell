@@ -87,15 +87,15 @@ public class ArrayConverterTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testCompletions() throws IOException {
-		String raw = "src/test/java/" + File.pathSeparator + "src/main/";
-
+		String raw = ("src/test/java/" + File.pathSeparator + "src/main/").replace('/', File.separatorChar);
+		String match1 = ("src/test/java/" + File.pathSeparator + "src/main/java/").replace('/', File.separatorChar);
+		String match2 = ("src/test/java/" + File.pathSeparator + "src/main/resources/").replace('/', File.separatorChar);
 
 		List<Completion> completions = new ArrayList<Completion>();
 		arrayConverter.getAllPossibleValues(completions, File[].class, raw, "", null);
 		assertThat(completions, containsInAnyOrder(
-				completionWhoseValue(equalTo("src/test/java/" + File.pathSeparator + "src/main/java/")),
-				completionWhoseValue(equalTo("src/test/java/" + File.pathSeparator + "src/main/resources/"))));
-
+				completionWhoseValue(equalTo(match1)),
+				completionWhoseValue(equalTo(match2))));
 	}
 
 	private Matcher<Completion> completionWhoseValue(final Matcher<String> matcher) {
