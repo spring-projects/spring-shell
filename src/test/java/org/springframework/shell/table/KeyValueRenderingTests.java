@@ -39,12 +39,10 @@ public class KeyValueRenderingTests extends AbstractTestWithSample {
 		values.put("long-key", "c");
 		values.put("d", "long-value");
 		TableModel model = new ArrayTableModel(new Object[][] {{"Thing", "Properties"}, {"Something", values}});
-		Table table = new Table(model);
-		BorderFactory.headerAndVerticals(table, BorderStyle.fancy_light);
-		table.format(CellMatchers.ofType(Map.class), new MapFormatter(" = "));
-		table.align(CellMatchers.ofType(Map.class), new KeyValueHorizontalAligner("="));
-		table.size(CellMatchers.ofType(Map.class), new KeyValueSizeConstraints(" = "));
-		table.wrap(CellMatchers.ofType(Map.class), new KeyValueTextWrapper());
+		TableBuilder tableBuilder = new TableBuilder(model)
+				.addHeaderAndVerticalsBorders(BorderStyle.fancy_light);
+		Tables.configureKeyValueRendering(tableBuilder, " = ");
+		Table table = tableBuilder.build();
 		String result = table.render(10);
 		assertThat(result, is(sample()));
 
@@ -57,12 +55,10 @@ public class KeyValueRenderingTests extends AbstractTestWithSample {
 		values.put("long-key", "c");
 		values.put("d", "long-value");
 		TableModel model = new ArrayTableModel(new Object[][] {{"Thing", "Properties"}, {"Something", values}});
-		Table table = new Table(model);
-		BorderFactory.headerAndVerticals(table, BorderStyle.fancy_light);
-		table.format(CellMatchers.ofType(Map.class), new MapFormatter(" = "));
-		table.align(CellMatchers.ofType(Map.class), new KeyValueHorizontalAligner("="));
-		table.size(CellMatchers.ofType(Map.class), new KeyValueSizeConstraints(" = "));
-		table.wrap(CellMatchers.ofType(Map.class), new KeyValueTextWrapper());
+		TableBuilder tableBuilder = new TableBuilder(model)
+				.addHeaderAndVerticalsBorders(BorderStyle.fancy_light);
+		Tables.configureKeyValueRendering(tableBuilder, " = ");
+		Table table = tableBuilder.build();
 		String result = table.render(80);
 		assertThat(result, is(sample()));
 

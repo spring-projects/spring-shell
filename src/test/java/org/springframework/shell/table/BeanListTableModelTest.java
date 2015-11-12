@@ -38,7 +38,7 @@ public class BeanListTableModelTest extends AbstractTestWithSample {
 
 		List<Person> data = data();
 
-		Table table = new Table(new BeanListTableModel<Person>(Person.class, data));
+		Table table = new TableBuilder(new BeanListTableModel<Person>(Person.class, data)).build();
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 
@@ -49,7 +49,7 @@ public class BeanListTableModelTest extends AbstractTestWithSample {
 
 		List<Person> data = data();
 
-		Table table = new Table(new BeanListTableModel<Person>(data, "lastName", "firstName"));
+		Table table = new TableBuilder(new BeanListTableModel<Person>(data, "lastName", "firstName")).build();
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 
@@ -64,7 +64,7 @@ public class BeanListTableModelTest extends AbstractTestWithSample {
 		header.put("lastName", "Last Name");
 		header.put("firstName", "First Name");
 
-		Table table = new Table(new BeanListTableModel<Person>(data, header));
+		Table table = new TableBuilder(new BeanListTableModel<Person>(data, header)).build();
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 

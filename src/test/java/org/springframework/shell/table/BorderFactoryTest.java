@@ -16,8 +16,8 @@
 
 package org.springframework.shell.table;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.springframework.shell.table.BorderStyle.fancy_double;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 /**
- * Tests for BorderFactory.
+ * Tests for convenience borders factory.
  *
  * @author Eric Bottard
  */
@@ -34,8 +34,7 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 	@Test
 	public void testOutlineBorder() throws IOException {
 		TableModel model = generate(3, 3);
-		Table table = new Table(model);
-		BorderFactory.outline(table, fancy_double);
+		Table table = new TableBuilder(model).addOutlineBorder(fancy_double).build();
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 	}
@@ -43,8 +42,7 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 	@Test
 	public void testFullBorder() throws IOException {
 		TableModel model = generate(3, 3);
-		Table table = new Table(model);
-		BorderFactory.full(table, fancy_double);
+		Table table = new TableBuilder(model).addFullBorder(fancy_double).build();
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 	}
@@ -52,8 +50,7 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 	@Test
 	public void testHeaderBorder() throws IOException {
 		TableModel model = generate(3, 3);
-		Table table = new Table(model);
-		BorderFactory.header(table, fancy_double);
+		Table table = new TableBuilder(model).addHeaderBorder(fancy_double).build();
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 	}
@@ -61,8 +58,7 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 	@Test
 	public void testHeaderAndVerticalsBorder() throws IOException {
 		TableModel model = generate(3, 3);
-		Table table = new Table(model);
-		BorderFactory.headerAndVerticals(table, fancy_double);
+		Table table = new TableBuilder(model).addHeaderAndVerticalsBorders(fancy_double).build();
 		String result = table.render(80);
 		assertThat(result, equalTo(sample()));
 	}

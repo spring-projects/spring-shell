@@ -16,8 +16,7 @@
 
 package org.springframework.shell.table;
 
-import static org.springframework.shell.table.BorderSpecification.*;
-import static org.springframework.shell.table.SimpleHorizontalAligner.*;
+import static org.springframework.shell.table.BorderSpecification.NONE;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,21 +24,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.shell.TerminalSizeAware;
-import org.springframework.util.Assert;
 
 /**
  * This is the central API for table rendering. A Table object is constructed with a given
  * TableModel, which holds raw table contents. Its rendering logic is then altered by applying
  * various customizations, in a fashion very similar to what is used <i>e.g.</i> in a spreadsheet
  * program:<ol>
- *    <li>{@link #format(CellMatcher, Formatter) formatters} know how to derive character data out of raw data. For example, numbers are
- *    formatted according to a Locale, or Maps are emitted as a series of {@literal key=value} lines</li>
- *    <li>{@link #size(CellMatcher, SizeConstraints) size constraints} are then applied, which decide how
- *    much column real estate to allocate to cells</li>
- *    <li>{@link #wrap(CellMatcher, TextWrapper) text wrapping policies} are applied once the column sizes
- *    are known</li>
- *    <li>finally, {@link #align(CellMatcher, Aligner) alignment} strategies actually render
- *    text as a series of space-padded strings that draw nicely on screen.</li>
+ * <li>{@link #format(CellMatcher, Formatter) formatters} know how to derive character data out of raw data. For
+ * example, numbers are
+ * formatted according to a Locale, or Maps are emitted as a series of {@literal key=value} lines</li>
+ * <li>{@link #size(CellMatcher, SizeConstraints) size constraints} are then applied, which decide how
+ * much column real estate to allocate to cells</li>
+ * <li>{@link #wrap(CellMatcher, TextWrapper) text wrapping policies} are applied once the column sizes
+ * are known</li>
+ * <li>finally, {@link #align(CellMatcher, Aligner) alignment} strategies actually render
+ * text as a series of space-padded strings that draw nicely on screen.</li>
  * </ol>
  * All those customizations are applied selectively on the Table cells thanks to a {@link CellMatcher}: One can
  * decide to right pad column number 3, or to format in a certain way all instances of {@literal java.util.Map}.
@@ -47,7 +46,6 @@ import org.springframework.util.Assert;
  * <p>Of course, all of those customizations often work hand in hand, and not all combinations make sense:
  * one needs to anticipate the fact that text will be split using the ' ' (space) character to properly
  * calculate column sizes.</p>
- *
  * @author Eric Bottard
  */
 public class Table implements TerminalSizeAware {
@@ -68,43 +66,32 @@ public class Table implements TerminalSizeAware {
 
 	private List<BorderSpecification> borderSpecifications = new ArrayList<BorderSpecification>();
 
-
 	/**
-	 * Construct a default table with the given model. The table will use the following
-	 * strategies for all cells:<ul>
-	 *     <li>{@link DefaultFormatter default formatting} using {@literal toString()}</li>
-	 *     <li>{@link AutoSizeConstraints sizing strategy} trying to use the maximum space, resorting to splitting lines on spaces</li>
-	 *     <li>{@link DelimiterTextWrapper wrapping text} on space characters</li>
-	 *     <li>{@link SimpleHorizontalAligner left aligning} text.</li>
-	 * </ul>
+	 * Construct a new Table with the given model and customizers.
+	 * The passed in LinkedHashMap should be in reverse-insertion order (<i>i.e.</i> the first CellMatcher
+	 * found in iteration order will "win").
+	 *
+	 * @see TableBuilder#build()
 	 */
-	public Table(TableModel model) {
+	/*package*/ Table(TableModel model,
+	      LinkedHashMap<CellMatcher, Formatter> formatters,
+	      LinkedHashMap<CellMatcher, SizeConstraints> sizeConstraints,
+	      LinkedHashMap<CellMatcher, TextWrapper> wrappers,
+	      LinkedHashMap<CellMatcher, Aligner> aligners,
+	      List<BorderSpecification> borderSpecifications) {
 		this.model = model;
+		this.formatters = formatters;
+		this.sizeConstraints = sizeConstraints;
+		this.wrappers = wrappers;
+		this.aligners = aligners;
+		this.borderSpecifications = borderSpecifications;
 		rows = model.getRowCount();
 		columns = model.getColumnCount();
-
-		formatters.put(CellMatchers.table(), new DefaultFormatter());
-
-		sizeConstraints.put(CellMatchers.table(), new AutoSizeConstraints());
-
-		wrappers.put(CellMatchers.table(), new DelimiterTextWrapper());
-
-		aligners.put(CellMatchers.table(), left);
 
 	}
 
 	public TableModel getModel() {
 		return model;
-	}
-
-	public Table addBorder(int top, int left, int bottom, int right, int match, BorderStyle style) {
-		Assert.isTrue(top >= 0 && top < rows, "top row must be positive and less than total number of rows");
-		Assert.isTrue(left >= 0 && left < columns, "left column must be positive and less than total number of columns");
-		Assert.isTrue(bottom > top && bottom <= rows, "bottom row must be greater than top and less than total number of rows");
-		Assert.isTrue(right >= left && right <= columns, "right column must be greater than left and less than total number of columns");
-		Assert.notNull(style, "style cannot be null");
-		borderSpecifications.add(new BorderSpecification(top, left, bottom, right, match, style));
-		return this;
 	}
 
 	public String render(int totalAvailableWidth) {
@@ -221,55 +208,31 @@ public class Table implements TerminalSizeAware {
 		return cellWidths;
 	}
 
-	public Table format(CellMatcher cells, Formatter formatter) {
-		formatters.put(cells, formatter);
-		return this;
-	}
-
-	public Table align(CellMatcher cells, Aligner aligner) {
-		aligners.put(cells, new DebugAligner(aligner));
-		return this;
-	}
-
-	public Table wrap(CellMatcher cells, TextWrapper wrapper) {
-		wrappers.put(cells, new DebugTextWrapper(wrapper));
-		return this;
-	}
-
-	public Table size(CellMatcher cells, SizeConstraints sizer) {
-		sizeConstraints.put(cells, sizer);
-		return this;
-	}
-
 	private TextWrapper getWrapper(int row, int column) {
-		TextWrapper result = null;
 		for (Map.Entry<CellMatcher, TextWrapper> kv : wrappers.entrySet()) {
 			if (kv.getKey().matches(row, column, model)) {
-				result = kv.getValue();
+				return kv.getValue();
 			}
 		}
-		return result;
+		throw new AssertionError("Can't be reached thanks to the whole-table default");
 	}
 
 	private SizeConstraints getSizeConstraints(int row, int column) {
-		SizeConstraints result = null;
 		for (Map.Entry<CellMatcher, SizeConstraints> kv : sizeConstraints.entrySet()) {
 			if (kv.getKey().matches(row, column, model)) {
-				result = kv.getValue();
+				return kv.getValue();
 			}
 		}
-		return result;
-
+		throw new AssertionError("Can't be reached thanks to the whole-table default");
 	}
 
 	private Formatter getFormatter(int row, int column) {
-		Formatter result = null;
 		for (Map.Entry<CellMatcher, Formatter> kv : formatters.entrySet()) {
 			if (kv.getKey().matches(row, column, model)) {
-				result = kv.getValue();
+				return  kv.getValue();
 			}
 		}
-		return result;
+		throw new AssertionError("Can't be reached thanks to the whole-table default");
 	}
 
 	/**
@@ -277,23 +240,33 @@ public class Table implements TerminalSizeAware {
 	 *
 	 * <p>In all instance arrays, 'row' and 'column' are actually indices in-between
 	 * table rows and columns. Hence, sizes are larger by one.</p>
-	 *
 	 * @author Eric Bottard
 	 */
 	private class Borders {
-		/** Glyph to paint a vertical line at row,col. */
+
+		/**
+		 * Glyph to paint a vertical line at row,col.
+		 */
 		private char[][] verticals;
 
-		/** Glyph to paint a horizontal line at row,col. */
+		/**
+		 * Glyph to paint a horizontal line at row,col.
+		 */
 		private char[][] horizontals;
 
-		/** The type of corner, if any, to paint at row,col. */
+		/**
+		 * The type of corner, if any, to paint at row,col.
+		 */
 		private char[][] corners;
 
-		/** True if at least one vertical bar exists in that col. */
+		/**
+		 * True if at least one vertical bar exists in that col.
+		 */
 		private boolean[] vFillers;
 
-		/** True if at least one horizontal bar exists in that row. */
+		/**
+		 * True if at least one horizontal bar exists in that row.
+		 */
 		private boolean[] hFillers;
 
 		public Borders() {

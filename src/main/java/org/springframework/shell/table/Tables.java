@@ -28,11 +28,11 @@ public class Tables {
 	/**
 	 * Install all the necessary formatters, aligners, etc for key-value rendering of Maps.
 	 */
-	public static Table configureKeyValueRendering(Table table, String delimiter) {
-		table.format(CellMatchers.ofType(Map.class), new MapFormatter(delimiter));
-		table.align(CellMatchers.ofType(Map.class), new KeyValueHorizontalAligner(delimiter));
-		table.size(CellMatchers.ofType(Map.class), new KeyValueSizeConstraints(delimiter));
-		table.wrap(CellMatchers.ofType(Map.class), new KeyValueTextWrapper(delimiter));
-		return table;
+	public static TableBuilder configureKeyValueRendering(TableBuilder builder, String delimiter) {
+		return builder.on(CellMatchers.ofType(Map.class))
+				.addFormatter(new MapFormatter(delimiter))
+				.addAligner(new KeyValueHorizontalAligner(delimiter.trim()))
+				.addSizer(new KeyValueSizeConstraints(delimiter))
+				.addWrapper(new KeyValueTextWrapper(delimiter)).and();
 	}
 }

@@ -1,9 +1,9 @@
 ┌─────────┬──────────┐
 │Thing    │Properties│
 ├─────────┼──────────┤
-│Something│     a = b│
-│         │long-key =│
-│         │c         │
-│         │       d =│
+│Something│a = b     │
+│         │long-key  │
+│         │  = c     │
+│         │d =       │
 │         │long-value│
 └─────────┴──────────┘
