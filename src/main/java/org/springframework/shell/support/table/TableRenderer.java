@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.shell.support.util.StringUtils;
-
 import com.google.common.base.Splitter;
+
+import org.springframework.shell.support.util.StringUtils;
 
 /**
  * Contains utility methods for rendering data to a formatted console output.
@@ -30,7 +30,8 @@ import com.google.common.base.Splitter;
  * 
  * @author Gunnar Hillert
  * @author Thomas Risberg
- * 
+ * @deprecated In favor of {@link org.springframework.shell.table.TableBuilder}
+ *
  */
 public final class TableRenderer {
 

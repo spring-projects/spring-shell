@@ -22,7 +22,8 @@ package org.springframework.shell.support.table;
  * @see TableRenderer
  * 
  * @author Gunnar Hillert
- * 
+ * @deprecated In favor of {@link org.springframework.shell.table.TableBuilder}
+ *
  */
 public class TableHeader {
 
