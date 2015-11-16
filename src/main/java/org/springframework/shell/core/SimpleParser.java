@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -1045,7 +1044,13 @@ public class SimpleParser implements Parser {
 			StringBuilder sb = new StringBuilder();
 
 			// Figure out if there's a single command we can offer help for
-			final Collection<MethodTarget> matchingTargets = locateTargets(buffer, false, false);
+			Collection<MethodTarget> matchingTargets = locateTargets(buffer, false, false);
+			for (MethodTarget candidate : matchingTargets) {
+				if (buffer.equals(candidate.getKey())) {
+					matchingTargets = Collections.singleton(candidate);
+					break;
+				}
+			}
 			if (matchingTargets.size() == 1) {
 				// Single command help
 				MethodTarget methodTarget = matchingTargets.iterator().next();
@@ -1115,8 +1120,6 @@ public class SimpleParser implements Parser {
 			}
 
 			LOGGER.info(sb.toString());
-			// LOGGER.warning("** Type 'hint' (without the quotes) and hit ENTER for step-by-step guidance **"
-			// + StringUtils.LINE_SEPARATOR);
 		}
 	}
 
