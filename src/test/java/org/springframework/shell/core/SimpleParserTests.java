@@ -319,10 +319,8 @@ public class SimpleParserTests {
 		candidates.clear();
 		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
 
-		// TODO
-		// assertThat(candidates, hasItem(completionThat(is(equalTo("file --option")))));
-		// assertThat(candidates, not(hasItem(completionThat(startsWith("fileMore")))));
-
+		assertThat(candidates, hasItem(completionThat(is(equalTo("file --option ")))));
+		assertThat(candidates, not(hasItem(completionThat(startsWith("fileMore")))));
 	}
 
 	@Test
@@ -442,6 +440,15 @@ public class SimpleParserTests {
 		parser.add(new SamePrefixCommands());
 		ParseResult result = parser.parse("fo");
 		assertThat(result, nullValue(ParseResult.class));
+	}
+
+	@Test
+	public void testCommandPrefixCollisionFalseAmbiguity() {
+		parser.add(new SamePrefixCommands());
+		buffer = "foo ";
+		offset = parser.completeAdvanced(buffer, buffer.length(), candidates);
+
+		assertThat(candidates, not(hasItem(completionThat(startsWith("fooBar ")))));
 	}
 
 	@Test
