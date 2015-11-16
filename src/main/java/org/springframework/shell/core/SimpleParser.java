@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -43,6 +42,8 @@ import org.springframework.shell.support.util.NaturalOrderComparator;
 import org.springframework.shell.support.util.OsUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Default implementation of {@link Parser}.
@@ -1046,6 +1047,12 @@ public class SimpleParser implements Parser {
 
 			// Figure out if there's a single command we can offer help for
 			final Collection<MethodTarget> matchingTargets = locateTargets(buffer, false, false);
+			for (MethodTarget candidate : matchingTargets) {
+				if (buffer.equals(candidate.getKey()) || buffer.startsWith(candidate.getKey() + " ")) {
+					matchingTargets.retainAll(ImmutableList.of(candidate));
+					break;
+				}
+			}
 			if (matchingTargets.size() == 1) {
 				// Single command help
 				MethodTarget methodTarget = matchingTargets.iterator().next();
