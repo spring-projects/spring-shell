@@ -1,0 +1,17 @@
+/.classpath
+/.project
+.settings/
+.gradle
+build
+target/
+/log.roo
+
+/bin/
+/*.log
+
+/.idea
+/*.iml
+/*.ipr
+/*.iws
+out
+.gradletasknamecache
