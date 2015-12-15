@@ -39,6 +39,12 @@
 			<artifactId>spring-shell</artifactId>
 			<version>1.2.0.BUILD-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.48</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<build>
