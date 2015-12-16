@@ -10,10 +10,12 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface ShellMapping {
+public @interface ShellMehtod {
 
 	String[] value() default "";
 
 	String help() default "";
+
+	String prefix() default "--";
 
 }

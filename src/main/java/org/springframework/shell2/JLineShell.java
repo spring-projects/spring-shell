@@ -27,6 +27,7 @@ import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
@@ -117,6 +118,7 @@ public class JLineShell {
 				Arrays.fill(rawArgs, unresolved);
 				for (int i = 0; i < parameters.length; i++) {
 					MethodParameter methodParameter = new MethodParameter(methodTarget.getMethod(), i);
+					methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
 					for (ParameterResolver resolver : parameterResolvers) {
 						if (resolver.supports(methodParameter)) {
 							rawArgs[i] = resolver.resolve(methodParameter, words.subList(wordsUsedForCommandKey, words.size()));

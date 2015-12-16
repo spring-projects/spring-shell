@@ -20,7 +20,7 @@ public class DefaultMethodTargetResolver implements MethodTargetResolver {
 		for (Object bean : commandBeans.values()) {
 			Class<?> clazz = bean.getClass();
 			ReflectionUtils.doWithMethods(clazz, method -> {
-				ShellMapping shellMapping = method.getAnnotation(ShellMapping.class);
+				ShellMehtod shellMapping = method.getAnnotation(ShellMehtod.class);
 				String[] keys = shellMapping.value();
 				if (keys.length == 1 && "".equals(keys[0])) {
 					keys[0] = method.getName();
@@ -28,7 +28,7 @@ public class DefaultMethodTargetResolver implements MethodTargetResolver {
 				for (String key : keys) {
 					methodTargets.put(key, new MethodTarget(method, bean, shellMapping.help()));
 				}
-			}, method -> method.getAnnotation(ShellMapping.class) != null);
+			}, method -> method.getAnnotation(ShellMehtod.class) != null);
 		}
 		return methodTargets;
 	}

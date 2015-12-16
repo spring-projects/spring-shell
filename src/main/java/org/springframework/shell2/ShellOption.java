@@ -14,5 +14,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface ShellOption {
 
-	String[] value() default "";
+	String NULL = "__NULL__";
+
+	String[] value() default {};
+
+	int arity() default 1;
+
+	String defaultValue() default NULL;
 }

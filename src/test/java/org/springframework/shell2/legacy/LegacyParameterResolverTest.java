@@ -4,6 +4,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Method;
+
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.converters.BooleanConverter;
 import org.springframework.shell.converters.EnumConverter;
@@ -39,16 +42,22 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void supportsParameterAnnotatedWithCliOption() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, NAME_OR_ANONYMOUS);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, NAME_OR_ANONYMOUS);
 
 		boolean supports = parameterResolver.supports(methodParameter);
 
 		assertThat(supports, is(true));
 	}
 
+	private MethodParameter buildMethodParameter(Method method, int index) {
+		MethodParameter methodParameter = new MethodParameter(method, index);
+		methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
+		return methodParameter;
+	}
+
 	@Test
 	public void resolvesParameterAnnotatedWithCliOption() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, NAME_OR_ANONYMOUS);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, NAME_OR_ANONYMOUS);
 
 		Object result = parameterResolver.resolve(methodParameter, asList("--foo bar --name baz --qix bux".split(" ")));
 
@@ -57,7 +66,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void resolvesAnonymousParameterAnnotatedWithCliOption() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, NAME_OR_ANONYMOUS);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, NAME_OR_ANONYMOUS);
 
 		Object result = parameterResolver.resolve(methodParameter, asList("--foo bar baz --qix bux".split(" ")));
 		assertThat(result, is("baz"));
@@ -69,7 +78,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void usesLegacyConverters() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, TYPE);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, TYPE);
 
 		Object result = parameterResolver.resolve(methodParameter, asList("--foo bar --name baz --qix bux --type processor".split(" ")));
 
@@ -78,7 +87,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testUnspecifiedDefaultValue() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, FORCE);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, FORCE);
 
 		Object result = parameterResolver.resolve(methodParameter, asList("--foo bar --name baz --qix bux".split(" ")));
 
@@ -87,7 +96,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testSpecifiedDefaultValue() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, FORCE);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, FORCE);
 
 		assertThat(parameterResolver.resolve(methodParameter, asList("--force --foo bar --name baz --qix bux".split(" "))), is(true));
 		assertThat(parameterResolver.resolve(methodParameter, asList("--foo bar --name baz --qix bux --force".split(" "))), is(true));
@@ -95,7 +104,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testParameterNotFound() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, COORDINATES);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, COORDINATES);
 
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("Could not find parameter values for [--coordinates, --coords] in [--force, --foo, bar, --name, baz, --qix, bux]");
@@ -104,7 +113,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testParameterFoundTooManyTimes() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.REGISTER_METHOD, COORDINATES);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.REGISTER_METHOD, COORDINATES);
 
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("Option --coordinates has already been set");
@@ -116,7 +125,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testNoConverterFound() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.SUM_METHOD, 0);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.SUM_METHOD, 0);
 
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("No converter found for --v1 from '1' to type int");
@@ -127,7 +136,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testNoConverterFoundForUnspecifiedValue() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.SUM_METHOD, 0);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.SUM_METHOD, 0);
 
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("No converter found for --v1 from '38' to type int");
@@ -136,7 +145,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testNoConverterFoundForSpecifiedValue() throws Exception {
-		MethodParameter methodParameter = new MethodParameter(LegacyCommands.SUM_METHOD, 1);
+		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.SUM_METHOD, 1);
 
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("No converter found for --v2 from '42' to type int");
