@@ -1,17 +1,15 @@
 package org.springframework.shell2;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.springframework.util.ReflectionUtils.findMethod;
-
-import java.lang.reflect.Method;
-
 import org.junit.Test;
-
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.support.DefaultConversionService;
+
+import java.lang.reflect.Method;
+
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.util.ReflectionUtils.findMethod;
 
 /**
  * Unit tests for DefaultParameterResolver.
@@ -31,19 +29,19 @@ public class DefaultParameterResolverTest {
 		assertThat(resolver.resolve(
 				makeMethodParameter(method, 0),
 				asList("--force --name --foo y".split(" "))
-		), is(true));
+		)).isEqualTo(true);
 		assertThat(resolver.resolve(
 				makeMethodParameter(method, 1),
 				asList("--force --name --foo y".split(" "))
-		), is("--foo"));
+		)).isEqualTo("--foo");
 		assertThat(resolver.resolve(
 				makeMethodParameter(method, 2),
 				asList("--force --name --foo y".split(" "))
-		), is("y"));
+		)).isEqualTo("y");
 		assertThat(resolver.resolve(
 				makeMethodParameter(method, 3),
 				asList("--force --name --foo y".split(" "))
-		), is("last"));
+		)).isEqualTo("last");
 
 	}
 
