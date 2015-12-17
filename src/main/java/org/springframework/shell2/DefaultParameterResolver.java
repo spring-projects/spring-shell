@@ -23,7 +23,7 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 
 /**
  * Default ParameterResolver implementation that supports the following features:<ul>
- *     <li>named parameters (recognized because they start with some {@link ShellMehtod#prefix()}</li>
+ *     <li>named parameters (recognized because they start with some {@link ShellMethod#prefix()}</li>
  *     <li>implicit named parameters (from the actual method parameter name)</li>
  *     <li>positional parameters (in order, for all parameter values that were not resolved via named parameters)</li>
  *     <li>default values (for all remaining parameters)</li>
@@ -63,7 +63,7 @@ class DefaultParameterResolver implements ParameterResolver {
 
 	@Override
 	public Object resolve(MethodParameter methodParameter, List<String> words) {
-		String prefix = methodParameter.getMethod().getAnnotation(ShellMehtod.class).prefix();
+		String prefix = methodParameter.getMethod().getAnnotation(ShellMethod.class).prefix();
 
 		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), words);
 		Map<Parameter, String> resolved = parameterCache.computeIfAbsent(cacheKey, (k) -> {
@@ -77,11 +77,11 @@ class DefaultParameterResolver implements ParameterResolver {
 				String word = words.get(i);
 				if (word.startsWith(prefix)) {
 					String key = word.substring(prefix.length());
-					Parameter parameter = lookupParameterForKey(methodParameter.getMethod(), key);
+					Parameter parameter = lookupParameterForKey(methodParameter.getMethod(), key, prefix);
 					int arity = getArity(parameter);
 
 					String raw = words.subList(i + 1, i + 1 + arity).stream().collect(Collectors.joining(","));
-					Assert.isTrue(!namedParameters.containsKey(key), String.format("Option '%s' has already been specified", word));
+					Assert.isTrue(!namedParameters.containsKey(key), String.format("Parameter for '%s' has already been specified", word));
 					namedParameters.put(key, raw);
 					result.put(parameter, raw);
 					i += arity;
@@ -123,14 +123,24 @@ class DefaultParameterResolver implements ParameterResolver {
 					}
 				}
 				else if (copy.size() > 1) {
-					throw new RuntimeException("Named parameter has been specified multiple times via: " + copy);
+					throw new IllegalArgumentException("Named parameter has been specified multiple times via " + prefix(copy, prefix));
 				}
 			}
+
+			Assert.isTrue(offset == positionalValues.size(), "Too many arguments: the following could not be mapped to parameters: "
+					+ positionalValues.subList(offset, positionalValues.size()).stream().collect(Collectors.joining(" ", "'", "'")));
 			return result;
 		});
 
 		String s = resolved.get(methodParameter.getMethod().getParameters()[methodParameter.getParameterIndex()]);
 		return conversionService.convert(s, TypeDescriptor.valueOf(String.class), new TypeDescriptor(methodParameter));
+	}
+
+	/**
+	 * Add the command prefix back to the list of keys that was used to invoke the method.
+	 */
+	private String prefix(Collection<String> keys, String prefix) {
+		return keys.stream().map(k -> prefix + k).collect(Collectors.joining(", ", "'", "'"));
 	}
 
 	private boolean booleanDefaultValue(Parameter parameter) {
@@ -177,7 +187,7 @@ class DefaultParameterResolver implements ParameterResolver {
 	/**
 	 * Return the method parameter that should be bound to the given key.
 	 */
-	private Parameter lookupParameterForKey(Method method, String key) {
+	private Parameter lookupParameterForKey(Method method, String key, String prefix) {
 		Parameter[] parameters = method.getParameters();
 		for (int i = 0, parametersLength = parameters.length; i < parametersLength; i++) {
 			Parameter p = parameters[i];
@@ -185,7 +195,7 @@ class DefaultParameterResolver implements ParameterResolver {
 				return p;
 			}
 		}
-		throw new IllegalStateException(String.format("Could not lookup parameter for '%s' in %s", key, method));
+		throw new IllegalArgumentException(String.format("Could not look up parameter for '%s%s' in %s", prefix, key, method));
 	}
 
 	private static class CacheKey {

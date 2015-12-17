@@ -1,6 +1,8 @@
 package org.springframework.shell2;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.support.DefaultConversionService;
@@ -19,6 +21,8 @@ import static org.springframework.util.ReflectionUtils.findMethod;
  */
 public class DefaultParameterResolverTest {
 
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	private DefaultParameterResolver resolver = new DefaultParameterResolver(new DefaultConversionService());
 
@@ -43,6 +47,58 @@ public class DefaultParameterResolverTest {
 				asList("--force --name --foo y".split(" "))
 		)).isEqualTo("last");
 
+	}
+
+	@Test
+	public void testParameterSpecifiedTwiceViaDifferentAliases() throws Exception {
+		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("Named parameter has been specified multiple times via '--bar, --baz'");
+
+		resolver.resolve(
+				makeMethodParameter(method, 0),
+				asList("--force --name --foo y --bar x --baz z".split(" "))
+		);
+	}
+
+	@Test
+	public void testParameterSpecifiedTwiceViaSameKey() throws Exception {
+		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("Parameter for '--baz' has already been specified");
+
+		resolver.resolve(
+				makeMethodParameter(method, 0),
+				asList("--force --name --foo y --baz x --baz z".split(" "))
+		);
+	}
+
+	@Test
+	public void testUnknownParameter() throws Exception {
+		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("Could not look up parameter for '--unknown' in " + method);
+
+		resolver.resolve(
+				makeMethodParameter(method, 0),
+				asList("--unknown --foo bar".split(" "))
+		);
+	}
+
+	@Test
+	public void testTooMuchInput() throws Exception {
+		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("the following could not be mapped to parameters: 'leftover'");
+
+		resolver.resolve(
+				makeMethodParameter(method, 0),
+				asList("--foo hello --name bar --force --bar well leftover".split(" "))
+		);
 	}
 
 	private MethodParameter makeMethodParameter(Method method, int parameterIndex) {

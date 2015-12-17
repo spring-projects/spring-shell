@@ -15,11 +15,11 @@ public class Remote {
 	 *     <li>default value supplying (foo and bar)</li>
 	 * </ul>
 	 */
-	@ShellMehtod
+	@ShellMethod
 	public void zap(boolean force,
 	                String name,
 	                @ShellOption(defaultValue="defoolt") String foo,
-	                @ShellOption(defaultValue = "last") String bar) {
+	                @ShellOption(value = {"bar", "baz"}, defaultValue = "last") String bar) {
 
 	}
 }
