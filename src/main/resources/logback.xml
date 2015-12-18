@@ -1,0 +1,5 @@
+<configuration>
+	<!-- Disable most stdout logging by default -->
+	<root level="ERROR">
+	</root>
+</configuration>

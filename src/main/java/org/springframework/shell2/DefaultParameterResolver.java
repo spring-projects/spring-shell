@@ -1,4 +1,22 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.shell2;
+
+import static org.springframework.shell2.Utils.unCamelify;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -23,25 +41,27 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 
 /**
  * Default ParameterResolver implementation that supports the following features:<ul>
- *     <li>named parameters (recognized because they start with some {@link ShellMethod#prefix()}</li>
- *     <li>implicit named parameters (from the actual method parameter name)</li>
- *     <li>positional parameters (in order, for all parameter values that were not resolved via named parameters)</li>
- *     <li>default values (for all remaining parameters)</li>
+ * <li>named parameters (recognized because they start with some {@link ShellMethod#prefix()}</li>
+ * <li>implicit named parameters (from the actual method parameter name)</li>
+ * <li>positional parameters (in order, for all parameter values that were not resolved via named parameters)</li>
+ * <li>default values (for all remaining parameters)</li>
  * </ul>
  *
  * <p>Method arguments can consume several words of input at once (driven by {@link ShellOption#arity()}, default 1).
- * If several words are consumed, they will be joined together as a comma separated value and passed to the {@link ConversionService}
+ * If several words are consumed, they will be joined together as a comma separated value and passed to the {@link
+ * ConversionService}
  * (which will typically return a List or array).</p>
  *
- * <p>Boolean parameters are by default expected to have an arity of 0, allowing invocations in the form {@code rm --force --dir /foo}:
- * the presence of {@code --force} passes {@code true} as a parameter value, while its absence passes {@code false}. Both
+ * <p>Boolean parameters are by default expected to have an arity of 0, allowing invocations in the form {@code rm
+ * --force --dir /foo}:
+ * the presence of {@code --force} passes {@code true} as a parameter value, while its absence passes {@code false}.
+ * Both
  * the default arity of 0 and the default value of {@code false} can be overridden <i>via</i> {@link ShellOption}
  * if needed.</p>
- *
  * @author Eric Bottard
  * @author Florent Biville
  */
-class DefaultParameterResolver implements ParameterResolver {
+public class DefaultParameterResolver implements ParameterResolver {
 
 	private final ConversionService conversionService;
 
@@ -63,7 +83,7 @@ class DefaultParameterResolver implements ParameterResolver {
 
 	@Override
 	public Object resolve(MethodParameter methodParameter, List<String> words) {
-		String prefix = methodParameter.getMethod().getAnnotation(ShellMethod.class).prefix();
+		String prefix = prefixForMethod(methodParameter);
 
 		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), words);
 		Map<Parameter, String> resolved = parameterCache.computeIfAbsent(cacheKey, (k) -> {
@@ -113,11 +133,7 @@ class DefaultParameterResolver implements ParameterResolver {
 						offset += arity;
 					} // No more input. Try defaultValues
 					else {
-						Optional<String> defaultValue = Optional.empty();
-						ShellOption option = parameter.getAnnotation(ShellOption.class);
-						if (option != null && !ShellOption.NULL.equals(option.defaultValue())) {
-							defaultValue = Optional.of(option.defaultValue());
-						}
+						Optional<String> defaultValue = defaultValueFor(parameter);
 						String value = defaultValue.orElseThrow(() -> new RuntimeException(String.format("Ran out of input for " + keys)));
 						result.put(parameter, value);
 					}
@@ -133,7 +149,72 @@ class DefaultParameterResolver implements ParameterResolver {
 		});
 
 		String s = resolved.get(methodParameter.getMethod().getParameters()[methodParameter.getParameterIndex()]);
-		return conversionService.convert(s, TypeDescriptor.valueOf(String.class), new TypeDescriptor(methodParameter));
+		if (ShellOption.NULL.equals(s)) {
+			return null;
+		}
+		else {
+			return conversionService.convert(s, TypeDescriptor.valueOf(String.class), new TypeDescriptor(methodParameter));
+		}
+	}
+
+	private String prefixForMethod(MethodParameter methodParameter) {
+		return methodParameter.getMethod().getAnnotation(ShellMethod.class).prefix();
+	}
+
+	private Optional<String> defaultValueFor(Parameter parameter) {
+		Optional<String> defaultValue = Optional.empty();
+		ShellOption option = parameter.getAnnotation(ShellOption.class);
+		if (option != null && !ShellOption.NONE.equals(option.defaultValue())) {
+			defaultValue = Optional.of(option.defaultValue());
+		}
+		return defaultValue;
+	}
+
+	@Override
+	public ParameterDescription describe(MethodParameter parameter) {
+		Parameter jlrParameter = parameter.getMethod().getParameters()[parameter.getParameterIndex()];
+		int arity = getArity(jlrParameter);
+		Class<?> type = parameter.getParameterType();
+		ShellOption option = jlrParameter.getAnnotation(ShellOption.class);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < arity; i++) {
+			if (i > 0) {
+				sb.append(" ");
+			}
+			sb.append(arity > 1 ? unCamelify(removeMultiplicityFromType(parameter).getSimpleName()) : unCamelify(type.getSimpleName()));
+		}
+		ParameterDescription result = ParameterDescription.ofType(type);
+		result.formal(sb.toString());
+		if (option != null) {
+			result.help(option.help());
+			Optional<String> defaultValue = defaultValueFor(jlrParameter);
+			if (defaultValue.isPresent()) {
+				result.defaultValue(defaultValue.map(dv -> dv.equals(ShellOption.NULL) ? "<none>" : dv).get());
+			}
+		}
+		List<String> rawKeys = getKeysForParameter(parameter.getMethod(), parameter.getParameterIndex());
+		String prefix = prefixForMethod(parameter);
+		result
+				.keys(rawKeys.stream().map(k -> prefix + k).collect(Collectors.toList()))
+				.mandatoryKey(false);
+
+		return result;
+	}
+
+	/**
+	 * In case of {@code foo[] or Collection<Foo>} and arity > 1, return the element type.
+	 */
+	private Class<?> removeMultiplicityFromType(MethodParameter parameter) {
+		Class<?> parameterType = parameter.getParameterType();
+		if (parameterType.isArray()) {
+			return parameterType.getComponentType();
+		}
+		else if (parameterType.isAssignableFrom(Collection.class)) {
+			return parameter.getNestedParameterType();
+		}
+		else {
+			throw new RuntimeException("For " + parameter + " (with arity > 1) expected an array/collection type");
+		}
 	}
 
 	/**
@@ -167,7 +248,7 @@ class DefaultParameterResolver implements ParameterResolver {
 	 * or from the actual parameter name.
 	 * @throws IllegalArgumentException if parameter names could not be extracted
 	 */
-	private Collection<String> getKeysForParameter(Method method, int index) {
+	private List<String> getKeysForParameter(Method method, int index) {
 		Parameter parameter = method.getParameters()[index];
 		ShellOption option = parameter.getAnnotation(ShellOption.class);
 		if (option != null && option.value().length > 0) {
@@ -180,7 +261,7 @@ class DefaultParameterResolver implements ParameterResolver {
 			Assert.notNull(parameterName, String.format(
 					"Could not discover parameter name at index %d for %s, and option key(s) were not specified via %s annotation",
 					index, method, ShellOption.class.getSimpleName()));
-			return Collections.singleton(parameterName);
+			return Collections.singletonList(parameterName);
 		}
 	}
 

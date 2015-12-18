@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.shell2.legacy;
 
 import java.util.HashMap;
@@ -12,7 +28,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * A {@link MethodTargetResolver} that discovers methods annotated with {@link CliCommand} on beans
+ * implementing the {@link CommandMarker} marker interface.
+ * @author Eric Bottard
+ * @author Florent Biville
  */
 @Component
 public class LegacyMethodTargetResolver implements MethodTargetResolver {
@@ -20,13 +39,13 @@ public class LegacyMethodTargetResolver implements MethodTargetResolver {
 	@Override
 	public Map<String, MethodTarget> resolve(ApplicationContext context) {
 		Map<String, MethodTarget> methodTargets = new HashMap<>();
-		Map<String, CommandMarker> beansOfType = context.getBeansOfType(CommandMarker.class);
-		for (Object bean : beansOfType.values()) {
+		Map<String, CommandMarker> beans = context.getBeansOfType(CommandMarker.class);
+		for (Object bean : beans.values()) {
 			Class<?> clazz = bean.getClass();
 			ReflectionUtils.doWithMethods(clazz, method -> {
-				CliCommand shellMapping = method.getAnnotation(CliCommand.class);
-				for (String key : shellMapping.value()) {
-					methodTargets.put(key, new MethodTarget(method, bean, shellMapping.help()));
+				CliCommand cliCommand = method.getAnnotation(CliCommand.class);
+				for (String key : cliCommand.value()) {
+					methodTargets.put(key, new MethodTarget(method, bean, cliCommand.help()));
 				}
 			}, method -> method.getAnnotation(CliCommand.class) != null);
 		}

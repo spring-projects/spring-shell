@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.shell2;
 
 import java.lang.reflect.Parameter;
@@ -7,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
@@ -22,7 +39,9 @@ import org.jline.reader.ParsedLine;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.AttributedCharSequence;
 import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +56,7 @@ import org.springframework.util.ReflectionUtils;
  * Created by ericbottard on 26/11/15.
  */
 @Component
-public class JLineShell {
+public class JLineShell implements Shell {
 
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -53,6 +72,11 @@ public class JLineShell {
 
 	@Autowired
 	private List<ParameterResolver> parameterResolvers = new ArrayList<>();
+
+	@Override
+	public Map<String, MethodTarget> listCommands() {
+		return methodTargets;
+	}
 
 	@PostConstruct
 	public void init() throws Exception {
@@ -76,11 +100,19 @@ public class JLineShell {
 
 					@Override
 					public AttributedString highlight(LineReader reader, String buffer) {
-						if (buffer.length() < 4) {
-							return new AttributedString(buffer, AttributedStyle.DEFAULT.blink().foreground(AttributedStyle.RED));
+						int l = 0;
+						String best = null;
+						for (String command : methodTargets.keySet()) {
+							if (buffer.startsWith(command) && command.length() > l) {
+								l = command.length();
+								best = command;
+							}
+						}
+						if (best != null) {
+							return new AttributedStringBuilder(buffer.length()).append(best, AttributedStyle.BOLD).append(buffer.substring(l)).toAttributedString();
 						}
 						else {
-							return new AttributedString(buffer);
+							return new AttributedString(buffer, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
 						}
 					}
 				})
@@ -111,6 +143,8 @@ public class JLineShell {
 			}
 
 			List<String> words = lineReader.getParsedLine().words();
+			// TODO investigate trailing empty string in e.g. "help 'WTF 2'"
+			words = words.stream().filter(w -> w.length() > 0).collect(Collectors.toList());
 			if (methodTarget != null) {
 				Parameter[] parameters = methodTarget.getMethod().getParameters();
 				Object[] rawArgs = new Object[parameters.length];
@@ -135,7 +169,9 @@ public class JLineShell {
 				Set<ConstraintViolation<Object>> constraintViolations = executableValidator.validateParameters(methodTarget.getBean(),
 						methodTarget.getMethod(),
 						rawArgs);
-				System.out.println(constraintViolations);
+				if (constraintViolations.size() > 0) {
+					System.out.println(constraintViolations);
+				}
 
 				Object result = null;
 				try {
@@ -145,7 +181,12 @@ public class JLineShell {
 					result = e;
 				}
 
-				System.out.println(String.valueOf(result));
+				if (result instanceof AttributedCharSequence) {
+					System.out.println(((AttributedCharSequence) result).toAnsi(lineReader.getTerminal()));
+				}
+				else {
+					System.out.println(String.valueOf(result));
+				}
 
 			}
 			else {

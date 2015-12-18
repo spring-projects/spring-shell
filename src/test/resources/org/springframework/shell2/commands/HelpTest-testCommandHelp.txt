@@ -1,0 +1,23 @@
+&
+&
+NAME&
+	first-command - A rather extensive description of some command.&
+&
+SYNOPSYS&
+	first-command [-r]  [-f]  [[-n] int]  [-o] float float float  &
+&
+OPTIONS&
+	-r	Whether to delete recursively  [Mandatory]&
+&
+	-f or --force&
+		Do not ask for confirmation. YOLO  [Mandatory]&
+&
+	-n  int&
+		The answer to everything  [Optional, default = 42]&
+&
+	-o  float float float&
+		Some other parameters  [Mandatory]&
+&
+ALSO KNOWN AS&
+	1st-command&
+&

@@ -17,25 +17,27 @@
 package org.springframework.shell2;
 
 /**
- * An example commands class.
+ * Some text utilities.
  *
  * @author Eric Bottard
- * @author Florent Biville
  */
-public class Remote {
+public class Utils {
 
 	/**
-	 * A command method that showcases<ul>
-	 *     <li>default handling for booleans (force)</li>
-	 *     <li>default parameter name discovery (name)</li>
-	 *     <li>default value supplying (foo and bar)</li>
-	 * </ul>
+	 * Turn CamelCaseText into gnu-style-lowercase.
 	 */
-	@ShellMethod
-	public void zap(boolean force,
-	                String name,
-	                @ShellOption(defaultValue="defoolt") String foo,
-	                @ShellOption(value = {"bar", "baz"}, defaultValue = "last") String bar) {
-
+	public static String unCamelify(CharSequence original) {
+		StringBuilder result = new StringBuilder(original.length());
+		boolean wasLowercase = false;
+		for (int i = 0; i < original.length(); i++) {
+			char ch = original.charAt(i);
+			if (Character.isUpperCase(ch) && wasLowercase) {
+				result.append('-');
+			}
+			wasLowercase = Character.isLowerCase(ch);
+			result.append(Character.toLowerCase(ch));
+		}
+		return result.toString();
 	}
+
 }

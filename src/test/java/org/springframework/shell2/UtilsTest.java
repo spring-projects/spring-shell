@@ -16,26 +16,22 @@
 
 package org.springframework.shell2;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 /**
- * An example commands class.
+ * Tests for {@link Utils}.
  *
  * @author Eric Bottard
- * @author Florent Biville
  */
-public class Remote {
+public class UtilsTest {
 
-	/**
-	 * A command method that showcases<ul>
-	 *     <li>default handling for booleans (force)</li>
-	 *     <li>default parameter name discovery (name)</li>
-	 *     <li>default value supplying (foo and bar)</li>
-	 * </ul>
-	 */
-	@ShellMethod
-	public void zap(boolean force,
-	                String name,
-	                @ShellOption(defaultValue="defoolt") String foo,
-	                @ShellOption(value = {"bar", "baz"}, defaultValue = "last") String bar) {
-
+	@Test
+	public void testUnCamelify() throws Exception {
+		assertThat(Utils.unCamelify("HelloWorld")).isEqualTo("hello-world");
+		assertThat(Utils.unCamelify("helloWorld")).isEqualTo("hello-world");
+		assertThat(Utils.unCamelify("helloWorldHowAreYou")).isEqualTo("hello-world-how-are-you");
+		assertThat(Utils.unCamelify("URL")).isEqualTo("url");
 	}
 }

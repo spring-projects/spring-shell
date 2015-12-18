@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.shell2.legacy;
 
 import java.util.ArrayList;
@@ -14,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -23,8 +40,6 @@ import org.springframework.util.Assert;
  */
 @Component
 public class LegacyParameterResolver implements ParameterResolver {
-
-	public static final Object UNSPECIFIED = new Object();
 
 	@Autowired(required = false)
 	private Collection<Converter<?>> converters = new ArrayList<>();
@@ -61,6 +76,11 @@ public class LegacyParameterResolver implements ParameterResolver {
 		}
 	}
 
+	@Override
+	public ParameterDescription describe(MethodParameter parameter) {
+		throw new UnsupportedOperationException();
+	}
+
 	private Map<String, String> parseOptions(List<String> words) {
 		Map<String, String> values = new HashMap<>();
 		for (int i = 0; i < words.size(); i++) {
@@ -68,7 +88,7 @@ public class LegacyParameterResolver implements ParameterResolver {
 			if (word.startsWith("--")) {
 				String key = word.substring("--".length());
 				// If next word doesn't exist or starts with '--', this is an unary option. Store null
-				String value = i < words.size() - 1 && !words.get(i+1).startsWith("--") ? words.get(++i) : null;
+				String value = i < words.size() - 1 && !words.get(i + 1).startsWith("--") ? words.get(++i) : null;
 				Assert.isTrue(!values.containsKey(key), String.format("Option --%s has already been set", key));
 				values.put(key, value);
 			} // Must be the 'anonymous' option
