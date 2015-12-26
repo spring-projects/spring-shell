@@ -40,8 +40,6 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-import org.jline.utils.AttributedCharSequence;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
@@ -50,7 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.convert.ConversionService;
+import org.springframework.shell2.result.ResultHandlers;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
@@ -61,16 +59,17 @@ import org.springframework.util.ReflectionUtils;
 public class JLineShell implements Shell {
 
 	@Autowired
-	private ApplicationContext applicationContext;
+	private ResultHandlers resultHandlers;
 
 	@Autowired
-	private ConversionService conversionService;
-
-	private Map<String, Object> commandBeans;
+	private ApplicationContext applicationContext;
 
 	private Map<String, MethodTarget> methodTargets = new HashMap<>();
 
 	private LineReader lineReader;
+
+	@Autowired
+	private Terminal terminal;
 
 	@Autowired
 	private List<ParameterResolver> parameterResolvers = new ArrayList<>();
@@ -86,7 +85,6 @@ public class JLineShell implements Shell {
 			methodTargets.putAll(resolver.resolve(applicationContext));
 		}
 
-		Terminal terminal = TerminalBuilder.builder().build();
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 				.terminal(terminal)
 				.appName("Foo")
@@ -189,12 +187,7 @@ public class JLineShell implements Shell {
 					result = e;
 				}
 
-				if (result instanceof AttributedCharSequence) {
-					System.out.println(((AttributedCharSequence) result).toAnsi(lineReader.getTerminal()));
-				}
-				else {
-					System.out.println(String.valueOf(result));
-				}
+				resultHandlers.handleResult(result);
 
 			}
 			else {
@@ -202,4 +195,5 @@ public class JLineShell implements Shell {
 			}
 		}
 	}
+
 }
