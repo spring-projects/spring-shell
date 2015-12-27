@@ -38,7 +38,10 @@ public class ResultHandlers {
 
 	@SuppressWarnings("unchecked")
 	public void handleResult(Object result) {
-		Class<?> clazz = result == null ? null : result.getClass();
+		if (result == null) { // void methods
+			return;
+		}
+		Class<?> clazz = result.getClass();
 		ResultHandler handler = getResultHandler(clazz);
 		handler.handleResult(result);
 	}
