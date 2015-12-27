@@ -16,14 +16,16 @@
 
 package org.springframework.shell2.jcommander;
 
-import org.junit.Test;
-import org.springframework.core.MethodParameter;
-import org.springframework.util.ReflectionUtils;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
+import org.springframework.core.MethodParameter;
+import org.springframework.shell2.Utils;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Created by ericbottard on 15/12/15.
@@ -36,19 +38,19 @@ public class JCommanderParameterResolverTest {
 
 	@Test
 	public void testSupportsJCommanderPojos() throws Exception {
-		assertThat(resolver.supports(new MethodParameter(COMMAND_METHOD, 0))).isEqualTo(true);
+		assertThat(resolver.supports(Utils.createMethodParameter(COMMAND_METHOD, 0))).isEqualTo(true);
 	}
 
 	@Test
 	public void testDoesNotSupportsNonJCommanderPojos() throws Exception {
 		Method method = ReflectionUtils.findMethod(MyLordCommands.class, "apocalypse", String.class);
 
-		assertThat(resolver.supports(new MethodParameter(method, 0))).isFalse();
+		assertThat(resolver.supports(Utils.createMethodParameter(method, 0))).isFalse();
 	}
 
 	@Test
 	public void testPojoValuesAreCorrectlySet() {
-		MethodParameter methodParameter = new MethodParameter(COMMAND_METHOD, 0);
+		MethodParameter methodParameter = Utils.createMethodParameter(COMMAND_METHOD, 0);
 
 		FieldCollins resolved = (FieldCollins) resolver.resolve(methodParameter, asList("--name foo -level 2 something-else yet-something-else".split(" ")));
 

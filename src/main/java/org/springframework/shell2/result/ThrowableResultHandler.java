@@ -31,7 +31,7 @@ public class ThrowableResultHandler implements ResultHandler<Throwable> {
 
 	@Override
 	public void handleResult(Throwable result) {
-		System.out.println(new AttributedString(result.getMessage(),
+		System.out.println(new AttributedString(result.toString(),
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
 	}
 }

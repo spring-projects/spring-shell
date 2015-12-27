@@ -17,18 +17,18 @@
 package org.springframework.shell2.commands;
 
 import org.springframework.shell2.ExitRequest;
-import org.springframework.shell2.ShellComponent;
-import org.springframework.shell2.ShellMethod;
+import org.springframework.shell2.standard.ShellComponent;
+import org.springframework.shell2.standard.ShellMethod;
 
 /**
  * A command that terminates the running shell.
  *
  * @author Eric Bottard
  */
-@ShellComponent("")
+@ShellComponent
 public class Quit {
 
-	@ShellMethod(help = "Exit the shell")
+	@ShellMethod(help = "Exit the shell.", value = {"quit", "exit"})
 	public void quit() {
 		throw new ExitRequest();
 	}

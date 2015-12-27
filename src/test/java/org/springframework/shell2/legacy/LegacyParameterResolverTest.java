@@ -16,28 +16,27 @@
 
 package org.springframework.shell2.legacy;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.shell2.legacy.LegacyCommands.REGISTER_METHOD;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.converters.BooleanConverter;
 import org.springframework.shell.converters.EnumConverter;
 import org.springframework.shell.converters.StringConverter;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell2.ParameterResolver;
+import org.springframework.shell2.Utils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.lang.reflect.Method;
-
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.shell2.legacy.LegacyCommands.REGISTER_METHOD;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = LegacyParameterResolverTest.Config.class)
@@ -56,7 +55,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void supportsParameterAnnotatedWithCliOption() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, NAME_OR_ANONYMOUS);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, NAME_OR_ANONYMOUS);
 
 		boolean result = parameterResolver.supports(methodParameter);
 
@@ -65,7 +64,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void resolvesParameterAnnotatedWithCliOption() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, NAME_OR_ANONYMOUS);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, NAME_OR_ANONYMOUS);
 
 		Object result = resolve(methodParameter, "--foo bar --name baz --qix bux");
 
@@ -74,7 +73,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void resolvesAnonymousParameterAnnotatedWithCliOption() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, NAME_OR_ANONYMOUS);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, NAME_OR_ANONYMOUS);
 
 		Object result = resolve(methodParameter, "--foo bar baz --qix bux");
 		assertThat(result).isEqualTo("baz");
@@ -86,7 +85,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void usesLegacyConverters() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, TYPE);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, TYPE);
 
 		Object result = resolve(methodParameter, "--foo bar --name baz --qix bux --type processor");
 
@@ -95,7 +94,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testUnspecifiedDefaultValue() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, FORCE);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, FORCE);
 
 		Object result = resolve(methodParameter, "--foo bar --name baz --qix bux");
 
@@ -104,7 +103,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testSpecifiedDefaultValue() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, FORCE);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, FORCE);
 
 		assertThat(resolve(methodParameter, "--force --foo bar --name baz --qix bux")).isEqualTo(true);
 		assertThat(resolve(methodParameter, "--foo bar --name baz --qix bux --force")).isEqualTo(true);
@@ -112,7 +111,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testParameterNotFound() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, COORDINATES);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, COORDINATES);
 
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("Could not find parameter values for [--coordinates, --coords] in [--force, --foo, bar, --name, baz, --qix, bux]");
@@ -121,7 +120,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testParameterFoundWithSameNameTooManyTimes() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(REGISTER_METHOD, COORDINATES);
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, COORDINATES);
 
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("Option --coordinates has already been set");
@@ -130,7 +129,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testNoConverterFound() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.SUM_METHOD, 0);
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SUM_METHOD, 0);
 
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("No converter found for --v1 from '1' to type int");
@@ -139,7 +138,7 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testNoConverterFoundForUnspecifiedValue() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.SUM_METHOD, 0);
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SUM_METHOD, 0);
 
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("No converter found for --v1 from '38' to type int");
@@ -148,17 +147,11 @@ public class LegacyParameterResolverTest {
 
 	@Test
 	public void testNoConverterFoundForSpecifiedValue() throws Exception {
-		MethodParameter methodParameter = buildMethodParameter(LegacyCommands.SUM_METHOD, 1);
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SUM_METHOD, 1);
 
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("No converter found for --v2 from '42' to type int");
 		resolve(methodParameter, "--v1 1 --v2");
-	}
-
-	private MethodParameter buildMethodParameter(Method method, int index) {
-		MethodParameter methodParameter = new MethodParameter(method, index);
-		methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
-		return methodParameter;
 	}
 
 	private Object resolve(MethodParameter methodParameter, String command) {

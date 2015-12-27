@@ -14,12 +14,28 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2.legacy;
+package org.springframework.shell2.commands;
+
+import org.jline.terminal.Terminal;
+import org.jline.utils.InfoCmp;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell2.standard.ShellComponent;
+import org.springframework.shell2.standard.ShellMethod;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * ANSI console related commands.
+ *
+ * @author Eric Bottard
  */
-public enum ArtifactType {
+@ShellComponent
+public class Console {
 
-	source, processor, sink, task
+	@Autowired
+	private Terminal terminal;
+
+	@ShellMethod(help = "Clear the shell screen.")
+	public void clear() {
+		terminal.puts(InfoCmp.Capability.clear_screen);
+	}
 }

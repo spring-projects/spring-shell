@@ -18,6 +18,7 @@ package org.springframework.shell2;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +47,6 @@ import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell2.result.ResultHandlers;
 import org.springframework.stereotype.Component;
@@ -74,6 +74,11 @@ public class JLineShell implements Shell {
 	@Autowired
 	private List<ParameterResolver> parameterResolvers = new ArrayList<>();
 
+	/**
+	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid value.
+	 */
+	private static final Object UNRESOLVED = new Object();
+
 	@Override
 	public Map<String, MethodTarget> listCommands() {
 		return methodTargets;
@@ -88,14 +93,7 @@ public class JLineShell implements Shell {
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 				.terminal(terminal)
 				.appName("Foo")
-				.completer(new Completer() {
-
-					@Override
-					public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
-						candidates.add(new Candidate("value", "displayed value", "v", "the description", null, null, false));
-						candidates.add(new Candidate("value1", "displayed value1", "v", "the description of v1", null, null, false));
-					}
-				})
+				.completer(new CompleterAdapter())
 				.highlighter(new Highlighter() {
 
 					@Override
@@ -125,7 +123,7 @@ public class JLineShell implements Shell {
 
 	public void run() throws IOException {
 		while (true) {
-			lineReader.readLine("shell:>");
+			lineReader.readLine(new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW)).toAnsi(terminal));
 			String separator = "";
 			StringBuilder candidateCommand = new StringBuilder();
 			MethodTarget methodTarget = null;
@@ -146,40 +144,19 @@ public class JLineShell implements Shell {
 			// TODO investigate trailing empty string in e.g. "help 'WTF 2'"
 			words = words.stream().filter(w -> w.length() > 0).collect(Collectors.toList());
 			if (methodTarget != null) {
-				Parameter[] parameters = methodTarget.getMethod().getParameters();
-				Object[] rawArgs = new Object[parameters.length];
-				Object unresolved = new Object();
-				Arrays.fill(rawArgs, unresolved);
-				for (int i = 0; i < parameters.length; i++) {
-					MethodParameter methodParameter = new MethodParameter(methodTarget.getMethod(), i);
-					methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
-					for (ParameterResolver resolver : parameterResolvers) {
-						if (resolver.supports(methodParameter)) {
-							rawArgs[i] = resolver.resolve(methodParameter, words.subList(wordsUsedForCommandKey, words.size()));
-							break;
-						}
-					}
-					if (rawArgs[i] == unresolved) {
-						throw new IllegalStateException("Could not resolve " + methodParameter);
-					}
-				}
+				List<String> wordsForArgs = words.subList(wordsUsedForCommandKey, words.size());
+				Method method = methodTarget.getMethod();
 
-				ExecutableValidator executableValidator = Validation
-						.buildDefaultValidatorFactory().getValidator().forExecutables();
-				Set<ConstraintViolation<Object>> constraintViolations = executableValidator.validateParameters(methodTarget.getBean(),
-						methodTarget.getMethod(),
-						rawArgs);
-				if (constraintViolations.size() > 0) {
-					System.out.println(constraintViolations);
-				}
 
 				Object result = null;
 				try {
-					result = ReflectionUtils.invokeMethod(methodTarget.getMethod(), methodTarget.getBean(), rawArgs);
+					Object[] args = resolveArgs(method, wordsForArgs);
+					validateArgs(args, methodTarget);
+					result = ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
 				}
 				catch (ExitRequest e) {
 					if (applicationContext instanceof Closeable) {
-						((Closeable)applicationContext).close();
+						((Closeable) applicationContext).close();
 						System.exit(e.status());
 					}
 				}
@@ -196,4 +173,113 @@ public class JLineShell implements Shell {
 		}
 	}
 
+	private void validateArgs(Object[] args, MethodTarget methodTarget) {
+		for (int i = 0; i < args.length; i++) {
+			if (args[i] == UNRESOLVED) {
+				MethodParameter methodParameter = Utils.createMethodParameter(methodTarget.getMethod(), i);
+				throw new IllegalStateException("Could not resolve " + methodParameter);
+			}
+		}
+		ExecutableValidator executableValidator = Validation
+				.buildDefaultValidatorFactory().getValidator().forExecutables();
+		Set<ConstraintViolation<Object>> constraintViolations = executableValidator.validateParameters(methodTarget.getBean(),
+				methodTarget.getMethod(),
+				args);
+		if (constraintViolations.size() > 0) {
+			System.out.println(constraintViolations);
+		}
+	}
+
+	/**
+	 * Use all known {@link ParameterResolver}s to try to compute a value for each parameter of the method to
+	 * invoke.
+	 * @param method       the method for which parameters should be computed
+	 * @param wordsForArgs the list of 'words' that should be converted to parameter values.
+	 *                     May include markers for passing parameters 'by name'
+	 * @return an array containing resolved parameter values, or {@link #UNRESOLVED} for parameters that could not be
+	 * resolved
+	 */
+	private Object[] resolveArgs(Method method, List<String> wordsForArgs) {
+		Parameter[] parameters = method.getParameters();
+		Object[] args = new Object[parameters.length];
+		Arrays.fill(args, UNRESOLVED);
+		for (int i = 0; i < parameters.length; i++) {
+			MethodParameter methodParameter = Utils.createMethodParameter(method, i);
+			args[i] = findResolver(methodParameter).resolve(methodParameter, wordsForArgs);
+		}
+		return args;
+	}
+
+	private ParameterResolver findResolver(MethodParameter parameter) {
+		return parameterResolvers.stream()
+				.filter(resolver -> resolver.supports(parameter))
+				.findFirst()
+				.orElseThrow(() -> new RuntimeException("resolver not found"));
+	}
+
+	/**
+	 * A bridge between JLine's {@link Completer} contract and our own.
+	 * @author Eric Bottard
+	 */
+	private class CompleterAdapter implements Completer {
+
+		@Override
+		public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
+			String prefix = reader.getBuffer().upToCursor();
+
+			String best = methodTargets.keySet().stream()
+					.filter(c -> prefix.startsWith(c))
+					.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
+			if (best.equals("")) { // no command found
+				List<Candidate> result = commandsStartingWith(prefix);
+				candidates.addAll(result);
+				return;
+			} // trying to complete args for command <best>,
+			// or trying to complete command whose name starts with <best> (which also happens to be a command)
+			else if (prefix.equals(best)) {
+				candidates.addAll(commandsStartingWith(best));
+				return;
+			} // valid command (<best>) followed by a suffix (but not necessarily [<space> args*])
+			else if (!prefix.startsWith(best + " ")) {
+				// must be an invalid command, can't do anything
+				return;
+			}
+
+			// Try to complete arguments
+			MethodTarget methodTarget = methodTargets.get(best);
+			List<String> words = line.words();
+			int noOfWordsInCommand = best.split(" ").length;
+			List<String> rest = words.subList(noOfWordsInCommand, words.size())
+					.stream()
+					.filter(w -> !w.isEmpty())
+					.collect(Collectors.toList());
+			CompletionContext context = new CompletionContext(rest, line.wordIndex() - noOfWordsInCommand, line.wordCursor());
+			Method method = methodTarget.getMethod();
+			for (int i = 0; i < method.getParameterCount(); i++) {
+				MethodParameter methodParameter = Utils.createMethodParameter(method, i);
+				ParameterResolver resolver = findResolver(methodParameter);
+				resolver.complete(methodParameter, context)
+						.stream()
+						.map(completion -> new Candidate(
+										completion.value(),
+										completion.displayText(),
+										"Comp for parameter " + resolver.describe(methodParameter).toString(),
+										resolver.describe(methodParameter).help(),
+										null, null, true)
+						)
+						.forEach(candidates::add);
+			}
+		}
+
+		private List<Candidate> commandsStartingWith(String prefix) {
+			return methodTargets.entrySet().stream()
+					.filter(e -> e.getKey().startsWith(prefix)) // find commands that start with our buffer prefix
+					.map(e -> toCandidate(e.getKey(), e.getValue()))
+					.collect(Collectors.toList());
+		}
+
+		private Candidate toCandidate(String command, MethodTarget methodTarget) {
+			return new Candidate(command, command, "Available commands", methodTarget.getHelp(), null, null, true);
+		}
+	}
 }

@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell2.CompletionContext;
+import org.springframework.shell2.CompletionProposal;
 import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
 import org.springframework.stereotype.Component;
@@ -79,6 +81,11 @@ public class LegacyParameterResolver implements ParameterResolver {
 	@Override
 	public ParameterDescription describe(MethodParameter parameter) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext context) {
+		return null;
 	}
 
 	private Map<String, String> parseOptions(List<String> words) {

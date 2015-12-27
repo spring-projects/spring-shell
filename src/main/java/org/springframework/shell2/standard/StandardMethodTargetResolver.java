@@ -14,40 +14,43 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2.legacy;
+package org.springframework.shell2.standard;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.shell.core.CommandMarker;
-import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell2.MethodTarget;
 import org.springframework.shell2.MethodTargetResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * A {@link MethodTargetResolver} that discovers methods annotated with {@link CliCommand} on beans
- * implementing the {@link CommandMarker} marker interface.
+ * The standard implementation of {@link MethodTargetResolver} for new shell applications,
+ * resolves methods annotated with {@link ShellMethod} on {@link ShellComponent} beans.
+ *
  * @author Eric Bottard
  * @author Florent Biville
  */
 @Component
-public class LegacyMethodTargetResolver implements MethodTargetResolver {
+public class StandardMethodTargetResolver implements MethodTargetResolver {
 
 	@Override
-	public Map<String, MethodTarget> resolve(ApplicationContext context) {
+	public Map<String, MethodTarget> resolve(ApplicationContext applicationContext) {
 		Map<String, MethodTarget> methodTargets = new HashMap<>();
-		Map<String, CommandMarker> beans = context.getBeansOfType(CommandMarker.class);
-		for (Object bean : beans.values()) {
+		Map<String, Object> commandBeans = applicationContext.getBeansWithAnnotation(ShellComponent.class);
+		for (Object bean : commandBeans.values()) {
 			Class<?> clazz = bean.getClass();
 			ReflectionUtils.doWithMethods(clazz, method -> {
-				CliCommand cliCommand = method.getAnnotation(CliCommand.class);
-				for (String key : cliCommand.value()) {
-					methodTargets.put(key, new MethodTarget(method, bean, cliCommand.help()));
+				ShellMethod shellMapping = method.getAnnotation(ShellMethod.class);
+				String[] keys = shellMapping.value();
+				if (keys.length == 0) {
+					keys = new String[] {method.getName()};
 				}
-			}, method -> method.getAnnotation(CliCommand.class) != null);
+				for (String key : keys) {
+					methodTargets.put(key, new MethodTarget(method, bean, shellMapping.help()));
+				}
+			}, method -> method.getAnnotation(ShellMethod.class) != null);
 		}
 		return methodTargets;
 	}

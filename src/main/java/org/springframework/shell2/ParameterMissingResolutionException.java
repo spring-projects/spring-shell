@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2.result;
+package org.springframework.shell2;
 
 /**
- * Implementations know how to deal with results of method invocations, whether normal results or exceptions thrown.
+ * Thrown by a {@link ParameterResolver} when a parameter that should have been set has been left out altogether.
  *
  * @author Eric Bottard
  */
-public interface ResultHandler<T> {
+public class ParameterMissingResolutionException extends RuntimeException {
 
-	/**
-	 * Deal with some method execution result, whether it was the normal return value, or some kind
-	 * of {@link Throwable}.
-	 */
-	void handleResult(T result);
+	private final ParameterDescription parameterDescription;
 
+	public ParameterMissingResolutionException(ParameterDescription parameterDescription) {
+		this.parameterDescription = parameterDescription;
+	}
+
+	public ParameterDescription getParameterDescription() {
+		return parameterDescription;
+	}
+
+	@Override
+	public String getMessage() {
+		return String.format("Parameter '%s' should be specified", parameterDescription);
+	}
 }

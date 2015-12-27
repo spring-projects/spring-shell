@@ -31,6 +31,11 @@ import org.springframework.core.MethodParameter;
 public class ParameterDescription {
 
 	/**
+	 * The original method parameter this is describing.
+	 */
+	private final MethodParameter parameter;
+
+	/**
 	 * A string representation of the type of the parameter.
 	 */
 	private final String type;
@@ -61,17 +66,15 @@ public class ParameterDescription {
 	 */
 	private String help = "";
 
-	public ParameterDescription(String type) {
+	public ParameterDescription(MethodParameter parameter, String type) {
+		this.parameter = parameter;
 		this.type = type;
 		this.formal = type;
 	}
 
-	public static ParameterDescription ofType(String type) {
-		return new ParameterDescription(Utils.unCamelify(type));
-	}
-
-	public static ParameterDescription ofType(Class<?> type) {
-		return ofType(type.getSimpleName());
+	public static ParameterDescription outOf(MethodParameter parameter) {
+		Class<?> type = parameter.getParameterType();
+		return new ParameterDescription(parameter, Utils.unCamelify(type.getSimpleName()));
 	}
 
 	public ParameterDescription help(String help) {
@@ -121,5 +124,14 @@ public class ParameterDescription {
 	public ParameterDescription formal(String formal) {
 		this.formal = formal;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s %s", keys().iterator().next(), formal());
+	}
+
+	public MethodParameter parameter() {
+		return parameter;
 	}
 }

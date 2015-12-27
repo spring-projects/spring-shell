@@ -31,4 +31,6 @@ public interface ParameterResolver {
 
 	ParameterDescription describe(MethodParameter parameter);
 
+	List<CompletionProposal> complete(MethodParameter parameter, CompletionContext context);
+
 }

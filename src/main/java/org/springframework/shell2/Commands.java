@@ -14,12 +14,34 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2.legacy;
+package org.springframework.shell2;
+
+import org.springframework.shell2.standard.ShellComponent;
+import org.springframework.shell2.standard.ShellMethod;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * Created by ericbottard on 27/12/15.
  */
-public enum ArtifactType {
+@ShellComponent("")
+public class Commands {
 
-	source, processor, sink, task
+	@ShellMethod(help = "it's cool")
+	public void foo(String bar) {
+
+	}
+
+	@ShellMethod(help = "it's better")
+	public void foobar() {
+
+	}
+
+	@ShellMethod(help = "something else")
+	public void somethingElse() {
+
+	}
+
+	@ShellMethod(help = "add stuff")
+	public int add(int ahbahdisdonc, int b, int c) {
+		return ahbahdisdonc + b + c;
+	}
 }

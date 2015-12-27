@@ -16,6 +16,14 @@
 
 package org.springframework.shell2;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+
+import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.MethodParameter;
+
 /**
  * Some text utilities.
  *
@@ -38,6 +46,34 @@ public class Utils {
 			result.append(Character.toLowerCase(ch));
 		}
 		return result.toString();
+	}
+
+	/**
+	 * Convert from JDK {@link Parameter} to Spring {@link MethodParameter}.
+	 */
+	public static MethodParameter createMethodParameter(Parameter parameter) {
+		Parameter[] parameters = parameter.getDeclaringExecutable().getParameters();
+		for (int i = 0; i < parameters.length; i++) {
+			if (parameters[i].equals(parameter)) {
+				return createMethodParameter(parameter.getDeclaringExecutable(), i);
+			}
+		}
+		throw new AssertionError("Can't happen");
+	}
+	/**
+	 * Return a properly initialized MethodParameter for the given executable and index.
+	 */
+	public static MethodParameter createMethodParameter(Executable executable, int i) {
+		MethodParameter methodParameter;
+		if (executable instanceof Method) {
+			methodParameter = new MethodParameter((Method) executable, i);
+		} else if (executable instanceof Constructor){
+			methodParameter = new MethodParameter((Constructor) executable, i);
+		} else {
+			throw new IllegalArgumentException("Unsupported Executable: " + executable);
+		}
+		methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
+		return methodParameter;
 	}
 
 }

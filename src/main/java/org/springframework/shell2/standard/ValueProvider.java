@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2.legacy;
+package org.springframework.shell2.standard;
+
+import java.util.List;
+
+import org.springframework.core.MethodParameter;
+import org.springframework.shell2.CompletionContext;
+import org.springframework.shell2.CompletionProposal;
 
 /**
- * Created by ericbottard on 09/12/15.
  */
-public enum ArtifactType {
+public interface ValueProvider {
 
-	source, processor, sink, task
+	boolean supports(MethodParameter parameter, CompletionContext completionContext);
+
+	List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints);
 }
