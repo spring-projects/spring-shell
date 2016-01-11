@@ -1,0 +1,111 @@
+---
+# The name of your project
+title: Spring Shell
+
+badges:
+
+  # Customize your project's badges. Delete any entries that do not apply.
+  custom:
+    - name: Source (GitHub)
+      url:  https://github.com/spring-projects/spring-shell
+      icon: github
+
+    - name: Issues (JIRA)
+      url:  https://jira.spring.io/browse/SHL
+      icon: tracking
+
+    - name: CI (Bamboo)
+      url:  https://build.spring.io/browse/SPRINGSHELL
+      icon: ci
+
+    - name: StackOverflow
+      url:  http://stackoverflow.com/questions/tagged/spring-shell
+      icon: stackoverflow
+
+---
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+{% capture billboard_description %}
+
+The Spring Shell project provides an interactive shell that allows you to 
+plugin your own custom commands using a Spring based programming model.
+
+{% endcapture %}
+
+{% capture main_content %}
+
+## Introduction
+
+Users of the Spring Shell project can easily build a full featured shell ( *aka* command line)
+application by depending on the Spring Shell jar and adding their own commands (which come as
+methods on spring beans). Creating a command line application can be useful *e.g.* to
+interact with your project's REST API, or to work with local file content.
+
+## Features
+Spring Shell's features include
+
+* A simple, annotation driven, programming model to contribute custom commands
+* Use of Spring's classpath scanning functionality as the basis for a command plugin strategy and command development
+* Tab completion, colorization, and script execution
+* Customization of command prompt, banner, shell history file name
+* Dynamic enablement of commands based on domain specific criteria
+* Already built-in commands, such as clear screen, help, exit, *etc.*
+
+
+<span id="quick-start"></span>
+## Quick Start
+
+{% include download_widget.md %}
+
+Then to create a simple command that could be invoked as
+
+```
+shell:>translate "hello world!" --from en_US --to fr_FR
+bonjour monde!
+```
+
+assuming you'd have access to some kind of translation service that worked with Locales:
+
+```java
+package foo;
+
+import foo;
+
+@CommandMarker
+public class TranslationCommands {
+
+    private final TranslationService service;
+
+    @Autowired
+    public TranslationCommands(TranslationService service) {
+      this.service = service;
+    }
+
+    @CliCommand(value = "translate", help = "translate text from one language to another")
+    public String translate(@CliOption(key = {"", "text"}) String text,
+      @CliOption(key = "from", unspecifiedDefaultValue = "en_US") Locale from,
+      @CliOption(key = "to") Locate to
+    ) {
+      // Check args, etc.
+
+      // invoke service
+      return service.translate(text, from, to);
+    }
+}
+```
+
+{% endcapture %}
+
+{% capture related_resources %}
+
+### Sample &amp; Related Projects
+
+* [Hello World shell](https://github.com/spring-projects/spring-shell/tree/master/samples/helloworld)
+* [Spring Cloud Dataflow Shell](https://github.com/spring-cloud/spring-cloud-dataflow/tree/master/spring-cloud-dataflow-shell)
+
+{% endcapture %}
+
+
+{% include project_page.html %}
+</html>
