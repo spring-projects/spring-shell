@@ -1017,6 +1017,9 @@ public class SimpleParser implements Parser {
 						for (Annotation a : annotations) {
 							if (a instanceof CliOption) {
 								cliOption = (CliOption) a;
+								if (cliOption.hidden()) {
+									continue;
+								}
 
 								for (String key : cliOption.key()) {
 									if ("".equals(key)) {
