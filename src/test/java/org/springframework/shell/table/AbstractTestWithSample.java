@@ -42,7 +42,7 @@ public class AbstractTestWithSample {
 				this.getClass().getSimpleName(), testName.getMethodName());
 		InputStream stream = TableTest.class.getResourceAsStream(sampleName);
 		Assert.notNull(stream, "Can't find expected rendering result at " + sampleName);
-		return FileCopyUtils.copyToString(new InputStreamReader(stream)).replace("&", "");
+		return FileCopyUtils.copyToString(new InputStreamReader(stream, "UTF-8")).replace("&", "");
 	}
 
 	/**

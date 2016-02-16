@@ -38,6 +38,8 @@ if (project.hasProperty('platformVersion')) {
 
 [compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:-serial", "-Xlint:unchecked", "-Xlint:rawtypes"]
 
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
 dependencies {
     compile "org.springframework:spring-core:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
@@ -62,6 +64,7 @@ javadoc {
   ext.tmpDir = file("${buildDir}/api-work")
   
   configure(options) {
+      encoding  = "UTF-8"
       stylesheetFile = file("${srcDir}/spring-javadoc.css")
       overview = "${srcDir}/overview.html"
       docFilesSubDirs = true
