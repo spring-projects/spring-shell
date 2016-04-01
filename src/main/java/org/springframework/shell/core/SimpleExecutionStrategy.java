@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.core;
 
+import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 import org.springframework.shell.event.ParseResult;
@@ -29,6 +30,7 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Mark Pollack
  * @author Costin Leau
+ * @author Oliver Gierke
  */
 public class SimpleExecutionStrategy implements ExecutionStrategy {
 
@@ -61,7 +63,9 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 
 	private Object invoke(ParseResult parseResult) {
 		try {
-			return ReflectionUtils.invokeMethod(parseResult.getMethod(), parseResult.getInstance(), parseResult.getArguments());
+			Method method = parseResult.getMethod();
+			ReflectionUtils.makeAccessible(method);
+			return ReflectionUtils.invokeMethod(method, parseResult.getInstance(), parseResult.getArguments());
 		} catch (Throwable th) {
 			logger.severe("Command failed " + th);
 			return handleThrowable(th);

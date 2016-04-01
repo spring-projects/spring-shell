@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 
 /**
  * @author Costin Leau
+ * @author Oliver Gierke
  */
 public class SimpleExecutionStrategyTest {
 
@@ -57,6 +58,11 @@ public class SimpleExecutionStrategyTest {
 		}
 	}
 
+	static class PackageProtectedTarget {
+
+		void someMethod() {}
+	}
+
 	private SimpleExecutionStrategy execution = new SimpleExecutionStrategy();
 
 	@Test
@@ -82,5 +88,17 @@ public class SimpleExecutionStrategyTest {
 		assertEquals("two", execution.execute(given));
 		assertSame(given, target.before);
 		assertSame(redirect, target.after);
+	}
+	
+	/**
+	 * @see SHL-189
+	 */
+	@Test
+	public void invokesMethodsOnPackageProtectedTypes() {
+		
+		Method method = ReflectionUtils.findMethod(PackageProtectedTarget.class, "someMethod");
+		ParseResult result = new ParseResult(method, new PackageProtectedTarget(), new Object[] {});
+		
+		execution.execute(result);
 	}
 }
