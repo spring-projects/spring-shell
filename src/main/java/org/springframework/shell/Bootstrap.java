@@ -52,7 +52,6 @@ public class Bootstrap {
 	private GenericApplicationContext ctx;
 
 	public static void main(String[] args) throws IOException {
-		sw.start();
 		ExitShellRequest exitShellRequest;
 		try {
 			bootstrap = new Bootstrap(args);
@@ -144,7 +143,7 @@ public class Bootstrap {
 	}
 
 	public ExitShellRequest run() {
-
+		sw.start();
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		// The shell is used
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
