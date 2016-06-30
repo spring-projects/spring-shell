@@ -16,6 +16,9 @@
 package org.springframework.shell;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,17 +40,19 @@ import org.springframework.util.StopWatch;
  * @author Ben Alex (original Roo code)
  * @author Mark Pollack
  * @author David Winterfeldt
+ * @author Robin Howlett
  * 
  */
 public class Bootstrap {
 
-	private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
+	public final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
+	public final static String[] DEFAULT_BASE_PACKAGE = { "org.springframework.shell" };
+	public final static String[] NO_BASE_PACKAGES = null;
 
-	private static Bootstrap bootstrap;
+    protected static StopWatch sw = new StopWatch("Spring Shell");
 
-	private static StopWatch sw = new StopWatch("Spring Shell");
-
-	private static CommandLine commandLine;
+    private static Bootstrap bootstrap;
+    private static CommandLine commandLine;
 
 	private GenericApplicationContext ctx;
 
@@ -67,16 +72,20 @@ public class Bootstrap {
 
 		System.exit(exitShellRequest.getExitCode());
 	}
-
+	
 	public Bootstrap() {
-		this(null, CONTEXT_PATH);
+		this(null, CONTEXT_PATH, DEFAULT_BASE_PACKAGE);
 	}
 
 	public Bootstrap(String[] args) throws IOException {
-		this(args, CONTEXT_PATH);
+		this(args, CONTEXT_PATH, DEFAULT_BASE_PACKAGE);
 	}
 
-	public Bootstrap(String[] args, String[] contextPath) {
+	public Bootstrap(String[] args, String[] contextPath) throws IOException {
+		this(args, contextPath, DEFAULT_BASE_PACKAGE);
+	}
+
+	public Bootstrap(String[] args, String[] contextPath, String... basePackages) {
 		try {
 			commandLine = SimpleShellCommandLineOptions.parseCommandLine(args);
 		}
@@ -87,16 +96,26 @@ public class Bootstrap {
 		ctx = new GenericApplicationContext();
 		ctx.registerShutdownHook();
 		configureApplicationContext(ctx);
+		
 		// built-in commands and converters
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(ctx);
-		if (commandLine.getDisableInternalCommands()) {
-			scanner.scan("org.springframework.shell.converters", "org.springframework.shell.plugin.support");
+		
+		List<String> packagesToScan = new ArrayList<String>();
+		
+		if (!commandLine.getDisableInternalCommands()) {
+			packagesToScan.add("org.springframework.shell.commands");
 		}
-		else {
-			scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters",
-					"org.springframework.shell.plugin.support");
+		
+		packagesToScan.add("org.springframework.shell.converters");
+		packagesToScan.add("org.springframework.shell.plugin.support");
+			
+		if (basePackages != null) {
+			packagesToScan.addAll(Arrays.asList(basePackages));
 		}
-		// user contributed commands
+		
+		scanner.scan(packagesToScan.toArray(new String[packagesToScan.size()]));
+		
+		// user contributed commands		
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(ctx);
 		reader.loadBeanDefinitions(contextPath);
 		ctx.refresh();
