@@ -27,6 +27,7 @@ public class CommandLine {
 	private int historySize;
 	private String[] shellCommandsToExecute;
 	private boolean disableInternalCommands;
+	private boolean disableColor;
 
 	/**
 	 * Construct a new CommandLine  
@@ -47,10 +48,24 @@ public class CommandLine {
 	 * @param disableInternalCommands if true, do not load the built-in shell commands
 	 */
 	public CommandLine(String[] args, int historySize, String[] shellCommandsToExecute, boolean disableInternalCommands) {
+		this(args, historySize, shellCommandsToExecute, false, false);
+	}
+
+	/**
+	 * Construct a new CommandLine
+	 * @param args an array of strings from main(String[] args)
+	 * @param historySize the size of this history buffer
+	 * @param shellCommandsToExecute semi-colon delimited list of commands for the shell to execute
+	 * @param disableInternalCommands if true, do not load the built-in shell commands
+	 * @param disableColor if true, disables ANSI colorization
+	 */
+	public CommandLine(String[] args, int historySize, String[] shellCommandsToExecute, boolean disableInternalCommands,
+					   boolean disableColor) {
 		this.args = args;
 		this.historySize = historySize;
 		this.shellCommandsToExecute = shellCommandsToExecute;
 		this.disableInternalCommands = disableInternalCommands;
+		this.disableColor = disableColor;
 	}
 
 	/**
@@ -66,6 +81,13 @@ public class CommandLine {
 	 */
 	public int getHistorySize() {
 		return historySize;
+	}
+
+	/**
+	 * @return the disableColor
+	 */
+	public boolean isDisableColor() {
+		return disableColor;
 	}
 
 	/**

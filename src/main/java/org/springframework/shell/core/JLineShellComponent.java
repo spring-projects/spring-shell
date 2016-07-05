@@ -108,6 +108,7 @@ public class JLineShellComponent extends JLineShell implements SmartLifecycle, A
 		}
 		
 		setHistorySize(commandLine.getHistorySize());
+		setDisableColor(commandLine.isDisableColor());
 		if (commandLine.getShellCommandsToExecute() != null) {
 			setPrintBanner(false);
 		}
