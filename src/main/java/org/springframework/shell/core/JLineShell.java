@@ -694,11 +694,10 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	}
 
 	/**
-	 *
 	 * @param disableColor if true, disables colorization
-     */
+         */
 	public void setDisableColor(boolean disableColor) {
-		this.disableColor = true;
+		this.disableColor = disableColor;
 	}
 
 	private static boolean isAppleTerminal() {
