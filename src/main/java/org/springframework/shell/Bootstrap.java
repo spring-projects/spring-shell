@@ -43,19 +43,14 @@ public class Bootstrap {
 
 	private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
 
-	private static Bootstrap bootstrap;
-
-	private static StopWatch sw = new StopWatch("Spring Shell");
-
-	private static CommandLine commandLine;
+	private CommandLine commandLine;
 
 	private GenericApplicationContext ctx;
 
 	public static void main(String[] args) throws IOException {
-		sw.start();
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(args);
+			Bootstrap bootstrap = new Bootstrap(args);
 			exitShellRequest = bootstrap.run();
 		}
 		catch (RuntimeException t) {
@@ -144,7 +139,7 @@ public class Bootstrap {
 	}
 
 	public ExitShellRequest run() {
-
+		StopWatch sw = new StopWatch("Spring Shell");
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		// The shell is used
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
