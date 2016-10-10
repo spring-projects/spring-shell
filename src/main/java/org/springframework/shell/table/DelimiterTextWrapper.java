@@ -46,7 +46,9 @@ public class DelimiterTextWrapper implements TextWrapper {
 				result.add(String.format("%-" + columnWidth + "s", toAdd));
 				line = line.substring(split == -1 ? columnWidth : split + 1);
 			}
-			result.add(String.format("%-" + columnWidth + "s", line)); // right pad if necessary
+			if (columnWidth > 0) {
+				result.add(String.format("%-" + columnWidth + "s", line)); // right pad if necessary
+			}
 		}
 		return result.toArray(new String[result.size()]);
 	}
