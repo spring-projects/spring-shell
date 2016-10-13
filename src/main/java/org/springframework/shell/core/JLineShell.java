@@ -49,6 +49,8 @@ import org.fusesource.jansi.Ansi.Attribute;
 import org.fusesource.jansi.Ansi.Color;
 import org.fusesource.jansi.Ansi.Erase;
 import org.fusesource.jansi.AnsiConsole;
+import org.springframework.shell.config.ApplicationContextProvider;
+import org.springframework.shell.config.JLineConfig;
 import org.springframework.shell.event.ShellStatus;
 import org.springframework.shell.event.ShellStatus.Status;
 import org.springframework.shell.event.ShellStatusListener;
@@ -124,6 +126,11 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		reader.setBellEnabled(true);
 		if (Boolean.getBoolean("jline.nobell")) {
 			reader.setBellEnabled(false);
+		}
+
+		final JLineConfig config = ApplicationContextProvider.getApplicationContext().getBean(JLineConfig.class);
+		if (config.isHandleUserInterrupt()){
+			reader.setHandleUserInterrupt(true);
 		}
 
 		// reader.setDebug(new PrintWriter(new FileWriter("writer.debug", true)));
@@ -539,6 +546,9 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		}
 		catch (IOException ioe) {
 			throw new IllegalStateException("Shell line reading failure", ioe);
+		}
+		catch (UserInterruptException e){ // only thrown if jline.handleuserinterrupt=true
+			promptLoop();
 		}
 		setShellStatus(Status.SHUTTING_DOWN);
 	}
