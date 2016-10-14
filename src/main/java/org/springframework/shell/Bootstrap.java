@@ -91,6 +91,7 @@ public class Bootstrap {
 			scanner.scan("org.springframework.shell.commands", "org.springframework.shell.converters",
 					"org.springframework.shell.plugin.support");
 		}
+		scanner.scan("org.springframework.shell.config");
 		// user contributed commands
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(ctx);
 		reader.loadBeanDefinitions(contextPath);
@@ -140,6 +141,8 @@ public class Bootstrap {
 
 	public ExitShellRequest run() {
 		StopWatch sw = new StopWatch("Spring Shell");
+		sw.start();
+
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		// The shell is used
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
