@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 
 import jline.WindowsTerminal;
 import jline.console.ConsoleReader;
+import jline.console.UserInterruptException;
 import jline.console.history.History;
 import jline.console.history.MemoryHistory;
 
