@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 
 import jline.WindowsTerminal;
 import jline.console.ConsoleReader;
+import jline.console.UserInterruptException;
 import jline.console.history.History;
 import jline.console.history.MemoryHistory;
 
@@ -88,7 +89,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	private static final String BEL = "\007";
 
 	// Fields
-	protected ConsoleReader reader;
+	protected volatile ConsoleReader reader;
 
 	private boolean developmentMode = false;
 
@@ -254,6 +255,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 			throw new IllegalStateException("Cannot start console class", ioe);
 		}
 		consoleReader.setExpandEvents(false);
+		consoleReader.setHandleUserInterrupt(true);
 		return consoleReader;
 	}
 
@@ -515,22 +517,25 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	 */
 	public void promptLoop() {
 		setShellStatus(Status.USER_INPUT);
-		String line;
+		String line = null;
 		String prompt = getPromptText();
 
 		try {
-			while (exitShellRequest == null && (reader != null && ((line = reader.readLine()) != null))) {
+			while (exitShellRequest == null) {
+				try {
+					line = reader.readLine();
+				}
+				catch (UserInterruptException e) {
+					if (e.getPartialLine().length() == 0) {
+						exitShellRequest = ExitShellRequest.FATAL_EXIT;
+					}
+				}
 				JLineLogHandler.resetMessageTracking();
 				setShellStatus(Status.USER_INPUT);
 
-				if (!StringUtils.hasText(line)) {
-					//generate prompt if empty line, the prompt maybe showing the time or something else that updates 
-					//independent of the lack of a command to execute.
-					prompt = generatePromptUpdate(prompt);
-					continue;
+				if (StringUtils.hasText(line)) {
+					executeCommand(line);
 				}
-
-				executeCommand(line);
 				//update the prompt after the command has been executed in case an application event listener in the
 				//command changes state in the prompt provider.
 				prompt = generatePromptUpdate(prompt);
