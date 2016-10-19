@@ -106,10 +106,6 @@ public class Bootstrap {
 		annctx.getBeanFactory().registerSingleton("commandLine", commandLine);
 	}
 
-	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class<?> clazz) {
-		createAndRegisterBeanDefinition(annctx, clazz, null);
-	}
-
 	protected void createAndRegisterBeanDefinition(GenericApplicationContext annctx, Class<?> clazz, String name) {
 		RootBeanDefinition rbd = new RootBeanDefinition();
 		rbd.setBeanClass(clazz);
@@ -140,6 +136,7 @@ public class Bootstrap {
 
 	public ExitShellRequest run() {
 		StopWatch sw = new StopWatch("Spring Shell");
+		sw.start();
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		// The shell is used
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);
@@ -162,7 +159,6 @@ public class Bootstrap {
 		}
 		else {
 			shell.start();
-			shell.promptLoop();
 			exitShellRequest = shell.getExitShellRequest();
 			if (exitShellRequest == null) {
 				// shouldn't really happen, but we'll fallback to this anyway
