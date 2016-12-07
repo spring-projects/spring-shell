@@ -55,6 +55,11 @@ public @interface CliOption {
 	boolean mandatory() default false;
 
 	/**
+	 * @return true if this option is hidden from the user (defaults to false)
+	 */
+	boolean hidden() default false;
+	
+	/**
 	 * @return the default value to use if this option is unspecified by the user (defaults to __NULL__, which causes null to
 	 * be presented to any non-primitive parameter)
 	 */
