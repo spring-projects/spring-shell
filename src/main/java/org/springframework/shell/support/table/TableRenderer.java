@@ -16,11 +16,10 @@
 
 package org.springframework.shell.support.table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.base.Splitter;
 
 import org.springframework.shell.support.util.StringUtils;
 
@@ -164,8 +163,7 @@ public final class TableRenderer {
 			for (TableHeader header : table.getHeaders().values()) {
 
 				if (header.getName().length() > header.getWidth()) {
-					Iterable<String> chunks = Splitter.fixedLength(
-							header.getWidth()).split(header.getName());
+					Iterable<String> chunks = split(header.getName(), header.getWidth());
 					int length = headerline.length();
 					boolean first = true;
 					for (String chunk : chunks) {
@@ -205,8 +203,7 @@ public final class TableRenderer {
 					.entrySet()) {
 				String value = row.getValue(entry.getKey());
 				if (value.length() > entry.getValue().getWidth()) {
-					Iterable<String> chunks = Splitter.fixedLength(
-							entry.getValue().getWidth()).split(value);
+					Iterable<String> chunks = split(value, entry.getValue().getWidth());
 					int length = rowLine.length();
 					boolean first = true;
 					for (String chunk : chunks) {
@@ -265,4 +262,13 @@ public final class TableRenderer {
 
 		return headerBorder.toString();
 	}
+
+	private static List<String> split(String in, int length) {
+		List<String> result = new ArrayList<String>(in.length() / length);
+		for (int i = 0; i < in.length(); i += length) {
+			result.add(in.substring(i, Math.min(in.length(), i + length)));
+		}
+		return result;
+	}
+
 }
