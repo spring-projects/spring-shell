@@ -309,6 +309,16 @@ public class SimpleParser implements Parser {
 		}
 	}
 
+	private void reportTokenizingException(String commandKey, TokenizingException te) {
+		StringBuilder caret = new StringBuilder();
+		for (int i = 0; i < te.getOffendingOffset() + commandKey.length() + 1; i++) {
+			caret.append(" ");
+		}
+		LOGGER.warning(commandKey + " " + te.getBuffer());
+		LOGGER.warning(caret + "^");
+		LOGGER.warning(te.getReason());
+	}
+
 	/**
 	 * We're being asked to execute a command, so the next completion invocation will definitely refer to a different
 	 * buffer.
