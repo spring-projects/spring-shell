@@ -90,4 +90,12 @@ public class TableTest extends AbstractTestWithSample {
 
 	}
 
+	@Test
+	public void testEmptyCellsVerticalAligner() {
+		TableModel model = new ArrayTableModel(new String[][] {{"a", "b"}, {null, null}});
+		Table table = new TableBuilder(model).on(CellMatchers.table()).addAligner(SimpleVerticalAligner.middle).build();
+		String result = table.render(3);
+
+	}
+
 }

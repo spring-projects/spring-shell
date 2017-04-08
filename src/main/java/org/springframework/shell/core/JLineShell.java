@@ -500,7 +500,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 			ansi.a(ESCAPE + "8");
 		}
 		else {
-			ansi.reset();
+			ansi.restorCursorPosition();
 		}
 
 		try {

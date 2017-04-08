@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import org.springframework.util.Assert;
  * Provides a base {@link Shell} implementation.
  *
  * @author Ben Alex
+ * @author Gunnar Hillert
  */
 public abstract class AbstractShell extends AbstractShellStatusPublisher implements Shell {
 
@@ -51,6 +52,9 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 
 	// Instance fields
 	protected final Logger logger = HandlerUtils.getLogger(getClass());
+
+	protected final Logger exceptionLogger = Logger.getLogger(getClass().getName() + ".exceptions");
+
 	protected boolean inBlockComment;
 	protected ExitShellRequest exitShellRequest;
 
@@ -144,7 +148,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			return new CommandResult(true, result, null);
 		} catch (RuntimeException e) {
 			setShellStatus(Status.EXECUTION_FAILED, line, parseResult);
-			logger.log(Level.WARNING, e.getMessage(), e);
+			exceptionLogger.log(Level.WARNING, e.getMessage(), e);
 			// We rely on execution strategy to log it
 			try {
 				logCommandIfRequired(line, false);

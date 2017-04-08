@@ -16,7 +16,6 @@
 package org.springframework.shell;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -43,19 +42,14 @@ public class Bootstrap {
 
 	private final static String[] CONTEXT_PATH = { "classpath*:/META-INF/spring/spring-shell-plugin.xml" };
 
-	private static Bootstrap bootstrap;
-
-	private static StopWatch sw = new StopWatch("Spring Shell");
-
-	private static CommandLine commandLine;
+	private CommandLine commandLine;
 
 	private GenericApplicationContext ctx;
 
 	public static void main(String[] args) throws IOException {
-		sw.start();
 		ExitShellRequest exitShellRequest;
 		try {
-			bootstrap = new Bootstrap(args);
+			Bootstrap bootstrap = new Bootstrap(args);
 			exitShellRequest = bootstrap.run();
 		}
 		catch (RuntimeException t) {
@@ -127,24 +121,9 @@ public class Bootstrap {
 		}
 	}
 
-	// seems on JDK 1.6.0_18 or higher causes the output to disappear
-	private void setupLogging() {
-		// Ensure all JDK log messages are deferred until a target is registered
-		Logger rootLogger = Logger.getLogger("");
-		HandlerUtils.wrapWithDeferredLogHandler(rootLogger, Level.SEVERE);
-
-		// Set a suitable priority level on Spring Framework log messages
-		Logger sfwLogger = Logger.getLogger("org.springframework");
-		sfwLogger.setLevel(Level.WARNING);
-
-		// Set a suitable priority level on Roo log messages
-		// (see ROO-539 and HandlerUtils.getLogger(Class))
-		Logger rooLogger = Logger.getLogger("org.springframework.shell");
-		rooLogger.setLevel(Level.FINE);
-	}
-
 	public ExitShellRequest run() {
-
+		StopWatch sw = new StopWatch("Spring Shell");
+		sw.start();
 		String[] commandsToExecuteAndThenQuit = commandLine.getShellCommandsToExecute();
 		// The shell is used
 		JLineShellComponent shell = ctx.getBean("shell", JLineShellComponent.class);

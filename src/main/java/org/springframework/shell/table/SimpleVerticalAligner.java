@@ -32,20 +32,25 @@ public enum SimpleVerticalAligner implements Aligner {
 		String[] result = new String[cellHeight];
 		int blanksBefore = 0;
 		int blanksAfter = 0;
+		boolean atLeastOneNonEmptyRow = false;
 		for (int row = 0; row < text.length; row++) {
 			if (text[row] == null || text[row].trim().equals("")) {
 				blanksBefore++;
 			}
 			else {
+				atLeastOneNonEmptyRow = true;
 				break;
 			}
 		}
-		for (int row = text.length - 1; row >= 0; row--) {
-			if (text[row] == null || text[row].trim().equals("")) {
-				blanksAfter++;
-			}
-			else {
-				break;
+		// In case of full blank, don't count blank rows twice
+		if (atLeastOneNonEmptyRow) {
+			for (int row = text.length - 1; row >= 0; row--) {
+				if (text[row] == null || text[row].trim().equals("")) {
+					blanksAfter++;
+				}
+				else {
+					break;
+				}
 			}
 		}
 		String filler = spaces(cellWidth);
