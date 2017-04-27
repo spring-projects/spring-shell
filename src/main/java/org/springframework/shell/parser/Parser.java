@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core;
+package org.springframework.shell.parser;
 
 import java.util.List;
 
-import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.core.Completion;
 
 /**
  * Interface for {@link SimpleParser}.

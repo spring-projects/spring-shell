@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.shell.parser;
 
-package org.springframework.shell.core;
-
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -29,11 +37,13 @@ import org.hamcrest.DiagnosingMatcher;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Test;
-
 import org.springframework.shell.converters.StringConverter;
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.Completion;
+import org.springframework.shell.core.Converter;
+import org.springframework.shell.core.MethodTarget;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.shell.event.ParseResult;
 
 /**
  * Tests for parsing and completion logic.
@@ -58,18 +68,20 @@ public class SimpleParserTests {
 		// A value made of space(s) is ok
 		ParseResult result = parser.parse("bar --option1 ' '");
 		assertThat(result.getMethod().getName(), equalTo("bar"));
-		assertThat(result.getArguments(), arrayContaining((Object) " "));
+		assertEquals(1, result.getArguments().size());
+		assertEquals(" ", result.getArguments().get(0).getArgumentValue(null));
 
 		// Ok too with a literal TAB
 		result = parser.parse("bar --option1 '\t'");
 		assertThat(result.getMethod().getName(), equalTo("bar"));
-		assertThat(result.getArguments(), arrayContaining((Object)"\t"));
+		assertEquals(1, result.getArguments().size());
+		assertEquals("\t", result.getArguments().get(0).getArgumentValue(null));
 
 		// Also Ok when Shell itself does the escaping
 		result = parser.parse("bar --option1 '\\t'");
 		assertThat(result.getMethod().getName(), equalTo("bar"));
-		assertThat(result.getArguments(), arrayContaining((Object)"\t"));
-
+		assertEquals(1, result.getArguments().size());
+		assertEquals("\t", result.getArguments().get(0).getArgumentValue(null));
 	}
 
 	@Test

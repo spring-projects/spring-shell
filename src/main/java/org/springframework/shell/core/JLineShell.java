@@ -51,6 +51,7 @@ import org.fusesource.jansi.Ansi.Erase;
 import org.fusesource.jansi.AnsiConsole;
 import org.springframework.shell.event.ShellStatus;
 import org.springframework.shell.event.ShellStatus.Status;
+import org.springframework.shell.parser.ParseResult;
 import org.springframework.shell.event.ShellStatusListener;
 import org.springframework.shell.support.util.IOUtils;
 import org.springframework.shell.support.util.OsUtils;
@@ -510,6 +511,7 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		catch (IOException ignored) {
 		}
 	}
+	
 	/**
 	 * Awaits user input, executes the command and displays the prompt to the user.
 	 */
@@ -578,6 +580,11 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 		}
 		catch (IOException ignoreIt) {
 		}
+	}
+	
+	@Override
+	protected void resolveArguments(ParseResult parseResult) {
+		parseResult.resolveArguments(reader);		
 	}
 
 	@Override

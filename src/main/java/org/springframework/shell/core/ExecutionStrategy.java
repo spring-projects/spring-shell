@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.core;
 
-import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.parser.ParseResult;
 
 /**
  * Strategy interface to permit the controlled execution of methods.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2017 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
  */
 package org.springframework.shell.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import org.junit.Test;
-import org.springframework.shell.core.ExecutionProcessor;
-import org.springframework.shell.core.SimpleExecutionStrategy;
-import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.parser.ParseResult;
+import org.springframework.shell.parser.argument.ArgumentResolver;
 import org.springframework.util.ReflectionUtils;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Costin Leau
@@ -59,7 +60,6 @@ public class SimpleExecutionStrategyTest {
 	}
 
 	static class PackageProtectedTarget {
-
 		void someMethod() {}
 	}
 
@@ -95,10 +95,8 @@ public class SimpleExecutionStrategyTest {
 	 */
 	@Test
 	public void invokesMethodsOnPackageProtectedTypes() {
-		
 		Method method = ReflectionUtils.findMethod(PackageProtectedTarget.class, "someMethod");
-		ParseResult result = new ParseResult(method, new PackageProtectedTarget(), new Object[] {});
-		
+		ParseResult result = new ParseResult(method, new PackageProtectedTarget(), new ArrayList<ArgumentResolver>(0));
 		execution.execute(result);
 	}
 }

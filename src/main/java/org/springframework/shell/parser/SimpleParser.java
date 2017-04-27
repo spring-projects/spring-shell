@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core;
+package org.springframework.shell.parser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -32,10 +32,20 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import org.springframework.shell.core.AbstractShell;
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.Completion;
+import org.springframework.shell.core.Converter;
+import org.springframework.shell.core.MethodTarget;
+import org.springframework.shell.core.Tokenizer;
+import org.springframework.shell.core.TokenizingException;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.parser.argument.ArgumentResolver;
+import org.springframework.shell.parser.argument.InteractiveArgumentResolver;
+import org.springframework.shell.parser.argument.ResolvedArgumentResolver;
+import org.springframework.shell.parser.argument.StringParserArgumentResolver;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.shell.support.util.ExceptionUtils;
 import org.springframework.shell.support.util.NaturalOrderComparator;
@@ -76,15 +86,6 @@ public class SimpleParser implements Parser {
 
 	private MethodTarget getAvailabilityIndicator(final String command) {
 		return availabilityIndicators.get(command);
-	}
-
-	/**
-	 * get all mandatory options keys. For the options with multiple keys, the keys will be in one row.
-	 * @param cliOptions options
-	 * @return mandatory options keys
-	 */
-	private List<List<String>> getMandatoryOptionsKeys(Collection<CliOption> cliOptions) {
-		return getOptionsKeys(cliOptions, false);
 	}
 
 	/**
@@ -161,8 +162,8 @@ public class SimpleParser implements Parser {
 				return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), null);
 			}
 
-			// Oh well, we need to convert some arguments
-			final List<Object> arguments = new ArrayList<Object>(methodTarget.getMethod().getParameterTypes().length);
+			// List of argument resolvers to be used when executing the command
+			final List<ArgumentResolver> arguments = new ArrayList<ArgumentResolver>(methodTarget.getMethod().getParameterTypes().length);
 
 			// Attempt to parse
 			Map<String, String> options = null;
@@ -192,7 +193,7 @@ public class SimpleParser implements Parser {
 						LOGGER.warning("Parameter type '" + requiredType + "' is not system provided");
 						return null;
 					}
-					arguments.add(result);
+					arguments.add(new ResolvedArgumentResolver(result));
 					continue;
 				}
 
@@ -213,10 +214,11 @@ public class SimpleParser implements Parser {
 
 				// Ensure the user specified a value if the value is mandatory or
 				// key and value must appear in pair
+				boolean interactive = cliOption.interactive();
 				boolean mandatory = cliOption.mandatory();
 				boolean specifiedKey = options.containsKey(sourcedFrom);
 				boolean specifiedKeyWithoutValue = specifiedKey && "".equals(value);
-				if (mandatory && (!specifiedKey || specifiedKeyWithoutValue)) {
+				if (mandatory && !interactive && (!specifiedKey || specifiedKeyWithoutValue)) {
 					if (isDefaultOption(cliOption)) {
 						StringBuilder message = new StringBuilder("You should specify ");
 						message.append(optionAliases(cliOption));
@@ -229,6 +231,12 @@ public class SimpleParser implements Parser {
 					return null;
 				}
 
+				if (value == null && interactive) {
+					arguments.add(
+							new InteractiveArgumentResolver(requiredType, cliOption, sourcedFrom, value, converters));
+					continue;
+				}
+				
 				// Accept a default if the user specified the option, but didn't provide a value
 				if (specifiedKeyWithoutValue) {
 					value = cliOption.specifiedDefaultValue();
@@ -245,46 +253,11 @@ public class SimpleParser implements Parser {
 								+ " for option '" + StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
 						return null;
 					}
-					arguments.add(null);
+					arguments.add(new ResolvedArgumentResolver(null));
 					continue;
 				}
-
-				// Now we're ready to perform a conversion
-				try {
-					Object result;
-					Converter<?> c = null;
-					for (Converter<?> candidate : converters) {
-						if (candidate.supports(requiredType, cliOption.optionContext())) {
-							// Found a usable converter
-							c = candidate;
-							break;
-						}
-					}
-					if (c == null) {
-						throw new IllegalStateException("TODO: Add basic type conversion");
-						// TODO Fall back to a normal SimpleTypeConverter and attempt conversion
-						// SimpleTypeConverter simpleTypeConverter = new SimpleTypeConverter();
-						// result = simpleTypeConverter.convertIfNecessary(value, requiredType, mp);
-					}
-
-					// Use the converter
-					result = c.convertFromText(value, requiredType, cliOption.optionContext());
-
-					// If the option has been specified to be mandatory then the result should never be null
-					if (result == null && cliOption.mandatory()) {
-						throw new IllegalStateException();
-					}
-					arguments.add(result);
-				}
-				catch (RuntimeException e) {
-					LOGGER.warning(e.getClass().getName() + ": Failed to convert '" + value + "' to type "
-							+ requiredType.getSimpleName() + " for option '"
-							+ StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
-					if (StringUtils.hasText(e.getMessage())) {
-						LOGGER.warning(e.getMessage());
-					}
-					return null;
-				}
+				
+				arguments.add(new StringParserArgumentResolver(requiredType, cliOption, sourcedFrom, value, converters));
 			}
 
 			// Check for options specified by the user but are unavailable for the command
@@ -305,7 +278,7 @@ public class SimpleParser implements Parser {
 				return null;
 			}
 
-			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), arguments.toArray());
+			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), arguments);
 		}
 	}
 
@@ -1144,4 +1117,5 @@ public class SimpleParser implements Parser {
 			return Collections.unmodifiableSet(converters);
 		}
 	}
+
 }

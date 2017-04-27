@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.event;
 
+import org.springframework.shell.parser.ParseResult;
 
 /**
  * Represents the different states that a shell can legally be in.

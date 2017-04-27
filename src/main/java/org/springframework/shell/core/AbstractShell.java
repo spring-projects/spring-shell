@@ -24,9 +24,10 @@ import jline.TerminalFactory;
 import org.springframework.shell.TerminalSizeAware;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.event.AbstractShellStatusPublisher;
-import org.springframework.shell.event.ParseResult;
 import org.springframework.shell.event.ShellStatus;
 import org.springframework.shell.event.ShellStatus.Status;
+import org.springframework.shell.parser.ParseResult;
+import org.springframework.shell.parser.Parser;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.shell.support.util.VersionUtils;
 import org.springframework.util.Assert;
@@ -129,6 +130,8 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			if (parseResult == null) {
 				return new CommandResult(false);
 			}
+			
+			resolveArguments(parseResult);
 
 			setShellStatus(Status.EXECUTING);
 			Object result = executionStrategy.execute(parseResult);
@@ -158,6 +161,14 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 			setShellStatus(Status.USER_INPUT);
 		}
 	}
+
+	/**
+	 * Defines an extension point for a subclass to resolve the arguments of the {@link ParseResult} object, for
+	 * example, to request interactive input for a given argument if required.
+	 * 
+	 * @param parseResult the {@link ParseResult} object to process
+	 */
+	protected abstract void resolveArguments(ParseResult parseResult);
 
 	/**
 	 * Allows a subclass to log the execution of a well-formed command. This is invoked after a command
