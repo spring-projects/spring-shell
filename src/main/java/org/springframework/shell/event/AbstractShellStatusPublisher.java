@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.springframework.shell.event.ShellStatus.Status;
+import org.springframework.shell.parser.ParseResult;
 import org.springframework.util.Assert;
 
 /**

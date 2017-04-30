@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core;
+package org.springframework.shell.parser;
 
 import java.util.List;
 
-import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.core.Completion;
+import org.springframework.shell.parser.argument.ArgumentHolder;
 
 /**
  * Interface for {@link SimpleParser}.
@@ -31,7 +32,16 @@ public interface Parser {
 	ParseResult parse(String buffer);
 
 	/**
-	 * Populates a list of completion candidates. This method is required for backward compatibility for STS versions up to 2.8.0.
+	 * Parses the given {@link ArgumentHolder} to get an object of the expected type.
+	 * 
+	 * @param argumentHolder
+	 * @return
+	 */
+	Object parseArgument(ArgumentHolder argumentHolder);
+
+	/**
+	 * Populates a list of completion candidates. This method is required for backward compatibility for STS versions up
+	 * to 2.8.0.
 	 * 
 	 * @param buffer
 	 * @param cursor
@@ -41,7 +51,7 @@ public interface Parser {
 	int complete(String buffer, int cursor, List<String> candidates);
 
 	/**
-	 * Populates a list of completion candidates. 
+	 * Populates a list of completion candidates.
 	 * 
 	 * @param buffer
 	 * @param cursor

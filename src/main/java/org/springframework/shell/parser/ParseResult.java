@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.event;
+package org.springframework.shell.parser;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.shell.core.Converter;
+import org.springframework.shell.parser.argument.ArgumentHolder;
+import org.springframework.shell.parser.argument.ArgumentHolder.ArgumentValue;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -27,9 +30,9 @@ import org.springframework.util.StringUtils;
  * Immutable representation of the outcome of parsing a given shell line.
  *
  * <p>
- * Note that contained objects (the instance and the arguments) may be mutable, as the shell infrastructure
- * has no way of restricting which methods can be the target of CLI commands and nor the arguments
- * they will accept via the {@link Converter} infrastructure.
+ * Note that contained objects (the instance and the arguments) may be mutable, as the shell infrastructure has no way
+ * of restricting which methods can be the target of CLI commands and nor the arguments they will accept via the
+ * {@link Converter} infrastructure.
  *
  * @author Ben Alex
  * @since 1.0
@@ -39,16 +42,21 @@ public class ParseResult {
 	// Fields
 	private final Method method;
 	private final Object instance;
-	private final Object[] arguments; // May be null if no arguments needed
+	private final List<ArgumentHolder> arguments; // May be empty if no arguments needed
 
-	public ParseResult(final Method method, final Object instance, final Object[] arguments) {
+	public ParseResult(final Method method, final Object instance, final List<ArgumentHolder> arguments) {
 		Assert.notNull(method, "Method required");
 		Assert.notNull(instance, "Instance required");
-		int length = arguments == null ? 0 : arguments.length;
-		Assert.isTrue(method.getParameterTypes().length == length, "Required " + method.getParameterTypes().length + " arguments, but received " + length);
+		int length = arguments == null ? 0 : arguments.size();
+		Assert.isTrue(method.getParameterTypes().length == length,
+				"Required " + method.getParameterTypes().length + " arguments, but received " + length);
 		this.method = method;
 		this.instance = instance;
-		this.arguments = arguments;
+		if (arguments == null) {
+			this.arguments = new ArrayList<ArgumentHolder>();
+		} else {
+			this.arguments = arguments;
+		}
 	}
 
 	public Method getMethod() {
@@ -59,22 +67,35 @@ public class ParseResult {
 		return instance;
 	}
 
-	public Object[] getArguments() {
+	public List<ArgumentHolder> getArguments() {
 		return arguments;
+	}
+
+	public Object[] getResolvedArguments() {
+		Object[] resolvedArguments = new Object[arguments.size()];
+		for (int i = 0; i < arguments.size(); i++) {
+			ArgumentValue argumentValue = arguments.get(i).getArgumentValue();
+			if (argumentValue.isResolved()) {
+				resolvedArguments[i] = argumentValue.getValue();
+			} else {
+				throw new IllegalStateException("No resolved value for argument: " + arguments.get(i).getCliOption());
+			}
+		}
+		return resolvedArguments;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(arguments);
+		result = prime * result + ((arguments == null) ? 0 : arguments.hashCode());
 		result = prime * result + ((instance == null) ? 0 : instance.hashCode());
 		result = prime * result + ((method == null) ? 0 : method.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -82,7 +103,10 @@ public class ParseResult {
 		if (getClass() != obj.getClass())
 			return false;
 		ParseResult other = (ParseResult) obj;
-		if (!Arrays.equals(arguments, other.arguments))
+		if (arguments == null) {
+			if (other.arguments != null)
+				return false;
+		} else if (!arguments.equals(other.arguments))
 			return false;
 		if (instance == null) {
 			if (other.instance != null)
@@ -102,7 +126,7 @@ public class ParseResult {
 		ToStringCreator tsc = new ToStringCreator(this);
 		tsc.append("method", method);
 		tsc.append("instance", instance);
-		tsc.append("arguments", StringUtils.arrayToCommaDelimitedString(arguments));
+		tsc.append("arguments", StringUtils.collectionToCommaDelimitedString(arguments));
 		return tsc.toString();
 	}
 }

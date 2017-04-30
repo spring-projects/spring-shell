@@ -20,6 +20,7 @@ import java.util.List;
 
 import jline.console.completer.Completer;
 
+import org.springframework.shell.parser.Parser;
 import org.springframework.util.Assert;
 
 /**

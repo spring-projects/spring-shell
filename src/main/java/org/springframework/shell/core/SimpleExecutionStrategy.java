@@ -18,7 +18,7 @@ package org.springframework.shell.core;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.parser.ParseResult;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
@@ -65,7 +65,7 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
 		try {
 			Method method = parseResult.getMethod();
 			ReflectionUtils.makeAccessible(method);
-			return ReflectionUtils.invokeMethod(method, parseResult.getInstance(), parseResult.getArguments());
+			return ReflectionUtils.invokeMethod(method, parseResult.getInstance(), parseResult.getResolvedArguments());
 		} catch (Throwable th) {
 			logger.severe("Command failed " + th);
 			return handleThrowable(th);

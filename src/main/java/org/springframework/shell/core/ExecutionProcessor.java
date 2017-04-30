@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.core;
 
-import org.springframework.shell.event.ParseResult;
+import org.springframework.shell.parser.ParseResult;
 
 /**
  * Extension interface allowing command provider to be called

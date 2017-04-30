@@ -20,9 +20,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.JLineShellComponent;
-import org.springframework.shell.core.SimpleParser;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell.parser.SimpleParser;
 import org.springframework.stereotype.Component;
 
 /**
