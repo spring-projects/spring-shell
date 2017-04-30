@@ -16,15 +16,15 @@
 package org.springframework.shell.parser;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.shell.core.Converter;
-import org.springframework.shell.parser.argument.ArgumentResolver;
+import org.springframework.shell.parser.argument.ArgumentHolder;
+import org.springframework.shell.parser.argument.ArgumentHolder.ArgumentValue;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import jline.console.ConsoleReader;
 
 /**
  * Immutable representation of the outcome of parsing a given shell line.
@@ -42,12 +42,9 @@ public class ParseResult {
 	// Fields
 	private final Method method;
 	private final Object instance;
-	private final List<ArgumentResolver> arguments; // May be empty if no arguments needed
-	private final Object[] resolvedArguments;
+	private final List<ArgumentHolder> arguments; // May be empty if no arguments needed
 
-	private boolean argumentsResolved;
-
-	public ParseResult(final Method method, final Object instance, final List<ArgumentResolver> arguments) {
+	public ParseResult(final Method method, final Object instance, final List<ArgumentHolder> arguments) {
 		Assert.notNull(method, "Method required");
 		Assert.notNull(instance, "Instance required");
 		int length = arguments == null ? 0 : arguments.size();
@@ -55,10 +52,11 @@ public class ParseResult {
 				"Required " + method.getParameterTypes().length + " arguments, but received " + length);
 		this.method = method;
 		this.instance = instance;
-		this.arguments = arguments;
-		this.resolvedArguments = new Object[length];
-		// if there are no arguments to resolve, we can mark arguments resolved as true
-		this.argumentsResolved = (length == 0);
+		if (arguments == null) {
+			this.arguments = new ArrayList<ArgumentHolder>();
+		} else {
+			this.arguments = arguments;
+		}
 	}
 
 	public Method getMethod() {
@@ -69,27 +67,21 @@ public class ParseResult {
 		return instance;
 	}
 
-	public List<ArgumentResolver> getArguments() {
+	public List<ArgumentHolder> getArguments() {
 		return arguments;
 	}
 
 	public Object[] getResolvedArguments() {
-		if (!argumentsResolved) {
-			throw new IllegalStateException("Arguments haven't been resolved yet");
+		Object[] resolvedArguments = new Object[arguments.size()];
+		for (int i = 0; i < arguments.size(); i++) {
+			ArgumentValue argumentValue = arguments.get(i).getArgumentValue();
+			if (argumentValue.isResolved()) {
+				resolvedArguments[i] = argumentValue.getValue();
+			} else {
+				throw new IllegalStateException("No resolved value for argument: " + arguments.get(i).getCliOption());
+			}
 		}
 		return resolvedArguments;
-	}
-
-	public void resolveArguments(ConsoleReader consoleReader) {
-		if (argumentsResolved && this.resolvedArguments.length > 0) {
-			throw new IllegalStateException("Arguments already resolved.");
-		}
-
-		for (int i = 0; i < resolvedArguments.length; i++) {
-			resolvedArguments[i] = arguments.get(i).getArgumentValue(consoleReader);
-		}
-
-		argumentsResolved = true;
 	}
 
 	@Override

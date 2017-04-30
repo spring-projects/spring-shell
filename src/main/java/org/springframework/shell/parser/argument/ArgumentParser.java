@@ -15,21 +15,12 @@
  */
 package org.springframework.shell.parser.argument;
 
-import jline.console.ConsoleReader;
-
 /**
- * Represents a resolver for an argument that will be passed into a method invocation.
+ * Represent a parser that will convert String values to objects of a given type
  * 
  * @author Camilo Gonzalez
  * @since 1.2.1
  */
-public interface ArgumentResolver {
-	/**
-	 * The argument value processed by the parser, or null if not available.
-	 *
-	 * @param consoleReader
-	 *            the {@link ConsoleReader} to be used if further interactive input is required
-	 * @return the resolved object to be used as the argument
-	 */
-	Object getArgumentValue(ConsoleReader consoleReader);
+public interface ArgumentParser {
+	Object parseArgument(ArgumentHolder argumentHolder);
 }

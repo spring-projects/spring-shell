@@ -42,10 +42,11 @@ import org.springframework.shell.core.TokenizingException;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.shell.parser.argument.ArgumentResolver;
-import org.springframework.shell.parser.argument.InteractiveArgumentResolver;
-import org.springframework.shell.parser.argument.ResolvedArgumentResolver;
-import org.springframework.shell.parser.argument.StringParserArgumentResolver;
+import org.springframework.shell.parser.argument.ArgumentHolder;
+import org.springframework.shell.parser.argument.ArgumentParser;
+import org.springframework.shell.parser.argument.ResolvedArgumentHolder;
+import org.springframework.shell.parser.argument.SimpleArgumentParser;
+import org.springframework.shell.parser.argument.UnresolvedArgumentHolder;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.shell.support.util.ExceptionUtils;
 import org.springframework.shell.support.util.NaturalOrderComparator;
@@ -73,7 +74,7 @@ public class SimpleParser implements Parser {
 	private final Set<CommandMarker> commands = new HashSet<CommandMarker>();
 
 	private final Map<String, MethodTarget> availabilityIndicators = new HashMap<String, MethodTarget>();
-
+	
 	/**
 	 * The last buffer when completion was requested.
 	 */
@@ -163,7 +164,7 @@ public class SimpleParser implements Parser {
 			}
 
 			// List of argument resolvers to be used when executing the command
-			final List<ArgumentResolver> arguments = new ArrayList<ArgumentResolver>(methodTarget.getMethod().getParameterTypes().length);
+			final List<ArgumentHolder> arguments = new ArrayList<ArgumentHolder>(methodTarget.getMethod().getParameterTypes().length);
 
 			// Attempt to parse
 			Map<String, String> options = null;
@@ -193,7 +194,7 @@ public class SimpleParser implements Parser {
 						LOGGER.warning("Parameter type '" + requiredType + "' is not system provided");
 						return null;
 					}
-					arguments.add(new ResolvedArgumentResolver(result));
+					arguments.add(new ResolvedArgumentHolder(requiredType, cliOption, null, null, result));
 					continue;
 				}
 
@@ -232,8 +233,7 @@ public class SimpleParser implements Parser {
 				}
 
 				if (value == null && interactive) {
-					arguments.add(
-							new InteractiveArgumentResolver(requiredType, cliOption, sourcedFrom, value, converters));
+					arguments.add(new UnresolvedArgumentHolder(requiredType, cliOption, sourcedFrom, value));
 					continue;
 				}
 				
@@ -253,11 +253,11 @@ public class SimpleParser implements Parser {
 								+ " for option '" + StringUtils.arrayToCommaDelimitedString(cliOption.key()) + "'");
 						return null;
 					}
-					arguments.add(new ResolvedArgumentResolver(null));
+					arguments.add(new ResolvedArgumentHolder(requiredType, cliOption, sourcedFrom, value, null));
 					continue;
 				}
 				
-				arguments.add(new StringParserArgumentResolver(requiredType, cliOption, sourcedFrom, value, converters));
+				arguments.add(new UnresolvedArgumentHolder(requiredType, cliOption, sourcedFrom, value));
 			}
 
 			// Check for options specified by the user but are unavailable for the command
@@ -280,6 +280,12 @@ public class SimpleParser implements Parser {
 
 			return new ParseResult(methodTarget.getMethod(), methodTarget.getTarget(), arguments);
 		}
+	}
+	
+	@Override
+	public Object parseArgument(ArgumentHolder argumentHolder) {
+		final ArgumentParser argumentParser = new SimpleArgumentParser(converters);
+		return argumentParser.parseArgument(argumentHolder);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2016 the original author or authors.
+ * Copyright 2011-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.springframework.shell.core;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +30,9 @@ import org.springframework.shell.event.ShellStatus;
 import org.springframework.shell.event.ShellStatus.Status;
 import org.springframework.shell.parser.ParseResult;
 import org.springframework.shell.parser.Parser;
+import org.springframework.shell.parser.argument.ArgumentHolder;
+import org.springframework.shell.parser.argument.ResolvedArgumentHolder;
+import org.springframework.shell.parser.argument.ArgumentHolder.ArgumentValue;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.shell.support.util.VersionUtils;
 import org.springframework.util.Assert;
@@ -131,7 +136,9 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 				return new CommandResult(false);
 			}
 			
-			resolveArguments(parseResult);
+			// additional step during parsing to allow for resolving arguments that require,
+			// for example, interactive input (like passwords)
+			parseResult = resolveArguments(parseResult);
 
 			setShellStatus(Status.EXECUTING);
 			Object result = executionStrategy.execute(parseResult);
@@ -162,13 +169,29 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 		}
 	}
 
+	protected ParseResult resolveArguments(ParseResult parseResult) {
+		final List<ArgumentHolder> resolvedArguments = new ArrayList<ArgumentHolder>(parseResult.getArguments().size());
+		for (final ArgumentHolder argument : parseResult.getArguments()) {
+			final ArgumentValue argumentValue = argument.getArgumentValue();
+			if (argumentValue.isResolved()) {
+				resolvedArguments.add(argument);
+			} else {
+				ResolvedArgumentHolder resolvedArgument = resolveArgument(argument);
+				resolvedArguments.add(resolvedArgument);
+			}
+		}
+		return new ParseResult(parseResult.getMethod(), parseResult.getInstance(), resolvedArguments);
+	}
+
 	/**
-	 * Defines an extension point for a subclass to resolve the arguments of the {@link ParseResult} object, for
+	 * Defines an extension point for a subclass to resolve an argument that requires additional processing, for
 	 * example, to request interactive input for a given argument if required.
 	 * 
-	 * @param parseResult the {@link ParseResult} object to process
+	 * @param argument
+	 *            the {@link ArgumentHolder} to resolve into a concrete value
+	 * @return the {@link ResolvedArgumentHolder} holding the resolved value
 	 */
-	protected abstract void resolveArguments(ParseResult parseResult);
+	protected abstract ResolvedArgumentHolder resolveArgument(final ArgumentHolder argument);
 
 	/**
 	 * Allows a subclass to log the execution of a well-formed command. This is invoked after a command

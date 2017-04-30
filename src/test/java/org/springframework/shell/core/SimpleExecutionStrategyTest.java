@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 import org.springframework.shell.parser.ParseResult;
-import org.springframework.shell.parser.argument.ArgumentResolver;
+import org.springframework.shell.parser.argument.ArgumentHolder;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -96,7 +96,7 @@ public class SimpleExecutionStrategyTest {
 	@Test
 	public void invokesMethodsOnPackageProtectedTypes() {
 		Method method = ReflectionUtils.findMethod(PackageProtectedTarget.class, "someMethod");
-		ParseResult result = new ParseResult(method, new PackageProtectedTarget(), new ArrayList<ArgumentResolver>(0));
+		ParseResult result = new ParseResult(method, new PackageProtectedTarget(), new ArrayList<ArgumentHolder>(0));
 		execution.execute(result);
 	}
 }

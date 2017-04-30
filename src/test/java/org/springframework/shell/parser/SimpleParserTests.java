@@ -69,19 +69,23 @@ public class SimpleParserTests {
 		ParseResult result = parser.parse("bar --option1 ' '");
 		assertThat(result.getMethod().getName(), equalTo("bar"));
 		assertEquals(1, result.getArguments().size());
-		assertEquals(" ", result.getArguments().get(0).getArgumentValue(null));
+		assertEquals(" ", parseArgument(result, 0));
 
 		// Ok too with a literal TAB
 		result = parser.parse("bar --option1 '\t'");
 		assertThat(result.getMethod().getName(), equalTo("bar"));
 		assertEquals(1, result.getArguments().size());
-		assertEquals("\t", result.getArguments().get(0).getArgumentValue(null));
+		assertEquals("\t", parseArgument(result, 0));
 
 		// Also Ok when Shell itself does the escaping
 		result = parser.parse("bar --option1 '\\t'");
 		assertThat(result.getMethod().getName(), equalTo("bar"));
 		assertEquals(1, result.getArguments().size());
-		assertEquals("\t", result.getArguments().get(0).getArgumentValue(null));
+		assertEquals("\t", parseArgument(result, 0));
+	}
+
+	private Object parseArgument(ParseResult result, int index) {
+		return parser.parseArgument(result.getArguments().get(index));
 	}
 
 	@Test
