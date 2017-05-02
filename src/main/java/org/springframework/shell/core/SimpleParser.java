@@ -41,6 +41,7 @@ import org.springframework.shell.support.util.ExceptionUtils;
 import org.springframework.shell.support.util.NaturalOrderComparator;
 import org.springframework.shell.support.util.OsUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -1086,7 +1087,7 @@ public class SimpleParser implements Parser {
 	public final void add(final CommandMarker command) {
 		synchronized (mutex) {
 			commands.add(command);
-			for (final Method method : command.getClass().getMethods()) {
+			for (final Method method : ReflectionUtils.getAllDeclaredMethods(command.getClass())) {
 				CliAvailabilityIndicator availability = method.getAnnotation(CliAvailabilityIndicator.class);
 				if (availability != null) {
 					Assert.isTrue(
@@ -1100,6 +1101,7 @@ public class SimpleParser implements Parser {
 					for (String cmd : availability.value()) {
 						Assert.isTrue(!availabilityIndicators.containsKey(cmd),
 								"Cannot specify an availability indicator for '" + cmd + "' more than once");
+						ReflectionUtils.makeAccessible(method);
 						availabilityIndicators.put(cmd, new MethodTarget(method, command));
 					}
 				}
