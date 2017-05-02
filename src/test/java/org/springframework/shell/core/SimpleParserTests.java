@@ -31,6 +31,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import org.springframework.shell.converters.StringConverter;
+import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.event.ParseResult;
@@ -462,6 +463,19 @@ public class SimpleParserTests {
 		assertThat(result, nullValue());
 	}
 
+	@Test
+	public void testAvailabilityIndicator() {
+		MyCommands commands = new MyCommands();
+		parser.add(commands);
+		ParseResult result = parser.parse("foo");
+		assertThat(result, notNullValue());
+
+		commands.fooIsAvailable = false;
+		result = parser.parse("foo");
+		assertThat(result, nullValue());
+
+	}
+
 	/**
 	 * Return a matcher that asserts that a completion, when added to {@link #buffer} at the given {@link #offset},
 	 * indeed matches the provided matcher.
@@ -489,6 +503,14 @@ public class SimpleParserTests {
 	}
 
 	public static class MyCommands implements CommandMarker {
+
+		boolean fooIsAvailable = true;
+
+		@CliAvailabilityIndicator("foo")
+		/*package private. see gh-122*/boolean isFooAvailable() {
+			System.out.println("Returning " + fooIsAvailable);
+			return fooIsAvailable;
+		}
 
 		@CliCommand("foo")
 		public void foo() {
