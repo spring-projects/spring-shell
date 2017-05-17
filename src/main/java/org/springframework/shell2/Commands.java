@@ -20,7 +20,11 @@ import org.springframework.shell2.standard.ShellComponent;
 import org.springframework.shell2.standard.ShellMethod;
 
 /**
- * Created by ericbottard on 27/12/15.
+ * Example commands for easy testing.
+ *
+ * To be removed in final project.
+ *
+ * @author Eric Bottard
  */
 @ShellComponent("")
 public class Commands {

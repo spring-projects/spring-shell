@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2;
-
-import java.util.Map;
-
 /**
- * Implementing this interface allows sub-systems (such as the {@literal help} command) to
- * discover available commands.
- *
- * @author Eric Bottard
+ * Provides integration with Spring Shell 1.
  */
-public interface Shell {
-
-
-	/**
-	 * Return the mapping from command trigger keywords to implementation.
-	 */
-	public Map<String, MethodTarget> listCommands();
-
-}
+package org.springframework.shell2.legacy;

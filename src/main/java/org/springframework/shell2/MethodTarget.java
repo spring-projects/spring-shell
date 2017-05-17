@@ -21,7 +21,9 @@ import java.lang.reflect.Method;
 import org.springframework.util.Assert;
 
 /**
- * Created by ericbottard on 27/11/15.
+ * Represents a shell command behavior, <em>i.e.</em> code to be executed when a command is requested.
+ *
+ * @author Eric Bottard
  */
 public class MethodTarget {
 

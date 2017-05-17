@@ -33,7 +33,10 @@ public class ExitRequest extends RuntimeException {
 		this.code = code;
 	}
 
+	/**
+	 * The exit code to be returned when the process exits.
+	 */
 	public int status() {
-		return 0;
+		return code;
 	}
 }

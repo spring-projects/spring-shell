@@ -38,7 +38,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * Resolves parameters by looking at the {@link CliOption} annotation and acting accordingly.
+ *
+ * @author Eric Bottard
  */
 @Component
 public class LegacyParameterResolver implements ParameterResolver {

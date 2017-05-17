@@ -36,6 +36,11 @@ import org.springframework.shell2.standard.EnumValueProvider;
 import org.springframework.shell2.standard.StandardParameterResolver;
 
 /**
+ * Main entry point for the application.
+ *
+ * <p>Creates the application context and start the REPL.</p>
+ *
+ * @author Eric Bottard
  */
 @SpringBootApplication
 @ComponentScan(basePackageClasses = {ArrayConverter.class, Bootstrap.class}, excludeFilters = @ComponentScan.Filter(

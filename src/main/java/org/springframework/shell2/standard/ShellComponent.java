@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 import org.springframework.stereotype.Component;
 
 /**
- * Indicates that an annotated class may contain shell methods (themselves annotated with {@link @ShellMethod}) that
+ * Indicates that an annotated class may contain shell methods (themselves annotated with {@link ShellMethod}) that
  * is,
  * methods that may be invoked reflectively by the shell.
  *

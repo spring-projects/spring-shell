@@ -21,10 +21,15 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * Strategy interface for discovering commands.
+ *
+ * @author Eric Bottard
  */
 public interface MethodTargetResolver {
 
+	/**
+	 * Return a mapping from {@literal <command keyword(s)>} to actual behavior.
+	 */
 	public Map<String, MethodTarget> resolve(ApplicationContext context);
 
 }

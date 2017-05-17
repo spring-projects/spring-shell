@@ -21,16 +21,31 @@ import java.util.List;
 import org.springframework.core.MethodParameter;
 
 /**
- * Created by ericbottard on 27/11/15.
+ * Implementations of this interface are responsible, once the command has been identified, of transforming the textual
+ * input to an actual parameter object.
  */
 public interface ParameterResolver {
 
+	/**
+	 * Should return true if this resolver recognizes the given method parameter (<em>e.g.</em> it
+	 * has the correct annotation or the correct type).
+	 */
 	boolean supports(MethodParameter parameter);
 
+	/**
+	 * Turn the given textual input into an actual object, maybe using some conversion or lookup mechanism.
+	 */
 	Object resolve(MethodParameter methodParameter, List<String> words);
 
+	/**
+	 * Describe a supported parameter, so that integrated help can be generated.
+	 */
 	ParameterDescription describe(MethodParameter parameter);
 
+	/**
+	 * Invoked during TAB completion. If the {@link CompletionContext} can be interpreted as the start
+	 * of a supported {@link MethodParameter} value, one or several proposals should be returned.
+	 */
 	List<CompletionProposal> complete(MethodParameter parameter, CompletionContext context);
 
 }

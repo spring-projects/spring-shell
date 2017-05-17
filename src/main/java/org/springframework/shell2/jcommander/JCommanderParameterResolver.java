@@ -36,7 +36,9 @@ import org.springframework.shell2.ParameterResolver;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Created by ericbottard on 15/12/15.
+ * Provides integration with JCommander.
+ *
+ * @author Eric Bottard
  */
 public class JCommanderParameterResolver implements ParameterResolver {
 
@@ -50,8 +52,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 		Class<?> parameterType = parameter.getParameterType();
 		ReflectionUtils.doWithFields(parameterType, field -> {
 			ReflectionUtils.makeAccessible(field);
-			boolean hasAnnotation = Arrays.asList(field.getAnnotations())
-					.stream()
+			boolean hasAnnotation = Arrays.stream(field.getAnnotations())
 					.map(Annotation::annotationType)
 					.anyMatch(JCOMMANDER_ANNOTATIONS::contains);
 			isSupported.compareAndSet(false, hasAnnotation);
@@ -60,8 +61,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 
 		ReflectionUtils.doWithMethods(parameterType, method -> {
 			ReflectionUtils.makeAccessible(method);
-			boolean hasAnnotation = Arrays.asList(method.getAnnotations())
-					.stream()
+			boolean hasAnnotation = Arrays.stream(method.getAnnotations())
 					.map(Annotation::annotationType)
 					.anyMatch(Parameter.class::equals);
 			isSupported.compareAndSet(false, hasAnnotation);
