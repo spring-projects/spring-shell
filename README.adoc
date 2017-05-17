@@ -1,0 +1,19 @@
+= Spring Shell 2
+Spring Shell 2 is an ongoing effort to completely rewrite
+https://github.com/spring-projects/spring-shell[Spring Shell] from scratch, making it more modular
+while maintaining some level of backward compatibility with your existing commands.
+
+== Building
+```
+./mvnw package
+```
+
+== Running
+*Note:* the dummy commands that are currently available are not here to stay. Expect a more modular
+setup in the future. In the meantime, to get a grasp of how the shell would behave, you can
+```
+./mvnw spring-boot:run
+```
+
+From there, try typing `help` at the shell prompt.
+
