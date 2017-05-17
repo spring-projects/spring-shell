@@ -1,4 +1,5 @@
 = Spring Shell 2
+
 Spring Shell 2 is an ongoing effort to completely rewrite
 https://github.com/spring-projects/spring-shell[Spring Shell] from scratch, making it more modular
 while maintaining some level of backward compatibility with your existing commands.
