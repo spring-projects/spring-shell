@@ -13,7 +13,9 @@ while maintaining some level of backward compatibility with your existing comman
 *Note:* the dummy commands that are currently available are not here to stay. Expect a more modular
 setup in the future. In the meantime, to get a grasp of how the shell would behave, you can
 ```
-./mvnw spring-boot:run
+# if using a local snapshot version
+./mvnw install
+./mvnw -pl spring-shell2-samples spring-boot:run
 ```
 
 From there, try typing `help` at the shell prompt.

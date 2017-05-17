@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>spring-shell2-jcommander-adapter</artifactId>
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>org.springframework.shell</groupId>
+		<artifactId>spring-shell2-parent</artifactId>
+		<version>2.0.0-BUILD.SNAPSHOT</version>
+	</parent>
+	
+	<description>Adapter classes to allow JCommander type annotations and parsing via Spring Shell 2</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell2-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.48</version>
+		</dependency>
+	</dependencies>
+	
+</project>

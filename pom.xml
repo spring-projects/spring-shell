@@ -3,18 +3,48 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.shell</groupId>
-	<artifactId>spring-shell2</artifactId>
-	<version>2.0.0.BUILD-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<artifactId>spring-shell2-parent</artifactId>
+	<version>2.0.0-BUILD.SNAPSHOT</version>
+	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.3.0.RELEASE</version>
 	</parent>
+	
 	<properties>
+		<jline.version>3.3.0</jline.version>
+		<assertj.version>3.2.0</assertj.version>
 		<java.version>1.8</java.version>
 	</properties>
+	
+	<modules>
+		<module>spring-shell2-core</module>
+		<module>spring-shell2-jcommander-adapter</module>
+		<module>spring-shell2-samples</module>
+		<module>spring-shell2-shell1-adapter</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell2-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell2-shell1-adapter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell2-jcommander-adapter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -32,34 +62,26 @@
 		<dependency>
 			<groupId>org.jline</groupId>
 			<artifactId>jline</artifactId>
-			<version>3.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell</artifactId>
-			<version>1.2.0.BUILD-SNAPSHOT</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.48</version>
-			<optional>true</optional>
+			<version>${jline.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>3.2.0</version>
+			<version>${assertj.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+			</plugins>		
+		</pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

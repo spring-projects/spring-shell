@@ -14,38 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2;
-
-import org.springframework.shell2.standard.ShellComponent;
-import org.springframework.shell2.standard.ShellMethod;
+package org.springframework.shell2.samples.legacy;
 
 /**
- * Example commands for easy testing.
- *
- * To be removed in final project.
- *
- * @author Eric Bottard
+ * Created by ericbottard on 09/12/15.
  */
-@ShellComponent("")
-public class Commands {
+public enum ArtifactType {
 
-	@ShellMethod(help = "it's cool")
-	public void foo(String bar) {
-
-	}
-
-	@ShellMethod(help = "it's better")
-	public void foobar() {
-
-	}
-
-	@ShellMethod(help = "something else")
-	public void somethingElse() {
-
-	}
-
-	@ShellMethod(help = "add stuff")
-	public int add(int ahbahdisdonc, int b, int c) {
-		return ahbahdisdonc + b + c;
-	}
+	source, processor, sink, task
 }

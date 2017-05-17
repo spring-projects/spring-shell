@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.shell.converters.ArrayConverter;
-import org.springframework.shell.converters.AvailableCommandsConverter;
-import org.springframework.shell.converters.SimpleFileConverter;
 import org.springframework.shell2.standard.EnumValueProvider;
 import org.springframework.shell2.standard.StandardParameterResolver;
 
@@ -41,11 +37,10 @@ import org.springframework.shell2.standard.StandardParameterResolver;
  * <p>Creates the application context and start the REPL.</p>
  *
  * @author Eric Bottard
+ * @author Camilo Gonzalez
  */
 @SpringBootApplication
-@ComponentScan(basePackageClasses = {ArrayConverter.class, Bootstrap.class}, excludeFilters = @ComponentScan.Filter(
-		type = FilterType.ASSIGNABLE_TYPE,
-		value = {AvailableCommandsConverter.class, SimpleFileConverter.class}))
+@ComponentScan(basePackageClasses = Bootstrap.class)
 public class Bootstrap {
 
 	public static void main(String[] args) throws Exception {
