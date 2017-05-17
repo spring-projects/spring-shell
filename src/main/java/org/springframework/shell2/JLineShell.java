@@ -16,7 +16,6 @@
 
 package org.springframework.shell2;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -39,6 +38,7 @@ import org.jline.reader.Highlighter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
+import org.jline.reader.UserInterruptException;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
@@ -48,25 +48,30 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
-import org.springframework.shell2.result.ResultHandlers;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Created by ericbottard on 26/11/15.
+ * Main component implementing a REPL using JLine.
+ *
+ * <p>Discovers {@link MethodTarget}s at startup and hands off execution of commands according
+ * to the parsed JLine buffer.</p>
+ *
+ * @author Eric Bottard
+ * @author Florent Biville
  */
 @Component
 public class JLineShell implements Shell {
 
 	@Autowired
-	private ResultHandlers resultHandlers;
+	ResultHandlers resultHandlers = new ResultHandlers();
 
 	@Autowired
 	private ApplicationContext applicationContext;
 
 	private Map<String, MethodTarget> methodTargets = new HashMap<>();
 
-	private LineReader lineReader;
+	LineReader lineReader;
 
 	@Autowired
 	private Terminal terminal;
@@ -123,7 +128,16 @@ public class JLineShell implements Shell {
 
 	public void run() throws IOException {
 		while (true) {
-			lineReader.readLine(new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW)).toAnsi(terminal));
+			try {
+				lineReader.readLine(new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW)).toAnsi(terminal));
+			}
+			catch (UserInterruptException e) {
+				if (e.getPartialLine().isEmpty()) {
+					resultHandlers.handleResult(new ExitRequest(1));
+				} else {
+					continue;
+				}
+			}
 			String separator = "";
 			StringBuilder candidateCommand = new StringBuilder();
 			MethodTarget methodTarget = null;
@@ -147,18 +161,11 @@ public class JLineShell implements Shell {
 				List<String> wordsForArgs = words.subList(wordsUsedForCommandKey, words.size());
 				Method method = methodTarget.getMethod();
 
-
 				Object result = null;
 				try {
 					Object[] args = resolveArgs(method, wordsForArgs);
 					validateArgs(args, methodTarget);
 					result = ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
-				}
-				catch (ExitRequest e) {
-					if (applicationContext instanceof Closeable) {
-						((Closeable) applicationContext).close();
-						System.exit(e.status());
-					}
 				}
 				catch (Exception e) {
 					result = e;

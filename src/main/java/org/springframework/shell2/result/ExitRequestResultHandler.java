@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,36 @@
 
 package org.springframework.shell2.result;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell2.ResultHandlers;
+import org.springframework.context.ApplicationContext;
+import org.springframework.shell2.ExitRequest;
 import org.springframework.stereotype.Component;
 
 /**
- * A {@link ResultHandler} that deals with {@link Iterable}s and delegates to
- * {@link ResultHandlers} for each element in turn.
+ * Intercepts {@link org.springframework.shell2.ExitRequest} exceptions and gracefully exits the running process.
  *
  * @author Eric Bottard
  */
 @Component
-public class IterableResultHandler implements ResultHandler<Iterable> {
-
-	private ResultHandlers resultHandlers;
+public class ExitRequestResultHandler implements ResultHandler<ExitRequest> {
 
 	@Autowired
-	public void setResultHandlers(ResultHandlers resultHandlers) {
-		this.resultHandlers = resultHandlers;
-	}
+	private ApplicationContext applicationContext;
 
 	@Override
-	public void handleResult(Iterable result) {
-		for (Object o : result) {
-			resultHandlers.handleResult(o);
+	public void handleResult(ExitRequest result) {
+		if (applicationContext instanceof Closeable) {
+			try {
+				((Closeable) applicationContext).close();
+			}
+			catch (IOException e) {
+				// ignore
+			}
+			System.exit(result.status());
 		}
+
 	}
 }
