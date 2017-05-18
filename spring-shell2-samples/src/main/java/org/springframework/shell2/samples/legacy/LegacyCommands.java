@@ -21,11 +21,13 @@ import java.lang.reflect.Method;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
  * Created by ericbottard on 09/12/15.
  */
+@Component
 public class LegacyCommands implements CommandMarker {
 
 	public static final Method REGISTER_METHOD = ReflectionUtils.findMethod(LegacyCommands.class, "register", String.class, ArtifactType.class, String.class, boolean.class);

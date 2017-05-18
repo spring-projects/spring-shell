@@ -16,6 +16,9 @@
 
 package org.springframework.shell2.samples.standard;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+
 import org.springframework.shell2.standard.ShellComponent;
 import org.springframework.shell2.standard.ShellMethod;
 
@@ -45,5 +48,10 @@ public class Commands {
 	@ShellMethod(help = "add stuff")
 	public int add(int ahbahdisdonc, int b, int c) {
 		return ahbahdisdonc + b + c;
+	}
+
+	@ShellMethod(help = "Fails with an exception")
+	public void fail(ElementType elementType) {
+		throw new IllegalArgumentException("You said " + elementType);
 	}
 }

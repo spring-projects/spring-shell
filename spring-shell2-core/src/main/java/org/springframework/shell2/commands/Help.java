@@ -38,6 +38,7 @@ import org.springframework.shell2.MethodTarget;
 import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
 import org.springframework.shell2.Shell;
+import org.springframework.shell2.standard.CommandValueProvider;
 import org.springframework.shell2.standard.ShellComponent;
 import org.springframework.shell2.standard.ShellMethod;
 import org.springframework.shell2.standard.ShellOption;
@@ -68,6 +69,7 @@ public class Help {
 	@ShellMethod(help = "Display help about available commands.", prefix = "-")
 	public CharSequence help(
 			@ShellOption(defaultValue = ShellOption.NULL,
+					valueProvider = CommandValueProvider.class,
 					value = {"-C", "--command"},
 					help = "The command to obtain help for.") String command) throws IOException {
 		if (command == null) {
