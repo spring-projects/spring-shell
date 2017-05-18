@@ -32,11 +32,12 @@ public class IterableResultHandler implements ResultHandler<Iterable> {
 	private ResultHandler delegate;
 
 	// Setter injection to avoid circular dependency at creation time
-	public void setDelegate(ResultHandler delegate) {
+	void setDelegate(ResultHandler delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void handleResult(Iterable result) {
 		for (Object o : result) {
 			delegate.handleResult(o);
