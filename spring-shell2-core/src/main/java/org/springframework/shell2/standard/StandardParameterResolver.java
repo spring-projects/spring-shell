@@ -16,8 +16,7 @@
 
 package org.springframework.shell2.standard;
 
-import static org.springframework.shell2.Utils.unCamelify;
-
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -48,6 +47,9 @@ import org.springframework.shell2.Utils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
+import org.springframework.util.ObjectUtils;
+
+import static org.springframework.shell2.Utils.unCamelify;
 
 /**
  * Default ParameterResolver implementation that supports the following features:<ul>
@@ -178,7 +180,12 @@ public class StandardParameterResolver implements ParameterResolver {
 		if (!resolved.containsKey(param)) {
 			throw new ParameterMissingResolutionException(describe(methodParameter));
 		}
-		String s = resolved.get(param).value;
+		ParameterRawValue parameterRawValue = resolved.get(param);
+		return convertRawValue(parameterRawValue, methodParameter);
+	}
+
+	private Object convertRawValue(ParameterRawValue parameterRawValue, MethodParameter methodParameter) {
+		String s = parameterRawValue.value;
 		if (ShellOption.NULL.equals(s)) {
 			return null;
 		}
@@ -261,10 +268,12 @@ public class StandardParameterResolver implements ParameterResolver {
 		Exception unfinished = null;
 		// First try to see if this parameter has been set, even to some unfinished value
 		ParameterRawValue parameterRawValue = null;
+		int arity = 1;
 		try {
 			resolve(methodParameter, context.getWords());
 			CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), context.getWords());
 			Parameter parameter = methodParameter.getMethod().getParameters()[methodParameter.getParameterIndex()];
+			arity = getArity(parameter);
 			parameterRawValue = parameterCache.get(cacheKey).get(parameter);
 			set = parameterRawValue.explicit;
 		}
@@ -279,11 +288,12 @@ public class StandardParameterResolver implements ParameterResolver {
 			//return Collections.emptyList();
 		}
 
-		// There are 3 possible cases:
+		// There are 4 possible cases:
 		// 1) parameter not set at all
 		// 2) parameter set via its key, not enough input to consume a value
-		// 3) parameter set, and some value bound. But maybe that value is just a prefix to what the user actually wants
-		// 3.1) or maybe that value was resolved by position, but is a prefix of an actual valid key
+		// 3) parameter set with multiple values, enough to cover arity. We're done
+		// 4) parameter set, and some value bound. But maybe that value is just a prefix to what the user actually wants
+		// 4.1) or maybe that value was resolved by position, but is a prefix of an actual valid key
 
 		if (!set) {
 			if (unfinished == null) { // case 1 above
@@ -298,11 +308,18 @@ public class StandardParameterResolver implements ParameterResolver {
 
 			String prefix = context.currentWordUpToCursor() != null ? context.currentWordUpToCursor() : "";
 			// TODO: should not look at last word only, but everything after what was used for key
-			// Case 3
+
+			Object value = convertRawValue(parameterRawValue, methodParameter);
+			if (value instanceof Collection && ((Collection) value).size() == arity
+					|| (ObjectUtils.isArray(value) && Array.getLength(value) == arity)) {
+				// We're done already
+				return result;
+			}
+			// Case 4
 			result.addAll(valueCompletions(methodParameter, context));
 
 			if (parameterRawValue.positional()) {
-				// Case 3.1: There exists "--command foo" and user has typed "--comm" which (wrongly) got resolved as a positional param
+				// Case 4.1: There exists "--command foo" and user has typed "--comm" which (wrongly) got resolved as a positional param
 				result.addAll(commandsThatStartWithContextPrefix(methodParameter, context));
 			}
 			return result;
@@ -320,7 +337,7 @@ public class StandardParameterResolver implements ParameterResolver {
 		String prefix = context.currentWordUpToCursor() != null ? context.currentWordUpToCursor() : "";
 		return describe(methodParameter).keys().stream()
 				.filter(k -> k.startsWith(prefix))
-				.map(v -> new CompletionProposal(v))
+				.map(CompletionProposal::new)
 				.collect(Collectors.toList());
 	}
 

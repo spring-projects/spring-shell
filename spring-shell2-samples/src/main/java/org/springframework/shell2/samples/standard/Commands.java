@@ -17,10 +17,11 @@
 package org.springframework.shell2.samples.standard;
 
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
+import java.util.Arrays;
 
 import org.springframework.shell2.standard.ShellComponent;
 import org.springframework.shell2.standard.ShellMethod;
+import org.springframework.shell2.standard.ShellOption;
 
 /**
  * Example commands for the Shell 2 Standard resolver.
@@ -54,4 +55,10 @@ public class Commands {
 	public void fail(ElementType elementType) {
 		throw new IllegalArgumentException("You said " + elementType);
 	}
+
+	@ShellMethod(help = "add array numbers")
+	public double addDoubles(@ShellOption(arity = 3) double[] numbers) {
+		return Arrays.stream(numbers).sum();
+	}
 }
+
