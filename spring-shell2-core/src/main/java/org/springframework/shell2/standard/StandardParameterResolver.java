@@ -45,6 +45,7 @@ import org.springframework.shell2.ParameterMissingResolutionException;
 import org.springframework.shell2.ParameterResolver;
 import org.springframework.shell2.UnfinishedParameterResolutionException;
 import org.springframework.shell2.Utils;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
@@ -71,6 +72,7 @@ import org.springframework.util.ConcurrentReferenceHashMap;
  * @author Eric Bottard
  * @author Florent Biville
  */
+@Component
 public class StandardParameterResolver implements ParameterResolver {
 
 	private final ConversionService conversionService;
@@ -84,6 +86,7 @@ public class StandardParameterResolver implements ParameterResolver {
 	 */
 	private final Map<CacheKey, Map<Parameter, ParameterRawValue>> parameterCache = new ConcurrentReferenceHashMap<>();
 
+	@Autowired
 	public StandardParameterResolver(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}

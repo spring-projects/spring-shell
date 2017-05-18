@@ -46,8 +46,10 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
+import org.springframework.shell2.result.TypeHierarchyResultHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
@@ -64,7 +66,8 @@ import org.springframework.util.ReflectionUtils;
 public class JLineShell implements Shell {
 
 	@Autowired
-	ResultHandlers resultHandlers = new ResultHandlers();
+	@Qualifier("main")
+	ResultHandler resultHandler;
 
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -133,7 +136,7 @@ public class JLineShell implements Shell {
 			}
 			catch (UserInterruptException e) {
 				if (e.getPartialLine().isEmpty()) {
-					resultHandlers.handleResult(new ExitRequest(1));
+					resultHandler.handleResult(new ExitRequest(1));
 				} else {
 					continue;
 				}
@@ -171,7 +174,7 @@ public class JLineShell implements Shell {
 					result = e;
 				}
 
-				resultHandlers.handleResult(result);
+				resultHandler.handleResult(result);
 
 			}
 			else {

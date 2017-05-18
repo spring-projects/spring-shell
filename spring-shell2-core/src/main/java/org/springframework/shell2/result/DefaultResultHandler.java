@@ -16,6 +16,7 @@
 
 package org.springframework.shell2.result;
 
+import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
 /**

@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.shell2.ExitRequest;
+import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
 /**

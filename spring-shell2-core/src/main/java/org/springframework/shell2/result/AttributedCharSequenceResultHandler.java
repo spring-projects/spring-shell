@@ -20,6 +20,7 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedCharSequence;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
 /**

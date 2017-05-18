@@ -17,29 +17,29 @@
 package org.springframework.shell2.result;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell2.ResultHandlers;
+import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
 /**
  * A {@link ResultHandler} that deals with {@link Iterable}s and delegates to
- * {@link ResultHandlers} for each element in turn.
+ * {@link TypeHierarchyResultHandler} for each element in turn.
  *
  * @author Eric Bottard
  */
 @Component
 public class IterableResultHandler implements ResultHandler<Iterable> {
 
-	private ResultHandlers resultHandlers;
+	private ResultHandler delegate;
 
-	@Autowired
-	public void setResultHandlers(ResultHandlers resultHandlers) {
-		this.resultHandlers = resultHandlers;
+	// Setter injection to avoid circular dependency at creation time
+	public void setDelegate(ResultHandler delegate) {
+		this.delegate = delegate;
 	}
 
 	@Override
 	public void handleResult(Iterable result) {
 		for (Object o : result) {
-			resultHandlers.handleResult(o);
+			delegate.handleResult(o);
 		}
 	}
 }

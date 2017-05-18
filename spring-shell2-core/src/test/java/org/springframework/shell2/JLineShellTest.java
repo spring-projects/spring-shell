@@ -23,12 +23,12 @@ import org.jline.reader.UserInterruptException;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import org.springframework.shell2.result.ResultHandler;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.springframework.shell2.result.TypeHierarchyResultHandler;
 
 /**
  * Unit tests for {@link JLineShell}.
@@ -43,7 +43,7 @@ public class JLineShellTest {
 	public void testCtrlCInterception() throws Exception {
 		shell.lineReader = mock(LineReader.class);
 		AssertingExitRequestResultHandler resultHandler = new AssertingExitRequestResultHandler();
-		shell.resultHandlers.setResultHandlers(Collections.singleton(resultHandler));
+		shell.resultHandler = resultHandler;
 		when(shell.lineReader.readLine(Mockito.<String>any())).thenThrow(
 			new UserInterruptException("some input"),
 			new UserInterruptException("")

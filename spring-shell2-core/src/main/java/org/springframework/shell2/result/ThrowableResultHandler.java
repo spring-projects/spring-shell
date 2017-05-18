@@ -19,6 +19,7 @@ package org.springframework.shell2.result;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
+import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
 /**

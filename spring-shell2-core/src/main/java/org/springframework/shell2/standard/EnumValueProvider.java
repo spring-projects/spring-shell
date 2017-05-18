@@ -22,11 +22,13 @@ import java.util.List;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell2.CompletionContext;
 import org.springframework.shell2.CompletionProposal;
+import org.springframework.stereotype.Component;
 
 /**
  * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed parameters.
  * @author Eric Bottard
  */
+@Component
 public class EnumValueProvider implements ValueProvider {
 
 	@Override

@@ -40,7 +40,6 @@ import org.springframework.shell2.standard.StandardParameterResolver;
  * @author Camilo Gonzalez
  */
 @SpringBootApplication
-@ComponentScan(basePackageClasses = Bootstrap.class)
 public class Bootstrap {
 
 	public static void main(String[] args) throws Exception {
@@ -54,17 +53,8 @@ public class Bootstrap {
 	}
 
 	@Bean
-	public ParameterResolver parameterResolver(ConversionService conversionService) {
-		return new StandardParameterResolver(conversionService);
-	}
-
-	@Bean
 	public Terminal terminal() throws IOException {
 		return TerminalBuilder.builder().build();
 	}
 
-	@Bean
-	public EnumValueProvider enumValueProvider() {
-		return new EnumValueProvider();
-	}
 }

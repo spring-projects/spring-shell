@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2;
+package org.springframework.shell2.result;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -23,17 +23,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell2.result.ResultHandler;
+import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
 /**
- * A unique entry point delegating to the most appropriate {@link ResultHandler},
- * according to the type of result to handle.
+ * A delegating {@link ResultHandler} that dispatches handling based on the type of the result.
+ * <p>
+ * If no direct match is found, the type hierarchy of the result is considered, including implemented interfaces.
+ * Auto-populates the handler map based on Generics type declaration of each discovered {@link ResultHandler} in the
+ * ApplicationContext.
+ * </p>
  *
  * @author Eric Bottard
  */
-@Component
-public class ResultHandlers {
+public class TypeHierarchyResultHandler implements ResultHandler<Object> {
 
 	private Map<Class<?>, ResultHandler<?>> resultHandlers = new HashMap<>();
 
@@ -67,7 +70,14 @@ public class ResultHandlers {
 	public void setResultHandlers(Set<ResultHandler<?>> resultHandlers) {
 		for (ResultHandler<?> resultHandler : resultHandlers) {
 			Type type = ((ParameterizedType) resultHandler.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
-			this.resultHandlers.put((Class<?>) type, resultHandler);
+			registerHandler((Class<?>) type, resultHandler);
+		}
+	}
+
+	private void registerHandler(Class<?> type, ResultHandler<?> resultHandler) {
+		ResultHandler<?> previous = this.resultHandlers.put(type, resultHandler);
+		if (previous != null) {
+			throw new IllegalArgumentException(String.format("Multiple ResultHandlers configured for %s: both %s and %s", type, previous, resultHandler));
 		}
 	}
 
