@@ -107,12 +107,14 @@ public class Help {
 			if (description.defaultValue().isPresent()) {
 				result.append("[");
 			}
-			if (!description.mandatoryKey()) {
-				result.append("[");
-			}
-			result.append(description.keys().iterator().next(), AttributedStyle.BOLD);
-			if (!description.mandatoryKey()) {
-				result.append("]");
+			if(!description.keys().isEmpty()) {
+				if (!description.mandatoryKey()) {
+					result.append("[");
+				}
+				result.append(description.keys().iterator().next(), AttributedStyle.BOLD);
+				if (!description.mandatoryKey()) {
+					result.append("]");
+				}
 				if (!description.formal().isEmpty()) {
 					result.append(" ");
 				}
@@ -132,7 +134,9 @@ public class Help {
 		for (ParameterDescription description : parameterDescriptions) {
 			result.append("\t").append(description.keys().stream().collect(Collectors.joining(" or ")), AttributedStyle.BOLD);
 			if (description.formal().length() > 0) {
-				result.append("  ");
+				if (!description.keys().isEmpty()) {
+					result.append("  ");
+				}
 				appendUnderlinedFormal(result, description);
 				result.append("\n\t");
 			}

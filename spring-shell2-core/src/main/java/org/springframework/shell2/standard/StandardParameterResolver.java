@@ -100,7 +100,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	@Override
 	public boolean supports(MethodParameter parameter) {
-		return true;
+		return parameter.getMethodAnnotation(ShellMethod.class) != null;
 	}
 
 	@Override

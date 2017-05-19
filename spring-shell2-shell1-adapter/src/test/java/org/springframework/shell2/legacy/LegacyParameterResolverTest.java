@@ -33,6 +33,8 @@ import org.springframework.shell.converters.BooleanConverter;
 import org.springframework.shell.converters.EnumConverter;
 import org.springframework.shell.converters.StringConverter;
 import org.springframework.shell.core.Converter;
+import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
 import org.springframework.shell2.Utils;
 import org.springframework.test.context.ContextConfiguration;
@@ -152,6 +154,96 @@ public class LegacyParameterResolverTest {
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("No converter found for --v2 from '42' to type int");
 		resolve(methodParameter, "--v1 1 --v2");
+	}
+	
+	@Test
+	public void testDescribeBothDefaultsNotDeclared() {
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.REGISTER_METHOD, 1);
+		
+		ParameterDescription description = parameterResolver.describe(methodParameter);
+		
+		assertThat(description.keys()).containsExactly("--type");
+		assertThat(description.formal()).isEqualTo(Utils.unCamelify(ArtifactType.class.getSimpleName()));
+		assertThat(description.defaultValue().isPresent()).isFalse();
+		assertThat(description.mandatoryKey()).isTrue();
+		
+		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
+		assertThat(description.help()).isEqualTo(expectedHelp);
+	}
+	
+	@Test
+	public void testDescribeBothDefaultsDeclared() {
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SOME_METHOD, 1);
+		
+		ParameterDescription description = parameterResolver.describe(methodParameter);
+		
+		assertThat(description.keys()).containsExactly("--option");
+		assertThat(description.formal()).isEqualTo(boolean.class.getName());
+		assertThat(description.defaultValue().get()).isEqualTo("false, or true if used as --option");
+		assertThat(description.mandatoryKey()).isTrue();
+		
+		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
+		assertThat(description.help()).isEqualTo(expectedHelp);
+	}
+	
+	@Test
+	public void testDescribeOnlySpecifiedDefaultDeclared() {
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SUM_METHOD, 1);
+		
+		ParameterDescription description = parameterResolver.describe(methodParameter);
+		
+		assertThat(description.keys()).containsExactly("--v2");
+		assertThat(description.formal()).isEqualTo(int.class.getName());
+		assertThat(description.defaultValue().get()).isEqualTo("42 if used as --v2");
+		assertThat(description.mandatoryKey()).isTrue();
+		
+		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
+		assertThat(description.help()).isEqualTo(expectedHelp);
+	}
+	
+	@Test
+	public void testDescribeOnlyUnspecifiedDefaultDeclared() {
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SUM_METHOD, 0);
+		
+		ParameterDescription description = parameterResolver.describe(methodParameter);
+		
+		assertThat(description.keys()).containsExactly("--v1");
+		assertThat(description.formal()).isEqualTo(int.class.getName());
+		assertThat(description.defaultValue().get()).isEqualTo("38");
+		assertThat(description.mandatoryKey()).isTrue();
+		
+		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
+		assertThat(description.help()).isEqualTo(expectedHelp);
+	}
+	
+	@Test
+	public void testDescribeDefaultKey() {
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.LEGACY_ECHO_METHOD, 0);
+		
+		ParameterDescription description = parameterResolver.describe(methodParameter);
+		
+		assertThat(description.keys()).isEmpty();
+		assertThat(description.formal()).isEqualTo(Utils.unCamelify(String.class.getSimpleName()));
+		assertThat(description.defaultValue().isPresent()).isFalse();
+		assertThat(description.mandatoryKey()).isFalse();
+		
+		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
+		assertThat(description.help()).isEqualTo(expectedHelp);
+	}
+	
+	@Test
+	public void testDescribeNonMandatoryNoDefaults() {
+		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SOME_METHOD, 0);
+		
+		ParameterDescription description = parameterResolver.describe(methodParameter);
+		
+		assertThat(description.keys()).containsExactly("--key");
+		assertThat(description.formal()).isEqualTo(Utils.unCamelify(String.class.getSimpleName()));
+		assertThat(description.defaultValue().get()).isEqualTo("null");
+		assertThat(description.mandatoryKey()).isTrue();
+		
+		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
+		assertThat(description.help()).isEqualTo(expectedHelp);
 	}
 
 	private Object resolve(MethodParameter methodParameter, String command) {

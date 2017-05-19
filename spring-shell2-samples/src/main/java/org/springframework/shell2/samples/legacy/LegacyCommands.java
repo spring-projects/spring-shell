@@ -43,7 +43,7 @@ public class LegacyCommands implements CommandMarker {
 					key = {"type"},
 					help = "the type for the registered module")
 			ArtifactType type,
-			@CliOption(mandatory = true,
+			@CliOption(mandatory = false,
 					key = {"coordinates", "coords"},
 					help = "coordinates to the module archive")
 			String coordinates,
@@ -56,8 +56,28 @@ public class LegacyCommands implements CommandMarker {
 	}
 
 	@CliCommand(value = "sum", help = "adds two numbers")
-	public int sum(@CliOption(key = "v1", unspecifiedDefaultValue = "38") int a, @CliOption(key = "v2", specifiedDefaultValue = "42") int b) {
+	public int sum(
+		@CliOption(key = "v1", unspecifiedDefaultValue = "38") int a,
+		@CliOption(key = "v2", specifiedDefaultValue = "42") int b) {
 		return a + b;
+	}
+
+	@CliCommand(value = "sum2", help = "adds two numbers")
+	public int sum2(
+			@CliOption(key = "v1", unspecifiedDefaultValue = "38") int a,
+			@CliOption(key = "v2", specifiedDefaultValue = "42", mandatory = true) int b,
+			@CliOption(key = "v3", mandatory = false) int c) {
+		return a + b + c;
+	}
+	
+	@CliCommand(value = "legacy-echo", help = "Echoes a message")
+	public String legacyEcho(@CliOption(key = "", mandatory = true) String message) {
+		return message;
+	}
+	
+	@CliCommand(value = "optional-echo", help = "Echoes an optional message")
+	public String optionalEcho(@CliOption(key = "", mandatory = false) String message) {
+		return message;
 	}
 
 }
