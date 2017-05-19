@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.springframework.shell2.legacy;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
@@ -30,16 +31,21 @@ import org.springframework.util.ReflectionUtils;
 /**
  * A {@link MethodTargetResolver} that discovers methods annotated with {@link CliCommand} on beans
  * implementing the {@link CommandMarker} marker interface.
+ * 
  * @author Eric Bottard
  * @author Florent Biville
+ * @author Camilo Gonzalez
  */
 @Component
 public class LegacyMethodTargetResolver implements MethodTargetResolver {
 
+	@Autowired
+	private ApplicationContext applicationContext;
+	
 	@Override
-	public Map<String, MethodTarget> resolve(ApplicationContext context) {
+	public Map<String, MethodTarget> resolve() {
 		Map<String, MethodTarget> methodTargets = new HashMap<>();
-		Map<String, CommandMarker> beans = context.getBeansOfType(CommandMarker.class);
+		Map<String, CommandMarker> beans = applicationContext.getBeansOfType(CommandMarker.class);
 		for (Object bean : beans.values()) {
 			Class<?> clazz = bean.getClass();
 			ReflectionUtils.doWithMethods(clazz, method -> {

@@ -17,21 +17,20 @@
 package org.springframework.shell2.legacy;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
+
+import java.util.Map;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell2.MethodTarget;
 import org.springframework.shell2.MethodTargetResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
 
 /**
  * Created by ericbottard on 09/12/15.
@@ -41,9 +40,6 @@ import static org.assertj.core.data.MapEntry.entry;
 public class LegacyMethodTargetResolverTest {
 
 	@Autowired
-	private ApplicationContext applicationContext;
-
-	@Autowired
 	private LegacyCommands legacyCommands;
 
 	@Autowired
@@ -51,7 +47,7 @@ public class LegacyMethodTargetResolverTest {
 
 	@Test
 	public void findsMethodsAnnotatedWithCliCommand() throws Exception {
-		Map<String, MethodTarget> targets = resolver.resolve(applicationContext);
+		Map<String, MethodTarget> targets = resolver.resolve();
 
 		assertThat(targets).contains(entry(
 				"register module",

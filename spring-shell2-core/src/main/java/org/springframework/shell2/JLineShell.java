@@ -44,12 +44,10 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
-import org.springframework.shell2.result.TypeHierarchyResultHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
@@ -95,7 +93,7 @@ public class JLineShell implements Shell {
 	@PostConstruct
 	public void init() throws Exception {
 		for (MethodTargetResolver resolver : applicationContext.getBeansOfType(MethodTargetResolver.class).values()) {
-			methodTargets.putAll(resolver.resolve(applicationContext));
+			methodTargets.putAll(resolver.resolve());
 		}
 
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()

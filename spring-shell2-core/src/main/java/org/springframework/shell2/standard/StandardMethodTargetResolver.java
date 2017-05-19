@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.springframework.shell2.standard;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.shell2.MethodTarget;
 import org.springframework.shell2.MethodTargetResolver;
@@ -31,12 +32,16 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Eric Bottard
  * @author Florent Biville
+ * @author Camilo Gonzalez
  */
 @Component
 public class StandardMethodTargetResolver implements MethodTargetResolver {
 
+	@Autowired
+	private ApplicationContext applicationContext;
+	
 	@Override
-	public Map<String, MethodTarget> resolve(ApplicationContext applicationContext) {
+	public Map<String, MethodTarget> resolve() {
 		Map<String, MethodTarget> methodTargets = new HashMap<>();
 		Map<String, Object> commandBeans = applicationContext.getBeansWithAnnotation(ShellComponent.class);
 		for (Object bean : commandBeans.values()) {
