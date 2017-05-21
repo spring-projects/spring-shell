@@ -96,6 +96,10 @@ public class JLineShell implements Shell {
 			methodTargets.putAll(resolver.resolve());
 		}
 
+		DefaultParser parser = new DefaultParser();
+		parser.setEofOnUnclosedQuote(true);
+		parser.setEofOnEscapedNewLine(true);
+
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 				.terminal(terminal)
 				.appName("Foo")
@@ -120,7 +124,7 @@ public class JLineShell implements Shell {
 						}
 					}
 				})
-				.parser(new DefaultParser());
+				.parser(parser);
 
 		lineReader = lineReaderBuilder.build();
 
@@ -144,7 +148,10 @@ public class JLineShell implements Shell {
 			MethodTarget methodTarget = null;
 			int c = 0;
 			int wordsUsedForCommandKey = 0;
-			for (String word : lineReader.getParsedLine().words()) {
+			List<String> words = lineReader.getParsedLine().words();
+			words = sanitizeInput(words);
+
+			for (String word : words) {
 				c++;
 				candidateCommand.append(separator).append(word);
 				MethodTarget t = methodTargets.get(candidateCommand.toString());
@@ -155,9 +162,6 @@ public class JLineShell implements Shell {
 				separator = " ";
 			}
 
-			List<String> words = lineReader.getParsedLine().words();
-			// TODO investigate trailing empty string in e.g. "help 'WTF 2'"
-			words = words.stream().filter(w -> w.length() > 0).collect(Collectors.toList());
 			if (methodTarget != null) {
 				List<String> wordsForArgs = words.subList(wordsUsedForCommandKey, words.size());
 				Method method = methodTarget.getMethod();
@@ -179,6 +183,19 @@ public class JLineShell implements Shell {
 				System.out.println("No command found for " + words);
 			}
 		}
+	}
+
+	/**
+	 * Sanitize the buffer input given the customizations applied to the JLine parser (<em>e.g.</em> support for
+	 * line continuations, <em>etc.</em>)
+	 */
+	private List<String> sanitizeInput(List<String> words) {
+		words = words.stream()
+			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
+			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
+			.filter(w -> w.length() > 0) // Empty word introduced when using quotes, no idea why...
+			.collect(Collectors.toList());
+		return words;
 	}
 
 	private void validateArgs(Object[] args, MethodTarget methodTarget) {
