@@ -100,49 +100,15 @@ public class LegacyParameterResolver implements ParameterResolver {
 				.filter(key -> !key.isEmpty())
 				.map(key -> CLI_PREFIX + key)
 				.collect(Collectors.toList()));
-		Optional<String> defaultValue = defaultValueFor(option, result.keys());
-		if (defaultValue.isPresent()) {
-			result.defaultValue(defaultValue.get());
+		if (!option.mandatory()) {
+			result.defaultValue(CLI_OPTION_NULL.equals(option.unspecifiedDefaultValue()) ? "null" : option.unspecifiedDefaultValue());
+		}
+		if(!CLI_OPTION_NULL.equals(option.specifiedDefaultValue())) {
+			result.whenFlag(option.specifiedDefaultValue());
 		}
 		boolean containsEmptyKey = keys.contains("");
 		result.mandatoryKey(!containsEmptyKey);
 		return result;
-	}
-
-	private Optional<String> defaultValueFor(CliOption option, List<String> keys) {
-		// CliOption annotations have two default values, one for when the key is specified without a value,
-		// and one when the key isn't specified (e.g. "command --key" vs "command")
-
-		final boolean unspecifiedDefaultDeclared = !CLI_OPTION_NULL.equals(option.unspecifiedDefaultValue());
-		final boolean specifiedDefaultDeclared = !CLI_OPTION_NULL.equals(option.specifiedDefaultValue());
-
-		if (!unspecifiedDefaultDeclared && !specifiedDefaultDeclared) {
-			if (option.mandatory()) {
-				return Optional.empty();
-			} else {
-				// according to CliOption, is no default is declared, then null will be presented to non-primitive
-				// arguments
-				return Optional.of("null");
-			}
-		}
-
-		final StringBuilder defaultValue = new StringBuilder();
-
-		if (unspecifiedDefaultDeclared) {
-			defaultValue.append(option.unspecifiedDefaultValue());
-		}
-		
-		if (specifiedDefaultDeclared) {
-			if (unspecifiedDefaultDeclared) {
-				defaultValue.append(", or ");
-			}
-			
-			defaultValue.append(option.specifiedDefaultValue());
-			defaultValue.append(" if used as ");
-			defaultValue.append(keys.stream().collect(Collectors.joining(" or ")));
-		}
-
-		return Optional.of(defaultValue.toString());
 	}
 
 	@Override
@@ -175,7 +141,7 @@ public class LegacyParameterResolver implements ParameterResolver {
 		for (String key : option.key()) {
 			if (values.containsKey(key)) {
 				String value = values.get(key);
-				if (value == null && !"__NULL__".equals(option.specifiedDefaultValue())) {
+				if (value == null && !CLI_OPTION_NULL.equals(option.specifiedDefaultValue())) {
 					value = option.specifiedDefaultValue();
 				}
 				Class<?> parameterType = methodParameter.getParameterType();

@@ -36,9 +36,9 @@ public class Commands {
 
 	}
 
-	@ShellMethod(help = "it's better")
-	public void foobar() {
-
+	@ShellMethod(help = "Shows support for boolean parameters, with arity=0")
+	public void shutdown(@ShellOption(arity = 0) boolean force) {
+		System.out.println("You passed " + force);
 	}
 
 	@ShellMethod(help = "something else")

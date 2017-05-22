@@ -56,7 +56,10 @@ public class LegacyCommands implements CommandMarker {
 	}
 
 	@CliCommand(value = "sum", help = "adds two numbers")
-	public int sum(@CliOption(key = "v1", unspecifiedDefaultValue = "38") int a, @CliOption(key = "v2", specifiedDefaultValue = "42") int b) {
+	public int sum(
+		@CliOption(key = "v1", unspecifiedDefaultValue = "38") int a,
+		@CliOption(key = "v2", specifiedDefaultValue = "42") int b
+	) {
 		return a + b;
 	}
 	
@@ -68,7 +71,7 @@ public class LegacyCommands implements CommandMarker {
 	@CliCommand(value = "someMethod", help = "Method used for testing purposes")
 	public String someMethod(
 			@CliOption(key = "key", mandatory = false, help = "The optional parameter") String parameter,
-			@CliOption(key = "option", help = "an option", specifiedDefaultValue = "true", unspecifiedDefaultValue = "false", mandatory = true) boolean option) {
+			@CliOption(key = "option", help = "an option", specifiedDefaultValue = "true", unspecifiedDefaultValue = "false") boolean option) {
 		return parameter + ", " + option;
 	}
 	

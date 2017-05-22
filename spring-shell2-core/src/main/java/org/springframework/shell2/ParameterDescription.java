@@ -47,9 +47,16 @@ public class ParameterDescription {
 	private String formal;
 
 	/**
-	 * A string representation of the default value for the parameter, if any.
+	 * A string representation of the default value (if the option is left out entirely) for the parameter, if any.
 	 */
 	private Optional<String> defaultValue = Optional.empty();
+
+	/**
+	 * A string representation of the default value for this parameter, if it can be used as a mere flag (<em>e.g.</em>
+	 * {@literal --force} without a value, being an equivalent to {@literal --force true}).
+	 * <p>{@literal Optional.empty()} (the default) means that this parameter cannot be used as a flag.</p>
+	 */
+	private Optional<String> defaultValueWhenFlag = Optional.empty();
 
 	/**
 	 * The list of 'keys' that can be used to specify this parameter, if any.
@@ -99,6 +106,11 @@ public class ParameterDescription {
 		return this;
 	}
 
+	public ParameterDescription whenFlag(String defaultValue) {
+		this.defaultValueWhenFlag = Optional.of(defaultValue);
+		return this;
+	}
+
 	public ParameterDescription keys(List<String> keys) {
 		this.keys = keys;
 		return this;
@@ -108,6 +120,7 @@ public class ParameterDescription {
 		this.mandatoryKey = mandatoryKey;
 		return this;
 	}
+
 
 	public String type() {
 		return type;
@@ -119,6 +132,10 @@ public class ParameterDescription {
 
 	public String help() {
 		return help;
+	}
+
+	public Optional<String> defaultValueWhenFlag() {
+		return defaultValueWhenFlag;
 	}
 
 	public ParameterDescription formal(String formal) {

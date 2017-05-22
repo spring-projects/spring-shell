@@ -179,7 +179,8 @@ public class LegacyParameterResolverTest {
 		
 		assertThat(description.keys()).containsExactly("--option");
 		assertThat(description.formal()).isEqualTo(boolean.class.getName());
-		assertThat(description.defaultValue().get()).isEqualTo("false, or true if used as --option");
+		assertThat(description.defaultValue().get()).isEqualTo("false");
+		assertThat(description.defaultValueWhenFlag().get()).isEqualTo("true");
 		assertThat(description.mandatoryKey()).isTrue();
 		
 		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
@@ -194,7 +195,8 @@ public class LegacyParameterResolverTest {
 		
 		assertThat(description.keys()).containsExactly("--v2");
 		assertThat(description.formal()).isEqualTo(int.class.getName());
-		assertThat(description.defaultValue().get()).isEqualTo("42 if used as --v2");
+		assertThat(description.defaultValue().get()).isEqualTo("null");
+		assertThat(description.defaultValueWhenFlag().get()).isEqualTo("42");
 		assertThat(description.mandatoryKey()).isTrue();
 		
 		String expectedHelp = methodParameter.getParameterAnnotation(CliOption.class).help();
