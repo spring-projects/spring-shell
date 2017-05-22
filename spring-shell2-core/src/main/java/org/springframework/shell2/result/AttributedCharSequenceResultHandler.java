@@ -40,6 +40,6 @@ public class AttributedCharSequenceResultHandler implements ResultHandler<Attrib
 
 	@Override
 	public void handleResult(AttributedCharSequence result) {
-		System.out.println(result.toAnsi(terminal));
+		terminal.writer().println(result.toAnsi(terminal));
 	}
 }
