@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -96,7 +97,7 @@ public class JLineShell implements Shell {
 			methodTargets.putAll(resolver.resolve());
 		}
 
-		DefaultParser parser = new DefaultParser();
+		ExtendedDefaultParser parser = new ExtendedDefaultParser();
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
 
@@ -143,27 +144,15 @@ public class JLineShell implements Shell {
 					continue;
 				}
 			}
-			String separator = "";
-			StringBuilder candidateCommand = new StringBuilder();
-			MethodTarget methodTarget = null;
-			int c = 0;
-			int wordsUsedForCommandKey = 0;
+
+			String line = lineReader.getParsedLine().line();
+			String command = findLongestCommand(line);
+
 			List<String> words = lineReader.getParsedLine().words();
-			words = sanitizeInput(words);
-
-			for (String word : words) {
-				c++;
-				candidateCommand.append(separator).append(word);
-				MethodTarget t = methodTargets.get(candidateCommand.toString());
-				if (t != null) {
-					methodTarget = t;
-					wordsUsedForCommandKey = c;
-				}
-				separator = " ";
-			}
-
-			if (methodTarget != null) {
-				List<String> wordsForArgs = words.subList(wordsUsedForCommandKey, words.size());
+			if (command != null) {
+				int wordsUsedForCommandKey = command.split(" ").length;
+				MethodTarget methodTarget = methodTargets.get(command);
+				List<String> wordsForArgs = sanitizeInput(words.subList(wordsUsedForCommandKey, words.size()));
 				Method method = methodTarget.getMethod();
 
 				Object result = null;
@@ -180,7 +169,7 @@ public class JLineShell implements Shell {
 
 			}
 			else {
-				System.out.println("No command found for " + words);
+				System.out.println("No command found for " + sanitizeInput(words));
 			}
 		}
 	}
@@ -252,23 +241,22 @@ public class JLineShell implements Shell {
 		public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
 			String prefix = reader.getBuffer().upToCursor();
 
-			String best = methodTargets.keySet().stream()
-					.filter(c -> prefix.startsWith(c))
-					.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
-			if (best.equals("")) { // no command found
-				List<Candidate> result = commandsStartingWith(prefix);
-				candidates.addAll(result);
+			// Find the longest match for a command name with words in the buffer
+			String best = findLongestCommand(prefix);
+			if (best == null) { // no command found
+				candidates.addAll(commandsStartingWith(prefix));
 				return;
-			} // trying to complete args for command <best>,
+			} // if we're here, we're either trying to complete args for command <best> (will fall through)
 			// or trying to complete command whose name starts with <best> (which also happens to be a command)
 			else if (prefix.equals(best)) {
 				candidates.addAll(commandsStartingWith(best));
-				return;
 			} // valid command (<best>) followed by a suffix (but not necessarily [<space> args*])
 			else if (!prefix.startsWith(best + " ")) {
 				// must be an invalid command, can't do anything
 				return;
 			}
+
+			CompletingParsedLine cpl = (line instanceof CompletingParsedLine) ? ((CompletingParsedLine) line) : t -> t;
 
 			// Try to complete arguments
 			MethodTarget methodTarget = methodTargets.get(best);
@@ -286,9 +274,9 @@ public class JLineShell implements Shell {
 				resolver.complete(methodParameter, context)
 						.stream()
 						.map(completion -> new Candidate(
-										completion.value(),
+										cpl.emit(completion.value()).toString(),
 										completion.displayText(),
-										"Comp for parameter " + resolver.describe(methodParameter).toString(),
+										"Value for parameter " + resolver.describe(methodParameter).toString(),
 										resolver.describe(methodParameter).help(),
 										null, null, true)
 						)
@@ -306,5 +294,17 @@ public class JLineShell implements Shell {
 		private Candidate toCandidate(String command, MethodTarget methodTarget) {
 			return new Candidate(command, command, "Available commands", methodTarget.getHelp(), null, null, true);
 		}
+	}
+
+	/**
+	 * Returns the longest command that can be matched as first word(s) in the given buffer.
+	 *
+	 * @return a valid command name, or {@literal null} if none matched
+	 */
+	private String findLongestCommand(String prefix) {
+		String result = methodTargets.keySet().stream()
+			.filter(prefix::startsWith)
+			.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
+		return "".equals(result) ? null : result;
 	}
 }

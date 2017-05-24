@@ -18,10 +18,17 @@ package org.springframework.shell2.samples.standard;
 
 import java.lang.annotation.ElementType;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.core.MethodParameter;
+import org.springframework.shell2.CompletionContext;
+import org.springframework.shell2.CompletionProposal;
 import org.springframework.shell2.standard.ShellComponent;
 import org.springframework.shell2.standard.ShellMethod;
 import org.springframework.shell2.standard.ShellOption;
+import org.springframework.shell2.standard.ValueProviderSupport;
+import org.springframework.stereotype.Component;
 
 /**
  * Example commands for the Shell 2 Standard resolver.
@@ -30,6 +37,11 @@ import org.springframework.shell2.standard.ShellOption;
  */
 @ShellComponent("")
 public class Commands {
+
+	@ShellMethod(help = "a command whose name looks the same as another one")
+	public void helpMeOut() {
+		System.out.println("You can go");
+	}
 
 	@ShellMethod(help = "it's cool")
 	public void foo(String bar) {
@@ -41,9 +53,9 @@ public class Commands {
 		System.out.println("You passed " + force);
 	}
 
-	@ShellMethod(help = "something else")
-	public void somethingElse() {
-
+	@ShellMethod(help = "test completion of special values")
+	public void quote(@ShellOption(valueProvider = FunnyValuesProvider.class) String text) {
+		System.out.println("You said " + text);
 	}
 
 	@ShellMethod(help = "add stuff")
@@ -62,3 +74,23 @@ public class Commands {
 	}
 }
 
+/**
+ * A {@link org.springframework.shell2.standard.ValueProvider} that emits values with special characters
+ * (quotes, escapes, <em>etc.</em>)
+ *
+ * @author Eric Bottard
+ */
+@Component
+class FunnyValuesProvider extends ValueProviderSupport {
+
+	private final static String[] VALUES = new String[] {
+		"hello world",
+		"I'm quoting \"The Daily Mail\"",
+		"10 \\ 3 = 3"
+	};
+
+	@Override
+	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints) {
+		return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
+	}
+}
