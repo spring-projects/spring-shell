@@ -25,11 +25,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.shell2.standard.EnumValueProvider;
-import org.springframework.shell2.standard.StandardParameterResolver;
 
 /**
  * Main entry point for the application.

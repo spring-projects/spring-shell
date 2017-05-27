@@ -14,9 +14,28 @@
  * limitations under the License.
  */
 
+package org.springframework.shell2.standard.commands;
+
+import org.jline.terminal.Terminal;
+import org.jline.utils.InfoCmp;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell2.standard.ShellComponent;
+import org.springframework.shell2.standard.ShellMethod;
+
 /**
- * Contains default commands that ought to apply to each shell app.
+ * ANSI console related commands.
  *
  * @author Eric Bottard
  */
-package org.springframework.shell2.commands;
+@ShellComponent
+public class Console {
+
+	@Autowired
+	private Terminal terminal;
+
+	@ShellMethod(help = "Clear the shell screen.")
+	public void clear() {
+		terminal.puts(InfoCmp.Capability.clear_screen);
+	}
+}
