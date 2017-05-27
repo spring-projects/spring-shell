@@ -74,4 +74,9 @@ public class MethodTarget {
 		result = 31 * result + help.hashCode();
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return method.toString();
+	}
 }

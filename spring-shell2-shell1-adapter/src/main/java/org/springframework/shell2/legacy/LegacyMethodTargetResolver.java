@@ -16,6 +16,8 @@
 
 package org.springframework.shell2.legacy;
 
+import static org.springframework.util.StringUtils.collectionToDelimitedString;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,4 +59,11 @@ public class LegacyMethodTargetResolver implements MethodTargetResolver {
 		}
 		return methodTargets;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " contributing "
+			+ collectionToDelimitedString(resolve().keySet(), ", ", "[", "]");
+	}
+
 }

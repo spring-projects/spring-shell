@@ -429,6 +429,11 @@ public class StandardParameterResolver implements ParameterResolver {
 		public int hashCode() {
 			return Objects.hash(method, words);
 		}
+
+		@Override
+		public String toString() {
+			return method.getName() + " " + words;
+		}
 	}
 
 	private static class ParameterRawValue {
@@ -472,6 +477,15 @@ public class StandardParameterResolver implements ParameterResolver {
 
 		public boolean positional() {
 			return key == null;
+		}
+
+		@Override
+		public String toString() {
+			return "ParameterRawValue{" +
+				"value='" + value + '\'' +
+				", explicit=" + explicit +
+				", key='" + key + '\'' +
+				'}';
 		}
 	}
 

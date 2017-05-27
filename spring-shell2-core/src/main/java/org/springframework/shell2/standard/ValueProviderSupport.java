@@ -20,6 +20,10 @@ import org.springframework.core.MethodParameter;
 import org.springframework.shell2.CompletionContext;
 
 /**
+ * Base class for {@link ValueProvider} that match by type. Subclasses {@literal C} will be selected for parameters
+ * whose {@literal @}{@link ShellOption#valueProvider()} return the concrete class {@literal C}.
+ *
+ * @author Eric Bottard
  */
 public abstract class ValueProviderSupport implements ValueProvider {
 

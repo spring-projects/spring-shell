@@ -16,6 +16,9 @@
 
 package org.springframework.shell2.standard;
 
+import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
+import static org.springframework.util.StringUtils.collectionToDelimitedString;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +27,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.shell2.MethodTarget;
 import org.springframework.shell2.MethodTargetResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * The standard implementation of {@link MethodTargetResolver} for new shell applications,
@@ -58,5 +63,11 @@ public class StandardMethodTargetResolver implements MethodTargetResolver {
 			}, method -> method.getAnnotation(ShellMethod.class) != null);
 		}
 		return methodTargets;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " contributing "
+			+ collectionToDelimitedString(resolve().keySet(), ", ", "[", "]");
 	}
 }
