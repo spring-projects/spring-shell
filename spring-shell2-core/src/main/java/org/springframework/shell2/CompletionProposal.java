@@ -51,32 +51,36 @@ public class CompletionProposal {
 		return value;
 	}
 
-	public void value(String value) {
+	public CompletionProposal value(String value) {
 		this.value = value;
+		return this;
 	}
 
 	public String displayText() {
 		return displayText;
 	}
 
-	public void displayText(String displayText) {
+	public CompletionProposal displayText(String displayText) {
 		this.displayText = displayText;
+		return this;
 	}
 
 	public String description() {
 		return description;
 	}
 
-	public void description(String description) {
+	public CompletionProposal description(String description) {
 		this.description = description;
+		return this;
 	}
 
 	public String category() {
 		return category;
 	}
 
-	public void category(String category) {
+	public CompletionProposal category(String category) {
 		this.category = category;
+		return this;
 	}
 
 	@Override
