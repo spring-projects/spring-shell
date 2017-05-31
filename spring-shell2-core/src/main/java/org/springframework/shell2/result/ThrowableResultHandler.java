@@ -28,11 +28,11 @@ import org.springframework.stereotype.Component;
  * @author Eric Bottard
  */
 @Component
-public class ThrowableResultHandler implements ResultHandler<Throwable> {
+public class ThrowableResultHandler extends TerminalAwareResultHandler implements ResultHandler<Throwable> {
 
 	@Override
 	public void handleResult(Throwable result) {
-		System.out.println(new AttributedString(result.toString(),
+		terminal.writer().println(new AttributedString(result.toString(),
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
 	}
 }

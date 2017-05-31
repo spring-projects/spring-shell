@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2.result;
+package org.springframework.shell2;
 
-import org.jline.terminal.Terminal;
-import org.jline.utils.AttributedCharSequence;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell2.ResultHandler;
-import org.springframework.stereotype.Component;
+import java.util.Map;
 
 /**
- * A {@link ResultHandler} that knows how to render JLine's {@link AttributedCharSequence}.
+ * Implementing this interface allows sub-systems (such as the {@literal help} command) to
+ * discover available commands.
  *
  * @author Eric Bottard
  */
-@Component
-public class AttributedCharSequenceResultHandler extends TerminalAwareResultHandler implements ResultHandler<AttributedCharSequence> {
+public interface CommandRegistry {
 
-	@Override
-	public void handleResult(AttributedCharSequence result) {
-		terminal.writer().println(result.toAnsi(terminal));
-	}
+
+	/**
+	 * Return the mapping from command trigger keywords to implementation.
+	 */
+	public Map<String, MethodTarget> listCommands();
+
 }

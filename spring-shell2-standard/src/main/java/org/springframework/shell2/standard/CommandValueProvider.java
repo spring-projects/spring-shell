@@ -19,15 +19,12 @@ package org.springframework.shell2.standard;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell2.CompletionContext;
 import org.springframework.shell2.CompletionProposal;
-import org.springframework.shell2.Shell;
+import org.springframework.shell2.CommandRegistry;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,17 +35,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommandValueProvider extends ValueProviderSupport {
 
-	private final Shell shell;
+	private final CommandRegistry commandRegistry;
 
 	@Lazy
 	@Autowired
-	public CommandValueProvider(Shell shell) {
-		this.shell = shell;
+	public CommandValueProvider(CommandRegistry commandRegistry) {
+		this.commandRegistry = commandRegistry;
 	}
 
 	@Override
 	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints) {
-		return shell.listCommands().keySet().stream()
+		return commandRegistry.listCommands().keySet().stream()
 			.map(CompletionProposal::new)
 			.collect(Collectors.toList());
 	}

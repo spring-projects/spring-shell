@@ -37,7 +37,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.shell2.MethodTarget;
 import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
-import org.springframework.shell2.Shell;
+import org.springframework.shell2.CommandRegistry;
 import org.springframework.shell2.standard.CommandValueProvider;
 import org.springframework.shell2.standard.ShellComponent;
 import org.springframework.shell2.standard.ShellMethod;
@@ -54,7 +54,7 @@ public class Help {
 
 	private final List<ParameterResolver> parameterResolvers;
 
-	private Shell shell;
+	private CommandRegistry commandRegistry;
 
 	@Autowired
 	public Help(List<ParameterResolver> parameterResolvers) {
@@ -62,8 +62,8 @@ public class Help {
 	}
 
 	@Autowired // ctor injection impossible b/c of circular dependency
-	public void setShell(Shell shell) {
-		this.shell = shell;
+	public void setCommandRegistry(CommandRegistry commandRegistry) {
+		this.commandRegistry = commandRegistry;
 	}
 
 	@ShellMethod(help = "Display help about available commands.", prefix = "-")
@@ -85,7 +85,7 @@ public class Help {
 	 * Return a description of a specific command. Uses a layout inspired by *nix man pages.
 	 */
 	private CharSequence documentCommand(String command) {
-		MethodTarget methodTarget = shell.listCommands().get(command);
+		MethodTarget methodTarget = commandRegistry.listCommands().get(command);
 		if (methodTarget == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
 		}
@@ -181,7 +181,7 @@ public class Help {
 		}
 
 		// ALSO KNOWN AS
-		Set<String> aliases = shell.listCommands().entrySet().stream()
+		Set<String> aliases = commandRegistry.listCommands().entrySet().stream()
 				.filter(e -> e.getValue().equals(methodTarget))
 				.map(Map.Entry::getKey)
 				.filter(c -> !command.equals(c))
@@ -203,7 +203,7 @@ public class Help {
 	}
 
 	private CharSequence listCommands() {
-		Map<String, Set<String>> groupedByMethodTarget = shell.listCommands().entrySet().stream()
+		Map<String, Set<String>> groupedByMethodTarget = commandRegistry.listCommands().entrySet().stream()
 				.collect(Collectors.groupingBy(e -> e.getValue().getHelp(), // Use help() as the grouping key
 						mapping(Map.Entry::getKey, toCollection(TreeSet::new)))); // accumulate the command 'names' into a sorted set
 

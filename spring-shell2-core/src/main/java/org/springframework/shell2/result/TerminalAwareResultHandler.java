@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,19 @@
 package org.springframework.shell2.result;
 
 import org.jline.terminal.Terminal;
-import org.jline.utils.AttributedCharSequence;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell2.ResultHandler;
-import org.springframework.stereotype.Component;
 
 /**
- * A {@link ResultHandler} that knows how to render JLine's {@link AttributedCharSequence}.
+ * Base class for ResultHandlers that rely on JLine's {@link Terminal}.
  *
  * @author Eric Bottard
  */
-@Component
-public class AttributedCharSequenceResultHandler extends TerminalAwareResultHandler implements ResultHandler<AttributedCharSequence> {
+public abstract  class TerminalAwareResultHandler {
+	protected Terminal terminal;
 
-	@Override
-	public void handleResult(AttributedCharSequence result) {
-		terminal.writer().println(result.toAnsi(terminal));
+	@Autowired
+	public void setTerminal(Terminal terminal) {
+		this.terminal = terminal;
 	}
 }

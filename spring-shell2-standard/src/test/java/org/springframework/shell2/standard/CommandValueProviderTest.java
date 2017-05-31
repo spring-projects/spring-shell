@@ -23,24 +23,19 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.assertj.core.api.Assertions;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.shell2.CompletionContext;
 import org.springframework.shell2.CompletionProposal;
 import org.springframework.shell2.MethodTarget;
-import org.springframework.shell2.Shell;
+import org.springframework.shell2.CommandRegistry;
 import org.springframework.shell2.Utils;
 import org.springframework.util.ReflectionUtils;
 
@@ -52,7 +47,7 @@ import org.springframework.util.ReflectionUtils;
 public class CommandValueProviderTest {
 
 	@Mock
-	private Shell shell;
+	private CommandRegistry shell;
 
 	@Before
 	public void setUp() {

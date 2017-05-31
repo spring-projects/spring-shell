@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,27 @@
 
 package org.springframework.shell2.result;
 
-import org.jline.terminal.Terminal;
-import org.jline.utils.AttributedCharSequence;
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell2.CommandNotFound;
 import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
 /**
- * A {@link ResultHandler} that knows how to render JLine's {@link AttributedCharSequence}.
+ * Used when no command can be matched for user input.
+ *
+ * Simply prints an error message, without printing the exception class.
  *
  * @author Eric Bottard
  */
 @Component
-public class AttributedCharSequenceResultHandler extends TerminalAwareResultHandler implements ResultHandler<AttributedCharSequence> {
+public class CommandNotFoundResultHandler extends TerminalAwareResultHandler implements ResultHandler<CommandNotFound> {
 
 	@Override
-	public void handleResult(AttributedCharSequence result) {
-		terminal.writer().println(result.toAnsi(terminal));
+	public void handleResult(CommandNotFound result) {
+		terminal.writer().println(new AttributedString(result.getMessage(),
+			AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
+
 	}
 }

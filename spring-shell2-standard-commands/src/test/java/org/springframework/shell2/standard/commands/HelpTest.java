@@ -38,7 +38,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.shell2.standard.StandardParameterResolver;
 import org.springframework.shell2.MethodTarget;
 import org.springframework.shell2.ParameterResolver;
-import org.springframework.shell2.Shell;
+import org.springframework.shell2.CommandRegistry;
 import org.springframework.shell2.standard.ShellComponent;
 import org.springframework.shell2.standard.ShellMethod;
 import org.springframework.shell2.standard.ShellOption;
@@ -93,7 +93,7 @@ public class HelpTest {
 		}
 
 		@Bean
-		public Shell shell() {
+		public CommandRegistry shell() {
 			return () -> {
 				Map<String, MethodTarget> result = new HashMap<>();
 				Method method = ReflectionUtils.findMethod(Commands.class, "firstCommand", boolean.class, boolean.class, int.class, float[].class);

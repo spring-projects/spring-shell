@@ -16,11 +16,6 @@
 
 package org.springframework.shell2;
 
-import java.io.IOException;
-
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -41,17 +36,12 @@ public class Bootstrap {
 
 	public static void main(String[] args) throws Exception {
 		ConfigurableApplicationContext context = SpringApplication.run(Bootstrap.class);
-		context.getBean(JLineShell.class).run();
+		context.getBean(Shell.class).run();
 	}
 
 	@Bean
 	public ConversionService conversionService() {
 		return new DefaultConversionService();
-	}
-
-	@Bean
-	public Terminal terminal() throws IOException {
-		return TerminalBuilder.builder().build();
 	}
 
 }

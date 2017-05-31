@@ -16,28 +16,22 @@
 
 package org.springframework.shell2;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Represents the input buffer to the shell.
- *
- * @author Eric Bottard
+ * A result to be handled by the {@link ResultHandler} when no command could be mapped to user input
  */
-public interface Input {
+public class CommandNotFound extends RuntimeException {
 
-	Input EMPTY = () -> "";
+	private final List<String> words;
 
-	/**
-	 * Return the input as entered by the user.
-	 */
-	String rawText();
+	public CommandNotFound(List<String> words) {
+		this.words = words;
+	}
 
-	/**
-	 * Return the input as a list of parsed "words", having split the raw input according
-	 * to parsing rules (for example, handling quoted portions of the readInput as a single
-	 * "word")
-	 */
-	default List<String> words() {return "".equals(rawText()) ? Collections.emptyList() : Arrays.asList(rawText().split(" "));}
+	@Override
+	public String getMessage() {
+		return String.format("No command found for '%s'", words.stream().collect(Collectors.joining(" ")));
+	}
 }

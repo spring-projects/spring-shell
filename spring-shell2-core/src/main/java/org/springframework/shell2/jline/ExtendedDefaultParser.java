@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2;
+package org.springframework.shell2.jline;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -25,6 +25,8 @@ import java.util.function.Predicate;
 import org.jline.reader.EOFError;
 import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
+
+import org.springframework.shell2.CompletingParsedLine;
 
 /**
  * Shameful copy-paste of JLine's {@link org.jline.reader.impl.DefaultParser} which

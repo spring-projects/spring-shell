@@ -17,8 +17,11 @@
 package org.springframework.shell2;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Represents a shell command behavior, <em>i.e.</em> code to be executed when a command is requested.
@@ -37,9 +40,24 @@ public class MethodTarget {
 		Assert.notNull(method, "Method cannot be null");
 		Assert.notNull(bean, "Bean cannot be null");
 		Assert.hasText(help, "Help cannot be blank");
+		ReflectionUtils.makeAccessible(method);
 		this.method = method;
 		this.bean = bean;
 		this.help = help;
+	}
+
+	/**
+	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
+	 * in case of overloaded method.
+	 */
+	public static MethodTarget of(String name, Object bean, String help) {
+		Set<Method> found = new HashSet<>();
+		ReflectionUtils.doWithMethods(bean.getClass(), found::add, m -> m.getName().equals(name));
+		if (found.size() != 1) {
+			throw new IllegalArgumentException(String.format("Could not find unique method named '%s' on object of class %s. Found %s",
+				name, bean.getClass(), found));
+		}
+		return new MethodTarget(found.iterator().next(), bean, help);
 	}
 
 	public Method getMethod() {

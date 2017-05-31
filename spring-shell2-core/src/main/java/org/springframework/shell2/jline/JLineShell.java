@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2;
+package org.springframework.shell2.jline;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,12 +30,23 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
 import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.shell2.CompletingParsedLine;
+import org.springframework.shell2.CompletionContext;
+import org.springframework.shell2.CompletionProposal;
+import org.springframework.shell2.ExitRequest;
+import org.springframework.shell2.Input;
+import org.springframework.shell2.ResultHandler;
+import org.springframework.shell2.Shell;
 
 /**
  * Shell implementation using JLine to capture input and trigger completions.
@@ -42,31 +54,58 @@ import org.springframework.stereotype.Component;
  * @author Eric Bottard
  * @author Florent Biville
  */
-@Component
-public class JLineShell extends AbstractShell {
-
-	LineReader lineReader;
+@Configuration
+public class JLineShell {
 
 	@Autowired
-	private Terminal terminal;
+	@Qualifier("main")
+	private  ResultHandler resultHandler;
 
+	@Bean
+	public Terminal terminal() {
+		try {
+			return TerminalBuilder.builder().build();
+		}
+		catch (IOException e) {
+			throw new BeanCreationException("Could not create Terminal: " + e.getMessage());
+		}
+	}
+
+	@Bean
+	public Shell shell() {
+		return new Shell(new JLineInputProvider(lineReader()), resultHandler);
+	}
+
+	@Bean
+	public CompleterAdapter completer() {
+		return new CompleterAdapter();
+	}
+
+	/*
+	 * Using setter injection to work around a circular dependency.
+	 */
 	@PostConstruct
-	public void init() throws Exception {
+	public void lateInit() {
+		completer().setShell(shell());
+	}
+
+	@Bean
+	public LineReader lineReader() {
 		ExtendedDefaultParser parser = new ExtendedDefaultParser();
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
 
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
-				.terminal(terminal)
+				.terminal(terminal())
 				.appName("Foo")
-				.completer(new CompleterAdapter())
+				.completer(completer())
 				.highlighter(new Highlighter() {
 
 					@Override
 					public AttributedString highlight(LineReader reader, String buffer) {
 						int l = 0;
 						String best = null;
-						for (String command : methodTargets.keySet()) {
+						for (String command : shell().listCommands().keySet()) {
 							if (buffer.startsWith(command) && command.length() > l) {
 								l = command.length();
 								best = command;
@@ -82,24 +121,7 @@ public class JLineShell extends AbstractShell {
 				})
 				.parser(parser);
 
-		lineReader = lineReaderBuilder.build();
-
-	}
-
-
-	@Override
-	protected Input readInput() {
-		try {
-			lineReader.readLine(new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW)).toAnsi(terminal));
-		}
-		catch (UserInterruptException e) {
-			if (e.getPartialLine().isEmpty()) {
-				resultHandler.handleResult(new ExitRequest(1));
-			} else {
-				return Input.EMPTY;
-			}
-		}
-		return new JLineInput(lineReader.getParsedLine());
+		return lineReaderBuilder.build();
 	}
 
 	/**
@@ -115,19 +137,13 @@ public class JLineShell extends AbstractShell {
 		return words;
 	}
 
-	// Overridden so it can be called from CompleterAdapter
-
-
-	@Override
-	public List<CompletionProposal> complete(CompletionContext context) {
-		return super.complete(context);
-	}
-
 	/**
 	 * A bridge between JLine's {@link Completer} contract and our own.
 	 * @author Eric Bottard
 	 */
-	private class CompleterAdapter implements Completer {
+	public static class CompleterAdapter implements Completer {
+
+		private Shell shell;
 
 		@Override
 		public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
@@ -135,7 +151,7 @@ public class JLineShell extends AbstractShell {
 
 			CompletionContext context = new CompletionContext(sanitizeInput(line.words()), line.wordIndex(), line.wordCursor());
 
-			List<CompletionProposal> proposals = JLineShell.this.complete(context);
+			List<CompletionProposal> proposals = shell.complete(context);
 			proposals.stream()
 				.map(p -> new Candidate(
 					cpl.emit(p.value()).toString(),
@@ -148,6 +164,36 @@ public class JLineShell extends AbstractShell {
 				)
 				.forEach(candidates::add);
 		}
+
+		public void setShell(Shell shell) {
+			this.shell = shell;
+		}
+	}
+
+	public static class JLineInputProvider implements Shell.InputProvider {
+
+		private final LineReader lineReader;
+
+		public JLineInputProvider(LineReader lineReader) {
+			this.lineReader = lineReader;
+		}
+
+		@Override
+		public Input readInput() {
+			try {
+				lineReader.readLine(new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW)).toAnsi(lineReader.getTerminal()));
+			}
+			catch (UserInterruptException e) {
+				if (e.getPartialLine().isEmpty()) {
+					throw new ExitRequest(1);
+				} else {
+					return Input.EMPTY;
+				}
+			}
+			return new JLineInput(lineReader.getParsedLine());
+		}
+
+
 	}
 
 	private static class JLineInput implements Input {
