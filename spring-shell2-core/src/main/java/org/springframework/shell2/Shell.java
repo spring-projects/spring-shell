@@ -102,7 +102,7 @@ public class Shell implements CommandRegistry {
 			}
 
 
-			String line = input.rawText();
+			String line = input.words().stream().collect(Collectors.joining(" ")).trim();
 			List<String> words = input.words();
 
 			String command = findLongestCommand(line);
