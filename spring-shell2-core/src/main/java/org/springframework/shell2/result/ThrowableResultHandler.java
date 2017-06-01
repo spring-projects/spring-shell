@@ -17,8 +17,12 @@
 package org.springframework.shell2.result;
 
 import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.shell2.CommandRegistry;
 import org.springframework.shell2.ResultHandler;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +34,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThrowableResultHandler extends TerminalAwareResultHandler implements ResultHandler<Throwable> {
 
+	/**
+	 * The name of the command that may be used to print details about the last error.
+	 */
+	public static final String DETAILS_COMMAND_NAME = "stacktrace";
+
+	private Throwable lastError;
+
+	@Autowired @Lazy
+	private CommandRegistry commandRegistry;
+
 	@Override
 	public void handleResult(Throwable result) {
+		lastError = result;
 		terminal.writer().println(new AttributedString(result.toString(),
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
+		if (commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
+			terminal.writer().println(
+				new AttributedStringBuilder()
+					.append("Details of the error have been omitted. You can use the ", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.append(DETAILS_COMMAND_NAME, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED).bold())
+					.append(" command to print the full stacktrace.", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.toAnsi()
+			);
+		}
+	}
+
+	/**
+	 * Return the last error that was dealt with by this result handler.
+	 */
+	public Throwable getLastError() {
+		return lastError;
 	}
 }
