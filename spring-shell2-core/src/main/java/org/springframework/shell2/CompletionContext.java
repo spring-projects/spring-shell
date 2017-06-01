@@ -16,6 +16,7 @@
 
 package org.springframework.shell2;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,5 +78,12 @@ public class CompletionContext {
 	public String currentWordUpToCursor() {
 		String currentWord = currentWord();
 		return currentWord != null ? currentWord.substring(0, getPosition()) : null;
+	}
+
+	/**
+	 * Return a copy of this context, as if the first {@literal nbWords} were not present
+	 */
+	public CompletionContext drop(int nbWords) {
+		return new CompletionContext(new ArrayList<String>(words.subList(nbWords, words.size())), wordIndex-nbWords, position);
 	}
 }

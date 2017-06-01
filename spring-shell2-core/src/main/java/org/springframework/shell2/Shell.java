@@ -154,12 +154,13 @@ public class Shell implements CommandRegistry {
 			return candidates;
 		}
 
+		CompletionContext argsContext = context.drop(best.split(" ").length);
 		// Try to complete arguments
 		MethodTarget methodTarget = methodTargets.get(best);
 		Method method = methodTarget.getMethod();
 		return Arrays.stream(method.getParameters())
 			.map(Utils::createMethodParameter)
-			.flatMap(mp -> findResolver(mp).complete(mp, context).stream())
+			.flatMap(mp -> findResolver(mp).complete(mp, argsContext).stream())
 			.collect(Collectors.toList());
 	}
 
