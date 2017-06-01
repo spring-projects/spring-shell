@@ -43,6 +43,12 @@ public class CompletionProposal {
 	 */
 	private String category;
 
+	/**
+	 * Whether the proposal should bypass escaping and quoting rules. This is useful for command proposals, which can
+	 * appear as true multi-word Strings.
+	 */
+	private boolean dontQuote = false;
+
 	public CompletionProposal(String value) {
 		this.value = this.displayText = value;
 	}
@@ -81,6 +87,15 @@ public class CompletionProposal {
 	public CompletionProposal category(String category) {
 		this.category = category;
 		return this;
+	}
+
+	public CompletionProposal dontQuote(boolean dontQuote) {
+		this.dontQuote = dontQuote;
+		return this;
+	}
+
+	public boolean dontQuote() {
+		return dontQuote;
 	}
 
 	@Override

@@ -154,7 +154,7 @@ public class JLineShell {
 			List<CompletionProposal> proposals = shell.complete(context);
 			proposals.stream()
 				.map(p -> new Candidate(
-					cpl.emit(p.value()).toString(),
+					p.dontQuote() ? p.value() : cpl.emit(p.value()).toString(),
 					p.displayText(),
 					p.category(),
 					p.description(),

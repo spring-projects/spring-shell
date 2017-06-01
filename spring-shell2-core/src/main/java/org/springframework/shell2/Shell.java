@@ -172,6 +172,7 @@ public class Shell implements CommandRegistry {
 
 	private CompletionProposal toCompletionProposal(String command, MethodTarget methodTarget) {
 		return new CompletionProposal(command)
+			.dontQuote(true)
 			.category("Available commands")
 			.description(methodTarget.getHelp());
 	}
