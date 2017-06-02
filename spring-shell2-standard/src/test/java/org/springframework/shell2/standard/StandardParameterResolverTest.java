@@ -192,8 +192,7 @@ public class StandardParameterResolverTest {
 				Utils.createMethodParameter(method, 2), // trying to complete --foo
 				contextFor("--name ") // but input is currently focused on --name
 		).stream().map(CompletionProposal::value).collect(Collectors.toList());
-		System.out.println(completions);
-//		assertThat(completions).isEmpty();
+		assertThat(completions).isEmpty();
 	}
 
 	@Test
