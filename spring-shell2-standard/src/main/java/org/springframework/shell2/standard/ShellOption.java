@@ -38,15 +38,21 @@ public @interface ShellOption {
 	String NONE = "__NONE__";
 
 	/**
+	 * Marker value to indicate that heuristics should be used to derive arity.
+	 */
+	int ARITY_USE_HEURISTICS = -1;
+
+	/**
 	 * The key(s) (without the {@link ShellMethod#prefix()}) by which this parameter can be referenced
 	 * when using named parameters. If none is specified, the actual method parameter name will be used.
 	 */
 	String[] value() default {};
 
 	/**
-	 * Return the number of input "words" this parameter consumes.
+	 * Return the number of input "words" this parameter consumes. Default is 1, except when parameter type is boolean,
+	 * in which case it is 0.
 	 */
-	int arity() default 1;
+	int arity() default ARITY_USE_HEURISTICS;
 
 	/**
 	 * The textual (pre-conversion) value to assign to this parameter if no value is provided by the user.

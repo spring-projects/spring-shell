@@ -371,7 +371,7 @@ public class StandardParameterResolver implements ParameterResolver {
 	private int getArity(Parameter parameter) {
 		ShellOption option = parameter.getAnnotation(ShellOption.class);
 		int inferred = (parameter.getType() == boolean.class || parameter.getType() == Boolean.class) ? 0 : 1;
-		return option != null ? option.arity() : inferred;
+		return option != null && option.arity() != ShellOption.ARITY_USE_HEURISTICS ? option.arity() : inferred;
 	}
 
 	/**
