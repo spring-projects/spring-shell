@@ -105,7 +105,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	@Override
 	public Object resolve(MethodParameter methodParameter, List<String> words) {
-		String prefix = prefixForMethod(methodParameter);
+		String prefix = prefixForMethod(methodParameter.getMethod());
 
 		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), words);
 		Map<Parameter, ParameterRawValue> resolved = parameterCache.computeIfAbsent(cacheKey, (k) -> {
@@ -195,7 +195,7 @@ public class StandardParameterResolver implements ParameterResolver {
 	}
 
 	private Set<String> gatherAllPossibleKeys(Method method) {
-		final String prefix = "--";
+		final String prefix = prefixForMethod(method);
 		return Arrays.stream(method.getParameters())
 				.flatMap(p -> {
 					ShellOption option = p.getAnnotation(ShellOption.class);
@@ -208,8 +208,8 @@ public class StandardParameterResolver implements ParameterResolver {
 				}).collect(Collectors.toSet());
 	}
 
-	private String prefixForMethod(MethodParameter methodParameter) {
-		return methodParameter.getMethod().getAnnotation(ShellMethod.class).prefix();
+	private String prefixForMethod(Method method) {
+		return method.getAnnotation(ShellMethod.class).prefix();
 	}
 
 	private Optional<String> defaultValueFor(Parameter parameter) {
@@ -380,7 +380,7 @@ public class StandardParameterResolver implements ParameterResolver {
 	 * or from the actual parameter name.
 	 */
 	private Stream<String> getKeysForParameter(Method method, int index) {
-		String prefix = "--";
+		String prefix = prefixForMethod(method);
 		Parameter p = method.getParameters()[index];
 		ShellOption option = p.getAnnotation(ShellOption.class);
 		if (option != null && option.value().length > 0) {

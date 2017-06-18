@@ -44,8 +44,13 @@ public class Commands {
 	}
 
 	@ShellMethod(help = "it's cool")
-	public void foo(String bar) {
-
+	public String foo(String bar) {
+		return bar;
+	}
+	
+	@ShellMethod(help = "it's cool with a prefix", prefix = "-")
+	public String fooPrefix(String bar) {
+		return bar;
 	}
 
 	@ShellMethod(help = "Shows support for boolean parameters, with arity=0")

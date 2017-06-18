@@ -74,6 +74,16 @@ public class StandardParameterResolverTest {
 		)).isEqualTo("last");
 
 	}
+	
+	@Test
+	public void testParsesWithMethodPrefix() throws Exception {
+		Method method = findMethod(Remote.class, "prefixTest", String.class);
+
+		assertThat(resolver.resolve(
+				Utils.createMethodParameter(method, 0),
+				asList("-message abc".split(" "))
+		)).isEqualTo("abc");
+	}
 
 	@Test
 	public void testParameterSpecifiedTwiceViaDifferentAliases() throws Exception {

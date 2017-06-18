@@ -45,11 +45,15 @@ public class Remote {
 	                String name,
 	                @ShellOption(defaultValue="defoolt") String foo,
 	                @ShellOption(value = {"--bar", "--baz"}, defaultValue = "last") String bar) {
-
 	}
 
 	@ShellMethod(help = "bye bye")
 	public void shutdown(@ShellOption Delay delay) {
+
+	}
+	
+	@ShellMethod(help = "a different prefix", prefix = "-")
+	public void prefixTest(@ShellOption String message) {
 
 	}
 
