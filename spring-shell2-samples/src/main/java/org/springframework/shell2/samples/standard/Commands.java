@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 @ShellComponent("")
 public class Commands {
 
-	@ShellMethod(help = "a command whose name looks the same as another one")
+	@ShellMethod(help = "a command whose name looks the same as another one", value = "help me out")
 	public void helpMeOut() {
 		System.out.println("You can go");
 	}

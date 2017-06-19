@@ -132,7 +132,6 @@ public class JLineShell {
 		words = words.stream()
 			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
 			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
-			.filter(w -> w.length() > 0) // Empty word introduced when using quotes, no idea why...
 			.collect(Collectors.toList());
 		return words;
 	}

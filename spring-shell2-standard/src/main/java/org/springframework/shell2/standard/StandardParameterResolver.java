@@ -297,7 +297,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 		if (!set) {
 			if (unfinished == null) { // case 1 above
-				return commandsThatStartWithContextPrefix(methodParameter, context);
+				return argumentKeysThatStartWithContextPrefix(methodParameter, context);
 			} // case 2
 			else {
 				return valueCompletions(methodParameter, context);
@@ -305,9 +305,6 @@ public class StandardParameterResolver implements ParameterResolver {
 		}
 		else {
 			List<CompletionProposal> result = new ArrayList<>();
-
-			String prefix = context.currentWordUpToCursor() != null ? context.currentWordUpToCursor() : "";
-			// TODO: should not look at last word only, but everything after what was used for key
 
 			Object value = convertRawValue(parameterRawValue, methodParameter);
 			if (value instanceof Collection && ((Collection) value).size() == arity
@@ -320,7 +317,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 			if (parameterRawValue.positional()) {
 				// Case 4.1: There exists "--command foo" and user has typed "--comm" which (wrongly) got resolved as a positional param
-				result.addAll(commandsThatStartWithContextPrefix(methodParameter, context));
+				result.addAll(argumentKeysThatStartWithContextPrefix(methodParameter, context));
 			}
 			return result;
 		}
@@ -333,7 +330,7 @@ public class StandardParameterResolver implements ParameterResolver {
 				.findFirst().orElseGet(() -> Collections.emptyList());
 	}
 
-	private List<CompletionProposal> commandsThatStartWithContextPrefix(MethodParameter methodParameter, CompletionContext context) {
+	private List<CompletionProposal> argumentKeysThatStartWithContextPrefix(MethodParameter methodParameter, CompletionContext context) {
 		String prefix = context.currentWordUpToCursor() != null ? context.currentWordUpToCursor() : "";
 		return describe(methodParameter).keys().stream()
 				.filter(k -> k.startsWith(prefix))

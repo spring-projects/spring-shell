@@ -97,21 +97,19 @@ public class Shell implements CommandRegistry {
 				resultHandler.handleResult(e);
 				continue;
 			}
-			if (input.words().isEmpty()) {
+			if (noInput(input)) {
 				continue;
 			}
 
 
 			String line = input.words().stream().collect(Collectors.joining(" ")).trim();
-			List<String> words = input.words();
-
 			String command = findLongestCommand(line);
 
+			List<String> words = input.words();
 			Object result;
 			if (command != null) {
-				int wordsUsedForCommandKey = command.split(" ").length;
 				MethodTarget methodTarget = methodTargets.get(command);
-				List<String> wordsForArgs = words.subList(wordsUsedForCommandKey, words.size());
+				List<String> wordsForArgs = wordsForArguments(command, words);
 				Method method = methodTarget.getMethod();
 
 				try {
@@ -131,6 +129,29 @@ public class Shell implements CommandRegistry {
 	}
 
 	/**
+	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an empty line or blank space)
+	 */
+	private boolean noInput(Input input) {
+		return input.words().isEmpty()
+			|| (input.words().size() == 1 && input.words().get(0).trim().isEmpty());
+	}
+
+	/**
+	 * Returns the list of words to be considered for argument resolving. Drops the first N words used for the
+	 * command, as well as an optional empty word at the end of the list (which may be present if user added spaces
+	 * before submitting the buffer)
+	 */
+	private List<String> wordsForArguments(String command, List<String> words) {
+		int wordsUsedForCommandKey = command.split(" ").length;
+		List<String> args = words.subList(wordsUsedForCommandKey, words.size());
+		int last = args.size() - 1;
+		if (last >= 0 && "".equals(args.get(last))) {
+			args.remove(last);
+		}
+		return args;
+	}
+
+	/**
 	 * Gather completion proposals given some (incomplete) input the user has already typed in.
 	 * When and how this method is invoked is implementation specific and decided by the actual user interface.
 	 */
@@ -139,39 +160,30 @@ public class Shell implements CommandRegistry {
 		String prefix = context.upToCursor();
 
 		List<CompletionProposal> candidates = new ArrayList<>();
-		// Find the longest match for a command name with words in the buffer
-		String best = findLongestCommand(prefix);
-		if (best == null) { // no command found
-			candidates.addAll(commandsStartingWith(prefix));
-			return candidates;
-		} // if we're here, we're either trying to complete args for command <best> (will fall through)
-		// or trying to complete command whose name starts with <best> (which also happens to be a command)
-		else if (prefix.equals(best)) {
-			candidates.addAll(commandsStartingWith(best));
-		} // valid command (<best>) followed by a suffix (but not necessarily [<space> args*])
-		else if (!prefix.startsWith(best + " ")) {
-			// must be an invalid command, can't do anything
-			return candidates;
-		}
+		candidates.addAll(commandsStartingWith(prefix));
 
-		CompletionContext argsContext = context.drop(best.split(" ").length);
-		// Try to complete arguments
-		MethodTarget methodTarget = methodTargets.get(best);
-		Method method = methodTarget.getMethod();
-		return Arrays.stream(method.getParameters())
-			.map(Utils::createMethodParameter)
-			.flatMap(mp -> findResolver(mp).complete(mp, argsContext).stream())
-			.collect(Collectors.toList());
+		String best = findLongestCommand(prefix);
+		if (best != null) {
+			CompletionContext argsContext = context.drop(best.split(" ").length);
+			// Try to complete arguments
+			MethodTarget methodTarget = methodTargets.get(best);
+			Method method = methodTarget.getMethod();
+			Arrays.stream(method.getParameters())
+				.map(Utils::createMethodParameter)
+				.flatMap(mp -> findResolver(mp).complete(mp, argsContext).stream())
+				.forEach(candidates::add);
+		}
+		return candidates;
 	}
 
 	private List<CompletionProposal> commandsStartingWith(String prefix) {
 		return methodTargets.entrySet().stream()
 			.filter(e -> e.getKey().startsWith(prefix))
-			.map(e -> toCompletionProposal(e.getKey(), e.getValue()))
+			.map(e -> toCommandProposal(e.getKey(), e.getValue()))
 			.collect(Collectors.toList());
 	}
 
-	private CompletionProposal toCompletionProposal(String command, MethodTarget methodTarget) {
+	private CompletionProposal toCommandProposal(String command, MethodTarget methodTarget) {
 		return new CompletionProposal(command)
 			.dontQuote(true)
 			.category("Available commands")
