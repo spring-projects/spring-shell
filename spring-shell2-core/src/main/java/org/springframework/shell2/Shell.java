@@ -222,7 +222,7 @@ public class Shell implements CommandRegistry {
 		Arrays.fill(args, UNRESOLVED);
 		for (int i = 0; i < parameters.length; i++) {
 			MethodParameter methodParameter = Utils.createMethodParameter(method, i);
-			args[i] = findResolver(methodParameter).resolve(methodParameter, wordsForArgs);
+			args[i] = findResolver(methodParameter).resolve(methodParameter, wordsForArgs).resolvedValue();
 		}
 		return args;
 	}

@@ -36,7 +36,7 @@ public interface ParameterResolver {
 	/**
 	 * Turn the given textual input into an actual object, maybe using some conversion or lookup mechanism.
 	 */
-	Object resolve(MethodParameter methodParameter, List<String> words);
+	ValueResult resolve(MethodParameter methodParameter, List<String> words);
 
 	/**
 	 * Describe a supported parameter, so that integrated help can be generated.

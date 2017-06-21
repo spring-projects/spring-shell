@@ -21,6 +21,7 @@
 	
 	<modules>
 		<module>spring-shell2-core</module>
+		<module>spring-shell2-core-tests</module>
 		<module>spring-shell2-standard</module>
 		<module>spring-shell2-standard-commands</module>
 		<module>spring-shell2-jcommander-adapter</module>
@@ -34,6 +35,11 @@
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell2-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell2-core-tests</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

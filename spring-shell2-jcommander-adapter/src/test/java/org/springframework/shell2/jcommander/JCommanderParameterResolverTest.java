@@ -63,7 +63,9 @@ public class JCommanderParameterResolverTest {
 	public void testPojoValuesAreCorrectlySet() {
 		MethodParameter methodParameter = Utils.createMethodParameter(COMMAND_METHOD, 0);
 
-		FieldCollins resolved = (FieldCollins) resolver.resolve(methodParameter, asList("--name foo -level 2 something-else yet-something-else".split(" ")));
+		FieldCollins resolved = (FieldCollins) resolver
+				.resolve(methodParameter, asList("--name foo -level 2 something-else yet-something-else".split(" ")))
+				.resolvedValue();
 
 		assertThat(resolved.getName()).isEqualTo("foo");
 		assertThat(resolved.getLevel()).isEqualTo(2);

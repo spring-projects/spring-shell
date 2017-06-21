@@ -19,7 +19,6 @@ package org.springframework.shell2.jcommander;
 import static org.springframework.shell2.Utils.unCamelify;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,21 +27,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterException;
-import com.beust.jcommander.ParametersDelegate;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell2.CompletionContext;
 import org.springframework.shell2.CompletionProposal;
 import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
-import org.springframework.shell2.Utils;
+import org.springframework.shell2.ValueResult;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
+
+import com.beust.jcommander.DynamicParameter;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.ParametersDelegate;
 
 /**
  * Provides integration with JCommander.
@@ -80,10 +79,10 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public Object resolve(MethodParameter methodParameter, List<String> words) {
+	public ValueResult resolve(MethodParameter methodParameter, List<String> words) {
 		JCommander jCommander = createJCommander(methodParameter);
 		jCommander.parse(words.toArray(new String[words.size()]));
-		return jCommander.getObjects().get(0);
+		return new ValueResult(methodParameter, jCommander.getObjects().get(0));
 	}
 
 	private JCommander createJCommander(MethodParameter methodParameter) {
