@@ -29,11 +29,11 @@ import com.beust.jcommander.Parameter;
  */
 public class FieldCollins {
 
-	@Parameter(names = "--name")
+	@Parameter(names = {"--name", "-n"}, description = "what's in a name?")
 	private String name;
 
 	@Parameter(names = "-level")
-	private int level;
+	private int level = 3;
 
 	@Parameter(description = "rest")
 	private List<String> rest = new ArrayList<>();

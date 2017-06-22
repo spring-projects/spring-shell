@@ -17,13 +17,18 @@
 package org.springframework.shell2.jcommander;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.Utils;
 import org.springframework.util.ReflectionUtils;
 
@@ -60,5 +65,24 @@ public class JCommanderParameterResolverTest {
 		assertThat(resolved.getName()).isEqualTo("foo");
 		assertThat(resolved.getLevel()).isEqualTo(2);
 		assertThat(resolved.getRest()).containsOnlyOnce("something-else", "yet-something-else");
+	}
+
+	@Test
+	public void testDescribe() {
+		MethodParameter methodParameter = Utils.createMethodParameter(COMMAND_METHOD, 0);
+
+		Stream<ParameterDescription> desciptions = resolver.describe(methodParameter);
+		ParameterDescription name = new ParameterDescription(methodParameter, "string")
+			.keys(Arrays.asList("--name", "-n"))
+			.help("what's in a name?")
+			.defaultValue("");
+		ParameterDescription level = new ParameterDescription(methodParameter, "int")
+			.keys(singletonList("-level"))
+			.defaultValue("3");
+		ParameterDescription rest = new ParameterDescription(methodParameter, "list")
+			.defaultValue("[]")
+			.mandatoryKey(false)
+			.help("rest");
+		assertThat(desciptions).contains(name, level, rest);
 	}
 }

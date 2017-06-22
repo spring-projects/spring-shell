@@ -16,6 +16,8 @@
 
 package org.springframework.shell2.jcommander;
 
+import static org.springframework.shell2.Utils.unCamelify;
+
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,6 +36,7 @@ import org.springframework.shell2.CompletionContext;
 import org.springframework.shell2.CompletionProposal;
 import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
+import org.springframework.shell2.Utils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
@@ -74,17 +77,33 @@ public class JCommanderParameterResolver implements ParameterResolver {
 
 	@Override
 	public Object resolve(MethodParameter methodParameter, List<String> words) {
-		Object pojo = BeanUtils.instantiateClass(methodParameter.getParameterType());
-		JCommander jCommander = new JCommander();
-		jCommander.addObject(pojo);
-		jCommander.setAcceptUnknownOptions(true);
+		JCommander jCommander = createJCommander(methodParameter);
 		jCommander.parse(words.toArray(new String[words.size()]));
-		return pojo;
+		return jCommander.getObjects().get(0);
+	}
+
+	private JCommander createJCommander(MethodParameter methodParameter) {
+		Object pojo = BeanUtils.instantiateClass(methodParameter.getParameterType());
+		JCommander jCommander = new JCommander(pojo);
+		jCommander.setAcceptUnknownOptions(true);
+		return jCommander;
 	}
 
 	@Override
 	public Stream<ParameterDescription> describe(MethodParameter parameter) {
-		throw new UnsupportedOperationException();
+		JCommander jCommander = createJCommander(parameter);
+		com.beust.jcommander.ParameterDescription mainParameter = jCommander.getMainParameter();
+		return Stream.concat(
+			jCommander.getParameters().stream(),
+			mainParameter != null ? Stream.of(mainParameter) : Stream.empty()
+		)
+			.map(j -> new ParameterDescription(parameter, unCamelify(j.getParameterized().getType().getSimpleName()))
+				.keys(Arrays.asList(j.getParameter().names()))
+				.help(j.getDescription())
+				.mandatoryKey(!j.equals(mainParameter))
+				// Not ideal as this does not take reverse-conversion into account, but just toString()
+				.defaultValue(j.getDefault() == null ? "" : String.valueOf(j.getDefault()))
+			);
 	}
 
 	@Override

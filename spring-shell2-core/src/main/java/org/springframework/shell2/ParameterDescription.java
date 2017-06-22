@@ -16,7 +16,9 @@
 
 package org.springframework.shell2;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.core.MethodParameter;
@@ -61,7 +63,7 @@ public class ParameterDescription {
 	/**
 	 * The list of 'keys' that can be used to specify this parameter, if any.
 	 */
-	private List<String> keys;
+	private List<String> keys = Collections.emptyList();
 
 	/**
 	 * Depending on the {@link ParameterResolver}, whether keys are mandatory to identify this parameter.
@@ -102,7 +104,7 @@ public class ParameterDescription {
 	}
 
 	public ParameterDescription defaultValue(String defaultValue) {
-		this.defaultValue = Optional.of(defaultValue);
+		this.defaultValue = Optional.ofNullable(defaultValue);
 		return this;
 	}
 
@@ -145,10 +147,30 @@ public class ParameterDescription {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s", keys().iterator().next(), formal());
+		return String.format("%s %s", keys.isEmpty() ? "" : keys().iterator().next(), formal());
 	}
 
 	public MethodParameter parameter() {
 		return parameter;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ParameterDescription that = (ParameterDescription) o;
+		return mandatoryKey == that.mandatoryKey &&
+			Objects.equals(parameter, that.parameter) &&
+			Objects.equals(type, that.type) &&
+			Objects.equals(formal, that.formal) &&
+			Objects.equals(defaultValue, that.defaultValue) &&
+			Objects.equals(defaultValueWhenFlag, that.defaultValueWhenFlag) &&
+			Objects.equals(keys, that.keys) &&
+			Objects.equals(help, that.help);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(parameter, type, formal, defaultValue, defaultValueWhenFlag, keys, mandatoryKey, help);
 	}
 }

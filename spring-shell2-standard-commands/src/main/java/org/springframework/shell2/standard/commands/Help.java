@@ -238,18 +238,10 @@ public class Help {
 	}
 
 	private List<ParameterDescription> getParameterDescriptions(MethodTarget methodTarget) {
-		Parameter[] parameters = methodTarget.getMethod().getParameters();
-		List<ParameterDescription> parameterDescriptions = new ArrayList<>();
-		for (int i = 0, parametersLength = parameters.length; i < parametersLength; i++) {
-			for (ParameterResolver parameterResolver : parameterResolvers) {
-				MethodParameter methodParameter = Utils.createMethodParameter(methodTarget.getMethod(), i);
-				if (parameterResolver.supports(methodParameter)) {
-					parameterDescriptions.add(parameterResolver.describe(methodParameter).findFirst().get());
-					break;
-				}
-			}
-		}
-		return parameterDescriptions;
+		return Utils.createMethodParameters(methodTarget.getMethod())
+			.flatMap(mp -> parameterResolvers.stream().filter(pr -> pr.supports(mp)).limit(1L).flatMap(pr -> pr.describe(mp)))
+			.collect(Collectors.toList());
+
 	}
 
 }

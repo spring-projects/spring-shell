@@ -20,6 +20,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
@@ -74,6 +76,11 @@ public class Utils {
 		}
 		methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
 		return methodParameter;
+	}
+
+	public static Stream<MethodParameter> createMethodParameters(Executable executable) {
+		return IntStream.range(0, executable.getParameterCount())
+			.mapToObj(i -> createMethodParameter(executable, i));
 	}
 
 }
