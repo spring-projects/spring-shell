@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -90,7 +91,7 @@ public class LegacyParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public ParameterDescription describe(MethodParameter parameter) {
+	public Stream<ParameterDescription> describe(MethodParameter parameter) {
 		Parameter jlrParameter = parameter.getMethod().getParameters()[parameter.getParameterIndex()];
 		CliOption option = jlrParameter.getAnnotation(CliOption.class);
 		ParameterDescription result = ParameterDescription.outOf(parameter);
@@ -108,7 +109,7 @@ public class LegacyParameterResolver implements ParameterResolver {
 		}
 		boolean containsEmptyKey = keys.contains("");
 		result.mandatoryKey(!containsEmptyKey);
-		return result;
+		return Stream.of(result);
 	}
 
 	@Override

@@ -28,7 +28,10 @@ import org.springframework.shell2.Utils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Created by ericbottard on 15/12/15.
+ * Unit test for {@link JCommanderParameterResolver}.
+ *
+ * @author Eric Bottard
+ * @author Florent Biville
  */
 public class JCommanderParameterResolverTest {
 

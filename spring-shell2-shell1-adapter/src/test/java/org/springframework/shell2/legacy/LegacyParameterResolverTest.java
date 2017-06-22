@@ -160,7 +160,7 @@ public class LegacyParameterResolverTest {
 	public void testDescribeBothDefaultsNotDeclared() {
 		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.REGISTER_METHOD, 1);
 		
-		ParameterDescription description = parameterResolver.describe(methodParameter);
+		ParameterDescription description = parameterResolver.describe(methodParameter).findFirst().get();
 		
 		assertThat(description.keys()).containsExactly("--type");
 		assertThat(description.formal()).isEqualTo(Utils.unCamelify(ArtifactType.class.getSimpleName()));
@@ -175,7 +175,7 @@ public class LegacyParameterResolverTest {
 	public void testDescribeBothDefaultsDeclared() {
 		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SOME_METHOD, 1);
 		
-		ParameterDescription description = parameterResolver.describe(methodParameter);
+		ParameterDescription description = parameterResolver.describe(methodParameter).findFirst().get();
 		
 		assertThat(description.keys()).containsExactly("--option");
 		assertThat(description.formal()).isEqualTo(boolean.class.getName());
@@ -191,7 +191,7 @@ public class LegacyParameterResolverTest {
 	public void testDescribeOnlySpecifiedDefaultDeclared() {
 		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SUM_METHOD, 1);
 		
-		ParameterDescription description = parameterResolver.describe(methodParameter);
+		ParameterDescription description = parameterResolver.describe(methodParameter).findFirst().get();
 		
 		assertThat(description.keys()).containsExactly("--v2");
 		assertThat(description.formal()).isEqualTo(int.class.getName());
@@ -207,7 +207,7 @@ public class LegacyParameterResolverTest {
 	public void testDescribeOnlyUnspecifiedDefaultDeclared() {
 		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SUM_METHOD, 0);
 		
-		ParameterDescription description = parameterResolver.describe(methodParameter);
+		ParameterDescription description = parameterResolver.describe(methodParameter).findFirst().get();
 		
 		assertThat(description.keys()).containsExactly("--v1");
 		assertThat(description.formal()).isEqualTo(int.class.getName());
@@ -222,7 +222,7 @@ public class LegacyParameterResolverTest {
 	public void testDescribeDefaultKey() {
 		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.LEGACY_ECHO_METHOD, 0);
 		
-		ParameterDescription description = parameterResolver.describe(methodParameter);
+		ParameterDescription description = parameterResolver.describe(methodParameter).findFirst().get();
 		
 		assertThat(description.keys()).isEmpty();
 		assertThat(description.formal()).isEqualTo(Utils.unCamelify(String.class.getSimpleName()));
@@ -237,7 +237,7 @@ public class LegacyParameterResolverTest {
 	public void testDescribeNonMandatoryNoDefaults() {
 		MethodParameter methodParameter = Utils.createMethodParameter(LegacyCommands.SOME_METHOD, 0);
 		
-		ParameterDescription description = parameterResolver.describe(methodParameter);
+		ParameterDescription description = parameterResolver.describe(methodParameter).findFirst().get();
 		
 		assertThat(description.keys()).containsExactly("--key");
 		assertThat(description.formal()).isEqualTo(Utils.unCamelify(String.class.getSimpleName()));

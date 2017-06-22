@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.JCommander;
@@ -33,6 +34,7 @@ import org.springframework.shell2.CompletionContext;
 import org.springframework.shell2.CompletionProposal;
 import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.ParameterResolver;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -40,6 +42,7 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Eric Bottard
  */
+@Component
 public class JCommanderParameterResolver implements ParameterResolver {
 
 	private static final Collection<Class<? extends Annotation>> JCOMMANDER_ANNOTATIONS =
@@ -80,7 +83,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public ParameterDescription describe(MethodParameter parameter) {
+	public Stream<ParameterDescription> describe(MethodParameter parameter) {
 		throw new UnsupportedOperationException();
 	}
 

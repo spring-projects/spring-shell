@@ -100,7 +100,8 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	@Override
 	public boolean supports(MethodParameter parameter) {
-		return parameter.getMethodAnnotation(ShellMethod.class) != null;
+		boolean optOut = parameter.hasParameterAnnotation(ShellOption.class) && parameter.getParameterAnnotation(ShellOption.class).optOut();
+		return !optOut && parameter.getMethodAnnotation(ShellMethod.class) != null;
 	}
 
 	@Override
@@ -126,7 +127,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 					if (i + 1 + arity > words.size()) {
 						String input = words.subList(i, words.size()).stream().collect(Collectors.joining(" "));
-						throw new UnfinishedParameterResolutionException(describe(Utils.createMethodParameter(parameter)), input);
+						throw new UnfinishedParameterResolutionException(describe(Utils.createMethodParameter(parameter)).findFirst().get(), input);
 					}
 					Assert.isTrue(i + 1 + arity <= words.size(), String.format("Not enough input for parameter '%s'", word));
 					String raw = words.subList(i + 1, i + 1 + arity).stream().collect(Collectors.joining(","));
@@ -178,7 +179,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 		Parameter param = methodParameter.getMethod().getParameters()[methodParameter.getParameterIndex()];
 		if (!resolved.containsKey(param)) {
-			throw new ParameterMissingResolutionException(describe(methodParameter));
+			throw new ParameterMissingResolutionException(describe(methodParameter).findFirst().get());
 		}
 		ParameterRawValue parameterRawValue = resolved.get(param);
 		return convertRawValue(parameterRawValue, methodParameter);
@@ -233,7 +234,7 @@ public class StandardParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public ParameterDescription describe(MethodParameter parameter) {
+	public Stream<ParameterDescription> describe(MethodParameter parameter) {
 		Parameter jlrParameter = parameter.getMethod().getParameters()[parameter.getParameterIndex()];
 		int arity = getArity(jlrParameter);
 		Class<?> type = parameter.getParameterType();
@@ -259,7 +260,7 @@ public class StandardParameterResolver implements ParameterResolver {
 						.collect(Collectors.toList()))
 				.mandatoryKey(false);
 
-		return result;
+		return Stream.of(result);
 	}
 
 	@Override
@@ -332,7 +333,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	private List<CompletionProposal> argumentKeysThatStartWithContextPrefix(MethodParameter methodParameter, CompletionContext context) {
 		String prefix = context.currentWordUpToCursor() != null ? context.currentWordUpToCursor() : "";
-		return describe(methodParameter).keys().stream()
+		return describe(methodParameter).flatMap(pd -> pd.keys().stream())
 				.filter(k -> k.startsWith(prefix))
 				.map(CompletionProposal::new)
 				.collect(Collectors.toList());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package org.springframework.shell2.jcommander;
+package org.springframework.shell2.samples.jcommander;
+
+import org.springframework.shell2.standard.ShellComponent;
+import org.springframework.shell2.standard.ShellMethod;
+import org.springframework.shell2.standard.ShellOption;
 
 /**
- * An hypothetical command class, with one method using JCommander args, and the other not.
+ * A class with JCommander commands.
  *
  * @author Eric Bottard
  */
-public class MyLordCommands {
+@ShellComponent
+public class JCommanderCommands {
 
-	/**
-	 * This method should be supported.
-	 */
-	public void genesis(FieldCollins fieldCollins) {
-
+	@ShellMethod(help = "bind parameters to JCommander POJO")
+	public String jcommander(@ShellOption(optOut = true) Args args) {
+		return "You said " + args;
 	}
-
-	/**
-	 * This method is not.
-	 */
-	public void apocalypse(String param) {
-
-	}
-
 }

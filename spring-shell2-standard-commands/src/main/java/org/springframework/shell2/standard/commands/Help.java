@@ -244,7 +244,7 @@ public class Help {
 			for (ParameterResolver parameterResolver : parameterResolvers) {
 				MethodParameter methodParameter = Utils.createMethodParameter(methodTarget.getMethod(), i);
 				if (parameterResolver.supports(methodParameter)) {
-					parameterDescriptions.add(parameterResolver.describe(methodParameter));
+					parameterDescriptions.add(parameterResolver.describe(methodParameter).findFirst().get());
 					break;
 				}
 			}

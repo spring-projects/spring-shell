@@ -66,6 +66,14 @@ public @interface ShellOption {
 
 	Class<? extends ValueProvider> valueProvider() default NoValueProvider.class;
 
+	/**
+	 * Used to indicate to the framework that the given parameter should NOT be resolved by
+	 * {@link StandardParameterResolver}. This is useful if several implementations of
+	 * {@link org.springframework.shell2.ParameterResolver} are present, given that the standard one can work with no
+	 * annotation at all.
+	 */
+	boolean optOut() default false;
+
 	interface NoValueProvider extends ValueProvider {
 
 	}

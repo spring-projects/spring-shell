@@ -22,7 +22,10 @@ import java.util.List;
 import com.beust.jcommander.Parameter;
 
 /**
- * Created by ericbottard on 15/12/15.
+ * A POJO with fields annotated with JCommander annotations.
+ *
+ * @author Eric Bottard
+ * @see MyLordCommands#genesis(FieldCollins)
  */
 public class FieldCollins {
 

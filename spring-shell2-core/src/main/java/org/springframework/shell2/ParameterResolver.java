@@ -17,6 +17,7 @@
 package org.springframework.shell2;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.core.MethodParameter;
 
@@ -39,8 +40,10 @@ public interface ParameterResolver {
 
 	/**
 	 * Describe a supported parameter, so that integrated help can be generated.
+	 * <p>Typical implementations will return a one element stream result, but some may return several (for
+	 * example if binding several words to a POJO).</p>
 	 */
-	ParameterDescription describe(MethodParameter parameter);
+	Stream<ParameterDescription> describe(MethodParameter parameter);
 
 	/**
 	 * Invoked during TAB completion. If the {@link CompletionContext} can be interpreted as the start
