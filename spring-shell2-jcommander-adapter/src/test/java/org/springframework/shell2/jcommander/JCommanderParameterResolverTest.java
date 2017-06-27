@@ -25,9 +25,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Stream;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.shell2.CompletionContext;
+import org.springframework.shell2.CompletionProposal;
 import org.springframework.shell2.ParameterDescription;
 import org.springframework.shell2.Utils;
 import org.springframework.util.ReflectionUtils;
@@ -84,5 +87,27 @@ public class JCommanderParameterResolverTest {
 			.mandatoryKey(false)
 			.help("rest");
 		assertThat(desciptions).contains(name, level, rest);
+	}
+
+	@Test
+	public void testCanComplete() {
+		MethodParameter methodParameter = Utils.createMethodParameter(COMMAND_METHOD, 0);
+
+		CompletionContext context = new CompletionContext(Collections.emptyList(), 0, 0);
+		Stream<String> proposals = resolver.complete(methodParameter, context).stream().map(CompletionProposal::value);
+		assertThat(proposals).containsExactly("--name", "-n", "-level");
+
+		context = new CompletionContext(Arrays.asList("-n", "foo"), 0, 0);
+		proposals = resolver.complete(methodParameter, context).stream().map(CompletionProposal::value);
+		assertThat(proposals).containsExactly("-level");
+	}
+
+	@Test
+	public void testCannotComplete() {
+		MethodParameter methodParameter = Utils.createMethodParameter(COMMAND_METHOD, 0);
+
+		CompletionContext context = new CompletionContext(Arrays.asList("--name"), 0, 0);
+		Stream<String> proposals = resolver.complete(methodParameter, context).stream().map(CompletionProposal::value);
+		assertThat(proposals).isEmpty();
 	}
 }

@@ -19,15 +19,19 @@ package org.springframework.shell2.jcommander;
 import static org.springframework.shell2.Utils.unCamelify;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.ParametersDelegate;
 
 import org.springframework.beans.BeanUtils;
@@ -92,22 +96,43 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	@Override
 	public Stream<ParameterDescription> describe(MethodParameter parameter) {
 		JCommander jCommander = createJCommander(parameter);
-		com.beust.jcommander.ParameterDescription mainParameter = jCommander.getMainParameter();
-		return Stream.concat(
-			jCommander.getParameters().stream(),
-			mainParameter != null ? Stream.of(mainParameter) : Stream.empty()
-		)
+		Stream<com.beust.jcommander.ParameterDescription> jCommanderDescriptions = streamAllJCommanderDescriptions(jCommander);
+		return jCommanderDescriptions
 			.map(j -> new ParameterDescription(parameter, unCamelify(j.getParameterized().getType().getSimpleName()))
 				.keys(Arrays.asList(j.getParameter().names()))
 				.help(j.getDescription())
-				.mandatoryKey(!j.equals(mainParameter))
+				.mandatoryKey(!j.equals(jCommander.getMainParameter()))
 				// Not ideal as this does not take reverse-conversion into account, but just toString()
 				.defaultValue(j.getDefault() == null ? "" : String.valueOf(j.getDefault()))
 			);
 	}
 
+	/**
+	 * Return <em>all</em> JCommander parameter descriptions, including the "main" parameter if present.
+	 */
+	private Stream<com.beust.jcommander.ParameterDescription> streamAllJCommanderDescriptions(JCommander jCommander) {
+		return Stream.concat(
+				jCommander.getParameters().stream(),
+				jCommander.getMainParameter() != null ? Stream.of(jCommander.getMainParameter()) : Stream.empty()
+			);
+	}
+
 	@Override
 	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext context) {
-		return null;
+		JCommander jCommander = createJCommander(parameter);
+		List<String> words = context.getWords();
+		try {
+			jCommander.parseWithoutValidation(words.toArray(new String[words.size()]));
+		}
+		catch (ParameterException ignored) {
+			// Exception here certainly means current buffer is not parseable in full.
+			// Better to bail out now.
+			return Collections.emptyList();
+		}
+		return streamAllJCommanderDescriptions(jCommander)
+			.filter(p -> !p.isAssigned())
+			.flatMap(p -> Arrays.stream(p.getParameter().names()))
+			.map(CompletionProposal::new)
+			.collect(Collectors.toList());
 	}
 }
