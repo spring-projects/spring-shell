@@ -61,12 +61,16 @@ public class JLineLogHandler extends Handler {
 	private static boolean suppressDuplicateMessages = true;
 
 	public JLineLogHandler(final ConsoleReader reader, final ShellPromptAccessor shellPromptAccessor) {
+		this(reader, shellPromptAccessor, false);
+	}
+
+	public JLineLogHandler(final ConsoleReader reader, final ShellPromptAccessor shellPromptAccessor, boolean disableColor) {
 		Assert.notNull(reader, "Console reader required");
 		Assert.notNull(shellPromptAccessor, "Shell prompt accessor required");
 		this.reader = reader;
 		this.shellPromptAccessor = shellPromptAccessor;
 		this.userInterfaceThreadName = Thread.currentThread().getName();
-		this.ansiSupported = reader.getTerminal().isAnsiSupported();
+		this.ansiSupported = reader.getTerminal().isAnsiSupported() && (!disableColor);
 
 		setFormatter(new Formatter() {
 			@Override
@@ -195,7 +199,6 @@ public class JLineLogHandler extends Handler {
 			threadName = "";
 			eventString = getFormatter().format(event);
 		}
-
 		if (ansiSupported) {
 			Ansi ansi = ansi(sb);
 			if (event.getLevel().intValue() >= Level.SEVERE.intValue()) {
