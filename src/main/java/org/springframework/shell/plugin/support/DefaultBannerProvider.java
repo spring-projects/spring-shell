@@ -48,7 +48,7 @@ public class DefaultBannerProvider implements BannerProvider {
 	}
 
 	public String getWelcomeMessage() {
-		return "Welcome to " + getProviderName() + ". For assistance press or type \"hint\" then hit ENTER.";
+		return "Welcome to " + getProviderName() + ".";
 	}
 
 	public String getProviderName() {
