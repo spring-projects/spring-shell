@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.springframework.shell.SpringShellAutoConfiguration,\
+org.springframework.shell.jline.JLineShell

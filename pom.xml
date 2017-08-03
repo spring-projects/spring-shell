@@ -3,7 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.shell</groupId>
-	<artifactId>spring-shell2-parent</artifactId>
+	<artifactId>spring-shell-parent</artifactId>
+	<name>Spring Shell Parent POM</name>
 	<version>2.0.0.BUILD-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -20,13 +21,13 @@
 	</properties>
 	
 	<modules>
-		<module>spring-shell2-core</module>
-		<module>spring-shell2-core-tests</module>
-		<module>spring-shell2-standard</module>
-		<module>spring-shell2-standard-commands</module>
-		<module>spring-shell2-jcommander-adapter</module>
-		<module>spring-shell2-samples</module>
-		<module>spring-shell2-shell1-adapter</module>
+		<module>spring-shell-core</module>
+		<module>spring-shell-core-test-support</module>
+		<module>spring-shell-standard</module>
+		<module>spring-shell-standard-commands</module>
+		<module>spring-shell-jcommander-adapter</module>
+		<module>spring-shell-samples</module>
+		<module>spring-shell-shell1-adapter</module>
 	</modules>
 
 	<dependencyManagement>
@@ -34,32 +35,32 @@
 			<!-- SUB MODULES -->
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell2-core</artifactId>
+				<artifactId>spring-shell-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell2-core-tests</artifactId>
+				<artifactId>spring-shell-core-test-support</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell2-standard</artifactId>
+				<artifactId>spring-shell-standard</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell2-standard-commands</artifactId>
+				<artifactId>spring-shell-standard-commands</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell2-shell1-adapter</artifactId>
+				<artifactId>spring-shell-shell1-adapter</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell2-jcommander-adapter</artifactId>
+				<artifactId>spring-shell-jcommander-adapter</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<!-- OTHER DEPS -->

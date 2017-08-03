@@ -10,13 +10,12 @@ while maintaining some level of backward compatibility with your existing comman
 ```
 
 == Running
-*Note:* the dummy commands that are currently available are not here to stay. Expect a more modular
-setup in the future. In the meantime, to get a grasp of how the shell would behave, you can
+The project comes with a sample application, showcasing the various ways you can write commands.
+
 ```
-# if using a local snapshot version
 ./mvnw install
-./mvnw -pl spring-shell2-samples spring-boot:run
+./mvnw -pl spring-shell-samples spring-boot:run
 ```
 
-From there, try typing `help` at the shell prompt.
+From there, try typing `help` or `help <commmand>` at the shell prompt.
 
