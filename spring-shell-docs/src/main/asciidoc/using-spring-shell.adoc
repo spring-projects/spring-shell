@@ -1,0 +1,47 @@
+== Using Spring Shell
+
+=== Getting started
+
+==== Let's Write a Simple Boot App
+
+==== Adding a Dependency on Spring Shell
+
+==== Your first command
+
+==== Let's Give It a Ride!
+
+
+
+=== Writing your own Commands
+`@ShellComponent`, `@ShellMethod`, etc.
+
+
+=== Invoking your commands
+==== By Name _vs._ Positional Parameters
+==== Quotes Handling
+==== Interacting with the Shell
+Line Continuation, TAB Completion, Search, etc.
+
+
+=== Built-In Commands
+* clear
+* help
+* exit
+* stacktrace
+* script
+
+
+
+=== Customizing the Shell
+
+==== Overriding or Disabling Built-In Commands
+
+==== ResultHandlers
+
+==== PromptProvider
+
+==== Customizing Command Line Options Behavior
+
+//==== Overriding the JLine Parser
+
+//=== Using Without Spring Boot

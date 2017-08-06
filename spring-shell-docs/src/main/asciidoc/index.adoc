@@ -1,0 +1,23 @@
+= Spring Shell Reference Documentation
+Eric Bottard;
+:doctype: book
+:hide-uri-scheme:
+:icons: font
+:experimental: // For kbd: macro
+
+Version {project-version}
+
+(C) 2017 Pivotal Software, Inc.
+
+_Copies of this document may be made for your own use and for distribution to
+others, provided that you do not charge any fee for such copies and further
+provided that each copy contains this Copyright Notice, whether distributed in
+print or electronically._
+
+// ======================================================================================
+
+include::what-is-spring-shell.adoc[]
+
+include::using-spring-shell.adoc[]
+
+include::extending-spring-shell.adoc[]

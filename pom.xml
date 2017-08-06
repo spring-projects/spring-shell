@@ -28,6 +28,7 @@
 		<module>spring-shell-jcommander-adapter</module>
 		<module>spring-shell-shell1-adapter</module>
 		<module>spring-shell-starter</module>
+		<module>spring-shell-docs</module>
 	</modules>
 
 	<dependencyManagement>

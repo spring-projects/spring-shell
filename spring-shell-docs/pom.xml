@@ -1,0 +1,135 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>spring-shell-docs</artifactId>
+	<name>Spring Shell Documentation</name>
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>org.springframework.shell</groupId>
+		<artifactId>spring-shell-parent</artifactId>
+		<version>2.0.0.BUILD-SNAPSHOT</version>
+	</parent>
+	
+	<description>Spring Shell reference documentation</description>
+	<properties>
+		<asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
+		<asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
+		<asciidoctorj.version>1.5.6</asciidoctorj.version>
+		<jruby.version>1.7.26</jruby.version>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>${asciidoctor.maven.plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.asciidoctor</groupId>
+						<artifactId>asciidoctorj-pdf</artifactId>
+						<version>${asciidoctorj.pdf.version}</version>
+					</dependency>
+					<!-- Comment this section to use the default jruby artifact provided by the plugin -->
+					<dependency>
+						<groupId>org.jruby</groupId>
+						<artifactId>jruby-complete</artifactId>
+						<version>${jruby.version}</version>
+					</dependency>
+					<!-- Comment this section to use the default AsciidoctorJ artifact provided by the plugin -->
+					<dependency>
+						<groupId>org.asciidoctor</groupId>
+						<artifactId>asciidoctorj</artifactId>
+						<version>${asciidoctorj.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<sourceDocumentName>index.adoc</sourceDocumentName>
+					<doctype>book</doctype>
+					<attributes>
+						<allow-uri-read>true</allow-uri-read>
+						<attribute-missing>warn</attribute-missing>
+						<project-version>${project.version}</project-version>
+						<project-artifactId>${project.artifactId}</project-artifactId>
+					</attributes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-html5</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<backend>html5</backend>
+							<attributes>
+								<toc2 />
+								<docinfo>shared-head</docinfo>
+								<source-highlighter>prettify</source-highlighter>
+							</attributes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-pdf</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<backend>pdf</backend>
+							<sourceHighlighter>rouge</sourceHighlighter>
+							<attributes>
+								<toc/>
+								<pagenums/>
+							</attributes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>zip-docs</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/docs-zip.xml</descriptor>
+							</descriptors>
+							<appendAssemblyId>false</appendAssemblyId>
+							<attach>false</attach>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-zip</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>${project.build.directory}/${project.artifactId}-${project.version}.zip</file>
+									<type>zip;zip.type=docs;zip.deployed=false</type>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,12 @@
+== Extending Spring Shell
+
+=== Support for Spring Shell 1 and JCommander
+
+
+=== Discovering Methods that Can Act as Commands
+
+=== Resolving Parameter Values
+
+==== Supporting kbd:[TAB] Completion
+
+
