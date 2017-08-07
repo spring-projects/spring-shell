@@ -33,8 +33,6 @@ import javax.validation.Validation;
 import javax.validation.executable.ExecutableValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.ReflectionUtils;
@@ -80,9 +78,11 @@ public class Shell implements CommandRegistry {
 
 	@PostConstruct
 	public void gatherMethodTargets() throws Exception {
-		for (MethodTargetResolver resolver : applicationContext.getBeansOfType(MethodTargetResolver.class).values()) {
-			methodTargets.putAll(resolver.resolve());
+		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+		for (MethodTargetRegistrar resolver : applicationContext.getBeansOfType(MethodTargetRegistrar.class).values()) {
+			resolver.register(registry);
 		}
+		methodTargets = registry.listCommands();
 	}
 
 	/**

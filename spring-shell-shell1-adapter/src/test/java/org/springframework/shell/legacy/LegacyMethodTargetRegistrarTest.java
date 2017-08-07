@@ -27,27 +27,32 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
-import org.springframework.shell.MethodTargetResolver;
+import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * Unit tests for {@link LegacyMethodTargetRegistrar}.
+ *
+ * @author Eric Bottard
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = LegacyMethodTargetResolverTest.Config.class)
-public class LegacyMethodTargetResolverTest {
+@ContextConfiguration(classes = LegacyMethodTargetRegistrarTest.Config.class)
+public class LegacyMethodTargetRegistrarTest {
 
 	@Autowired
 	private LegacyCommands legacyCommands;
 
 	@Autowired
-	private MethodTargetResolver resolver;
+	private MethodTargetRegistrar resolver;
 
 	@Test
 	public void findsMethodsAnnotatedWithCliCommand() throws Exception {
-		Map<String, MethodTarget> targets = resolver.resolve();
+		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+		resolver.register(registry);
+		Map<String, MethodTarget> targets = registry.listCommands();
 
 		assertThat(targets).contains(entry(
 				"register module",
@@ -64,8 +69,8 @@ public class LegacyMethodTargetResolverTest {
 		}
 
 		@Bean
-		public MethodTargetResolver methodTargetResolver() {
-			return new LegacyMethodTargetResolver();
+		public MethodTargetRegistrar methodTargetResolver() {
+			return new LegacyMethodTargetRegistrar();
 		}
 	}
 

@@ -20,18 +20,20 @@ import static org.springframework.util.StringUtils.collectionToDelimitedString;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.MethodTarget;
-import org.springframework.shell.MethodTargetResolver;
+import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * A {@link MethodTargetResolver} that discovers methods annotated with {@link CliCommand} on beans
+ * A {@link MethodTargetRegistrar} that discovers methods annotated with {@link CliCommand} on beans
  * implementing the {@link CommandMarker} marker interface.
  * 
  * @author Eric Bottard
@@ -39,31 +41,33 @@ import org.springframework.util.ReflectionUtils;
  * @author Camilo Gonzalez
  */
 @Component
-public class LegacyMethodTargetResolver implements MethodTargetResolver {
+public class LegacyMethodTargetRegistrar implements MethodTargetRegistrar {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+
+	private Map<String, MethodTarget> commands = new TreeMap<>();
 	
 	@Override
-	public Map<String, MethodTarget> resolve() {
-		Map<String, MethodTarget> methodTargets = new HashMap<>();
+	public void register(ConfigurableCommandRegistry registry) {
 		Map<String, CommandMarker> beans = applicationContext.getBeansOfType(CommandMarker.class);
 		for (Object bean : beans.values()) {
 			Class<?> clazz = bean.getClass();
 			ReflectionUtils.doWithMethods(clazz, method -> {
 				CliCommand cliCommand = method.getAnnotation(CliCommand.class);
 				for (String key : cliCommand.value()) {
-					methodTargets.put(key, new MethodTarget(method, bean, cliCommand.help()));
+					MethodTarget target = new MethodTarget(method, bean, cliCommand.help());
+					registry.register(key, target);
+					commands.put(key, target);
 				}
 			}, method -> method.getAnnotation(CliCommand.class) != null);
 		}
-		return methodTargets;
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " contributing "
-			+ collectionToDelimitedString(resolve().keySet(), ", ", "[", "]");
+			+ collectionToDelimitedString(commands.keySet(), ", ", "[", "]");
 	}
 
 }

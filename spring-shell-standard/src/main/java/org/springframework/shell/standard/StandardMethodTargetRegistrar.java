@@ -23,27 +23,28 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
-import org.springframework.shell.MethodTargetResolver;
-import org.springframework.stereotype.Component;
+import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * The standard implementation of {@link MethodTargetResolver} for new shell applications,
+ * The standard implementation of {@link MethodTargetRegistrar} for new shell applications,
  * resolves methods annotated with {@link ShellMethod} on {@link ShellComponent} beans.
  *
  * @author Eric Bottard
  * @author Florent Biville
  * @author Camilo Gonzalez
  */
-public class StandardMethodTargetResolver implements MethodTargetResolver {
+public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+
+	private Map<String, MethodTarget> commands = new HashMap<>();
 	
 	@Override
-	public Map<String, MethodTarget> resolve() {
-		Map<String, MethodTarget> methodTargets = new HashMap<>();
+	public void register(ConfigurableCommandRegistry registry) {
 		Map<String, Object> commandBeans = applicationContext.getBeansWithAnnotation(ShellComponent.class);
 		for (Object bean : commandBeans.values()) {
 			Class<?> clazz = bean.getClass();
@@ -54,16 +55,17 @@ public class StandardMethodTargetResolver implements MethodTargetResolver {
 					keys = new String[] {method.getName()};
 				}
 				for (String key : keys) {
-					methodTargets.put(key, new MethodTarget(method, bean, shellMapping.help()));
+					MethodTarget target = new MethodTarget(method, bean, shellMapping.help());
+					registry.register(key, target);
+					commands.put(key, target);
 				}
 			}, method -> method.getAnnotation(ShellMethod.class) != null);
 		}
-		return methodTargets;
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " contributing "
-			+ collectionToDelimitedString(resolve().keySet(), ", ", "[", "]");
+			+ collectionToDelimitedString(commands.keySet(), ", ", "[", "]");
 	}
 }

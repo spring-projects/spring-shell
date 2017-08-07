@@ -16,19 +16,17 @@
 
 package org.springframework.shell;
 
-import java.util.Map;
-
 /**
- * Strategy interface for discovering commands.
+ * Strategy interface for registering commands.
  *
  * @author Eric Bottard
  * @author Camilo Gonzalez
  */
-public interface MethodTargetResolver {
+public interface MethodTargetRegistrar {
 
 	/**
-	 * Return a mapping from {@literal <command keyword(s)>} to actual behavior.
+	 * Register mappings from {@literal <command keyword(s)>} to actual behavior.
 	 */
-	public Map<String, MethodTarget> resolve();
+	void register(ConfigurableCommandRegistry registry);
 
 }

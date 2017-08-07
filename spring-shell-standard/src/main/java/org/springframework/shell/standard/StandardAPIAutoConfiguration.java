@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.CommandRegistry;
-import org.springframework.shell.MethodTargetResolver;
+import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.ParameterResolver;
 
 /**
@@ -42,8 +42,8 @@ public class StandardAPIAutoConfiguration {
 	}
 
 	@Bean
-	public MethodTargetResolver standardMethodTargetResolver() {
-		return new StandardMethodTargetResolver();
+	public MethodTargetRegistrar standardMethodTargetResolver() {
+		return new StandardMethodTargetRegistrar();
 	}
 
 	@Bean

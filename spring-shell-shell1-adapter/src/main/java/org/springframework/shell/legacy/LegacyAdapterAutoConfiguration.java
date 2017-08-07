@@ -35,8 +35,8 @@ import org.springframework.shell.converters.SimpleFileConverter;
 public class LegacyAdapterAutoConfiguration {
 
 	@Bean
-	public LegacyMethodTargetResolver legacyMethodTargetResolver() {
-		return new LegacyMethodTargetResolver();
+	public LegacyMethodTargetRegistrar legacyMethodTargetResolver() {
+		return new LegacyMethodTargetRegistrar();
 	}
 
 	@Bean
