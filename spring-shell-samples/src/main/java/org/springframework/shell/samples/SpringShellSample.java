@@ -40,6 +40,6 @@ import org.springframework.shell.result.ResultHandlerConfig;
 public class SpringShellSample {
 
 	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext context = SpringApplication.run(SpringShellSample.class);
+		ConfigurableApplicationContext context = SpringApplication.run(SpringShellSample.class, args);
 	}
 }

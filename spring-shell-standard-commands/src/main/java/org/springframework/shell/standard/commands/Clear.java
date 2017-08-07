@@ -30,7 +30,20 @@ import org.springframework.shell.standard.ShellMethod;
  * @author Eric Bottard
  */
 @ShellComponent
-public class Console {
+public class Clear {
+
+	/**
+	 * Marker interface for beans providing {@literal clear} functionality to the shell.
+	 *
+	 * <p>To override the clear command, simply register your own bean implementing that interface
+	 * and the standard implementation will back off.</p>
+	 *
+	 * <p>To disable the {@literal clear} command entirely, set the {@literal spring.shell.command.clear.enabled=false}
+	 * property in the environment.</p>
+	 *
+	 * @author Eric Bottard
+	 */
+	public interface Command {}
 
 	@Autowired @Lazy
 	private Terminal terminal;

@@ -30,6 +30,19 @@ import org.springframework.shell.standard.ShellMethod;
 @ShellComponent
 public class Stacktrace {
 
+	/**
+	 * Marker interface for beans providing {@literal stacktrace} functionality to the shell.
+	 *
+	 * <p>To override the stacktrace command, simply register your own bean implementing that interface
+	 * and the standard implementation will back off.</p>
+	 *
+	 * <p>To disable the {@literal stacktrace} command entirely, set the {@literal spring.shell.command.stacktrace.enabled=false}
+	 * property in the environment.</p>
+	 *
+	 * @author Eric Bottard
+	 */
+	public interface Command {}
+
 	@Autowired @Lazy
 	private Terminal terminal;
 

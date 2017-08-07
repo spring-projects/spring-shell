@@ -49,6 +49,19 @@ import org.springframework.shell.Utils;
 @ShellComponent
 public class Help {
 
+	/**
+	 * Marker interface for beans providing {@literal help} functionality to the shell.
+	 *
+	 * <p>To override the help command, simply register your own bean implementing that interface
+	 * and the standard implementation will back off.</p>
+	 *
+	 * <p>To disable the {@literal help} command entirely, set the {@literal spring.shell.command.help.enabled=false}
+	 * property in the environment.</p>
+	 *
+	 * @author Eric Bottard
+	 */
+	public interface Command {}
+
 	private final List<ParameterResolver> parameterResolvers;
 
 	private CommandRegistry commandRegistry;
