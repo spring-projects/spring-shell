@@ -17,7 +17,9 @@
 package org.springframework.shell.samples.legacy;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * Enum used by some of the example Shell 1 commands.
+ *
+ * @author Eric Bottard
  */
 public enum ArtifactType {
 

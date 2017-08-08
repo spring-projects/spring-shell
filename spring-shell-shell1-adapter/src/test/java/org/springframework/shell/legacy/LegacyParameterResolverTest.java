@@ -41,6 +41,11 @@ import org.springframework.shell.ValueResult;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+/**
+ * Tests for {@link LegacyParameterResolver}.
+ *
+ * @author Eric Bottard
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = LegacyParameterResolverTest.Config.class)
 public class LegacyParameterResolverTest {

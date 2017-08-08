@@ -24,7 +24,9 @@ import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Created by ericbottard on 09/12/15.
+ * A set of Shell 1 commands used for tests.
+ *
+ * @author Eric Bottard
  */
 public class LegacyCommands implements CommandMarker {
 
