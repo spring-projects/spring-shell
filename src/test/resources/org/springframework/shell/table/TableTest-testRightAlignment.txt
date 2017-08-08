@@ -1,4 +1,0 @@
-a  bbb&
-a     &
-a     &
-ccc  d&
