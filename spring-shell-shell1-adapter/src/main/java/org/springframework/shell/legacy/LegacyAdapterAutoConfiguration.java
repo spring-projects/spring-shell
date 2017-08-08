@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.legacy;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.shell.converters.ArrayConverter;
 import org.springframework.shell.converters.AvailableCommandsConverter;
 import org.springframework.shell.converters.SimpleFileConverter;
+import org.springframework.shell.core.annotation.CliCommand;
 
 /**
  * Main configuration class for the Shell 2 - Shell 1 adapter.
@@ -29,6 +31,7 @@ import org.springframework.shell.converters.SimpleFileConverter;
  * @author Camilo Gonzalez
  */
 @Configuration
+@ConditionalOnClass(CliCommand.class)
 @ComponentScan(basePackageClasses = {ArrayConverter.class}, excludeFilters = @ComponentScan.Filter(
 		type = FilterType.ASSIGNABLE_TYPE,
 		value = {AvailableCommandsConverter.class, SimpleFileConverter.class}))

@@ -27,27 +27,28 @@
 	</build>
 
 	<dependencies>
+
+		<!-- The following starter brings everything you need, including adapters that trigger only if needed-->
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-core</artifactId>
+			<artifactId>spring-shell-starter</artifactId>
 		</dependency>
+
+		<!-- Depend on Shell 1 to use Shell 1 API -->
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-standard</artifactId>
+			<artifactId>spring-shell</artifactId>
+			<version>1.2.0.RELEASE</version>
 		</dependency>
+
+		<!-- Depend on JCommander to use JCommander API -->
 		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-standard-commands</artifactId>
-			<scope>runtime</scope>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.48</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-shell1-adapter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-jcommander-adapter</artifactId>
-		</dependency>
+
+
 	</dependencies>
 	
 </project>

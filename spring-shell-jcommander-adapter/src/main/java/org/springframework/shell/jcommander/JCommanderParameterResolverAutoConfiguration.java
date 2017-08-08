@@ -16,6 +16,9 @@
 
 package org.springframework.shell.jcommander;
 
+import com.beust.jcommander.JCommander;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 
@@ -25,6 +28,7 @@ import org.springframework.context.annotation.Bean;
  * @author Eric Bottard
  */
 @Configuration
+@ConditionalOnClass(JCommander.class)
 public class JCommanderParameterResolverAutoConfiguration {
 
 	@Bean
