@@ -38,6 +38,7 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.CompletingParsedLine;
@@ -55,11 +56,14 @@ import org.springframework.shell.Shell;
  * @author Florent Biville
  */
 @Configuration
-public class JLineShell {
+class JLineShellAutoConfiguration {
 
 	@Autowired
 	@Qualifier("main")
 	private  ResultHandler resultHandler;
+
+	@Autowired
+	private PromptProvider promptProvider;
 
 	@Bean
 	public Terminal terminal() {
@@ -73,7 +77,13 @@ public class JLineShell {
 
 	@Bean
 	public Shell shell() {
-		return new Shell(new JLineInputProvider(lineReader()), resultHandler);
+		return new Shell(new JLineInputProvider(lineReader(), promptProvider), resultHandler);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(PromptProvider.class)
+	public PromptProvider promptProvider() {
+		return () -> new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
 	}
 
 	@Bean
@@ -97,7 +107,7 @@ public class JLineShell {
 
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 				.terminal(terminal())
-				.appName("Foo")
+				.appName("Spring Shell")
 				.completer(completer())
 				.highlighter(new Highlighter() {
 
@@ -173,14 +183,18 @@ public class JLineShell {
 
 		private final LineReader lineReader;
 
-		public JLineInputProvider(LineReader lineReader) {
+		private final PromptProvider promptProvider;
+
+		public JLineInputProvider(LineReader lineReader, PromptProvider promptProvider) {
 			this.lineReader = lineReader;
+			this.promptProvider = promptProvider;
 		}
 
 		@Override
 		public Input readInput() {
 			try {
-				lineReader.readLine(new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW)).toAnsi(lineReader.getTerminal()));
+				AttributedString prompt = promptProvider.getPrompt();
+				lineReader.readLine(prompt.toAnsi(lineReader.getTerminal()));
 			}
 			catch (UserInterruptException e) {
 				if (e.getPartialLine().isEmpty()) {

@@ -16,18 +16,14 @@
 
 package org.springframework.shell.samples;
 
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
+
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.shell.Shell;
-import org.springframework.shell.jline.JLineShell;
-import org.springframework.shell.result.ResultHandlerConfig;
+import org.springframework.shell.jline.PromptProvider;
 
 /**
  * Main entry point for the application.
@@ -41,5 +37,10 @@ public class SpringShellSample {
 
 	public static void main(String[] args) throws Exception {
 		ConfigurableApplicationContext context = SpringApplication.run(SpringShellSample.class, args);
+	}
+
+	@Bean
+	public PromptProvider myPromptProvider() {
+		return () -> new AttributedString("my-shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
 	}
 }

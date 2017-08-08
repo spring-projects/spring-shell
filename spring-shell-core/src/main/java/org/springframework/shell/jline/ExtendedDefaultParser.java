@@ -35,7 +35,7 @@ import org.springframework.shell.CompletingParsedLine;
  * @author Original JLine author
  * @author Eric Bottard
  */
-public class ExtendedDefaultParser implements Parser {
+class ExtendedDefaultParser implements Parser {
 
 	private char[] quoteChars = { '\'', '"' };
 
