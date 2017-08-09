@@ -39,7 +39,7 @@ public class MethodTarget {
 	public MethodTarget(Method method, Object bean, String help) {
 		Assert.notNull(method, "Method cannot be null");
 		Assert.notNull(bean, "Bean cannot be null");
-		Assert.hasText(help, "Help cannot be blank");
+		Assert.hasText(help, String.format("Help cannot be blank when trying to define command based on '%s'", method));
 		ReflectionUtils.makeAccessible(method);
 		this.method = method;
 		this.bean = bean;
