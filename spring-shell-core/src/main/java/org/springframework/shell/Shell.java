@@ -99,43 +99,58 @@ public class Shell implements CommandRegistry {
 				resultHandler.handleResult(e);
 				continue;
 			}
-			if (noInput(input)) {
-				continue;
+			if (input == null) {
+				break;
 			}
-
-
-			String line = input.words().stream().collect(Collectors.joining(" ")).trim();
-			String command = findLongestCommand(line);
-
-			List<String> words = input.words();
-			Object result;
-			if (command != null) {
-				MethodTarget methodTarget = methodTargets.get(command);
-				List<String> wordsForArgs = wordsForArguments(command, words);
-				Method method = methodTarget.getMethod();
-
-				try {
-					Object[] args = resolveArgs(method, wordsForArgs);
-					validateArgs(args, methodTarget);
-					result = ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
-				}
-				catch (Exception e) {
-					result = e;
-				}
-			}
-			else {
-				result = new CommandNotFound(words);
-			}
-			resultHandler.handleResult(result);
+			evaluate(input);
 		}
 	}
 
 	/**
-	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an empty line or blank space)
+	 * Evaluate a single "line" of input from the user by trying to map words to a command and arguments.
+	 *
+	 * <p>This method has public visibility so that it can be invoked by actual commands
+	 * (<em>e.g.</em> a {@literal script} command).</p>
+	 */
+	public void evaluate(Input input) {
+		if (noInput(input)) {
+			return;
+		}
+
+		String line = input.words().stream().collect(Collectors.joining(" ")).trim();
+		String command = findLongestCommand(line);
+
+		List<String> words = input.words();
+		Object result;
+		if (command != null) {
+			MethodTarget methodTarget = methodTargets.get(command);
+			List<String> wordsForArgs = wordsForArguments(command, words);
+			Method method = methodTarget.getMethod();
+
+			try {
+				Object[] args = resolveArgs(method, wordsForArgs);
+				validateArgs(args, methodTarget);
+				result = ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
+			}
+			catch (Exception e) {
+				result = e;
+			}
+		}
+		else {
+			result = new CommandNotFound(words);
+		}
+		resultHandler.handleResult(result);
+	}
+
+	/**
+	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an empty line or blank space).
+	 *
+	 * <p>Also returns true (<em>i.e.</em> ask to ignore) when input starts with {@literal //}, which is used for comments.</p>
 	 */
 	private boolean noInput(Input input) {
 		return input.words().isEmpty()
-			|| (input.words().size() == 1 && input.words().get(0).trim().isEmpty());
+			|| (input.words().size() == 1 && input.words().get(0).trim().isEmpty())
+			|| (input.words().iterator().next().matches("\\s*//.*"));
 	}
 
 	/**
@@ -252,6 +267,8 @@ public class Shell implements CommandRegistry {
 	public interface InputProvider {
 		/**
 		 * Return text entered by user to invoke commands.
+		 *
+		 * <p>Returning {@literal null} indicates end of input, requesting shell exit.</p>
 		 */
 		Input readInput();
 	}

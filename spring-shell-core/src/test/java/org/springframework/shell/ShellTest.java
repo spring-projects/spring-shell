@@ -143,6 +143,15 @@ public class ShellTest {
 
 	}
 
+	@Test
+	public void comments() throws IOException {
+		when(parameterResolver.supports(any())).thenReturn(true);
+		when(inputProvider.readInput()).thenReturn(() -> "// This is a comment", (Input) null);
+
+		shell.run();
+
+	}
+
 	private void helloWorld(String a) {
 		invoked = true;
 	}
