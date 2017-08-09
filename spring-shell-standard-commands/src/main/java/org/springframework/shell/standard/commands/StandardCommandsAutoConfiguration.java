@@ -23,6 +23,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.Shell;
 
 /**
  * Creates beans for standard commands.
@@ -58,5 +59,12 @@ public class StandardCommandsAutoConfiguration {
 	@ConditionalOnProperty(prefix = "spring.shell.command.stacktrace", value = "enabled", havingValue = "true", matchIfMissing = true)
 	public Stacktrace stacktrace() {
 		return new Stacktrace();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(Script.Command.class)
+	@ConditionalOnProperty(prefix = "spring.shell.command.script", value = "enabled", havingValue = "true", matchIfMissing = true)
+	public Script script(Shell shell) {
+		return new Script(shell);
 	}
 }

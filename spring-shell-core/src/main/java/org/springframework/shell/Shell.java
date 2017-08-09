@@ -264,14 +264,4 @@ public class Shell implements CommandRegistry {
 		return "".equals(result) ? null : result;
 	}
 
-	public interface InputProvider {
-		/**
-		 * Return text entered by user to invoke commands.
-		 *
-		 * <p>Returning {@literal null} indicates end of input, requesting shell exit.</p>
-		 */
-		Input readInput();
-	}
-
-
 }

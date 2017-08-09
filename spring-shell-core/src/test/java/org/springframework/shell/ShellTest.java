@@ -45,7 +45,7 @@ public class ShellTest {
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Mock
-	private Shell.InputProvider inputProvider;
+	private InputProvider inputProvider;
 
 	@Mock
 	private ResultHandler resultHandler;

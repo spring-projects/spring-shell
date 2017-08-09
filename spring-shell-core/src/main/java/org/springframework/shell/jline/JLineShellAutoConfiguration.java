@@ -46,6 +46,7 @@ import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.Input;
+import org.springframework.shell.InputProvider;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.Shell;
 
@@ -179,7 +180,7 @@ class JLineShellAutoConfiguration {
 		}
 	}
 
-	public static class JLineInputProvider implements Shell.InputProvider {
+	public static class JLineInputProvider implements InputProvider {
 
 		private final LineReader lineReader;
 
