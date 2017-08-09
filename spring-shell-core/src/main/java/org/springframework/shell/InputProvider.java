@@ -6,7 +6,7 @@ package org.springframework.shell;
  * @author Eric Bottard
  */
 public interface InputProvider {
-	
+
 	/**
 	 * Return text entered by user to invoke commands.
 	 *
