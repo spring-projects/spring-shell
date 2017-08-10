@@ -50,12 +50,12 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 			Class<?> clazz = bean.getClass();
 			ReflectionUtils.doWithMethods(clazz, method -> {
 				ShellMethod shellMapping = method.getAnnotation(ShellMethod.class);
-				String[] keys = shellMapping.value();
+				String[] keys = shellMapping.key();
 				if (keys.length == 0) {
 					keys = new String[] {method.getName()};
 				}
 				for (String key : keys) {
-					MethodTarget target = new MethodTarget(method, bean, shellMapping.help());
+					MethodTarget target = new MethodTarget(method, bean, shellMapping.value());
 					registry.register(key, target);
 					commands.put(key, target);
 				}

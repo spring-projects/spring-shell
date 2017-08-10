@@ -38,42 +38,42 @@ import org.springframework.stereotype.Component;
 @ShellComponent()
 public class Commands {
 
-	@ShellMethod(help = "a command whose name looks the same as another one", value = "help me out")
+	@ShellMethod(value = "A command whose name looks the same as another one.", key = "help me out")
 	public void helpMeOut() {
 		System.out.println("You can go");
 	}
 
-	@ShellMethod(help = "it's cool")
+	@ShellMethod("It's cool.")
 	public String foo(String bar) {
 		return bar;
 	}
 	
-	@ShellMethod(help = "it's cool with a prefix", prefix = "-")
+	@ShellMethod(value = "It's cool with a prefix.", prefix = "-")
 	public String fooPrefix(String bar) {
 		return bar;
 	}
 
-	@ShellMethod(help = "Shows support for boolean parameters, with arity=0")
+	@ShellMethod("Shows support for boolean parameters, with arity=0.")
 	public void shutdown(@ShellOption(arity = 0) boolean force) {
 		System.out.println("You passed " + force);
 	}
 
-	@ShellMethod(help = "test completion of special values")
+	@ShellMethod("Test completion of special values.")
 	public void quote(@ShellOption(valueProvider = FunnyValuesProvider.class) String text) {
 		System.out.println("You said " + text);
 	}
 
-	@ShellMethod(help = "add stuff")
+	@ShellMethod("Add stuff.")
 	public int add(int ahbahdisdonc, int b, int c) {
 		return ahbahdisdonc + b + c;
 	}
 
-	@ShellMethod(help = "Fails with an exception")
+	@ShellMethod("Fails with an exception.")
 	public void fail(ElementType elementType) {
 		throw new IllegalArgumentException("You said " + elementType);
 	}
 
-	@ShellMethod(help = "add array numbers")
+	@ShellMethod("Add array numbers.")
 	public double addDoubles(@ShellOption(arity = 3) double[] numbers) {
 		return Arrays.stream(numbers).sum();
 	}

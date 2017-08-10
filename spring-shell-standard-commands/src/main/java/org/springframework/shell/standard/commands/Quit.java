@@ -41,7 +41,7 @@ public class Quit {
 	 */
 	public interface Command {}
 
-	@ShellMethod(help = "Exit the shell.", value = {"quit", "exit"})
+	@ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
 	public void quit() {
 		throw new ExitRequest();
 	}

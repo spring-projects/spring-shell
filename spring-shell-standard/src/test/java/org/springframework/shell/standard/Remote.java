@@ -39,29 +39,29 @@ public class Remote {
 	 *     <li>default value supplying (foo and bar)</li>
 	 * </ul>
 	 */
-	@ShellMethod(help = "switch channels")
+	@ShellMethod(value = "switch channels")
 	public void zap(boolean force,
 	                String name,
 	                @ShellOption(defaultValue="defoolt") String foo,
 	                @ShellOption(value = {"--bar", "--baz"}, defaultValue = "last") String bar) {
 	}
 
-	@ShellMethod(help = "bye bye")
+	@ShellMethod(value = "bye bye")
 	public void shutdown(@ShellOption Delay delay) {
 
 	}
 	
-	@ShellMethod(help = "a different prefix", prefix = "-")
+	@ShellMethod(value = "a different prefix", prefix = "-")
 	public void prefixTest(@ShellOption String message) {
 
 	}
 
-	@ShellMethod(help = "add 3 numbers together")
+	@ShellMethod(value = "add 3 numbers together")
 	public void add(@ShellOption(arity = 3, valueProvider = NumberValueProvider.class) List<Integer> numbers) {
 
 	}
 
-	@ShellMethod(help = "add 3 numbers together (array)")
+	@ShellMethod(value = "add 3 numbers together (array)")
 	public void addAsArray(@ShellOption(arity = 3, valueProvider = NumberValueProvider.class) int[] numbers) {
 
 	}

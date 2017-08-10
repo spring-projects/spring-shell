@@ -76,7 +76,7 @@ public class Help {
 		this.commandRegistry = commandRegistry;
 	}
 
-	@ShellMethod(help = "Display help about available commands.", prefix = "-")
+	@ShellMethod(value = "Display help about available commands.", prefix = "-")
 	public CharSequence help(
 			@ShellOption(defaultValue = ShellOption.NULL,
 					valueProvider = CommandValueProvider.class,

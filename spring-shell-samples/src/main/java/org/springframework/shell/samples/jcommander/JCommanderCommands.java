@@ -28,7 +28,7 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class JCommanderCommands {
 
-	@ShellMethod(help = "bind parameters to JCommander POJO")
+	@ShellMethod("Bind parameters to JCommander POJO.")
 	public String jcommander(@ShellOption(optOut = true) Args args) {
 		return "You said " + args;
 	}

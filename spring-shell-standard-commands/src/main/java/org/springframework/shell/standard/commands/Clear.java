@@ -48,7 +48,7 @@ public class Clear {
 	@Autowired @Lazy
 	private Terminal terminal;
 
-	@ShellMethod(help = "Clear the shell screen.")
+	@ShellMethod("Clear the shell screen.")
 	public void clear() {
 		terminal.puts(InfoCmp.Capability.clear_screen);
 	}
