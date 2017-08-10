@@ -33,8 +33,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface ShellOption {
 
+	/**
+	 * Used to indicate that the default value is the value {@literal null}, which is different from the fact that
+	 * there is no default value.
+	 */
 	String NULL = "__NULL__";
 
+	/**
+	 * Used to indicate that there is no default value (<em>i.e.</em> parameter is mandatory).
+	 */
 	String NONE = "__NONE__";
 
 	/**
