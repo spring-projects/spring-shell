@@ -114,7 +114,7 @@ public class Help {
 
 		for (ParameterDescription description : parameterDescriptions) {
 
-			if (description.defaultValue().isPresent()) {
+			if (description.defaultValue().isPresent() && description.formal().length()>0) {
 				result.append("["); // Whole parameter is optional, as there is a default value (1)
 			}
 			List<String> keys = description.keys();
@@ -137,7 +137,7 @@ public class Help {
 			if (description.defaultValueWhenFlag().isPresent()) {
 				result.append("]"); // (close 3)
 			}
-			if (description.defaultValue().isPresent()) {
+			if (description.defaultValue().isPresent() && description.formal().length()>0) {
 				result.append("]"); // (close 1)
 			}
 			result.append("  "); // two spaces between each param for better legibility

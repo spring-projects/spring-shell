@@ -19,6 +19,7 @@ package org.springframework.shell.standard;
 import static org.springframework.shell.Utils.unCamelify;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class StandardParameterResolver implements ParameterResolver {
 				String word = words.get(i);
 				if (possibleKeys.contains(word)) {
 					String key = word;
-					Parameter parameter = lookupParameterForKey(methodParameter.getMethod(), key, prefix);
+					Parameter parameter = lookupParameterForKey(methodParameter.getMethod(), key);
 					int arity = getArity(parameter);
 
 					if (i + 1 + arity > words.size()) {
@@ -233,38 +234,29 @@ public class StandardParameterResolver implements ParameterResolver {
 	}
 
 	private Set<String> gatherAllPossibleKeys(Method method) {
-		final String prefix = prefixForMethod(method);
 		return Arrays.stream(method.getParameters())
-				.flatMap(p -> {
-					ShellOption option = p.getAnnotation(ShellOption.class);
-					if (option != null && option.value().length > 0) {
-						return Arrays.stream(option.value());
-					}
-					else {
-						return Stream.of(prefix + Utils.createMethodParameter(p).getParameterName());
-					}
-				}).collect(Collectors.toSet());
+				.flatMap(this::getKeysForParameter)
+				.collect(Collectors.toSet());
 	}
 
-	private String prefixForMethod(Method method) {
+	private String prefixForMethod(Executable method) {
 		return method.getAnnotation(ShellMethod.class).prefix();
 	}
 
 	private Optional<String> defaultValueFor(Parameter parameter) {
-		Optional<String> defaultValue = Optional.empty();
 		ShellOption option = parameter.getAnnotation(ShellOption.class);
 		if (option != null && !ShellOption.NONE.equals(option.defaultValue())) {
-			defaultValue = Optional.of(option.defaultValue());
+			return Optional.of(option.defaultValue());
 		}
-		else if (option == null && getArity(parameter) == 0) {
+		else if (getArity(parameter) == 0) {
 			return Optional.of("false");
 		}
-		return defaultValue;
+		return Optional.empty();
 	}
 
 	private boolean booleanDefaultValue(Parameter parameter) {
 		ShellOption option = parameter.getAnnotation(ShellOption.class);
-		if (option != null && !ShellOption.NULL.equals(option.defaultValue())) {
+		if (option != null && !ShellOption.NONE.equals(option.defaultValue())) {
 			return Boolean.parseBoolean(option.defaultValue());
 		}
 		return false;
@@ -410,26 +402,30 @@ public class StandardParameterResolver implements ParameterResolver {
 	}
 
 	/**
-	 * Return the key(s) the i-th parameter of the command method, resolved either from the {@link ShellOption}
-	 * annotation,
-	 * or from the actual parameter name.
+	 * Return the key(s) for the i-th parameter of the command method, resolved either from the {@link ShellOption}
+	 * annotation, or from the actual parameter name.
 	 */
 	private Stream<String> getKeysForParameter(Method method, int index) {
-		String prefix = prefixForMethod(method);
 		Parameter p = method.getParameters()[index];
+		return getKeysForParameter(p);
+	}
+
+	private Stream<String> getKeysForParameter(Parameter p) {
+		Executable method = p.getDeclaringExecutable();
+		String prefix = prefixForMethod(method);
 		ShellOption option = p.getAnnotation(ShellOption.class);
 		if (option != null && option.value().length > 0) {
 			return Arrays.stream(option.value());
 		}
 		else {
-			return Stream.of(prefix + Utils.createMethodParameter(p).getParameterName());
+			return Stream.of(prefix + Utils.unCamelify(Utils.createMethodParameter(p).getParameterName()));
 		}
 	}
 
 	/**
 	 * Return the method parameter that should be bound to the given key.
 	 */
-	private Parameter lookupParameterForKey(Method method, String key, String prefix) {
+	private Parameter lookupParameterForKey(Method method, String key) {
 		Parameter[] parameters = method.getParameters();
 		for (int i = 0, parametersLength = parameters.length; i < parametersLength; i++) {
 			Parameter p = parameters[i];
@@ -437,7 +433,7 @@ public class StandardParameterResolver implements ParameterResolver {
 				return p;
 			}
 		}
-		throw new IllegalArgumentException(String.format("Could not look up parameter for '%s%s' in %s", prefix, key, method));
+		throw new IllegalArgumentException(String.format("Could not look up parameter for '%s' in %s", key, method));
 	}
 
 	private static class CacheKey {

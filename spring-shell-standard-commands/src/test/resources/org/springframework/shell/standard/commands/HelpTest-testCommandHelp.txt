@@ -7,10 +7,10 @@ SYNOPSYS&
 	first-command [-r]  [-f]  [[-n] int]  [-o] float float float  &
 &
 OPTIONS&
-	-r	Whether to delete recursively  [Mandatory]&
+	-r	Whether to delete recursively  [Optional, default = false]&
 &
 	-f or --force&
-		Do not ask for confirmation. YOLO  [Mandatory]&
+		Do not ask for confirmation. YOLO  [Optional, default = false]&
 &
 	-n  int&
 		The answer to everything  [Optional, default = 42]&
