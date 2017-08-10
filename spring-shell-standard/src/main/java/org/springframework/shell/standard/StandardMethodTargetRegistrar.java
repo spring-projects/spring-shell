@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.MethodTargetRegistrar;
+import org.springframework.shell.Utils;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -52,7 +53,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 				ShellMethod shellMapping = method.getAnnotation(ShellMethod.class);
 				String[] keys = shellMapping.key();
 				if (keys.length == 0) {
-					keys = new String[] {method.getName()};
+					keys = new String[] {Utils.unCamelify(method.getName())};
 				}
 				for (String key : keys) {
 					MethodTarget target = new MethodTarget(method, bean, shellMapping.value());
