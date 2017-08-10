@@ -22,13 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import org.jline.reader.Candidate;
-import org.jline.reader.Completer;
-import org.jline.reader.Highlighter;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.ParsedLine;
-import org.jline.reader.UserInterruptException;
+import org.jline.reader.*;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.AttributedString;
@@ -101,11 +95,15 @@ class JLineShellAutoConfiguration {
 	}
 
 	@Bean
-	public LineReader lineReader() {
+	public Parser parser() {
 		ExtendedDefaultParser parser = new ExtendedDefaultParser();
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
+		return parser;
+	}
 
+	@Bean
+	public LineReader lineReader() {
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 				.terminal(terminal())
 				.appName("Spring Shell")
@@ -130,7 +128,7 @@ class JLineShellAutoConfiguration {
 						}
 					}
 				})
-				.parser(parser);
+				.parser(parser());
 
 		return lineReaderBuilder.build();
 	}
@@ -139,7 +137,7 @@ class JLineShellAutoConfiguration {
 	 * Sanitize the buffer input given the customizations applied to the JLine parser (<em>e.g.</em> support for
 	 * line continuations, <em>etc.</em>)
 	 */
-	static private List<String> sanitizeInput(List<String> words) {
+	static List<String> sanitizeInput(List<String> words) {
 		words = words.stream()
 			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
 			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
@@ -204,29 +202,10 @@ class JLineShellAutoConfiguration {
 					return Input.EMPTY;
 				}
 			}
-			return new JLineInput(lineReader.getParsedLine());
+			return new ParsedLineInput(lineReader.getParsedLine());
 		}
 
 
-	}
-
-	private static class JLineInput implements Input {
-
-		private final ParsedLine parsedLine;
-
-		JLineInput(ParsedLine parsedLine) {
-			this.parsedLine = parsedLine;
-		}
-
-		@Override
-		public String rawText() {
-			return parsedLine.line();
-		}
-
-		@Override
-		public List<String> words() {
-			return sanitizeInput(parsedLine.words());
-		}
 	}
 
 }

@@ -42,6 +42,11 @@ public class StandardAPIAutoConfiguration {
 	}
 
 	@Bean
+	public ValueProvider fileValueProvider() {
+		return new FileValueProvider();
+	}
+
+	@Bean
 	public MethodTargetRegistrar standardMethodTargetResolver() {
 		return new StandardMethodTargetRegistrar();
 	}

@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
  * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed parameters.
  * @author Eric Bottard
  */
-@Component
 public class EnumValueProvider implements ValueProvider {
 
 	@Override

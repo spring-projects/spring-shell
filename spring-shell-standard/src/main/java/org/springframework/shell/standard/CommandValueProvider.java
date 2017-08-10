@@ -32,7 +32,6 @@ import org.springframework.stereotype.Component;
  *
  * @author Eric Bottard
  */
-@Component
 public class CommandValueProvider extends ValueProviderSupport {
 
 	private final CommandRegistry commandRegistry;

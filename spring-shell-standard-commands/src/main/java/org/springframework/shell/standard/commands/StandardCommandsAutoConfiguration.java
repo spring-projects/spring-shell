@@ -18,6 +18,7 @@ package org.springframework.shell.standard.commands;
 
 import java.util.List;
 
+import org.jline.reader.Parser;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -61,4 +62,10 @@ public class StandardCommandsAutoConfiguration {
 		return new Stacktrace();
 	}
 
+	@Bean
+	@ConditionalOnMissingBean(Script.Command.class)
+	@ConditionalOnProperty(prefix = "spring.shell.command.script", value = "enabled", havingValue = "true", matchIfMissing = true)
+	public Script script(Shell shell, Parser parser) {
+		return new Script(shell, parser);
+	}
 }

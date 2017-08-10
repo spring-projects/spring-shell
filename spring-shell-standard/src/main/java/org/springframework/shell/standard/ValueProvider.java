@@ -23,6 +23,9 @@ import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 
 /**
+ * Beans implementing this interface are queried during TAB completion to gather possible values of a parameter.
+ *
+ * @author Eric Bottard
  */
 public interface ValueProvider {
 
