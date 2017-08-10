@@ -26,7 +26,6 @@
 		<module>spring-shell-standard</module>
 		<module>spring-shell-standard-commands</module>
 		<module>spring-shell-jcommander-adapter</module>
-		<module>spring-shell-samples</module>
 		<module>spring-shell-shell1-adapter</module>
 		<module>spring-shell-starter</module>
 	</modules>
@@ -190,6 +189,18 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<!-- Don't build samples by default, so they're not published -->
+			<id>samples</id>
+			<activation>
+				<property>
+					<name>!env.DISABLE_SAMPLES</name>
+				</property>
+			</activation>
+			<modules>
+				<module>spring-shell-samples</module>
+			</modules>
 		</profile>
 	</profiles>
 </project>
