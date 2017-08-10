@@ -42,6 +42,7 @@ public @interface ShellComponent {
 
 	/**
 	 * Used to indicate a suggestion for a logical name for the component.
+	 * @return the suggested component name, if any
 	 */
 	String value() default "";
 }

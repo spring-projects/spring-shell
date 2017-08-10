@@ -43,24 +43,29 @@ public @interface ShellOption {
 	int ARITY_USE_HEURISTICS = -1;
 
 	/**
-	 * The key(s) (without the {@link ShellMethod#prefix()}) by which this parameter can be referenced
-	 * when using named parameters. If none is specified, the actual method parameter name will be used.
+	 * The key(s) by which this parameter can be referenced
+	 * when using named parameters. If none is specified, the actual method parameter name will be used, prefixed by the
+	 * method {@link ShellMethod#prefix()}.
+	 * @return explicit key(s) to use to pass a value for this parameter
 	 */
 	String[] value() default {};
 
 	/**
 	 * Return the number of input "words" this parameter consumes. Default is 1, except when parameter type is boolean,
 	 * in which case it is 0.
+	 * @return the number of words to map to this parameter
 	 */
 	int arity() default ARITY_USE_HEURISTICS;
 
 	/**
 	 * The textual (pre-conversion) value to assign to this parameter if no value is provided by the user.
+	 * @return the default value for this parameter
 	 */
 	String defaultValue() default NONE;
 
 	/**
 	 * Return a short description of the parameter.
+	 * @return description of the parameter
 	 */
 	String help() default "";
 
@@ -71,6 +76,7 @@ public @interface ShellOption {
 	 * {@link StandardParameterResolver}. This is useful if several implementations of
 	 * {@link org.springframework.shell.ParameterResolver} are present, given that the standard one can work with no
 	 * annotation at all.
+	 * @return true to indicate that the {@link StandardParameterResolver} should not be used for this parameter
 	 */
 	boolean optOut() default false;
 

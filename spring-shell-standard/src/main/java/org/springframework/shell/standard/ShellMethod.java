@@ -36,17 +36,20 @@ public @interface ShellMethod {
 	/**
 	 * The name(s) by which this method can be invoked via Spring Shell. If not specified, the actual method name
 	 * will be used (turning camelCase humps into "-").
+	 * @return explicit command name(s) to use
 	 */
 	String[] key() default {};
 
 	/**
 	 * A description for the command. Should not contain any formatting (e.g. html) characters and would typically
 	 * start with a capital letter and end with a dot.
+	 * @return short description of what the command does
 	 */
 	String value() default "";
 
 	/**
 	 * The prefix to use for assigning parameters by name.
+	 * @return prefix to use when not specified as part of the parameter annotation
 	 */
 	String prefix() default "--";
 
