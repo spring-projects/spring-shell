@@ -61,10 +61,4 @@ public class StandardCommandsAutoConfiguration {
 		return new Stacktrace();
 	}
 
-	@Bean
-	@ConditionalOnMissingBean(Script.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.script", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public Script script(Shell shell) {
-		return new Script(shell);
-	}
 }
