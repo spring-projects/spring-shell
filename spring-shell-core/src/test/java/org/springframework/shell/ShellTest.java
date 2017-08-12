@@ -24,14 +24,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.springframework.context.ApplicationContext;
 
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -43,6 +46,9 @@ public class ShellTest {
 
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+	@Rule
+	public ExpectedException thrown= ExpectedException.none();
 
 	@Mock
 	private InputProvider inputProvider;
@@ -150,6 +156,19 @@ public class ShellTest {
 
 		shell.run();
 
+	}
+
+	@Test
+	public void parametersSupported() throws Exception {
+		when(parameterResolver.supports(any())).thenReturn(false);
+		shell.applicationContext = mock(ApplicationContext.class);
+		when(shell.applicationContext.getBeansOfType(MethodTargetRegistrar.class))
+				.thenReturn(Collections.singletonMap("foo", r -> {
+					r.register("hw", MethodTarget.of("helloWorld", this, "hellow world"));
+				}));
+
+		thrown.expect(ParameterResolverMissingException.class);
+		shell.gatherMethodTargets();
 	}
 
 	private void helloWorld(String a) {
