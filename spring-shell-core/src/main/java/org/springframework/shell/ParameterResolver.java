@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,21 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.core.Ordered;
 
 /**
  * Implementations of this interface are responsible, once the command has been identified, of transforming the textual
  * input to an actual parameter object.
+ * 
+ * <p>
+ * An order can also be specified in case more than one {@link ParameterResolver} supports a {@link MethodParameter} via
+ * the {@link ParameterResolver#getOrder()} method.
+ * </p>
+ * 
+ * @author Eric Bottard
+ * @author Camilo Gonzalez
  */
-public interface ParameterResolver {
+public interface ParameterResolver extends Ordered {
 
 	/**
 	 * Should return true if this resolver recognizes the given method parameter (<em>e.g.</em> it

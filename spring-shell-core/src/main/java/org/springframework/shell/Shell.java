@@ -18,7 +18,6 @@ package org.springframework.shell;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
@@ -185,9 +185,14 @@ public class Shell implements CommandRegistry {
 			// Try to complete arguments
 			MethodTarget methodTarget = methodTargets.get(best);
 			Method method = methodTarget.getMethod();
-			Arrays.stream(method.getParameters())
-				.map(Utils::createMethodParameter)
-				.flatMap(mp -> findResolver(mp).complete(mp, argsContext).stream())
+			
+			Utils.createMethodParameters(method)
+				.flatMap(mp -> findResolvers(mp))
+				.flatMap(paramToResolver -> {
+					MethodParameter parameter = paramToResolver.parameter;
+					ParameterResolver resolver = paramToResolver.resolver;
+					return resolver.complete(parameter, argsContext).stream();
+				})
 				.forEach(candidates::add);
 		}
 		return candidates;
@@ -234,24 +239,39 @@ public class Shell implements CommandRegistry {
 	 * resolved
 	 */
 	private Object[] resolveArgs(Method method, List<String> wordsForArgs) {
-		Parameter[] parameters = method.getParameters();
-		Object[] args = new Object[parameters.length];
+		List<ParameterToResolver> resolvers = findResolvers(Utils.createMethodParameters(method));
+		Object[] args = new Object[method.getParameters().length];
 		Arrays.fill(args, UNRESOLVED);
-		for (int i = 0; i < parameters.length; i++) {
-			MethodParameter methodParameter = Utils.createMethodParameter(method, i);
-			args[i] = findResolver(methodParameter).resolve(methodParameter, wordsForArgs).resolvedValue();
+		for (ParameterToResolver parameterToResolver : resolvers) {
+			MethodParameter methodParameter = parameterToResolver.parameter;
+			ParameterResolver resolver = parameterToResolver.resolver;
+			int index = methodParameter.getParameterIndex();
+			if (args[index] == UNRESOLVED) {
+				args[index] = resolver.resolve(methodParameter, wordsForArgs).resolvedValue();
+			}
 		}
 		return args;
 	}
 
-	private ParameterResolver findResolver(MethodParameter parameter) {
-		return parameterResolvers.stream()
-			.filter(resolver -> resolver.supports(parameter))
-			.findFirst()
-			.orElseThrow(() -> new RuntimeException("resolver not found"));
+	private List<ParameterToResolver> findResolvers(Stream<MethodParameter> methodParameters) {
+		return methodParameters
+			.flatMap(this::findResolvers)
+			.sorted()
+			.collect(Collectors.toList());
 	}
 
-
+	private Stream<ParameterToResolver> findResolvers(MethodParameter parameter) {
+		parameterResolvers.stream()
+			.filter(resolver -> resolver.supports(parameter))
+			.findFirst()
+			.orElseThrow(() -> new ParameterResolverMissingException(parameter));
+		
+		return parameterResolvers.stream()
+			.filter(resolver -> resolver.supports(parameter))
+			.map(resolver -> new ParameterToResolver(parameter, resolver))
+			.sorted();
+	}
+	
 	/**
 	 * Returns the longest command that can be matched as first word(s) in the given buffer.
 	 *
@@ -264,4 +284,24 @@ public class Shell implements CommandRegistry {
 		return "".equals(result) ? null : result;
 	}
 
+	private static class ParameterToResolver implements Comparable<ParameterToResolver> {
+		private final MethodParameter parameter;
+
+		private final ParameterResolver resolver;
+
+		private ParameterToResolver(MethodParameter parameter, ParameterResolver resolver) {
+			this.parameter = parameter;
+			this.resolver = resolver;
+		}
+
+		@Override
+		public int compareTo(ParameterToResolver other) {
+			if (resolver.getOrder() == other.resolver.getOrder()) {
+				int parameterIndex = parameter.getParameterIndex();
+				int otherParameterIndex = other.parameter.getParameterIndex();
+				return parameterIndex - otherParameterIndex;
+			}
+			return resolver.getOrder() - other.resolver.getOrder();
+		}
+	}
 }

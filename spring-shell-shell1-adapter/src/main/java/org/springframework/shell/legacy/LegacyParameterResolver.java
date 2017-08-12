@@ -192,4 +192,8 @@ public class LegacyParameterResolver implements ParameterResolver {
 		
 	}
 	
+	@Override
+	public int getOrder() {
+		return 0;
+	}
 }
