@@ -17,23 +17,11 @@ package org.springframework.shell.core;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,32 +176,26 @@ public abstract class JLineShell extends AbstractShell implements Shell, Runnabl
 	 * @return history commands
 	 */
 	private String[] filterLogEntry() {
-		ArrayList<String> entries = new ArrayList<String>();
-		ReversedLinesFileReader reversedReader = null;
 		try {
-			reversedReader = new ReversedLinesFileReader(new File(getHistoryFileName()), 4096, Charset.forName("UTF-8"));
-			int size = 0;
-			String line = null;
-			while ((line = reversedReader.readLine()) != null) {
-				if (!line.startsWith("//")) {
-					size++;
-					if (size > historySize) {
-						break;
-					}
-					else {
-						entries.add(line);
-					}
+			List<String> lines = org.apache.commons.io.IOUtils.readLines(
+					new BufferedInputStream(new FileInputStream(getHistoryFileName())), Charset.forName("UTF-8")
+			);
+			Iterator<String> iter = lines.iterator();
+			while (iter.hasNext()) {
+				String line = iter.next();
+				if (line.startsWith("//")) {
+					iter.remove();
 				}
 			}
-		}
-		catch (IOException e) {
+
+			int totalSize = lines.size();
+			int size = Math.min(totalSize, historySize);
+			return lines.subList(totalSize - size, totalSize).toArray(new String[size]);
+		} catch (IOException e) {
 			logger.warning("read history file failed. Reason:" + e.getMessage());
+
+			return new String[0];
 		}
-		finally {
-			closeReversedReader(reversedReader);
-		}
-		Collections.reverse(entries);
-		return entries.toArray(new String[0]);
 	}
 
 	private void closeReversedReader(ReversedLinesFileReader reversedReader) {
