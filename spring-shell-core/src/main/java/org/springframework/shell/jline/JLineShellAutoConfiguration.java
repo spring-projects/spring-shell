@@ -17,12 +17,14 @@
 package org.springframework.shell.jline;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import org.jline.reader.*;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.AttributedString;
@@ -32,9 +34,15 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.shell.CompletingParsedLine;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -60,6 +68,9 @@ class JLineShellAutoConfiguration {
 	@Autowired
 	private PromptProvider promptProvider;
 
+	@Autowired
+	private History history;
+
 	@Bean
 	public Terminal terminal() {
 		try {
@@ -79,6 +90,31 @@ class JLineShellAutoConfiguration {
 	@ConditionalOnMissingBean(PromptProvider.class)
 	public PromptProvider promptProvider() {
 		return () -> new AttributedString("shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
+	}
+
+	/**
+	 * Installs a default JLine history, and triggers saving to file on context shutdown. Filename is based on
+	 * {@literal spring.application.name}.
+	 *
+	 * @author Eric Bottard
+	 */
+	@Configuration
+	@ConditionalOnMissingBean(History.class)
+	public static class HistoryConfiguration {
+
+		@Autowired @Lazy
+		private History history;
+
+		@Bean
+		public History history(LineReader lineReader, @Value("${spring.application.name:spring-shell}.log") String historyPath) {
+			lineReader.setVariable(LineReader.HISTORY_FILE, Paths.get(historyPath));
+			return new DefaultHistory(lineReader);
+		}
+
+		@EventListener
+		public void onContextClosedEvent(ContextClosedEvent event) throws IOException {
+			history.save();
+		}
 	}
 
 	@Bean
@@ -108,6 +144,7 @@ class JLineShellAutoConfiguration {
 				.terminal(terminal())
 				.appName("Spring Shell")
 				.completer(completer())
+				.history(history)
 				.highlighter(new Highlighter() {
 
 					@Override
