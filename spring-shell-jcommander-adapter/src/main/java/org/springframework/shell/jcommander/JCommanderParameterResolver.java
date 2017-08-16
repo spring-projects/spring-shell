@@ -132,9 +132,4 @@ public class JCommanderParameterResolver implements ParameterResolver {
 			.map(CompletionProposal::new)
 			.collect(Collectors.toList());
 	}
-	
-	@Override
-	public int getOrder() {
-		return 0;
-	}
 }

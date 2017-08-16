@@ -436,11 +436,6 @@ public class StandardParameterResolver implements ParameterResolver {
 		throw new IllegalArgumentException(String.format("Could not look up parameter for '%s' in %s", key, method));
 	}
 
-	@Override
-	public int getOrder() {
-		return 0;
-	}
-	
 	private static class CacheKey {
 
 		private final Method method;

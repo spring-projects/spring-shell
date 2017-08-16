@@ -35,6 +35,7 @@ import javax.validation.executable.ExecutableValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -296,12 +297,13 @@ public class Shell implements CommandRegistry {
 
 		@Override
 		public int compareTo(ParameterToResolver other) {
-			if (resolver.getOrder() == other.resolver.getOrder()) {
+			int orderComparison = AnnotationAwareOrderComparator.INSTANCE.compare(this, other);
+			if (orderComparison == 0) {
 				int parameterIndex = parameter.getParameterIndex();
 				int otherParameterIndex = other.parameter.getParameterIndex();
 				return parameterIndex - otherParameterIndex;
 			}
-			return resolver.getOrder() - other.resolver.getOrder();
+			return orderComparison;
 		}
 	}
 }

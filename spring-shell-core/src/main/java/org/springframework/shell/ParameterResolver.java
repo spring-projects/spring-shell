@@ -20,21 +20,21 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.core.MethodParameter;
-import org.springframework.core.Ordered;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 /**
  * Implementations of this interface are responsible, once the command has been identified, of transforming the textual
  * input to an actual parameter object.
  * 
  * <p>
- * An order can also be specified in case more than one {@link ParameterResolver} supports a {@link MethodParameter} via
- * the {@link ParameterResolver#getOrder()} method.
+ * An order can also be specified in case more than one {@link ParameterResolver} supports a {@link MethodParameter}.
+ * See {@link AnnotationAwareOrderComparator} for details..
  * </p>
  * 
  * @author Eric Bottard
  * @author Camilo Gonzalez
  */
-public interface ParameterResolver extends Ordered {
+public interface ParameterResolver {
 
 	/**
 	 * Should return true if this resolver recognizes the given method parameter (<em>e.g.</em> it
