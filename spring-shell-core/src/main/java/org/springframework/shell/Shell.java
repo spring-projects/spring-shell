@@ -297,7 +297,7 @@ public class Shell implements CommandRegistry {
 
 		@Override
 		public int compareTo(ParameterToResolver other) {
-			int orderComparison = AnnotationAwareOrderComparator.INSTANCE.compare(this, other);
+			int orderComparison = AnnotationAwareOrderComparator.INSTANCE.compare(this.resolver, other.resolver);
 			if (orderComparison == 0) {
 				int parameterIndex = parameter.getParameterIndex();
 				int otherParameterIndex = other.parameter.getParameterIndex();
