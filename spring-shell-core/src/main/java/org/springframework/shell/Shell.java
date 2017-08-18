@@ -192,6 +192,7 @@ public class Shell implements CommandRegistry {
 			Method method = methodTarget.getMethod();
 			
 			List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
+			validateParameters(parameters);
 			for (ParameterResolver resolver : parameterResolvers) {
 				for (int index = 0; index < parameters.size(); index++) {
 					MethodParameter parameter = parameters.get(index);
@@ -246,6 +247,7 @@ public class Shell implements CommandRegistry {
 	 */
 	private Object[] resolveArgs(Method method, List<String> wordsForArgs) {
 		List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
+		validateParameters(parameters);
 		Object[] args = new Object[parameters.size()];
 		Arrays.fill(args, UNRESOLVED);
 		for (ParameterResolver resolver : parameterResolvers) {
@@ -257,6 +259,18 @@ public class Shell implements CommandRegistry {
 			}
 		}
 		return args;
+	}
+	
+	/**
+	 * Verifies that we have at least one {@link ParameterResolver} that supports each of the {@link MethodParameter}s in the list.
+	 */
+	private void validateParameters(List<MethodParameter> parameters) {
+		parameters.forEach(parameter -> {
+			parameterResolvers.stream()
+					.filter(resolver -> resolver.supports(parameter))
+					.findFirst()
+					.orElseThrow(() -> new ParameterResolverMissingException(parameter));
+		});
 	}
 	
 	/**
