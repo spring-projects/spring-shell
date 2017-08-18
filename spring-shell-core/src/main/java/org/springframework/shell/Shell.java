@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
@@ -59,8 +58,7 @@ public class Shell implements CommandRegistry {
 
 	protected Map<String, MethodTarget> methodTargets = new HashMap<>();
 
-	@Autowired
-	protected List<ParameterResolver> parameterResolvers = new ArrayList<>();
+	protected List<ParameterResolver> parameterResolvers;
 
 	/**
 	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid value.
@@ -84,6 +82,12 @@ public class Shell implements CommandRegistry {
 			resolver.register(registry);
 		}
 		methodTargets = registry.listCommands();
+	}
+	
+	@Autowired
+	public void setParameterResolvers(List<ParameterResolver> resolvers) {
+		this.parameterResolvers = new ArrayList<>(resolvers);
+		AnnotationAwareOrderComparator.sort(parameterResolvers);
 	}
 
 	/**
@@ -142,7 +146,7 @@ public class Shell implements CommandRegistry {
 		}
 		resultHandler.handleResult(result);
 	}
-
+	
 	/**
 	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an empty line or blank space).
 	 *
@@ -187,14 +191,15 @@ public class Shell implements CommandRegistry {
 			MethodTarget methodTarget = methodTargets.get(best);
 			Method method = methodTarget.getMethod();
 			
-			Utils.createMethodParameters(method)
-				.flatMap(mp -> findResolvers(mp))
-				.flatMap(paramToResolver -> {
-					MethodParameter parameter = paramToResolver.parameter;
-					ParameterResolver resolver = paramToResolver.resolver;
-					return resolver.complete(parameter, argsContext).stream();
-				})
-				.forEach(candidates::add);
+			List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
+			for (ParameterResolver resolver : parameterResolvers) {
+				for (int index = 0; index < parameters.size(); index++) {
+					MethodParameter parameter = parameters.get(index);
+					if (resolver.supports(parameter)) {
+						resolver.complete(parameter, argsContext).stream().forEach(candidates::add);
+					}
+				}
+			}
 		}
 		return candidates;
 	}
@@ -240,37 +245,18 @@ public class Shell implements CommandRegistry {
 	 * resolved
 	 */
 	private Object[] resolveArgs(Method method, List<String> wordsForArgs) {
-		List<ParameterToResolver> resolvers = findResolvers(Utils.createMethodParameters(method));
-		Object[] args = new Object[method.getParameters().length];
+		List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
+		Object[] args = new Object[parameters.size()];
 		Arrays.fill(args, UNRESOLVED);
-		for (ParameterToResolver parameterToResolver : resolvers) {
-			MethodParameter methodParameter = parameterToResolver.parameter;
-			ParameterResolver resolver = parameterToResolver.resolver;
-			int index = methodParameter.getParameterIndex();
-			if (args[index] == UNRESOLVED) {
-				args[index] = resolver.resolve(methodParameter, wordsForArgs).resolvedValue();
+		for (ParameterResolver resolver : parameterResolvers) {
+			for (int argIndex = 0; argIndex < args.length; argIndex++) {
+				MethodParameter parameter = parameters.get(argIndex);
+				if (args[argIndex] == UNRESOLVED && resolver.supports(parameter)) {
+					args[argIndex] = resolver.resolve(parameter, wordsForArgs).resolvedValue();
+				}
 			}
 		}
 		return args;
-	}
-
-	private List<ParameterToResolver> findResolvers(Stream<MethodParameter> methodParameters) {
-		return methodParameters
-			.flatMap(this::findResolvers)
-			.sorted()
-			.collect(Collectors.toList());
-	}
-
-	private Stream<ParameterToResolver> findResolvers(MethodParameter parameter) {
-		parameterResolvers.stream()
-			.filter(resolver -> resolver.supports(parameter))
-			.findFirst()
-			.orElseThrow(() -> new ParameterResolverMissingException(parameter));
-		
-		return parameterResolvers.stream()
-			.filter(resolver -> resolver.supports(parameter))
-			.map(resolver -> new ParameterToResolver(parameter, resolver))
-			.sorted();
 	}
 	
 	/**
@@ -285,25 +271,4 @@ public class Shell implements CommandRegistry {
 		return "".equals(result) ? null : result;
 	}
 
-	private static class ParameterToResolver implements Comparable<ParameterToResolver> {
-		private final MethodParameter parameter;
-
-		private final ParameterResolver resolver;
-
-		private ParameterToResolver(MethodParameter parameter, ParameterResolver resolver) {
-			this.parameter = parameter;
-			this.resolver = resolver;
-		}
-
-		@Override
-		public int compareTo(ParameterToResolver other) {
-			int orderComparison = AnnotationAwareOrderComparator.INSTANCE.compare(this.resolver, other.resolver);
-			if (orderComparison == 0) {
-				int parameterIndex = parameter.getParameterIndex();
-				int otherParameterIndex = other.parameter.getParameterIndex();
-				return parameterIndex - otherParameterIndex;
-			}
-			return orderComparison;
-		}
-	}
 }
