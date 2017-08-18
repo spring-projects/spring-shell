@@ -34,7 +34,6 @@ import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.ParameterDescription;
 import org.springframework.shell.ParameterResolver;
 import org.springframework.shell.ValueResult;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import com.beust.jcommander.DynamicParameter;

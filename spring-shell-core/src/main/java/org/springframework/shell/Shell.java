@@ -18,7 +18,6 @@ package org.springframework.shell;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,6 +34,7 @@ import javax.validation.executable.ExecutableValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -58,8 +58,7 @@ public class Shell implements CommandRegistry {
 
 	protected Map<String, MethodTarget> methodTargets = new HashMap<>();
 
-	@Autowired
-	protected List<ParameterResolver> parameterResolvers = new ArrayList<>();
+	protected List<ParameterResolver> parameterResolvers;
 
 	/**
 	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid value.
@@ -83,6 +82,12 @@ public class Shell implements CommandRegistry {
 			resolver.register(registry);
 		}
 		methodTargets = registry.listCommands();
+	}
+	
+	@Autowired
+	public void setParameterResolvers(List<ParameterResolver> resolvers) {
+		this.parameterResolvers = new ArrayList<>(resolvers);
+		AnnotationAwareOrderComparator.sort(parameterResolvers);
 	}
 
 	/**
@@ -141,7 +146,7 @@ public class Shell implements CommandRegistry {
 		}
 		resultHandler.handleResult(result);
 	}
-
+	
 	/**
 	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an empty line or blank space).
 	 *
@@ -185,10 +190,17 @@ public class Shell implements CommandRegistry {
 			// Try to complete arguments
 			MethodTarget methodTarget = methodTargets.get(best);
 			Method method = methodTarget.getMethod();
-			Arrays.stream(method.getParameters())
-				.map(Utils::createMethodParameter)
-				.flatMap(mp -> findResolver(mp).complete(mp, argsContext).stream())
-				.forEach(candidates::add);
+			
+			List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
+			validateParameters(parameters);
+			for (ParameterResolver resolver : parameterResolvers) {
+				for (int index = 0; index < parameters.size(); index++) {
+					MethodParameter parameter = parameters.get(index);
+					if (resolver.supports(parameter)) {
+						resolver.complete(parameter, argsContext).stream().forEach(candidates::add);
+					}
+				}
+			}
 		}
 		return candidates;
 	}
@@ -234,24 +246,33 @@ public class Shell implements CommandRegistry {
 	 * resolved
 	 */
 	private Object[] resolveArgs(Method method, List<String> wordsForArgs) {
-		Parameter[] parameters = method.getParameters();
-		Object[] args = new Object[parameters.length];
+		List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
+		validateParameters(parameters);
+		Object[] args = new Object[parameters.size()];
 		Arrays.fill(args, UNRESOLVED);
-		for (int i = 0; i < parameters.length; i++) {
-			MethodParameter methodParameter = Utils.createMethodParameter(method, i);
-			args[i] = findResolver(methodParameter).resolve(methodParameter, wordsForArgs).resolvedValue();
+		for (ParameterResolver resolver : parameterResolvers) {
+			for (int argIndex = 0; argIndex < args.length; argIndex++) {
+				MethodParameter parameter = parameters.get(argIndex);
+				if (args[argIndex] == UNRESOLVED && resolver.supports(parameter)) {
+					args[argIndex] = resolver.resolve(parameter, wordsForArgs).resolvedValue();
+				}
+			}
 		}
 		return args;
 	}
-
-	private ParameterResolver findResolver(MethodParameter parameter) {
-		return parameterResolvers.stream()
-			.filter(resolver -> resolver.supports(parameter))
-			.findFirst()
-			.orElseThrow(() -> new RuntimeException("resolver not found"));
+	
+	/**
+	 * Verifies that we have at least one {@link ParameterResolver} that supports each of the {@link MethodParameter}s in the list.
+	 */
+	private void validateParameters(List<MethodParameter> parameters) {
+		parameters.forEach(parameter -> {
+			parameterResolvers.stream()
+					.filter(resolver -> resolver.supports(parameter))
+					.findFirst()
+					.orElseThrow(() -> new ParameterResolverMissingException(parameter));
+		});
 	}
-
-
+	
 	/**
 	 * Returns the longest command that can be matched as first word(s) in the given buffer.
 	 *
