@@ -19,6 +19,7 @@ package org.springframework.shell.samples.legacy;
 import java.lang.reflect.Method;
 
 import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,13 @@ public class LegacyCommands implements CommandMarker {
 
 	public static final Method REGISTER_METHOD = ReflectionUtils.findMethod(LegacyCommands.class, "register", String.class, ArtifactType.class, String.class, boolean.class);
 	public static final Method SUM_METHOD = ReflectionUtils.findMethod(LegacyCommands.class, "sum", int.class, int.class);
+
+	private boolean available = true;
+
+	@CliAvailabilityIndicator("register module")
+	public boolean registerAvailable() {
+		return available;
+	}
 
 	@CliCommand(value = "register module", help = "Register a new module")
 	public String register(
@@ -57,10 +65,11 @@ public class LegacyCommands implements CommandMarker {
 		return String.format(("Successfully registered module '%s:%s'"), type, name);
 	}
 
-	@CliCommand(value = "sum", help = "adds two numbers")
+	@CliCommand(value = "sum", help = "adds two numbers. Will also toggle the 'register module' command availability")
 	public int sum(
 		@CliOption(key = "v1", unspecifiedDefaultValue = "38") int a,
 		@CliOption(key = "v2", specifiedDefaultValue = "42") int b) {
+		available = !available;
 		return a + b;
 	}
 

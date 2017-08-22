@@ -31,15 +31,11 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.MethodTarget;
-import org.springframework.shell.ParameterDescription;
-import org.springframework.shell.ParameterResolver;
-import org.springframework.shell.CommandRegistry;
+import org.springframework.shell.*;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.Utils;
 
 /**
  * A command to display help about all available commands.
@@ -204,6 +200,14 @@ public class Help {
 			}
 		}
 
+		Availability availability = methodTarget.getAvailability();
+		if (!availability.isAvailable()) {
+			result.append("CURRENTLY UNAVAILABLE", AttributedStyle.BOLD).append("\n");
+			result.append('\t').append("This command is currently not available because ")
+					.append(availability.getReason())
+					.append(".\n");
+		}
+
 		result.append("\n");
 		return result;
 	}
@@ -223,17 +227,28 @@ public class Help {
 
 		groupedByMethodTarget.entrySet().stream()
 				.sorted(sortByFirstElement())
-				.forEach(e -> result.append("\t")
+				.forEach(e -> result.append(isAvailable(e) ? "        " : "      * ")
 								.append(e.getValue().stream().collect(Collectors.joining(", ")), AttributedStyle.BOLD)
 								.append(": ")
 								.append(e.getKey())
 								.append('\n')
 				);
+
+		groupedByMethodTarget.entrySet().stream()
+				.filter(e -> !isAvailable(e))
+				.findAny()
+				.ifPresent(e -> result.append("\nCommands marked with (*) are currently unavailable.\nType `help <command>` to learn more.\n"));
+
 		return result.append("\n");
 	}
 
 	private Comparator<Map.Entry<String, Set<String>>> sortByFirstElement() {
 		return Comparator.comparing(e -> e.getValue().iterator().next());
+	}
+
+	private boolean isAvailable(Map.Entry<String, Set<String>> entry) {
+		String commandName = entry.getValue().iterator().next();
+		return commandRegistry.listCommands().get(commandName).getAvailability().isAvailable();
 	}
 
 	private void appendUnderlinedFormal(AttributedStringBuilder result, ParameterDescription description) {

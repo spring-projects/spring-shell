@@ -18,14 +18,16 @@ package org.springframework.shell.legacy;
 
 import static org.springframework.util.StringUtils.collectionToDelimitedString;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.shell.Availability;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.MethodTargetRegistrar;
@@ -56,11 +58,34 @@ public class LegacyMethodTargetRegistrar implements MethodTargetRegistrar {
 			ReflectionUtils.doWithMethods(clazz, method -> {
 				CliCommand cliCommand = method.getAnnotation(CliCommand.class);
 				for (String key : cliCommand.value()) {
-					MethodTarget target = new MethodTarget(method, bean, cliCommand.help());
+					Supplier<Availability> availabilityIndicator = bridgeAvailabilityIndicator(key, bean);
+					MethodTarget target = new MethodTarget(method, bean, cliCommand.help(), availabilityIndicator);
 					registry.register(key, target);
 					commands.put(key, target);
 				}
 			}, method -> method.getAnnotation(CliCommand.class) != null);
+		}
+	}
+
+	private Supplier<Availability> bridgeAvailabilityIndicator(String commandKey, Object bean) {
+		Class<?> clazz = bean.getClass();
+		Set<Method> candidates = new HashSet<>();
+
+		ReflectionUtils.doWithMethods(clazz, candidates::add,
+			method -> method.getAnnotation(CliAvailabilityIndicator.class) != null
+					&& Arrays.asList(method.getAnnotation(CliAvailabilityIndicator.class).value()).contains(commandKey));
+
+		switch (candidates.size()) {
+			case 0:
+				return null;
+			case 1:
+				return () -> {
+					boolean available = (Boolean) ReflectionUtils.invokeMethod(candidates.iterator().next(), bean);
+					return available ? Availability.available() : Availability.unavailable("[Unknown reason]");
+				};
+			default:
+				throw new IllegalStateException("Looks like there are several @" + CliAvailabilityIndicator.class.getSimpleName()
+				+ " for '" + commandKey + "'. Found " + candidates);
 		}
 	}
 

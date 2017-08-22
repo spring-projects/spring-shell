@@ -131,16 +131,21 @@ public class Shell implements CommandRegistry {
 		Object result;
 		if (command != null) {
 			MethodTarget methodTarget = methodTargets.get(command);
-			List<String> wordsForArgs = wordsForArguments(command, words);
-			Method method = methodTarget.getMethod();
+			Availability availability = methodTarget.getAvailability();
+			if (availability.isAvailable()) {
+				List<String> wordsForArgs = wordsForArguments(command, words);
+				Method method = methodTarget.getMethod();
 
-			try {
-				Object[] args = resolveArgs(method, wordsForArgs);
-				validateArgs(args, methodTarget);
-				result = ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
-			}
-			catch (Exception e) {
-				result = e;
+				try {
+					Object[] args = resolveArgs(method, wordsForArgs);
+					validateArgs(args, methodTarget);
+					result = ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
+				}
+				catch (Exception e) {
+					result = e;
+				}
+			} else {
+				result = new CommandNotCurrentlyAvailable(command, availability);
 			}
 		}
 		else {

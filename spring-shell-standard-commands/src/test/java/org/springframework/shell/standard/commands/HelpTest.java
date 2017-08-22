@@ -96,18 +96,15 @@ public class HelpTest {
 		public CommandRegistry shell() {
 			return () -> {
 				Map<String, MethodTarget> result = new HashMap<>();
-				Method method = ReflectionUtils.findMethod(Commands.class, "firstCommand", boolean.class, boolean.class, int.class, float[].class);
-				MethodTarget methodTarget = new MethodTarget(method, commands(), "A rather extensive description of some command.");
+				MethodTarget methodTarget = MethodTarget.of("firstCommand", commands(), "A rather extensive description of some command.");
 				result.put("first-command", methodTarget);
 				result.put("1st-command", methodTarget);
 
-				method = ReflectionUtils.findMethod(Commands.class, "secondCommand");
-				methodTarget = new MethodTarget(method, commands(), "The second command. This one is known under several aliases as well.");
+				methodTarget = MethodTarget.of("secondCommand", commands(), "The second command. This one is known under several aliases as well.");
 				result.put("second-command", methodTarget);
 				result.put("yet-another-command", methodTarget);
 
-				method = ReflectionUtils.findMethod(Commands.class, "thirdCommand");
-				methodTarget = new MethodTarget(method, commands(), "The last command.");
+				methodTarget = MethodTarget.of("thirdCommand", commands(), "The last command.");
 				result.put("third-command", methodTarget);
 
 				return result;

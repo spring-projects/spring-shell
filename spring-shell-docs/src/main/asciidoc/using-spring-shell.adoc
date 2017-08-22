@@ -20,8 +20,9 @@
 ==== By Name _vs._ Positional Parameters
 ==== Quotes Handling
 ==== Interacting with the Shell
-Line Continuation, TAB Completion, Search, etc.
+Line Continuation, kbd:[TAB] Completion, Search, etc.
 
+=== Dynamic Command Availability
 
 === Built-In Commands
 * clear

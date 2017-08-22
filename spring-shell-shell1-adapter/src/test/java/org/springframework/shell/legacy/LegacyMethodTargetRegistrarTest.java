@@ -56,7 +56,7 @@ public class LegacyMethodTargetRegistrarTest {
 
 		assertThat(targets).contains(entry(
 				"register module",
-				new MethodTarget(LegacyCommands.REGISTER_METHOD, legacyCommands, "Register a new module" )
+				MethodTarget.of("register", legacyCommands, "Register a new module")
 		));
 	}
 
