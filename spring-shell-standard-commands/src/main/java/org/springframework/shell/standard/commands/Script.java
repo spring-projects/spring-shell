@@ -43,7 +43,7 @@ public class Script {
     public interface Command {
     }
 
-    @ShellMethod(value = "Read and execute commands from a file")
+    @ShellMethod(value = "Read and execute commands from a file.")
     public void script(File file) throws IOException {
         Reader reader = new FileReader(file);
         try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {

@@ -50,7 +50,7 @@ public class Stacktrace {
 	private ThrowableResultHandler throwableResultHandler;
 
 
-	@ShellMethod(key = ThrowableResultHandler.DETAILS_COMMAND_NAME, value = "Display the full stacktrace of the last error")
+	@ShellMethod(key = ThrowableResultHandler.DETAILS_COMMAND_NAME, value = "Display the full stacktrace of the last error.")
 	public void stacktrace() {
 		if (throwableResultHandler.getLastError() != null) {
 			throwableResultHandler.getLastError().printStackTrace(terminal.writer());
