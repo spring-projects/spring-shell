@@ -112,28 +112,539 @@ Try to play with the shell (hint: there is a `help` command) and when you're don
 The rest of this document delves deeper into the whole Spring Shell programming model.
 
 === Writing your own Commands
-`@ShellComponent`, `@ShellMethod`, etc.
+
+The way Spring Shell decides to turn a method into an actual shell command is entirely pluggable
+(see xref:extending-spring-shell[]), but as of Spring Shell 2.x, the recommended way to write commands
+is to use the new API described in this section (the so-called _standard_ API).
+
+Using the _standard_ API, methods on beans will be turned into executable commands provided that
+
+* the bean class bears the `@ShellComponent` annotation. This is used to restrict the set of beans that
+are considered.
+* the method bears the `@ShellMethod` annotation.
+
+[TIP]
+====
+The `@ShellComponent` is a stereotype annotation itself meta-annotated with `@Component`. As such, it
+can be used in addition to the filtering mechanism to also _declare_ beans (_e.g._ using `@ComponentScan`).
+
+The name of the created bean can be customized using the `value` attribute of the annotation.
+====
+
+==== It's all about Documentation!
+
+The only required attribute of the `@ShellMethod` annotation is its `value` attribute, which should be used
+to write a short, one-sentence, description of what the command does. This is important so that your users can
+get consistent help about your commands without having to leave the shell (see xref:help-command[]).
+
+[NOTE]
+====
+The description of your command should be short, one or two sentences only. For better consistency, it is
+recommended that it starts with a capital letter and ends with a dot.
+====
+
+==== Customizing the Command Name(s)
+
+By default, there is no need to specify the _key_ for your command (_i.e._ the word(s) that should be used
+to invoke it in the shell). The name of the method will be used as the command key, turning camelCase names into
+dashed, gnu-style, names (that is, `sayHello()` will become `say-hello`).
+
+It is possible, however, to explicitly set the command key, using the `key` attribute of the annotation, like so:
+[source, java]
+----
+	@ShellMethod(value = "Add numbers.", key = "sum")
+	public int add(int a, int b) {
+		return a + b;
+	}
+
+----
+
+[NOTE]
+====
+The `key` attribute accepts multiple values.
+If you set multiple keys for a single method, then the command will be registered using those different aliases.
+====
+
+[TIP]
+====
+The command key can contain pretty much any character, including spaces. When coming up with names though,
+keep in mind that consistency is often appreciated by users (_i.e._ avoid mixing dashed-names with spaced names, _etc._)
+====
 
 
-=== Invoking your commands
+=== Invoking your Commands
 ==== By Name _vs._ Positional Parameters
-==== Quotes Handling
-==== Interacting with the Shell
-Line Continuation, kbd:[TAB] Completion, Search, etc.
+As seen above, decorating a method with `@ShellMethod` is the sole requirement for creating a command.
+When doing so, the user can set the value of all method parameters in two possible ways:
 
+* using a parameter key (_e.g._ `--arg value`). This approach is called "by name" parameters
+* or without a key, simply setting parameter values in the same order they appear in the method signature ("positional" parameters).
+
+These two approaches can be mixed and matched, with named parameters always taking precedence (as they are less
+prone to ambiguity). As such, given the following command
+[source, java]
+----
+	@ShellMethod("Display stuff.")
+	public String echo(int a, int b, int c) {
+		return String.format("You said a=%d, b=%d, c=%d", a, b, c);
+	}
+----
+then the following invocations are all equivalent, as witnessed by the output:
+[source, bash]
+----
+shell:>echo 1 2 3               <1>
+You said a=1, b=2, c=3
+shell:>echo --a 1 --b 2 --c 3   <2>
+You said a=1, b=2, c=3
+shell:>echo --b 2 --c 3 --a 1   <3>
+You said a=1, b=2, c=3
+shell:>echo --a 1 2 3           <4>
+You said a=1, b=2, c=3
+shell:>echo 1 --c 3 2           <5>
+You said a=1, b=2, c=3
+----
+<1> This uses positional parameters
+<2> This is an example of full by-name parameters
+<3> By-name parameters can be reordered as desired
+<4> You can use a mix of the two approaches
+<5> The non by-name parameters are resolved in the order they appear
+
+===== Customizing the Named Parameter Key(s)
+As seen above, the default strategy for deriving the key for a named parameter is to use the java
+name of the method signature and prefixing it with two dashes (`--`). This can be customized in two ways:
+
+1. to change the default prefix for the whole method, use the `prefix()` attribute of the
+`@ShellMethod` annotation
+2. to override the _whole_ key on a per-parameter fashion, annotate the parameter with the `@ShellOption` annotation.
+
+Have a look at the following example:
+[source, java]
+----
+	@ShellMethod(value = "Display stuff.", prefix="-")
+	public String echo(int a, int b, @ShellOption("--third") int c) {
+		return String.format("You said a=%d, b=%d, c=%d", a, b, c);
+	}
+----
+
+For such a setup, the possible parameter keys will be `-a`, `-b` and `--third`.
+
+[TIP]
+====
+It is possible to specify several keys for a single parameter. If so, these will be mutually exclusive ways
+to specify the same parameter (so only one of them can be used). Here is an example:
+[source, java]
+----
+	@ShellMethod("Describe a command.")
+	public String help(@ShellOption({"-C", "--command"} String command) {
+		...
+	}
+----
+====
+
+[[optional-parameters-default-values]]
+==== Optional Parameters and Default Values
+Spring Shell provides the ability to give parameters default values, which will allow the user to omit
+those parameters:
+[source, java]
+----
+	@ShellMethod("Say hello.")
+	public String greet(@ShellOption(defaultValue="World"} String who) {
+		return "Hello " + who;
+	}
+----
+
+Now, the `greet` command can still be invoked as `greet Mother` (or `greet --who Mother`), but the following
+is also possible:
+[source]
+----
+shell:>greet
+Hello World
+----
+
+==== Parameter Arity
+Up to now, it has always been assumed that each parameter mapped to a single word entered by the user.
+Situations may arise though, when a parameter value should be _multi valued_. This is driven by the `arity()`
+attribute of the `@ShellOption` annotation. Simply use a collection or array for the parameter type, and specify how
+many values are expected:
+[source, java]
+----
+	@ShellMethod("Add Numbers.")
+	public float add(@ShellOption(arity=3) float[] numbers) {
+		return numbers[0] + numbers[1] + numbers[2];
+	}
+----
+
+The command may then be invoked using any of the following syntax:
+[source]
+----
+shell:>add 1 2 3.3
+6.3
+shell:>add --numbers 1 2 3.3
+6.3
+----
+
+[WARNING]
+====
+When using the _by-name_ parameter approach, the key should *not* be repeated. The following does *not* work:
+[source]
+----
+shell:>add --numbers 1 --numbers 2 --numbers 3.3
+----
+====
+
+===== Infinite Arity
+TO BE IMPLEMENTED
+
+===== Special Handling of Boolean Parameters
+When it comes to parameter arity, there is a kind of parameters that receives a special treatment by default, as
+is often the case in command-line utilities.
+Boolean (that is, `boolean` as well as `java.lang.Boolean`) parameters behave like they have an `arity()` of `0` by default, allowing users to set their values using a "flag" approach.
+Take a look at the following:
+[source, java]
+----
+	@ShellMethod("Terminate the system.")
+	public String shutdown(boolean force) {
+		return "You said " + force;
+	}
+----
+
+This allows the following invocations:
+[source]
+----
+shell:>shutdown
+You said false
+shell:>shutdown --force
+You said true
+----
+
+[TIP]
+====
+This special treatment plays well with the xref:optional-parameters-default-values[default value] specification. Although the default
+for boolean parameters is to have their default value be `false`, you can specify otherwise (_i.e._
+`@ShellOption(defaultValue="true")`) and the behavior will be inverted (that is, not specifying the parameter
+will result in the value being `true`, and specifying the flag will result in the value being `false`)
+====
+
+[WARNING]
+====
+Having this behavior of implicit `arity()=0` prevents the user from specifying a value (_e.g._ `shutdown --force true`).
+If you would like to allow this behavior (and forego the flag approach), then force an arity of `1` using the annotation:
+[source, java]
+----
+	@ShellMethod("Terminate the system.")
+	public String shutdown(@ShellOption(arity=1, defaultValue="false") boolean force) {
+		return "You said " + force;
+	}
+----
+====
+
+[[quotes-handling]]
+==== Quotes Handling
+Spring Shell takes user input and tokenizes it in _words_, splitting on space characters.
+If the user wants to provide a parameter value that contains spaces, that value needs to be quoted.
+Both single (`'`) and double (`"`) quotes are supported, and those quotes will not be part of the value:
+
+[source, java]
+----
+	@ShellMethod("Prints what has been entered.")
+	public String echo(String what) {
+		return "You said " + what;
+	}
+----
+
+[source]
+----
+shell:>echo Hello
+You said Hello
+shell:>echo 'Hello'
+You said Hello
+shell:>echo 'Hello World'
+You said Hello World
+shell:>echo "Hello World"
+You said Hello World
+----
+
+Supporting both single and double quotes allows the user to easily embed one type of quotes into
+a value:
+[source]
+----
+shell:>echo "I'm here!"
+You said I'm here!
+shell:>echo 'He said "Hi!"'
+You said He said "Hi!"
+----
+
+Should the user need to embed the same kind of quote that was used to quote the whole parameter,
+the escape sequence uses the backslash (`\`) character:
+[source]
+----
+shell:>echo 'I\'m here!'
+You said I'm here!
+shell:>echo "He said \"Hi!\""
+You said He said "Hi!"
+shell:>echo I\'m here!
+You said I'm here!
+----
+
+It is also possible to escape space characters when not using enclosing quotes, as such:
+[source]
+----
+shell:>echo This\ is\ a\ single\ value
+You said This is a single value
+----
+
+[[interacting-with-the-shell]]
+==== Interacting with the Shell
+The Spring Shell project builds on top of the https://github.com/jline/jline3[JLine] library, and as such brings
+a lot of nice interactive features, some of which are detailed in this section.
+
+First and foremost, Spring Shell supports kbd:[TAB] completion almost everywhere possible. So if there
+is an `echo` command and the user presses kbd:[e], kbd:[c], kbd:[TAB] then `echo` will appear.
+Should there be several commands that start with `ec`, then the user will be prompted to choose (using kbd:[TAB] or
+kbd:[Shift + TAB] to navigate, and kbd:[ENTER] for selection.)
+
+But completion does not stop at command keys. It also works for parameter keys (`--arg`) and even
+parameter values, if the application developer registered the appropriate beans (see xref:providing-tab-completion[]).
+
+Another nice feature of Spring Shell apps is support for line continuation. If a command and its parameters
+is too long and does not fit nicely on screen, a user may chunk it and terminate a line with a backslash (`\`) character
+then hit kbd:[ENTER] and continue on the next line. Uppon submission of the whole command, this will
+be parsed as if the user entered a single space on line breaks.
+
+[source]
+----
+shell:>register module --type source --name foo  \ <1>
+> --uri file:///tmp/bar
+Successfully registered module 'source:foo'
+----
+<1> command continues on next line
+
+Line continuation also automatically triggers if the user has opened a quote (see xref:quotes-handling[])
+and hits kbd:[ENTER] while still in the quotes:
+[source]
+----
+shell:>echo "Hello <1>
+dquote> World"
+You said Hello World
+----
+<1> user presses kbd:[ENTER] here
+
+
+Lastly, Spring Shell apps benefit from a lot of keyboard shortcuts you may already be familiar with when
+working with your regular OS Shell, borrowed from Emacs. Notable shortcuts include kbd:[Ctrl+r] to perform
+a reverse search, kbd:[Ctrl+a] and kbd:[Ctrl+e] to move to beginning and end of line respectively or kbd:[Esc f] and
+kbd:[Esc b] to move forward (_resp._ backward) one word at a time.
+
+[[providing-tab-completion]]
+===== Providing TAB Completion Proposals
+
+TBD
+
+
+[[dynamic-command-availability]]
 === Dynamic Command Availability
 
-=== Built-In Commands
-* clear
-* help
-* exit
-* stacktrace
-* script
+There may be times when registered commands don't make sense, due to internal state of the application.
+For example, maybe there is a `download` command, but it only works once the user has used `connect` on a remote
+server. Now, if the user tries to use the `download` command, the shell should gracefully explain that
+the command _does_ exist, but that it is not available at the time.
+Spring Shell lets the developer do that, even providing a short explanation of the reason for
+the command not being available.
 
+There are three possible ways for a command to indicate availability.
+They all leverage a no-arg method that returns an instance of `Availability`.
+Let's start with a simple example:
+
+[source, java]
+----
+@ShellComponent
+public class MyCommands {
+
+    private boolean connected;
+
+    @ShellMethod("Connect to the server.")
+    public void connect(String user, String password) {
+        [...]
+        connected = true;
+    }
+
+    @ShellMethod("Download the nuclear codes.")
+    public void download() {
+        [...]
+    }
+
+    public Availability downloadAvailability() {
+        return connected
+            ? Availability.available()
+            : Availability.unavailable("you are not connected");
+    }
+}
+----
+
+Here you see the `connect` method is used to connect to the server (details omitted), altering state
+of the command through the `connected` boolean when done.
+The `download` command will be marked as _unavailable_ till the user has connected, thanks to the presence
+of a method named exactly as the command method with the `Availability` prefix in its name.
+The method returns an instance of `Availability`, constructed with one of the two factory methods.
+In case of the command not being available, an explanation has to be provided.
+Now, if the user tries to invoke the command while not being connected, here is what happens:
+[source]
+----
+shell:>download
+Command 'download' exists but is not currently available because you are not connected.
+Details of the error have been omitted. You can use the stacktrace command to print the full stacktrace.
+----
+
+Information about currently unavailable commands is also leveraged in the integrated help. See xref:help-command[].
+
+[TIP]
+====
+The reason provided when the command is not available should read nicely if appended after "Because ..."
+
+It's best not to start the sentence with a capital and not add a final dot.
+====
+
+If for some reason naming the availability method after the name of the command method does not suit you, you
+can provide an explicit name using the `@ShellMethodAvailability`, like so:
+[source, java]
+----
+    @ShellMethod("Download the nuclear codes.")
+    @ShellMethodAvailability("availabilityCheck") // <1>
+    public void download() {
+        [...]
+    }
+
+    public Availability availabilityCheck() { // <1>
+        return connected
+            ? Availability.available()
+            : Availability.unavailable("you are not connected");
+    }
+----
+<1> the names have to match
+
+Lastly, it is often the case that several commands in the same class share the same internal state and thus
+should all be available or unavailable all at one. Instead of having to stick the `@ShellMethodAvailability`
+on all command methods, Spring Shell allows the user to flip things around and put the `@ShellMethodAvailabilty`
+annotation on the availability method, specifying the names of the commands that it controls:
+
+[source, java]
+----
+    @ShellMethod("Download the nuclear codes.")
+    public void download() {
+        [...]
+    }
+
+    @ShellMethod("Disconnect from the server.")
+    public void disconnect() {
+        [...]
+    }
+
+    @ShellMethodAvailability({"download", "disconnect"})
+    public Availability availabilityCheck() {
+        return connected
+            ? Availability.available()
+            : Availability.unavailable("you are not connected");
+    }
+----
+
+[NOTE]
+====
+The default value for the `@ShellMethodAvailability.value()` attribute is `"*"` and this serves as a special
+wildcard that matches all command names. It's thus easy to turn all commands of a single class on or off
+with a single availability method.
+====
+
+
+
+[TIP]
+====
+Spring Shell does not impose much constraints on how to write commands and how to organize classes.
+But it's often good practice to put related commands in the same class, and the availability indicators
+can benefit from that.
+====
+
+=== Built-In Commands
+Any application built using the `{starter-artifactId}` artifact
+(or, to be more precise, the `spring-shell-standard-commands` dependency) comes with a set of built-in commands.
+These commands can be overridden or disabled individually (see xref:overriding-or-disabling-built-in-commands[]), but if they're
+not, this section describes their behavior.
+
+[[help-command]]
+==== Integrated Documentation with the `help` Command
+Running a shell application often implies that the user is in a graphically limited environment. And although, in the era of mobile
+phones we're always connected, accessing a web browser or any other rich UI application such as a pdf viewer may not always
+be possible. This is why it is important that the shell commands are correctly self documented, and this is where the `help`
+command comes in.
+
+Typing `help` + kbd:[ENTER] will list all the known commands to the shell (including xref:dynamic-command-availability[unavailable] commands)
+and a short description of what they do:
+[source]
+----
+shell:>help
+AVAILABLE COMMANDS
+        add: Add numbers together.
+      * authenticate: Authenticate with the system.
+      * blow-up: Blow Everything up.
+        clear: Clear the shell screen.
+        connect: Connect to the system
+        disconnect: Disconnect from the system.
+        exit, quit: Exit the shell.
+        help: Display help about available commands.
+        register module: Register a new module.
+        script: Read and execute commands from a file.
+        stacktrace: Display the full stacktrace of the last error.
+
+Commands marked with (*) are currently unavailable.
+Type `help <command>` to learn more.
+----
+
+Typing `help <command>` will display more detailed information about a command, including the available parameters, their
+type and whether they are mandatory or not, _etc._
+
+Here is the `help` command applied to itself:
+----
+shell:>help help
+
+
+NAME
+	help - Display help about available commands.
+
+SYNOPSYS
+	help [[-C] string]
+
+OPTIONS
+	-C or --command  string
+		The command to obtain help for.  [Optional, default = <none>]
+----
+
+
+==== Clearing the Screen
+The `clear` command does what you would expect and clears the screen, resetting the prompt
+in the top left corner.
+
+==== Exitting the Shell
+The `quit` command (also aliased as `exit`) simply requests the shell to quit, gracefully
+closing the Spring application context. If not overridden, a JLine `History` bean will write a history of all
+commands executed to disk, so that they are available again (see xref:interacting-with-the-shell[]) on next launch.
+
+==== Displaying Details about an Error
+When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
+so as not to overflow the user with too much information.
+There are cases though when understanding what exactly happened is important (especially if the exception has a nested cause).
+
+To this purpose, Spring Shell remembers the last exception that occurred and the user can later use the `stacktrace`
+command to print all the gory details on the console.
+
+==== Running a Batch of Commands
+The `script` command accepts a local file as an argument and will replay commands found there, one at a time.
+
+Reading from the file behaves exactly like inside the interactive shell, so lines starting with `//` will be considered
+as comments and ignored, while lines ending with `\` will trigger line continuation.
 
 
 === Customizing the Shell
 
+[[overriding-or-disabling-built-in-commands]]
 ==== Overriding or Disabling Built-In Commands
 
 ==== ResultHandlers
@@ -141,6 +652,8 @@ Line Continuation, kbd:[TAB] Completion, Search, etc.
 ==== PromptProvider
 
 ==== Customizing Command Line Options Behavior
+
+==== ConversionService
 
 //==== Overriding the JLine Parser
 

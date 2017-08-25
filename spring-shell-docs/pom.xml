@@ -66,7 +66,7 @@
 							<attributes>
 								<toc2 />
 								<docinfo>shared-head</docinfo>
-								<source-highlighter>prettify</source-highlighter>
+								<source-highlighter>coderay</source-highlighter>
 							</attributes>
 						</configuration>
 					</execution>
@@ -78,7 +78,7 @@
 						</goals>
 						<configuration>
 							<backend>pdf</backend>
-							<sourceHighlighter>rouge</sourceHighlighter>
+							<sourceHighlighter>coderay</sourceHighlighter>
 							<attributes>
 								<toc/>
 								<pagenums/>

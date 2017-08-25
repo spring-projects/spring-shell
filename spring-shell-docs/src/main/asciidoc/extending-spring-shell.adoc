@@ -1,3 +1,4 @@
+[[extending-spring-shell]]
 == Extending Spring Shell
 
 === Support for Spring Shell 1 and JCommander
