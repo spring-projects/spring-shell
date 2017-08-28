@@ -40,6 +40,7 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(ApplicationRunner.class)
 	public ApplicationRunner applicationRunner(Shell shell) {
 		return new ApplicationRunner() {
 			@Override

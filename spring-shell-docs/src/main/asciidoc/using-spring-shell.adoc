@@ -563,6 +563,7 @@ But it's often good practice to put related commands in the same class, and the 
 can benefit from that.
 ====
 
+[[built-in-commands]]
 === Built-In Commands
 Any application built using the `{starter-artifactId}` artifact
 (or, to be more precise, the `spring-shell-standard-commands` dependency) comes with a set of built-in commands.
@@ -646,6 +647,72 @@ as comments and ignored, while lines ending with `\` will trigger line continuat
 
 [[overriding-or-disabling-built-in-commands]]
 ==== Overriding or Disabling Built-In Commands
+xref:built-in-commands[Built-in commands] are provided with Spring Shell to achieve everyday tasks that many if not
+all shell applications need. If you're not happy with the way they behave though, you can disable or override them, as explained in this section.
+
+[TIP]
+.Disabling all Built-in Commands
+====
+If you don't need built-in commands at all, then there is an easy way to "disable" them: just don't include them!
+Either use a maven exclusion on `spring-shell-standard-commands` or, if you're selectively including Spring Shell dependencies,
+don't bring that one in!
+[source,xml]
+----
+<dependency>
+    <groupId>org.springframework.shell</groupId>
+    <artifactId>{starter-artifactId}</artifactId>
+    <version>{project-version}</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-standard-commands</artifactId>
+        </exclusion>
+    </exclusion>
+</dependency>
+----
+====
+
+===== Disabling Specific Commands
+To disable a single built-in command, simply set the `spring.shell.command.<command>.enabled` property to `false` in the app
+`Environment`. One easy way to do this is to pass extra args to the Boot application in your `main()` entry point:
+
+[source, java]
+----
+	public static void main(String[] args) throws Exception {
+		String[] disabledCommands = {"--spring.shell.command.help.enabled=false"}; // <1>
+		String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
+		SpringApplication.run(MyApp.class, fullArgs);
+	}
+----
+<1> This disables the integrated `help` command
+
+===== Overriding Specific Commands
+If, instead of disabling a command you'd rather provide your own implementation, then you can either
+
+* disable the command like explained above and have your implementation registered with the same name
+* have your implementing class implement the `<Command>.Command` interface. As an example, here is how
+to override the `clear` command:
++
+[source, java]
+----
+public class MyClear implements Clear.Command {
+
+    @ShellCommand("Clear the screen, only better.")
+    public void clear() {
+        // ...
+    }
+}
+----
+
+[NOTE]
+.Please Consider Contributing your Changes
+====
+If you feel like your implementation of a standard command could be valuable to the community,
+please consider opening a pull-request at http://github.com/spring-projects/spring-shell.
+
+Alternatively, before making any changes on your own, you can open an issue with the project. Feedback is
+always welcome!
+====
 
 ==== ResultHandlers
 
