@@ -109,8 +109,10 @@ public class StandardParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public ValueResult resolve(MethodParameter methodParameter, List<String> words) {
+	public ValueResult resolve(MethodParameter methodParameter, List<String> wordsBuffer) {
 		String prefix = prefixForMethod(methodParameter.getMethod());
+
+		List<String> words = wordsBuffer.stream().filter(w -> !w.isEmpty()).collect(Collectors.toList());
 
 		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), words);
 		Map<Parameter, ParameterRawValue> resolved = parameterCache.computeIfAbsent(cacheKey, (k) -> {
