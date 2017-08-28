@@ -19,9 +19,11 @@ package org.springframework.shell.result;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.ResultHandler;
+import org.springframework.shell.TerminalSizeAware;
 
 /**
  * Used for explicit configuration of {@link org.springframework.shell.ResultHandler}s.
@@ -45,6 +47,12 @@ public class ResultHandlerConfig {
 	@PostConstruct
 	public void wireIterableResultHandler() {
 		iterableResultHandler().setDelegate(mainResultHandler());
+	}
+
+	@Bean
+	@ConditionalOnClass(TerminalSizeAware.class)
+	public TerminalSizeAwareResultHandler terminalSizeAwareResultHandler() {
+		return new TerminalSizeAwareResultHandler();
 	}
 
 }
