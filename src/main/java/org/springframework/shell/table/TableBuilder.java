@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,8 @@ public class TableBuilder {
 	 * <li>{@link DelimiterTextWrapper wrapping text} on space characters</li>
 	 * <li>{@link SimpleHorizontalAligner left aligning} text.</li>
 	 * </ul>
+	 *
+	 * @param model the data model of the table to construct
 	 */
 
 	public TableBuilder(TableModel model) {
@@ -109,6 +111,8 @@ public class TableBuilder {
 
 	/**
 	 * Set a border on the outline of the whole table.
+	 * @param style the style to apply
+	 * @return this, for method chaining
 	 */
 	public TableBuilder addOutlineBorder(BorderStyle style) {
 		this.addBorder(0, 0, model.getRowCount(), model.getColumnCount(), OUTLINE, style);
@@ -117,6 +121,8 @@ public class TableBuilder {
 
 	/**
 	 * Set a border on the outline of the whole table, as well as around the first row.
+	 * @param style the style to apply
+	 * @return this, for method chaining
 	 */
 	public TableBuilder addHeaderBorder(BorderStyle style) {
 		this.addBorder(0, 0, 1, model.getColumnCount(), OUTLINE, style);
@@ -125,6 +131,9 @@ public class TableBuilder {
 
 	/**
 	 * Set a border around each and every cell of the table.
+	 *
+	 * @param style the style to apply
+	 * @return this, for method chaining
 	 */
 	public TableBuilder addFullBorder(BorderStyle style) {
 		this.addBorder(0, 0, model.getRowCount(), model.getColumnCount(), FULL, style);
@@ -134,6 +143,9 @@ public class TableBuilder {
 	/**
 	 * Set a border on the outline of the whole table, around the first row and draw vertical lines
 	 * around each column.
+	 *
+	 * @param style the style to apply
+	 * @return this, for method chaining
 	 */
 	public TableBuilder addHeaderAndVerticalsBorders(BorderStyle style) {
 		this.addBorder(0, 0, 1, model.getColumnCount(), OUTLINE, style);
@@ -143,6 +155,9 @@ public class TableBuilder {
 
 	/**
 	 * Set a border on the inner verticals and horizontals of the table, but not on the outline.
+	 *
+	 * @param style the style to apply
+	 * @return this, for method chaining
 	 */
 	public TableBuilder addInnerBorder(BorderStyle style) {
 		this.addBorder(0, 0, model.getRowCount(), model.getColumnCount(), INNER, style);

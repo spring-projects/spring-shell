@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 public interface SizeConstraints {
 
 	/**
-	 * Return the minimum and maximum width of the cell, given its raw content.
+	 * @return the minimum and maximum width of the cell, given its raw content.
 	 * @param raw the raw String representation of the cell contents (may be reformatted later, eg wrapped)
 	 * @param tableWidth the whole available width for the table
 	 * @param nbColumns the number of columns in the table

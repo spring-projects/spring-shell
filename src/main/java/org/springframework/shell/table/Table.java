@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,14 +30,14 @@ import org.springframework.shell.TerminalSizeAware;
  * TableModel, which holds raw table contents. Its rendering logic is then altered by applying
  * various customizations, in a fashion very similar to what is used <i>e.g.</i> in a spreadsheet
  * program:<ol>
- * <li>{@link #format(CellMatcher, Formatter) formatters} know how to derive character data out of raw data. For
+ * <li>{@link #formatters formatters} know how to derive character data out of raw data. For
  * example, numbers are
  * formatted according to a Locale, or Maps are emitted as a series of {@literal key=value} lines</li>
- * <li>{@link #size(CellMatcher, SizeConstraints) size constraints} are then applied, which decide how
+ * <li>{@link #sizeConstraints size constraints} are then applied, which decide how
  * much column real estate to allocate to cells</li>
- * <li>{@link #wrap(CellMatcher, TextWrapper) text wrapping policies} are applied once the column sizes
+ * <li>{@link #wrappers text wrapping policies} are applied once the column sizes
  * are known</li>
- * <li>finally, {@link #align(CellMatcher, Aligner) alignment} strategies actually render
+ * <li>finally, {@link #aligners alignment} strategies actually render
  * text as a series of space-padded strings that draw nicely on screen.</li>
  * </ol>
  * All those customizations are applied selectively on the Table cells thanks to a {@link CellMatcher}: One can

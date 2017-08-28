@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,24 +24,26 @@ package org.springframework.shell.table;
 public abstract class TableModel {
 
 	/**
-	 * Return the number of rows that can be queried.
+	 * @return the number of rows that can be queried.
 	 * Values between 0 and {@code rowCount-1} inclusive are valid values.
 	 */
 	public abstract int getRowCount();
 
 	/**
-	 * Return the number of columns that can be queried.
+	 * @return the number of columns that can be queried.
 	 * Values between 0 and {@code columnCount-1} inclusive are valid values.
 	 */
 	public abstract int getColumnCount();
 
 	/**
-	 * Return the data value to be displayed at a given row and column, which may be null.
+	 * @return the data value to be displayed at a given row and column, which may be null.
+	 * @param row the row that is being queried
+	 * @param column the column that is being queried
 	 */
 	public abstract Object getValue(int row, int column);
 
 	/**
-	 * Return a transposed view of this model, where rows become columns and vice-versa.
+	 * @return a transposed view of this model, where rows become columns and vice-versa.
 	 */
 	public TableModel transpose() {
 		return new TableModel() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,10 @@ package org.springframework.shell.table;
 public interface CellMatcher {
 
 	/**
-	 * Return whether a given cell of the table should match.
+	 * @return whether a given cell of the table should match.
+	 * @param row the row being tested.
+	 * @param column the column being tested
+	 * @param model the data model of the table
 	 */
 	public boolean matches(int row, int column, TableModel model);
 }

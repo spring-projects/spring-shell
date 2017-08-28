@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,18 @@ package org.springframework.shell.table;
 
 /**
  * A strategy for applying text wrapping/cropping given a cell width.
+ *
+ * @author Eric Bottard
  */
 public interface TextWrapper {
 
 	/**
-	 * Return a list of lines where each line length MUST be equal to {@code columnWidth} (padding with spaces if
+	 * @return a list of lines where each line length MUST be equal to {@code columnWidth} (padding with spaces if
 	 * appropriate). There is no constraint on the number of lines returned however (typically, will be greater than
 	 * the input number if wrapping occurred).
+	 *
+	 * @param original the text in its original form
+	 * @param columnWidth the width to conform to
 	 */
 	String[] wrap(String[] original, int columnWidth);
 }

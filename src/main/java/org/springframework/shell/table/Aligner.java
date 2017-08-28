@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,18 @@ package org.springframework.shell.table;
 public interface Aligner {
 
 	/**
-	 * Perform text alignment, returning a String array that MUST contain
-	 * {@code cellHeight} lines, each of which MUST be {@code cellWidth} chars in length.
+	 * Perform text alignment, returning a String array that MUST contain {@code cellHeight}
+	 * lines, each of which MUST be {@code cellWidth} chars in length.
 	 *
-	 * <p>Input array is guaranteed to contain lines that have length equal to {@cellWidth}. There
-	 * is no guarantee on the input number of lines though.</p>
+	 * <p>
+	 * Input array is guaranteed to contain lines that have length equal to {@code cellWidth}.
+	 * There is no guarantee on the input number of lines though.
+	 * </p>
+	 * 
+	 * @param text the text to align
+	 * @param cellWidth the width of of the table cell
+	 * @param cellHeight the height of the table cell
+	 * @return the aligned text, in a {@code cellHeight} element array
 	 */
 	String[] align(String[] text, int cellWidth, int cellHeight);
 }
