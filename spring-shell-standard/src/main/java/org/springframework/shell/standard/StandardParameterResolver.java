@@ -114,7 +114,8 @@ public class StandardParameterResolver implements ParameterResolver {
 
 		List<String> words = wordsBuffer.stream().filter(w -> !w.isEmpty()).collect(Collectors.toList());
 
-		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), words);
+		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), wordsBuffer);
+		parameterCache.clear();
 		Map<Parameter, ParameterRawValue> resolved = parameterCache.computeIfAbsent(cacheKey, (k) -> {
 
 			Map<Parameter, ParameterRawValue> result = new HashMap<>();
@@ -308,16 +309,21 @@ public class StandardParameterResolver implements ParameterResolver {
 			arity = getArity(parameter);
 			parameterRawValue = parameterCache.get(cacheKey).get(parameter);
 			set = parameterRawValue.explicit;
-		}
-		catch (ParameterMissingResolutionException e) {
+		} catch (ParameterMissingResolutionException e) {
 			set = false;
-		}
-		catch (Exception e) {
+		} catch (UnfinishedParameterResolutionException e) {
+			if (e.getParameterDescription().parameter().equals(methodParameter)) {
+				unfinished = e;
+				set = false;
+			} else {
+				return Collections.emptyList();
+			}
+		} catch (Exception e) {
 			unfinished = e;
 			set = false;
 			// Most likely what is already typed would fail resolution (eg type conversion failure)
 			// Exit early and let other parameters have a chance at being proposed
-			//return Collections.emptyList();
+			return Collections.emptyList();
 		}
 
 		// There are 4 possible cases:
@@ -344,8 +350,10 @@ public class StandardParameterResolver implements ParameterResolver {
 				// We're done already
 				return result;
 			}
-			// Case 4
-			result.addAll(valueCompletions(methodParameter, context));
+			if (!context.currentWord().equals("")) {
+				// Case 4
+				result.addAll(valueCompletions(methodParameter, context));
+			}
 
 			if (parameterRawValue.positional()) {
 				// Case 4.1: There exists "--command foo" and user has typed "--comm" which (wrongly) got resolved as a positional param
