@@ -21,5 +21,9 @@
                 <include>index.pdf</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}/apidocs</directory>
+            <outputDirectory>api</outputDirectory>
+        </fileSet>
     </fileSets>
 </assembly>

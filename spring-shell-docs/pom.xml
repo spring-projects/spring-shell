@@ -19,8 +19,53 @@
 		<asciidoctorj.version>1.5.6</asciidoctorj.version>
 		<jruby.version>1.7.26</jruby.version>
 	</properties>
+
+	<!-- This project artificially depends on all others so that the javadoc plugin can consolidate everything.-->
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-standard</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-standard-commands</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-shell1-adapter</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-jcommander-adapter</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-table</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
+			<!-- ASCIIDOC -->
 			<plugin>
 				<groupId>org.asciidoctor</groupId>
 				<artifactId>asciidoctor-maven-plugin</artifactId>
@@ -87,6 +132,43 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- API DOCS -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<executions>
+					<execution>
+						<id>dependency-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>prepare-package</phase>
+						<configuration>
+							<includeDependencySources>true</includeDependencySources>
+							<dependencySourceIncludes>
+								<dependencySourceInclude>${project.groupId}:*</dependencySourceInclude>
+							</dependencySourceIncludes>
+							<dependencySourceExcludes>
+								<!-- Exclude Spring Shell 1 -->
+								<dependencySourceExclude>${project.groupId}:spring-shell</dependencySourceExclude>
+							</dependencySourceExcludes>
+							<quiet>true</quiet>
+							<attach>false</attach>
+							<links>
+								<link>
+									http://docs.spring.io/spring-framework/docs/current/javadoc-api/
+								</link>
+								<link>http://jcommander.org/apidocs/</link>
+								<link>https://docs.spring.io/spring-shell/docs/1.2.0.RELEASE/api/</link>
+							</links>
+							<doclint>-missing</doclint>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- PACKAGE ASCIIDOC + API -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.1.0</version>
