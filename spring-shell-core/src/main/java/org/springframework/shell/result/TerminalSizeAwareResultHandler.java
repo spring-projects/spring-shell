@@ -24,13 +24,12 @@ import org.springframework.shell.TerminalSizeAware;
  *
  * @author Eric Bottard
  */
-public class TerminalSizeAwareResultHandler extends TerminalAwareResultHandler implements ResultHandler<TerminalSizeAware> {
+public class TerminalSizeAwareResultHandler extends TerminalAwareResultHandler<TerminalSizeAware> {
 
 
 	@Override
-	public void handleResult(TerminalSizeAware result) {
+	protected void doHandleResult(TerminalSizeAware result) {
 		CharSequence toPrint = result.render(terminal.getWidth());
 		terminal.writer().println(toPrint);
-		terminal.writer().flush();
 	}
 }

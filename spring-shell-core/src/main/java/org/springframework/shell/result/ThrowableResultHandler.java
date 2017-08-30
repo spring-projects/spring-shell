@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
  * @author Eric Bottard
  */
 @Component
-public class ThrowableResultHandler extends TerminalAwareResultHandler implements ResultHandler<Throwable> {
+public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable> {
 
 	/**
 	 * The name of the command that may be used to print details about the last error.
@@ -45,7 +45,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler implement
 	private CommandRegistry commandRegistry;
 
 	@Override
-	public void handleResult(Throwable result) {
+	protected void doHandleResult(Throwable result) {
 		lastError = result;
 		terminal.writer().println(new AttributedString(result.toString(),
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());

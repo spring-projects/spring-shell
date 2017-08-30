@@ -27,10 +27,10 @@ import org.springframework.stereotype.Component;
  * @author Eric Bottard
  */
 @Component
-public class AttributedCharSequenceResultHandler extends TerminalAwareResultHandler implements ResultHandler<AttributedCharSequence> {
+public class AttributedCharSequenceResultHandler extends TerminalAwareResultHandler<AttributedCharSequence> {
 
 	@Override
-	public void handleResult(AttributedCharSequence result) {
+	protected void doHandleResult(AttributedCharSequence result) {
 		terminal.writer().println(result.toAnsi(terminal));
 		terminal.writer().flush();
 	}

@@ -31,10 +31,10 @@ import org.springframework.stereotype.Component;
  * @author Eric Bottard
  */
 @Component
-public class CommandNotFoundResultHandler extends TerminalAwareResultHandler implements ResultHandler<CommandNotFound> {
+public class CommandNotFoundResultHandler extends TerminalAwareResultHandler<CommandNotFound> {
 
 	@Override
-	public void handleResult(CommandNotFound result) {
+	protected void doHandleResult(CommandNotFound result) {
 		terminal.writer().println(new AttributedString(result.getMessage(),
 			AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
 		terminal.writer().flush();

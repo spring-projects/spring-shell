@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ResolvableType;
 import org.springframework.shell.ResultHandler;
 
 /**
@@ -68,8 +69,8 @@ public class TypeHierarchyResultHandler implements ResultHandler<Object> {
 	@Autowired
 	public void setResultHandlers(Set<ResultHandler<?>> resultHandlers) {
 		for (ResultHandler<?> resultHandler : resultHandlers) {
-			Type type = ((ParameterizedType) resultHandler.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
-			registerHandler((Class<?>) type, resultHandler);
+			ResolvableType type = ResolvableType.forInstance(resultHandler).as(ResultHandler.class);
+			registerHandler(type.resolveGeneric(0), resultHandler);
 		}
 	}
 

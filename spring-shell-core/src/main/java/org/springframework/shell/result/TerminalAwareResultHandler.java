@@ -20,17 +20,26 @@ import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.shell.ResultHandler;
 
 /**
  * Base class for ResultHandlers that rely on JLine's {@link Terminal}.
  *
  * @author Eric Bottard
  */
-public abstract  class TerminalAwareResultHandler {
+public abstract  class TerminalAwareResultHandler<T> implements ResultHandler<T> {
 	protected Terminal terminal;
 
 	@Autowired @Lazy
 	public void setTerminal(Terminal terminal) {
 		this.terminal = terminal;
 	}
+
+	@Override
+	public final void handleResult(T result) {
+		doHandleResult(result);
+		terminal.writer().flush();
+	}
+
+	protected abstract void doHandleResult(T result);
 }
