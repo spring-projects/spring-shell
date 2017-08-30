@@ -21,6 +21,8 @@ import java.util.List;
 
 import com.beust.jcommander.Parameter;
 
+import javax.validation.constraints.Min;
+
 /**
  * An example straight from the JCommander documentation.
  *
@@ -31,6 +33,7 @@ public class Args {
 	@Parameter
 	private List<String> parameters = new ArrayList<>();
 
+	@Min(3)
 	@Parameter(names = { "-log", "-verbose" }, description = "Level of verbosity")
 	private Integer verbose = 1;
 

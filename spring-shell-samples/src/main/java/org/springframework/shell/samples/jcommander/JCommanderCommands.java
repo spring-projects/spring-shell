@@ -20,6 +20,8 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import javax.validation.Valid;
+
 /**
  * A class with JCommander commands.
  *
@@ -29,7 +31,7 @@ import org.springframework.shell.standard.ShellOption;
 public class JCommanderCommands {
 
 	@ShellMethod("Bind parameters to JCommander POJO.")
-	public String jcommander(@ShellOption(optOut = true) Args args) {
+	public String jcommander(@ShellOption(optOut = true) @Valid Args args) {
 		return "You said " + args;
 	}
 }

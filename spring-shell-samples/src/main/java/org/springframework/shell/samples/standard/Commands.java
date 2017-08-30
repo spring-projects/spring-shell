@@ -30,6 +30,8 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Size;
+
 /**
  * Example commands for the Shell 2 Standard resolver.
  *
@@ -44,7 +46,7 @@ public class Commands {
 	}
 
 	@ShellMethod("It's cool.")
-	public String foo(String bar) {
+	public String foo(@Size(min = 2) String bar) {
 		return bar;
 	}
 	

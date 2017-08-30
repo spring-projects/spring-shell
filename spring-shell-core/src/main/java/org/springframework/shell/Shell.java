@@ -63,6 +63,9 @@ public class Shell implements CommandRegistry {
 	 */
 	protected static final Object UNRESOLVED = new Object();
 
+	private final ExecutableValidator executableValidator = Validation
+		.buildDefaultValidatorFactory().getValidator().forExecutables();
+
 	public Shell(ResultHandler resultHandler) {
 		this.resultHandler = resultHandler;
 	}
@@ -229,13 +232,13 @@ public class Shell implements CommandRegistry {
 				throw new IllegalStateException("Could not resolve " + methodParameter);
 			}
 		}
-		ExecutableValidator executableValidator = Validation
-			.buildDefaultValidatorFactory().getValidator().forExecutables();
-		Set<ConstraintViolation<Object>> constraintViolations = executableValidator.validateParameters(methodTarget.getBean(),
+		Set<ConstraintViolation<Object>> constraintViolations = executableValidator.validateParameters(
+			methodTarget.getBean(),
 			methodTarget.getMethod(),
-			args);
+			args
+		);
 		if (constraintViolations.size() > 0) {
-			System.out.println(constraintViolations);
+			throw new ParameterValidationException(constraintViolations, methodTarget);
 		}
 	}
 
