@@ -82,7 +82,7 @@ public class ShellTest {
 		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, "Say hello"));
 
 		try {
-			shell.run();
+			shell.run(inputProvider);
 			fail("Exit expected");
 		}
 		catch (Exit expected) {
@@ -100,7 +100,7 @@ public class ShellTest {
 		shell.methodTargets = Collections.singletonMap("bonjour", MethodTarget.of("helloWorld", this, "Say hello"));
 
 		try {
-			shell.run();
+			shell.run(inputProvider);
 			fail("Exit expected");
 		}
 		catch (Exit expected) {
@@ -119,7 +119,7 @@ public class ShellTest {
 		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, "Say hello"));
 
 		try {
-			shell.run();
+			shell.run(inputProvider);
 			fail("Exit expected");
 		}
 		catch (Exit expected) {
@@ -138,7 +138,7 @@ public class ShellTest {
 		shell.methodTargets = Collections.singletonMap("fail", MethodTarget.of("failing", this, "Will throw an exception"));
 
 		try {
-			shell.run();
+			shell.run(inputProvider);
 			fail("Exit expected");
 		}
 		catch (Exit expected) {
@@ -154,7 +154,7 @@ public class ShellTest {
 		when(parameterResolver.supports(any())).thenReturn(true);
 		when(inputProvider.readInput()).thenReturn(() -> "// This is a comment", (Input) null);
 
-		shell.run();
+		shell.run(inputProvider);
 
 	}
 

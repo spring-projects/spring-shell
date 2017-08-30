@@ -31,5 +31,6 @@ public class TerminalSizeAwareResultHandler extends TerminalAwareResultHandler i
 	public void handleResult(TerminalSizeAware result) {
 		CharSequence toPrint = result.render(terminal.getWidth());
 		terminal.writer().println(toPrint);
+		terminal.writer().flush();
 	}
 }

@@ -16,6 +16,7 @@
 
 package org.springframework.shell.samples;
 
+import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 

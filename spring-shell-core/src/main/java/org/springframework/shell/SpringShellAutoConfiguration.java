@@ -16,6 +16,7 @@
 
 package org.springframework.shell;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -40,14 +41,9 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(ApplicationRunner.class)
-	public ApplicationRunner applicationRunner(Shell shell) {
-		return new ApplicationRunner() {
-			@Override
-			public void run(ApplicationArguments args) throws Exception {
-				shell.run();
-			}
-		};
+	public Shell shell(@Qualifier("main") ResultHandler resultHandler) {
+		return new Shell(resultHandler);
 	}
+
 
 }

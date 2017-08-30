@@ -37,6 +37,7 @@ public class CommandNotFoundResultHandler extends TerminalAwareResultHandler imp
 	public void handleResult(CommandNotFound result) {
 		terminal.writer().println(new AttributedString(result.getMessage(),
 			AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
+		terminal.writer().flush();
 
 	}
 }

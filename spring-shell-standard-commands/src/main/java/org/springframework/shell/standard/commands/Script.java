@@ -47,11 +47,7 @@ public class Script {
     public void script(File file) throws IOException {
         Reader reader = new FileReader(file);
         try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-            Input input = inputProvider.readInput();
-            while (input != null) {
-                shell.evaluate(input);
-                input = inputProvider.readInput();
-            }
+            shell.run(inputProvider);
         }
     }
 

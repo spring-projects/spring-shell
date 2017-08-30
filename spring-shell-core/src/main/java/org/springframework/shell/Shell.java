@@ -49,8 +49,6 @@ import org.springframework.util.ReflectionUtils;
  */
 public class Shell implements CommandRegistry {
 
-	private final InputProvider inputProvider;
-
 	private final ResultHandler resultHandler;
 
 	@Autowired
@@ -65,8 +63,7 @@ public class Shell implements CommandRegistry {
 	 */
 	protected static final Object UNRESOLVED = new Object();
 
-	public Shell(InputProvider inputProvider, ResultHandler resultHandler) {
-		this.inputProvider = inputProvider;
+	public Shell(ResultHandler resultHandler) {
 		this.resultHandler = resultHandler;
 	}
 
@@ -94,9 +91,9 @@ public class Shell implements CommandRegistry {
 
 	/**
 	 * The main program loop: acquire input, try to match it to a command and evaluate. Repeat until a
-	 * {@link ResultHandler} causes the process to exit.
+	 * {@link ResultHandler} causes the process to exit or there is no input.
 	 */
-	public void run() throws IOException {
+	public void run(InputProvider inputProvider) throws IOException {
 		while (true) {
 			Input input;
 			try {

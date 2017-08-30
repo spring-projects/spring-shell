@@ -16,7 +16,7 @@
 
 package org.springframework.shell.jline;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +35,8 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
@@ -62,14 +64,13 @@ import org.springframework.shell.Shell;
 class JLineShellAutoConfiguration {
 
 	@Autowired
-	@Qualifier("main")
-	private  ResultHandler resultHandler;
-
-	@Autowired
 	private PromptProvider promptProvider;
 
 	@Autowired
 	private History history;
+
+	@Autowired
+	private Shell shell;
 
 	@Bean
 	public Terminal terminal() {
@@ -82,9 +83,30 @@ class JLineShellAutoConfiguration {
 	}
 
 	@Bean
-	public Shell shell() {
-		return new Shell(new JLineInputProvider(lineReader(), promptProvider), resultHandler);
+	@ConditionalOnMissingBean(ApplicationRunner.class)
+	public ApplicationRunner applicationRunner(Parser parser) {
+		return new ApplicationRunner() {
+			@Override
+			public void run(ApplicationArguments args) throws Exception {
+				List<File> scriptsToRun = args.getNonOptionArgs().stream()
+						.filter(s -> s.startsWith("@"))
+						.map(s -> new File(s.substring(1)))
+						.collect(Collectors.toList());
+
+				if (scriptsToRun.isEmpty()) {
+					InputProvider inputProvider = new JLineInputProvider(lineReader(), promptProvider);
+					shell.run(inputProvider);
+				} else {
+					for (File file : scriptsToRun) {
+						try (Reader reader = new FileReader(file); FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
+							shell.run(inputProvider);
+						}
+					}
+				}
+			}
+		};
 	}
+
 
 	@Bean
 	@ConditionalOnMissingBean(PromptProvider.class)
@@ -127,7 +149,7 @@ class JLineShellAutoConfiguration {
 	 */
 	@PostConstruct
 	public void lateInit() {
-		completer().setShell(shell());
+		completer().setShell(shell);
 	}
 
 	@Bean
@@ -151,7 +173,7 @@ class JLineShellAutoConfiguration {
 					public AttributedString highlight(LineReader reader, String buffer) {
 						int l = 0;
 						String best = null;
-						for (String command : shell().listCommands().keySet()) {
+						for (String command : shell.listCommands().keySet()) {
 							if (buffer.startsWith(command) && command.length() > l) {
 								l = command.length();
 								best = command;

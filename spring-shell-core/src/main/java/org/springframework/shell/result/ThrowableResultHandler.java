@@ -58,6 +58,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler implement
 					.toAnsi()
 			);
 		}
+		terminal.writer().flush();
 	}
 
 	/**

@@ -32,5 +32,6 @@ public class AttributedCharSequenceResultHandler extends TerminalAwareResultHand
 	@Override
 	public void handleResult(AttributedCharSequence result) {
 		terminal.writer().println(result.toAnsi(terminal));
+		terminal.writer().flush();
 	}
 }
