@@ -33,6 +33,7 @@ import org.springframework.context.ApplicationContext;
 
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,7 +75,7 @@ public class ShellTest {
 	@Test
 	public void commandMatch() throws IOException {
 		when(parameterResolver.supports(any())).thenReturn(true);
-		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?");
+		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?", null);
 		valueResult = new ValueResult(null, "test");
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
 		doThrow(new Exit()).when(resultHandler).handleResult(any());
@@ -94,8 +95,8 @@ public class ShellTest {
 
 	@Test
 	public void commandNotFound() throws IOException {
-		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?");
-		doThrow(new Exit()).when(resultHandler).handleResult(any(CommandNotFound.class));
+		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?", null);
+		doThrow(new Exit()).when(resultHandler).handleResult(isA(CommandNotFound.class));
 
 		shell.methodTargets = Collections.singletonMap("bonjour", MethodTarget.of("helloWorld", this, "Say hello"));
 
@@ -109,9 +110,26 @@ public class ShellTest {
 	}
 
 	@Test
+	// See https://github.com/spring-projects/spring-shell/issues/142
+	public void commandNotFoundPrefix() throws IOException {
+		when(inputProvider.readInput()).thenReturn(() -> "helloworld how are you doing ?", null);
+		doThrow(new Exit()).when(resultHandler).handleResult(isA(CommandNotFound.class));
+
+		shell.methodTargets = Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, "Say hello"));
+
+		try {
+			shell.run(inputProvider);
+			fail("Exit expected");
+		}
+		catch (Exit expected) {
+
+		}
+	}
+
+	@Test
 	public void noCommand() throws IOException {
 		when(parameterResolver.supports(any())).thenReturn(true);
-		when(inputProvider.readInput()).thenReturn(() -> "", () -> "hello world how are you doing ?");
+		when(inputProvider.readInput()).thenReturn(() -> "", () -> "hello world how are you doing ?", null);
 		valueResult = new ValueResult(null, "test");
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
 		doThrow(new Exit()).when(resultHandler).handleResult(any());
@@ -132,8 +150,8 @@ public class ShellTest {
 	@Test
 	public void commandThrowingAnException() throws IOException {
 		when(parameterResolver.supports(any())).thenReturn(true);
-		when(inputProvider.readInput()).thenReturn(() -> "fail");
-		doThrow(new Exit()).when(resultHandler).handleResult(any(SomeException.class));
+		when(inputProvider.readInput()).thenReturn(() -> "fail", null);
+		doThrow(new Exit()).when(resultHandler).handleResult(isA(SomeException.class));
 
 		shell.methodTargets = Collections.singletonMap("fail", MethodTarget.of("failing", this, "Will throw an exception"));
 

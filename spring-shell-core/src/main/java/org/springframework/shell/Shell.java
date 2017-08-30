@@ -284,7 +284,7 @@ public class Shell implements CommandRegistry {
 	 */
 	private String findLongestCommand(String prefix) {
 		String result = methodTargets.keySet().stream()
-			.filter(prefix::startsWith)
+			.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))
 			.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
 		return "".equals(result) ? null : result;
 	}
