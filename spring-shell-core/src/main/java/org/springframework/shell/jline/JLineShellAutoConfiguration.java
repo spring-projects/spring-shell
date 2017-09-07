@@ -72,7 +72,7 @@ class JLineShellAutoConfiguration {
 	@Autowired
 	private Shell shell;
 
-	@Bean
+	@Bean(destroyMethod = "close")
 	public Terminal terminal() {
 		try {
 			return TerminalBuilder.builder().build();

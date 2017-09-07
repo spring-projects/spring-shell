@@ -440,6 +440,35 @@ kbd:[Esc b] to move forward (_resp._ backward) one word at a time.
 
 TBD
 
+=== Validating Command Arguments
+
+Spring Shell integrates with the http://beanvalidation.org/[Bean Validation API] to support
+automatic and self documenting constraints on command parameters.
+
+Annotations found on command parameters as well as annotations at the method level will be
+honored and trigger validation prior to the command executing. Given the following command:
+
+[source, java]
+----
+	@ShellMethod("Change password.")
+	public String changePassword(@Size(min = 8, max = 40) String password) {
+		return "Password successfully set to " + password;
+	}
+----
+
+You'll get this behavior, for free:
+----
+shell:>change-password hello
+The following constraints were not met:
+	--password string : size must be between 8 and 40 (You passed 'hello')
+----
+
+[NOTE]
+.Applies to All Command Implementations
+====
+It is important to note that bean validation applies to all command implementations, whether
+they use the "standard" API or any other API, through the use of an adapter (see xref:support-for-shell-1-and-jcommander[Supporting Other APIs])
+====
 
 [[dynamic-command-availability]]
 === Dynamic Command Availability
