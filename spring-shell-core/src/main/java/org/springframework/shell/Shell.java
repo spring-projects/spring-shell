@@ -83,7 +83,7 @@ public class Shell implements CommandRegistry {
 		}
 		methodTargets = registry.listCommands();
 		methodTargets.values()
-				.forEach(this::validateParameters);
+				.forEach(this::validateParameterResolvers);
 	}
 	
 	@Autowired
@@ -270,7 +270,7 @@ public class Shell implements CommandRegistry {
 	 * Verifies that we have at least one {@link ParameterResolver} that supports each of
 	 * the {@link MethodParameter}s in the method.
 	 */
-	private void validateParameters(MethodTarget methodTarget) {
+	private void validateParameterResolvers(MethodTarget methodTarget) {
 		Utils.createMethodParameters(methodTarget.getMethod())
 				.forEach(parameter -> {
 					parameterResolvers.stream()
