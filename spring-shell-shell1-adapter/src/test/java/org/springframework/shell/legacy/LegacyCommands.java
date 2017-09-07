@@ -47,6 +47,7 @@ public class LegacyCommands implements CommandMarker {
 			ArtifactType type,
 			@CliOption(mandatory = true,
 					key = {"coordinates", "coords"},
+					optionContext = "disable-string-converter",
 					help = "coordinates to the module archive")
 			String coordinates,
 			@CliOption(key = "force",

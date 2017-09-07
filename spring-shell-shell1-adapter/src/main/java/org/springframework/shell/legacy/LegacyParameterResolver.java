@@ -17,21 +17,16 @@
 package org.springframework.shell.legacy;
 
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.shell.core.Completion;
 import org.springframework.shell.core.Converter;
+import org.springframework.shell.core.MethodTarget;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -40,9 +35,11 @@ import org.springframework.shell.ParameterResolver;
 import org.springframework.shell.ValueResult;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 /**
- * Resolves parameters by looking at the {@link CliOption} annotation and acting accordingly.
+ * Resolves parameters by looking at the {@link CliOption} annotation and acting
+ * accordingly.
  *
  * @author Eric Bottard
  * @author Camilo Gonzalez
@@ -51,12 +48,13 @@ import org.springframework.util.Assert;
 public class LegacyParameterResolver implements ParameterResolver {
 
 	private static final String CLI_OPTION_NULL = "__NULL__";
-	
+
 	/**
-	 * Prefix used by Spring Shell 1 for the argument keys (<em>e.g.</em> command --key value).
+	 * Prefix used by Spring Shell 1 for the argument keys (<em>e.g.</em> command --key
+	 * value).
 	 */
 	private static final String CLI_PREFIX = "--";
-	
+
 	@Autowired(required = false)
 	private Collection<Converter<?>> converters = new ArrayList<>();
 
@@ -67,31 +65,40 @@ public class LegacyParameterResolver implements ParameterResolver {
 
 	@Override
 	public ValueResult resolve(MethodParameter methodParameter, List<String> words) {
+		Optional<Converter<?>> converter = findOptionalConverter(methodParameter);
 		CliOption cliOption = methodParameter.getParameterAnnotation(CliOption.class);
-		Optional<Converter<?>> converter = converters.stream()
-				.filter(c -> c.supports(methodParameter.getParameterType(), cliOption.optionContext()))
-				.findFirst();
 
 		Map<String, ParseResult> values = parseOptions(words);
 		Map<String, ValueResult> seenValues = convertValues(values, methodParameter, converter);
 		switch (seenValues.size()) {
-			case 0:
-				if (!cliOption.mandatory()) {
-					String value = cliOption.unspecifiedDefaultValue();
-					Object resolvedValue = converter
-							.orElseThrow(noConverterFound(cliOption.key()[0], value, methodParameter.getParameterType()))
-							.convertFromText(value, methodParameter.getParameterType(), cliOption.optionContext());
-					
-					return new ValueResult(methodParameter, resolvedValue);
-				}
-				else {
-					throw new IllegalArgumentException("Could not find parameter values for " + prettifyKeys(Arrays.asList(cliOption.key())) + " in " + words);
-				}
-			case 1:
-				return seenValues.values().iterator().next();
-			default:
-				throw new RuntimeException("Option has been set multiple times via " + prettifyKeys(seenValues.keySet()));
+		case 0:
+			if (!cliOption.mandatory()) {
+				String value = cliOption.unspecifiedDefaultValue();
+				Object resolvedValue = converter
+						.orElseThrow(noConverterFound(cliOption.key()[0], value, methodParameter.getParameterType()))
+						.convertFromText(value, methodParameter.getParameterType(), cliOption.optionContext());
+
+				return new ValueResult(methodParameter, resolvedValue);
+			}
+			else {
+				throw new IllegalArgumentException("Could not find parameter values for "
+						+ prettifyKeys(Arrays.asList(cliOption.key())) + " in " + words);
+			}
+		case 1:
+			return seenValues.values().iterator().next();
+		default:
+			throw new RuntimeException("Option has been set multiple times via " + prettifyKeys(seenValues.keySet()));
 		}
+	}
+
+	/**
+	 * Maybe find a Shell 1 Converter that applies to the given {@literal methodParameter}.
+	 */
+	private Optional<Converter<?>> findOptionalConverter(MethodParameter methodParameter) {
+		CliOption cliOption = methodParameter.getParameterAnnotation(CliOption.class);
+		return converters.stream()
+				.filter(c -> c.supports(methodParameter.getParameterType(), cliOption.optionContext()))
+				.findFirst();
 	}
 
 	@Override
@@ -101,14 +108,12 @@ public class LegacyParameterResolver implements ParameterResolver {
 		ParameterDescription result = ParameterDescription.outOf(parameter);
 		result.help(option.help());
 		List<String> keys = Arrays.asList(option.key());
-		result.keys(keys.stream()
-				.filter(key -> !key.isEmpty())
-				.map(key -> CLI_PREFIX + key)
-				.collect(Collectors.toList()));
+		result.keys(notDefaultCommandKeys(parameter));
 		if (!option.mandatory()) {
-			result.defaultValue(CLI_OPTION_NULL.equals(option.unspecifiedDefaultValue()) ? "null" : option.unspecifiedDefaultValue());
+			result.defaultValue(CLI_OPTION_NULL.equals(option.unspecifiedDefaultValue()) ? "null"
+					: option.unspecifiedDefaultValue());
 		}
-		if(!CLI_OPTION_NULL.equals(option.specifiedDefaultValue())) {
+		if (!CLI_OPTION_NULL.equals(option.specifiedDefaultValue())) {
 			result.whenFlag(option.specifiedDefaultValue());
 		}
 		boolean containsEmptyKey = keys.contains("");
@@ -116,9 +121,82 @@ public class LegacyParameterResolver implements ParameterResolver {
 		return Stream.of(result);
 	}
 
+	/**
+	 * Return the list of keys (with their "--" prefix) that can be used to set the given
+	 * parameter. If the parameter supports the empty key, this is not part of the result.
+	 */
+	private List<String> notDefaultCommandKeys(MethodParameter parameter) {
+		Parameter jlrParameter = parameter.getMethod().getParameters()[parameter.getParameterIndex()];
+		CliOption option = jlrParameter.getAnnotation(CliOption.class);
+		return Arrays.stream(option.key())
+				.filter(key -> !key.isEmpty())
+				.map(key -> CLI_PREFIX + key)
+				.collect(Collectors.toList());
+	}
+
 	@Override
 	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext context) {
-		return null;
+		String nextToLast = null;
+		String last;
+		if (context.getWords().size() >= 2) {
+			nextToLast = context.getWords().get(context.getWords().size() - 2);
+		}
+		if (context.getWords().size() >= 1) {
+			last = context.getWords().get(context.getWords().size() - 1);
+		}
+		else {
+			last = null;
+		}
+		List<String> commandKeys = notDefaultCommandKeys(parameter);
+		if (nextToLast != null) {
+			if (commandKeys.contains(nextToLast)) {
+				// nextToLast is our key, last is our (possibly unfinished) value
+				if (findOptionalConverter(parameter).isPresent()) {
+					ArrayList<Completion> legacyProposals = new ArrayList<>();
+					findOptionalConverter(parameter).get().getAllPossibleValues(
+							legacyProposals,
+							parameter.getParameterType(),
+							last,
+							parameter.getParameterAnnotation(CliOption.class).optionContext(),
+							craftMethodTarget()
+					);
+					return legacyProposals.stream()
+							.filter(lp -> lp.getValue().startsWith(last))
+							.map(this::toCompletionProposal)
+							.collect(Collectors.toList());
+				} else {
+					return Collections.emptyList();
+				}
+			} // nextToLast looks like a key, but not for this parameter
+			else if (nextToLast.startsWith(CLI_PREFIX)) {
+				// Not for this parameter
+				return Collections.emptyList();
+			}
+		}
+		// Fallthrough: nextToLast is the value to another parameter
+		// and last (possibly the empty string) could be our key
+		if (last != null) {
+			return commandKeys.stream()
+					.filter(k -> k.startsWith(last))
+					.map(CompletionProposal::new)
+					.collect(Collectors.toList());
+		}
+		// Invoked completion just after the command (without a space): my-command<TAB>
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Turn a Shell 1 Completion into a CompletionProposal.
+	 */
+	private CompletionProposal toCompletionProposal(Completion c) {
+		return new CompletionProposal(c.getValue())
+				.displayText(c.getFormattedValue())
+				.category(c.getHeading());
+	}
+
+	// TODO pass invokable method in the completion context. Rarely used by converters, so ok for now
+	private MethodTarget craftMethodTarget() {
+		return new MethodTarget(ReflectionUtils.findMethod(Object.class, "toString"), "foo");
 	}
 
 	private Map<String, ParseResult> parseOptions(List<String> words) {
@@ -130,7 +208,8 @@ public class LegacyParameterResolver implements ParameterResolver {
 				String key = word.substring(CLI_PREFIX.length());
 				// If next word doesn't exist or starts with '--', this is an unary option. Store null
 				String value = i < words.size() - 1 && !words.get(i + 1).startsWith(CLI_PREFIX) ? words.get(++i) : null;
-				Assert.isTrue(!values.containsKey(key), String.format("Option %s%s has already been set", CLI_PREFIX, key));
+				Assert.isTrue(!values.containsKey(key),
+						String.format("Option %s%s has already been set", CLI_PREFIX, key));
 				values.put(key, new ParseResult(value, from));
 			} // Must be the 'anonymous' option
 			else {
@@ -141,7 +220,8 @@ public class LegacyParameterResolver implements ParameterResolver {
 		return values;
 	}
 
-	private Map<String, ValueResult> convertValues(Map<String, ParseResult> values, MethodParameter methodParameter, Optional<Converter<?>> converter) {
+	private Map<String, ValueResult> convertValues(Map<String, ParseResult> values, MethodParameter methodParameter,
+			Optional<Converter<?>> converter) {
 		Map<String, ValueResult> seenValues = new HashMap<>();
 		CliOption option = methodParameter.getParameterAnnotation(CliOption.class);
 		for (String key : option.key()) {
@@ -170,26 +250,29 @@ public class LegacyParameterResolver implements ParameterResolver {
 	}
 
 	/**
-	 * Return the list of possible keys for an option, suitable for displaying in an error message.
+	 * Return the list of possible keys for an option, suitable for displaying in an error
+	 * message.
 	 */
 	private String prettifyKeys(Collection<String> keys) {
-		return keys.stream().map(s -> "".equals(s) ? "<anonymous>" : CLI_PREFIX + s).collect(Collectors.joining(", ", "[", "]"));
+		return keys.stream().map(s -> "".equals(s) ? "<anonymous>" : CLI_PREFIX + s)
+				.collect(Collectors.joining(", ", "[", "]"));
 	}
 
 	private Supplier<IllegalStateException> noConverterFound(String key, String value, Class<?> parameterType) {
-		return () -> new IllegalStateException("No converter found for " + CLI_PREFIX + key + " from '" + value + "' to type " + parameterType);
+		return () -> new IllegalStateException(
+				"No converter found for " + CLI_PREFIX + key + " from '" + value + "' to type " + parameterType);
 	}
-	
+
 	private static class ParseResult {
 		private final String value;
-		
+
 		private final Integer from;
 
 		public ParseResult(String value, Integer from) {
 			this.value = value;
 			this.from = from;
 		}
-		
+
 	}
-	
+
 }

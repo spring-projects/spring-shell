@@ -29,17 +29,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
+import org.springframework.shell.*;
 import org.springframework.shell.converters.BooleanConverter;
 import org.springframework.shell.converters.EnumConverter;
 import org.springframework.shell.converters.StringConverter;
 import org.springframework.shell.core.Converter;
 import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.shell.ParameterDescription;
-import org.springframework.shell.ParameterResolver;
-import org.springframework.shell.Utils;
-import org.springframework.shell.ValueResult;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Tests for {@link LegacyParameterResolver}.
@@ -257,6 +259,74 @@ public class LegacyParameterResolverTest {
 	private ValueResult resolve(MethodParameter methodParameter, String command) {
 		ValueResult result = parameterResolver.resolve(methodParameter, asList(command.split(" ")));
 		return result;
+	}
+
+	// ======================== Completion Tests ==========================
+
+	@Test
+	public void testNoCompletionJustAfterCommandWithNoSpace() {
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, NAME_OR_ANONYMOUS);
+
+		List<CompletionProposal> proposals = parameterResolver.complete(methodParameter, new CompletionContext(Collections.emptyList(), -1, 0));
+		assertThat(proposals).isEmpty();
+	}
+
+	@Test
+	public void testAllCommandKeysJustAfterCommand() {
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, COORDINATES);
+
+		List<CompletionProposal> proposals = parameterResolver.complete(methodParameter, new CompletionContext(Collections.singletonList(""), 0, 0));
+		assertThat(valuesOf(proposals)).contains("--coords", "--coordinates");
+	}
+
+	@Test
+	public void testAllCommandKeysWhenStarted() {
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, COORDINATES);
+
+		List<CompletionProposal> proposals = parameterResolver.complete(methodParameter, new CompletionContext(Collections.singletonList("--co"), 0, 4));
+		assertThat(valuesOf(proposals)).contains("--coords", "--coordinates");
+
+		proposals = parameterResolver.complete(methodParameter, new CompletionContext(Arrays.asList("--name", "foo", "--co"), 2, 4));
+		assertThat(valuesOf(proposals)).contains("--coords", "--coordinates");
+	}
+
+	@Test
+	public void testNoCompletionsWhenAnotherParameterDetected() {
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, COORDINATES);
+
+		List<CompletionProposal> proposals = parameterResolver.complete(methodParameter, new CompletionContext(Arrays.asList("--name", ""), 1, 0));
+		assertThat(valuesOf(proposals)).isEmpty();
+
+		proposals = parameterResolver.complete(methodParameter, new CompletionContext(Arrays.asList("--name", "foo"), 1, 3));
+		assertThat(valuesOf(proposals)).isEmpty();
+	}
+
+	@Test
+	public void testValueCompletionsWhenConverterAvailable() {
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, FORCE);
+
+		List<CompletionProposal> proposals = parameterResolver.complete(methodParameter, new CompletionContext(Arrays.asList("--force", ""), 1, 0));
+		assertThat(valuesOf(proposals)).contains("true", "false");
+
+		proposals = parameterResolver.complete(methodParameter, new CompletionContext(Arrays.asList("--force", "fa"), 1, 2));
+		assertThat(valuesOf(proposals)).contains("false").doesNotContain("true");
+
+	}
+
+	@Test
+	public void testNoValueCompletionsWhenNoConverterAvailable() {
+		MethodParameter methodParameter = Utils.createMethodParameter(REGISTER_METHOD, COORDINATES);
+
+		List<CompletionProposal> proposals = parameterResolver.complete(methodParameter, new CompletionContext(Arrays.asList("--coords", ""), 1, 0));
+		assertThat(valuesOf(proposals)).isEmpty();
+
+		proposals = parameterResolver.complete(methodParameter, new CompletionContext(Arrays.asList("--coords", "foo"), 1, 3));
+		assertThat(valuesOf(proposals)).isEmpty();
+
+	}
+
+	private List<String> valuesOf(List<CompletionProposal> proposals) {
+		return proposals.stream().map(CompletionProposal::value).collect(Collectors.toList());
 	}
 
 	@Configuration

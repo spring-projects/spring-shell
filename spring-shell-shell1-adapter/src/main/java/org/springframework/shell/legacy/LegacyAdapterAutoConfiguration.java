@@ -22,8 +22,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.shell.converters.ArrayConverter;
 import org.springframework.shell.converters.AvailableCommandsConverter;
+import org.springframework.shell.converters.FileConverter;
 import org.springframework.shell.converters.SimpleFileConverter;
 import org.springframework.shell.core.annotation.CliCommand;
+
+import java.io.File;
 
 /**
  * Main configuration class for the Shell 2 - Shell 1 adapter.
@@ -47,4 +50,13 @@ public class LegacyAdapterAutoConfiguration {
 		return new LegacyParameterResolver();
 	}
 
+	@Bean
+	public FileConverter fileConverter() {
+		return new FileConverter() {
+			@Override
+			protected File getWorkingDirectory() {
+				return new File(".");
+			}
+		};
+	}
 }

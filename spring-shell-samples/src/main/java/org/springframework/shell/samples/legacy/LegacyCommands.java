@@ -16,6 +16,7 @@
 
 package org.springframework.shell.samples.legacy;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import org.springframework.shell.core.CommandMarker;
@@ -91,4 +92,8 @@ public class LegacyCommands implements CommandMarker {
 		return message;
 	}
 
+	@CliCommand(value = "legacy-file", help = "Uses a legacy converter for completion")
+	public String legacyFile(@CliOption(key = "file") File file, @CliOption(key = "flag") boolean flag) {
+		return file + " exists? : " + file.exists();
+	}
 }
