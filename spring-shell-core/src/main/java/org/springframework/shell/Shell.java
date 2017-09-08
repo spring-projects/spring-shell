@@ -41,16 +41,25 @@ import org.springframework.util.ReflectionUtils;
 /**
  * Main class implementing a shell loop.
  *
- * <p>Given some textual input, locate the {@link MethodTarget} to invoke and {@link ResultHandler#handleResult(Object) handle}
- * the result.</p>
+ * <p>
+ * Given some textual input, locate the {@link MethodTarget} to invoke and
+ * {@link ResultHandler#handleResult(Object) handle} the result.
+ * </p>
  *
- * <p>Also provides hooks for code completion</p>
+ * <p>
+ * Also provides hooks for code completion
+ * </p>
  *
  * @author Eric Bottard
  */
 public class Shell implements CommandRegistry {
 
 	private final ResultHandler resultHandler;
+
+	/**
+	 * Marker object returned to signify that there was no input to turn into a command execution.
+	 */
+	public static final Object NO_INPUT = new Object();
 
 	@Autowired
 	protected ApplicationContext applicationContext;
@@ -63,7 +72,8 @@ public class Shell implements CommandRegistry {
 	protected List<ParameterResolver> parameterResolvers;
 
 	/**
-	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid value.
+	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid
+	 * value.
 	 */
 	protected static final Object UNRESOLVED = new Object();
 
@@ -86,7 +96,7 @@ public class Shell implements CommandRegistry {
 		methodTargets.values()
 				.forEach(this::validateParameterResolvers);
 	}
-	
+
 	@Autowired
 	public void setParameterResolvers(List<ParameterResolver> resolvers) {
 		this.parameterResolvers = new ArrayList<>(resolvers);
@@ -94,8 +104,12 @@ public class Shell implements CommandRegistry {
 	}
 
 	/**
-	 * The main program loop: acquire input, try to match it to a command and evaluate. Repeat until a
-	 * {@link ResultHandler} causes the process to exit or there is no input.
+	 * The main program loop: acquire input, try to match it to a command and evaluate. Repeat
+	 * until a {@link ResultHandler} causes the process to exit or there is no input.
+	 * <p>
+	 * This method has public visibility so that it can be invoked by actual commands
+	 * (<em>e.g.</em> a {@literal script} command).
+	 * </p>
 	 */
 	public void run(InputProvider inputProvider) throws IOException {
 		while (true) {
@@ -110,19 +124,25 @@ public class Shell implements CommandRegistry {
 			if (input == null) {
 				break;
 			}
-			evaluate(input);
+			Object result = evaluate(input);
+			if (result != NO_INPUT) {
+				resultHandler.handleResult(result);
+			}
 		}
 	}
 
 	/**
-	 * Evaluate a single "line" of input from the user by trying to map words to a command and arguments.
-	 *
-	 * <p>This method has public visibility so that it can be invoked by actual commands
-	 * (<em>e.g.</em> a {@literal script} command).</p>
+	 * Evaluate a single "line" of input from the user by trying to map words to a command and
+	 * arguments.
+	 * 
+	 * <p>
+	 * This method does not throw exceptions, it catches them and returns them as a regular
+	 * result
+	 * </p>
 	 */
-	public void evaluate(Input input) {
+	public Object evaluate(Input input) {
 		if (noInput(input)) {
-			return;
+			return NO_INPUT;
 		}
 
 		String line = input.words().stream().collect(Collectors.joining(" ")).trim();
@@ -140,36 +160,40 @@ public class Shell implements CommandRegistry {
 				try {
 					Object[] args = resolveArgs(method, wordsForArgs);
 					validateArgs(args, methodTarget);
-					result = ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
+					return ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
 				}
 				catch (Exception e) {
-					result = e;
+					return e;
 				}
-			} else {
-				result = new CommandNotCurrentlyAvailable(command, availability);
+			}
+			else {
+				return new CommandNotCurrentlyAvailable(command, availability);
 			}
 		}
 		else {
-			result = new CommandNotFound(words);
+			return new CommandNotFound(words);
 		}
-		resultHandler.handleResult(result);
-	}
-	
-	/**
-	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an empty line or blank space).
-	 *
-	 * <p>Also returns true (<em>i.e.</em> ask to ignore) when input starts with {@literal //}, which is used for comments.</p>
-	 */
-	private boolean noInput(Input input) {
-		return input.words().isEmpty()
-			|| (input.words().size() == 1 && input.words().get(0).trim().isEmpty())
-			|| (input.words().iterator().next().matches("\\s*//.*"));
 	}
 
 	/**
-	 * Returns the list of words to be considered for argument resolving. Drops the first N words used for the
-	 * command, as well as an optional empty word at the end of the list (which may be present if user added spaces
-	 * before submitting the buffer)
+	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an
+	 * empty line or blank space).
+	 *
+	 * <p>
+	 * Also returns true (<em>i.e.</em> ask to ignore) when input starts with {@literal //},
+	 * which is used for comments.
+	 * </p>
+	 */
+	private boolean noInput(Input input) {
+		return input.words().isEmpty()
+				|| (input.words().size() == 1 && input.words().get(0).trim().isEmpty())
+				|| (input.words().iterator().next().matches("\\s*//.*"));
+	}
+
+	/**
+	 * Returns the list of words to be considered for argument resolving. Drops the first N
+	 * words used for the command, as well as an optional empty word at the end of the list
+	 * (which may be present if user added spaces before submitting the buffer)
 	 */
 	private List<String> wordsForArguments(String command, List<String> words) {
 		int wordsUsedForCommandKey = command.split(" ").length;
@@ -182,8 +206,9 @@ public class Shell implements CommandRegistry {
 	}
 
 	/**
-	 * Gather completion proposals given some (incomplete) input the user has already typed in.
-	 * When and how this method is invoked is implementation specific and decided by the actual user interface.
+	 * Gather completion proposals given some (incomplete) input the user has already typed
+	 * in. When and how this method is invoked is implementation specific and decided by the
+	 * actual user interface.
 	 */
 	public List<CompletionProposal> complete(CompletionContext context) {
 
@@ -198,7 +223,7 @@ public class Shell implements CommandRegistry {
 			// Try to complete arguments
 			MethodTarget methodTarget = methodTargets.get(best);
 			Method method = methodTarget.getMethod();
-			
+
 			List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
 			for (ParameterResolver resolver : parameterResolvers) {
 				for (int index = 0; index < parameters.size(); index++) {
@@ -214,16 +239,16 @@ public class Shell implements CommandRegistry {
 
 	private List<CompletionProposal> commandsStartingWith(String prefix) {
 		return methodTargets.entrySet().stream()
-			.filter(e -> e.getKey().startsWith(prefix))
-			.map(e -> toCommandProposal(e.getKey(), e.getValue()))
-			.collect(Collectors.toList());
+				.filter(e -> e.getKey().startsWith(prefix))
+				.map(e -> toCommandProposal(e.getKey(), e.getValue()))
+				.collect(Collectors.toList());
 	}
 
 	private CompletionProposal toCommandProposal(String command, MethodTarget methodTarget) {
 		return new CompletionProposal(command)
-			.dontQuote(true)
-			.category("Available commands")
-			.description(methodTarget.getHelp());
+				.dontQuote(true)
+				.category("Available commands")
+				.description(methodTarget.getHelp());
 	}
 
 	private void validateArgs(Object[] args, MethodTarget methodTarget) {
@@ -234,23 +259,22 @@ public class Shell implements CommandRegistry {
 			}
 		}
 		Set<ConstraintViolation<Object>> constraintViolations = validator.forExecutables().validateParameters(
-			methodTarget.getBean(),
-			methodTarget.getMethod(),
-			args
-		);
+				methodTarget.getBean(),
+				methodTarget.getMethod(),
+				args);
 		if (constraintViolations.size() > 0) {
 			throw new ParameterValidationException(constraintViolations, methodTarget);
 		}
 	}
 
 	/**
-	 * Use all known {@link ParameterResolver}s to try to compute a value for each parameter of the method to
-	 * invoke.
-	 * @param method       the method for which parameters should be computed
+	 * Use all known {@link ParameterResolver}s to try to compute a value for each parameter
+	 * of the method to invoke.
+	 * @param method the method for which parameters should be computed
 	 * @param wordsForArgs the list of 'words' that should be converted to parameter values.
-	 *                     May include markers for passing parameters 'by name'
-	 * @return an array containing resolved parameter values, or {@link #UNRESOLVED} for parameters that could not be
-	 * resolved
+	 * May include markers for passing parameters 'by name'
+	 * @return an array containing resolved parameter values, or {@link #UNRESOLVED} for
+	 * parameters that could not be resolved
 	 */
 	private Object[] resolveArgs(Method method, List<String> wordsForArgs) {
 		List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
@@ -266,10 +290,10 @@ public class Shell implements CommandRegistry {
 		}
 		return args;
 	}
-	
+
 	/**
-	 * Verifies that we have at least one {@link ParameterResolver} that supports each of
-	 * the {@link MethodParameter}s in the method.
+	 * Verifies that we have at least one {@link ParameterResolver} that supports each of the
+	 * {@link MethodParameter}s in the method.
 	 */
 	private void validateParameterResolvers(MethodTarget methodTarget) {
 		Utils.createMethodParameters(methodTarget.getMethod())
@@ -280,7 +304,7 @@ public class Shell implements CommandRegistry {
 							.orElseThrow(() -> new ParameterResolverMissingException(parameter));
 				});
 	}
-	
+
 	/**
 	 * Returns the longest command that can be matched as first word(s) in the given buffer.
 	 *
@@ -288,8 +312,8 @@ public class Shell implements CommandRegistry {
 	 */
 	private String findLongestCommand(String prefix) {
 		String result = methodTargets.keySet().stream()
-			.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))
-			.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
+				.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))
+				.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
 		return "".equals(result) ? null : result;
 	}
 
