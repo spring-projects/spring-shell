@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -42,6 +43,12 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.ParametersDelegate;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.MethodDescriptor;
+import javax.validation.metadata.ParameterDescriptor;
+
 /**
  * Provides integration with JCommander.
  *
@@ -51,6 +58,9 @@ public class JCommanderParameterResolver implements ParameterResolver {
 
 	private static final Collection<Class<? extends Annotation>> JCOMMANDER_ANNOTATIONS =
 			Arrays.asList(Parameter.class, DynamicParameter.class, ParametersDelegate.class);
+
+	@Autowired(required = false)
+	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 	@Override
 	public boolean supports(MethodParameter parameter) {
@@ -94,6 +104,9 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	public Stream<ParameterDescription> describe(MethodParameter parameter) {
 		JCommander jCommander = createJCommander(parameter);
 		Stream<com.beust.jcommander.ParameterDescription> jCommanderDescriptions = streamAllJCommanderDescriptions(jCommander);
+
+		BeanDescriptor constraintsForClass = validator.getConstraintsForClass(parameter.getParameterType());
+
 		return jCommanderDescriptions
 			.map(j -> new ParameterDescription(parameter, unCamelify(j.getParameterized().getType().getSimpleName()))
 				.keys(Arrays.asList(j.getParameter().names()))
@@ -101,6 +114,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 				.mandatoryKey(!j.equals(jCommander.getMainParameter()))
 				// Not ideal as this does not take reverse-conversion into account, but just toString()
 				.defaultValue(j.getDefault() == null ? "" : String.valueOf(j.getDefault()))
+				.elementDescriptor(constraintsForClass.getConstraintsForProperty(j.getParameterized().getName()))
 			);
 	}
 

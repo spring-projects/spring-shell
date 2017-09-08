@@ -27,6 +27,9 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.result.ResultHandlerConfig;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+
 /**
  * Creates supporting beans for running the Shell
  */
@@ -41,9 +44,14 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(Validator.class)
+	public Validator validator() {
+		return Validation.buildDefaultValidatorFactory().getValidator();
+	}
+
+	@Bean
 	public Shell shell(@Qualifier("main") ResultHandler resultHandler) {
 		return new Shell(resultHandler);
 	}
-
 
 }

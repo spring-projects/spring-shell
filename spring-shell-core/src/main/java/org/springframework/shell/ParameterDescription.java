@@ -23,6 +23,8 @@ import java.util.Optional;
 
 import org.springframework.core.MethodParameter;
 
+import javax.validation.metadata.ElementDescriptor;
+
 /**
  * Encapsulates information about a shell invokable method parameter, so that it can be documented.
  *
@@ -75,6 +77,14 @@ public class ParameterDescription {
 	 */
 	private String help = "";
 
+	/**
+	 * Allows discovery of bean validation constraints for the command parameter.
+	 * <p>Note that most often, constraints will directly come from parameter constraints,
+	 * but sometimes (<em>e.g.</em> in case of one method argument mapping to multiple
+	 * command options) may come from property constraints.</p>
+	 */
+	private ElementDescriptor elementDescriptor;
+
 	public ParameterDescription(MethodParameter parameter, String type) {
 		this.parameter = parameter;
 		this.type = type;
@@ -123,6 +133,17 @@ public class ParameterDescription {
 		return this;
 	}
 
+	/**
+	 * @return an ElementDescriptor used to discover constraints. May be {@literal null}.
+	 */
+	public ElementDescriptor elementDescriptor() {
+		return this.elementDescriptor;
+	}
+
+	public ParameterDescription elementDescriptor(ElementDescriptor descriptor) {
+		this.elementDescriptor = descriptor;
+		return this;
+	}
 
 	public String type() {
 		return type;

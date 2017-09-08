@@ -47,6 +47,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ReflectionUtils;
 
+import javax.validation.constraints.Max;
+
 /**
  * Tests for the {@link Help} command.
  *
@@ -133,7 +135,8 @@ public class HelpTest {
 				// Multiple keys and arity 0. Help displayed on next line
 				@ShellOption(help = "Do not ask for confirmation. YOLO", arity = 0, value = {"-f", "--force"}) boolean force,
 				// Single key, arity >= 1. Help displayed on next line. Optional
-				@ShellOption(help = "The answer to everything", defaultValue = "42", value = "-n") int n,
+				// Also, bears bean validation annotation
+				@ShellOption(help = "The answer to everything", defaultValue = "42", value = "-n") @Max(5) int n,
 		        // Single key, arity > 1.
 		        @ShellOption(help = "Some other parameters", arity = 3, value = "-o") float[] o
 		) {

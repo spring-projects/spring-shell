@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.validation.executable.ExecutableValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,9 @@ public class Shell implements CommandRegistry {
 	@Autowired
 	protected ApplicationContext applicationContext;
 
+	@Autowired(required = false)
+	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
 	protected Map<String, MethodTarget> methodTargets = new HashMap<>();
 
 	protected List<ParameterResolver> parameterResolvers;
@@ -62,9 +66,6 @@ public class Shell implements CommandRegistry {
 	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid value.
 	 */
 	protected static final Object UNRESOLVED = new Object();
-
-	private final ExecutableValidator executableValidator = Validation
-		.buildDefaultValidatorFactory().getValidator().forExecutables();
 
 	public Shell(ResultHandler resultHandler) {
 		this.resultHandler = resultHandler;
@@ -232,7 +233,7 @@ public class Shell implements CommandRegistry {
 				throw new IllegalStateException("Could not resolve " + methodParameter);
 			}
 		}
-		Set<ConstraintViolation<Object>> constraintViolations = executableValidator.validateParameters(
+		Set<ConstraintViolation<Object>> constraintViolations = validator.forExecutables().validateParameters(
 			methodTarget.getBean(),
 			methodTarget.getMethod(),
 			args

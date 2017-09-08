@@ -37,6 +37,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.metadata.MethodDescriptor;
+import javax.validation.metadata.ParameterDescriptor;
+
 /**
  * Resolves parameters by looking at the {@link CliOption} annotation and acting
  * accordingly.
@@ -57,6 +62,9 @@ public class LegacyParameterResolver implements ParameterResolver {
 
 	@Autowired(required = false)
 	private Collection<Converter<?>> converters = new ArrayList<>();
+
+	@Autowired(required = false)
+	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 	@Override
 	public boolean supports(MethodParameter parameter) {
@@ -118,6 +126,15 @@ public class LegacyParameterResolver implements ParameterResolver {
 		}
 		boolean containsEmptyKey = keys.contains("");
 		result.mandatoryKey(!containsEmptyKey);
+
+		MethodDescriptor constraintsForMethod = validator.getConstraintsForClass(parameter.getDeclaringClass())
+				.getConstraintsForMethod(parameter.getMethod().getName(), parameter.getMethod().getParameterTypes());
+		if (constraintsForMethod != null) {
+			ParameterDescriptor constraintsDescriptor = constraintsForMethod
+					.getParameterDescriptors().get(parameter.getParameterIndex());
+			result.elementDescriptor(constraintsDescriptor);
+		}
+
 		return Stream.of(result);
 	}
 

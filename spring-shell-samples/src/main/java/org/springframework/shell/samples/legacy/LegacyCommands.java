@@ -26,6 +26,8 @@ import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
+import javax.validation.constraints.Min;
+
 /**
  * A sample of legacy Shell 1 commands that can be run thanks to the legacy adapter.
  *
@@ -76,7 +78,7 @@ public class LegacyCommands implements CommandMarker {
 
 	@CliCommand(value = "sum2", help = "adds two numbers")
 	public int sum2(
-			@CliOption(key = "v1", unspecifiedDefaultValue = "38") int a,
+			@CliOption(key = "v1", unspecifiedDefaultValue = "38") @Min(5) int a,
 			@CliOption(key = "v2", specifiedDefaultValue = "42", mandatory = true) int b,
 			@CliOption(key = "v3", mandatory = false) int c) {
 		return a + b + c;
