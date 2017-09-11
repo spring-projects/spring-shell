@@ -40,6 +40,7 @@ import org.springframework.shell.standard.ShellOption;
 
 import javax.validation.MessageInterpolator;
 import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 import javax.validation.metadata.ConstraintDescriptor;
 
 /**
@@ -72,7 +73,6 @@ public class Help {
 
 	private CommandRegistry commandRegistry;
 
-	@Autowired(required = false)
 	private MessageInterpolator messageInterpolator = Validation.buildDefaultValidatorFactory()
 			.getMessageInterpolator();
 
@@ -85,6 +85,13 @@ public class Help {
 	public void setCommandRegistry(CommandRegistry commandRegistry) {
 		this.commandRegistry = commandRegistry;
 	}
+
+
+	@Autowired(required = false)
+	public void setValidatorFactory(ValidatorFactory validatorFactory) {
+		this.messageInterpolator = validatorFactory.getMessageInterpolator();
+	}
+
 
 	@ShellMethod(value = "Display help about available commands.", prefix = "-")
 	public CharSequence help(

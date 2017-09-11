@@ -30,6 +30,7 @@ import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.executable.ExecutableValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,6 @@ public class Shell implements CommandRegistry {
 	@Autowired
 	protected ApplicationContext applicationContext;
 
-	@Autowired(required = false)
 	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 	protected Map<String, MethodTarget> methodTargets = new HashMap<>();
@@ -79,6 +79,11 @@ public class Shell implements CommandRegistry {
 
 	public Shell(ResultHandler resultHandler) {
 		this.resultHandler = resultHandler;
+	}
+
+	@Autowired(required = false)
+	public void setValidatorFactory(ValidatorFactory validatorFactory) {
+		this.validator = validatorFactory.getValidator();
 	}
 
 	@Override

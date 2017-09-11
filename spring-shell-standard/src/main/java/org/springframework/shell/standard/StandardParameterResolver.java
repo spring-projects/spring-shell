@@ -54,10 +54,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ObjectUtils;
 
-import javax.validation.MessageInterpolator;
-import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import javax.validation.*;
 import javax.validation.metadata.MethodDescriptor;
 import javax.validation.metadata.ParameterDescriptor;
 
@@ -115,8 +112,13 @@ public class StandardParameterResolver implements ParameterResolver {
 		this.valueProviders = valueProviders;
 	}
 
-	@Autowired(required = false)
 	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+	@Autowired(required = false)
+	public void setValidatorFactory(ValidatorFactory validatorFactory) {
+		this.validator = validatorFactory.getValidator();
+	}
+
 
 	@Override
 	public boolean supports(MethodParameter parameter) {

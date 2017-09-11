@@ -45,6 +45,7 @@ import com.beust.jcommander.ParametersDelegate;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.MethodDescriptor;
 import javax.validation.metadata.ParameterDescriptor;
@@ -59,8 +60,12 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	private static final Collection<Class<? extends Annotation>> JCOMMANDER_ANNOTATIONS =
 			Arrays.asList(Parameter.class, DynamicParameter.class, ParametersDelegate.class);
 
-	@Autowired(required = false)
 	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+	@Autowired(required = false)
+	public void setValidatorFactory(ValidatorFactory validatorFactory) {
+		this.validator = validatorFactory.getValidator();
+	}
 
 	@Override
 	public boolean supports(MethodParameter parameter) {

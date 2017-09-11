@@ -39,6 +39,7 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.metadata.MethodDescriptor;
 import javax.validation.metadata.ParameterDescriptor;
 
@@ -63,8 +64,13 @@ public class LegacyParameterResolver implements ParameterResolver {
 	@Autowired(required = false)
 	private Collection<Converter<?>> converters = new ArrayList<>();
 
-	@Autowired(required = false)
 	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+	@Autowired(required = false)
+	public void setValidatorFactory(ValidatorFactory validatorFactory) {
+		this.validator = validatorFactory.getValidator();
+	}
+
 
 	@Override
 	public boolean supports(MethodParameter parameter) {
