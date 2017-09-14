@@ -38,6 +38,7 @@
 		<module>spring-shell-shell1-adapter</module>
 		<module>spring-shell-starter</module>
 		<module>spring-shell-table</module>
+		<module>spring-shell-docs</module>
 	</modules>
 
 	<dependencyManagement>
@@ -256,18 +257,6 @@
 			</activation>
 			<modules>
 				<module>spring-shell-samples</module>
-			</modules>
-		</profile>
-		<profile>
-			<!-- Skip docs by default -->
-			<id>full</id>
-			<activation>
-				<property>
-					<name>env.BUILD_DOCS</name>
-				</property>
-			</activation>
-			<modules>
-				<module>spring-shell-docs</module>
 			</modules>
 		</profile>
 	</profiles>
