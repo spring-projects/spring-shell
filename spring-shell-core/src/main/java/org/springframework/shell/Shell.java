@@ -58,7 +58,8 @@ public class Shell implements CommandRegistry {
 	private final ResultHandler resultHandler;
 
 	/**
-	 * Marker object returned to signify that there was no input to turn into a command execution.
+	 * Marker object returned to signify that there was no input to turn into a command
+	 * execution.
 	 */
 	public static final Object NO_INPUT = new Object();
 
@@ -243,9 +244,12 @@ public class Shell implements CommandRegistry {
 	}
 
 	private List<CompletionProposal> commandsStartingWith(String prefix) {
+		// Workaround for https://github.com/spring-projects/spring-shell/issues/150
+		// (sadly, this ties this class to JLine somehow)
+		int lastWordStart = prefix.lastIndexOf(' ') + 1;
 		return methodTargets.entrySet().stream()
 				.filter(e -> e.getKey().startsWith(prefix))
-				.map(e -> toCommandProposal(e.getKey(), e.getValue()))
+				.map(e -> toCommandProposal(e.getKey().substring(lastWordStart), e.getValue()))
 				.collect(Collectors.toList());
 	}
 

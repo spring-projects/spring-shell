@@ -19,6 +19,8 @@ package org.springframework.shell;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,6 +33,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.context.ApplicationContext;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
@@ -187,6 +190,53 @@ public class ShellTest {
 
 		thrown.expect(ParameterResolverMissingException.class);
 		shell.gatherMethodTargets();
+	}
+
+	@Test
+	public void commandNameCompletion() throws Exception {
+		shell.applicationContext = mock(ApplicationContext.class);
+		when(parameterResolver.supports(any())).thenReturn(true);
+		when(shell.applicationContext.getBeansOfType(MethodTargetRegistrar.class))
+				.thenReturn(Collections.singletonMap("foo", r -> {
+					r.register("hello world", MethodTarget.of("helloWorld", this, "hellow world"));
+					r.register("another command", MethodTarget.of("helloWorld", this, "another command"));
+				}));
+		shell.gatherMethodTargets();
+
+		// Invoke at very start
+		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList(""), 0, "".length()))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals).containsExactly("another command", "hello world");
+
+		// Invoke in middle of first word
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hel"), 0, "hel".length()))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals).containsExactly("hello world");
+
+		// Invoke at end of first word (no space after yet)
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello"), 0, "hello".length()))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals).containsExactly("hello world");
+
+		// Invoke after first word / start of second word
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", ""), 1, "".length()))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals).containsExactly("world");
+
+		// Invoke in middle of second word
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "wo"), 1, "wo".length()))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals).containsExactly("world");
+
+		// Invoke at end of whole command (no space after yet)
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world"), 1, "world".length()))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals).containsExactly("world");
+
+		// Invoke in middle of second word
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length()))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals).isEmpty();
 	}
 
 	private void helloWorld(String a) {
