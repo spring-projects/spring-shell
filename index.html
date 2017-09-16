@@ -10,8 +10,8 @@ badges:
       url:  https://github.com/spring-projects/spring-shell
       icon: github
 
-    - name: Issues (JIRA)
-      url:  https://jira.spring.io/browse/SHL
+    - name: Issues (GitHub)
+      url:  https://github.com/spring-projects/spring-shell/issues
       icon: tracking
 
     - name: CI (Bamboo)
@@ -38,23 +38,27 @@ plugin your own custom commands using a Spring based programming model.
 ## Introduction
 
 Users of the Spring Shell project can easily build a full featured shell ( *aka* command line)
-application by depending on the Spring Shell jar and adding their own commands (which come as
+application by depending on the Spring Shell jars and adding their own commands (which come as
 methods on spring beans). Creating a command line application can be useful *e.g.* to
 interact with your project's REST API, or to work with local file content.
 
 ## Features
 Spring Shell's features include
 
-* A simple, annotation driven, programming model to contribute custom commands
-* Use of Spring's classpath scanning functionality as the basis for a command plugin strategy and command development
+* A simple, annotation driven, [programming model](https://docs.spring.io/spring-shell/docs/current-SNAPSHOT/reference/htmlsingle/#_writing_your_own_commands) to contribute custom commands
+* Use of Spring Boot auto-configuration functionality as the basis for a command plugin strategy
 * Tab completion, colorization, and script execution
-* Customization of command prompt, banner, shell history file name
-* Dynamic enablement of commands based on domain specific criteria
-* Already built-in commands, such as clear screen, help, exit, *etc.*
+* Customization of command prompt, shell history file name, handling of results and errors
+* [Dynamic enablement](https://docs.spring.io/spring-shell/docs/current-SNAPSHOT/reference/htmlsingle/#dynamic-command-availability) of commands based on domain specific criteria
+* Integration with the [bean validation API](https://docs.spring.io/spring-shell/docs/current-SNAPSHOT/reference/htmlsingle/#_validating_command_arguments)
+* Already [built-in commands](https://docs.spring.io/spring-shell/docs/current-SNAPSHOT/reference/htmlsingle/#built-in-commands), such as clear screen, gorgeous help, exit
+* ASCII art Tables, with formatting, alignment, fancy borders, *etc.*
 
 
 <span id="quick-start"></span>
+
 ## Quick Start
+
 
 {% include download_widget.md %}
 
@@ -70,9 +74,7 @@ assuming you'd have access to some kind of translation service that worked with 
 ```java
 package foo;
 
-import foo;
-
-@CommandMarker
+@ShellComponent
 public class TranslationCommands {
 
     private final TranslationService service;
@@ -82,13 +84,12 @@ public class TranslationCommands {
       this.service = service;
     }
 
-    @CliCommand(value = "translate", help = "translate text from one language to another")
-    public String translate(@CliOption(key = {"", "text"}) String text,
-      @CliOption(key = "from", unspecifiedDefaultValue = "en_US") Locale from,
-      @CliOption(key = "to") Locate to
+    @ShellMethod"Translate text from one language to another.")
+    public String translate(
+      @ShellOption(mandatory = true) String text,
+      @ShellOption(mandatory = true, defaultValue = "en_US") Locale from,
+      @ShellOption(mandatory = true) Locate to
     ) {
-      // Check args, etc.
-
       // invoke service
       return service.translate(text, from, to);
     }
@@ -99,10 +100,10 @@ public class TranslationCommands {
 
 {% capture related_resources %}
 
-### Sample &amp; Related Projects
+### Samples &amp; Related Projects
 
-* [Hello World shell](https://github.com/spring-projects/spring-shell/tree/master/samples/helloworld)
-* [Spring Cloud Dataflow Shell](https://github.com/spring-cloud/spring-cloud-dataflow/tree/master/spring-cloud-dataflow-shell)
+* [Spring Shell Samples](https://github.com/spring-projects/spring-shell/tree/master/spring-shell-samples)
+* [Spring Cloud Skipper Shell](https://github.com/spring-cloud/spring-cloud-skipper/tree/master/spring-cloud-skipper-shell-commands)
 
 {% endcapture %}
 
