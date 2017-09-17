@@ -27,7 +27,7 @@ import org.springframework.shell.ResultHandler;
  *
  * @author Eric Bottard
  */
-public abstract  class TerminalAwareResultHandler<T> implements ResultHandler<T> {
+public abstract class TerminalAwareResultHandler<T> implements ResultHandler<T> {
 	protected Terminal terminal;
 
 	@Autowired @Lazy
