@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
  *
  * @author Eric Bottard
  */
-@Component
 public class IterableResultHandler implements ResultHandler<Iterable> {
 
 	private ResultHandler delegate;
