@@ -29,6 +29,7 @@ import org.jline.utils.AttributedString;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
@@ -45,7 +46,10 @@ import org.springframework.shell.Shell;
  *
  * @author Eric Bottard
  */
+@Order(DefaultShellApplicationRunner.PRECEDENCE)
 public class DefaultShellApplicationRunner implements ApplicationRunner {
+
+	public static final int PRECEDENCE = 0;
 
 	private final LineReader lineReader;
 
