@@ -85,26 +85,7 @@ class JLineShellAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(ApplicationRunner.class)
 	public ApplicationRunner applicationRunner(Parser parser) {
-		return new ApplicationRunner() {
-			@Override
-			public void run(ApplicationArguments args) throws Exception {
-				List<File> scriptsToRun = args.getNonOptionArgs().stream()
-						.filter(s -> s.startsWith("@"))
-						.map(s -> new File(s.substring(1)))
-						.collect(Collectors.toList());
-
-				if (scriptsToRun.isEmpty()) {
-					InputProvider inputProvider = new JLineInputProvider(lineReader(), promptProvider);
-					shell.run(inputProvider);
-				} else {
-					for (File file : scriptsToRun) {
-						try (Reader reader = new FileReader(file); FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-							shell.run(inputProvider);
-						}
-					}
-				}
-			}
-		};
+		return new DefaultShellApplicationRunner(lineReader(), promptProvider, parser, shell);
 	}
 
 
@@ -237,35 +218,6 @@ class JLineShellAutoConfiguration {
 		}
 	}
 
-	public static class JLineInputProvider implements InputProvider {
-
-		private final LineReader lineReader;
-
-		private final PromptProvider promptProvider;
-
-		public JLineInputProvider(LineReader lineReader, PromptProvider promptProvider) {
-			this.lineReader = lineReader;
-			this.promptProvider = promptProvider;
-		}
-
-		@Override
-		public Input readInput() {
-			try {
-				AttributedString prompt = promptProvider.getPrompt();
-				lineReader.readLine(prompt.toAnsi(lineReader.getTerminal()));
-			}
-			catch (UserInterruptException e) {
-				if (e.getPartialLine().isEmpty()) {
-					throw new ExitRequest(1);
-				} else {
-					return Input.EMPTY;
-				}
-			}
-			return new ParsedLineInput(lineReader.getParsedLine());
-		}
-
-
-	}
 
 }
 
