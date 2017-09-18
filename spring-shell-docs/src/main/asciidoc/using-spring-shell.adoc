@@ -194,12 +194,16 @@ then the following invocations are all equivalent, as witnessed by the output:
 ----
 shell:>echo 1 2 3               <1>
 You said a=1, b=2, c=3
+
 shell:>echo --a 1 --b 2 --c 3   <2>
 You said a=1, b=2, c=3
+
 shell:>echo --b 2 --c 3 --a 1   <3>
 You said a=1, b=2, c=3
+
 shell:>echo --a 1 2 3           <4>
 You said a=1, b=2, c=3
+
 shell:>echo 1 --c 3 2           <5>
 You said a=1, b=2, c=3
 ----
@@ -513,7 +517,7 @@ public class MyCommands {
 Here you see the `connect` method is used to connect to the server (details omitted), altering state
 of the command through the `connected` boolean when done.
 The `download` command will be marked as _unavailable_ till the user has connected, thanks to the presence
-of a method named exactly as the command method with the `Availability` prefix in its name.
+of a method named exactly as the `download` command method with the `Availability` suffix in its name.
 The method returns an instance of `Availability`, constructed with one of the two factory methods.
 In case of the command not being available, an explanation has to be provided.
 Now, if the user tries to invoke the command while not being connected, here is what happens:
@@ -685,7 +689,7 @@ all shell applications need. If you're not happy with the way they behave though
 If you don't need built-in commands at all, then there is an easy way to "disable" them: just don't include them!
 Either use a maven exclusion on `spring-shell-standard-commands` or, if you're selectively including Spring Shell dependencies,
 don't bring that one in!
-[source,xml]
+[source,xml,subs=attributes+]
 ----
 <dependency>
     <groupId>org.springframework.shell</groupId>
