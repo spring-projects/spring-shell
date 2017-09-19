@@ -444,6 +444,7 @@ kbd:[Esc b] to move forward (_resp._ backward) one word at a time.
 
 TBD
 
+[[validating-command-arguments]]
 === Validating Command Arguments
 
 Spring Shell integrates with the http://beanvalidation.org/[Bean Validation API] to support
@@ -669,6 +670,7 @@ There are cases though when understanding what exactly happened is important (es
 To this purpose, Spring Shell remembers the last exception that occurred and the user can later use the `stacktrace`
 command to print all the gory details on the console.
 
+[[script-command]]
 ==== Running a Batch of Commands
 The `script` command accepts a local file as an argument and will replay commands found there, one at a time.
 
@@ -750,10 +752,132 @@ always welcome!
 ==== ResultHandlers
 
 ==== PromptProvider
+After each command invocation, the shell waits for new input from the user, displaying
+a _prompt_ in yellow:
+
+[source]
+----
+shell:>
+----
+
+It is possible to customize this behavior by registering a bean of type `PromptProvider`.
+Such a bean may use internal state to decide what to display to the user (it may for example
+react to https://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#context-functionality-events-annotation[application events])
+and can use JLine's `AttributedCharSequence` to display fancy ANSI text.
+
+Here is a fictional example:
+[source, java]
+----
+@Component
+public class CustomPromptProvider implements PromptProvider {
+
+	private ConnectionDetails connection;
+
+	@Override
+	public AttributedString getPrompt() {
+		if (connection != null) {
+			return new AttributedString(connection.getHost() + ":>",
+				AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
+		}
+		else {
+			return new AttributedString("server-unknown:>",
+				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
+		}
+	}
+
+	@EventListener
+	public void handle(ConnectionUpdatedEvent event) {
+		this.connection = event.getConnectionDetails();
+	}
+}
+----
 
 ==== Customizing Command Line Options Behavior
+Spring Shell comes with a default Spring Boot `ApplicationRunner`
+that bootstraps the Shell REPL. It sets up the JLine infrastructure and eventually
+calls `Shell.run()`.
 
-==== ConversionService
+If the application is started with arguments that start with `@` though, it assumes those
+are local file names and tries to run commands contained in those files (with the same
+semantics as the xref:script-command[script command]) and then exits the process.
+
+If this behavior does not suit you, simply provide one (or more) bean of type `ApplicationRunner`
+and it will replace the default. You'll want to take inspiration from the `DefaultShellApplicationRunner`:
+
+[source,java]
+----
+include::../../../../spring-shell-core/src/main/java/org/springframework/shell/jline/DefaultShellApplicationRunner.java[tag=documentation]
+
+...
+----
+
+==== Customizing Arguments Conversion
+Conversion from text input to actual method arguments uses the standard Spring
+https://docs.spring.io/spring/docs/4.3.11.RELEASE/spring-framework-reference/htmlsingle/#core-convert[conversion] mechanism.
+Spring Shell installs a new `DefaultConversionService` (with built-in converters enabled)
+and registers to it any bean of type `Converter<S, T>`, `GenericConverter` or
+`ConverterFactory<S, T>` that it finds in the application context.
+
+This means that it's really easy to customize conversion to your custom objects of type `Foo`:
+just install a `Converter<String, Foo>` bean in the context.
+
+[source, java]
+----
+@ShellComponent
+class ConversionCommands {
+
+	@ShellMethod("Shows conversion using Spring converter")
+	public String conversionExample(DomainObject object) {
+		return object.getClass();
+	}
+
+}
+
+class DomainObject {
+	private final String value;
+
+	DomainObject(String value) {
+		this.value = value;
+	}
+
+	public String toString() {
+		return value;
+	}
+}
+
+@Component
+class CustomDomainConverter implements Converter<String, DomainObject> {
+
+	@Override
+	public DomainObject convert(String source) {
+		return new DomainObject(source);
+	}
+}
+
+----
+
+[TIP]
+.Mind your String representation
+====
+As in the example above, it's probably a good idea if you can to have
+your `toString()` implementations return the converse of what was used
+to create the object instance. This is because when a value fails
+validation, Spring Shell prints
+[source]
+----
+The following constraints were not met:
+	--arg <type> : <message> (You passed '<value.toString()>')
+----
+See xref:validating-command-arguments[] for more information.
+====
+
+[NOTE]
+====
+If you want to customize the `ConversionService` further, you can either
+
+* Have the default one injected in your code and act upon it in some way
+* Override it altogether with your own (custom converters will need to be registered by hand)
+====
 
 //==== Overriding the JLine Parser
 

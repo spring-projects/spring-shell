@@ -46,9 +46,10 @@ import org.springframework.shell.Shell;
  *
  * @author Eric Bottard
  */
+//tag::documentation[]
 @Order(DefaultShellApplicationRunner.PRECEDENCE)
 public class DefaultShellApplicationRunner implements ApplicationRunner {
-
+//end::documentation[]
 	public static final int PRECEDENCE = 0;
 
 	private final LineReader lineReader;
@@ -66,6 +67,7 @@ public class DefaultShellApplicationRunner implements ApplicationRunner {
 		this.shell = shell;
 	}
 
+	//tag::documentation[]
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		List<File> scriptsToRun = args.getNonOptionArgs().stream()
@@ -84,7 +86,7 @@ public class DefaultShellApplicationRunner implements ApplicationRunner {
 			}
 		}
 	}
-
+	//end::documentation[]
 	public static class JLineInputProvider implements InputProvider {
 
 		private final LineReader lineReader;
