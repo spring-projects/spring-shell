@@ -235,11 +235,12 @@ For such a setup, the possible parameter keys will be `-a`, `-b` and `--third`.
 [TIP]
 ====
 It is possible to specify several keys for a single parameter. If so, these will be mutually exclusive ways
-to specify the same parameter (so only one of them can be used). Here is an example:
+to specify the same parameter (so only one of them can be used). As an example, here is the signature of the
+built-in xref:help-command[`help`] command:
 [source, java]
 ----
 	@ShellMethod("Describe a command.")
-	public String help(@ShellOption({"-C", "--command"} String command) {
+	public String help(@ShellOption({"-C", "--command"}) String command) {
 		...
 	}
 ----
@@ -252,7 +253,7 @@ those parameters:
 [source, java]
 ----
 	@ShellMethod("Say hello.")
-	public String greet(@ShellOption(defaultValue="World"} String who) {
+	public String greet(@ShellOption(defaultValue="World") String who) {
 		return "Hello " + who;
 	}
 ----
@@ -587,8 +588,6 @@ The default value for the `@ShellMethodAvailability.value()` attribute is `"*"` 
 wildcard that matches all command names. It's thus easy to turn all commands of a single class on or off
 with a single availability method.
 ====
-
-
 
 [TIP]
 ====
