@@ -53,4 +53,11 @@ public @interface ShellMethod {
 	 */
 	String prefix() default "--";
 
+	/**
+	 * The command group which this command belongs to. The command group is used when printing a list of
+	 * commands to group related commands.
+	 * @return name of the command group
+	 */
+	String group() default "";
+
 }

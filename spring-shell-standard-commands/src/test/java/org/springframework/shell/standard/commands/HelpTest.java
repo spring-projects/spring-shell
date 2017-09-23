@@ -125,6 +125,12 @@ public class HelpTest {
 				methodTarget = MethodTarget.of("thirdCommand", commands(), "The last command.");
 				result.put("third-command", methodTarget);
 
+				methodTarget = MethodTarget.of("firstCommandInGroup", commands(), "The first command in a separate group.", "Example Group");
+				result.put("first-group-command", methodTarget);
+
+				methodTarget = MethodTarget.of("secondCommandInGroup", commands(), "The second command in a separate group.", "Example Group");
+				result.put("second-group-command", methodTarget);
+
 				return result;
 			};
 		}
@@ -166,6 +172,16 @@ public class HelpTest {
 
 		@ShellMethod
 		public void thirdCommand() {
+
+		}
+
+		@ShellMethod
+		public void firstCommandInGroup() {
+
+		}
+
+		@ShellMethod
+		public void secondCommandInGroup() {
 
 		}
 

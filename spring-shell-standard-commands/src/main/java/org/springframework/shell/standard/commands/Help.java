@@ -16,14 +16,20 @@
 
 package org.springframework.shell.standard.commands;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
 
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -267,39 +273,49 @@ public class Help {
 	}
 
 	private CharSequence listCommands() {
-		Map<String, Set<String>> groupedByMethodTarget = commandRegistry.listCommands().entrySet().stream()
-				.collect(Collectors.groupingBy(e -> e.getValue().getHelp(), // Use help() as the grouping key
-						mapping(Map.Entry::getKey, toCollection(TreeSet::new)))); // accumulate the command 'names' into
-																					// a sorted set
+		Map<String, MethodTarget> commandsByName = commandRegistry.listCommands();
 
-		// Then display commands, sorted alphabetically by their first alias
+		SortedMap<String, Map<String, MethodTarget>> commandsByGroupAndName = commandsByName.entrySet().stream()
+				.collect(groupingBy(e -> e.getValue().getGroup(), TreeMap::new, // group by and sort by command group
+						toMap(Entry::getKey, Entry::getValue)));
+
 		AttributedStringBuilder result = new AttributedStringBuilder();
 		result.append("AVAILABLE COMMANDS\n\n", AttributedStyle.BOLD);
 
-		groupedByMethodTarget.entrySet().stream()
-				.sorted(sortByFirstElement())
-				.forEach(e -> result.append(isAvailable(e) ? "        " : "      * ")
-						.append(e.getValue().stream().collect(Collectors.joining(", ")), AttributedStyle.BOLD)
+		// display groups, sorted alphabetically, "Default" first
+		commandsByGroupAndName.forEach((group, commandsInGroup) -> {
+			result.append("".equals(group) ? "Default" : group, AttributedStyle.BOLD).append('\n');
+
+			Map<MethodTarget, SortedSet<String>> commandNamesByMethod = commandsInGroup.entrySet().stream()
+					.collect(groupingBy(Entry::getValue, // group by command method
+							mapping(Entry::getKey, toCollection(TreeSet::new)))); // sort command names
+
+			// display commands, sorted alphabetically by their first alias
+			commandNamesByMethod.entrySet().stream().sorted(sortByFirstCommandName()).forEach(e -> {
+				result
+						.append(isAvailable(e.getKey()) ? "        " : "      * ")
+						.append(String.join(", ", e.getValue()), AttributedStyle.BOLD)
 						.append(": ")
-						.append(e.getKey())
-						.append('\n'));
+						.append(e.getKey().getHelp())
+						.append('\n');
+			});
 
-		groupedByMethodTarget.entrySet().stream()
-				.filter(e -> !isAvailable(e))
-				.findAny()
-				.ifPresent(e -> result.append(
-						"\nCommands marked with (*) are currently unavailable.\nType `help <command>` to learn more.\n"));
+			result.append('\n');
+		});
 
-		return result.append("\n");
+		if (commandsByName.values().stream().distinct().anyMatch(m -> !isAvailable(m))) {
+			result.append("Commands marked with (*) are currently unavailable.\nType `help <command>` to learn more.\n\n");
+		}
+
+		return result;
 	}
 
-	private Comparator<Map.Entry<String, Set<String>>> sortByFirstElement() {
-		return Comparator.comparing(e -> e.getValue().iterator().next());
+	private Comparator<Entry<MethodTarget, SortedSet<String>>> sortByFirstCommandName() {
+		return Comparator.comparing(e -> e.getValue().first());
 	}
 
-	private boolean isAvailable(Map.Entry<String, Set<String>> entry) {
-		String commandName = entry.getValue().iterator().next();
-		return commandRegistry.listCommands().get(commandName).getAvailability().isAvailable();
+	private boolean isAvailable(MethodTarget methodTarget) {
+		return methodTarget.getAvailability().isAvailable();
 	}
 
 	private void appendUnderlinedFormal(AttributedStringBuilder result, ParameterDescription description) {

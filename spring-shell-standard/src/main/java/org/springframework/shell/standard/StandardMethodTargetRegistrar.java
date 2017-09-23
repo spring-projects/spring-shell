@@ -61,9 +61,10 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 				if (keys.length == 0) {
 					keys = new String[] { Utils.unCamelify(method.getName()) };
 				}
+				String group = shellMapping.group();
 				for (String key : keys) {
 					Supplier<Availability> availabilityIndicator = findAvailabilityIndicator(keys, bean, method);
-					MethodTarget target = new MethodTarget(method, bean, shellMapping.value(), availabilityIndicator);
+					MethodTarget target = new MethodTarget(method, bean, shellMapping.value(), group, availabilityIndicator);
 					registry.register(key, target);
 					commands.put(key, target);
 				}
