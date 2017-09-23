@@ -22,9 +22,12 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.assertj.core.api.Assertions;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -57,6 +60,19 @@ import javax.validation.constraints.Max;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = HelpTest.Config.class)
 public class HelpTest {
+
+	private static Locale previousLocale;
+
+	@BeforeClass
+	public static void setAssumedLocale() {
+		previousLocale = Locale.getDefault();
+		Locale.setDefault(Locale.ENGLISH);
+	}
+
+	@AfterClass
+	public static void restorePreviousLocale() {
+		Locale.setDefault(previousLocale);
+	}
 
 	@Autowired
 	private Help help;
