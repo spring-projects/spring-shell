@@ -37,22 +37,22 @@ public class DynamicCommands {
         return connected ? Availability.available() : Availability.unavailable("you are not connected");
     }
 
-    @ShellMethod("Authenticate with the system")
+    @ShellMethod(value = "Authenticate with the system", group = "Dynamic Commands")
     public void authenticate(String credentials) {
         authenticated = "sesame".equals(credentials);
     }
 
-    @ShellMethod("Connect to the system")
+    @ShellMethod(value = "Connect to the system", group = "Dynamic Commands")
     public void connect() {
         connected = true;
     }
 
-    @ShellMethod("Disconnect from the system")
+    @ShellMethod(value = "Disconnect from the system", group = "Dynamic Commands")
     public void disconnect() {
         connected = false;
     }
 
-    @ShellMethod("Blow Everything up")
+    @ShellMethod(value = "Blow Everything up", group = "Dynamic Commands")
     @ShellMethodAvailability("dangerousAvailability")
     public String blowUp() {
         return "Boom!";

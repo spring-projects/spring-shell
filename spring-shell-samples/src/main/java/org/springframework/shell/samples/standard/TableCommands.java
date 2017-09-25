@@ -31,7 +31,7 @@ public class TableCommands {
 			"voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat " +
 			"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
-	@ShellMethod("Showcase Table rendering")
+	@ShellMethod(value = "Showcase Table rendering", group = "Tables")
 	public Table table() {
 		String[][] data = new String[3][3];
 		TableModel model = new ArrayTableModel(data);
