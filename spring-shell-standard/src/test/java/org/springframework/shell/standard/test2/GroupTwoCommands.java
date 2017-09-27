@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-/**
- * Contains default commands that ought to apply to each shell app.
- *
- * @author Eric Bottard
- */
-@ShellCommandGroup("Built-In Commands")
-package org.springframework.shell.standard.commands;
+package org.springframework.shell.standard.test2;
 
-import org.springframework.shell.standard.ShellCommandGroup;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+
+@ShellComponent
+public class GroupTwoCommands {
+
+	@ShellMethod(value = "Do Something.", group = "Explicit Group Method Level 2")
+	public void explicit2() {
+
+	}
+
+	@ShellMethod(value = "Do Something Else")
+	public void implicit2() {
+
+	}
+
+}

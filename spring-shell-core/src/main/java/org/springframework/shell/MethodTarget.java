@@ -29,15 +29,13 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Eric Bottard
  */
-public class MethodTarget {
+public class MethodTarget implements Command {
 
 	private final Method method;
 
 	private final Object bean;
 
-	private final String help;
-
-	private final String group;
+	private final Help help;
 
 	/**
 	 * If not null, returns whether or not the command is currently available. Implementations must be idempotent.
@@ -45,22 +43,21 @@ public class MethodTarget {
 	private final Supplier<Availability> availabilityIndicator;
 
 	public MethodTarget(Method method, Object bean, String help) {
-		this(method, bean, help, null, null);
+		this(method, bean, new Help(help, null), null);
 	}
 
 	public MethodTarget(Method method, Object bean, String help, Supplier<Availability> availabilityIndicator) {
-		this(method, bean, help, null, availabilityIndicator);
+		this(method, bean, new Help(help, null), availabilityIndicator);
 	}
 
-	public MethodTarget(Method method, Object bean, String help, String group, Supplier<Availability> availabilityIndicator) {
+	public MethodTarget(Method method, Object bean, Help help, Supplier<Availability> availabilityIndicator) {
 		Assert.notNull(method, "Method cannot be null");
 		Assert.notNull(bean, "Bean cannot be null");
-		Assert.hasText(help, String.format("Help cannot be blank when trying to define command based on '%s'", method));
+		Assert.hasText(help.getDescription(), String.format("Help cannot be blank when trying to define command based on '%s'", method));
 		ReflectionUtils.makeAccessible(method);
 		this.method = method;
 		this.bean = bean;
 		this.help = help;
-		this.group = group != null ? group : "";
 		this.availabilityIndicator = availabilityIndicator != null ? availabilityIndicator : () -> Availability.available();
 	}
 
@@ -68,30 +65,22 @@ public class MethodTarget {
 	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
 	 * in case of overloaded method.
 	 */
-	public static MethodTarget of(String name, Object bean, String help) {
-		return of(name, bean, help, null, null);
+	public static MethodTarget of(String name, Object bean, Help help) {
+		return of(name, bean, help, null);
 	}
 
 	/**
 	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
 	 * in case of overloaded method.
 	 */
-	public static MethodTarget of(String name, Object bean, String help, String group) {
-		return of(name, bean, help, group, null);
-	}
-
-	/**
-	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
-	 * in case of overloaded method.
-	 */
-	public static MethodTarget of(String name, Object bean, String help, String group, Supplier<Availability> availabilityIndicator) {
+	public static MethodTarget of(String name, Object bean, Help help, Supplier<Availability> availabilityIndicator) {
 		Set<Method> found = new HashSet<>();
 		ReflectionUtils.doWithMethods(bean.getClass(), found::add, m -> m.getName().equals(name));
 		if (found.size() != 1) {
 			throw new IllegalArgumentException(String.format("Could not find unique method named '%s' on object of class %s. Found %s",
 				name, bean.getClass(), found));
 		}
-		return new MethodTarget(found.iterator().next(), bean, help, group, availabilityIndicator);
+		return new MethodTarget(found.iterator().next(), bean, help, availabilityIndicator);
 	}
 
 	public Method getMethod() {
@@ -103,11 +92,11 @@ public class MethodTarget {
 	}
 
 	public String getHelp() {
-		return help;
+		return help.getDescription();
 	}
 
 	public String getGroup() {
-		return group;
+		return help.getGroup();
 	}
 
 	public Availability getAvailability() {
@@ -123,7 +112,7 @@ public class MethodTarget {
 
 		if (!method.equals(that.method)) return false;
 		if (!bean.equals(that.bean)) return false;
-		if (!group.equals(that.group)) return false;
+		if (!help.equals(that.help)) return false;
 		return help.equals(that.help);
 
 	}
@@ -133,7 +122,7 @@ public class MethodTarget {
 		int result = method.hashCode();
 		result = 31 * result + bean.hashCode();
 		result = 31 * result + help.hashCode();
-		result = 31 * result + group.hashCode();
+		result = 31 * result + help.hashCode();
 		return result;
 	}
 

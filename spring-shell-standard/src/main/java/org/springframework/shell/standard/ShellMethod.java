@@ -34,6 +34,13 @@ import java.lang.annotation.Target;
 public @interface ShellMethod {
 
 	/**
+	 * The default value for {@link #group()}, meaning that the group will be inherited from the explicit value set
+	 * on the containing element (class then package) or ultimately inferred.
+	 * @see ShellCommandGroup
+	 */
+	String INHERITED = "";
+
+	/**
 	 * The name(s) by which this method can be invoked via Spring Shell. If not specified, the actual method name
 	 * will be used (turning camelCase humps into "-").
 	 * @return explicit command name(s) to use
@@ -55,9 +62,10 @@ public @interface ShellMethod {
 
 	/**
 	 * The command group which this command belongs to. The command group is used when printing a list of
-	 * commands to group related commands.
+	 * commands to group related commands. By default, group is first looked up from owning class then package,
+	 * and if not explicitly set, is inferred from class name.
 	 * @return name of the command group
 	 */
-	String group() default "";
+	String group() default INHERITED;
 
 }
