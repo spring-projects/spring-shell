@@ -16,8 +16,7 @@
 
 package org.springframework.shell.standard;
 
-import org.hamcrest.Matchers;
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -26,12 +25,17 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.shell.Availability;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
+import org.springframework.shell.standard.test1.GroupOneCommands;
+import org.springframework.shell.standard.test2.GroupTwoCommands;
+import org.springframework.shell.standard.test2.GroupThreeCommands;
 import org.springframework.util.ReflectionUtils;
 
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
+import java.util.Map;
 
 /**
  * Unit tests for {@link StandardMethodTargetRegistrar}.
@@ -240,6 +244,22 @@ public class StandardMethodTargetRegistrarTest {
         public void wrong() {
 
         }
+    }
+
+    @Test
+    public void testGrouping() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(GroupOneCommands.class,
+                GroupTwoCommands.class, GroupThreeCommands.class);
+        registrar.setApplicationContext(context);
+        registrar.register(registry);
+
+        Map<String, MethodTarget> commands = registry.listCommands();
+        Assertions.assertThat(commands.get("explicit1").getGroup()).isEqualTo("Explicit Group Method Level 1");
+        Assertions.assertThat(commands.get("explicit2").getGroup()).isEqualTo("Explicit Group Method Level 2");
+        Assertions.assertThat(commands.get("explicit3").getGroup()).isEqualTo("Explicit Group Method Level 3");
+        Assertions.assertThat(commands.get("implicit1").getGroup()).isEqualTo("Implicit Group Package Level 1");
+        Assertions.assertThat(commands.get("implicit2").getGroup()).isEqualTo("Group Two Commands");
+        Assertions.assertThat(commands.get("implicit3").getGroup()).isEqualTo("Explicit Group 3 Class Level");
     }
 
 }

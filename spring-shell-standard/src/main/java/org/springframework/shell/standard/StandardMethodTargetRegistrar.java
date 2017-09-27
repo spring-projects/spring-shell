@@ -21,14 +21,15 @@ import static org.springframework.util.StringUtils.collectionToDelimitedString;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.shell.*;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * The standard implementation of {@link MethodTargetRegistrar} for new shell
@@ -61,15 +62,41 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 				if (keys.length == 0) {
 					keys = new String[] { Utils.unCamelify(method.getName()) };
 				}
-				String group = shellMapping.group();
+				String group = getOrInferGroup(method);
 				for (String key : keys) {
 					Supplier<Availability> availabilityIndicator = findAvailabilityIndicator(keys, bean, method);
-					MethodTarget target = new MethodTarget(method, bean, shellMapping.value(), group, availabilityIndicator);
+					MethodTarget target = new MethodTarget(method, bean, new Command.Help(shellMapping.value(), group), availabilityIndicator);
 					registry.register(key, target);
 					commands.put(key, target);
 				}
 			}, method -> method.getAnnotation(ShellMethod.class) != null);
 		}
+	}
+
+	/**
+	 * Gets the group from the following places, in order:<ul>
+	 *     <li>explicit annotation at the method level</li>
+	 *     <li>explicit annotation at the class level</li>
+	 *     <li>explicit annotation at the package level</li>
+	 *     <li>implicit from the class name</li>
+	 * </ul>
+	 */
+	private String getOrInferGroup(Method method) {
+		ShellMethod methodAnn = AnnotationUtils.getAnnotation(method, ShellMethod.class);
+		if (!methodAnn.group().equals(ShellMethod.INHERITED)) {
+			return methodAnn.group();
+		}
+		Class<?> clazz = method.getDeclaringClass();
+		ShellCommandGroup classAnn = AnnotationUtils.getAnnotation(clazz, ShellCommandGroup.class);
+		if (classAnn != null && !classAnn.value().equals(ShellCommandGroup.INHERIT_AND_INFER)) {
+			return classAnn.value();
+		}
+		ShellCommandGroup packageAnn = AnnotationUtils.getAnnotation(clazz.getPackage(), ShellCommandGroup.class);
+		if (packageAnn != null && !packageAnn.value().equals(ShellCommandGroup.INHERIT_AND_INFER)) {
+			return packageAnn.value();
+		}
+		// Shameful copy/paste from https://stackoverflow.com/questions/7593969/regex-to-split-camelcase-or-titlecase-advanced
+		return StringUtils.arrayToDelimitedString(clazz.getSimpleName().split("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])"), " ");
 	}
 
 	/**

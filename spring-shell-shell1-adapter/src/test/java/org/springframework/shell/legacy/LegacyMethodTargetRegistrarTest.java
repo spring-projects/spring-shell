@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.Command;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.MethodTargetRegistrar;
@@ -56,7 +57,7 @@ public class LegacyMethodTargetRegistrarTest {
 
 		assertThat(targets).contains(entry(
 				"register module",
-				MethodTarget.of("register", legacyCommands, "Register a new module")
+				MethodTarget.of("register", legacyCommands, new Command.Help("Register a new module"))
 		));
 	}
 

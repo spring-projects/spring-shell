@@ -83,7 +83,7 @@ public class ShellTest {
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
 		doThrow(new Exit()).when(resultHandler).handleResult(any());
 
-		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, "Say hello"));
+		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
 		try {
 			shell.run(inputProvider);
@@ -101,7 +101,7 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?", null);
 		doThrow(new Exit()).when(resultHandler).handleResult(isA(CommandNotFound.class));
 
-		shell.methodTargets = Collections.singletonMap("bonjour", MethodTarget.of("helloWorld", this, "Say hello"));
+		shell.methodTargets = Collections.singletonMap("bonjour", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
 		try {
 			shell.run(inputProvider);
@@ -118,7 +118,7 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "helloworld how are you doing ?", null);
 		doThrow(new Exit()).when(resultHandler).handleResult(isA(CommandNotFound.class));
 
-		shell.methodTargets = Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, "Say hello"));
+		shell.methodTargets = Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
 		try {
 			shell.run(inputProvider);
@@ -137,7 +137,7 @@ public class ShellTest {
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
 		doThrow(new Exit()).when(resultHandler).handleResult(any());
 
-		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, "Say hello"));
+		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
 		try {
 			shell.run(inputProvider);
@@ -156,7 +156,7 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "fail", null);
 		doThrow(new Exit()).when(resultHandler).handleResult(isA(SomeException.class));
 
-		shell.methodTargets = Collections.singletonMap("fail", MethodTarget.of("failing", this, "Will throw an exception"));
+		shell.methodTargets = Collections.singletonMap("fail", MethodTarget.of("failing", this, new Command.Help("Will throw an exception")));
 
 		try {
 			shell.run(inputProvider);
@@ -185,7 +185,7 @@ public class ShellTest {
 		shell.applicationContext = mock(ApplicationContext.class);
 		when(shell.applicationContext.getBeansOfType(MethodTargetRegistrar.class))
 				.thenReturn(Collections.singletonMap("foo", r -> {
-					r.register("hw", MethodTarget.of("helloWorld", this, "hellow world"));
+					r.register("hw", MethodTarget.of("helloWorld", this, new Command.Help("hellow world")));
 				}));
 
 		thrown.expect(ParameterResolverMissingException.class);
@@ -198,8 +198,8 @@ public class ShellTest {
 		when(parameterResolver.supports(any())).thenReturn(true);
 		when(shell.applicationContext.getBeansOfType(MethodTargetRegistrar.class))
 				.thenReturn(Collections.singletonMap("foo", r -> {
-					r.register("hello world", MethodTarget.of("helloWorld", this, "hellow world"));
-					r.register("another command", MethodTarget.of("helloWorld", this, "another command"));
+					r.register("hello world", MethodTarget.of("helloWorld", this, new Command.Help("hellow world")));
+					r.register("another command", MethodTarget.of("helloWorld", this, new Command.Help("another command")));
 				}));
 		shell.gatherMethodTargets();
 

@@ -596,6 +596,57 @@ But it's often good practice to put related commands in the same class, and the 
 can benefit from that.
 ====
 
+[[organizing-commands]]
+=== Organizing Commands
+When your shell starts to provide a lot of functionality, you may en up
+with a lot of commands, which could be confusing for your users. Typing `help`
+they would see a daunting list of commands, organized by alphabetical order,
+which may not always make sense.
+
+To alleviate this, Spring Shell provides the ability to group commands together,
+with reasonable defaults. Related commands would then end up in the same _group_ (_e.g._ `User Management Commands`)
+and be displayed together in the help screen and other places.
+
+By default, commands will be grouped according to the class they are implemented in,
+turning the camel case class name into separate words (so `URLRelatedCommands` becomes `URL Related Commands`).
+This is a very sensible default, as related commands are often already in the class anyway,
+for they need to use the same collaborating objects.
+
+If however, this behavior does not suit you, you can override the group for a
+command in the following ways, in order of priority:
+
+* specifying a `group()` in the `@ShellMethod` annotation
+* placing a `@ShellCommandGroup` on the class the command is defined in. This will apply
+the group for all commands defined in that class (unless overridden as above)
+* placing a `@ShellCommandGroup` on the package (_via_ `package-info.java`)
+the command is defined in. This will apply to all commands defined in the
+package (unless overridden at the method or class level as explained above)
+
+Here is a short example:
+[source,java]
+----
+public class UserCommands {
+    @ShellCommand(value = "This command ends up in the 'User Commands' group")
+    public void foo() {}
+
+    @ShellCommand(value = "This command ends up in the 'Other Commands' group",
+    	group = "Other Commands")
+    public void bar() {}
+}
+
+...
+
+@ShellCommandGroup("Other Commands")
+public class SomeCommands {
+	@ShellMethod(value = "This one is in 'Other Commands'")
+	public void wizz() {}
+
+	@ShellMethod(value = "And this one is 'Yet Another Group'",
+		group = "Yet Another Group")
+	public void last() {}
+}
+----
+
 [[built-in-commands]]
 === Built-In Commands
 Any application built using the `{starter-artifactId}` artifact

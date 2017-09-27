@@ -20,7 +20,6 @@ import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.junit.Assert.*;
 
-import org.hamcrest.collection.IsMapContaining;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -38,7 +37,7 @@ public class ConfigurableCommandRegistryTest {
 	@Test
 	public void testRegistration() {
 		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
-		registry.register("foo", MethodTarget.of("toString", this, "some command"));
+		registry.register("foo", MethodTarget.of("toString", this, new Command.Help("some command")));
 
 		assertThat(registry.listCommands(), hasKey("foo"));
 	}
@@ -46,14 +45,14 @@ public class ConfigurableCommandRegistryTest {
 	@Test
 	public void testDoubleRegistration() {
 		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
-		registry.register("foo", MethodTarget.of("toString", this, "some command"));
+		registry.register("foo", MethodTarget.of("toString", this, new Command.Help("some command")));
 
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("foo");
 		thrown.expectMessage("toString");
 		thrown.expectMessage("hashCode");
 
-		registry.register("foo", MethodTarget.of("hashCode", this, "some command"));
+		registry.register("foo", MethodTarget.of("hashCode", this, new Command.Help("some command")));
 	}
 
 }

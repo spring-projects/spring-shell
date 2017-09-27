@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * Contains default commands that ought to apply to each shell app.
- *
- * @author Eric Bottard
- */
-@ShellCommandGroup("Built-In Commands")
-package org.springframework.shell.standard.commands;
+@ShellCommandGroup("Implicit Group Package Level 1")
+package org.springframework.shell.standard.test1;
 
 import org.springframework.shell.standard.ShellCommandGroup;

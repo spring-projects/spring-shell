@@ -19,7 +19,6 @@ package org.springframework.shell.standard.commands;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -38,6 +37,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.shell.Command;
 import org.springframework.shell.standard.StandardParameterResolver;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.ParameterResolver;
@@ -48,7 +48,6 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.ReflectionUtils;
 
 import javax.validation.constraints.Max;
 
@@ -114,21 +113,21 @@ public class HelpTest {
 		public CommandRegistry shell() {
 			return () -> {
 				Map<String, MethodTarget> result = new HashMap<>();
-				MethodTarget methodTarget = MethodTarget.of("firstCommand", commands(), "A rather extensive description of some command.");
+				MethodTarget methodTarget = MethodTarget.of("firstCommand", commands(), new Command.Help("A rather extensive description of some command."));
 				result.put("first-command", methodTarget);
 				result.put("1st-command", methodTarget);
 
-				methodTarget = MethodTarget.of("secondCommand", commands(), "The second command. This one is known under several aliases as well.");
+				methodTarget = MethodTarget.of("secondCommand", commands(), new Command.Help("The second command. This one is known under several aliases as well."));
 				result.put("second-command", methodTarget);
 				result.put("yet-another-command", methodTarget);
 
-				methodTarget = MethodTarget.of("thirdCommand", commands(), "The last command.");
+				methodTarget = MethodTarget.of("thirdCommand", commands(), new Command.Help("The last command."));
 				result.put("third-command", methodTarget);
 
-				methodTarget = MethodTarget.of("firstCommandInGroup", commands(), "The first command in a separate group.", "Example Group");
+				methodTarget = MethodTarget.of("firstCommandInGroup", commands(), new Command.Help("The first command in a separate group.", "Example Group"));
 				result.put("first-group-command", methodTarget);
 
-				methodTarget = MethodTarget.of("secondCommandInGroup", commands(), "The second command in a separate group.", "Example Group");
+				methodTarget = MethodTarget.of("secondCommandInGroup", commands(), new Command.Help("The second command in a separate group.", "Example Group"));
 				result.put("second-group-command", methodTarget);
 
 				return result;
