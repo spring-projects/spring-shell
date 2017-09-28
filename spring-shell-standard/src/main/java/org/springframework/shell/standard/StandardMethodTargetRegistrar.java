@@ -73,6 +73,28 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 		}
 	}
 
+	private String getOrInferGroup(Method method) {
+		ShellMethod methodAnn = AnnotationUtils.getAnnotation(method, ShellMethod.class);
+		if (!methodAnn.group().equals(ShellMethod.INHERITED)) {
+			return methodAnn.group();
+		}
+		Class<?> clazz = method.getDeclaringClass();
+		ShellCommandGroup classAnn = AnnotationUtils.getAnnotation(clazz, ShellCommandGroup.class);
+		if (classAnn != null && !classAnn.value().equals(ShellCommandGroup.INHERIT_AND_INFER)) {
+			return classAnn.value();
+		}
+		ShellCommandGroup packageAnn = AnnotationUtils.getAnnotation(clazz.getPackage(), ShellCommandGroup.class);
+		if (packageAnn != null && !packageAnn.value().equals(ShellCommandGroup.INHERIT_AND_INFER)) {
+			return packageAnn.value();
+		}
+		// Shameful copy/paste from https://stackoverflow.com/questions/7593969/regex-to-split-camelcase-or-titlecase-advanced
+		return StringUtils.arrayToDelimitedString(clazz.getSimpleName().split("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])"), " ");
+	}
+
+	public static void main(String[] args) {
+		System.out.println(Arrays.asList("URLCommandsURL".split("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")));
+	}
+
 	/**
 	 * Gets the group from the following places, in order:<ul>
 	 *     <li>explicit annotation at the method level</li>
