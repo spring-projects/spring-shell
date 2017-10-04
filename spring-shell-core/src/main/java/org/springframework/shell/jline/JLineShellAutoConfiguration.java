@@ -61,12 +61,12 @@ import org.springframework.shell.Shell;
  * @author Florent Biville
  */
 @Configuration
-class JLineShellAutoConfiguration {
+public class JLineShellAutoConfiguration {
 
 	@Autowired
 	private PromptProvider promptProvider;
 
-	@Autowired
+	@Autowired @Lazy
 	private History history;
 
 	@Autowired
