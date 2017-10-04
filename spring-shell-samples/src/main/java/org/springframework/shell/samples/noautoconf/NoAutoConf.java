@@ -50,7 +50,7 @@ import org.springframework.shell.standard.commands.StandardCommandsAutoConfigura
 		StandardAPIAutoConfiguration.class,
 		// Built-In Commands
 		StandardCommandsAutoConfiguration.class,
-		// Allows ${} supports
+		// Allows ${} support
 		PropertyPlaceholderAutoConfiguration.class,
 		// Sample Commands
 		JCommanderCommands.class,
