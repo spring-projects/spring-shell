@@ -45,14 +45,14 @@ public class Commands {
 		System.out.println("You can go");
 	}
 
-	@ShellMethod("It's cool.")
-	public String foo(@Size(min = 2) String bar) {
-		return bar;
+	@ShellMethod("Change Password. Shows support for bean validation.")
+	public String changePassword(@Size(min = 8) String password) {
+		return "Password changed";
 	}
 	
-	@ShellMethod(value = "It's cool with a prefix.", prefix = "-")
-	public String fooPrefix(String bar) {
-		return bar;
+	@ShellMethod(value = "Shows non trivial character encoding.")
+	public String helloWorld() {
+		return "こんにちは世界";
 	}
 
 	@ShellMethod("Shows support for boolean parameters, with arity=0.")
@@ -65,12 +65,12 @@ public class Commands {
 		System.out.println("You said " + text);
 	}
 
-	@ShellMethod("Add stuff.")
-	public int add(int ahbahdisdonc, int b, int c) {
-		return ahbahdisdonc + b + c;
+	@ShellMethod("Add numbers.")
+	public int add(int a, int b, int c) {
+		return a + b + c;
 	}
 
-	@ShellMethod("Fails with an exception.")
+	@ShellMethod("Fails with an exception. Shows enum conversion.")
 	public void fail(ElementType elementType) {
 		throw new IllegalArgumentException("You said " + elementType);
 	}
