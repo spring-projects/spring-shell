@@ -361,11 +361,8 @@ public class StandardParameterResolver implements ParameterResolver {
 			}
 		}
 		catch (Exception e) {
-			unfinished = e;
-			set = false;
 			// Most likely what is already typed would fail resolution (eg type conversion failure)
-			// Exit early and let other parameters have a chance at being proposed
-			return Collections.emptyList();
+			return argumentKeysThatStartWithContextPrefix(methodParameter, context);
 		}
 
 		// There are 4 possible cases:
@@ -378,7 +375,8 @@ public class StandardParameterResolver implements ParameterResolver {
 		// key
 
 		if (!set) {
-			if (unfinished == null) { // case 1 above
+			if (unfinished == null) {
+				// case 1 above
 				return argumentKeysThatStartWithContextPrefix(methodParameter, context);
 			} // case 2
 			else {
