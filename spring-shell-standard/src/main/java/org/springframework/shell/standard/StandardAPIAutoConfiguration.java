@@ -16,6 +16,7 @@
 
 package org.springframework.shell.standard;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
@@ -52,7 +53,7 @@ public class StandardAPIAutoConfiguration {
 	}
 
 	@Bean
-	public ParameterResolver standardParameterResolver(ConversionService conversionService) {
+	public ParameterResolver standardParameterResolver(@Qualifier("spring-shell") ConversionService conversionService) {
 		return new StandardParameterResolver(conversionService);
 	}
 }

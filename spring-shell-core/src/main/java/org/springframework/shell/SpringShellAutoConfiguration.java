@@ -44,7 +44,7 @@ import javax.validation.Validator;
 public class SpringShellAutoConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean(ConversionService.class)
+	@Qualifier("spring-shell")
 	public ConversionService conversionService(ApplicationContext applicationContext) {
 		Collection<Converter> converters = applicationContext.getBeansOfType(Converter.class).values();
 		Collection<GenericConverter> genericConverters = applicationContext.getBeansOfType(GenericConverter.class).values();
@@ -61,6 +61,11 @@ public class SpringShellAutoConfiguration {
 			defaultConversionService.addConverterFactory(converterFactory);
 		}
 		return defaultConversionService;
+	}
+
+	@Bean
+	public ConversionService other() {
+		return new DefaultConversionService();
 	}
 
 	@Bean

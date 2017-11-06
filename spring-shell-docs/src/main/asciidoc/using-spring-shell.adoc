@@ -929,7 +929,8 @@ See xref:validating-command-arguments[] for more information.
 If you want to customize the `ConversionService` further, you can either
 
 * Have the default one injected in your code and act upon it in some way
-* Override it altogether with your own (custom converters will need to be registered by hand)
+* Override it altogether with your own (custom converters will need to be registered by hand).
+  The ConversionService used by Spring Shell needs to be https://docs.spring.io/spring/docs/4.3.12.RELEASE/spring-framework-reference/htmlsingle/#beans-autowired-annotation-qualifiers[qualified] as `"spring-shell"`.
 ====
 
 //==== Overriding the JLine Parser
