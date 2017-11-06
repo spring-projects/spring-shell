@@ -25,9 +25,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * A {@link ResultHandler} that prints thrown exceptions messages in red.
+ *
+ * <p>Also stores the last exception reported, so that details can be printed using a dedicated command.</p>
  *
  * @author Eric Bottard
  */
@@ -47,7 +50,8 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 	@Override
 	protected void doHandleResult(Throwable result) {
 		lastError = result;
-		terminal.writer().println(new AttributedString(result.toString(),
+		String toPrint = StringUtils.hasLength(result.getMessage()) ? result.getMessage() : result.toString();
+		terminal.writer().println(new AttributedString(toPrint,
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
 		if (commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
 			terminal.writer().println(
