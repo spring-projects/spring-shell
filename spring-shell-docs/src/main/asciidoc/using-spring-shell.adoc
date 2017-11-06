@@ -589,7 +589,25 @@ annotation on the availability method, specifying the names of the commands that
 ====
 The default value for the `@ShellMethodAvailability.value()` attribute is `"*"` and this serves as a special
 wildcard that matches all command names. It's thus easy to turn all commands of a single class on or off
-with a single availability method.
+with a single availability method. Here is an example below:
+[source,java]
+----
+@ShellComponent
+public class Toggles {
+  @ShellMethodAvailability
+  public Availability availabilityOnWeekdays() {
+    return Calendar.getInstance().get(DAY_OF_WEEK) == SUNDAY
+      ? Availability.available()
+      : Availability.unavailable("today is not Sunday");
+  }
+
+  @ShellMethod
+  public void foo() {}
+
+  @ShellMethod
+  public void bar() {}
+}
+----
 ====
 
 [TIP]
