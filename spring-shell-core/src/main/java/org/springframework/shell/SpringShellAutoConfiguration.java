@@ -45,7 +45,7 @@ public class SpringShellAutoConfiguration {
 
 	@Bean
 	@Qualifier("spring-shell")
-	public ConversionService conversionService(ApplicationContext applicationContext) {
+	public ConversionService shellConversionService(ApplicationContext applicationContext) {
 		Collection<Converter> converters = applicationContext.getBeansOfType(Converter.class).values();
 		Collection<GenericConverter> genericConverters = applicationContext.getBeansOfType(GenericConverter.class).values();
 		Collection<ConverterFactory> converterFactories = applicationContext.getBeansOfType(ConverterFactory.class).values();
@@ -61,11 +61,6 @@ public class SpringShellAutoConfiguration {
 			defaultConversionService.addConverterFactory(converterFactory);
 		}
 		return defaultConversionService;
-	}
-
-	@Bean
-	public ConversionService other() {
-		return new DefaultConversionService();
 	}
 
 	@Bean
