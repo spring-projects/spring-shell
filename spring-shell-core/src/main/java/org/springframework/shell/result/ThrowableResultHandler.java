@@ -34,7 +34,6 @@ import org.springframework.util.StringUtils;
  *
  * @author Eric Bottard
  */
-@Component
 public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable> {
 
 	/**

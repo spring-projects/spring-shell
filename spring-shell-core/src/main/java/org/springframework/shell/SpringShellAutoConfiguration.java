@@ -18,14 +18,15 @@ package org.springframework.shell;
 
 import java.util.Collection;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
@@ -33,14 +34,11 @@ import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.result.ResultHandlerConfig;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-
 /**
  * Creates supporting beans for running the Shell
  */
 @Configuration
-@ComponentScan(basePackageClasses = ResultHandlerConfig.class)
+@Import(ResultHandlerConfig.class)
 public class SpringShellAutoConfiguration {
 
 	@Bean

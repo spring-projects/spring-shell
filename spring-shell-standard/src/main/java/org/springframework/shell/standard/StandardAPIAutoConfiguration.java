@@ -19,6 +19,7 @@ package org.springframework.shell.standard;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTargetRegistrar;
@@ -33,7 +34,7 @@ import org.springframework.shell.ParameterResolver;
 public class StandardAPIAutoConfiguration {
 
 	@Bean
-	public ValueProvider commandValueProvider(CommandRegistry commandRegistry) {
+	public ValueProvider commandValueProvider(@Lazy CommandRegistry commandRegistry) {
 		return new CommandValueProvider(commandRegistry);
 	}
 

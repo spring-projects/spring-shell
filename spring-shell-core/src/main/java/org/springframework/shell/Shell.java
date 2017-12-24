@@ -118,7 +118,8 @@ public class Shell implements CommandRegistry {
 	 * </p>
 	 */
 	public void run(InputProvider inputProvider) throws IOException {
-		while (true) {
+		Object result = null;
+		while (!(result instanceof ExitRequest)) {
 			Input input;
 			try {
 				input = inputProvider.readInput();
@@ -130,8 +131,8 @@ public class Shell implements CommandRegistry {
 			if (input == null) {
 				break;
 			}
-			Object result = evaluate(input);
-			if (result != NO_INPUT) {
+			result = evaluate(input);
+			if (result != NO_INPUT && !(result instanceof ExitRequest)) {
 				resultHandler.handleResult(result);
 			}
 		}
@@ -155,7 +156,6 @@ public class Shell implements CommandRegistry {
 		String command = findLongestCommand(line);
 
 		List<String> words = input.words();
-		Object result;
 		if (command != null) {
 			MethodTarget methodTarget = methodTargets.get(command);
 			Availability availability = methodTarget.getAvailability();

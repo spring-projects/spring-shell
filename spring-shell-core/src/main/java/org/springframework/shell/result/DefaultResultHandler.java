@@ -25,11 +25,24 @@ import org.springframework.stereotype.Component;
  *
  * @author Eric Bottard
  */
-@Component
-public class DefaultResultHandler implements ResultHandler<Object> {
+public class DefaultResultHandler extends TerminalAwareResultHandler<Object> {
 
 	@Override
-	public void handleResult(Object result) {
-		System.out.println(String.valueOf(result));
+	protected void doHandleResult(Object result) {
+		if (!(result instanceof Throwable)) {
+			terminal.writer().println(String.valueOf(result));
+		}
+		else { // Assumes throwables will have been handled elsewhere, eg ThrowableResultHandler or
+				// non-interactive mode
+			if (result instanceof RuntimeException) {
+				throw (RuntimeException) result;
+			}
+			else if (result instanceof Error) {
+				throw (Error) result;
+			}
+			else {
+				throw new RuntimeException((Throwable) result);
+			}
+		}
 	}
 }
