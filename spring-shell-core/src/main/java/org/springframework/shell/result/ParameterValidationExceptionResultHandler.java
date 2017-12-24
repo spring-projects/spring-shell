@@ -40,7 +40,6 @@ import java.util.stream.StreamSupport;
  *
  * @author Eric Bottard
  */
-@Component
 public class ParameterValidationExceptionResultHandler
 		extends TerminalAwareResultHandler<ParameterValidationException> {
 

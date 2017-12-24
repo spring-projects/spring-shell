@@ -864,20 +864,20 @@ public class CustomPromptProvider implements PromptProvider {
 ----
 
 ==== Customizing Command Line Options Behavior
-Spring Shell comes with a default Spring Boot `ApplicationRunner`
-that bootstraps the Shell REPL. It sets up the JLine infrastructure and eventually
-calls `Shell.run()`.
+Spring Shell comes with two default Spring Boot `ApplicationRunners`:
 
-If the application is started with arguments that start with `@` though, it assumes those
-are local file names and tries to run commands contained in those files (with the same
-semantics as the xref:script-command[script command]) and then exits the process.
+* `InteractiveShellApplicationRunner` bootstraps the Shell REPL. It sets up the JLine infrastructure and eventually
+calls `Shell.run()`
+* `ScriptShellApplicationRunner` looks for program arguments that start with `@`, assumes those are local file names and
+tries to run commands contained in those files (with the same semantics as the xref:script-command[script command]) and
+then exits the process (by effectively disabling the `InteractiveShellApplicationRunner`, see below).
 
 If this behavior does not suit you, simply provide one (or more) bean of type `ApplicationRunner`
-and it will replace the default. You'll want to take inspiration from the `DefaultShellApplicationRunner`:
+and optionally disable the standard ones. You'll want to take inspiration from the `ScriptShellApplicationRunner`:
 
 [source,java]
 ----
-include::../../../../spring-shell-core/src/main/java/org/springframework/shell/jline/DefaultShellApplicationRunner.java[tag=documentation]
+include::../../../../spring-shell-core/src/main/java/org/springframework/shell/jline/ScriptShellApplicationRunner.java[tag=documentation]
 
 ...
 ----

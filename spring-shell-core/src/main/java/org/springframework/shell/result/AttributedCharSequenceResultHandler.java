@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
  *
  * @author Eric Bottard
  */
-@Component
 public class AttributedCharSequenceResultHandler extends TerminalAwareResultHandler<AttributedCharSequence> {
 
 	@Override

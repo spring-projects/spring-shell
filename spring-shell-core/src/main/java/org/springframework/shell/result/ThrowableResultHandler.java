@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
+import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +35,6 @@ import org.springframework.util.StringUtils;
  *
  * @author Eric Bottard
  */
-@Component
 public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable> {
 
 	/**
@@ -47,13 +47,16 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 	@Autowired @Lazy
 	private CommandRegistry commandRegistry;
 
+	@Autowired @Lazy
+	private InteractiveShellApplicationRunner interactiveRunner;
+
 	@Override
 	protected void doHandleResult(Throwable result) {
 		lastError = result;
 		String toPrint = StringUtils.hasLength(result.getMessage()) ? result.getMessage() : result.toString();
 		terminal.writer().println(new AttributedString(toPrint,
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
-		if (commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
+		if (interactiveRunner.isEnabled() && commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
 			terminal.writer().println(
 				new AttributedStringBuilder()
 					.append("Details of the error have been omitted. You can use the ", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
@@ -63,6 +66,17 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 			);
 		}
 		terminal.writer().flush();
+		if (!interactiveRunner.isEnabled()) {
+			if (result instanceof RuntimeException) {
+				throw (RuntimeException) result;
+			}
+			else if (result instanceof Error) {
+				throw (Error) result;
+			}
+			else {
+				throw new RuntimeException((Throwable) result);
+			}
+		}
 	}
 
 	/**

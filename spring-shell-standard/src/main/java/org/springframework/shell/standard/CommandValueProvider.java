@@ -36,8 +36,6 @@ public class CommandValueProvider extends ValueProviderSupport {
 
 	private final CommandRegistry commandRegistry;
 
-	@Lazy
-	@Autowired
 	public CommandValueProvider(CommandRegistry commandRegistry) {
 		this.commandRegistry = commandRegistry;
 	}

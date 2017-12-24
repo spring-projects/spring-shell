@@ -16,6 +16,9 @@
 
 package org.springframework.shell.jline;
 
+import static org.springframework.shell.jline.InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE;
+import static org.springframework.shell.jline.ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT;
+
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.List;
@@ -33,25 +36,20 @@ import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.context.ApplicationListener;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
 import org.springframework.shell.CompletingParsedLine;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.ExitRequest;
-import org.springframework.shell.Input;
-import org.springframework.shell.InputProvider;
-import org.springframework.shell.ResultHandler;
 import org.springframework.shell.Shell;
 
 /**
@@ -83,9 +81,15 @@ public class JLineShellAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(ApplicationRunner.class)
-	public ApplicationRunner applicationRunner(Parser parser) {
-		return new DefaultShellApplicationRunner(lineReader(), promptProvider, parser, shell);
+	@ConditionalOnProperty(prefix = SPRING_SHELL_INTERACTIVE, value = InteractiveShellApplicationRunner.ENABLED, havingValue = "true", matchIfMissing = true)
+	public ApplicationRunner interactiveApplicationRunner(Parser parser, Environment environment) {
+		return new InteractiveShellApplicationRunner(lineReader(), promptProvider, parser, shell, environment);
+	}
+
+	@Bean
+	@ConditionalOnProperty(prefix = SPRING_SHELL_SCRIPT, value = ScriptShellApplicationRunner.ENABLED, havingValue = "true", matchIfMissing = true)
+	public ApplicationRunner scriptApplicationRunner(Parser parser, ConfigurableEnvironment environment) {
+		return new ScriptShellApplicationRunner(parser, shell, environment);
 	}
 
 

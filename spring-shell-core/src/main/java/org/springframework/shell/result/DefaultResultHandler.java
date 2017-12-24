@@ -25,11 +25,10 @@ import org.springframework.stereotype.Component;
  *
  * @author Eric Bottard
  */
-@Component
-public class DefaultResultHandler implements ResultHandler<Object> {
+public class DefaultResultHandler extends TerminalAwareResultHandler<Object> {
 
 	@Override
-	public void handleResult(Object result) {
-		System.out.println(String.valueOf(result));
+	protected void doHandleResult(Object result) {
+		terminal.writer().println(String.valueOf(result));
 	}
 }

@@ -55,4 +55,24 @@ public class ResultHandlerConfig {
 		return new TerminalSizeAwareResultHandler();
 	}
 
+	@Bean
+	public AttributedCharSequenceResultHandler attributedCharSequenceResultHandler() {
+		return new AttributedCharSequenceResultHandler();
+	}
+
+	@Bean
+	public DefaultResultHandler defaultResultHandler() {
+		return new DefaultResultHandler();
+	}
+
+	@Bean
+	public ParameterValidationExceptionResultHandler parameterValidationExceptionResultHandler() {
+		return new ParameterValidationExceptionResultHandler();
+	}
+
+	@Bean
+	public ThrowableResultHandler throwableResultHandler() {
+		return new ThrowableResultHandler();
+	}
+
 }
