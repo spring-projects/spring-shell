@@ -16,12 +16,12 @@
 
 package org.springframework.shell.samples;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeExceptionMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +41,8 @@ public class ExampleApplicationRunnerConfiguration {
 	private Shell shell;
 
 	@Bean
-	public ApplicationRunner exampleApplicationRunner(ConfigurableEnvironment environment) {
-		return new ExampleApplicationRunner(shell, environment);
+	public CommandLineRunner exampleCommandLineRunner(ConfigurableEnvironment environment) {
+		return new ExampleCommandLineRunner(shell, environment);
 	}
 
 	@Bean
@@ -58,25 +58,25 @@ public class ExampleApplicationRunnerConfiguration {
 }
 
 /**
- * Example ApplicationRunner that shows how overall shell behavior can be customized. In
+ * Example CommandLineRunner that shows how overall shell behavior can be customized. In
  * this particular example, any program (process) arguments are assumed to be shell
  * commands that need to be executed (and the shell then quits).
  */
 @Order(InteractiveShellApplicationRunner.PRECEDENCE - 2)
-class ExampleApplicationRunner implements ApplicationRunner {
+class ExampleCommandLineRunner implements CommandLineRunner {
 
 	private Shell shell;
 
 	private final ConfigurableEnvironment environment;
 
-	public ExampleApplicationRunner(Shell shell, ConfigurableEnvironment environment) {
+	public ExampleCommandLineRunner(Shell shell, ConfigurableEnvironment environment) {
 		this.shell = shell;
 		this.environment = environment;
 	}
 
 	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		List<String> commandsToRun = args.getNonOptionArgs().stream()
+	public void run(String... args) throws Exception {
+		List<String> commandsToRun = Arrays.stream(args)
 				.filter(w -> !w.startsWith("@"))
 				.collect(Collectors.toList());
 		if (!commandsToRun.isEmpty()) {
