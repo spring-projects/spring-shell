@@ -29,20 +29,6 @@ public class DefaultResultHandler extends TerminalAwareResultHandler<Object> {
 
 	@Override
 	protected void doHandleResult(Object result) {
-		if (!(result instanceof Throwable)) {
-			terminal.writer().println(String.valueOf(result));
-		}
-		else { // Assumes throwables will have been handled elsewhere, eg ThrowableResultHandler or
-				// non-interactive mode
-			if (result instanceof RuntimeException) {
-				throw (RuntimeException) result;
-			}
-			else if (result instanceof Error) {
-				throw (Error) result;
-			}
-			else {
-				throw new RuntimeException((Throwable) result);
-			}
-		}
+		terminal.writer().println(String.valueOf(result));
 	}
 }

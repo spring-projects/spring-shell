@@ -80,8 +80,8 @@ class ExampleApplicationRunner implements ApplicationRunner {
 				.filter(w -> !w.startsWith("@"))
 				.collect(Collectors.toList());
 		if (!commandsToRun.isEmpty()) {
-			shell.run(new StringInputProvider(commandsToRun));
 			InteractiveShellApplicationRunner.disable(environment);
+			shell.run(new StringInputProvider(commandsToRun));
 		}
 	}
 }

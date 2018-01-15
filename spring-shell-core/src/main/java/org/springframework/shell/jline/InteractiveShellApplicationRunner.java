@@ -78,11 +78,15 @@ public class InteractiveShellApplicationRunner implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		boolean interactive = environment.getProperty(SPRING_SHELL_INTERACTIVE_ENABLED,boolean.class,  true);
+		boolean interactive = isEnabled();
 		if (interactive) {
 			InputProvider inputProvider = new JLineInputProvider(lineReader, promptProvider);
 			shell.run(inputProvider);
 		}
+	}
+
+	public boolean isEnabled() {
+		return environment.getProperty(SPRING_SHELL_INTERACTIVE_ENABLED,boolean.class,  true);
 	}
 
 	/**

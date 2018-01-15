@@ -47,13 +47,7 @@ public class TypeHierarchyResultHandler implements ResultHandler<Object> {
 		}
 		Class<?> clazz = result.getClass();
 		ResultHandler handler = getResultHandler(clazz);
-		try {
-			handler.handleResult(result);
-		}
-		catch (Exception e) {
-			// Protect against exceptions happening in ResultHandlers
-			getResultHandler(e.getClass()).handleResult(e);
-		}
+		handler.handleResult(result);
 	}
 
 	private ResultHandler getResultHandler(Class<?> clazz) {
