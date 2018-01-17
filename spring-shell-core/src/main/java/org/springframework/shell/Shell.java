@@ -119,12 +119,15 @@ public class Shell implements CommandRegistry {
 	 */
 	public void run(InputProvider inputProvider) throws IOException {
 		Object result = null;
-		while (!(result instanceof ExitRequest)) {
+		while (!(result instanceof ExitRequest)) { // Handles ExitRequest thrown from Quit command
 			Input input;
 			try {
 				input = inputProvider.readInput();
 			}
 			catch (Exception e) {
+				if (e instanceof ExitRequest) { // Handles ExitRequest thrown from hitting CTRL-C
+					break;
+				}
 				resultHandler.handleResult(e);
 				continue;
 			}
