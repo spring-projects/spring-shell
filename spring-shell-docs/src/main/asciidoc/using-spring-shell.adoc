@@ -647,10 +647,10 @@ Here is a short example:
 [source,java]
 ----
 public class UserCommands {
-    @ShellCommand(value = "This command ends up in the 'User Commands' group")
+    @ShellMethod(value = "This command ends up in the 'User Commands' group")
     public void foo() {}
 
-    @ShellCommand(value = "This command ends up in the 'Other Commands' group",
+    @ShellMethod(value = "This command ends up in the 'Other Commands' group",
     	group = "Other Commands")
     public void bar() {}
 }
@@ -803,7 +803,7 @@ to override the `clear` command:
 ----
 public class MyClear implements Clear.Command {
 
-    @ShellCommand("Clear the screen, only better.")
+    @ShellMethod("Clear the screen, only better.")
     public void clear() {
         // ...
     }
