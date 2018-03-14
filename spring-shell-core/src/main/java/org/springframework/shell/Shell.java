@@ -18,6 +18,8 @@ package org.springframework.shell;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +34,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.executable.ExecutableValidator;
+
+import org.jline.utils.Signals;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -134,6 +138,7 @@ public class Shell implements CommandRegistry {
 			if (input == null) {
 				break;
 			}
+
 			result = evaluate(input);
 			if (result != NO_INPUT && !(result instanceof ExitRequest)) {
 				resultHandler.handleResult(result);
@@ -166,13 +171,25 @@ public class Shell implements CommandRegistry {
 				List<String> wordsForArgs = wordsForArguments(command, words);
 				Method method = methodTarget.getMethod();
 
+				Thread commandThread = Thread.currentThread();
+				Object sh = Signals.register("INT", () -> commandThread.interrupt());
 				try {
 					Object[] args = resolveArgs(method, wordsForArgs);
 					validateArgs(args, methodTarget);
+
 					return ReflectionUtils.invokeMethod(method, methodTarget.getBean(), args);
+				}
+				catch (UndeclaredThrowableException e) {
+					if (e.getCause() instanceof InterruptedException || e.getCause() instanceof ClosedByInterruptException) {
+						Thread.interrupted(); // to reset interrupted flag
+					}
+					return e.getCause();
 				}
 				catch (Exception e) {
 					return e;
+				}
+				finally {
+					Signals.unregister("INT", sh);
 				}
 			}
 			else {
