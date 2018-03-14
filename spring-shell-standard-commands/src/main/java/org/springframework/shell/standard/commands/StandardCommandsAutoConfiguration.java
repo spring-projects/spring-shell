@@ -68,4 +68,11 @@ public class StandardCommandsAutoConfiguration {
 	public Script script(Shell shell, Parser parser) {
 		return new Script(shell, parser);
 	}
+
+	@Bean
+	@ConditionalOnMissingBean(History.Command.class)
+	@ConditionalOnProperty(prefix = "spring.shell.command.history", value = "enabled", havingValue = "true", matchIfMissing = true)
+	public History historyCommand(org.jline.reader.History jLineHistory) {
+		return new History(jLineHistory);
+	}
 }
