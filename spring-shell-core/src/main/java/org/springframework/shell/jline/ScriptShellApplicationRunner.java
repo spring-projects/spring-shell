@@ -47,7 +47,7 @@ public class ScriptShellApplicationRunner implements ApplicationRunner {
 //end::documentation[]
 
 	public static final String SPRING_SHELL_SCRIPT = "spring.shell.script";
-	public static final String ENABLED = "spring.shell.script";
+	public static final String ENABLED = "enabled";
 
 	/**
 	 * The name of the environment property that allows to disable the behavior of this
