@@ -257,6 +257,7 @@
 			</activation>
 			<modules>
 				<module>spring-shell-samples</module>
+				<module>spring-shell-test-samples</module>
 			</modules>
 		</profile>
 	</profiles>
