@@ -39,16 +39,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-shell1-adapter</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-jcommander-adapter</artifactId>
 			<scope>provided</scope>
 		</dependency>

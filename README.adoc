@@ -1,8 +1,7 @@
-= Spring Shell 2
+= Spring Shell 3
 
-Spring Shell 2 is an ongoing effort to completely rewrite
-https://github.com/spring-projects/spring-shell[Spring Shell] from scratch, making it more modular
-while maintaining some level of backward compatibility with your existing commands.
+Spring Shell 3 is a work to solely depend on Spring Boot 2.x and not trying to keep
+any backward compatibility with older Spring Shell 1.x nor Spring Boot 1.x.
 
 == Building
 ```
