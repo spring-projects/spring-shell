@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.springframework.shell</groupId>
 		<artifactId>spring-shell-parent</artifactId>
-		<version>2.0.2.BUILD-SNAPSHOT</version>
+		<version>3.0.0.BUILD-SNAPSHOT</version>
 	</parent>
 	
 	<description>Adapter classes to allow JCommander type annotations and parsing via Spring Shell 2</description>
