@@ -75,11 +75,11 @@ public class Help {
 	public interface Command {
 	}
 
-	private final List<ParameterResolver> parameterResolvers;
+	protected final List<ParameterResolver> parameterResolvers;
 
-	private CommandRegistry commandRegistry;
+	protected CommandRegistry commandRegistry;
 
-	private MessageInterpolator messageInterpolator = Validation.buildDefaultValidatorFactory()
+	protected MessageInterpolator messageInterpolator = Validation.buildDefaultValidatorFactory()
 			.getMessageInterpolator();
 
 	@Autowired
@@ -116,7 +116,7 @@ public class Help {
 	/**
 	 * Return a description of a specific command. Uses a layout inspired by *nix man pages.
 	 */
-	private CharSequence documentCommand(String command) {
+	protected CharSequence documentCommand(String command) {
 		MethodTarget methodTarget = commandRegistry.listCommands().get(command);
 		if (methodTarget == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
@@ -144,12 +144,12 @@ public class Help {
 		return result;
 	}
 
-	private void documentCommandName(AttributedStringBuilder result, String command, String help) {
+	protected void documentCommandName(AttributedStringBuilder result, String command, String help) {
 		result.append("NAME", AttributedStyle.BOLD).append("\n\t");
 		result.append(command).append(" - ").append(help).append("\n\n");
 	}
 
-	private void documentSynopsys(AttributedStringBuilder result, String command,
+	protected void documentSynopsys(AttributedStringBuilder result, String command,
 			List<ParameterDescription> parameterDescriptions) {
 		result.append("SYNOPSYS", AttributedStyle.BOLD).append("\n\t");
 		result.append(command, AttributedStyle.BOLD);
@@ -188,7 +188,7 @@ public class Help {
 		result.append("\n\n");
 	}
 
-	private void documentOptions(AttributedStringBuilder result, List<ParameterDescription> parameterDescriptions) {
+	protected void documentOptions(AttributedStringBuilder result, List<ParameterDescription> parameterDescriptions) {
 		if (!parameterDescriptions.isEmpty()) {
 			result.append("OPTIONS", AttributedStyle.BOLD).append("\n");
 		}
@@ -243,7 +243,7 @@ public class Help {
 		}
 	}
 
-	private void documentAliases(AttributedStringBuilder result, String command, MethodTarget methodTarget) {
+	protected void documentAliases(AttributedStringBuilder result, String command, MethodTarget methodTarget) {
 		Set<String> aliases = commandRegistry.listCommands().entrySet().stream()
 				.filter(e -> e.getValue().equals(methodTarget))
 				.map(Map.Entry::getKey)
@@ -258,7 +258,7 @@ public class Help {
 		}
 	}
 
-	private void documentAvailability(AttributedStringBuilder result, MethodTarget methodTarget) {
+	protected void documentAvailability(AttributedStringBuilder result, MethodTarget methodTarget) {
 		Availability availability = methodTarget.getAvailability();
 		if (!availability.isAvailable()) {
 			result.append("CURRENTLY UNAVAILABLE", AttributedStyle.BOLD).append("\n");
@@ -268,11 +268,11 @@ public class Help {
 		}
 	}
 
-	private String first(List<String> keys) {
+	protected String first(List<String> keys) {
 		return keys.iterator().next();
 	}
 
-	private CharSequence listCommands() {
+	protected CharSequence listCommands() {
 		Map<String, MethodTarget> commandsByName = commandRegistry.listCommands();
 
 		SortedMap<String, Map<String, MethodTarget>> commandsByGroupAndName = commandsByName.entrySet().stream()
@@ -310,15 +310,15 @@ public class Help {
 		return result;
 	}
 
-	private Comparator<Entry<MethodTarget, SortedSet<String>>> sortByFirstCommandName() {
+	protected Comparator<Entry<MethodTarget, SortedSet<String>>> sortByFirstCommandName() {
 		return Comparator.comparing(e -> e.getValue().first());
 	}
 
-	private boolean isAvailable(MethodTarget methodTarget) {
+	protected boolean isAvailable(MethodTarget methodTarget) {
 		return methodTarget.getAvailability().isAvailable();
 	}
 
-	private void appendUnderlinedFormal(AttributedStringBuilder result, ParameterDescription description) {
+	protected void appendUnderlinedFormal(AttributedStringBuilder result, ParameterDescription description) {
 		for (char c : description.formal().toCharArray()) {
 			if (c != ' ') {
 				result.append("" + c, AttributedStyle.DEFAULT.underline());
@@ -329,7 +329,7 @@ public class Help {
 		}
 	}
 
-	private List<ParameterDescription> getParameterDescriptions(MethodTarget methodTarget) {
+	protected List<ParameterDescription> getParameterDescriptions(MethodTarget methodTarget) {
 		return Utils.createMethodParameters(methodTarget.getMethod())
 				.flatMap(mp -> parameterResolvers.stream().filter(pr -> pr.supports(mp)).limit(1L)
 						.flatMap(pr -> pr.describe(mp)))
@@ -337,11 +337,11 @@ public class Help {
 
 	}
 
-	private static class DummyContext implements MessageInterpolator.Context {
+	protected static class DummyContext implements MessageInterpolator.Context {
 
-		private final ConstraintDescriptor<?> descriptor;
+		protected final ConstraintDescriptor<?> descriptor;
 
-		private DummyContext(ConstraintDescriptor<?> descriptor) {
+		protected DummyContext(ConstraintDescriptor<?> descriptor) {
 			this.descriptor = descriptor;
 		}
 
