@@ -35,7 +35,6 @@
 		<module>spring-shell-standard-commands</module>
 		<module>spring-shell-jcommander-adapter</module>
 		<module>spring-shell-table</module>
-		<module>spring-shell-docs</module>
 		<module>spring-shell-dependencies</module>
 		<module>spring-shell-starter</module>
 	</modules>
