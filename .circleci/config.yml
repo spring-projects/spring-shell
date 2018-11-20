@@ -8,7 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       #- image: circleci/openjdk:8u181-jdk-browsers-legacy
-      - image: maven/3.6.0-jdk-8
+      - image: maven/3.6.0-jdk-8-alpine
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
