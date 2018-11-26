@@ -6,6 +6,13 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+/**
+ *
+ * Basic commands for the illustrative Spring Shell Calculator application.
+ *
+ * @author Sualeh Fatehi <sualeh@hotmail.com>
+ *
+ **/
 @ShellComponent
 @ShellCommandGroup("Calculator Commands")
 public class CalculatorCommands {

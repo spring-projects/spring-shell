@@ -1,6 +1,12 @@
 package com.example;
 
-
+/**
+ *
+ * Program state for the illustrative Spring Shell Calculator application.
+ *
+ * @author Sualeh Fatehi <sualeh@hotmail.com>
+ *
+ **/
 public class CalculatorState {
 
   private int memory;

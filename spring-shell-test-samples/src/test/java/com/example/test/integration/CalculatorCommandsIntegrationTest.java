@@ -19,6 +19,14 @@ import com.example.CalculatorState;
 import com.example.test.BaseCalculatorTest;
 import com.example.test.TestCalculatorStateConfig;
 
+/**
+ *
+ * Illustrative integration tests for the Spring Shell Calculator application.
+ * These integration tests use Spring Shell auto-wired by the Spring Test Runner.
+ *
+ * @author Sualeh Fatehi <sualeh@hotmail.com>
+ *
+ **/
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(
     properties = {InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=" + false})
@@ -33,6 +41,10 @@ public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
   @Autowired
   private CalculatorState state;
 
+  /**
+	 * Test "happy path" or basic addition with positive numbers
+	 * and zeroes. Use Spring Shell auto-wired by the Spring Test Runner.
+	 **/	
   @Test
   public void testAdd() {
     final String command = "add";
@@ -49,6 +61,12 @@ public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
     assertThat(state.getMemory(), is(0));
   }
 
+  /**
+	 * Test "happy path" or basic addition with positive numbers
+	 * and zeroes, using calculator memory (program state).
+	 * Use Spring Shell and calculator memory auto-wired by 
+	 * the Spring Test Runner.
+	 **/	
   @Test
   public void testAddToMemory() {
     final String command = "add-to-memory";
