@@ -5,13 +5,13 @@
 	<groupId>org.springframework.shell</groupId>
 	<artifactId>spring-shell-parent</artifactId>
 	<name>Spring Shell Parent POM</name>
-	<version>2.0.2.BUILD-SNAPSHOT</version>
+	<version>3.0.0.BUILD-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.8.RELEASE</version>
+		<version>2.0.6.RELEASE</version>
 		<relativePath />
 	</parent>
 	<scm>
@@ -26,7 +26,6 @@
 		<assertj.version>3.8.0</assertj.version>
 		<java.version>1.8</java.version>
 		<jcommander.version>1.48</jcommander.version>
-		<shell1.version>1.2.0.RELEASE</shell1.version>
 	</properties>
 	
 	<modules>
@@ -35,10 +34,10 @@
 		<module>spring-shell-standard</module>
 		<module>spring-shell-standard-commands</module>
 		<module>spring-shell-jcommander-adapter</module>
-		<module>spring-shell-shell1-adapter</module>
-		<module>spring-shell-starter</module>
 		<module>spring-shell-table</module>
 		<module>spring-shell-docs</module>
+		<module>spring-shell-dependencies</module>
+		<module>spring-shell-starter</module>
 	</modules>
 
 	<dependencyManagement>
@@ -47,42 +46,37 @@
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-core</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
+				<version>3.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-core-test-support</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
+				<version>3.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-standard</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
+				<version>3.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-standard-commands</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell-shell1-adapter</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
+				<version>3.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-jcommander-adapter</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
+				<version>3.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-starter</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
+				<version>3.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-table</artifactId>
-				<version>2.0.2.BUILD-SNAPSHOT</version>
+				<version>3.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<!-- OTHER DEPS -->
 			<dependency>
@@ -107,12 +101,6 @@
 				<artifactId>assertj-core</artifactId>
 				<version>${assertj.version}</version>
 				<scope>test</scope>
-			</dependency>
-			<!-- The following dependency is Spring Shell 1. Note the spring-shell artifactId is not used by Shell 2-->
-			<dependency>
-				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell</artifactId>
-				<version>${shell1.version}</version>
 			</dependency>
 
 		</dependencies>
