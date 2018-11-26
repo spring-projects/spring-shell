@@ -6,6 +6,13 @@ import javax.validation.constraints.NotNull;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTarget;
 
+/**
+*
+* Utility methods for tests.
+*
+* @author Sualeh Fatehi <sualeh@hotmail.com>
+*
+**/
 public class BaseCalculatorTest {
 
   protected <T> T invoke(final MethodTarget methodTarget, final Object... args) {
