@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package org.springframework.shell;
+
+import java.util.Objects;
 
 /**
  * Represents a proposal for TAB completion, made not only of the text to append, but also metadata about the proposal.
@@ -117,5 +119,22 @@ public class CompletionProposal {
 	@Override
 	public String toString() {
 		return value;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CompletionProposal that = (CompletionProposal) o;
+		return dontQuote == that.dontQuote &&
+				Objects.equals(value, that.value) &&
+				Objects.equals(displayText, that.displayText) &&
+				Objects.equals(description, that.description) &&
+				Objects.equals(category, that.category);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(value, displayText, description, category, dontQuote);
 	}
 }
