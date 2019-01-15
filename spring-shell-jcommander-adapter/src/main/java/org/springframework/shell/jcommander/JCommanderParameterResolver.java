@@ -104,9 +104,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 
 	private JCommander createJCommander(MethodParameter methodParameter) {
 		Object pojo = BeanUtils.instantiateClass(methodParameter.getParameterType());
-		JCommander jCommander = new JCommander(pojo);
-		jCommander.setAcceptUnknownOptions(true);
-		return jCommander;
+		return new JCommander(pojo);
 	}
 
 	@Override
@@ -122,7 +120,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 						unCamelify(j.getParameterized().getType().getSimpleName()))
 								.keys(Arrays.asList(j.getParameter().names()))
 								.help(j.getDescription())
-								.mandatoryKey(!j.equals(jCommander.getMainParameter()))
+								.mandatoryKey(!j.equals(jCommander.getMainParameterValue()))
 								// Not ideal as this does not take reverse-conversion into account, but just toString()
 								.defaultValue(j.getDefault() == null ? "" : String.valueOf(j.getDefault()))
 								.elementDescriptor(
@@ -136,7 +134,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	private Stream<com.beust.jcommander.ParameterDescription> streamAllJCommanderDescriptions(JCommander jCommander) {
 		return Stream.concat(
 				jCommander.getParameters().stream(),
-				jCommander.getMainParameter() != null ? Stream.of(jCommander.getMainParameter()) : Stream.empty());
+				jCommander.getMainParameterValue() != null ? Stream.of(jCommander.getMainParameterValue()) : Stream.empty());
 	}
 
 	// Java 9+ warn if you try to reflect on JDK types
