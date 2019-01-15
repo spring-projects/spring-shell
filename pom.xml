@@ -25,7 +25,7 @@
 		<jline.version>3.4.0</jline.version>
 		<assertj.version>3.8.0</assertj.version>
 		<java.version>1.8</java.version>
-		<jcommander.version>1.48</jcommander.version>
+		<jcommander.version>1.72</jcommander.version>
 		<shell1.version>1.2.0.RELEASE</shell1.version>
 	</properties>
 	
