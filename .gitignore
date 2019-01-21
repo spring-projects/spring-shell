@@ -10,3 +10,5 @@ target/
 *.iws
 .DS_Store
 spring-shell.log
+
+.mvn/wrapper/maven-wrapper.jar
