@@ -88,7 +88,6 @@ import javax.validation.metadata.ParameterDescriptor;
  * @author Florent Biville
  * @author Camilo Gonzalez
  */
-@Component
 public class StandardParameterResolver implements ParameterResolver {
 
 	private final ConversionService conversionService;
@@ -129,9 +128,8 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	@Override
 	public ValueResult resolve(MethodParameter methodParameter, List<String> wordsBuffer) {
-		String prefix = prefixForMethod(methodParameter.getMethod());
 
-		List<String> words = wordsBuffer.stream().filter(w -> !w.isEmpty()).collect(Collectors.toList());
+		List<String> words = wordsBuffer.stream().filter(w -> w != null).collect(Collectors.toList());
 
 		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), wordsBuffer);
 		parameterCache.clear();
