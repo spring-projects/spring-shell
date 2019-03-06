@@ -147,7 +147,7 @@
 							<attach>false</attach>
 							<links>
 								<link>
-									http://docs.spring.io/spring-framework/docs/current/javadoc-api/
+									https://docs.spring.io/spring-framework/docs/current/javadoc-api/
 								</link>
 								<link>http://jcommander.org/apidocs/</link>
 								<link>https://docs.spring.io/spring-shell/docs/1.2.0.RELEASE/api/</link>
