@@ -5,8 +5,8 @@ apply plugin: 'eclipse'
 apply plugin: 'application'
 
 repositories {
-	maven { url "http://repo.springsource.org/libs-milestone" }
-	maven { url "http://repo.springsource.org/libs-release" }
+	maven { url "https://repo.springsource.org/libs-milestone" }
+	maven { url "https://repo.springsource.org/libs-release" }
 	mavenLocal()
 	mavenCentral()
 }

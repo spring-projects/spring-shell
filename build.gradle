@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url 'http://repo.springsource.org/plugins-release' }
+        maven { url 'https://repo.springsource.org/plugins-release' }
     }
     dependencies {
         classpath 'io.spring.gradle:docbook-reference-plugin:0.3.1'
@@ -13,8 +13,8 @@ group = 'org.springframework.shell'
 
 repositories {
   mavenCentral()
-  maven { url "http://repo.springsource.org/libs-snapshot" }
-  maven { url "http://repo.springsource.org/plugins-release" }
+  maven { url "https://repo.springsource.org/libs-snapshot" }
+  maven { url "https://repo.springsource.org/plugins-release" }
 }
 
 apply plugin: "java"
@@ -73,8 +73,8 @@ javadoc {
       ]
   
      links = [
-        "http://static.springframework.org/spring/docs/3.1.x/javadoc-api",
-        "http://download.oracle.com/javase/6/docs/api",
+        "https://docs.spring.io/spring/docs/3.1.x/javadoc-api",
+        "https://download.oracle.com/javase/6/docs/api",
      ]
      
      //exclude "org/springframework/data/redis/config/**"
