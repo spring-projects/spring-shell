@@ -115,7 +115,7 @@ public abstract class AbstractShell extends AbstractShellStatusPublisher impleme
 				line = line.substring(line.lastIndexOf("*/") + 2);
 			}
 			// We also support inline comments (but only at start of line, otherwise valid
-			// command options like http://www.helloworld.com will fail as per ROO-517)
+			// command options like https://www.helloworld.com will fail as per ROO-517)
 			if (!inBlockComment && (line.trim().startsWith("//") || line.trim().startsWith("#"))) { // # support in ROO-1116
 				line = "";
 			}

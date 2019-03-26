@@ -1,9 +1,9 @@
 SPRING SHELL CHANGELOG
 ======================
-http://www.springsource.org/spring-shell
+https://www.springsource.org/spring-shell
 
-Commit changelog: http://github.com/SpringSource/spring-shell/tree/[version]
-Issues changelog: http://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10361
+Commit changelog: https://github.com/SpringSource/spring-shell/tree/[version]
+Issues changelog: https://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10361
 
 Changes in version 1.1.0 RELEASE (2014-7-25)
 -------------------------------------
