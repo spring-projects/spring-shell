@@ -23,4 +23,4 @@ as sections of interest in the reference documentation.
 
 5. ADDITIONAL RESOURCES
 
-Spring Shell homepage: http://www.springsource.org/spring-shell
+Spring Shell homepage: https://www.springsource.org/spring-shell
