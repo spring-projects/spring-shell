@@ -26,7 +26,7 @@ name: Spring Shell
 project: spring-shell
 
 # Project github URL
-github_repo_url: http://github.com/spring-projects/spring-shell
+github_repo_url: https://github.com/spring-projects/spring-shell
 
 # If you want to include a custom pom.xml or gradle template set these value to true and add _include files
 custom_pom_template: false
