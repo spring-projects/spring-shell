@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<partintro version="5.0" xmlns="http://docbook.org/ns/docbook"
-           xmlns:ns5="http://www.w3.org/2000/svg"
-           xmlns:ns4="http://www.w3.org/1999/xhtml"
-           xmlns:ns3="http://www.w3.org/1998/Math/MathML"
-           xmlns:ns2="http://www.w3.org/1999/xlink"
-           xmlns:ns="http://docbook.org/ns/docbook">
+<partintro version="5.0" xmlns="https://docbook.org/ns/docbook"
+           xmlns:ns5="https://www.w3.org/2000/svg"
+           xmlns:ns4="https://www.w3.org/1999/xhtml"
+           xmlns:ns3="https://www.w3.org/1998/Math/MathML"
+           xmlns:ns2="https://www.w3.org/1999/xlink"
+           xmlns:ns="https://docbook.org/ns/docbook">
   <para>The Spring Shell provides an interactive shell that lets you
   contribute commands using a simple Spring based programming model.</para>
 

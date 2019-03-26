@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="shell" xmlns="http://docbook.org/ns/docbook"
-         xmlns:xlink="http://www.w3.org/1999/xlink"
-         xmlns:xi="http://www.w3.org/2001/XInclude"
-         xmlns:ns5="http://www.w3.org/1999/xhtml"
-         xmlns:ns4="http://www.w3.org/2000/svg"
-         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
-         xmlns:ns="http://docbook.org/ns/docbook">
+<chapter version="5.0" xml:id="shell" xmlns="https://docbook.org/ns/docbook"
+         xmlns:xlink="https://www.w3.org/1999/xlink"
+         xmlns:xi="https://www.w3.org/2001/XInclude"
+         xmlns:ns5="https://www.w3.org/1999/xhtml"
+         xmlns:ns4="https://www.w3.org/2000/svg"
+         xmlns:ns3="https://www.w3.org/1998/Math/MathML"
+         xmlns:ns="https://docbook.org/ns/docbook">
   <title>Spring Shell</title>
 
   <para>The core components of the shell are its plugin model, built-in
@@ -49,13 +49,13 @@
       <literal>spring-shell-plugin.xml </literal> from the sample
       application:</para>
 
-      <programlisting language="xml">&lt;beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context 
-       http://www.springframework.org/schema/context/spring-context-3.1.xsd"&gt;
+      <programlisting language="xml">&lt;beans xmlns="https://www.springframework.org/schema/beans"
+       xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="https://www.springframework.org/schema/context"
+       xsi:schemaLocation="https://www.springframework.org/schema/beans 
+       https://www.springframework.org/schema/beans/spring-beans.xsd
+       https://www.springframework.org/schema/context 
+       https://www.springframework.org/schema/context/spring-context-3.1.xsd"&gt;
 
   &lt;context:component-scan 
            base-package="org.springframework.shell.samples.helloworld.commands" /&gt;
@@ -203,9 +203,9 @@ public class HelloWorldCommands implements CommandMarker {
     other plugins.</para>
 
     <para>To make cool "<link
-    xlink:href="http://en.wikipedia.org/wiki/ASCII_art">ASCII art</link>"
+    xlink:href="https://en.wikipedia.org/wiki/ASCII_art">ASCII art</link>"
     banners the website <link
-    xlink:href="http://patorjk.com/software/taag">http://patorjk.com/software/taag</link>
+    xlink:href="http://patorjk.com/software/taag/">http://patorjk.com/software/taag/</link>
     is quite neat!</para>
   </section>
 
@@ -272,7 +272,7 @@ public class HelloWorldCommands implements CommandMarker {
       <listitem>
         <para><literal>--profiles</literal> - Specifies values for the system
         property spring.profiles.active so that Spring 3.1 and greater <link
-        xlink:href="http://blog.springsource.com/2011/02/11/spring-framework-3-1-m1-released/">profile
+        xlink:href="https://spring.io/blog/2011/02/11/spring-framework-3-1-m1-released/">profile
         support </link>is enabled.</para>
       </listitem>
 

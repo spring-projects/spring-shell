@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter version="5.0" xml:id="dev-shell"
-         xmlns="http://docbook.org/ns/docbook"
-         xmlns:xlink="http://www.w3.org/1999/xlink"
-         xmlns:xi="http://www.w3.org/2001/XInclude"
-         xmlns:ns5="http://www.w3.org/1999/xhtml"
-         xmlns:ns4="http://www.w3.org/2000/svg"
-         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
-         xmlns:ns="http://docbook.org/ns/docbook">
+         xmlns="https://docbook.org/ns/docbook"
+         xmlns:xlink="https://www.w3.org/1999/xlink"
+         xmlns:xi="https://www.w3.org/2001/XInclude"
+         xmlns:ns5="https://www.w3.org/1999/xhtml"
+         xmlns:ns4="https://www.w3.org/2000/svg"
+         xmlns:ns3="https://www.w3.org/1998/Math/MathML"
+         xmlns:ns="https://docbook.org/ns/docbook">
   <title>Developing Spring Shell Applications</title>
 
   <para>Contributing commands to the shell is very easy. There are only a few
@@ -214,7 +214,7 @@ public class HelloWorldCommands implements CommandMarker {
     application plugin from gradle to create a bin directory with a startup
     script for windows and Unix and places all dependent jars in a lib
     directory. Maven has a similar plugin - the <link
-    xlink:href="http://mojo.codehaus.org/appassembler/appassembler-maven-plugin/">AppAssembler</link>
+    xlink:href="https://mojo.codehaus.org/appassembler/appassembler-maven-plugin/">AppAssembler</link>
     plugin.</para>
 
     <para>The main class of the shell is
