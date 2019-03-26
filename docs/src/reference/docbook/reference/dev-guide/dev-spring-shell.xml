@@ -214,7 +214,7 @@ public class HelloWorldCommands implements CommandMarker {
     application plugin from gradle to create a bin directory with a startup
     script for windows and Unix and places all dependent jars in a lib
     directory. Maven has a similar plugin - the <link
-    xlink:href="http://mojo.codehaus.org/appassembler/appassembler-maven-plugin/">AppAssembler</link>
+    xlink:href="https://mojo.codehaus.org/appassembler/appassembler-maven-plugin/">AppAssembler</link>
     plugin.</para>
 
     <para>The main class of the shell is
