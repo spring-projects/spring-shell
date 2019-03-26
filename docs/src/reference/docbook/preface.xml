@@ -12,7 +12,7 @@
   model.</para>
 
   <para>The shell has been extracted from the <link
-  ns2:href="http://www.springsource.org/spring-roo/">Spring Roo
+  ns2:href="https://www.springsource.org/spring-roo/">Spring Roo
   project</link>, giving it a strong foundation and rich feature set. One
   significant change from Spring Roo is that the plugin model is no longer
   based on OSGi but instead uses the Spring IoC container to discover commands
@@ -34,7 +34,7 @@
 
     <listitem>
       <para>Inheritance of the <link
-      ns2:href="http://static.springsource.org/spring-roo/reference/html-single/index.html#usage-shell">Roo
+      ns2:href="https://docs.spring.io/spring-roo/reference/html-single/index.html#usage-shell">Roo
       Shell features</link>, most notably tab completion, colorization, and
       script execution.</para>
     </listitem>
