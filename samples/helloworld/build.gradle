@@ -8,7 +8,7 @@ repositories {
 	maven { url "https://repo.springsource.org/libs-milestone" }
 	maven { url "https://repo.springsource.org/libs-release" }
 	mavenLocal()
-	mavenCentral()
+	maven { url 'https://repo.maven.apache.org/maven2/' }
 }
 
 dependencies {
