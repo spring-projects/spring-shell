@@ -84,7 +84,7 @@ public class TranslationCommands {
       this.service = service;
     }
 
-    @ShellMethod"Translate text from one language to another.")
+    @ShellMethod("Translate text from one language to another.")
     public String translate(
       @ShellOption(mandatory = true) String text,
       @ShellOption(mandatory = true, defaultValue = "en_US") Locale from,
