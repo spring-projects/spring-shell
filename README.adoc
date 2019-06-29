@@ -18,3 +18,5 @@ The project comes with a sample application, showcasing the various ways you can
 
 From there, try typing `help` or `help <commmand>` at the shell prompt.
 
+== Quick Start
+See instructions on wbe site: https://projects.spring.io/spring-shell/
