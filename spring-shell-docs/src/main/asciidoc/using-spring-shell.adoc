@@ -619,7 +619,7 @@ can benefit from that.
 
 [[organizing-commands]]
 === Organizing Commands
-When your shell starts to provide a lot of functionality, you may en up
+When your shell starts to provide a lot of functionality, you may end up
 with a lot of commands, which could be confusing for your users. Typing `help`
 they would see a daunting list of commands, organized by alphabetical order,
 which may not always make sense.
