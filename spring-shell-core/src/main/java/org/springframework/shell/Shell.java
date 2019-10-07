@@ -309,11 +309,14 @@ public class Shell implements CommandRegistry {
 		List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
 		Object[] args = new Object[parameters.size()];
 		Arrays.fill(args, UNRESOLVED);
-		for (ParameterResolver resolver : parameterResolvers) {
-			for (int argIndex = 0; argIndex < args.length; argIndex++) {
+		for (int argIndex = 0; argIndex < args.length; argIndex++) {
+			for (ParameterResolver resolver : parameterResolvers) {
 				MethodParameter parameter = parameters.get(argIndex);
 				if (args[argIndex] == UNRESOLVED && resolver.supports(parameter)) {
-					args[argIndex] = resolver.resolve(parameter, wordsForArgs).resolvedValue();
+					try {
+						//StandardParameterResolver will throw a runtime exception when it's unable to resolve the parameter
+						args[argIndex] = resolver.resolve(parameter, wordsForArgs).resolvedValue();
+					} catch(RuntimeException e) {}
 				}
 			}
 		}

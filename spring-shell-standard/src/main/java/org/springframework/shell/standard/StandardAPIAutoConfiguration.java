@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTargetRegistrar;
@@ -53,8 +54,19 @@ public class StandardAPIAutoConfiguration {
 		return new StandardMethodTargetRegistrar();
 	}
 
-	@Bean
+    @Bean
+    @Order(1)
 	public ParameterResolver standardParameterResolver(@Qualifier("spring-shell") ConversionService conversionService) {
 		return new StandardParameterResolver(conversionService);
-	}
+    }
+    
+    @Bean
+    public ParameterResolver optionaParameterResolver() {
+        return new OptionalParameterResolver();
+    }
+
+    @Bean
+    public ParameterResolver nullableParameterResolver() {
+        return new NullableParameterResolver();
+    }
 }

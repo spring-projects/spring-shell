@@ -85,6 +85,7 @@ public @interface ShellOption {
 	 * annotation at all.
 	 * @return true to indicate that the {@link StandardParameterResolver} should not be used for this parameter
 	 */
+    @Deprecated
 	boolean optOut() default false;
 
 	interface NoValueProvider extends ValueProvider {
