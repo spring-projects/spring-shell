@@ -1,11 +1,14 @@
 package com.example;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * Program state for the illustrative Spring Shell Calculator application.
  *
  * @author Sualeh Fatehi
  */
+@Component
 public class CalculatorState {
 
 	private int memory;

@@ -38,6 +38,7 @@ public class TypeHierarchyResultHandler implements ResultHandler<Object> {
 
 	private Map<Class<?>, ResultHandler<?>> resultHandlers = new HashMap<>();
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void handleResult(Object result) {
 		if (result == null) { // void methods
