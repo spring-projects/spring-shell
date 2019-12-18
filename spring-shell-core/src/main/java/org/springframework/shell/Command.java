@@ -46,9 +46,9 @@ public interface Command {
 		}
 
 		public Help(String description, String group) {
-			Assert.isTrue(StringUtils.hasText(description), "Command description cannot be null or empty");
-			this.description = description;
 			this.group = StringUtils.hasText(group) ? group : "";
+			Assert.isTrue(StringUtils.hasText(description), "Command description cannot be null or empty group='" + this.group + "'");
+			this.description = description;
 		}
 
 		public String getDescription() {
