@@ -16,6 +16,7 @@
 
 package org.springframework.shell;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,5 +34,13 @@ public class CommandNotFound extends RuntimeException {
 	@Override
 	public String getMessage() {
 		return String.format("No command found for '%s'", words.stream().collect(Collectors.joining(" ")));
+	}
+
+	/**
+	 * return a copy of the words inputted by the user to avoid mutation
+	 * @return
+	 */
+	public List<String> getWords(){
+		return new ArrayList<>(words);
 	}
 }
