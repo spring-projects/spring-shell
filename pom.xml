@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.6.RELEASE</version>
+		<version>2.1.9.RELEASE</version>
 		<relativePath />
 	</parent>
 	<scm>
@@ -35,6 +35,7 @@
 		<module>spring-shell-standard-commands</module>
 		<module>spring-shell-jcommander-adapter</module>
 		<module>spring-shell-table</module>
+		<module>spring-shell-websocket</module>
 		<module>spring-shell-docs</module>
 		<module>spring-shell-dependencies</module>
 		<module>spring-shell-starter</module>
@@ -77,6 +78,11 @@
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-table</artifactId>
 				<version>3.0.0.BUILD-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-websocket</artifactId>
+				<version>1.0.0.BUILD-RELEASE</version>
 			</dependency>
 			<!-- OTHER DEPS -->
 			<dependency>
@@ -246,6 +252,7 @@
 			<modules>
 				<module>spring-shell-samples</module>
 				<module>spring-shell-test-samples</module>
+				<module>spring-shell-websocket-samples</module>
 			</modules>
 		</profile>
 	</profiles>

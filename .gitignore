@@ -10,3 +10,6 @@ target/
 *.iws
 .DS_Store
 spring-shell.log
+
+.vscode/
+.sts4-cache/

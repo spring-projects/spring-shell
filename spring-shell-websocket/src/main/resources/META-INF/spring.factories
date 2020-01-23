@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.springframework.shell.websocket.configuration.ShellAutoConfiguration,\
+org.springframework.shell.websocket.configuration.WebSocketHandlerAutoConfiguration,\
+org.springframework.shell.websocket.configuration.WebSocketSecurityAutoConfiguration,\
+org.springframework.shell.websocket.configuration.WebSocketAutoConfiguration
