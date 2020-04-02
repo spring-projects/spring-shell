@@ -9,6 +9,4 @@
 
 === Resolving Parameter Values
 
-==== Supporting kbd:[TAB] Completion
-
-
+==== Supporting Completion

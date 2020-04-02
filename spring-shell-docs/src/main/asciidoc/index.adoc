@@ -1,11 +1,9 @@
 = Spring Shell Reference Documentation
 Eric Bottard;
-:doctype: book
-:hide-uri-scheme:
-:icons: font
-:experimental: // For kbd: macro
+:toc: left
+:toclevels: 4
 
-Version {project-version}
+Version {version}
 
 (C) 2017 Pivotal Software, Inc.
 

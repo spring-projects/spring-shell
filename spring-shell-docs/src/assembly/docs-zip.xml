@@ -12,6 +12,8 @@
             <outputDirectory>reference/htmlsingle</outputDirectory>
             <includes>
                 <include>index.html</include>
+                <include>css/**</include>
+                <include>js/**</include>
             </includes>
         </fileSet>
         <fileSet>

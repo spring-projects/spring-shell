@@ -10,7 +10,6 @@ The Spring Shell project provides the infrastructure to create such a REPL (Read
 Print Loop), allowing the developer to concentrate on the commands implementation, using
 the familiar Spring programming model.
 
-Advanced features such as parsing, kbd:[TAB] completion, colorization of output, fancy ascii-art
+Advanced features such as parsing, completion, colorization of output, fancy ascii-art
 table display, input conversion and validation all come for free, with the developer only
 having to focus on core command logic.
-
