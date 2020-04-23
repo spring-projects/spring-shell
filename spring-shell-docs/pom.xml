@@ -18,7 +18,7 @@
 		<asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
 		<asciidoctorj.version>1.5.6</asciidoctorj.version>
 		<jruby.version>1.7.26</jruby.version>
-		<docs.resources.version>0.2.0.RELEASE</docs.resources.version>
+		<docs.resources.version>0.2.1.RELEASE</docs.resources.version>
 	</properties>
 
 	<!-- This project artificially depends on all others so that the javadoc plugin can consolidate everything.-->
