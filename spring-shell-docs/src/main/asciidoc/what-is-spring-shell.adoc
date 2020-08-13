@@ -1,16 +1,15 @@
 == What is Spring Shell?
 
 Not all applications need a fancy web user interface!
-Sometimes, interacting with an application using an interactive terminal is
+Sometimes, interacting with an application through an interactive terminal is
 the most appropriate way to get things done.
 
-Spring Shell allows one to easily create such a runnable application, where the
-user will enter textual commands that will get executed until the program terminates.
+Spring Shell lets you create such a runnable application, where the
+user enters textual commands that are run until the program terminates.
 The Spring Shell project provides the infrastructure to create such a REPL (Read, Eval,
-Print Loop), allowing the developer to concentrate on the commands implementation, using
+Print Loop), letting you concentrate on the commands implementation by using
 the familiar Spring programming model.
 
-Advanced features such as parsing, kbd:[TAB] completion, colorization of output, fancy ascii-art
-table display, input conversion and validation all come for free, with the developer only
-having to focus on core command logic.
-
+Advanced features such as parsing, tab completion, colorization of output, fancy ascii-art
+table display, input conversion, and validation are all include, freeing you
+to focus on core command logic.
