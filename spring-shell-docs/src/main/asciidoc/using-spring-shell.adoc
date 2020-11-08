@@ -300,8 +300,27 @@ shell:>add --numbers 1 --numbers 2 --numbers 3.3
 ----
 ====
 
-===== Infinite Arity
-TO BE IMPLEMENTED
+===== Varying Amount Arity
+
+The above example demonstrates requiring a known, constant arity for a parameter, three in this case. Allowing any number of multiple values of a parameter can be achieved by leaving `arity` unspecified and using Spring's built-in comma separated value parsing for collections and/or arrays:
+[source, java]
+----
+	@ShellMethod("Add a Varying Amount of Numbers.")
+	public double add(@ShellOption double[] numbers) {
+		return Arrays.stream(numbers).sum();
+	}
+----
+
+The command may then be invoked with any amount of `numbers`:
+[source]
+----
+shell:>add 1,2,3.3
+6.3
+shell:>add --numbers 42
+42.0
+shell:>add --numbers 1,2,3.3,4,5
+15.3
+----
 
 ===== Special Handling of Boolean Parameters
 When it comes to parameter arity, there is a kind of parameters that receives a special treatment by default, as
