@@ -38,6 +38,11 @@ public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
 	@Autowired
 	private CalculatorState state;
 
+    @Before
+	public void setup() {
+		state.clear();
+	}
+    
 	/**
 	 * Test "happy path" or basic addition with positive numbers and zeroes. Use Spring Shell
 	 * auto-wired by the Spring Test Runner.
