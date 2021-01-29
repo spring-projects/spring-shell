@@ -715,7 +715,7 @@ shell:>help help
 NAME
 	help - Display help about available commands.
 
-SYNOPSYS
+SYNOPSIS
 	help [[-C] string]
 
 OPTIONS

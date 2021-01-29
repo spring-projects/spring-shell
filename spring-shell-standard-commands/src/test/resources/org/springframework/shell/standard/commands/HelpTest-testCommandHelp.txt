@@ -3,7 +3,7 @@
 NAME
 	first-command - A rather extensive description of some command.
 
-SYNOPSYS
+SYNOPSIS
 	first-command [-r]  [-f]  [[-n] int]  [-o] float float float  
 
 OPTIONS

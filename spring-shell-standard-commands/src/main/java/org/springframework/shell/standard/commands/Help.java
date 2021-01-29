@@ -128,8 +128,8 @@ public class Help {
 		// NAME
 		documentCommandName(result, command, methodTarget.getHelp());
 
-		// SYNOPSYS
-		documentSynopsys(result, command, parameterDescriptions);
+		// SYNOPSIS
+		documentSynopsis(result, command, parameterDescriptions);
 
 		// OPTIONS
 		documentOptions(result, parameterDescriptions);
@@ -149,9 +149,9 @@ public class Help {
 		result.append(command).append(" - ").append(help).append("\n\n");
 	}
 
-	private void documentSynopsys(AttributedStringBuilder result, String command,
+	private void documentSynopsis(AttributedStringBuilder result, String command,
 			List<ParameterDescription> parameterDescriptions) {
-		result.append("SYNOPSYS", AttributedStyle.BOLD).append("\n\t");
+		result.append("SYNOPSIS", AttributedStyle.BOLD).append("\n\t");
 		result.append(command, AttributedStyle.BOLD);
 		result.append(" ");
 
