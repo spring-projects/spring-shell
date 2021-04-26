@@ -773,7 +773,7 @@ don't bring that one in!
             <groupId>org.springframework.shell</groupId>
             <artifactId>spring-shell-standard-commands</artifactId>
         </exclusion>
-    </exclusion>
+    </exclusions>
 </dependency>
 ----
 ====
