@@ -7,7 +7,7 @@ Eric Bottard;
 
 Version {project-version}
 
-(C) 2017 Pivotal Software, Inc.
+(C) 2017 - 2021 VMware, Inc.
 
 _Copies of this document may be made for your own use and for distribution to
 others, provided that you do not charge any fee for such copies and further

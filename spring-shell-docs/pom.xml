@@ -11,13 +11,15 @@
 		<artifactId>spring-shell-parent</artifactId>
 		<version>3.0.0.BUILD-SNAPSHOT</version>
 	</parent>
-	
+
 	<description>Spring Shell reference documentation</description>
 	<properties>
-		<asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
-		<asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
-		<asciidoctorj.version>1.5.6</asciidoctorj.version>
-		<jruby.version>1.7.26</jruby.version>
+		<asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
+		<asciidoctorj.pdf.version>1.5.4</asciidoctorj.pdf.version>
+		<asciidoctorj.epub.version>1.5.1</asciidoctorj.epub.version>
+		<asciidoctorj.version>2.5.1</asciidoctorj.version>
+		<jruby.version>9.2.17.0</jruby.version>
+		<spring-doc-resources.version>0.2.5</spring-doc-resources.version>
 	</properties>
 
 	<!-- This project artificially depends on all others so that the javadoc plugin can consolidate everything.-->
@@ -57,6 +59,46 @@
 		<plugins>
 			<!-- ASCIIDOC -->
 			<plugin>
+          <groupId>com.googlecode.maven-download-plugin</groupId>
+          <artifactId>download-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>unpack-doc-resources</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>wget</goal>
+              </goals>
+              <configuration>
+                <url>https://repo.spring.io/release/io/spring/docresources/spring-doc-resources/${spring-doc-resources.version}/spring-doc-resources-${spring-doc-resources.version}.zip</url>
+                <unpack>true</unpack>
+                <outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-asciidoc-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/asciidoc</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.asciidoctor</groupId>
 				<artifactId>asciidoctor-maven-plugin</artifactId>
 				<version>${asciidoctor.maven.plugin.version}</version>
@@ -66,48 +108,46 @@
 						<artifactId>asciidoctorj-pdf</artifactId>
 						<version>${asciidoctorj.pdf.version}</version>
 					</dependency>
-					<!-- Comment this section to use the default jruby artifact provided by the plugin -->
-					<dependency>
-						<groupId>org.jruby</groupId>
-						<artifactId>jruby-complete</artifactId>
-						<version>${jruby.version}</version>
-					</dependency>
-					<!-- Comment this section to use the default AsciidoctorJ artifact provided by the plugin -->
 					<dependency>
 						<groupId>org.asciidoctor</groupId>
-						<artifactId>asciidoctorj</artifactId>
-						<version>${asciidoctorj.version}</version>
+						<artifactId>asciidoctorj-epub3</artifactId>
+						<version>${asciidoctorj.epub.version}</version>
 					</dependency>
 				</dependencies>
 				<configuration>
+					<sourceDirectory>${project.build.directory}/refdocs/</sourceDirectory>
 					<sourceDocumentName>index.adoc</sourceDocumentName>
-					<doctype>book</doctype>
-					<attributes>
-						<allow-uri-read>true</allow-uri-read>
-						<attribute-missing>warn</attribute-missing>
-						<project-version>${project.version}</project-version>
-						<project-artifactId>${project.artifactId}</project-artifactId>
-					</attributes>
 				</configuration>
 				<executions>
 					<execution>
-						<id>generate-html5</id>
-						<phase>prepare-package</phase>
+						<id>generate-html</id>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>process-asciidoc</goal>
 						</goals>
 						<configuration>
 							<backend>html5</backend>
+							<sourceHighlighter>highlight.js</sourceHighlighter>
 							<attributes>
-								<toc2 />
-								<docinfo>shared-head</docinfo>
-								<source-highlighter>coderay</source-highlighter>
+								<project-version>${project.version}</project-version>
+								<project-artifactId>${project.artifactId}</project-artifactId>
+								<toc>left</toc>
+								<toc-levels>4</toc-levels>
+								<sectanchors>true</sectanchors>
+								<sectnums />
+								<docinfo>shared</docinfo>
+								<stylesdir>css/</stylesdir>
+								<stylesheet>spring.css</stylesheet>
+								<linkcss>true</linkcss>
+								<icons>font</icons>
+								<highlightjsdir>js/highlight</highlightjsdir>
+								<highlightjs-theme>github</highlightjs-theme>
 							</attributes>
 						</configuration>
 					</execution>
 					<execution>
 						<id>generate-pdf</id>
-						<phase>prepare-package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>process-asciidoc</goal>
 						</goals>
@@ -115,8 +155,31 @@
 							<backend>pdf</backend>
 							<sourceHighlighter>coderay</sourceHighlighter>
 							<attributes>
-								<toc />
+								<project-version>${project.version}</project-version>
+								<project-artifactId>${project.artifactId}</project-artifactId>
+								<icons>font</icons>
 								<pagenums />
+								<sectnums />
+								<toc />
+							</attributes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-epub</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<backend>epub3</backend>
+							<sourceHighlighter>coderay</sourceHighlighter>
+							<attributes>
+								<project-version>${project.version}</project-version>
+								<project-artifactId>${project.artifactId}</project-artifactId>
+								<icons>font</icons>
+								<pagenums />
+								<sectnums />
+								<toc />
 							</attributes>
 						</configuration>
 					</execution>

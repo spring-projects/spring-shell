@@ -11,14 +11,25 @@
             <directory>${project.build.directory}/generated-docs</directory>
             <outputDirectory>reference/htmlsingle</outputDirectory>
             <includes>
-                <include>index.html</include>
+                <include>**/*</include>
             </includes>
+            <excludes>
+                <exclude>index.pdf</exclude>
+                <exclude>index.epub</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}/generated-docs</directory>
             <outputDirectory>reference/pdf</outputDirectory>
             <includes>
                 <include>index.pdf</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}/generated-docs</directory>
+            <outputDirectory>reference/epub</outputDirectory>
+            <includes>
+                <include>index.epub</include>
             </includes>
         </fileSet>
         <fileSet>
