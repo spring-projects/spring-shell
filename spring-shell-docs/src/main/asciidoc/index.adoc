@@ -5,7 +5,15 @@ Eric Bottard;
 :icons: font
 :experimental: // For kbd: macro
 
-Version {project-version}
+ifdef::backend-html5[]
+*{projectVersion}*
+
+NOTE: This documentation is also available as https://docs.spring.io/spring-shell/docs/{projectVersion}/reference/pdf/index.pdf[PDF].
+endif::[]
+
+ifdef::backend-pdf[]
+NOTE: This documentation is also available as https://docs.spring.io/spring-shell/docs/{projectVersion}/reference/htmlsingle/index.html[HTML].
+endif::[]
 
 (C) 2017 Pivotal Software, Inc.
 
