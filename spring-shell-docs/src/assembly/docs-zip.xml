@@ -8,15 +8,16 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${project.build.directory}/generated-docs</directory>
-            <outputDirectory>reference/htmlsingle</outputDirectory>
+            <directory>${project.build.directory}/site/reference/html</directory>
+            <outputDirectory>site/reference/htmlsingle</outputDirectory>
             <includes>
                 <include>index.html</include>
+                <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.build.directory}/generated-docs</directory>
-            <outputDirectory>reference/pdf</outputDirectory>
+            <directory>${project.build.directory}/site/reference/pdf</directory>
+            <outputDirectory>site/reference/pdf</outputDirectory>
             <includes>
                 <include>index.pdf</include>
             </includes>
