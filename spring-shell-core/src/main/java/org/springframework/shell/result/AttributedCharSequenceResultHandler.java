@@ -19,7 +19,6 @@ package org.springframework.shell.result;
 import org.jline.utils.AttributedCharSequence;
 
 import org.springframework.shell.ResultHandler;
-import org.springframework.stereotype.Component;
 
 /**
  * A {@link ResultHandler} that knows how to render JLine's {@link AttributedCharSequence}.

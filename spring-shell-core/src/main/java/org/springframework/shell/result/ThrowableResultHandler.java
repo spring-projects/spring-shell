@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**

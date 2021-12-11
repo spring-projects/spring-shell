@@ -16,7 +16,6 @@
 
 package org.springframework.shell.result;
 
-import org.springframework.shell.ResultHandler;
 import org.springframework.shell.TerminalSizeAware;
 
 /**

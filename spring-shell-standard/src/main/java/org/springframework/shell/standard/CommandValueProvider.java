@@ -19,13 +19,10 @@ package org.springframework.shell.standard;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodParameter;
+import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.CommandRegistry;
-import org.springframework.stereotype.Component;
 
 /**
  * A {@link ValueProvider} that can be used to auto-complete names of shell commands.

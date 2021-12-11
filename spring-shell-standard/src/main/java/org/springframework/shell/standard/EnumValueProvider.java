@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.stereotype.Component;
 
 /**
  * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed parameters.

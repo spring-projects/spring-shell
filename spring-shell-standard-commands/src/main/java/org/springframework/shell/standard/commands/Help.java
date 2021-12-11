@@ -16,11 +16,6 @@
 
 package org.springframework.shell.standard.commands;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -33,21 +28,30 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.hibernate.validator.internal.engine.MessageInterpolatorContext;
+import javax.validation.MessageInterpolator;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+import javax.validation.metadata.ConstraintDescriptor;
+
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.*;
+import org.springframework.shell.Availability;
+import org.springframework.shell.CommandRegistry;
+import org.springframework.shell.MethodTarget;
+import org.springframework.shell.ParameterDescription;
+import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.Utils;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import javax.validation.MessageInterpolator;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
-import javax.validation.metadata.ConstraintDescriptor;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * A command to display help about all available commands.

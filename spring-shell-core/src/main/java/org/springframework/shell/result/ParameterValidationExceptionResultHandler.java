@@ -16,24 +16,24 @@
 
 package org.springframework.shell.result;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.validation.ElementKind;
+import javax.validation.Path;
+
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.ParameterDescription;
 import org.springframework.shell.ParameterResolver;
 import org.springframework.shell.ParameterValidationException;
 import org.springframework.shell.Utils;
-import org.springframework.stereotype.Component;
-
-import javax.validation.ElementKind;
-import javax.validation.Path;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * Displays validation errors on the terminal.

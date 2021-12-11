@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.jline.reader.Parser;
-import org.springframework.shell.Input;
+
 import org.springframework.shell.Shell;
 import org.springframework.shell.jline.FileInputProvider;
 import org.springframework.shell.standard.ShellComponent;

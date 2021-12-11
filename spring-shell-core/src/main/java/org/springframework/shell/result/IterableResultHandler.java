@@ -17,7 +17,6 @@
 package org.springframework.shell.result;
 
 import org.springframework.shell.ResultHandler;
-import org.springframework.stereotype.Component;
 
 /**
  * A {@link ResultHandler} that deals with {@link Iterable}s and delegates to

@@ -17,7 +17,6 @@
 package org.springframework.shell.result;
 
 import org.springframework.shell.ResultHandler;
-import org.springframework.stereotype.Component;
 
 /**
  * A simple {@link ResultHandler} that deals with Objects (hence comes as a last resort)

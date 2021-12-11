@@ -33,7 +33,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.validation.executable.ExecutableValidator;
 
 import org.jline.utils.Signals;
 
@@ -149,7 +148,7 @@ public class Shell implements CommandRegistry {
 	/**
 	 * Evaluate a single "line" of input from the user by trying to map words to a command and
 	 * arguments.
-	 * 
+	 *
 	 * <p>
 	 * This method does not throw exceptions, it catches them and returns them as a regular
 	 * result

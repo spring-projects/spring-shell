@@ -16,19 +16,18 @@
 
 package org.springframework.shell.standard;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.core.MethodParameter;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
 
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 
