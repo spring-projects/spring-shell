@@ -1,10 +1,10 @@
 package com.example.test.unit;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import org.junit.Before;
-import org.junit.Test;
 import com.example.CalculatorCommands;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -22,7 +22,7 @@ public class AddTest {
 	 * Setup test calculator commands as "plain-old Java objects" or POJOs, initialized for
 	 * each test.
 	 */
-	@Before
+	@BeforeEach
 	public void setup() {
 		commands = new CalculatorCommands();
 	}
@@ -32,9 +32,9 @@ public class AddTest {
 	 */
 	@Test
 	public void addHappyPath() {
-		assertThat(commands.add(0, 1), is(1));
-		assertThat(commands.add(1, 2), is(3));
-		assertThat(commands.add(1, 0), is(1));
+		assertThat(commands.add(0, 1)).isEqualTo(1);
+		assertThat(commands.add(1, 2)).isEqualTo(3);
+		assertThat(commands.add(1, 0)).isEqualTo(1);
 	}
 
 	/**
@@ -42,9 +42,9 @@ public class AddTest {
 	 */
 	@Test
 	public void addNegatives() {
-		assertThat(commands.add(0, -1), is(-1));
-		assertThat(commands.add(1, -2), is(-1));
-		assertThat(commands.add(-1, 0), is(-1));
+		assertThat(commands.add(0, -1)).isEqualTo(-1);
+		assertThat(commands.add(1, -2)).isEqualTo(-1);
+		assertThat(commands.add(-1, 0)).isEqualTo(-1);
 	}
 
 }

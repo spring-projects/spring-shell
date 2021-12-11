@@ -1,15 +1,16 @@
 package com.example.test.unit;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import java.lang.reflect.Field;
+
+import com.example.CalculatorCommands;
+import com.example.CalculatorState;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.util.ReflectionUtils.findField;
 import static org.springframework.util.ReflectionUtils.makeAccessible;
 import static org.springframework.util.ReflectionUtils.setField;
-import java.lang.reflect.Field;
-import org.junit.Before;
-import org.junit.Test;
-import com.example.CalculatorCommands;
-import com.example.CalculatorState;
 
 /**
  *
@@ -29,7 +30,7 @@ public class AddToMemoryTest {
 	 * Setup test calculator commands as "plain-old Java objects" or POJOs, initialized for
 	 * each test.
 	 */
-	@Before
+	@BeforeEach
 	public void setup() {
 		state = new CalculatorState();
 		commands = new CalculatorCommands();
@@ -44,14 +45,14 @@ public class AddToMemoryTest {
 	 */
 	@Test
 	public void addToMemoryHappyPath() {
-		assertThat(commands.addToMemory(1), is(1));
-		assertThat(state.getMemory(), is(1));
+		assertThat(commands.addToMemory(1)).isEqualTo(1);
+		assertThat(state.getMemory()).isEqualTo(1);
 
-		assertThat(commands.addToMemory(2), is(3));
-		assertThat(state.getMemory(), is(3));
+		assertThat(commands.addToMemory(2)).isEqualTo(3);
+		assertThat(state.getMemory()).isEqualTo(3);
 
-		assertThat(commands.addToMemory(0), is(3));
-		assertThat(state.getMemory(), is(3));
+		assertThat(commands.addToMemory(0)).isEqualTo(3);
+		assertThat(state.getMemory()).isEqualTo(3);
 	}
 
 	/**
@@ -60,14 +61,14 @@ public class AddToMemoryTest {
 	 */
 	@Test
 	public void addToMemoryNegatives() {
-		assertThat(commands.addToMemory(-1), is(-1));
-		assertThat(state.getMemory(), is(-1));
+		assertThat(commands.addToMemory(-1)).isEqualTo(-1);
+		assertThat(state.getMemory()).isEqualTo(-1);
 
-		assertThat(commands.addToMemory(-2), is(-3));
-		assertThat(state.getMemory(), is(-3));
+		assertThat(commands.addToMemory(-2)).isEqualTo(-3);
+		assertThat(state.getMemory()).isEqualTo(-3);
 
-		assertThat(commands.addToMemory(0), is(-3));
-		assertThat(state.getMemory(), is(-3));
+		assertThat(commands.addToMemory(0)).isEqualTo(-3);
+		assertThat(state.getMemory()).isEqualTo(-3);
 	}
 
 }

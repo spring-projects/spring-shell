@@ -1,23 +1,23 @@
 package com.example.test.functional;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.springframework.util.ReflectionUtils.findMethod;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.example.CalculatorCommands;
+import com.example.CalculatorState;
+import com.example.test.BaseCalculatorTest;
+import com.example.test.TestCalculatorStateConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.standard.StandardMethodTargetRegistrar;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import com.example.CalculatorCommands;
-import com.example.CalculatorState;
-import com.example.test.BaseCalculatorTest;
-import com.example.test.TestCalculatorStateConfig;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.util.ReflectionUtils.findMethod;
 
 /**
  * Illustrative functional tests for the Spring Shell Calculator application. These
@@ -26,7 +26,7 @@ import com.example.test.TestCalculatorStateConfig;
  *
  * @author Sualeh Fatehi
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { TestCalculatorStateConfig.class, CalculatorCommands.class })
 public class CalculatorCommandsTest extends BaseCalculatorTest {
 
@@ -40,7 +40,7 @@ public class CalculatorCommandsTest extends BaseCalculatorTest {
 	@Autowired
 	private ApplicationContext context;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		final StandardMethodTargetRegistrar registrar = new StandardMethodTargetRegistrar();
 		registrar.setApplicationContext(context);
@@ -55,14 +55,15 @@ public class CalculatorCommandsTest extends BaseCalculatorTest {
 		final String commandMethod = "add";
 
 		final MethodTarget commandTarget = lookupCommand(registry, command);
-		assertThat(commandTarget, notNullValue());
-		assertThat(commandTarget.getGroup(), is("Calculator Commands"));
-		assertThat(commandTarget.getHelp(), is("Add two integers"));
-		assertThat(commandTarget.getMethod(),
-				is(findMethod(COMMAND_CLASS_UNDER_TEST, commandMethod, int.class, int.class)));
-		assertThat(commandTarget.getAvailability().isAvailable(), is(true));
-		assertThat(invoke(commandTarget, 1, 2), is(3));
-		assertThat(state.getMemory(), is(0));
+		assertThat(commandTarget).isNotNull();
+		assertThat(commandTarget.getGroup()).isEqualTo("Calculator Commands");
+		assertThat(commandTarget.getHelp()).isEqualTo("Add two integers");
+		assertThat(commandTarget.getMethod())
+				.isEqualTo(findMethod(COMMAND_CLASS_UNDER_TEST, commandMethod, int.class, int.class));
+		assertThat(commandTarget.getAvailability().isAvailable()).isTrue();
+		Object invoke = invoke(commandTarget, 1, 2);
+		assertThat(invoke).isEqualTo(3);
+		assertThat(state.getMemory()).isEqualTo(0);
 	}
 
 	@Test
@@ -71,16 +72,16 @@ public class CalculatorCommandsTest extends BaseCalculatorTest {
 		final String commandMethod = "addToMemory";
 
 		final MethodTarget commandTarget = lookupCommand(registry, command);
-		assertThat(commandTarget, notNullValue());
-		assertThat(commandTarget.getGroup(), is("Calculator Commands"));
-		assertThat(commandTarget.getHelp(), is("Add an integer to the value in memory"));
-		assertThat(commandTarget.getMethod(),
-				is(findMethod(COMMAND_CLASS_UNDER_TEST, commandMethod, int.class)));
-		assertThat(commandTarget.getAvailability().isAvailable(), is(true));
+		assertThat(commandTarget).isNotNull();
+		assertThat(commandTarget.getGroup()).isEqualTo("Calculator Commands");
+		assertThat(commandTarget.getHelp()).isEqualTo("Add an integer to the value in memory");
+		assertThat(commandTarget.getMethod()).isEqualTo(findMethod(COMMAND_CLASS_UNDER_TEST, commandMethod, int.class));
+		assertThat(commandTarget.getAvailability().isAvailable()).isTrue();
 
 		state.setMemory(1);
-		assertThat(invoke(commandTarget, 2), is(3));
-		assertThat(state.getMemory(), is(3));
+		Object invoke = invoke(commandTarget, 2);
+		assertThat(invoke).isEqualTo(3);
+		assertThat(state.getMemory()).isEqualTo(3);
 	}
 
 }

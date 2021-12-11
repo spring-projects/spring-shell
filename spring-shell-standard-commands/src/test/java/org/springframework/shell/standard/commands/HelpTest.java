@@ -19,18 +19,22 @@ package org.springframework.shell.standard.commands;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+
+import javax.validation.constraints.Max;
 
 import org.assertj.core.api.Assertions;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,46 +42,52 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.shell.Command;
-import org.springframework.shell.standard.StandardParameterResolver;
+import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.ParameterResolver;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.standard.StandardParameterResolver;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.FileCopyUtils;
 
-import javax.validation.constraints.Max;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests for the {@link Help} command.
  *
  * @author Eric Bottard
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = HelpTest.Config.class)
 public class HelpTest {
 
 	private static Locale previousLocale;
+	private String testName;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setAssumedLocale() {
 		previousLocale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void restorePreviousLocale() {
 		Locale.setDefault(previousLocale);
 	}
 
+	@BeforeEach
+	public void setup(TestInfo testInfo) {
+		Optional<Method> testMethod = testInfo.getTestMethod();
+		if (testMethod.isPresent()) {
+			this.testName = testMethod.get().getName();
+		}
+	}
+
 	@Autowired
 	private Help help;
-
-	@Rule
-	public TestName testName = new TestName();
 
 	@Test
 	public void testCommandHelp() throws Exception {
@@ -91,13 +101,15 @@ public class HelpTest {
 		Assertions.assertThat(list).isEqualTo(sample());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testUnknownCommand() throws Exception {
-		this.help.help("some unknown command");
+		assertThatThrownBy(() -> {
+			this.help.help("some unknown command");
+		}).isInstanceOf(IllegalArgumentException.class);
 	}
 
 	private String sample() throws IOException {
-		InputStream is = new ClassPathResource(HelpTest.class.getSimpleName() + "-" + testName.getMethodName() + ".txt", HelpTest.class).getInputStream();
+		InputStream is = new ClassPathResource(HelpTest.class.getSimpleName() + "-" + testName + ".txt", HelpTest.class).getInputStream();
 		return FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")).replace("&", "");
 	}
 

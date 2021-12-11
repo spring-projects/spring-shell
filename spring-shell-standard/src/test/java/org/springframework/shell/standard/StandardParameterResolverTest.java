@@ -16,21 +16,14 @@
 
 package org.springframework.shell.standard;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.shell.ValueResultAsserts.assertThat;
-import static org.springframework.util.ReflectionUtils.findMethod;
-
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jline.reader.ParsedLine;
 import org.jline.reader.impl.DefaultParser;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
+
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -39,15 +32,19 @@ import org.springframework.shell.UnfinishedParameterResolutionException;
 import org.springframework.shell.Utils;
 import org.springframework.shell.ValueResult;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.shell.ValueResultAsserts.assertThat;
+import static org.springframework.util.ReflectionUtils.findMethod;
+
 /**
  * Unit tests for DefaultParameterResolver.
  * @author Eric Bottard
  * @author Florent Biville
  */
 public class StandardParameterResolverTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService());
 
@@ -61,16 +58,16 @@ public class StandardParameterResolverTest {
 		ValueResult result0 = resolver.resolve(Utils.createMethodParameter(method, 0), words);
 		assertThat(result0).hasValue(true).usesWords(0).notUsesWordsForValue();
 		assertThat(result0.wordsUsed(words)).containsExactly("--force");
-		
+
 		ValueResult result1 = resolver.resolve(Utils.createMethodParameter(method, 1), words);
 		assertThat(result1).hasValue("--foo").usesWords(1, 2).usesWordsForValue(2);
 		assertThat(result1.wordsUsed(words)).containsExactly("--name", "--foo");
 		assertThat(result1.wordsUsedForValue(words)).containsExactly("--foo");
-		
+
 		ValueResult result2 = resolver.resolve(Utils.createMethodParameter(method, 2), words);
 		assertThat(result2).hasValue("y").usesWords(3).usesWordsForValue(3);
 		assertThat(result2.wordsUsed(words)).containsExactly("y");
-		
+
 		ValueResult result3 = resolver.resolve(Utils.createMethodParameter(method, 3), words);
 		assertThat(result3).hasValue("last").notUsesWords().notUsesWordsForValue();
 	}
@@ -88,78 +85,72 @@ public class StandardParameterResolverTest {
 	public void testParameterSpecifiedTwiceViaDifferentAliases() throws Exception {
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Named parameter has been specified multiple times via '--bar, --baz'");
-
-		resolver.resolve(
-				Utils.createMethodParameter(method, 0),
-				asList("--force --name --foo y --bar x --baz z".split(" "))
-		);
+		assertThatThrownBy(() -> {
+			resolver.resolve(
+					Utils.createMethodParameter(method, 0),
+					asList("--force --name --foo y --bar x --baz z".split(" ")));
+		}).isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Named parameter has been specified multiple times via '--bar, --baz'");
 	}
 
 	@Test
 	public void testParameterSpecifiedTwiceViaSameKey() throws Exception {
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Parameter for '--baz' has already been specified");
-
-		resolver.resolve(
-				Utils.createMethodParameter(method, 0),
-				asList("--force --name --foo y --baz x --baz z".split(" "))
-		);
+		assertThatThrownBy(() -> {
+			resolver.resolve(
+					Utils.createMethodParameter(method, 0),
+					asList("--force --name --foo y --baz x --baz z".split(" ")));
+		}).isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Parameter for '--baz' has already been specified");
 	}
 
 	@Test
 	public void testTooMuchInput() throws Exception {
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("the following could not be mapped to parameters: 'leftover'");
-
-		resolver.resolve(
-				Utils.createMethodParameter(method, 0),
-				asList("--foo hello --name bar --force --bar well leftover".split(" "))
-		);
+		assertThatThrownBy(() -> {
+			resolver.resolve(
+					Utils.createMethodParameter(method, 0),
+					asList("--foo hello --name bar --force --bar well leftover".split(" ")));
+		}).isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("the following could not be mapped to parameters: 'leftover'");
 	}
 
 	@Test
 	public void testIncompleteCommandResolution() throws Exception {
 		Method method = findMethod(Remote.class, "shutdown", Remote.Delay.class);
 
-		thrown.expect(UnfinishedParameterResolutionException.class);
-		thrown.expectMessage("Error trying to resolve '--delay delay' using [--delay]");
-
-		resolver.resolve(
-				Utils.createMethodParameter(method, 0),
-				asList("--delay".split(" "))
-		);
+		assertThatThrownBy(() -> {
+			resolver.resolve(
+					Utils.createMethodParameter(method, 0),
+					asList("--delay".split(" ")));
+		}).isInstanceOf(UnfinishedParameterResolutionException.class)
+				.hasMessageContaining("Error trying to resolve '--delay delay' using [--delay]");
 	}
 
 	@Test
 	public void testIncompleteCommandResolutionBigArity() throws Exception {
 		Method method = findMethod(Remote.class, "add", List.class);
 
-		thrown.expect(UnfinishedParameterResolutionException.class);
-		thrown.expectMessage("Error trying to resolve '--numbers list list list' using [--numbers 1 2]");
-
-		resolver.resolve(
-				Utils.createMethodParameter(method, 0),
-				asList("--numbers 1 2".split(" "))
-		);
+		assertThatThrownBy(() -> {
+			resolver.resolve(
+					Utils.createMethodParameter(method, 0),
+					asList("--numbers 1 2".split(" ")));
+		}).isInstanceOf(UnfinishedParameterResolutionException.class)
+				.hasMessageContaining("Error trying to resolve '--numbers list list list' using [--numbers 1 2]");
 	}
 
 	@Test
 	public void testUnresolvableArg() throws Exception {
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
-		thrown.expect(ParameterMissingResolutionException.class);
-		thrown.expectMessage("Parameter '--name string' should be specified");
-
-		resolver.resolve(
-				Utils.createMethodParameter(method, 1),
-				asList("--foo hello --force --bar well".split(" "))
-		);
+		assertThatThrownBy(() -> {
+			resolver.resolve(
+					Utils.createMethodParameter(method, 1),
+					asList("--foo hello --force --bar well".split(" ")));
+		}).isInstanceOf(ParameterMissingResolutionException.class)
+				.hasMessageContaining("Parameter '--name string' should be specified");
 	}
 
 	// Tests for completion
@@ -216,9 +207,9 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testValueCompletionWithNonDefaultArity() {
-		
+
 		resolver.setValueProviders(singletonList(new Remote.NumberValueProvider("12", "42", "7")));
-		
+
 		Method[] methods = {
 			findMethod(org.springframework.shell.standard.Remote.class, "add", List.class),
 			findMethod(org.springframework.shell.standard.Remote.class, "addAsArray", int[].class),

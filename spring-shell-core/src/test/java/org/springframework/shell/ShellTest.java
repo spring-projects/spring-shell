@@ -22,21 +22,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.context.ApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -46,13 +45,12 @@ import static org.mockito.Mockito.when;
  *
  * @author Eric Bottard
  */
+@ExtendWith(MockitoExtension.class)
+// @RunWith(JUnitPlatform.class)
 public class ShellTest {
 
-	@Rule
-	public MockitoRule mockitoRule = MockitoJUnit.rule();
-
-	@Rule
-	public ExpectedException thrown= ExpectedException.none();
+	// @Rule
+	// public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Mock
 	private InputProvider inputProvider;
@@ -62,7 +60,7 @@ public class ShellTest {
 
 	@Mock
 	private ParameterResolver parameterResolver;
-	
+
 	private ValueResult valueResult;
 
 	@InjectMocks
@@ -70,7 +68,7 @@ public class ShellTest {
 
 	private boolean invoked;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		shell.parameterResolvers = Arrays.asList(parameterResolver);
 	}
@@ -93,7 +91,7 @@ public class ShellTest {
 
 		}
 
-		Assert.assertTrue(invoked);
+		assertThat(invoked).isTrue();
 	}
 
 	@Test
@@ -147,12 +145,11 @@ public class ShellTest {
 
 		}
 
-		Assert.assertTrue(invoked);
+		assertThat(invoked).isTrue();
 	}
 
 	@Test
 	public void commandThrowingAnException() throws IOException {
-		when(parameterResolver.supports(any())).thenReturn(true);
 		when(inputProvider.readInput()).thenReturn(() -> "fail", null);
 		doThrow(new Exit()).when(resultHandler).handleResult(isA(SomeException.class));
 
@@ -166,17 +163,14 @@ public class ShellTest {
 
 		}
 
-		Assert.assertTrue(invoked);
-
+		assertThat(invoked).isTrue();
 	}
 
 	@Test
 	public void comments() throws IOException {
-		when(parameterResolver.supports(any())).thenReturn(true);
 		when(inputProvider.readInput()).thenReturn(() -> "// This is a comment", (Input) null);
 
 		shell.run(inputProvider);
-
 	}
 
 	@Test
@@ -188,8 +182,9 @@ public class ShellTest {
 					r.register("hw", MethodTarget.of("helloWorld", this, new Command.Help("hellow world")));
 				}));
 
-		thrown.expect(ParameterResolverMissingException.class);
-		shell.gatherMethodTargets();
+		assertThatThrownBy(() -> {
+			shell.gatherMethodTargets();
+		}).isInstanceOf(ParameterResolverMissingException.class);
 	}
 
 	@Test

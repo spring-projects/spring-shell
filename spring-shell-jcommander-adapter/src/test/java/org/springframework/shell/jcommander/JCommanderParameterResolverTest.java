@@ -16,16 +16,12 @@
 
 package org.springframework.shell.jcommander;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
@@ -33,6 +29,10 @@ import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.ParameterDescription;
 import org.springframework.shell.Utils;
 import org.springframework.util.ReflectionUtils;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit test for {@link JCommanderParameterResolver}.
