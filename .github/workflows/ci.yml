@@ -22,3 +22,10 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
       - run: ./mvnw -B package
+  publish:
+    needs: [build]
+    runs-on: ubuntu-latest
+    name: Call Publish Snapshot
+    uses: spring-projects/spring-shell/.github/workflows/ci-publish@main
+    secrets:
+      jfArtifactorySpring: ${{ secrets.JF_ARTIFACTORY_SPRING }}

@@ -1,7 +1,10 @@
 name: CI Publish
 
 on:
-  workflow_dispatch:
+  workflow_call:
+    secrets:
+      jfArtifactorySpring:
+        required: true
 
 jobs:
   publish:
@@ -20,7 +23,7 @@ jobs:
       with:
         version: 1.46.4
       env:
-        JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+        JF_ARTIFACTORY_SPRING: ${{ secrets.jfArtifactorySpring }}
     - name: Configure JFrog Cli
       run: |
         jfrog rt mvnc \
