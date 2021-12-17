@@ -18,6 +18,7 @@ package org.springframework.shell.samples.standard;
 
 import java.lang.annotation.ElementType;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class Commands {
 	public String changePassword(@Size(min = 8) String password) {
 		return "Password changed";
 	}
-	
+
 	@ShellMethod(value = "Shows non trivial character encoding.")
 	public String helloWorld() {
 		return "こんにちは世界";
@@ -78,6 +79,18 @@ public class Commands {
 	@ShellMethod("Add array numbers.")
 	public double addDoubles(@ShellOption(arity = 3) double[] numbers) {
 		return Arrays.stream(numbers).sum();
+	}
+
+	@ShellMethod("Get iterables.")
+	public Iterable<String> iterables() {
+		List<String> list = Arrays.asList("first", "second");
+		Iterable<String> iterable = new Iterable<String>() {
+			@Override
+			public Iterator<String> iterator() {
+				return list.iterator();
+			}
+		};
+		return iterable;
 	}
 }
 

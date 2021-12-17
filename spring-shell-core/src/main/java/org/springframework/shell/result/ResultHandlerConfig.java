@@ -16,12 +16,10 @@
 
 package org.springframework.shell.result;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.TerminalSizeAware;
 
@@ -40,13 +38,9 @@ public class ResultHandlerConfig {
 	}
 
 	@Bean
+	@Qualifier("iterableResultHandler")
 	public IterableResultHandler iterableResultHandler() {
 		return new IterableResultHandler();
-	}
-
-	@PostConstruct
-	public void wireIterableResultHandler() {
-		iterableResultHandler().setDelegate(mainResultHandler());
 	}
 
 	@Bean

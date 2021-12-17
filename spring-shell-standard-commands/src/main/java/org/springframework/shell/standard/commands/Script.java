@@ -7,6 +7,7 @@ import java.io.Reader;
 
 import org.jline.reader.Parser;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.Shell;
 import org.springframework.shell.jline.FileInputProvider;
 import org.springframework.shell.standard.ShellComponent;
@@ -20,11 +21,11 @@ import org.springframework.shell.standard.ShellMethod;
 @ShellComponent
 public class Script {
 
-    private final Shell shell;
+    private final ObjectProvider<Shell> shell;
 
     private final Parser parser;
 
-    public Script(Shell shell, Parser parser) {
+    public Script(ObjectProvider<Shell> shell, Parser parser) {
         this.shell = shell;
         this.parser = parser;
     }
@@ -47,7 +48,7 @@ public class Script {
     public void script(File file) throws IOException {
         Reader reader = new FileReader(file);
         try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-            shell.run(inputProvider);
+            shell.getIfAvailable().run(inputProvider);
         }
     }
 

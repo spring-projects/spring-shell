@@ -29,7 +29,7 @@ public class IterableResultHandler implements ResultHandler<Iterable> {
 	private ResultHandler delegate;
 
 	// Setter injection to avoid circular dependency at creation time
-	void setDelegate(ResultHandler delegate) {
+	public void setDelegate(ResultHandler delegate) {
 		this.delegate = delegate;
 	}
 

@@ -36,6 +36,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
 import org.springframework.shell.CommandRegistry;
@@ -81,7 +82,7 @@ public class Help {
 
 	private final List<ParameterResolver> parameterResolvers;
 
-	private CommandRegistry commandRegistry;
+	private ObjectProvider<CommandRegistry> commandRegistry;
 
 	private MessageInterpolator messageInterpolator = Validation.buildDefaultValidatorFactory()
 			.getMessageInterpolator();
@@ -92,10 +93,9 @@ public class Help {
 	}
 
 	@Autowired // ctor injection impossible b/c of circular dependency
-	public void setCommandRegistry(CommandRegistry commandRegistry) {
+	public void setCommandRegistry(ObjectProvider<CommandRegistry> commandRegistry) {
 		this.commandRegistry = commandRegistry;
 	}
-
 
 	@Autowired(required = false)
 	public void setValidatorFactory(ValidatorFactory validatorFactory) {
@@ -121,7 +121,7 @@ public class Help {
 	 * Return a description of a specific command. Uses a layout inspired by *nix man pages.
 	 */
 	private CharSequence documentCommand(String command) {
-		MethodTarget methodTarget = commandRegistry.listCommands().get(command);
+		MethodTarget methodTarget = commandRegistry.getIfAvailable().listCommands().get(command);
 		if (methodTarget == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
 		}
@@ -248,7 +248,7 @@ public class Help {
 	}
 
 	private void documentAliases(AttributedStringBuilder result, String command, MethodTarget methodTarget) {
-		Set<String> aliases = commandRegistry.listCommands().entrySet().stream()
+		Set<String> aliases = commandRegistry.getIfAvailable().listCommands().entrySet().stream()
 				.filter(e -> e.getValue().equals(methodTarget))
 				.map(Map.Entry::getKey)
 				.filter(c -> !command.equals(c))
@@ -277,7 +277,7 @@ public class Help {
 	}
 
 	private CharSequence listCommands() {
-		Map<String, MethodTarget> commandsByName = commandRegistry.listCommands();
+		Map<String, MethodTarget> commandsByName = commandRegistry.getIfAvailable().listCommands();
 
 		SortedMap<String, Map<String, MethodTarget>> commandsByGroupAndName = commandsByName.entrySet().stream()
 				.collect(groupingBy(e -> e.getValue().getGroup(), TreeMap::new, // group by and sort by command group
