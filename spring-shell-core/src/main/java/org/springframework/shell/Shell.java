@@ -56,7 +56,7 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Eric Bottard
  */
-public class Shell implements CommandRegistry {
+public class Shell {
 
 	private final ResultHandler resultHandler;
 
@@ -68,6 +68,9 @@ public class Shell implements CommandRegistry {
 
 	@Autowired
 	protected ApplicationContext applicationContext;
+
+	@Autowired
+	private CommandRegistry commandRegistry;
 
 	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -90,18 +93,9 @@ public class Shell implements CommandRegistry {
 		this.validator = validatorFactory.getValidator();
 	}
 
-	@Override
-	public Map<String, MethodTarget> listCommands() {
-		return methodTargets;
-	}
-
 	@PostConstruct
 	public void gatherMethodTargets() throws Exception {
-		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
-		for (MethodTargetRegistrar resolver : applicationContext.getBeansOfType(MethodTargetRegistrar.class).values()) {
-			resolver.register(registry);
-		}
-		methodTargets = registry.listCommands();
+		methodTargets = commandRegistry.listCommands();
 		methodTargets.values()
 				.forEach(this::validateParameterResolvers);
 	}

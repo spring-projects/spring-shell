@@ -32,6 +32,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.shell.result.IterableResultHandler;
 import org.springframework.shell.result.ResultHandlerConfig;
 
 /**
@@ -68,8 +69,8 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	public Shell shell(@Qualifier("main") ResultHandler resultHandler) {
+	public Shell shell(@Qualifier("main") ResultHandler resultHandler, @Qualifier("iterableResultHandler") IterableResultHandler iterableResultHandler) {
+		iterableResultHandler.setDelegate(resultHandler);
 		return new Shell(resultHandler);
 	}
-
 }

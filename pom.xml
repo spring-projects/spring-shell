@@ -27,7 +27,7 @@
 		<java.version>1.8</java.version>
 		<jcommander.version>1.48</jcommander.version>
 	</properties>
-	
+
 	<modules>
 		<module>spring-shell-core</module>
 		<module>spring-shell-core-test-support</module>
@@ -113,7 +113,7 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
 				</plugin>
-			</plugins>		
+			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>

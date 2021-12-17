@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.Shell;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
@@ -23,8 +24,7 @@ import static org.springframework.util.ReflectionUtils.findMethod;
  *
  * @author Sualeh Fatehi
  */
-@SpringBootTest(properties = { InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=" + false,
-		"spring.main.allow-circular-references=true" })
+@SpringBootTest(properties = { InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=" + false })
 @ContextConfiguration(classes = TestCalculatorStateConfig.class)
 public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
 
@@ -32,6 +32,9 @@ public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
 
 	@Autowired
 	private Shell shell;
+
+	@Autowired
+	private CommandRegistry commandRegistry;
 
 	@Autowired
 	private CalculatorState state;
@@ -45,7 +48,7 @@ public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
 		final String command = "add";
 		final String commandMethod = "add";
 
-		final MethodTarget commandTarget = lookupCommand(shell, command);
+		final MethodTarget commandTarget = lookupCommand(commandRegistry, command);
 		assertThat(commandTarget).isNotNull();
 		assertThat(commandTarget.getGroup()).isEqualTo("Calculator Commands");
 		assertThat(commandTarget.getHelp()).isEqualTo("Add two integers");
@@ -67,7 +70,7 @@ public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
 		final String command = "add-to-memory";
 		final String commandMethod = "addToMemory";
 
-		final MethodTarget commandTarget = lookupCommand(shell, command);
+		final MethodTarget commandTarget = lookupCommand(commandRegistry, command);
 		assertThat(commandTarget).isNotNull();
 		assertThat(commandTarget.getGroup()).isEqualTo("Calculator Commands");
 		assertThat(commandTarget.getHelp()).isEqualTo("Add an integer to the value in memory");
