@@ -16,7 +16,9 @@
 	<properties>
 		<asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
 		<asciidoctorj.pdf.version>1.5.4</asciidoctorj.pdf.version>
+		<asciidoctorj.epub.version>1.5.1</asciidoctorj.epub.version>
 		<asciidoctorj.version>2.5.1</asciidoctorj.version>
+		<jruby.version>9.2.17.0</jruby.version>
 		<spring-doc-resources.version>0.2.5</spring-doc-resources.version>
 	</properties>
 
@@ -101,6 +103,46 @@
 			<!-- ASCIIDOC -->
 
 			<plugin>
+          <groupId>com.googlecode.maven-download-plugin</groupId>
+          <artifactId>download-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>unpack-doc-resources</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>wget</goal>
+              </goals>
+              <configuration>
+                <url>https://repo.spring.io/release/io/spring/docresources/spring-doc-resources/${spring-doc-resources.version}/spring-doc-resources-${spring-doc-resources.version}.zip</url>
+                <unpack>true</unpack>
+                <outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-asciidoc-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/asciidoc</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.asciidoctor</groupId>
 				<artifactId>asciidoctor-maven-plugin</artifactId>
 				<version>${asciidoctor.maven.plugin.version}</version>
@@ -110,21 +152,29 @@
 						<artifactId>asciidoctorj-pdf</artifactId>
 						<version>${asciidoctorj.pdf.version}</version>
 					</dependency>
+					<dependency>
+						<groupId>org.asciidoctor</groupId>
+						<artifactId>asciidoctorj-epub3</artifactId>
+						<version>${asciidoctorj.epub.version}</version>
+					</dependency>
 				</dependencies>
 				<executions>
 					<execution>
-						<id>html</id>
+						<id>generate-html</id>
 						<phase>generate-resources</phase>
-						<inherited>false</inherited>
 						<goals>
 							<goal>process-asciidoc</goal>
 						</goals>
 						<configuration>
 							<backend>html5</backend>
-							<outputDirectory>${project.build.directory}/site/reference/html</outputDirectory>
 							<sourceHighlighter>highlight.js</sourceHighlighter>
 							<attributes>
-								// these attributes are required to use the doc resources
+								<project-version>${project.version}</project-version>
+								<project-artifactId>${project.artifactId}</project-artifactId>
+								<toc>left</toc>
+								<toc-levels>4</toc-levels>
+								<sectanchors>true</sectanchors>
+								<sectnums />
 								<docinfo>shared</docinfo>
 								<stylesdir>css/</stylesdir>
 								<stylesheet>spring.css</stylesheet>
@@ -132,15 +182,13 @@
 								<icons>font</icons>
 								<highlightjsdir>js/highlight</highlightjsdir>
 								<highlightjs-theme>github</highlightjs-theme>
-								<sectanchors>true</sectanchors>
 							</attributes>
 						</configuration>
 					</execution>
 
 					<execution>
-						<id>pdf</id>
+						<id>generate-pdf</id>
 						<phase>generate-resources</phase>
-						<inherited>false</inherited>
 						<goals>
 							<goal>process-asciidoc</goal>
 						</goals>
@@ -148,6 +196,33 @@
 							<outputDirectory>${project.build.directory}/site/reference/pdf</outputDirectory>
 							<backend>pdf</backend>
 							<sourceHighlighter>coderay</sourceHighlighter>
+							<attributes>
+								<project-version>${project.version}</project-version>
+								<project-artifactId>${project.artifactId}</project-artifactId>
+								<icons>font</icons>
+								<pagenums />
+								<sectnums />
+								<toc />
+							</attributes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-epub</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<backend>epub3</backend>
+							<sourceHighlighter>coderay</sourceHighlighter>
+							<attributes>
+								<project-version>${project.version}</project-version>
+								<project-artifactId>${project.artifactId}</project-artifactId>
+								<icons>font</icons>
+								<pagenums />
+								<sectnums />
+								<toc />
+							</attributes>
 						</configuration>
 					</execution>
 				</executions>

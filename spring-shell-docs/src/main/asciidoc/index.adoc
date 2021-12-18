@@ -8,14 +8,7 @@ Eric Bottard;
 ifdef::backend-html5[]
 *{projectVersion}*
 
-NOTE: This documentation is also available as https://docs.spring.io/spring-shell/docs/{projectVersion}/reference/pdf/index.pdf[PDF].
-endif::[]
-
-ifdef::backend-pdf[]
-NOTE: This documentation is also available as https://docs.spring.io/spring-shell/docs/{projectVersion}/reference/htmlsingle/index.html[HTML].
-endif::[]
-
-(C) 2017 - 2020 Pivotal Software, Inc.
+(C) 2017 - 2021 VMware, Inc.
 
 _Copies of this document may be made for your own use and for distribution to
 others, provided that you do not charge any fee for such copies and further
