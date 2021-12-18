@@ -12,5 +12,6 @@
         "checkstyle.additional.suppressions.file": "https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow-build/main/spring-cloud-dataflow-build-tools/src/checkstyle/checkstyle-suppressions-empty.xml",
         "checkstyle.header.file": "https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow-build/main/spring-cloud-dataflow-build-tools/src/main/resources/checkstyle-header.txt"
     },
-    "java.checkstyle.version": "8.29"
+    "java.checkstyle.version": "8.29",
+    "java.configuration.maven.notCoveredPluginExecutionSeverity": "ignore"
 }
