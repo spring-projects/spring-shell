@@ -17,6 +17,7 @@ package org.springframework.shell;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 import org.jline.reader.Completer;
 import org.jline.reader.Highlighter;
@@ -86,6 +87,14 @@ public class LineReaderAutoConfiguration {
 						else {
 							return new AttributedString(buffer, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
 						}
+					}
+
+					@Override
+					public void setErrorPattern(Pattern errorPattern) {
+					}
+
+					@Override
+					public void setErrorIndex(int errorIndex) {
 					}
 				})
 				.parser(parser);
