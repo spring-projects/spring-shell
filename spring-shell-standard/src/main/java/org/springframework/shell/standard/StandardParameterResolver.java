@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.shell.standard;
-
-import static org.springframework.shell.Utils.unCamelify;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Executable;
@@ -37,6 +35,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.metadata.MethodDescriptor;
+import javax.validation.metadata.ParameterDescriptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
@@ -54,9 +58,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ObjectUtils;
 
-import javax.validation.*;
-import javax.validation.metadata.MethodDescriptor;
-import javax.validation.metadata.ParameterDescriptor;
+import static org.springframework.shell.Utils.unCamelify;
 
 /**
  * Default ParameterResolver implementation that supports the following features:
@@ -129,8 +131,6 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	@Override
 	public ValueResult resolve(MethodParameter methodParameter, List<String> wordsBuffer) {
-		String prefix = prefixForMethod(methodParameter.getMethod());
-
 		List<String> words = wordsBuffer.stream().filter(w -> !w.isEmpty()).collect(Collectors.toList());
 
 		CacheKey cacheKey = new CacheKey(methodParameter.getMethod(), wordsBuffer);
@@ -526,13 +526,9 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	private static class ParameterRawValue {
 
-		private CompletionContext context;
-
 		private Integer from;
 
 		private Integer to;
-
-		private Integer keyIndex;
 
 		/**
 		 * The raw String value that got bound to a parameter.

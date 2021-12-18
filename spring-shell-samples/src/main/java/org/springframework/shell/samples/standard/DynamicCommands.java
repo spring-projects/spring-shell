@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,12 @@ public class DynamicCommands {
 
     private boolean connected;
 
-    private boolean authenticated;
-
     public Availability authenticateAvailability() {
         return connected ? Availability.available() : Availability.unavailable("you are not connected");
     }
 
     @ShellMethod(value = "Authenticate with the system", group = "Dynamic Commands")
     public void authenticate(String credentials) {
-        authenticated = "sesame".equals(credentials);
     }
 
     @ShellMethod(value = "Connect to the system", group = "Dynamic Commands")
@@ -56,9 +53,5 @@ public class DynamicCommands {
     @ShellMethodAvailability("dangerousAvailability")
     public String blowUp() {
         return "Boom!";
-    }
-
-    private Availability dangerousAvailability() {
-        return connected && authenticated ? Availability.available() : Availability.unavailable("you failed to authenticate. Try 'sesame'.");
     }
 }
