@@ -19,7 +19,6 @@ package org.springframework.shell.jline;
 import java.util.Collections;
 
 import org.jline.reader.LineReader;
-import org.jline.reader.Parser;
 import org.jline.reader.UserInterruptException;
 import org.jline.utils.AttributedString;
 
@@ -62,16 +61,14 @@ public class InteractiveShellApplicationRunner implements ApplicationRunner {
 
 	private final PromptProvider promptProvider;
 
-	private final Parser parser;
-
 	private final Shell shell;
 
 	private final Environment environment;
 
-	public InteractiveShellApplicationRunner(LineReader lineReader, PromptProvider promptProvider, Parser parser, Shell shell, Environment environment) {
+	public InteractiveShellApplicationRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell,
+			Environment environment) {
 		this.lineReader = lineReader;
 		this.promptProvider = promptProvider;
-		this.parser = parser;
 		this.shell = shell;
 		this.environment = environment;
 	}

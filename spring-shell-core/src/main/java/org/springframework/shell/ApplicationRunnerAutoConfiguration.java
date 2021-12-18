@@ -46,8 +46,8 @@ public class ApplicationRunnerAutoConfiguration {
 
 	@Bean
 	@ConditionalOnProperty(prefix = SPRING_SHELL_INTERACTIVE, value = InteractiveShellApplicationRunner.ENABLED, havingValue = "true", matchIfMissing = true)
-	public ApplicationRunner interactiveApplicationRunner(Parser parser, Environment environment) {
-		return new InteractiveShellApplicationRunner(lineReader, promptProvider, parser, shell, environment);
+	public ApplicationRunner interactiveApplicationRunner(Environment environment) {
+		return new InteractiveShellApplicationRunner(lineReader, promptProvider, shell, environment);
 	}
 
 	@Bean
