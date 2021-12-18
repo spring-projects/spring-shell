@@ -1,5 +1,5 @@
 = Spring Shell Reference Documentation
-Eric Bottard;
+Eric Bottard; Janne Valkealahti; Jay Bryant;
 :doctype: book
 :hide-uri-scheme:
 :icons: font
