@@ -11,7 +11,7 @@
 		<artifactId>spring-shell-parent</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<description>Examples of using Spring Shell 2</description>
 
 	<build>
@@ -27,28 +27,13 @@
 	</build>
 
 	<dependencies>
-
-		<!-- The following starter brings everything you need, including adapters that trigger only if needed-->
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
 		</dependency>
-
-		<!-- Depend on Shell 1 to use Shell 1 API -->
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell</artifactId>
-			<version>1.2.0.RELEASE</version>
-		</dependency>
-
-		<!-- Depend on JCommander to use JCommander API -->
 		<dependency>
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
-			<version>1.48</version>
 		</dependency>
-
-
 	</dependencies>
-	
 </project>
