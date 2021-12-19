@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
 
 package org.springframework.shell.jline;
 
-import org.jline.reader.ParsedLine;
-import org.springframework.shell.Input;
-
 import java.util.List;
+
+import org.jline.reader.ParsedLine;
+
+import org.springframework.shell.Input;
+import org.springframework.shell.Utils;
 
 /**
  * An implementation of {@link Input} backed by the result of a {@link org.jline.reader.Parser#parse(String, int)}.
@@ -41,6 +43,6 @@ class ParsedLineInput implements Input {
 
     @Override
     public List<String> words() {
-        return JLineShellAutoConfiguration.sanitizeInput(parsedLine.words());
+        return Utils.sanitizeInput(parsedLine.words());
     }
 }

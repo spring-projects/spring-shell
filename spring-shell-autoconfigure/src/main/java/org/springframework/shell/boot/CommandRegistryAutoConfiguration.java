@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell;
+package org.springframework.shell.boot;
 
-import org.jline.reader.impl.history.DefaultHistory;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.CommandRegistry;
+import org.springframework.shell.ConfigurableCommandRegistry;
+import org.springframework.shell.MethodTargetRegistrar;
 
-@Configuration
-public class JLineAutoConfiguration {
+@Configuration(proxyBeanMethods = false)
+public class CommandRegistryAutoConfiguration {
 
-	@Configuration
-	@ConditionalOnMissingBean(org.jline.reader.History.class)
-	public static class JLineHistoryConfiguration {
-
-		@Bean
-		public org.jline.reader.History history(@Value("${spring.application.name:spring-shell}.log") String historyPath) {
-			return new DefaultHistory();
-		}
+	@Bean
+	public CommandRegistry commandRegistry(
+			ObjectProvider<MethodTargetRegistrar> methodTargerRegistrars) {
+		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+		methodTargerRegistrars.orderedStream().forEach(resolver -> {
+			resolver.register(registry);
+		});
+		return registry;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -86,4 +88,16 @@ public class Utils {
 			.mapToObj(i -> createMethodParameter(executable, i));
 	}
 
+	/**
+	 * Sanitize the buffer input given the customizations applied to the JLine
+	 * parser (<em>e.g.</em> support for
+	 * line continuations, <em>etc.</em>)
+	 */
+	public static List<String> sanitizeInput(List<String> words) {
+		words = words.stream()
+			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
+			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
+			.collect(Collectors.toList());
+		return words;
+	}
 }

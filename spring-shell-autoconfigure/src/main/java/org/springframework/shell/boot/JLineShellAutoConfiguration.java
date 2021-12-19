@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.jline;
+package org.springframework.shell.boot;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jline.reader.Parser;
 import org.jline.terminal.Terminal;
@@ -30,6 +28,8 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.jline.ExtendedDefaultParser;
+import org.springframework.shell.jline.PromptProvider;
 
 /**
  * Shell implementation using JLine to capture input and trigger completions.
@@ -62,17 +62,5 @@ public class JLineShellAutoConfiguration {
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
 		return parser;
-	}
-
-	/**
-	 * Sanitize the buffer input given the customizations applied to the JLine parser (<em>e.g.</em> support for
-	 * line continuations, <em>etc.</em>)
-	 */
-	static List<String> sanitizeInput(List<String> words) {
-		words = words.stream()
-			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
-			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
-			.collect(Collectors.toList());
-		return words;
 	}
 }
