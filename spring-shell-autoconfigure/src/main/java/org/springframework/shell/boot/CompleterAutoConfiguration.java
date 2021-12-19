@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell;
+package org.springframework.shell.boot;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +26,10 @@ import org.jline.reader.ParsedLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.CompletingParsedLine;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.Shell;
 
 @Configuration
 public class CompleterAutoConfiguration {

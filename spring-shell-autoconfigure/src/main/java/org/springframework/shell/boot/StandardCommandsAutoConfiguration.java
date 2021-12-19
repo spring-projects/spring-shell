@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.standard.commands;
+package org.springframework.shell.boot;
 
 import java.util.List;
 
 import org.jline.reader.Parser;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.ParameterResolver;
 import org.springframework.shell.Shell;
+import org.springframework.shell.standard.commands.Clear;
+import org.springframework.shell.standard.commands.Help;
+import org.springframework.shell.standard.commands.History;
+import org.springframework.shell.standard.commands.Quit;
+import org.springframework.shell.standard.commands.Script;
+import org.springframework.shell.standard.commands.Stacktrace;
 
 /**
  * Creates beans for standard commands.
@@ -34,6 +41,7 @@ import org.springframework.shell.Shell;
  * @author Eric Bottard
  */
 @Configuration
+@ConditionalOnClass({ Help.Command.class })
 public class StandardCommandsAutoConfiguration {
 
 	@Bean

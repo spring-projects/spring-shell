@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>spring-shell-starter</artifactId>
-	<name>Spring Shell Starter</name>
-	<packaging>pom</packaging>
+	<artifactId>spring-shell-autoconfigure</artifactId>
+	<name>Spring Shell Autoconfigure</name>
+	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>org.springframework.shell</groupId>
@@ -12,12 +12,10 @@
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
-	<description>Starter Dependency for Using Spring Shell</description>
-
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-autoconfigure</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
@@ -25,20 +23,23 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-standard</artifactId>
+			<artifactId>spring-shell-standard-commands</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-standard-commands</artifactId>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-jcommander-adapter</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-table</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 </project>

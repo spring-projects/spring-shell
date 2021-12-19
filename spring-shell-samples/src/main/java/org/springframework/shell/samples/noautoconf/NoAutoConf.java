@@ -19,16 +19,16 @@ package org.springframework.shell.samples.noautoconf;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.shell.SpringShellAutoConfiguration;
-import org.springframework.shell.jcommander.JCommanderParameterResolverAutoConfiguration;
-import org.springframework.shell.jline.JLineShellAutoConfiguration;
+import org.springframework.shell.boot.JCommanderParameterResolverAutoConfiguration;
+import org.springframework.shell.boot.JLineShellAutoConfiguration;
+import org.springframework.shell.boot.SpringShellAutoConfiguration;
+import org.springframework.shell.boot.StandardCommandsAutoConfiguration;
 import org.springframework.shell.samples.jcommander.JCommanderCommands;
 import org.springframework.shell.samples.standard.Commands;
 import org.springframework.shell.samples.standard.DynamicCommands;
 import org.springframework.shell.samples.standard.TableCommands;
 import org.springframework.shell.standard.FileValueProvider;
 import org.springframework.shell.standard.StandardAPIAutoConfiguration;
-import org.springframework.shell.standard.commands.StandardCommandsAutoConfiguration;
 
 /**
  * This class shows how to use the full extent of Spring Shell without relying on Boot auto configuration.
