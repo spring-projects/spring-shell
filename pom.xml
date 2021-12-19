@@ -23,8 +23,6 @@
 
 	<properties>
 		<jline.version>3.21.0</jline.version>
-		<assertj.version>3.8.0</assertj.version>
-		<java.version>1.8</java.version>
 		<jcommander.version>1.81</jcommander.version>
 	</properties>
 
@@ -42,7 +40,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- SUB MODULES -->
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-core</artifactId>
@@ -78,7 +75,6 @@
 				<artifactId>spring-shell-table</artifactId>
 				<version>3.0.0-SNAPSHOT</version>
 			</dependency>
-			<!-- OTHER DEPS -->
 			<dependency>
 				<groupId>org.jline</groupId>
 				<artifactId>jline</artifactId>
@@ -96,13 +92,6 @@
 				<version>${jcommander.version}</version>
 				<optional>true</optional>
 			</dependency>
-			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>${assertj.version}</version>
-				<scope>test</scope>
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
