@@ -17,6 +17,7 @@
 package org.springframework.shell.boot;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -33,8 +34,9 @@ import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.ResultHandler;
+import org.springframework.shell.ResultHandlerService;
 import org.springframework.shell.Shell;
-import org.springframework.shell.result.IterableResultHandler;
+import org.springframework.shell.result.GenericResultHandlerService;
 import org.springframework.shell.result.ResultHandlerConfig;
 
 /**
@@ -71,8 +73,16 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	public Shell shell(@Qualifier("main") ResultHandler resultHandler, @Qualifier("iterableResultHandler") IterableResultHandler iterableResultHandler) {
-		iterableResultHandler.setDelegate(resultHandler);
-		return new Shell(resultHandler);
+	public ResultHandlerService resultHandlerService(Set<ResultHandler<?>> resultHandlers) {
+		GenericResultHandlerService service = new GenericResultHandlerService();
+		for (ResultHandler<?> resultHandler : resultHandlers) {
+			service.addResultHandler(resultHandler);
+		}
+		return service;
+	}
+
+	@Bean
+	public Shell shell(ResultHandlerService resultHandlerService) {
+		return new Shell(resultHandlerService);
 	}
 }
