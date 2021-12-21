@@ -132,6 +132,7 @@
 				</executions>
 				<configuration>
 					<quiet>true</quiet>
+					<additionalJOption>-Xdoclint:none</additionalJOption>
 				</configuration>
 			</plugin>
 			<plugin>
