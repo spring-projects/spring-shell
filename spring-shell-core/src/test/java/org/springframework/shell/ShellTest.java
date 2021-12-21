@@ -46,17 +46,13 @@ import static org.mockito.Mockito.when;
  * @author Eric Bottard
  */
 @ExtendWith(MockitoExtension.class)
-// @RunWith(JUnitPlatform.class)
 public class ShellTest {
-
-	// @Rule
-	// public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Mock
 	private InputProvider inputProvider;
 
 	@Mock
-	private ResultHandler resultHandler;
+	ResultHandlerService resultHandlerService;
 
 	@Mock
 	private ParameterResolver parameterResolver;
@@ -79,7 +75,7 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?", null);
 		valueResult = new ValueResult(null, "test");
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
-		doThrow(new Exit()).when(resultHandler).handleResult(any());
+		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
 		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
@@ -97,7 +93,7 @@ public class ShellTest {
 	@Test
 	public void commandNotFound() throws IOException {
 		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?", null);
-		doThrow(new Exit()).when(resultHandler).handleResult(isA(CommandNotFound.class));
+		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
 		shell.methodTargets = Collections.singletonMap("bonjour", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
@@ -114,7 +110,7 @@ public class ShellTest {
 	// See https://github.com/spring-projects/spring-shell/issues/142
 	public void commandNotFoundPrefix() throws IOException {
 		when(inputProvider.readInput()).thenReturn(() -> "helloworld how are you doing ?", null);
-		doThrow(new Exit()).when(resultHandler).handleResult(isA(CommandNotFound.class));
+		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
 		shell.methodTargets = Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
@@ -133,7 +129,7 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "", () -> "hello world how are you doing ?", null);
 		valueResult = new ValueResult(null, "test");
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
-		doThrow(new Exit()).when(resultHandler).handleResult(any());
+		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
 		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
 
@@ -151,7 +147,7 @@ public class ShellTest {
 	@Test
 	public void commandThrowingAnException() throws IOException {
 		when(inputProvider.readInput()).thenReturn(() -> "fail", null);
-		doThrow(new Exit()).when(resultHandler).handleResult(isA(SomeException.class));
+		doThrow(new Exit()).when(resultHandlerService).handle(isA(SomeException.class));
 
 		shell.methodTargets = Collections.singletonMap("fail", MethodTarget.of("failing", this, new Command.Help("Will throw an exception")));
 

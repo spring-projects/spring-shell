@@ -55,10 +55,11 @@ import org.springframework.util.ReflectionUtils;
  * </p>
  *
  * @author Eric Bottard
+ * @author Janne Valkealahti
  */
 public class Shell {
 
-	private final ResultHandler resultHandler;
+	private final ResultHandlerService resultHandlerService;
 
 	/**
 	 * Marker object returned to signify that there was no input to turn into a command
@@ -84,8 +85,8 @@ public class Shell {
 	 */
 	protected static final Object UNRESOLVED = new Object();
 
-	public Shell(ResultHandler resultHandler) {
-		this.resultHandler = resultHandler;
+	public Shell(ResultHandlerService resultHandlerService) {
+		this.resultHandlerService = resultHandlerService;
 	}
 
 	@Autowired(required = false)
@@ -125,7 +126,7 @@ public class Shell {
 				if (e instanceof ExitRequest) { // Handles ExitRequest thrown from hitting CTRL-C
 					break;
 				}
-				resultHandler.handleResult(e);
+				resultHandlerService.handle(e);
 				continue;
 			}
 			if (input == null) {
@@ -134,7 +135,7 @@ public class Shell {
 
 			result = evaluate(input);
 			if (result != NO_INPUT && !(result instanceof ExitRequest)) {
-				resultHandler.handleResult(result);
+				resultHandlerService.handle(result);
 			}
 		}
 	}
