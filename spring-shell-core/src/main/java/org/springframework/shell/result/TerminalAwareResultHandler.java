@@ -18,8 +18,6 @@ package org.springframework.shell.result;
 
 import org.jline.terminal.Terminal;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.ResultHandler;
 
 /**
@@ -28,10 +26,10 @@ import org.springframework.shell.ResultHandler;
  * @author Eric Bottard
  */
 public abstract class TerminalAwareResultHandler<T> implements ResultHandler<T> {
+
 	protected Terminal terminal;
 
-	@Autowired @Lazy
-	public void setTerminal(Terminal terminal) {
+	protected TerminalAwareResultHandler(Terminal terminal) {
 		this.terminal = terminal;
 	}
 

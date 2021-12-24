@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 
@@ -99,5 +103,31 @@ public class Utils {
 			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
 			.collect(Collectors.toList());
 		return words;
+	}
+
+	private final static ValidatorFactory DEFAULT_VALIDATOR_FACTORY;
+	private final static Validator DEFAULT_VALIDATOR;
+
+	static {
+		DEFAULT_VALIDATOR_FACTORY = Validation.buildDefaultValidatorFactory();
+		DEFAULT_VALIDATOR = DEFAULT_VALIDATOR_FACTORY.getValidator();
+	}
+
+	/**
+	 * Gets a default shared validation factory.
+	 *
+	 * @return default validation factory
+	 */
+	public static ValidatorFactory defaultValidatorFactory() {
+		return DEFAULT_VALIDATOR_FACTORY;
+	}
+
+	/**
+	 * Gets a default shared validator.
+	 *
+	 * @return default validator
+	 */
+	public static Validator defaultValidator() {
+		return DEFAULT_VALIDATOR;
 	}
 }

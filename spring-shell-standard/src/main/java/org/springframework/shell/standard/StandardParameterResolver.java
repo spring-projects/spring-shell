@@ -35,7 +35,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.MethodDescriptor;
@@ -97,6 +96,8 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	private Collection<ValueProvider> valueProviders = new HashSet<>();
 
+	private Validator validator = Utils.defaultValidator();
+
 	/**
 	 * A cache from method+input to String representation of actual parameter values. Note
 	 * that the converted result is not cached, to allow dynamic computation to happen at
@@ -104,23 +105,15 @@ public class StandardParameterResolver implements ParameterResolver {
 	 */
 	private final Map<CacheKey, Map<Parameter, ParameterRawValue>> parameterCache = new ConcurrentReferenceHashMap<>();
 
-	@Autowired
-	public StandardParameterResolver(ConversionService conversionService) {
+	public StandardParameterResolver(ConversionService conversionService, Set<ValueProvider> valueProviders) {
 		this.conversionService = conversionService;
-	}
-
-	@Autowired(required = false)
-	public void setValueProviders(Collection<ValueProvider> valueProviders) {
 		this.valueProviders = valueProviders;
 	}
-
-	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 	@Autowired(required = false)
 	public void setValidatorFactory(ValidatorFactory validatorFactory) {
 		this.validator = validatorFactory.getValidator();
 	}
-
 
 	@Override
 	public boolean supports(MethodParameter parameter) {

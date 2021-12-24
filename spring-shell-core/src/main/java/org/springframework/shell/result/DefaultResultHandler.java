@@ -16,6 +16,8 @@
 
 package org.springframework.shell.result;
 
+import org.jline.terminal.Terminal;
+
 import org.springframework.shell.ResultHandler;
 
 /**
@@ -25,6 +27,10 @@ import org.springframework.shell.ResultHandler;
  * @author Eric Bottard
  */
 public class DefaultResultHandler extends TerminalAwareResultHandler<Object> {
+
+	public DefaultResultHandler(Terminal terminal) {
+		super(terminal);
+	}
 
 	@Override
 	protected void doHandleResult(Object result) {

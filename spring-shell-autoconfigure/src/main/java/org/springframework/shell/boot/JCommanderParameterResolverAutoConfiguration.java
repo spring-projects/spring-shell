@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Eric Bottard
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({ JCommander.class, JCommanderParameterResolver.class })
 public class JCommanderParameterResolverAutoConfiguration {
 

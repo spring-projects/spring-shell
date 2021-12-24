@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
@@ -70,10 +69,9 @@ public class Shell {
 	@Autowired
 	protected ApplicationContext applicationContext;
 
-	@Autowired
 	private CommandRegistry commandRegistry;
 
-	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+	private Validator validator = Utils.defaultValidator();
 
 	protected Map<String, MethodTarget> methodTargets = new HashMap<>();
 
@@ -85,8 +83,9 @@ public class Shell {
 	 */
 	protected static final Object UNRESOLVED = new Object();
 
-	public Shell(ResultHandlerService resultHandlerService) {
+	public Shell(ResultHandlerService resultHandlerService, CommandRegistry commandRegistry) {
 		this.resultHandlerService = resultHandlerService;
+		this.commandRegistry = commandRegistry;
 	}
 
 	@Autowired(required = false)

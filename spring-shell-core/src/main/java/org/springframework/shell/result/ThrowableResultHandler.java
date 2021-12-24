@@ -16,12 +16,12 @@
 
 package org.springframework.shell.result;
 
+import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
@@ -43,11 +43,16 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 
 	private Throwable lastError;
 
-	@Autowired @Lazy
 	private CommandRegistry commandRegistry;
 
-	@Autowired @Lazy
-	private InteractiveShellApplicationRunner interactiveRunner;
+	private ObjectProvider<InteractiveShellApplicationRunner> interactiveRunner;
+
+	public ThrowableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
+			ObjectProvider<InteractiveShellApplicationRunner> interactiveRunner) {
+		super(terminal);
+		this.commandRegistry = commandRegistry;
+		this.interactiveRunner = interactiveRunner;
+	}
 
 	@Override
 	protected void doHandleResult(Throwable result) {
@@ -55,7 +60,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 		String toPrint = StringUtils.hasLength(result.getMessage()) ? result.getMessage() : result.toString();
 		terminal.writer().println(new AttributedString(toPrint,
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
-		if (interactiveRunner.isEnabled() && commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
+		if (interactiveRunner.getIfAvailable().isEnabled() && commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
 			terminal.writer().println(
 				new AttributedStringBuilder()
 					.append("Details of the error have been omitted. You can use the ", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
@@ -65,7 +70,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 			);
 		}
 		terminal.writer().flush();
-		if (!interactiveRunner.isEnabled()) {
+		if (!interactiveRunner.getIfAvailable().isEnabled()) {
 			if (result instanceof RuntimeException) {
 				throw (RuntimeException) result;
 			}

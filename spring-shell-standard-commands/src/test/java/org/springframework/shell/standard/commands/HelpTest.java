@@ -117,8 +117,8 @@ public class HelpTest {
 	static class Config {
 
 		@Bean
-		public Help help() {
-			return new Help(Collections.singletonList(parameterResolver()));
+		public Help help(CommandRegistry commandRegistry) {
+			return new Help();
 		}
 
 		@Bean
@@ -148,7 +148,7 @@ public class HelpTest {
 
 		@Bean
 		public ParameterResolver parameterResolver() {
-			return new StandardParameterResolver(new DefaultConversionService());
+			return new StandardParameterResolver(new DefaultConversionService(), Collections.emptySet());
 		}
 
 		@Bean

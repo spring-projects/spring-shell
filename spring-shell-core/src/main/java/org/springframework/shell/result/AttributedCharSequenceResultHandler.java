@@ -16,6 +16,7 @@
 
 package org.springframework.shell.result;
 
+import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedCharSequence;
 
 import org.springframework.shell.ResultHandler;
@@ -26,6 +27,10 @@ import org.springframework.shell.ResultHandler;
  * @author Eric Bottard
  */
 public class AttributedCharSequenceResultHandler extends TerminalAwareResultHandler<AttributedCharSequence> {
+
+	public AttributedCharSequenceResultHandler(Terminal terminal) {
+		super(terminal);
+	}
 
 	@Override
 	protected void doHandleResult(AttributedCharSequence result) {

@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.BeanDescriptor;
@@ -43,6 +42,7 @@ import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.ParameterDescription;
 import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.Utils;
 import org.springframework.shell.ValueResult;
 import org.springframework.util.ReflectionUtils;
 
@@ -59,7 +59,7 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	private static final Collection<Class<? extends Annotation>> JCOMMANDER_ANNOTATIONS = Arrays.asList(Parameter.class,
 			DynamicParameter.class, ParametersDelegate.class);
 
-	private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+	private Validator validator = Utils.defaultValidator();
 
 	@Autowired(required = false)
 	public void setValidatorFactory(ValidatorFactory validatorFactory) {

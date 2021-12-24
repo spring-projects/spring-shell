@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.standard;
+package org.springframework.shell.boot;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTargetRegistrar;
-import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.standard.CommandValueProvider;
+import org.springframework.shell.standard.EnumValueProvider;
+import org.springframework.shell.standard.FileValueProvider;
+import org.springframework.shell.standard.StandardMethodTargetRegistrar;
+import org.springframework.shell.standard.ValueProvider;
 
 /**
  * Sets up all required beans for supporting the standard Shell API.
  *
  * @author Eric Bottard
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class StandardAPIAutoConfiguration {
 
 	@Bean
-	public ValueProvider commandValueProvider(@Lazy CommandRegistry commandRegistry) {
+	public ValueProvider commandValueProvider(CommandRegistry commandRegistry) {
 		return new CommandValueProvider(commandRegistry);
 	}
 
@@ -51,10 +52,5 @@ public class StandardAPIAutoConfiguration {
 	@Bean
 	public MethodTargetRegistrar standardMethodTargetResolver() {
 		return new StandardMethodTargetRegistrar();
-	}
-
-	@Bean
-	public ParameterResolver standardParameterResolver(@Qualifier("spring-shell") ConversionService conversionService) {
-		return new StandardParameterResolver(conversionService);
 	}
 }

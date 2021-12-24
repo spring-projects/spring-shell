@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 package org.springframework.shell.standard.commands;
 
-import org.jline.terminal.Terminal;
 import org.jline.utils.InfoCmp;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -28,9 +26,10 @@ import org.springframework.shell.standard.ShellMethod;
  * ANSI console related commands.
  *
  * @author Eric Bottard
+ * @author Janne Valkealahti
  */
 @ShellComponent
-public class Clear {
+public class Clear extends AbstractShellComponent {
 
 	/**
 	 * Marker interface for beans providing {@literal clear} functionality to the shell.
@@ -45,11 +44,11 @@ public class Clear {
 	 */
 	public interface Command {}
 
-	@Autowired @Lazy
-	private Terminal terminal;
+	public Clear() {
+	}
 
 	@ShellMethod("Clear the shell screen.")
 	public void clear() {
-		terminal.puts(InfoCmp.Capability.clear_screen);
+		getTerminal().puts(InfoCmp.Capability.clear_screen);
 	}
 }

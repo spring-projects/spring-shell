@@ -27,9 +27,9 @@ public class CommandRegistryAutoConfiguration {
 
 	@Bean
 	public CommandRegistry commandRegistry(
-			ObjectProvider<MethodTargetRegistrar> methodTargerRegistrars) {
+			ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars) {
 		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
-		methodTargerRegistrars.orderedStream().forEach(resolver -> {
+		methodTargetRegistrars.orderedStream().forEach(resolver -> {
 			resolver.register(registry);
 		});
 		return registry;

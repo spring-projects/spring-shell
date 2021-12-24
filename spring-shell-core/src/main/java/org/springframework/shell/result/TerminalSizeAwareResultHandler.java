@@ -16,6 +16,8 @@
 
 package org.springframework.shell.result;
 
+import org.jline.terminal.Terminal;
+
 import org.springframework.shell.TerminalSizeAware;
 
 /**
@@ -25,6 +27,9 @@ import org.springframework.shell.TerminalSizeAware;
  */
 public class TerminalSizeAwareResultHandler extends TerminalAwareResultHandler<TerminalSizeAware> {
 
+	public TerminalSizeAwareResultHandler(Terminal terminal) {
+		super(terminal);
+	}
 
 	@Override
 	protected void doHandleResult(TerminalSizeAware result) {

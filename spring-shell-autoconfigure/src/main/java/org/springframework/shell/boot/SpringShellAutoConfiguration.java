@@ -19,11 +19,7 @@ package org.springframework.shell.boot;
 import java.util.Collection;
 import java.util.Set;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +29,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
 import org.springframework.shell.Shell;
@@ -42,7 +39,7 @@ import org.springframework.shell.result.ResultHandlerConfig;
 /**
  * Creates supporting beans for running the Shell
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @Import(ResultHandlerConfig.class)
 public class SpringShellAutoConfiguration {
 
@@ -67,12 +64,6 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(Validator.class)
-	public Validator validator() {
-		return Validation.buildDefaultValidatorFactory().getValidator();
-	}
-
-	@Bean
 	public ResultHandlerService resultHandlerService(Set<ResultHandler<?>> resultHandlers) {
 		GenericResultHandlerService service = new GenericResultHandlerService();
 		for (ResultHandler<?> resultHandler : resultHandlers) {
@@ -82,7 +73,7 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	public Shell shell(ResultHandlerService resultHandlerService) {
-		return new Shell(resultHandlerService);
+	public Shell shell(ResultHandlerService resultHandlerService, CommandRegistry commandRegistry) {
+		return new Shell(resultHandlerService, commandRegistry);
 	}
 }

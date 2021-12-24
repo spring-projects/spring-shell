@@ -16,10 +16,15 @@
 
 package org.springframework.shell.result;
 
+import org.jline.terminal.Terminal;
+
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.TerminalSizeAware;
+import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 
 /**
  * Used for explicit configuration of {@link org.springframework.shell.ResultHandler}s.
@@ -32,28 +37,29 @@ public class ResultHandlerConfig {
 
 	@Bean
 	@ConditionalOnClass(TerminalSizeAware.class)
-	public TerminalSizeAwareResultHandler terminalSizeAwareResultHandler() {
-		return new TerminalSizeAwareResultHandler();
+	public TerminalSizeAwareResultHandler terminalSizeAwareResultHandler(Terminal terminal) {
+		return new TerminalSizeAwareResultHandler(terminal);
 	}
 
 	@Bean
-	public AttributedCharSequenceResultHandler attributedCharSequenceResultHandler() {
-		return new AttributedCharSequenceResultHandler();
+	public AttributedCharSequenceResultHandler attributedCharSequenceResultHandler(Terminal terminal) {
+		return new AttributedCharSequenceResultHandler(terminal);
 	}
 
 	@Bean
-	public DefaultResultHandler defaultResultHandler() {
-		return new DefaultResultHandler();
+	public DefaultResultHandler defaultResultHandler(Terminal terminal) {
+		return new DefaultResultHandler(terminal);
 	}
 
 	@Bean
-	public ParameterValidationExceptionResultHandler parameterValidationExceptionResultHandler() {
-		return new ParameterValidationExceptionResultHandler();
+	public ParameterValidationExceptionResultHandler parameterValidationExceptionResultHandler(Terminal terminal) {
+		return new ParameterValidationExceptionResultHandler(terminal);
 	}
 
 	@Bean
-	public ThrowableResultHandler throwableResultHandler() {
-		return new ThrowableResultHandler();
+	public ThrowableResultHandler throwableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
+		ObjectProvider<InteractiveShellApplicationRunner> interactiveApplicationRunner) {
+		return new ThrowableResultHandler(terminal, commandRegistry, interactiveApplicationRunner);
 	}
 
 }

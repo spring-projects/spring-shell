@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017-2021 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.shell.standard.commands;
 
 import java.io.File;
@@ -7,9 +22,8 @@ import java.io.Reader;
 
 import org.jline.reader.Parser;
 
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.shell.Shell;
 import org.springframework.shell.jline.FileInputProvider;
+import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -17,16 +31,14 @@ import org.springframework.shell.standard.ShellMethod;
  * A command that can read and execute other commands from a file.
  *
  * @author Eric Bottard
+ * @author Janne Valkealahti
  */
 @ShellComponent
-public class Script {
-
-    private final ObjectProvider<Shell> shell;
+public class Script extends AbstractShellComponent {
 
     private final Parser parser;
 
-    public Script(ObjectProvider<Shell> shell, Parser parser) {
-        this.shell = shell;
+    public Script(Parser parser) {
         this.parser = parser;
     }
 
@@ -48,7 +60,7 @@ public class Script {
     public void script(File file) throws IOException {
         Reader reader = new FileReader(file);
         try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-            shell.getIfAvailable().run(inputProvider);
+            getShell().run(inputProvider);
         }
     }
 

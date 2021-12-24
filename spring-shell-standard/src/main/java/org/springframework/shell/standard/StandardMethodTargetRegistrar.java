@@ -16,20 +16,31 @@
 
 package org.springframework.shell.standard;
 
-import static org.springframework.util.StringUtils.collectionToDelimitedString;
-
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.shell.*;
+import org.springframework.shell.Availability;
+import org.springframework.shell.Command;
+import org.springframework.shell.ConfigurableCommandRegistry;
+import org.springframework.shell.MethodTarget;
+import org.springframework.shell.MethodTargetRegistrar;
+import org.springframework.shell.Utils;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+
+import static org.springframework.util.StringUtils.collectionToDelimitedString;
 
 /**
  * The standard implementation of {@link MethodTargetRegistrar} for new shell
@@ -40,13 +51,13 @@ import org.springframework.util.StringUtils;
  * @author Florent Biville
  * @author Camilo Gonzalez
  */
-public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
+public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
 	private Map<String, MethodTarget> commands = new HashMap<>();
 
-	@Autowired
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}

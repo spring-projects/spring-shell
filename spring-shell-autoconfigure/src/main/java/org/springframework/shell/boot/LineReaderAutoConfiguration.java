@@ -29,7 +29,6 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,31 +36,35 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.shell.CommandRegistry;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class LineReaderAutoConfiguration {
 
-	@Autowired
 	private Terminal terminal;
 
-	@Autowired
 	private Completer completer;
 
-	@Autowired
 	private Parser parser;
 
-	@Autowired
 	private CommandRegistry commandRegistry;
 
-	@Autowired
 	private org.jline.reader.History jLineHistory;
+
+	@Value("${spring.application.name:spring-shell}.log")
+	private String historyPath;
+
+	public LineReaderAutoConfiguration(Terminal terminal, Completer completer, Parser parser,
+			CommandRegistry commandRegistry, org.jline.reader.History jLineHistory) {
+		this.terminal = terminal;
+		this.completer = completer;
+		this.parser = parser;
+		this.commandRegistry = commandRegistry;
+		this.jLineHistory = jLineHistory;
+	}
 
 	@EventListener
 	public void onContextClosedEvent(ContextClosedEvent event) throws IOException {
 		jLineHistory.save();
 	}
-
-	@Value("${spring.application.name:spring-shell}.log")
-	private String historyPath;
 
 	@Bean
 	public LineReader lineReader() {

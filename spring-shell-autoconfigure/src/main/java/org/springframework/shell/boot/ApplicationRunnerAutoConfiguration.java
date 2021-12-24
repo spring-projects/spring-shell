@@ -18,8 +18,6 @@ package org.springframework.shell.boot;
 import org.jline.reader.LineReader;
 import org.jline.reader.Parser;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,27 +31,30 @@ import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import static org.springframework.shell.jline.InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE;
 import static org.springframework.shell.jline.ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class ApplicationRunnerAutoConfiguration {
 
-	@Autowired
 	private Shell shell;
 
-	@Autowired
 	private PromptProvider promptProvider;
 
-	@Autowired
 	private LineReader lineReader;
+
+	public ApplicationRunnerAutoConfiguration(Shell shell, PromptProvider promptProvider, LineReader lineReader) {
+		this.shell = shell;
+		this.promptProvider = promptProvider;
+		this.lineReader = lineReader;
+	}
 
 	@Bean
 	@ConditionalOnProperty(prefix = SPRING_SHELL_INTERACTIVE, value = InteractiveShellApplicationRunner.ENABLED, havingValue = "true", matchIfMissing = true)
-	public ApplicationRunner interactiveApplicationRunner(Environment environment) {
+	public InteractiveShellApplicationRunner interactiveApplicationRunner(Environment environment) {
 		return new InteractiveShellApplicationRunner(lineReader, promptProvider, shell, environment);
 	}
 
 	@Bean
 	@ConditionalOnProperty(prefix = SPRING_SHELL_SCRIPT, value = ScriptShellApplicationRunner.ENABLED, havingValue = "true", matchIfMissing = true)
-	public ApplicationRunner scriptApplicationRunner(Parser parser, ConfigurableEnvironment environment) {
+	public ScriptShellApplicationRunner scriptApplicationRunner(Parser parser, ConfigurableEnvironment environment) {
 		return new ScriptShellApplicationRunner(parser, shell, environment);
 	}
 }

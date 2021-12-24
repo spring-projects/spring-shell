@@ -17,7 +17,10 @@
 package org.springframework.shell.standard;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jline.reader.ParsedLine;
@@ -33,7 +36,6 @@ import org.springframework.shell.Utils;
 import org.springframework.shell.ValueResult;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.shell.ValueResultAsserts.assertThat;
@@ -46,12 +48,14 @@ import static org.springframework.util.ReflectionUtils.findMethod;
  */
 public class StandardParameterResolverTest {
 
-	private StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService());
+	// private StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(), Collections.emptySet());
 
 	// Tests for resolution
 
 	@Test
 	public void testParses() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
 		List<String> words = asList("--force --name --foo y".split(" "));
@@ -74,6 +78,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testParsesWithMethodPrefix() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "prefixTest", String.class);
 
 		ValueResult result = resolver.resolve(Utils.createMethodParameter(method, 0),
@@ -83,6 +89,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testParameterSpecifiedTwiceViaDifferentAliases() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
 		assertThatThrownBy(() -> {
@@ -95,6 +103,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testParameterSpecifiedTwiceViaSameKey() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
 		assertThatThrownBy(() -> {
@@ -107,6 +117,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testTooMuchInput() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
 		assertThatThrownBy(() -> {
@@ -119,6 +131,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testIncompleteCommandResolution() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "shutdown", Remote.Delay.class);
 
 		assertThatThrownBy(() -> {
@@ -131,6 +145,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testIncompleteCommandResolutionBigArity() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "add", List.class);
 
 		assertThatThrownBy(() -> {
@@ -143,6 +159,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testUnresolvableArg() throws Exception {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 
 		assertThatThrownBy(() -> {
@@ -157,6 +175,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testParameterKeyNotYetSetAppearsInProposals() {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 		List<String> completions = resolver.complete(
 				Utils.createMethodParameter(method, 1),
@@ -172,6 +192,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testParameterKeyNotFullySpecified() {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 		List<String> completions = resolver.complete(
 				Utils.createMethodParameter(method, 1),
@@ -187,6 +209,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testNoMoreAvailableParameters() {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "zap", boolean.class, String.class, String.class, String.class);
 		List<String> completions = resolver.complete(
 				Utils.createMethodParameter(method, 2), // trying to complete --foo
@@ -197,6 +221,8 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testNotTheRightTimeToCompleteThatParameter() {
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				Collections.emptySet());
 		Method method = findMethod(Remote.class, "shutdown", Remote.Delay.class);
 		List<String> completions = resolver.complete(
 				Utils.createMethodParameter(method, 0),
@@ -207,8 +233,10 @@ public class StandardParameterResolverTest {
 
 	@Test
 	public void testValueCompletionWithNonDefaultArity() {
-
-		resolver.setValueProviders(singletonList(new Remote.NumberValueProvider("12", "42", "7")));
+		Set<ValueProvider> valueProviders = new HashSet<>();
+		valueProviders.add(new Remote.NumberValueProvider("12", "42", "7"));
+		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
+				valueProviders);
 
 		Method[] methods = {
 			findMethod(org.springframework.shell.standard.Remote.class, "add", List.class),

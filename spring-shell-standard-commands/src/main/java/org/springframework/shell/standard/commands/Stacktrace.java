@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.standard.commands;
 
-import org.jline.terminal.Terminal;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.result.ThrowableResultHandler;
+import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 /**
  * A command to display the full stacktrace when an error occurs.
+ *
+ * @author Eric Bottard
+ * @author Janne Valkealahti
  */
 @ShellComponent
-public class Stacktrace {
+public class Stacktrace extends AbstractShellComponent {
 
 	/**
 	 * Marker interface for beans providing {@literal stacktrace} functionality to the shell.
@@ -43,17 +43,16 @@ public class Stacktrace {
 	 */
 	public interface Command {}
 
-	@Autowired @Lazy
-	private Terminal terminal;
+	private ObjectProvider<ThrowableResultHandler> throwableResultHandler;
 
-	@Autowired
-	private ThrowableResultHandler throwableResultHandler;
-
+	public Stacktrace(ObjectProvider<ThrowableResultHandler> throwableResultHandler) {
+		this.throwableResultHandler = throwableResultHandler;
+	}
 
 	@ShellMethod(key = ThrowableResultHandler.DETAILS_COMMAND_NAME, value = "Display the full stacktrace of the last error.")
 	public void stacktrace() {
-		if (throwableResultHandler.getLastError() != null) {
-			throwableResultHandler.getLastError().printStackTrace(terminal.writer());
+		if (throwableResultHandler.getIfAvailable().getLastError() != null) {
+			throwableResultHandler.getIfAvailable().getLastError().printStackTrace(getTerminal().writer());
 		}
 	}
 }

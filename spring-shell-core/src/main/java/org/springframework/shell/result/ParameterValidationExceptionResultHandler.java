@@ -24,6 +24,7 @@ import java.util.stream.StreamSupport;
 import javax.validation.ElementKind;
 import javax.validation.Path;
 
+import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
@@ -42,6 +43,10 @@ import org.springframework.shell.Utils;
  */
 public class ParameterValidationExceptionResultHandler
 		extends TerminalAwareResultHandler<ParameterValidationException> {
+
+	public ParameterValidationExceptionResultHandler(Terminal terminal) {
+		super(terminal);
+	}
 
 	@Autowired
 	private List<ParameterResolver> parameterResolvers;

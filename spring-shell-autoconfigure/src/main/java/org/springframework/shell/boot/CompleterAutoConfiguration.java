@@ -31,7 +31,7 @@ import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.Shell;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class CompleterAutoConfiguration {
 
 	@Autowired

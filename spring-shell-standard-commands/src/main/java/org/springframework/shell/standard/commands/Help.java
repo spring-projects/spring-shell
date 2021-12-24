@@ -29,21 +29,18 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.validation.MessageInterpolator;
-import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.ConstraintDescriptor;
 
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.ParameterDescription;
-import org.springframework.shell.ParameterResolver;
 import org.springframework.shell.Utils;
+import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -60,7 +57,7 @@ import static java.util.stream.Collectors.toMap;
  * @author Eric Bottard
  */
 @ShellComponent
-public class Help {
+public class Help extends AbstractShellComponent {
 
 	/**
 	 * Marker interface for beans providing {@literal help} functionality to the shell.
@@ -80,28 +77,15 @@ public class Help {
 	public interface Command {
 	}
 
-	private final List<ParameterResolver> parameterResolvers;
+	private MessageInterpolator messageInterpolator = Utils.defaultValidatorFactory().getMessageInterpolator();
 
-	private ObjectProvider<CommandRegistry> commandRegistry;
-
-	private MessageInterpolator messageInterpolator = Validation.buildDefaultValidatorFactory()
-			.getMessageInterpolator();
-
-	@Autowired
-	public Help(List<ParameterResolver> parameterResolvers) {
-		this.parameterResolvers = parameterResolvers;
-	}
-
-	@Autowired // ctor injection impossible b/c of circular dependency
-	public void setCommandRegistry(ObjectProvider<CommandRegistry> commandRegistry) {
-		this.commandRegistry = commandRegistry;
+	public Help() {
 	}
 
 	@Autowired(required = false)
 	public void setValidatorFactory(ValidatorFactory validatorFactory) {
 		this.messageInterpolator = validatorFactory.getMessageInterpolator();
 	}
-
 
 	@ShellMethod(value = "Display help about available commands.", prefix = "-")
 	public CharSequence help(
@@ -121,7 +105,7 @@ public class Help {
 	 * Return a description of a specific command. Uses a layout inspired by *nix man pages.
 	 */
 	private CharSequence documentCommand(String command) {
-		MethodTarget methodTarget = commandRegistry.getIfAvailable().listCommands().get(command);
+		MethodTarget methodTarget = getCommandRegistry().listCommands().get(command);
 		if (methodTarget == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
 		}
@@ -248,7 +232,7 @@ public class Help {
 	}
 
 	private void documentAliases(AttributedStringBuilder result, String command, MethodTarget methodTarget) {
-		Set<String> aliases = commandRegistry.getIfAvailable().listCommands().entrySet().stream()
+		Set<String> aliases = getCommandRegistry().listCommands().entrySet().stream()
 				.filter(e -> e.getValue().equals(methodTarget))
 				.map(Map.Entry::getKey)
 				.filter(c -> !command.equals(c))
@@ -277,7 +261,7 @@ public class Help {
 	}
 
 	private CharSequence listCommands() {
-		Map<String, MethodTarget> commandsByName = commandRegistry.getIfAvailable().listCommands();
+		Map<String, MethodTarget> commandsByName = getCommandRegistry().listCommands();
 
 		SortedMap<String, Map<String, MethodTarget>> commandsByGroupAndName = commandsByName.entrySet().stream()
 				.collect(groupingBy(e -> e.getValue().getGroup(), TreeMap::new, // group by and sort by command group
@@ -335,7 +319,7 @@ public class Help {
 
 	private List<ParameterDescription> getParameterDescriptions(MethodTarget methodTarget) {
 		return Utils.createMethodParameters(methodTarget.getMethod())
-				.flatMap(mp -> parameterResolvers.stream().filter(pr -> pr.supports(mp)).limit(1L)
+				.flatMap(mp -> getParameterResolver().filter(pr -> pr.supports(mp)).limit(1L)
 						.flatMap(pr -> pr.describe(mp)))
 				.collect(Collectors.toList());
 

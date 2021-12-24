@@ -16,8 +16,6 @@
 
 package org.springframework.shell.boot;
 
-import java.util.List;
-
 import org.jline.reader.Parser;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -26,8 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.ParameterResolver;
-import org.springframework.shell.Shell;
+import org.springframework.shell.result.ThrowableResultHandler;
 import org.springframework.shell.standard.commands.Clear;
 import org.springframework.shell.standard.commands.Help;
 import org.springframework.shell.standard.commands.History;
@@ -40,15 +37,15 @@ import org.springframework.shell.standard.commands.Stacktrace;
  *
  * @author Eric Bottard
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({ Help.Command.class })
 public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(Help.Command.class)
 	@ConditionalOnProperty(prefix = "spring.shell.command.help", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public Help help(List<ParameterResolver> parameterResolvers) {
-		return new Help(parameterResolvers);
+	public Help help() {
+		return new Help();
 	}
 
 	@Bean
@@ -68,15 +65,15 @@ public class StandardCommandsAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(Stacktrace.Command.class)
 	@ConditionalOnProperty(prefix = "spring.shell.command.stacktrace", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public Stacktrace stacktrace() {
-		return new Stacktrace();
+	public Stacktrace stacktrace(ObjectProvider<ThrowableResultHandler> throwableResultHandler) {
+		return new Stacktrace(throwableResultHandler);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(Script.Command.class)
 	@ConditionalOnProperty(prefix = "spring.shell.command.script", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public Script script(ObjectProvider<Shell> shell, Parser parser) {
-		return new Script(shell, parser);
+	public Script script(Parser parser) {
+		return new Script(parser);
 	}
 
 	@Bean

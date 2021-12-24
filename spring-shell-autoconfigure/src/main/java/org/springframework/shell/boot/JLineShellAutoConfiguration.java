@@ -37,7 +37,7 @@ import org.springframework.shell.jline.PromptProvider;
  * @author Eric Bottard
  * @author Florent Biville
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class JLineShellAutoConfiguration {
 
 	@Bean(destroyMethod = "close")
