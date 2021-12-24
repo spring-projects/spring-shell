@@ -41,6 +41,11 @@ class DomainObject {
 	public String getValue() {
 		return value;
 	}
+
+	@Override
+	public String toString() {
+		return "DomainObject [value=" + value + "]";
+	}
 }
 
 @Component

@@ -16,19 +16,17 @@
 
 package org.springframework.shell.boot;
 
-import java.util.Collection;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.convert.converter.ConverterFactory;
-import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
@@ -44,23 +42,13 @@ import org.springframework.shell.result.ResultHandlerConfig;
 public class SpringShellAutoConfiguration {
 
 	@Bean
-	@Qualifier("spring-shell")
+	@ConditionalOnMissingBean(ConversionService.class)
 	public ConversionService shellConversionService(ApplicationContext applicationContext) {
-		Collection<Converter> converters = applicationContext.getBeansOfType(Converter.class).values();
-		Collection<GenericConverter> genericConverters = applicationContext.getBeansOfType(GenericConverter.class).values();
-		Collection<ConverterFactory> converterFactories = applicationContext.getBeansOfType(ConverterFactory.class).values();
-
-		DefaultConversionService defaultConversionService = new DefaultConversionService();
-		for (Converter converter : converters) {
-			defaultConversionService.addConverter(converter);
-		}
-		for (GenericConverter genericConverter : genericConverters) {
-			defaultConversionService.addConverter(genericConverter);
-		}
-		for (ConverterFactory converterFactory : converterFactories) {
-			defaultConversionService.addConverterFactory(converterFactory);
-		}
-		return defaultConversionService;
+		FormattingConversionService service = new FormattingConversionService();
+		DefaultConversionService.addDefaultConverters(service);
+		DefaultConversionService.addCollectionConverters(service);
+		ApplicationConversionService.addBeans(service, applicationContext);
+		return service;
 	}
 
 	@Bean
