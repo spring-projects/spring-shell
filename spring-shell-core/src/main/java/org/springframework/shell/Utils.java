@@ -76,7 +76,7 @@ public class Utils {
 		if (executable instanceof Method) {
 			methodParameter = new MethodParameter((Method) executable, i);
 		} else if (executable instanceof Constructor){
-			methodParameter = new MethodParameter((Constructor) executable, i);
+			methodParameter = new MethodParameter((Constructor<?>) executable, i);
 		} else {
 			throw new IllegalArgumentException("Unsupported Executable: " + executable);
 		}

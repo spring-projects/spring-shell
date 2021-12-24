@@ -13,6 +13,7 @@ import org.springframework.shell.MethodTarget;
  */
 public class BaseCalculatorTest {
 
+	@SuppressWarnings("unchecked")
 	protected <T> T invoke(final MethodTarget methodTarget, final Object... args) {
 		return (T) invokeMethod(methodTarget.getMethod(), methodTarget.getBean(), args);
 	}

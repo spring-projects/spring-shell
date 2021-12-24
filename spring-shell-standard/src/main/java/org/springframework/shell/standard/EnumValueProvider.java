@@ -38,7 +38,7 @@ public class EnumValueProvider implements ValueProvider {
 	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints) {
 		List<CompletionProposal> result = new ArrayList<>();
 		for (Object v : parameter.getParameterType().getEnumConstants()) {
-			Enum e = (Enum) v;
+			Enum<?> e = (Enum<?>) v;
 			String prefix = completionContext.currentWordUpToCursor();
 			if (prefix == null) {
 				prefix = "";

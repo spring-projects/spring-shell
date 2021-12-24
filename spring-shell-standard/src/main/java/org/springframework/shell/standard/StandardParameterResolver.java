@@ -380,7 +380,7 @@ public class StandardParameterResolver implements ParameterResolver {
 			List<CompletionProposal> result = new ArrayList<>();
 
 			Object value = convertRawValue(parameterRawValue, methodParameter);
-			if (value instanceof Collection && ((Collection) value).size() == arity
+			if (value instanceof Collection && ((Collection<?>) value).size() == arity
 					|| (ObjectUtils.isArray(value) && Array.getLength(value) == arity)) {
 				// We're done already
 				return result;

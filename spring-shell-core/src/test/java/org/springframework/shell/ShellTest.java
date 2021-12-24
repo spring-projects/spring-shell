@@ -72,7 +72,7 @@ public class ShellTest {
 	@Test
 	public void commandMatch() throws IOException {
 		when(parameterResolver.supports(any())).thenReturn(true);
-		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?", null);
+		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?");
 		valueResult = new ValueResult(null, "test");
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
 		doThrow(new Exit()).when(resultHandlerService).handle(any());
@@ -92,7 +92,7 @@ public class ShellTest {
 
 	@Test
 	public void commandNotFound() throws IOException {
-		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?", null);
+		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
 		shell.methodTargets = Collections.singletonMap("bonjour", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
@@ -109,7 +109,7 @@ public class ShellTest {
 	@Test
 	// See https://github.com/spring-projects/spring-shell/issues/142
 	public void commandNotFoundPrefix() throws IOException {
-		when(inputProvider.readInput()).thenReturn(() -> "helloworld how are you doing ?", null);
+		when(inputProvider.readInput()).thenReturn(() -> "helloworld how are you doing ?");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
 		shell.methodTargets = Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
@@ -146,7 +146,7 @@ public class ShellTest {
 
 	@Test
 	public void commandThrowingAnException() throws IOException {
-		when(inputProvider.readInput()).thenReturn(() -> "fail", null);
+		when(inputProvider.readInput()).thenReturn(() -> "fail");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(SomeException.class));
 
 		shell.methodTargets = Collections.singletonMap("fail", MethodTarget.of("failing", this, new Command.Help("Will throw an exception")));
@@ -231,10 +231,12 @@ public class ShellTest {
 		assertThat(proposals).isEmpty();
 	}
 
+	@SuppressWarnings("unused")
 	private void helloWorld(String a) {
 		invoked = true;
 	}
 
+	@SuppressWarnings("unused")
 	private String failing() {
 		invoked = true;
 		throw new SomeException();
