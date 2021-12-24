@@ -19,14 +19,15 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>org.springframework.shell.samples.SpringShellSample</mainClass>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
@@ -36,4 +37,85 @@
 			<artifactId>jcommander</artifactId>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+        <profile>
+            <id>native</id>
+			<!-- needs GRAALVM_HOME to point to graal tools -->
+			<properties>
+				<spring-native.version>0.11.1</spring-native.version>
+			</properties>
+            <dependencies>
+				<dependency>
+					<groupId>org.springframework.experimental</groupId>
+					<artifactId>spring-native</artifactId>
+					<version>${spring-native.version}</version>
+				</dependency>
+                <!-- Required with Maven Surefire 2.x -->
+                <dependency>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-launcher</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+			        <plugin>
+			            <groupId>org.springframework.experimental</groupId>
+			            <artifactId>spring-aot-maven-plugin</artifactId>
+			            <version>${spring-native.version}</version>
+			            <executions>
+			                <execution>
+			                    <id>generate</id>
+			                    <goals>
+			                        <goal>generate</goal>
+			                    </goals>
+			                </execution>
+			            </executions>
+			        </plugin>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>0.9.9</version>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                            <execution>
+                                <id>test-native</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <phase>test</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- ... -->
+                        </configuration>
+                    </plugin>
+                    <!-- Avoid a clash between Spring Boot repackaging and native-maven-plugin -->
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>spring-releases</id>
+					<name>Spring Releasess</name>
+					<url>https://repo.spring.io/release</url>
+				</pluginRepository>
+			</pluginRepositories>
+        </profile>
+    </profiles>
+
 </project>
