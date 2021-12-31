@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *      https://www.apache.org/licenses/LICENSE-2.0
- *      
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,25 +25,23 @@ import java.util.stream.Collectors;
 import org.jline.reader.Parser;
 
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.shell.Shell;
+import org.springframework.shell.ShellRunner;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Spring Boot ApplicationRunner that looks for process arguments that start with
  * {@literal @}, which are then interpreted as references to script files to run and exit.
- * 
- * <p>
+ *
  * Has higher precedence than {@link InteractiveShellApplicationRunner} so that it
  * prevents it to run if scripts are found.
- * </p>
  *
  * @author Eric Bottard
  */
 //tag::documentation[]
 @Order(InteractiveShellApplicationRunner.PRECEDENCE - 100) // Runs before InteractiveShellApplicationRunner
-public class ScriptShellApplicationRunner implements ApplicationRunner {
+public class ScriptShellApplicationRunner implements ShellRunner {
 //end::documentation[]
 
 	public static final String SPRING_SHELL_SCRIPT = "spring.shell.script";
@@ -59,12 +57,18 @@ public class ScriptShellApplicationRunner implements ApplicationRunner {
 
 	private final Shell shell;
 
-	private final ConfigurableEnvironment environment;
-
-	public ScriptShellApplicationRunner(Parser parser, Shell shell, ConfigurableEnvironment environment) {
+	public ScriptShellApplicationRunner(Parser parser, Shell shell) {
 		this.parser = parser;
 		this.shell = shell;
-		this.environment = environment;
+	}
+
+	@Override
+	public boolean canRun(ApplicationArguments args) {
+		List<File> scriptsToRun = args.getNonOptionArgs().stream()
+				.filter(s -> s.startsWith("@"))
+				.map(s -> new File(s.substring(1)))
+				.collect(Collectors.toList());
+		return !ObjectUtils.isEmpty(scriptsToRun);
 	}
 
 	//tag::documentation[]
@@ -76,15 +80,10 @@ public class ScriptShellApplicationRunner implements ApplicationRunner {
 				.map(s -> new File(s.substring(1)))
 				.collect(Collectors.toList());
 
-		boolean batchEnabled = environment.getProperty(SPRING_SHELL_SCRIPT_ENABLED, boolean.class, true);
-
-		if (!scriptsToRun.isEmpty() && batchEnabled) {
-			InteractiveShellApplicationRunner.disable(environment);
-			for (File file : scriptsToRun) {
-				try (Reader reader = new FileReader(file);
-						FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-					shell.run(inputProvider);
-				}
+		for (File file : scriptsToRun) {
+			try (Reader reader = new FileReader(file);
+					FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
+				shell.run(inputProvider);
 			}
 		}
 	}

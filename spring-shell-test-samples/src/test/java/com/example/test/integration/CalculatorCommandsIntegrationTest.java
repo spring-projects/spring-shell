@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.Shell;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +23,7 @@ import static org.springframework.util.ReflectionUtils.findMethod;
  *
  * @author Sualeh Fatehi
  */
-@SpringBootTest(properties = { InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=" + false })
+@SpringBootTest(properties = { "spring.shell.interactive.enabled=false" })
 @ContextConfiguration(classes = TestCalculatorStateConfig.class)
 public class CalculatorCommandsIntegrationTest extends BaseCalculatorTest {
 

@@ -15,46 +15,23 @@
  */
 package org.springframework.shell.boot;
 
-import org.jline.reader.LineReader;
-import org.jline.reader.Parser;
+import java.util.List;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
-import org.springframework.shell.Shell;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
-import org.springframework.shell.jline.PromptProvider;
-import org.springframework.shell.jline.ScriptShellApplicationRunner;
-
-import static org.springframework.shell.jline.InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE;
-import static org.springframework.shell.jline.ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT;
+import org.springframework.shell.DefaultApplicationRunner;
+import org.springframework.shell.ShellApplicationRunner;
+import org.springframework.shell.ShellRunner;
 
 @Configuration(proxyBeanMethods = false)
+@EnableConfigurationProperties(SpringShellProperties.class)
 public class ApplicationRunnerAutoConfiguration {
 
-	private Shell shell;
-
-	private PromptProvider promptProvider;
-
-	private LineReader lineReader;
-
-	public ApplicationRunnerAutoConfiguration(Shell shell, PromptProvider promptProvider, LineReader lineReader) {
-		this.shell = shell;
-		this.promptProvider = promptProvider;
-		this.lineReader = lineReader;
-	}
-
 	@Bean
-	@ConditionalOnProperty(prefix = SPRING_SHELL_INTERACTIVE, value = InteractiveShellApplicationRunner.ENABLED, havingValue = "true", matchIfMissing = true)
-	public InteractiveShellApplicationRunner interactiveApplicationRunner(Environment environment) {
-		return new InteractiveShellApplicationRunner(lineReader, promptProvider, shell, environment);
-	}
-
-	@Bean
-	@ConditionalOnProperty(prefix = SPRING_SHELL_SCRIPT, value = ScriptShellApplicationRunner.ENABLED, havingValue = "true", matchIfMissing = true)
-	public ScriptShellApplicationRunner scriptApplicationRunner(Parser parser, ConfigurableEnvironment environment) {
-		return new ScriptShellApplicationRunner(parser, shell, environment);
+	@ConditionalOnMissingBean(ShellApplicationRunner.class)
+	public DefaultApplicationRunner defaultApplicationRunner(List<ShellRunner> shellRunners) {
+		return new DefaultApplicationRunner(shellRunners);
 	}
 }

@@ -1,5 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.springframework.shell.boot.SpringShellAutoConfiguration,\
+org.springframework.shell.boot.ShellRunnerAutoConfiguration,\
 org.springframework.shell.boot.ApplicationRunnerAutoConfiguration,\
 org.springframework.shell.boot.CommandRegistryAutoConfiguration,\
 org.springframework.shell.boot.LineReaderAutoConfiguration,\

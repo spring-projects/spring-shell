@@ -60,7 +60,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 		String toPrint = StringUtils.hasLength(result.getMessage()) ? result.getMessage() : result.toString();
 		terminal.writer().println(new AttributedString(toPrint,
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
-		if (interactiveRunner.getIfAvailable().isEnabled() && commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
+		if (interactiveRunner.getIfAvailable() != null && commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
 			terminal.writer().println(
 				new AttributedStringBuilder()
 					.append("Details of the error have been omitted. You can use the ", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
@@ -70,7 +70,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 			);
 		}
 		terminal.writer().flush();
-		if (!interactiveRunner.getIfAvailable().isEnabled()) {
+		if (interactiveRunner.getIfAvailable() == null) {
 			if (result instanceof RuntimeException) {
 				throw (RuntimeException) result;
 			}

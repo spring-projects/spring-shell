@@ -16,34 +16,29 @@
 
 package org.springframework.shell.jline;
 
-import java.util.Collections;
-
 import org.jline.reader.LineReader;
 import org.jline.reader.UserInterruptException;
 import org.jline.utils.AttributedString;
 
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
 import org.springframework.shell.Shell;
+import org.springframework.shell.ShellRunner;
 
 /**
- * Default Boot runner that bootstraps the shell application in interactive mode.
+ * Default Boot runner that bootstraps the shell application in interactive
+ * mode.
  *
- * <p>
- *     Runs the REPL of the shell unless the {@literal spring.shell.interactive} property has been set to {@literal false}.
- * </p>
+ * Runs the REPL of the shell unless the {@literal spring.shell.interactive}
+ * property has been set to {@literal false}.
  *
  * @author Eric Bottard
  */
 @Order(InteractiveShellApplicationRunner.PRECEDENCE)
-public class InteractiveShellApplicationRunner implements ApplicationRunner {
+public class InteractiveShellApplicationRunner implements ShellRunner {
 
 	/**
 	 * The precedence at which this runner is set. Highger precedence runners may effectively disable this one by setting
@@ -51,47 +46,27 @@ public class InteractiveShellApplicationRunner implements ApplicationRunner {
 	 */
 	public static final int PRECEDENCE = 0;
 
-	public static final String SPRING_SHELL_INTERACTIVE = "spring.shell.interactive";
-	public static final String ENABLED = "enabled";
-
-	/** The name of the property that controls whether this runner effectively does something. */
-	public static final String SPRING_SHELL_INTERACTIVE_ENABLED = SPRING_SHELL_INTERACTIVE + "." + ENABLED;
-
 	private final LineReader lineReader;
 
 	private final PromptProvider promptProvider;
 
 	private final Shell shell;
 
-	private final Environment environment;
-
-	public InteractiveShellApplicationRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell,
-			Environment environment) {
+	public InteractiveShellApplicationRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell) {
 		this.lineReader = lineReader;
 		this.promptProvider = promptProvider;
 		this.shell = shell;
-		this.environment = environment;
 	}
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		boolean interactive = isEnabled();
-		if (interactive) {
-			InputProvider inputProvider = new JLineInputProvider(lineReader, promptProvider);
-			shell.run(inputProvider);
-		}
+		InputProvider inputProvider = new JLineInputProvider(lineReader, promptProvider);
+		shell.run(inputProvider);
 	}
 
-	public boolean isEnabled() {
-		return environment.getProperty(SPRING_SHELL_INTERACTIVE_ENABLED,boolean.class,  true);
-	}
-
-	/**
-	 * Helper method to dynamically disable this runner.
-	 */
-	public static void disable(ConfigurableEnvironment environment) {
-		environment.getPropertySources().addFirst(new MapPropertySource("interactive.override",
-				Collections.singletonMap(SPRING_SHELL_INTERACTIVE_ENABLED, "false")));
+	@Override
+	public boolean canRun(ApplicationArguments args) {
+		return true;
 	}
 
 	public static class JLineInputProvider implements InputProvider {
@@ -121,5 +96,4 @@ public class InteractiveShellApplicationRunner implements ApplicationRunner {
 			return new ParsedLineInput(lineReader.getParsedLine());
 		}
 	}
-
 }
