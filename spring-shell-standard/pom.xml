@@ -19,6 +19,10 @@
 			<artifactId>spring-shell-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>ST4</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
