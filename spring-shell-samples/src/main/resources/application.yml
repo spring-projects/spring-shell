@@ -1,3 +1,10 @@
 logging:
   level:
    root: error
+spring:
+  main:
+    banner-mode: off
+  shell:
+    command:
+      completion:
+        root-command: spring-shell-samples

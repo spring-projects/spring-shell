@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,6 +179,28 @@ public class SpringShellProperties {
 		}
 	}
 
+	public static class CompletionCommand {
+
+		private boolean enabled = true;
+		private String rootCommand;
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+
+		public String getRootCommand() {
+			return rootCommand;
+		}
+
+		public void setRootCommand(String rootCommand) {
+			this.rootCommand = rootCommand;
+		}
+	}
+
 	public static class Command {
 
 		private HelpCommand help = new HelpCommand();
@@ -187,6 +209,7 @@ public class SpringShellProperties {
 		private StacktraceCommand stacktrace = new StacktraceCommand();
 		private ScriptCommand script = new ScriptCommand();
 		private HistoryCommand history = new HistoryCommand();
+		private CompletionCommand completion = new CompletionCommand();
 
 		public void setHelp(HelpCommand help) {
 			this.help = help;
@@ -234,6 +257,14 @@ public class SpringShellProperties {
 
 		public void setHistory(HistoryCommand history) {
 			this.history = history;
+		}
+
+		public CompletionCommand getCompletion() {
+			return completion;
+		}
+
+		public void setCompletion(CompletionCommand completion) {
+			this.completion = completion;
 		}
 	}
 }
