@@ -24,7 +24,7 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
+import org.springframework.shell.jline.InteractiveShellRunner;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,10 +45,10 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 
 	private CommandRegistry commandRegistry;
 
-	private ObjectProvider<InteractiveShellApplicationRunner> interactiveRunner;
+	private ObjectProvider<InteractiveShellRunner> interactiveRunner;
 
 	public ThrowableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
-			ObjectProvider<InteractiveShellApplicationRunner> interactiveRunner) {
+			ObjectProvider<InteractiveShellRunner> interactiveRunner) {
 		super(terminal);
 		this.commandRegistry = commandRegistry;
 		this.interactiveRunner = interactiveRunner;

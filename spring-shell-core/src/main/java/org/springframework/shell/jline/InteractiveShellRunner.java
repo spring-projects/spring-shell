@@ -37,8 +37,8 @@ import org.springframework.shell.ShellRunner;
  *
  * @author Eric Bottard
  */
-@Order(InteractiveShellApplicationRunner.PRECEDENCE)
-public class InteractiveShellApplicationRunner implements ShellRunner {
+@Order(InteractiveShellRunner.PRECEDENCE)
+public class InteractiveShellRunner implements ShellRunner {
 
 	/**
 	 * The precedence at which this runner is set. Highger precedence runners may effectively disable this one by setting
@@ -52,7 +52,7 @@ public class InteractiveShellApplicationRunner implements ShellRunner {
 
 	private final Shell shell;
 
-	public InteractiveShellApplicationRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell) {
+	public InteractiveShellRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell) {
 		this.lineReader = lineReader;
 		this.promptProvider = promptProvider;
 		this.shell = shell;

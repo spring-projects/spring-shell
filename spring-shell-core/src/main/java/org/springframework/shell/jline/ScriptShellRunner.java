@@ -34,14 +34,14 @@ import org.springframework.util.ObjectUtils;
  * Spring Boot ApplicationRunner that looks for process arguments that start with
  * {@literal @}, which are then interpreted as references to script files to run and exit.
  *
- * Has higher precedence than {@link InteractiveShellApplicationRunner} so that it
+ * Has higher precedence than {@link InteractiveShellRunner} so that it
  * prevents it to run if scripts are found.
  *
  * @author Eric Bottard
  */
 //tag::documentation[]
-@Order(InteractiveShellApplicationRunner.PRECEDENCE - 100) // Runs before InteractiveShellApplicationRunner
-public class ScriptShellApplicationRunner implements ShellRunner {
+@Order(InteractiveShellRunner.PRECEDENCE - 100)
+public class ScriptShellRunner implements ShellRunner {
 //end::documentation[]
 
 	public static final String SPRING_SHELL_SCRIPT = "spring.shell.script";
@@ -57,7 +57,7 @@ public class ScriptShellApplicationRunner implements ShellRunner {
 
 	private final Shell shell;
 
-	public ScriptShellApplicationRunner(Parser parser, Shell shell) {
+	public ScriptShellRunner(Parser parser, Shell shell) {
 		this.parser = parser;
 		this.shell = shell;
 	}

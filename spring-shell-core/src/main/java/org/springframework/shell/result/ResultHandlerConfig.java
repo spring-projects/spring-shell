@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.TerminalSizeAware;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
+import org.springframework.shell.jline.InteractiveShellRunner;
 
 /**
  * Used for explicit configuration of {@link org.springframework.shell.ResultHandler}s.
@@ -58,7 +58,7 @@ public class ResultHandlerConfig {
 
 	@Bean
 	public ThrowableResultHandler throwableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
-		ObjectProvider<InteractiveShellApplicationRunner> interactiveApplicationRunner) {
+		ObjectProvider<InteractiveShellRunner> interactiveApplicationRunner) {
 		return new ThrowableResultHandler(terminal, commandRegistry, interactiveApplicationRunner);
 	}
 

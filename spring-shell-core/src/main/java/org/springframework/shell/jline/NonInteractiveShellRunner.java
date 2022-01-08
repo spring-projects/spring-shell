@@ -33,12 +33,12 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  */
-@Order(InteractiveShellApplicationRunner.PRECEDENCE - 50)
-public class NonInteractiveShellApplicationRunner implements ShellRunner {
+@Order(InteractiveShellRunner.PRECEDENCE - 50)
+public class NonInteractiveShellRunner implements ShellRunner {
 
 	private final Shell shell;
 
-	public NonInteractiveShellApplicationRunner(Shell shell) {
+	public NonInteractiveShellRunner(Shell shell) {
 		this.shell = shell;
 	}
 

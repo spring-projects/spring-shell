@@ -22,10 +22,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.Shell;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
-import org.springframework.shell.jline.NonInteractiveShellApplicationRunner;
+import org.springframework.shell.jline.InteractiveShellRunner;
+import org.springframework.shell.jline.NonInteractiveShellRunner;
 import org.springframework.shell.jline.PromptProvider;
-import org.springframework.shell.jline.ScriptShellApplicationRunner;
+import org.springframework.shell.jline.ScriptShellRunner;
 
 @Configuration(proxyBeanMethods = false)
 public class ShellRunnerAutoConfiguration {
@@ -44,19 +44,19 @@ public class ShellRunnerAutoConfiguration {
 
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public InteractiveShellApplicationRunner interactiveApplicationRunner() {
-		return new InteractiveShellApplicationRunner(lineReader, promptProvider, shell);
+	public InteractiveShellRunner interactiveApplicationRunner() {
+		return new InteractiveShellRunner(lineReader, promptProvider, shell);
 	}
 
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public NonInteractiveShellApplicationRunner nonInteractiveApplicationRunner() {
-		return new NonInteractiveShellApplicationRunner(shell);
+	public NonInteractiveShellRunner nonInteractiveApplicationRunner() {
+		return new NonInteractiveShellRunner(shell);
 	}
 
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.script", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public ScriptShellApplicationRunner scriptApplicationRunner() {
-		return new ScriptShellApplicationRunner(parser, shell);
+	public ScriptShellRunner scriptApplicationRunner() {
+		return new ScriptShellRunner(parser, shell);
 	}
 }
