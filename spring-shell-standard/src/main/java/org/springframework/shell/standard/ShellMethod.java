@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.standard;
 
 import java.lang.annotation.Documented;
@@ -21,6 +20,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.springframework.shell.context.InteractionMode;
 
 /**
  * Used to mark a method as invokable via Spring Shell.
@@ -68,4 +69,14 @@ public @interface ShellMethod {
 	 */
 	String group() default INHERITED;
 
+	/**
+	 * Defines interaction mode for a command as a hint when command should be
+	 * available. For example presense of some commands doesn't make sense if shell
+	 * is running as non-interactive mode and vice versa.
+	 *
+	 * Defaults to {@link InteractionMode#ALL}
+	 *
+	 * @return interaction mode
+	 */
+	InteractionMode interactionMode() default InteractionMode.ALL;
 }

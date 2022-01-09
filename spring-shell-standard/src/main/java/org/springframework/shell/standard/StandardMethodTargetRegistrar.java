@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.standard;
 
 import java.lang.reflect.Method;
@@ -76,7 +75,8 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 				String group = getOrInferGroup(method);
 				for (String key : keys) {
 					Supplier<Availability> availabilityIndicator = findAvailabilityIndicator(keys, bean, method);
-					MethodTarget target = new MethodTarget(method, bean, new Command.Help(shellMapping.value(), group), availabilityIndicator);
+					MethodTarget target = new MethodTarget(method, bean, new Command.Help(shellMapping.value(), group),
+							availabilityIndicator, shellMapping.interactionMode());
 					registry.register(key, target);
 					commands.put(key, target);
 				}

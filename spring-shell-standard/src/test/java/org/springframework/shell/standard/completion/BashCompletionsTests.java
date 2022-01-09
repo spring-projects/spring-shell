@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.context.DefaultShellContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +49,7 @@ public class BashCompletionsTests {
 
 	@Test
 	public void testDoesNotError() {
-		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry();
+		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry(new DefaultShellContext());
 		List<ParameterResolver> parameterResolvers = new ArrayList<>();
 		BashCompletions completions = new BashCompletions(context, commandRegistry, parameterResolvers);
 		String bash = completions.generate("root-command");

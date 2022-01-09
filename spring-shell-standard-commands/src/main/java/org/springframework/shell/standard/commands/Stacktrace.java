@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.springframework.shell.standard.commands;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.result.ThrowableResultHandler;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
@@ -49,7 +50,9 @@ public class Stacktrace extends AbstractShellComponent {
 		this.throwableResultHandler = throwableResultHandler;
 	}
 
-	@ShellMethod(key = ThrowableResultHandler.DETAILS_COMMAND_NAME, value = "Display the full stacktrace of the last error.")
+	@ShellMethod(key = ThrowableResultHandler.DETAILS_COMMAND_NAME,
+			value = "Display the full stacktrace of the last error.",
+			interactionMode = InteractionMode.INTERACTIVE)
 	public void stacktrace() {
 		if (throwableResultHandler.getIfAvailable().getLastError() != null) {
 			throwableResultHandler.getIfAvailable().getLastError().printStackTrace(getTerminal().writer());

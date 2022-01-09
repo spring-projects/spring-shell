@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.Shell;
+import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;
 import org.springframework.shell.jline.NonInteractiveShellRunner;
 import org.springframework.shell.jline.PromptProvider;
@@ -34,24 +35,27 @@ public class ShellRunnerAutoConfiguration {
 	private PromptProvider promptProvider;
 	private LineReader lineReader;
 	private Parser parser;
+	private ShellContext shellContext;
 
-	public ShellRunnerAutoConfiguration(Shell shell, PromptProvider promptProvider, LineReader lineReader, Parser parser) {
+	public ShellRunnerAutoConfiguration(Shell shell, PromptProvider promptProvider, LineReader lineReader,
+			Parser parser, ShellContext shellContext) {
 		this.shell = shell;
 		this.promptProvider = promptProvider;
 		this.lineReader = lineReader;
 		this.parser = parser;
+		this.shellContext = shellContext;
 	}
 
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true", matchIfMissing = true)
 	public InteractiveShellRunner interactiveApplicationRunner() {
-		return new InteractiveShellRunner(lineReader, promptProvider, shell);
+		return new InteractiveShellRunner(lineReader, promptProvider, shell, shellContext);
 	}
 
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
 	public NonInteractiveShellRunner nonInteractiveApplicationRunner() {
-		return new NonInteractiveShellRunner(shell);
+		return new NonInteractiveShellRunner(shell, shellContext);
 	}
 
 	@Bean

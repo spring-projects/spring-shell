@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell;
 
 import java.lang.reflect.Method;
@@ -21,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import org.springframework.shell.context.InteractionMode;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
@@ -37,6 +37,8 @@ public class MethodTarget implements Command {
 
 	private final Help help;
 
+	private final InteractionMode interactionMode;
+
 	/**
 	 * If not null, returns whether or not the command is currently available. Implementations must be idempotent.
 	 */
@@ -51,6 +53,10 @@ public class MethodTarget implements Command {
 	}
 
 	public MethodTarget(Method method, Object bean, Help help, Supplier<Availability> availabilityIndicator) {
+		this(method, bean, help, availabilityIndicator, null);
+	}
+
+	public MethodTarget(Method method, Object bean, Help help, Supplier<Availability> availabilityIndicator, InteractionMode interactionMode) {
 		Assert.notNull(method, "Method cannot be null");
 		Assert.notNull(bean, "Bean cannot be null");
 		Assert.hasText(help.getDescription(), String.format("Help cannot be blank when trying to define command based on '%s'", method));
@@ -59,6 +65,7 @@ public class MethodTarget implements Command {
 		this.bean = bean;
 		this.help = help;
 		this.availabilityIndicator = availabilityIndicator != null ? availabilityIndicator : () -> Availability.available();
+		this.interactionMode = interactionMode;
 	}
 
 	/**
@@ -101,6 +108,10 @@ public class MethodTarget implements Command {
 
 	public Availability getAvailability() {
 		return availabilityIndicator.get();
+	}
+
+	public InteractionMode getInteractionMode() {
+		return interactionMode;
 	}
 
 	@Override

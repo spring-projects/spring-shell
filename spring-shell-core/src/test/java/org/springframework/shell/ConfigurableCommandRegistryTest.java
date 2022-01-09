@@ -18,6 +18,8 @@ package org.springframework.shell;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.shell.context.DefaultShellContext;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -30,14 +32,14 @@ public class ConfigurableCommandRegistryTest {
 
 	@Test
 	public void testRegistration() {
-		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(new DefaultShellContext());
 		registry.register("foo", MethodTarget.of("toString", this, new Command.Help("some command")));
 		assertThat(registry.listCommands()).containsKeys("foo");
 	}
 
 	@Test
 	public void testDoubleRegistration() {
-		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(new DefaultShellContext());
 		registry.register("foo", MethodTarget.of("toString", this, new Command.Help("some command")));
 
 		assertThatThrownBy(() -> {
