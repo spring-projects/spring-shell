@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.shell.Availability;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
+import org.springframework.shell.context.DefaultShellContext;
+import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.test1.GroupOneCommands;
 import org.springframework.shell.standard.test2.GroupThreeCommands;
 import org.springframework.shell.standard.test2.GroupTwoCommands;
@@ -42,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class StandardMethodTargetRegistrarTest {
 
     private StandardMethodTargetRegistrar registrar = new StandardMethodTargetRegistrar();
-    private ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+    private ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(new DefaultShellContext());
 
     @Test
     public void testRegistrations() {
@@ -256,4 +258,47 @@ public class StandardMethodTargetRegistrarTest {
         Assertions.assertThat(commands.get("implicit3").getGroup()).isEqualTo("Explicit Group 3 Class Level");
     }
 
+    @Test
+    public void testInteractionModeInteractive() {
+        DefaultShellContext shellContext = new DefaultShellContext();
+        shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
+        registry = new ConfigurableCommandRegistry(shellContext);
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(InteractionModeCommands.class);
+        registrar.setApplicationContext(applicationContext);
+        registrar.register(registry);
+
+        assertThat(registry.listCommands().get("foo1")).isNotNull();
+        assertThat(registry.listCommands().get("foo2")).isNull();
+        assertThat(registry.listCommands().get("foo3")).isNotNull();
+    }
+
+    @Test
+    public void testInteractionModeNonInteractive() {
+        DefaultShellContext shellContext = new DefaultShellContext();
+        shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
+        registry = new ConfigurableCommandRegistry(shellContext);
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(InteractionModeCommands.class);
+        registrar.setApplicationContext(applicationContext);
+        registrar.register(registry);
+
+        assertThat(registry.listCommands().get("foo1")).isNull();
+        assertThat(registry.listCommands().get("foo2")).isNotNull();
+        assertThat(registry.listCommands().get("foo3")).isNotNull();
+    }
+
+    @ShellComponent
+    public static class InteractionModeCommands {
+
+        @ShellMethod(value = "foo1", interactionMode = InteractionMode.INTERACTIVE)
+        public void foo1() {
+        }
+
+        @ShellMethod(value = "foo2", interactionMode = InteractionMode.NONINTERACTIVE)
+        public void foo2() {
+        }
+
+        @ShellMethod(value = "foo3")
+        public void foo3() {
+        }
+    }
 }

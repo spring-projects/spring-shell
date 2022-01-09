@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.shell.standard.commands;
 
 import org.springframework.shell.ExitRequest;
+import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -41,7 +42,7 @@ public class Quit {
 	 */
 	public interface Command {}
 
-	@ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
+	@ShellMethod(value = "Exit the shell.", key = {"quit", "exit"}, interactionMode = InteractionMode.INTERACTIVE)
 	public void quit() {
 		throw new ExitRequest();
 	}

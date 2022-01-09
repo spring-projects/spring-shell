@@ -29,6 +29,7 @@ import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
 import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.context.DefaultShellContext;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.standard.StandardParameterResolver;
@@ -42,7 +43,7 @@ public class AbstractCompletionsTests {
 	@Test
 	public void testBasicModelGeneration() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry();
+		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry(new DefaultShellContext());
 		List<ParameterResolver> parameterResolvers = new ArrayList<>();
 		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
 				Collections.emptySet());
@@ -91,7 +92,7 @@ public class AbstractCompletionsTests {
 	@Test
 	public void testBuilder() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry();
+		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry(new DefaultShellContext());
 		List<ParameterResolver> parameterResolvers = new ArrayList<>();
 		TestCompletions completions = new TestCompletions(resourceLoader, commandRegistry, parameterResolvers);
 

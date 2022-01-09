@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.springframework.shell.standard.commands;
 
 import org.jline.utils.InfoCmp;
 
+import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -47,7 +48,7 @@ public class Clear extends AbstractShellComponent {
 	public Clear() {
 	}
 
-	@ShellMethod("Clear the shell screen.")
+	@ShellMethod(value = "Clear the shell screen.", interactionMode = InteractionMode.INTERACTIVE)
 	public void clear() {
 		getTerminal().puts(InfoCmp.Capability.clear_screen);
 	}

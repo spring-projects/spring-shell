@@ -21,14 +21,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTargetRegistrar;
+import org.springframework.shell.context.ShellContext;
 
 @Configuration(proxyBeanMethods = false)
 public class CommandRegistryAutoConfiguration {
 
 	@Bean
 	public CommandRegistry commandRegistry(
-			ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars) {
-		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+			ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
+			ShellContext shellContext) {
+		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(shellContext);
 		methodTargetRegistrars.orderedStream().forEach(resolver -> {
 			resolver.register(registry);
 		});

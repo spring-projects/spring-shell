@@ -27,6 +27,8 @@ import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
 import org.springframework.shell.Shell;
 import org.springframework.shell.ShellRunner;
+import org.springframework.shell.context.InteractionMode;
+import org.springframework.shell.context.ShellContext;
 
 /**
  * Default Boot runner that bootstraps the shell application in interactive
@@ -52,14 +54,19 @@ public class InteractiveShellRunner implements ShellRunner {
 
 	private final Shell shell;
 
-	public InteractiveShellRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell) {
+	private final ShellContext shellContext;
+
+	public InteractiveShellRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell,
+			ShellContext shellContext) {
 		this.lineReader = lineReader;
 		this.promptProvider = promptProvider;
 		this.shell = shell;
+		this.shellContext = shellContext;
 	}
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+		shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
 		InputProvider inputProvider = new JLineInputProvider(lineReader, promptProvider);
 		shell.run(inputProvider);
 	}

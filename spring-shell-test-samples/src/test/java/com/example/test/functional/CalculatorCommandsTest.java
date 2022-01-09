@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.shell.ConfigurableCommandRegistry;
 import org.springframework.shell.MethodTarget;
+import org.springframework.shell.context.DefaultShellContext;
 import org.springframework.shell.standard.StandardMethodTargetRegistrar;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,7 +33,7 @@ public class CalculatorCommandsTest extends BaseCalculatorTest {
 
 	private static final Class<CalculatorCommands> COMMAND_CLASS_UNDER_TEST = CalculatorCommands.class;
 
-	private final ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry();
+	private final ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(new DefaultShellContext());
 
 	@Autowired
 	private CalculatorState state;

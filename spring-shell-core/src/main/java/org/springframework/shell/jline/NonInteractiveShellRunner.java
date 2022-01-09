@@ -24,6 +24,8 @@ import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
 import org.springframework.shell.Shell;
 import org.springframework.shell.ShellRunner;
+import org.springframework.shell.context.InteractionMode;
+import org.springframework.shell.context.ShellContext;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -37,9 +39,11 @@ import org.springframework.util.StringUtils;
 public class NonInteractiveShellRunner implements ShellRunner {
 
 	private final Shell shell;
+	private final ShellContext shellContext;
 
-	public NonInteractiveShellRunner(Shell shell) {
+	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext) {
 		this.shell = shell;
+		this.shellContext = shellContext;
 	}
 
 	@Override
@@ -50,6 +54,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		List<String> argsToShellCommand = Arrays.asList(args.getSourceArgs());
 		InputProvider inputProvider = new StringInputProvider(argsToShellCommand);
 		shell.run(inputProvider);
