@@ -8,7 +8,7 @@ Eric Bottard; Janne Valkealahti; Jay Bryant;
 ifdef::backend-html5[]
 *{projectVersion}*
 
-(C) 2017 - 2021 VMware, Inc.
+(C) 2017 - 2022 VMware, Inc.
 
 _Copies of this document may be made for your own use and for distribution to
 others, provided that you do not charge any fee for such copies and further
