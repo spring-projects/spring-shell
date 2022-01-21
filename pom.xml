@@ -5,7 +5,7 @@
 	<groupId>org.springframework.shell</groupId>
 	<artifactId>spring-shell-parent</artifactId>
 	<name>Spring Shell Parent POM</name>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0-M1</version>
 	<packaging>pom</packaging>
 
 	<parent>
@@ -45,42 +45,42 @@
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-core</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-core-test-support</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-standard</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-standard-commands</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-jcommander-adapter</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-starter</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-table</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-autoconfigure</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0-M1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jline</groupId>
