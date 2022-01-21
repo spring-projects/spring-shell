@@ -21,4 +21,4 @@ include::what-is-spring-shell.adoc[]
 
 include::using-spring-shell.adoc[]
 
-include::extending-spring-shell.adoc[]
+// include::extending-spring-shell.adoc[]

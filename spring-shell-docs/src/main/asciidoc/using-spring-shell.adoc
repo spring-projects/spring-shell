@@ -4,6 +4,15 @@
 
 This section describes how to use Spring Shell.
 
+[IMPORTANT]
+====
+_Spring Shell 3.x_ is a major rework to bring codebase up-to-date with
+existing _Spring Boot_ versions, adding new features and especially
+making it work with _GraalVM_ which makes command-line applications much
+more relevant on a java space. Moving to new major version also allows
+us to clean up codebase and make some needed breaking changes.
+====
+
 === Getting Started
 
 To see what Spring Shell has to offer, we can write a trivial shell application that
@@ -106,15 +115,6 @@ https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-featu
 ====
 [source]
 ----
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::        (v1.5.6.RELEASE)
-
 shell:>
 ----
 ====
@@ -545,9 +545,9 @@ a reverse search, `Ctrl+a`] and `Ctrl+e` to move to the beginning and the end of
 `Esc b` to move forward or backward (respectively) one word at a time.
 
 [[providing-tab-completion]]
-===== Providing TAB Completion Proposals
+// ===== Providing TAB Completion Proposals
 
-TBD
+// TBD
 
 [[validating-command-arguments]]
 === Validating Command Arguments
@@ -794,7 +794,7 @@ You can override or disable these commands individually (see <<overriding-or-dis
 However, if they are not overridden or disabled, this section describes their behavior.
 
 [[help-command]]
-==== Integrated Documentation with the `help` Command
+==== Help
 
 Running a shell application often implies that the user is in a graphically limited
 environment. Also, while we are nearly always connected in the era of mobile phones,
@@ -849,17 +849,17 @@ OPTIONS
 ----
 ====
 
-==== Clearing the Screen
+==== Clear
 The `clear` command does what you would expect and clears the screen, resetting the prompt
 in the top left corner.
 
-==== Exiting the Shell
+==== Exit
 
 The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
 closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all
 commands to disk, so that they are available again (see <<interacting-with-the-shell>>) on the next launch.
 
-==== Displaying Details about an Error
+==== Stacktrace
 
 When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
 so as not to overflow the user with too much information.
@@ -869,13 +869,73 @@ To this end, Spring Shell remembers the last exception that occurred, and the us
 command to print all the details on the console.
 
 [[script-command]]
-==== Running a Batch of Commands
+==== Script
 
 The `script` command accepts a local file as an argument and replays commands found there, one at a time.
 
 Reading from the file behaves exactly like inside the interactive shell, so lines starting with `//` are considered
 to be comments and are ignored, while lines ending with `\` trigger line continuation.
 
+==== History
+
+The `history` command shows history of a commands which has been executed.
+
+==== Completion
+
+The `completion` command set allows you to create _scripts_ files which can be used
+with am OS shell implementations to provide completion. This is very usefull when
+working with non-interactive mode.
+
+Currently only implementation is for _bash_ which works with `bash` sub-command.
+
+=== Interaction Mode
+
+Starting from _3.x_ a build-in support has been added to distinguish between interactive
+and non-interactive modes. This has been added so that it's easier to use shell as a
+simple command-line tool without requiring customisation to accomplish that.
+
+Currently interactive mode is entered if any command line options are passed when starting
+or running a shell from a command-line. This especially works well when shell application
+is compiled with <<native>>.
+
+Some commands may not have any usefull meaning if running on interactive mode
+or vice versa on non-interactive mode. For example a build-in `exit` command
+have no meaning in non-interactive mode as it's used to exit interactive mode.
+
+Annotation `@ShellMethod` has a field `interactionMode` which can be used to instruct
+shell when particular command is available.
+
+[[native]]
+=== Native Support
+
+Re-work with _3.x_ brings in an experimental support for compiling shell application
+into _native_ application with _GraalVM_ and _spring-native_. As underlying _jline_
+library works with _GraalVM_ most of a things should just work.
+
+Project can be compiled with native profile to get sample compiled as an native
+application:
+
+====
+----
+$ ./mvnw clean package -Pnative
+----
+====
+
+You can then run sample either with interactive or non-interactive mode:
+
+====
+----
+$ ./spring-shell-samples/target/spring-shell-samples help
+AVAILABLE COMMANDS
+
+Built-In Commands
+        completion bash: Generate bash completion script
+        help: Display help about available commands.
+        history: Display or save the history of previously run commands
+        script: Read and execute commands from a file.
+...
+----
+====
 
 === Customizing the Shell
 
@@ -960,9 +1020,9 @@ Alternatively, before making any changes on your own, you can open an issue with
 always welcome!
 ====
 
-==== ResultHandlers
+// ==== ResultHandlers
 
-TBD
+// TBD
 
 ==== PromptProvider
 After each command invocation, the shell waits for new input from the user, displaying
@@ -1011,23 +1071,22 @@ public class CustomPromptProvider implements PromptProvider {
 ====
 
 ==== Customizing Command Line Options Behavior
-Spring Shell comes with two default Spring Boot `ApplicationRunners`:
 
-* `InteractiveShellApplicationRunner` bootstraps the Shell REPL. It sets up the JLine infrastructure and eventually
-calls `Shell.run()`
-* `ScriptShellApplicationRunner` looks for program arguments that start with `@`, assumes those are local file names and
-tries to run commands contained in those files (with the same semantics as the <<script-command,script command>>) and
-then exits the process (by effectively disabling the `InteractiveShellApplicationRunner` -- see below).
+There can be exactly one shell spesific `ShellApplicationRunner` which simply extends
+Boot's `ApplicationRunner`. Default behariour is to have actual runner logic in
+various `ShellRunner` implementations where candidate will be picked up.
 
-If this behavior does not suit you, provide at least one bean of type `ApplicationRunner`
-and optionally disable the standard ones. You can take inspiration from the `ScriptShellApplicationRunner`:
-
+[IMPORTANT]
 ====
-[source,java]
-----
-include::../../../../spring-shell-core/src/main/java/org/springframework/shell/jline/ScriptShellApplicationRunner.java[tag=documentation]
+This is a breaking change in `3.x` as previous shell versions had an confusing
+logic how `ApplicationRunner` instances were used. These changes were made
+to have a better support for interactive and non-interactive modes in a same
+shell application as it's convenient to fully work on command-line and still
+have ability to enter interactive mode.
+====
 
-...
+You can override bean type of `ShellApplicationRunner` if there's a need to
+customise shell running logic.
 ----
 ====
 
