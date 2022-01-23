@@ -28,6 +28,7 @@ public class SpringShellProperties {
 	private Script script = new Script();
 	private Interactive interactive = new Interactive();
 	private Noninteractive noninteractive = new Noninteractive();
+	private Theme theme = new Theme();
 	private Command command = new Command();
 
 	public void setScript(Script script) {
@@ -52,6 +53,14 @@ public class SpringShellProperties {
 
 	public void setNoninteractive(Noninteractive noninteractive) {
 		this.noninteractive = noninteractive;
+	}
+
+	public Theme getTheme() {
+		return theme;
+	}
+
+	public void setTheme(Theme theme) {
+		this.theme = theme;
 	}
 
 	public Command getCommand() {
@@ -98,6 +107,19 @@ public class SpringShellProperties {
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
+		}
+	}
+
+	public static class Theme {
+
+		private String name = "default";
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 	}
 
@@ -210,6 +232,7 @@ public class SpringShellProperties {
 		private ScriptCommand script = new ScriptCommand();
 		private HistoryCommand history = new HistoryCommand();
 		private CompletionCommand completion = new CompletionCommand();
+		private VersionCommand version = new VersionCommand();
 
 		public void setHelp(HelpCommand help) {
 			this.help = help;
@@ -265,6 +288,117 @@ public class SpringShellProperties {
 
 		public void setCompletion(CompletionCommand completion) {
 			this.completion = completion;
+		}
+
+		public VersionCommand getVersion() {
+			return version;
+		}
+
+		public void setVersion(VersionCommand version) {
+			this.version = version;
+		}
+	}
+
+	public static class VersionCommand {
+
+		private boolean enabled = true;
+		private String template = "classpath:template/version-default.st";
+		private boolean showBuildGroup = false;
+		private boolean showBuildArtifact = false;
+		private boolean showBuildName = false;
+		private boolean showBuildVersion = true;
+		private boolean showBuildTime = false;
+		private boolean showGitBranch = false;
+		private boolean showGitCommitId = false;
+		private boolean showGitShortCommitId = false;
+		private boolean showGitCommitTime = false;
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+
+		public String getTemplate() {
+			return template;
+		}
+
+		public void setTemplate(String template) {
+			this.template = template;
+		}
+
+		public boolean isShowBuildGroup() {
+			return showBuildGroup;
+		}
+
+		public void setShowBuildGroup(boolean showBuildGroup) {
+			this.showBuildGroup = showBuildGroup;
+		}
+
+		public boolean isShowBuildArtifact() {
+			return showBuildArtifact;
+		}
+
+		public void setShowBuildArtifact(boolean showBuildArtifact) {
+			this.showBuildArtifact = showBuildArtifact;
+		}
+
+		public boolean isShowBuildName() {
+			return showBuildName;
+		}
+
+		public void setShowBuildName(boolean showBuildName) {
+			this.showBuildName = showBuildName;
+		}
+
+		public boolean isShowBuildVersion() {
+			return showBuildVersion;
+		}
+
+		public void setShowBuildVersion(boolean showBuildVersion) {
+			this.showBuildVersion = showBuildVersion;
+		}
+
+		public boolean isShowBuildTime() {
+			return showBuildTime;
+		}
+
+		public void setShowBuildTime(boolean showBuildTime) {
+			this.showBuildTime = showBuildTime;
+		}
+
+		public boolean isShowGitBranch() {
+			return showGitBranch;
+		}
+
+		public void setShowGitBranch(boolean showGitBranch) {
+			this.showGitBranch = showGitBranch;
+		}
+
+		public boolean isShowGitCommitId() {
+			return showGitCommitId;
+		}
+
+		public void setShowGitCommitId(boolean showGitCommitId) {
+			this.showGitCommitId = showGitCommitId;
+		}
+
+		public boolean isShowGitShortCommitId() {
+			return showGitShortCommitId;
+		}
+
+		public void setShowGitShortCommitId(boolean showGitShortCommitId) {
+			this.showGitShortCommitId = showGitShortCommitId;
+		}
+
+		public boolean isShowGitCommitTime() {
+			return showGitCommitTime;
+		}
+
+		public void setShowGitCommitTime(boolean showGitCommitTime) {
+			this.showGitCommitTime = showGitCommitTime;
 		}
 	}
 }

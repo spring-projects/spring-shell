@@ -11,4 +11,5 @@ org.springframework.shell.boot.JLineShellAutoConfiguration,\
 org.springframework.shell.boot.JCommanderParameterResolverAutoConfiguration,\
 org.springframework.shell.boot.ParameterResolverAutoConfiguration,\
 org.springframework.shell.boot.StandardAPIAutoConfiguration,\
+org.springframework.shell.boot.ThemingAutoConfiguration,\
 org.springframework.shell.boot.StandardCommandsAutoConfiguration

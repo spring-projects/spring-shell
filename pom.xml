@@ -154,6 +154,23 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<verbose>true</verbose>
+					<dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<profiles>

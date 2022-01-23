@@ -23,9 +23,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.boot.SpringShellProperties.VersionCommand;
 import org.springframework.shell.boot.condition.OnCompletionCommandCondition;
 import org.springframework.shell.result.ThrowableResultHandler;
 import org.springframework.shell.standard.commands.Clear;
@@ -35,6 +38,8 @@ import org.springframework.shell.standard.commands.History;
 import org.springframework.shell.standard.commands.Quit;
 import org.springframework.shell.standard.commands.Script;
 import org.springframework.shell.standard.commands.Stacktrace;
+import org.springframework.shell.standard.commands.Version;
+import org.springframework.shell.style.TemplateExecutor;
 
 /**
  * Creates beans for standard commands.
@@ -93,5 +98,27 @@ public class StandardCommandsAutoConfiguration {
 	@Conditional(OnCompletionCommandCondition.class)
 	public Completion completion(SpringShellProperties properties) {
 		return new Completion(properties.getCommand().getCompletion().getRootCommand());
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(Version.Command.class)
+	@ConditionalOnProperty(prefix = "spring.shell.command.version", value = "enabled", havingValue = "true", matchIfMissing = true)
+	public Version version(SpringShellProperties properties, ObjectProvider<BuildProperties> buildProperties,
+			ObjectProvider<GitProperties> gitProperties, ObjectProvider<TemplateExecutor> templateExecutor) {
+		Version version = new Version(templateExecutor.getIfAvailable());
+		version.setBuildProperties(buildProperties.getIfAvailable());
+		version.setGitProperties(gitProperties.getIfAvailable());
+		VersionCommand versionProperties = properties.getCommand().getVersion();
+		version.setTemplate(versionProperties.getTemplate());
+		version.setShowBuildArtifact(versionProperties.isShowBuildArtifact());
+		version.setShowBuildGroup(versionProperties.isShowBuildGroup());
+		version.setShowBuildName(versionProperties.isShowBuildName());
+		version.setShowBuildTime(versionProperties.isShowBuildTime());
+		version.setShowBuildVersion(versionProperties.isShowBuildVersion());
+		version.setShowGitBranch(versionProperties.isShowGitBranch());
+		version.setShowGitCommitId(versionProperties.isShowGitCommitId());
+		version.setShowGitShortCommitId(versionProperties.isShowGitShortCommitId());
+		version.setShowGitCommitTime(versionProperties.isShowGitCommitTime());
+		return version;
 	}
 }

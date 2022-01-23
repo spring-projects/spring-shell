@@ -11,7 +11,7 @@
 		<artifactId>spring-shell-parent</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<description>Core API and classes for Spring Shell 2</description>
 
 	<dependencies>
@@ -31,7 +31,10 @@
 			<groupId>org.jline</groupId>
 			<artifactId>jline-terminal-jna</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>ST4</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-table</artifactId>

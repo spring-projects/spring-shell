@@ -3,6 +3,9 @@
     "includes": [
       {
         "pattern": "completion/.*"
+      },
+      {
+        "pattern": "template/.*.st"
       }
     ]
   }
