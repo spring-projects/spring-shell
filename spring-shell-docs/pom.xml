@@ -4,7 +4,6 @@
 
 	<artifactId>spring-shell-docs</artifactId>
 	<name>Spring Shell Documentation</name>
-	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>org.springframework.shell</groupId>
