@@ -78,6 +78,7 @@ public class Help extends AbstractShellComponent {
 	}
 
 	private MessageInterpolator messageInterpolator = Utils.defaultValidatorFactory().getMessageInterpolator();
+	private boolean showGroups = true;
 
 	public Help() {
 	}
@@ -99,6 +100,16 @@ public class Help extends AbstractShellComponent {
 			return documentCommand(command);
 		}
 
+	}
+
+	/**
+	 * Sets if groups should be shown in a listing, defaults to true. If not enabled
+	 * a simple list is shown without groups.
+	 *
+	 * @param showGroups the flag to show groups
+	 */
+	public void setShowGroups(boolean showGroups) {
+		this.showGroups = showGroups;
 	}
 
 	/**
@@ -263,32 +274,34 @@ public class Help extends AbstractShellComponent {
 	private CharSequence listCommands() {
 		Map<String, MethodTarget> commandsByName = getCommandRegistry().listCommands();
 
-		SortedMap<String, Map<String, MethodTarget>> commandsByGroupAndName = commandsByName.entrySet().stream()
-				.collect(groupingBy(e -> e.getValue().getGroup(), TreeMap::new, // group by and sort by command group
-						toMap(Entry::getKey, Entry::getValue)));
-
 		AttributedStringBuilder result = new AttributedStringBuilder();
 		result.append("AVAILABLE COMMANDS\n\n", AttributedStyle.BOLD);
 
+		SortedMap<String, Map<String, MethodTarget>> commandsByGroupAndName = commandsByName.entrySet().stream()
+				.collect(groupingBy(e -> e.getValue().getGroup(), TreeMap::new, // group by and sort by command group
+						toMap(Entry::getKey, Entry::getValue)));
 		// display groups, sorted alphabetically, "Default" first
 		commandsByGroupAndName.forEach((group, commandsInGroup) -> {
-			result.append("".equals(group) ? "Default" : group, AttributedStyle.BOLD).append('\n');
-
+			if (showGroups) {
+				result.append("".equals(group) ? "Default" : group, AttributedStyle.BOLD).append('\n');
+			}
 			Map<MethodTarget, SortedSet<String>> commandNamesByMethod = commandsInGroup.entrySet().stream()
 					.collect(groupingBy(Entry::getValue, // group by command method
 							mapping(Entry::getKey, toCollection(TreeSet::new)))); // sort command names
-
 			// display commands, sorted alphabetically by their first alias
 			commandNamesByMethod.entrySet().stream().sorted(sortByFirstCommandName()).forEach(e -> {
+				String prefix = showGroups ? "      " : "";
+				prefix = prefix + (isAvailable(e.getKey()) ? "  " : " *");
 				result
-						.append(isAvailable(e.getKey()) ? "        " : "      * ")
+						.append(prefix)
 						.append(String.join(", ", e.getValue()), AttributedStyle.BOLD)
 						.append(": ")
 						.append(e.getKey().getHelp())
 						.append('\n');
 			});
-
-			result.append('\n');
+			if (showGroups) {
+				result.append('\n');
+			}
 		});
 
 		if (commandsByName.values().stream().distinct().anyMatch(m -> !isAvailable(m))) {

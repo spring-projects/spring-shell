@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.boot.SpringShellProperties.VersionCommand;
+import org.springframework.shell.boot.SpringShellProperties.HelpCommand.GroupingMode;
 import org.springframework.shell.boot.condition.OnCompletionCommandCondition;
 import org.springframework.shell.result.ThrowableResultHandler;
 import org.springframework.shell.standard.commands.Clear;
@@ -54,8 +55,12 @@ public class StandardCommandsAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(Help.Command.class)
 	@ConditionalOnProperty(prefix = "spring.shell.command.help", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public Help help() {
-		return new Help();
+	public Help help(SpringShellProperties properties) {
+		Help help = new Help();
+		if (properties.getCommand().getHelp().getGroupingMode() == GroupingMode.FLAT) {
+			help.setShowGroups(false);
+		}
+		return help;
 	}
 
 	@Bean
