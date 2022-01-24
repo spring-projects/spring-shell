@@ -126,6 +126,7 @@ public class SpringShellProperties {
 	public static class HelpCommand {
 
 		private boolean enabled = true;
+		private GroupingMode groupingMode = GroupingMode.GROUP;
 
 		public boolean isEnabled() {
 			return enabled;
@@ -133,6 +134,19 @@ public class SpringShellProperties {
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
+		}
+
+		public GroupingMode getGroupingMode() {
+			return groupingMode;
+		}
+
+		public void setGroupingMode(GroupingMode groupingMode) {
+			this.groupingMode = groupingMode;
+		}
+
+		public enum GroupingMode {
+			GROUP,
+			FLAT
 		}
 	}
 

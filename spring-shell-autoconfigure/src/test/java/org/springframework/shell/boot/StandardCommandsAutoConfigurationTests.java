@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.boot;
 
+import java.lang.reflect.Field;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.shell.standard.commands.Completion;
+import org.springframework.shell.standard.commands.Help;
+import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,6 +49,21 @@ public class StandardCommandsAutoConfigurationTests {
 				.withPropertyValues("spring.shell.command.completion.root-command=fake")
 				.run((context) -> {assertThat(context).hasSingleBean(Completion.class);
 		});
+	}
+
+	@Test
+	public void testHelpCommand() {
+		this.contextRunner
+				.with(disableCommands("clear", "quit", "stacktrace", "script", "history", "completion"))
+				.withPropertyValues("spring.shell.command.help.grouping-mode=flat")
+				.run(context -> {
+					assertThat(context).hasSingleBean(Help.class);
+					Help help = context.getBean(Help.class);
+					Field showGroupsField = ReflectionUtils.findField(Help.class, "showGroups");
+					ReflectionUtils.makeAccessible(showGroupsField);
+					ReflectionUtils.getField(showGroupsField, help);
+					assertThat(ReflectionUtils.getField(showGroupsField, help)).isEqualTo(false);
+				});
 	}
 
 	private static Function<ApplicationContextRunner, ApplicationContextRunner> disableCommands(String... commands) {
