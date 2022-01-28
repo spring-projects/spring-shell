@@ -3,6 +3,9 @@
 Spring Shell 3 is a work to solely depend on Spring Boot 2.x and not trying to keep
 any backward compatibility with older Spring Shell 1.x nor Spring Boot 1.x.
 
+IMPORTANT: We've changed main branch from `3.0.0-SNAPSHOT` to `2.1.0-SNAPSHOT`,
+           for more info see issue #356
+
 == Building
 ```
 ./mvnw package
