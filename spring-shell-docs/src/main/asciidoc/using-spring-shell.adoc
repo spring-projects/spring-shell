@@ -6,7 +6,7 @@ This section describes how to use Spring Shell.
 
 [IMPORTANT]
 ====
-_Spring Shell 3.x_ is a major rework to bring codebase up-to-date with
+_Spring Shell 2.1.x_ is a major rework to bring codebase up-to-date with
 existing _Spring Boot_ versions, adding new features and especially
 making it work with _GraalVM_ which makes command-line applications much
 more relevant on a java space. Moving to new major version also allows
@@ -888,9 +888,46 @@ working with non-interactive mode.
 
 Currently only implementation is for _bash_ which works with `bash` sub-command.
 
+==== Version
+
+The `version` command shows existing _build_ and _git_ info by integrating into
+Boot's `BuildProperties` and `GitProperties` if those exists in a shell app.
+On default only version info is shown and other can be enabled via configuration
+options.
+
+Settings are under `spring.shell.command.version` where you can use `enabled` to
+disable command and optionally define your own template with `template`. Options
+`show-build-artifact`, `show-build-group`, `show-build-name`, `show-build-time`,
+`show-build-version`, `show-git-branch`, `show-git-commit-id`,
+`show-git-short-commit-id` and `show-git-commit-time` can be used to control
+fields in a default template.
+
+Template default to `classpath:template/version-default.st` and you can define
+your own, for example having:
+
+====
+[source]
+----
+<buildVersion>
+----
+====
+
+Which would simply output something like:
+
+====
+[source]
+----
+X.X.X
+----
+====
+
+Attributes added to default template rendering are `buildVersion`, `buildGroup`,
+`buildGroup`, `buildName`, `buildTime`, `gitShortCommitId`, `gitCommitId`,
+`gitBranch` and `gitCommitTime`.
+
 === Interaction Mode
 
-Starting from _3.x_ a build-in support has been added to distinguish between interactive
+Starting from _2.1.x_ a build-in support has been added to distinguish between interactive
 and non-interactive modes. This has been added so that it's easier to use shell as a
 simple command-line tool without requiring customisation to accomplish that.
 
@@ -908,7 +945,7 @@ shell when particular command is available.
 [[native]]
 === Native Support
 
-Re-work with _3.x_ brings in an experimental support for compiling shell application
+Re-work with _2.1.x_ brings in an experimental support for compiling shell application
 into _native_ application with _GraalVM_ and _spring-native_. As underlying _jline_
 library works with _GraalVM_ most of a things should just work.
 
@@ -936,6 +973,57 @@ Built-In Commands
 ...
 ----
 ====
+
+[[styling]]
+=== Styling
+
+Starting with _2.1.x_ there is a support for centrally handling styling and theming.
+There is a default theme named _default_ which can be changed using property
+`spring.shell.theme.name`.
+
+To create a new theme register new `Theme` bean with custom `ThemeSettings` where
+you can tweak styles.
+
+====
+[source, java]
+----
+@Configuration
+static class CustomThemeConfig {
+
+	@Bean
+	public Theme myTheme() {
+		return new Theme() {
+			@Override
+			public String getName() {
+				return "mytheme";
+			}
+			@Override
+			public ThemeSettings getSettings() {
+				return new MyThemeSettings();
+			}
+		};
+	}
+}
+
+static class MyThemeSettings extends ThemeSettings {
+}
+----
+====
+
+`ThemeResolver` can be used to resolve styles if you want to create
+_jline_ styled strings programmatically.
+
+====
+[source, java]
+----
+@Autowired
+private ThemeResolver themeResolver;
+
+String resolvedStyle = themeResolver.resolveTag(TAG_TITLE);
+AttributedStyle style = themeResolver.resolveStyle(resolvedStyle);
+----
+====
+
 
 === Customizing the Shell
 
@@ -1078,7 +1166,7 @@ various `ShellRunner` implementations where candidate will be picked up.
 
 [IMPORTANT]
 ====
-This is a breaking change in `3.x` as previous shell versions had an confusing
+This is a breaking change in `2.1.x` as previous shell versions had an confusing
 logic how `ApplicationRunner` instances were used. These changes were made
 to have a better support for interactive and non-interactive modes in a same
 shell application as it's convenient to fully work on command-line and still

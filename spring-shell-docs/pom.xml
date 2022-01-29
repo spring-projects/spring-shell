@@ -100,25 +100,24 @@
 			</plugin>
 
 			<!-- ASCIIDOC -->
-
 			<plugin>
-          <groupId>com.googlecode.maven-download-plugin</groupId>
-          <artifactId>download-maven-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>unpack-doc-resources</id>
-              <phase>generate-resources</phase>
-              <goals>
-                <goal>wget</goal>
-              </goals>
-              <configuration>
-                <url>https://repo.spring.io/release/io/spring/docresources/spring-doc-resources/${spring-doc-resources.version}/spring-doc-resources-${spring-doc-resources.version}.zip</url>
-                <unpack>true</unpack>
-                <outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
+				<groupId>com.googlecode.maven-download-plugin</groupId>
+				<artifactId>download-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-doc-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>https://repo.spring.io/release/io/spring/docresources/spring-doc-resources/${spring-doc-resources.version}/spring-doc-resources-${spring-doc-resources.version}.zip</url>
+							<unpack>true</unpack>
+							<outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
