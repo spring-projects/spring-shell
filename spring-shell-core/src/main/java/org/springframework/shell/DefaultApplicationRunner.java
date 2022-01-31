@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.core.annotation.Order;
 
 /**
- * Default {@link ApplicationRunner} which dispatches to first ordered
- * {@link ShellRunner} able to handle shell.
+ * Default {@link ShellApplicationRunner} which dispatches to the first ordered {@link ShellRunner} able to handle
+ * the shell.
  *
  * @author Janne Valkealahti
+ * @author Chris Bono
  */
+@Order(DefaultApplicationRunner.PRECEDENCE)
 public class DefaultApplicationRunner implements ShellApplicationRunner {
+
+	public static final int PRECEDENCE = 0;
 
 	private final static Logger log = LoggerFactory.getLogger(DefaultApplicationRunner.class);
 	private final List<ShellRunner> shellRunners;

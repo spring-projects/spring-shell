@@ -18,6 +18,7 @@ package org.springframework.shell.boot;
 import org.jline.reader.LineReader;
 import org.jline.reader.Parser;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,8 +55,10 @@ public class ShellRunnerAutoConfiguration {
 
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public NonInteractiveShellRunner nonInteractiveApplicationRunner() {
-		return new NonInteractiveShellRunner(shell, shellContext);
+	public NonInteractiveShellRunner nonInteractiveApplicationRunner(ObjectProvider<NonInteractiveShellRunnerCustomizer> customizer) {
+		NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(shell, shellContext);
+		customizer.orderedStream().forEach((c) -> c.customize(shellRunner));
+		return shellRunner;
 	}
 
 	@Bean

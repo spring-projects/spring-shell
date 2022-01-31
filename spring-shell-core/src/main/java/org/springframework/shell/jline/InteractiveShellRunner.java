@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,20 +31,21 @@ import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
 
 /**
- * Default Boot runner that bootstraps the shell application in interactive
- * mode.
+ * A {@link ShellRunner} that bootstraps the shell in interactive mode.
  *
- * Runs the REPL of the shell unless the {@literal spring.shell.interactive}
- * property has been set to {@literal false}.
+ * <p>Has lower precedence than {@link ScriptShellRunner} and {@link NonInteractiveShellRunner} which makes it the
+ * default shell runner when the other runners opt-out of handling the shell.
  *
  * @author Eric Bottard
+ * @author Janne Valkealahti
+ * @author Chris Bono
  */
 @Order(InteractiveShellRunner.PRECEDENCE)
 public class InteractiveShellRunner implements ShellRunner {
 
 	/**
-	 * The precedence at which this runner is set. Highger precedence runners may effectively disable this one by setting
-	 * the {@link #SPRING_SHELL_INTERACTIVE_ENABLED} property to {@literal false}.
+	 * The precedence at which this runner is ordered by the DefaultApplicationRunner - which also controls
+	 * the order it is consulted on the ability to handle the current shell.
 	 */
 	public static final int PRECEDENCE = 0;
 
