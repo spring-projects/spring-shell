@@ -36,6 +36,9 @@ import org.springframework.core.annotation.Order;
 @Order(DefaultApplicationRunner.PRECEDENCE)
 public class DefaultApplicationRunner implements ShellApplicationRunner {
 
+	/**
+	 * The precedence at which this runner is executed with respect to other ApplicationRunner beans
+	 */
 	public static final int PRECEDENCE = 0;
 
 	private final static Logger log = LoggerFactory.getLogger(DefaultApplicationRunner.class);
