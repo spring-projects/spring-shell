@@ -57,8 +57,7 @@ class ShellRunnerAutoConfigurationTests {
 
 		@Test
 		void disabledWhenPropertySet() {
-			contextRunner
-					.withPropertyValues("spring.shell.interactive.enabled:false")
+			contextRunner.withPropertyValues("spring.shell.interactive.enabled:false")
 					.run(context -> assertThat(context).doesNotHaveBean(InteractiveShellRunner.class));
 		}
 	}
@@ -72,16 +71,14 @@ class ShellRunnerAutoConfigurationTests {
 
 		@Test
 		void disabledWhenPropertySet() {
-			contextRunner
-					.withPropertyValues("spring.shell.noninteractive.enabled:false")
+			contextRunner.withPropertyValues("spring.shell.noninteractive.enabled:false")
 					.run(context -> assertThat(context).doesNotHaveBean(NonInteractiveShellRunner.class));
 		}
 
 		@Test
 		void canBeCustomized() {
 			NonInteractiveShellRunnerCustomizer customizer = mock(NonInteractiveShellRunnerCustomizer.class);
-			contextRunner
-					.withBean(NonInteractiveShellRunnerCustomizer.class, () -> customizer)
+			contextRunner.withBean(NonInteractiveShellRunnerCustomizer.class, () -> customizer)
 					.run(context -> {
 						NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
 						verify(customizer).customize(runner);
@@ -98,8 +95,7 @@ class ShellRunnerAutoConfigurationTests {
 
 		@Test
 		void disabledWhenPropertySet() {
-			contextRunner
-					.withPropertyValues("spring.shell.script.enabled:false")
+			contextRunner.withPropertyValues("spring.shell.script.enabled:false")
 					.run(context -> assertThat(context).doesNotHaveBean(ScriptShellRunner.class));
 		}
 	}
