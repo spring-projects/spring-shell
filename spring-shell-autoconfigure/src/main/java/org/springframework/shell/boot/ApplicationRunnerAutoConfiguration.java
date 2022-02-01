@@ -21,7 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.DefaultApplicationRunner;
+import org.springframework.shell.DefaultShellApplicationRunner;
 import org.springframework.shell.ShellApplicationRunner;
 import org.springframework.shell.ShellRunner;
 
@@ -31,7 +31,7 @@ public class ApplicationRunnerAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(ShellApplicationRunner.class)
-	public DefaultApplicationRunner defaultApplicationRunner(List<ShellRunner> shellRunners) {
-		return new DefaultApplicationRunner(shellRunners);
+	public DefaultShellApplicationRunner defaultShellApplicationRunner(List<ShellRunner> shellRunners) {
+		return new DefaultShellApplicationRunner(shellRunners);
 	}
 }

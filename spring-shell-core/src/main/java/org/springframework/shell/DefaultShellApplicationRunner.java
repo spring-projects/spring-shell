@@ -33,18 +33,18 @@ import org.springframework.core.annotation.Order;
  * @author Janne Valkealahti
  * @author Chris Bono
  */
-@Order(DefaultApplicationRunner.PRECEDENCE)
-public class DefaultApplicationRunner implements ShellApplicationRunner {
+@Order(DefaultShellApplicationRunner.PRECEDENCE)
+public class DefaultShellApplicationRunner implements ShellApplicationRunner {
 
 	/**
 	 * The precedence at which this runner is executed with respect to other ApplicationRunner beans
 	 */
 	public static final int PRECEDENCE = 0;
 
-	private final static Logger log = LoggerFactory.getLogger(DefaultApplicationRunner.class);
+	private final static Logger log = LoggerFactory.getLogger(DefaultShellApplicationRunner.class);
 	private final List<ShellRunner> shellRunners;
 
-	public DefaultApplicationRunner(List<ShellRunner> shellRunners) {
+	public DefaultShellApplicationRunner(List<ShellRunner> shellRunners) {
 		// TODO: follow up with spring-native
 		// Looks like with fatjar it comes on a correct order from
 		// a context(not really sure if that's how spring context works) but
