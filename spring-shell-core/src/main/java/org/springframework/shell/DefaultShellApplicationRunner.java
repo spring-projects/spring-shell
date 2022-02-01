@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.core.annotation.Order;
 
 /**
- * Default {@link ApplicationRunner} which dispatches to first ordered
- * {@link ShellRunner} able to handle shell.
+ * Default {@link ShellApplicationRunner} which dispatches to the first ordered {@link ShellRunner} able to handle
+ * the shell.
  *
  * @author Janne Valkealahti
+ * @author Chris Bono
  */
-public class DefaultApplicationRunner implements ShellApplicationRunner {
+@Order(DefaultShellApplicationRunner.PRECEDENCE)
+public class DefaultShellApplicationRunner implements ShellApplicationRunner {
 
-	private final static Logger log = LoggerFactory.getLogger(DefaultApplicationRunner.class);
+	/**
+	 * The precedence at which this runner is executed with respect to other ApplicationRunner beans
+	 */
+	public static final int PRECEDENCE = 0;
+
+	private final static Logger log = LoggerFactory.getLogger(DefaultShellApplicationRunner.class);
 	private final List<ShellRunner> shellRunners;
 
-	public DefaultApplicationRunner(List<ShellRunner> shellRunners) {
+	public DefaultShellApplicationRunner(List<ShellRunner> shellRunners) {
 		// TODO: follow up with spring-native
 		// Looks like with fatjar it comes on a correct order from
 		// a context(not really sure if that's how spring context works) but

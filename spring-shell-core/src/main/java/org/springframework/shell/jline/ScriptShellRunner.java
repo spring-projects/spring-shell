@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2018-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ import org.springframework.shell.ShellRunner;
 import org.springframework.util.ObjectUtils;
 
 /**
- * Spring Boot ApplicationRunner that looks for process arguments that start with
- * {@literal @}, which are then interpreted as references to script files to run and exit.
+ * A {@link ShellRunner} that looks for process arguments that start with {@literal @}, which are then interpreted as
+ * references to script files to run and exit.
  *
- * Has higher precedence than {@link InteractiveShellRunner} so that it
- * prevents it to run if scripts are found.
+ * <p>Has higher precedence than {@link NonInteractiveShellRunner} and {@link InteractiveShellRunner} which gives it
+ * top priority to run the shell if scripts are found.
  *
  * @author Eric Bottard
  */
@@ -43,15 +43,6 @@ import org.springframework.util.ObjectUtils;
 @Order(InteractiveShellRunner.PRECEDENCE - 100)
 public class ScriptShellRunner implements ShellRunner {
 //end::documentation[]
-
-	public static final String SPRING_SHELL_SCRIPT = "spring.shell.script";
-	public static final String ENABLED = "enabled";
-
-	/**
-	 * The name of the environment property that allows to disable the behavior of this
-	 * runner.
-	 */
-	public static final String SPRING_SHELL_SCRIPT_ENABLED = SPRING_SHELL_SCRIPT + "." + ENABLED;
 
 	private final Parser parser;
 
