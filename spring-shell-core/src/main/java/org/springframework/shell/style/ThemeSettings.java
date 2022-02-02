@@ -49,8 +49,48 @@ public abstract class ThemeSettings {
 	 */
 	public final static String TAG_LIST_VALUE = "list-value";
 
+	/**
+	 * Styling for some arbitrary content indicating {@code INFO} level.
+	 */
+	public final static String TAG_LEVEL_INFO = "level-info";
+
+	/**
+	 * Styling for some arbitrary content indicating {@code WARN} level.
+	 */
+	public final static String TAG_LEVEL_WARN = "level-warn";
+
+	/**
+	 * Styling for some arbitrary content indicating {@code ERROR} level.
+	 */
+	public final static String TAG_LEVEL_ERROR = "level-error";
+
+	/**
+	 * Styling for something i.e. in selectors when item is selectable.
+	 */
+	public final static String TAG_ITEM_ENABLED = "item-enabled";
+
+	/**
+	 * Styling for something i.e. in selectors when item can't be selected.
+	 */
+	public final static String TAG_ITEM_DISABLED = "item-disabled";
+
+	/**
+	 * Styling for something i.e. in selectors when item is selected.
+	 */
+	public final static String TAG_ITEM_SELECTED = "item-selected";
+
+	/**
+	 * Styling for something i.e. in selectors when item is not selected.
+	 */
+	public final static String TAG_ITEM_UNSELECTED = "item-unselected";
+
+	/**
+	 * Styling for selector i.e. arrow in selectors.
+	 */
+	public final static String TAG_ITEM_SELECTOR = "item-selector";
+
 	public String title() {
-		return "bold";
+		return "bold,fg:bright-white";
 	}
 
 	public String value() {
@@ -58,11 +98,43 @@ public abstract class ThemeSettings {
 	}
 
 	public String listKey() {
-		return null;
+		return "default";
 	}
 
 	public String listValue() {
 		return "bold,fg:green";
+	}
+
+	public String listLevelInfo() {
+		return "fg:green";
+	}
+
+	public String listLevelWarn() {
+		return "fg:yellow";
+	}
+
+	public String listLevelError() {
+		return "fg:red";
+	}
+
+	public String itemEnabled() {
+		return "bold";
+	}
+
+	public String itemDisabled() {
+		return "faint";
+	}
+
+	public String itemSelected() {
+		return "fg:green";
+	}
+
+	public String itemUnselected() {
+		return "bold";
+	}
+
+	public String itemSelector() {
+		return "bold,fg:bright-cyan";
 	}
 
 	/**
@@ -81,6 +153,22 @@ public abstract class ThemeSettings {
 				return listKey();
 			case TAG_LIST_VALUE:
 				return listValue();
+			case TAG_LEVEL_INFO:
+				return listLevelInfo();
+			case TAG_LEVEL_WARN:
+				return listLevelWarn();
+			case TAG_LEVEL_ERROR:
+				return listLevelError();
+			case TAG_ITEM_ENABLED:
+				return itemEnabled();
+			case TAG_ITEM_DISABLED:
+				return itemDisabled();
+			case TAG_ITEM_SELECTED:
+				return itemSelected();
+			case TAG_ITEM_UNSELECTED:
+				return itemUnselected();
+			case TAG_ITEM_SELECTOR:
+				return itemSelector();
 		}
 		throw new IllegalArgumentException(String.format("Unknown tag '%s'", tag));
 	}

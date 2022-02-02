@@ -29,12 +29,13 @@ public class ThemeSettingsTests {
 	public void test() {
 		ThemeSettings themeSettings = ThemeSettings.themeSettings();
 		String resolveTag = themeSettings.resolveTag(ThemeSettings.TAG_TITLE);
-		assertThat(resolveTag).isEqualTo("bold");
+		assertThat(resolveTag).isEqualTo("bold,fg:bright-white");
 
 		StyleSource styleSource = new MemoryStyleSource();
 		StyleResolver styleResolver = new StyleResolver(styleSource, "default");
 		AttributedStyle style = styleResolver.resolve(resolveTag);
-		assertThat(style).isEqualTo(AttributedStyle.BOLD);
+		assertThat(style)
+				.isEqualTo(AttributedStyle.DEFAULT.foreground(AttributedStyle.BRIGHT + AttributedStyle.WHITE).bold());
 	}
 
 }

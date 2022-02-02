@@ -20,11 +20,11 @@ import java.util.Map;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jline.utils.AttributedStyle.BOLD;
 
 public class TemplateExecutorTests {
 
@@ -74,7 +74,10 @@ public class TemplateExecutorTests {
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put("foo", "bar");
 		AttributedString result = executor.render(template, attributes);
-		AttributedString equalTo = new AttributedStringBuilder().append("bar", BOLD).toAttributedString();
+		AttributedString equalTo = new AttributedStringBuilder()
+				.append("bar",
+						AttributedStyle.DEFAULT.foreground(AttributedStyle.BRIGHT + AttributedStyle.WHITE).bold())
+				.toAttributedString();
 		assertThat(result).isEqualTo(equalTo);
 	}
 

@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupString;
 import org.stringtemplate.v4.misc.STMessage;
 
 /**
@@ -32,6 +33,7 @@ import org.stringtemplate.v4.misc.STMessage;
  */
 public class TemplateExecutor {
 
+	private final static Logger log = LoggerFactory.getLogger(TemplateExecutor.class);
 	private final static STErrorListener ERROR_LISTENER = new LoggingSTErrorListener();
 	private final ThemeResolver themeResolver;
 	private StringToStyleExpressionRenderer renderer;
@@ -58,6 +60,31 @@ public class TemplateExecutor {
 			attributes.entrySet().stream().forEach(e -> st.add(e.getKey(), e.getValue()));
 		}
 		String templateRendered = st.render();
+		return themeResolver.evaluateExpression(templateRendered);
+	}
+
+	/**
+	 * Render template group with a given attributes expecting to find instance
+	 * named {@code main}.
+	 *
+	 * @param template   the ST template
+	 * @param attributes the ST template attributes
+	 * @return a rendered template
+	 */
+	public AttributedString renderGroup(String template, Map<String, Object> attributes) {
+		STGroup group = new STGroupString(template);
+		group.setListener(ERROR_LISTENER);
+		group.registerRenderer(String.class, renderer);
+
+		ST st = group.getInstanceOf("main");
+		if (st == null) {
+			throw new IllegalArgumentException("template instance 'main' not found from a group");
+		}
+		if (attributes != null) {
+			attributes.entrySet().stream().forEach(e -> st.add(e.getKey(), e.getValue()));
+		}
+		String templateRendered = st.render();
+		log.debug("Rendered template {}", templateRendered);
 		return themeResolver.evaluateExpression(templateRendered);
 	}
 
