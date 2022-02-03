@@ -101,6 +101,7 @@ jobs:
         RELEASE_NOTES_HEADERS: ${{runner.temp}}/release_notes_headers.json
         RELEASE_NOTES_FOOTERS: ${{runner.temp}}/release_notes_footers.json
         RELEASE_NOTES_ISSUES: ${{runner.temp}}/release_notes_issues.json
+        RELEASE_NOTES_PRS: ${{runner.temp}}/release_notes_prs.json
       run: |
         gh issue list \
           --repo spring-projects/spring-shell \
@@ -122,8 +123,15 @@ jobs:
           --state all --json number,title,labels \
           --jq '{issues:map(select((.labels | length == 0) or (any(.labels[].name; startswith("automation/rlnotes")|not))))}' \
           > $RELEASE_NOTES_ISSUES
-        jq -s '{issues:(.[0].issues),headers:(.[1].headers),headerslength:(.[1].headerslength),footers:(.[2].footers), footerslength:(.[2].footerslength)}' \
+        gh pr list \
+          --repo spring-projects/spring-shell \
+          --search milestone:$PROJECT_VERSION \
+          --state all --json number,title,labels \
+          --jq '{prs:map(.),prslength:(length)}' \
+          > $RELEASE_NOTES_PRS
+        jq -s '{issues:(.[0].issues),prs:(.[1].prs),prslength:(.[1].prslength),headers:(.[2].headers),headerslength:(.[2].headerslength),footers:(.[3].footers), footerslength:(.[3].footerslength)}' \
           $RELEASE_NOTES_ISSUES \
+          $RELEASE_NOTES_PRS \
           $RELEASE_NOTES_HEADERS \
           $RELEASE_NOTES_FOOTERS \
           > $RELEASE_NOTES_DATA
