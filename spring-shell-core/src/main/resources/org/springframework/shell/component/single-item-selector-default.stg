@@ -1,0 +1,44 @@
+// selector rows
+select_item(item) ::= <%
+<if(item.selected)>
+<("> "); format="item-selector"><item.name; format="item-selector">
+<else>
+<("  ")><item.name>
+<endif>
+%>
+
+// start '? xxx' shows both running and result
+question_name(model) ::= <<
+<("?"); format="list-value"> <model.name; format="title">
+>>
+
+// within info section, dedicated instructions for user
+info_filter(model) ::= <%
+<if(model.input)>
+, filtering '<model.input>'
+<else>
+, type to filter
+<endif>
+%>
+
+// info section after '? xxx'
+info(model) ::= <<
+[Use arrows to move]<info_filter(model)>
+>>
+
+// component result
+result(model) ::= <<
+<question_name(model)> <model.value; format="value">
+>>
+
+// component is running
+running(model) ::= <<
+<question_name(model)> <info(model)>
+<model.rows:{x|<select_item(x)>}; separator="\n">
+>>
+
+// main - hardcoded name
+// model - model built by SingleItemSelectorContext
+main(model) ::= <<
+<if(model.isResult)><result(model)><else><running(model)><endif>
+>>

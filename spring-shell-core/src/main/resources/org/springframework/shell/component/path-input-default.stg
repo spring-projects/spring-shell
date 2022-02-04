@@ -1,0 +1,38 @@
+// message
+message(model) ::= <%
+<if(model.message && model.hasMessageLevelError)>
+<(">>>"); format="level-error"> <model.message; format="level-error">
+<elseif(model.message && model.hasMessageLevelWarn)>
+<(">>"); format="level-warn"> <model.message; format="level-warn">
+<elseif(model.message && model.hasMessageLevelInfo)>
+<(">"); format="level-info"> <model.message; format="level-info">
+<endif>
+%>
+
+// info section after '? xxx'
+info(model) ::= <%
+<if(model.input)>
+<model.input>
+<endif>
+%>
+
+// start '? xxx' shows both running and result
+question_name(model) ::= <<
+<("?"); format="list-value"> <model.name; format="title">
+>>
+
+// component result
+result(model) ::= <<
+<question_name(model)> <model.resultValue; format="value">
+>>
+
+// component is running
+running(model) ::= <<
+<question_name(model)> <info(model)>
+<message(model)>
+>>
+
+// main
+main(model) ::= <<
+<if(model.resultValue)><result(model)><else><running(model)><endif>
+>>

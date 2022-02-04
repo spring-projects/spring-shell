@@ -25,6 +25,7 @@
 		<jline.version>3.21.0</jline.version>
 		<jcommander.version>1.81</jcommander.version>
 		<antlr-st4.version>4.3.1</antlr-st4.version>
+		<jimfs.version>1.2</jimfs.version>
 	</properties>
 
 	<modules>
@@ -109,6 +110,11 @@
 				<groupId>org.antlr</groupId>
 				<artifactId>ST4</artifactId>
 				<version>${antlr-st4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.jimfs</groupId>
+				<artifactId>jimfs</artifactId>
+				<version>${jimfs.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
