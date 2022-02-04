@@ -1,0 +1,64 @@
+// used to select style if item is selected/unselected
+selected_style(flag) ::= <%
+<if(flag)>item-selected<else>item-unselected<endif>
+%>
+
+// selector rows
+select_item(item) ::= <%
+<if(item.onrow)>
+  <("> "); format="item-selector">
+<else>
+  <("  ")>
+<endif>
+
+<if(item.enabled)>
+  <if(item.selected)>
+    <("[x]"); format=selected_style(item.selected)> <item.name>
+  <else>
+    <("[ ]"); format=selected_style(item.selected)> <item.name>
+  <endif>
+<else>
+  <("[ ]"); format="item-disabled"> <item.name; format="item-disabled">
+<endif>
+%>
+
+// start '? xxx' shows both running and result
+question_name(model) ::= <<
+<("?"); format="list-value"> <model.name; format="title">
+>>
+
+// within info section, dedicated instructions for user
+info_filter(model) ::= <%
+<if(model.input)>
+, filtering '<model.input>'
+<else>
+, type to filter
+<endif>
+%>
+
+// info section after '? xxx'
+info(model) ::= <<
+[Use arrows to move]<info_filter(model)>
+>>
+
+// get comma delited string
+comma_delimited(values) ::= <%
+<values; separator=",">
+%>
+
+// component result
+result(model) ::= <<
+<question_name(model)> <(comma_delimited(model.values)); format="value">
+>>
+
+// component is running
+running(model) ::= <<
+<question_name(model)> <info(model)>
+<model.rows:{x|<select_item(x)>}; separator="\n">
+>>
+
+// main - hardcoded name
+// model - model built by MultiItemSelectorContext
+main(model) ::= <<
+<if(model.isResult)><result(model)><else><running(model)><endif>
+>>

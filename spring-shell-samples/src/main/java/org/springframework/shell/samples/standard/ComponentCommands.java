@@ -1,0 +1,103 @@
+/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.springframework.shell.samples.standard;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.shell.component.MultiItemSelector;
+import org.springframework.shell.component.PathInput;
+import org.springframework.shell.component.SingleItemSelector;
+import org.springframework.shell.component.StringInput;
+import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
+import org.springframework.shell.component.PathInput.PathInputContext;
+import org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
+import org.springframework.shell.component.StringInput.StringInputContext;
+import org.springframework.shell.component.support.SelectorItem;
+import org.springframework.shell.standard.AbstractShellComponent;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.style.TemplateExecutor;
+
+@ShellComponent
+public class ComponentCommands extends AbstractShellComponent implements ResourceLoaderAware {
+
+	private ResourceLoader resourceLoader;
+
+	@Autowired
+	private TemplateExecutor templateExecutor;
+
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
+	}
+
+	@ShellMethod(key = "component string", value = "String input", group = "Components")
+	public String stringInput() {
+		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
+		component.setResourceLoader(resourceLoader);
+		component.setTemplateExecutor(templateExecutor);
+		StringInputContext context = component.run(StringInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+
+	@ShellMethod(key = "component path", value = "Path input", group = "Components")
+	public String pathInput() {
+		PathInput component = new PathInput(getTerminal(), "Enter value");
+		component.setResourceLoader(resourceLoader);
+		component.setTemplateExecutor(templateExecutor);
+		PathInputContext context = component.run(PathInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+
+	@ShellMethod(key = "component single", value = "Single selector", group = "Components")
+	public String singleSelector() {
+		List<SelectorItem<String>> items = new ArrayList<>();
+		items.add(SelectorItem.of("key1", "value1"));
+		items.add(SelectorItem.of("key2", "value2"));
+		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+				items, "testSimple", null);
+		component.setResourceLoader(resourceLoader);
+		component.setTemplateExecutor(templateExecutor);
+		SingleItemSelectorContext<String, SelectorItem<String>> context = component
+				.run(SingleItemSelectorContext.empty());
+		String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
+		return "Got value " + result;
+	}
+
+	@ShellMethod(key = "component multi", value = "Multi selector", group = "Components")
+	public String multiSelector() {
+		List<SelectorItem<String>> items = new ArrayList<>();
+		items.add(SelectorItem.of("key1", "value1"));
+		items.add(SelectorItem.of("key2", "value2", false));
+		items.add(SelectorItem.of("key3", "value3"));
+		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
+				items, "testSimple", null);
+		component.setResourceLoader(resourceLoader);
+		component.setTemplateExecutor(templateExecutor);
+		MultiItemSelectorContext<String, SelectorItem<String>> context = component
+				.run(MultiItemSelectorContext.empty());
+		String result = context.getResultItems().stream()
+				.map(si -> si.getItem())
+				.collect(Collectors.joining(","));
+		return "Got value " + result;
+	}
+}

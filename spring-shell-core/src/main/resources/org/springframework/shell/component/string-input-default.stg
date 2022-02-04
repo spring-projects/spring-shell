@@ -1,0 +1,28 @@
+// info section after '? xxx'
+info(model) ::= <%
+<if(model.input)>
+<model.input>
+<else>
+<("[Default "); format="value"><model.defaultValue; format="value"><("]"); format="value">
+<endif>
+%>
+
+// start '? xxx' shows both running and result
+question_name(model) ::= <<
+<("?"); format="list-value"> <model.name; format="title">
+>>
+
+// component result
+result(model) ::= <<
+<question_name(model)> <model.resultValue; format="value">
+>>
+
+// component is running
+running(model) ::= <<
+<question_name(model)> <info(model)>
+>>
+
+// main
+main(model) ::= <<
+<if(model.resultValue)><result(model)><else><running(model)><endif>
+>>
