@@ -86,6 +86,32 @@ public class StringInputTests extends AbstractShellTests {
 	}
 
 	@Test
+	public void testResultBasicWithMask() throws InterruptedException {
+		ComponentContext<?> empty = ComponentContext.empty();
+		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
+		component1.setPrintResults(true);
+		component1.setMaskCharater('*');
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+
+		service.execute(() -> {
+			StringInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+			latch1.countDown();
+		});
+
+		TestBuffer testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+		StringInputContext run1Context = result1.get();
+
+		assertThat(run1Context).isNotNull();
+		assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
+		assertThat(consoleOut()).contains("component1 *********************");
+	}
+
+	@Test
 	public void testResultUserInput() throws InterruptedException {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");

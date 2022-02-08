@@ -51,10 +51,13 @@ public class ComponentCommands extends AbstractShellComponent implements Resourc
 	}
 
 	@ShellMethod(key = "component string", value = "String input", group = "Components")
-	public String stringInput() {
+	public String stringInput(boolean mask) {
 		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
 		component.setResourceLoader(resourceLoader);
 		component.setTemplateExecutor(templateExecutor);
+		if (mask) {
+			component.setMaskCharater('*');
+		}
 		StringInputContext context = component.run(StringInputContext.empty());
 		return "Got value " + context.getResultValue();
 	}

@@ -40,6 +40,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 	private final String defaultValue;
 	private StringInputContext currentContext;
+	private Character maskCharacter;
 
 	public StringInput(Terminal terminal) {
 		this(terminal, null, null, null);
@@ -57,12 +58,21 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		this.defaultValue = defaultValue;
 	}
 
+	/**
+	 * Sets a mask character for input and result value.
+	 *
+	 * @param maskCharacter a mask character
+	 */
+	public void setMaskCharater(Character maskCharacter) {
+		this.maskCharacter = maskCharacter;
+	}
+
 	@Override
 	protected StringInputContext getThisContext(ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
-		currentContext = StringInputContext.of(defaultValue);
+		currentContext = StringInputContext.of(defaultValue, maskCharacter);
 		currentContext.setName(getName());
 		context.stream().forEach(e -> {
 			currentContext.put(e.getKey(), e.getValue());
@@ -124,12 +134,47 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		void setDefaultValue(String defaultValue);
 
 		/**
+		 * Sets a mask character.
+		 *
+		 * @param maskCharacter the mask character
+		 */
+		void setMaskCharacter(Character maskCharacter);
+
+		/**
+		 * Gets a masked input.
+		 *
+		 * @return a masked input
+		 */
+		String getMaskedInput();
+
+		/**
+		 * Gets a masked result value.
+		 *
+		 * @return masked result value
+		 */
+		String getMaskedResultValue();
+
+		/**
+		 * Returns flag if there is a mask character defined.
+		 *
+		 * @return true if mask character defined, false otherwise
+		 */
+		boolean hasMaskCharacter();
+
+		/**
+		 * Gets a mask character.
+		 *
+		 * @return a mask character.
+		 */
+		Character getMaskCharacter();
+
+		/**
 		 * Gets an empty {@link StringInputContext}.
 		 *
 		 * @return empty path input context
 		 */
 		public static StringInputContext empty() {
-			return of(null);
+			return of(null, null);
 		}
 
 		/**
@@ -137,8 +182,8 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		 *
 		 * @return path input context
 		 */
-		public static StringInputContext of(String defaultValue) {
-			return new DefaultStringInputContext(defaultValue);
+		public static StringInputContext of(String defaultValue, Character maskCharacter) {
+			return new DefaultStringInputContext(defaultValue, maskCharacter);
 		}
 	}
 
@@ -146,9 +191,11 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 			implements StringInputContext {
 
 		private String defaultValue;
+		private Character maskCharacter;
 
-		public DefaultStringInputContext(String defaultValue) {
+		public DefaultStringInputContext(String defaultValue, Character maskCharacter) {
 			this.defaultValue = defaultValue;
+			this.maskCharacter = maskCharacter;
 		}
 
 		@Override
@@ -162,12 +209,50 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		}
 
 		@Override
+		public void setMaskCharacter(Character maskCharacter) {
+			this.maskCharacter = maskCharacter;
+		}
+
+		@Override
+		public String getMaskedInput() {
+			return maybeMask(getInput());
+		}
+
+		@Override
+		public String getMaskedResultValue() {
+			return maybeMask(getResultValue());
+		}
+
+		@Override
+		public boolean hasMaskCharacter() {
+			return maskCharacter != null;
+		}
+
+		@Override
+		public Character getMaskCharacter() {
+			return maskCharacter;
+		}
+
+		@Override
 		public Map<String, Object> toTemplateModel() {
 			Map<String, Object> attributes = super.toTemplateModel();
 			attributes.put("defaultValue", getDefaultValue() != null ? getDefaultValue() : null);
+			attributes.put("maskedInput", getMaskedInput());
+			attributes.put("maskedResultValue", getMaskedResultValue());
+			attributes.put("maskCharacter", getMaskCharacter());
+			attributes.put("hasMaskCharacter", hasMaskCharacter());
 			Map<String, Object> model = new HashMap<>();
 			model.put("model", attributes);
 			return model;
+		}
+
+		private String maybeMask(String str) {
+			if (StringUtils.hasLength(str) && maskCharacter != null) {
+				return new String(new char[str.length()]).replace('\0', maskCharacter);
+			}
+			else {
+				return str;
+			}
 		}
 	}
 
