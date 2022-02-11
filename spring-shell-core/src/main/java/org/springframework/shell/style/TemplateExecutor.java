@@ -94,22 +94,22 @@ public class TemplateExecutor {
 
 		@Override
 		public void compileTimeError(STMessage msg) {
-			log.error("compileTimeError [{}]", msg);
+			log.debug("compileTimeError [{}]", msg);
 		}
 
 		@Override
 		public void runTimeError(STMessage msg) {
-			log.error("runTimeError [{}]", msg);
+			log.debug("runTimeError [{}]", msg);
 		}
 
 		@Override
 		public void IOError(STMessage msg) {
-			log.error("IOError [{}]", msg);
+			log.debug("IOError [{}]", msg);
 		}
 
 		@Override
 		public void internalError(STMessage msg) {
-			log.error("internalError [{}]", msg);
+			log.debug("internalError [{}]", msg);
 		}
 	}
 }
