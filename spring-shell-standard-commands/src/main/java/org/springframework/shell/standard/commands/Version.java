@@ -80,37 +80,56 @@ public class Version extends AbstractShellComponent implements ResourceLoaderAwa
 		String templateResource = resourceAsString(resourceLoader.getResource(template));
 
 		Map<String, Object> attributes = new HashMap<>();
+		String buildGroup = null;
+		String buildArtifact = null;
+		String buildName = null;
+		String buildVersion = null;
+		String buildTime = null;
+		String gitBranch = null;
+		String gitCommitId = null;
+		String gitShortCommitId = null;
+		String gitCommitTime = null;
 		if (buildProperties != null) {
 			if (showBuildGroup && StringUtils.hasText(buildProperties.getGroup())) {
-				attributes.put("buildGroup", buildProperties.getGroup());
+				buildGroup = buildProperties.getGroup();
 			}
 			if (showBuildArtifact && StringUtils.hasText(buildProperties.getArtifact())) {
-				attributes.put("buildArtifact", buildProperties.getArtifact());
+				buildArtifact = buildProperties.getArtifact();
 			}
 			if (showBuildName && StringUtils.hasText(buildProperties.getName())) {
-				attributes.put("buildName", buildProperties.getName());
+				buildName = buildProperties.getName();
 			}
 			if (showBuildVersion && StringUtils.hasText(buildProperties.getVersion())) {
-				attributes.put("buildVersion", buildProperties.getVersion());
+				buildVersion = buildProperties.getVersion();
 			}
 			if (showBuildTime && buildProperties.getTime() != null) {
-				attributes.put("buildTime", buildProperties.getTime().toString());
+				buildTime = buildProperties.getTime().toString();
 			}
 		}
 		if (gitProperties != null) {
 			if (showGitBranch && StringUtils.hasText(gitProperties.getBranch())) {
-				attributes.put("gitBranch", gitProperties.getBranch());
+				gitBranch = gitProperties.getBranch();
 			}
 			if (showGitCommitId && StringUtils.hasText(gitProperties.getCommitId())) {
-				attributes.put("gitCommitId", gitProperties.getCommitId());
+				gitCommitId = gitProperties.getCommitId();
 			}
 			if (showGitShortCommitId && StringUtils.hasText(gitProperties.getShortCommitId())) {
-				attributes.put("gitShortCommitId", gitProperties.getShortCommitId());
+				gitShortCommitId = gitProperties.getShortCommitId();
 			}
 			if (showGitCommitTime && gitProperties.getCommitTime() != null) {
-				attributes.put("gitCommitTime", gitProperties.getCommitTime().toString());
+				gitCommitTime = gitProperties.getCommitTime().toString();
 			}
 		}
+		// make sure we pass arguments, even as nulls, so that ST don't complain
+		attributes.put("buildGroup", buildGroup);
+		attributes.put("buildArtifact", buildArtifact);
+		attributes.put("buildName", buildName);
+		attributes.put("buildVersion", buildVersion);
+		attributes.put("buildTime", buildTime);
+		attributes.put("gitBranch", gitBranch);
+		attributes.put("gitCommitId", gitCommitId);
+		attributes.put("gitShortCommitId", gitShortCommitId);
+		attributes.put("gitCommitTime", gitCommitTime);
 		AttributedString rendered = templateExecutor.render(templateResource, attributes);
 		return rendered;
 	}
