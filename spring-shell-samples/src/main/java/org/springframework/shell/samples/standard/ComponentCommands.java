@@ -23,10 +23,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.shell.component.ConfirmationInput;
 import org.springframework.shell.component.MultiItemSelector;
 import org.springframework.shell.component.PathInput;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.StringInput;
+import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
 import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
 import org.springframework.shell.component.PathInput.PathInputContext;
 import org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
@@ -68,6 +70,15 @@ public class ComponentCommands extends AbstractShellComponent implements Resourc
 		component.setResourceLoader(resourceLoader);
 		component.setTemplateExecutor(templateExecutor);
 		PathInputContext context = component.run(PathInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+
+	@ShellMethod(key = "component confirmation", value = "Confirmation input", group = "Components")
+	public String confirmationInput(boolean no) {
+		ConfirmationInput component = new ConfirmationInput(getTerminal(), "Enter value", !no);
+		component.setResourceLoader(resourceLoader);
+		component.setTemplateExecutor(templateExecutor);
+		ConfirmationInputContext context = component.run(ConfirmationInputContext.empty());
 		return "Got value " + context.getResultValue();
 	}
 
