@@ -27,7 +27,7 @@ public interface ShellRunner {
 	/**
 	 * Checks if a particular shell runner can execute.
 	 *
-	 * @param args the application argumets
+	 * @param args the application arguments
 	 * @return true if shell runner can execute
 	 */
 	boolean canRun(ApplicationArguments args);

@@ -33,12 +33,12 @@ public class ThemingAutoConfiguration {
 	public ThemeRegistry themeRegistry(ObjectProvider<Theme> themes) {
 		ThemeRegistry registry = new ThemeRegistry();
 		registry.register(Theme.of("default", ThemeSettings.themeSettings()));
-		themes.orderedStream().forEachOrdered(theme -> registry.register(theme));
+		themes.orderedStream().forEachOrdered(registry::register);
 		return registry;
 	}
 
 	@Bean
-	public ThemeResolver themeResolver(ThemeRegistry themeRegistry, SpringShellProperties properties) {
+	public ThemeResolver shellThemeResolver(ThemeRegistry themeRegistry, SpringShellProperties properties) {
 		return new ThemeResolver(themeRegistry, properties.getTheme().getName());
 	}
 
