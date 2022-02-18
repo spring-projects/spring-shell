@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class DelimiterTextWrapperTest {
 
-	private TextWrapper wrapper = new DelimiterTextWrapper();
+	private final TextWrapper wrapper = new DelimiterTextWrapper();
 
 	@Test
 	public void testNoWordSplit() {

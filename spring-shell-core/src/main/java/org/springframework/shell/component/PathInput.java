@@ -149,7 +149,7 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 		 *
 		 * @return empty path input context
 		 */
-		public static PathInputContext empty() {
+		static PathInputContext empty() {
 			return new DefaultPathInputContext();
 		}
 	}

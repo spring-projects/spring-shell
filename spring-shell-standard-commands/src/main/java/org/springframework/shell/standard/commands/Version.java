@@ -53,7 +53,7 @@ public class Version extends AbstractShellComponent {
 	private BuildProperties buildProperties;
 	private GitProperties gitProperties;
 	private ResourceLoader resourceLoader;
-	private TemplateExecutor templateExecutor;
+	private final TemplateExecutor templateExecutor;
 	private String template;
 	private boolean showBuildGroup;
 	private boolean showBuildArtifact;

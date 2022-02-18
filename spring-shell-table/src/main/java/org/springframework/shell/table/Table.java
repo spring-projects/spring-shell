@@ -54,17 +54,17 @@ public class Table implements TerminalSizeAware {
 
 	private final int columns;
 
-	private TableModel model;
+	private final TableModel model;
 
-	private Map<CellMatcher, Formatter> formatters = new LinkedHashMap<CellMatcher, Formatter>();
+	private Map<CellMatcher, Formatter> formatters;
 
-	private Map<CellMatcher, SizeConstraints> sizeConstraints = new LinkedHashMap<CellMatcher, SizeConstraints>();
+	private Map<CellMatcher, SizeConstraints> sizeConstraints;
 
-	private Map<CellMatcher, TextWrapper> wrappers = new LinkedHashMap<CellMatcher, TextWrapper>();
+	private Map<CellMatcher, TextWrapper> wrappers;
 
-	private Map<CellMatcher, Aligner> aligners = new LinkedHashMap<CellMatcher, Aligner>();
+	private Map<CellMatcher, Aligner> aligners;
 
-	private List<BorderSpecification> borderSpecifications = new ArrayList<BorderSpecification>();
+	private List<BorderSpecification> borderSpecifications;
 
 	/**
 	 * Construct a new Table with the given model and customizers.
@@ -247,27 +247,27 @@ public class Table implements TerminalSizeAware {
 		/**
 		 * Glyph to paint a vertical line at row,col.
 		 */
-		private char[][] verticals;
+		private final char[][] verticals;
 
 		/**
 		 * Glyph to paint a horizontal line at row,col.
 		 */
-		private char[][] horizontals;
+		private final char[][] horizontals;
 
 		/**
 		 * The type of corner, if any, to paint at row,col.
 		 */
-		private char[][] corners;
+		private final char[][] corners;
 
 		/**
 		 * True if at least one vertical bar exists in that col.
 		 */
-		private boolean[] vFillers;
+		private final boolean[] vFillers;
 
 		/**
 		 * True if at least one horizontal bar exists in that row.
 		 */
-		private boolean[] hFillers;
+		private final boolean[] hFillers;
 
 		public Borders() {
 			verticals = new char[rows][columns + 1];

@@ -17,7 +17,7 @@
 package org.springframework.shell.table;
 
 /**
- * An horizontal alignment strategy that allows alignment to the left, center or right.
+ * A horizontal alignment strategy that allows alignment to the left, center or right.
  *
  * @author Eric Bottard
  */

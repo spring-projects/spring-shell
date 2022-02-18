@@ -25,13 +25,13 @@ import org.springframework.util.Assert;
  */
 public class ArrayTableModel extends TableModel {
 
-	private Object[][] data;
+	private final Object[][] data;
 
 	public ArrayTableModel(Object[][] data) {
 		this.data = data;
 		int width = data.length > 0 ? data[0].length : 0;
-		for (int row = 0; row < data.length; row++) {
-			Assert.isTrue(width == data[row].length, "All rows of array data must be of same length");
+		for ( Object[] datum : data ) {
+			Assert.isTrue( width == datum.length, "All rows of array data must be of same length" );
 		}
 	}
 

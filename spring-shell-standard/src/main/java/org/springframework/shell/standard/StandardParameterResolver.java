@@ -94,7 +94,7 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	private final ConversionService conversionService;
 
-	private Collection<ValueProvider> valueProviders = new HashSet<>();
+	private Collection<ValueProvider> valueProviders;
 
 	private Validator validator = Utils.defaultValidator();
 
@@ -148,13 +148,13 @@ public class StandardParameterResolver implements ParameterResolver {
 					int arity = getArity(parameter);
 
 					if (i + 1 + arity > words.size()) {
-						String input = words.subList(i, words.size()).stream().collect(Collectors.joining(" "));
+						String input = String.join( " ", words.subList( i, words.size() ) );
 						throw new UnfinishedParameterResolutionException(
 								describe(Utils.createMethodParameter(parameter)).findFirst().get(), input);
 					}
 					Assert.isTrue(i + 1 + arity <= words.size(),
 							String.format("Not enough input for parameter '%s'", word));
-					String raw = words.subList(i + 1, i + 1 + arity).stream().collect(Collectors.joining(","));
+					String raw = String.join( ",", words.subList( i + 1, i + 1 + arity ) );
 					Assert.isTrue(!namedParameters.containsKey(key),
 							String.format("Parameter for '%s' has already been specified", word));
 					namedParameters.put(key, raw);
@@ -354,7 +354,7 @@ public class StandardParameterResolver implements ParameterResolver {
 			}
 		}
 		catch (Exception e) {
-			// Most likely what is already typed would fail resolution (eg type conversion failure)
+			// Most likely what is already typed would fail resolution (e.g. type conversion failure)
 			return argumentKeysThatStartWithContextPrefix(methodParameter, context);
 		}
 
@@ -519,9 +519,9 @@ public class StandardParameterResolver implements ParameterResolver {
 
 	private static class ParameterRawValue {
 
-		private Integer from;
+		private final Integer from;
 
-		private Integer to;
+		private final Integer to;
 
 		/**
 		 * The raw String value that got bound to a parameter.

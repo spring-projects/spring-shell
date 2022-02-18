@@ -49,7 +49,7 @@ public class FileInputProvider implements InputProvider, Closeable {
     @Override
     public Input readInput() {
         StringBuilder sb = new StringBuilder();
-        boolean continued = false;
+        boolean continued;
         String line;
         try {
             do {

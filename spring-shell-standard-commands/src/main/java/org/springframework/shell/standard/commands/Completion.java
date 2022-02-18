@@ -38,7 +38,7 @@ public class Completion extends AbstractShellComponent {
 	}
 
 	private ResourceLoader resourceLoader;
-	private String rootCommand;
+	private final String rootCommand;
 
 	public Completion(String rootCommand) {
 		this.rootCommand = rootCommand;

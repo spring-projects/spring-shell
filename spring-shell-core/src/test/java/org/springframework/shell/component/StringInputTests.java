@@ -90,7 +90,7 @@ public class StringInputTests extends AbstractShellTests {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
 		component1.setPrintResults(true);
-		component1.setMaskCharater('*');
+		component1.setMaskCharacter('*');
 		component1.setResourceLoader(new DefaultResourceLoader());
 		component1.setTemplateExecutor(getTemplateExecutor());
 
@@ -124,7 +124,7 @@ public class StringInputTests extends AbstractShellTests {
 			latch1.countDown();
 		});
 
-		TestBuffer testBuffer = new TestBuffer().append("test").cr();
+		TestBuffer testBuffer = new TestBuffer().append( "test").cr();
 		write(testBuffer.getBytes());
 
 		latch1.await(2, TimeUnit.SECONDS);

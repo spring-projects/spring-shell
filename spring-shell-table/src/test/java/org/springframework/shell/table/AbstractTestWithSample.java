@@ -19,6 +19,7 @@ package org.springframework.shell.table;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -46,7 +47,7 @@ public class AbstractTestWithSample {
 				this.getClass().getSimpleName(), testName);
 		InputStream stream = TableTest.class.getResourceAsStream(sampleName);
 		Assert.notNull(stream, "Can't find expected rendering result at " + sampleName);
-		return FileCopyUtils.copyToString(new InputStreamReader(stream, "UTF-8")).replace("&", "");
+		return FileCopyUtils.copyToString(new InputStreamReader( stream, StandardCharsets.UTF_8 )).replace( "&", "");
 	}
 
 	/**

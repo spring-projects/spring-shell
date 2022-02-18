@@ -69,7 +69,7 @@ public class Shell {
 	@Autowired
 	protected ApplicationContext applicationContext;
 
-	private CommandRegistry commandRegistry;
+	private final CommandRegistry commandRegistry;
 
 	private Validator validator = Utils.defaultValidator();
 
@@ -153,7 +153,7 @@ public class Shell {
 			return NO_INPUT;
 		}
 
-		String line = input.words().stream().collect(Collectors.joining(" ")).trim();
+		String line = String.join( " ", input.words() ).trim();
 		String command = findLongestCommand(line);
 
 		List<String> words = input.words();
@@ -233,8 +233,7 @@ public class Shell {
 
 		String prefix = context.upToCursor();
 
-		List<CompletionProposal> candidates = new ArrayList<>();
-		candidates.addAll(commandsStartingWith(prefix));
+		List<CompletionProposal> candidates = new ArrayList<>( commandsStartingWith( prefix ) );
 
 		String best = findLongestCommand(prefix);
 		if (best != null) {
@@ -245,10 +244,9 @@ public class Shell {
 
 			List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
 			for (ParameterResolver resolver : parameterResolvers) {
-				for (int index = 0; index < parameters.size(); index++) {
-					MethodParameter parameter = parameters.get(index);
-					if (resolver.supports(parameter)) {
-						resolver.complete(parameter, argsContext).stream().forEach(candidates::add);
+				for ( MethodParameter parameter : parameters ) {
+					if ( resolver.supports( parameter ) ) {
+						candidates.addAll( resolver.complete( parameter, argsContext ) );
 					}
 				}
 			}

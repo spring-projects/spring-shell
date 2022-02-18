@@ -32,11 +32,11 @@ import org.springframework.shell.jline.ScriptShellRunner;
 @Configuration(proxyBeanMethods = false)
 public class ShellRunnerAutoConfiguration {
 
-	private Shell shell;
-	private PromptProvider promptProvider;
-	private LineReader lineReader;
-	private Parser parser;
-	private ShellContext shellContext;
+	private final Shell shell;
+	private final PromptProvider promptProvider;
+	private final LineReader lineReader;
+	private final Parser parser;
+	private final ShellContext shellContext;
 
 	public ShellRunnerAutoConfiguration(Shell shell, PromptProvider promptProvider, LineReader lineReader,
 			Parser parser, ShellContext shellContext) {

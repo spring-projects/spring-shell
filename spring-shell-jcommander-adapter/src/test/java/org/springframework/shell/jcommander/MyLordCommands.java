@@ -17,7 +17,7 @@
 package org.springframework.shell.jcommander;
 
 /**
- * An hypothetical command class, with one method using JCommander args, and the other not.
+ * A hypothetical command class, with one method using JCommander args, and the other not.
  *
  * @author Eric Bottard
  */

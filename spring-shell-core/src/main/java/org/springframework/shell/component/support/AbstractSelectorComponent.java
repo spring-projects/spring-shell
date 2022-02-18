@@ -48,12 +48,12 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 	protected final String name;
 	private final List<I> items;
 	private Comparator<I> comparator = (o1, o2) -> 0;
-	private boolean exitSelects;
+	private final boolean exitSelects;
 	private int maxItems = 5;
 	private Function<T, String> itemMapper = item -> item.toString();
 	private boolean stale = false;
-	private AtomicInteger start = new AtomicInteger(0);
-	private AtomicInteger pos = new AtomicInteger(0);
+	private final AtomicInteger start = new AtomicInteger( 0);
+	private final AtomicInteger pos = new AtomicInteger( 0);
 
 	public AbstractSelectorComponent(Terminal terminal, String name, List<I> items, boolean exitSelects,
 			Comparator<I> comparator) {
@@ -89,7 +89,7 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 	/**
 	 * Gets an item mapper.
 	 *
-	 * @return
+	 * @return the item mapper function
 	 */
 	public Function<T, String> getItemMapper() {
 		return itemMapper;
@@ -236,13 +236,8 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		}
 		AtomicInteger reindex = new AtomicInteger(0);
 		List<ItemState<I>> filtered = itemStates.stream()
-			.filter(i -> {
-				return i.matches(context.getInput());
-			})
-			.map(i -> {
-				i.index = reindex.getAndIncrement();
-				return i;
-			})
+			.filter(i -> i.matches( context.getInput()) )
+			.peek( i -> i.index = reindex.getAndIncrement() )
 			.collect(Collectors.toList());
 		List<ItemState<I>> items = filtered.stream()
 			.skip(skip)

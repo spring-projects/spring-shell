@@ -117,7 +117,7 @@ public abstract class AbstractShellTests {
         return templateExecutor;
     }
 
-    protected class TestBuffer {
+    protected static class TestBuffer {
         private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         public TestBuffer() {

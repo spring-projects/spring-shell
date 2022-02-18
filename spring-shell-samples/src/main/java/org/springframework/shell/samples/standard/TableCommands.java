@@ -50,11 +50,6 @@ public class TableCommands {
 	}
 
 	public static CellMatcher at(final int theRow, final int col) {
-		return new CellMatcher() {
-			@Override
-			public boolean matches(int row, int column, TableModel model) {
-				return row == theRow && column == col;
-			}
-		};
+		return ( row, column, model ) -> row == theRow && column == col;
 	}
 }

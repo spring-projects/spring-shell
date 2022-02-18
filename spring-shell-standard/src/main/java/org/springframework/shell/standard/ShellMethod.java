@@ -71,7 +71,7 @@ public @interface ShellMethod {
 
 	/**
 	 * Defines interaction mode for a command as a hint when command should be
-	 * available. For example presense of some commands doesn't make sense if shell
+	 * available. For example presence of some commands doesn't make sense if shell
 	 * is running as non-interactive mode and vice versa.
 	 *
 	 * Defaults to {@link InteractionMode#ALL}

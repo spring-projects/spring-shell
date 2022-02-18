@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * Contract for base component context having access to basic key/value pairs.
  * This is a base context which components can extend to provide their own
- * component spesific contexts.
+ * component specific contexts.
  *
  * @author Janne Valkealahti
  */

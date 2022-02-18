@@ -31,5 +31,5 @@ public interface CellMatcher {
 	 * @param column the column being tested
 	 * @param model the data model of the table
 	 */
-	public boolean matches(int row, int column, TableModel model);
+	boolean matches( int row, int column, TableModel model );
 }

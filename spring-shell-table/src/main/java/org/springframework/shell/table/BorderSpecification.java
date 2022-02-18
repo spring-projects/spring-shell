@@ -82,7 +82,7 @@ public class BorderSpecification {
 	}
 
 	/**
-	 * Does this specification result in the need to paint an horizontal bar at row,column?
+	 * Does this specification result in the need to paint a horizontal bar at row,column?
 	 */
 	/*default*/ char horizontals(int row, int column) {
 		boolean result = (match & TOP) == TOP && row == row1;
@@ -103,7 +103,7 @@ public class BorderSpecification {
 		try {
 			for (String field : new String[] {"NONE", "INNER", "FULL", "OUTLINE"}) {
 				int value = ReflectionUtils.findField(getClass(), field).getInt(null);
-				if (match  == value) {
+				if (match == value) {
 					return field;
 				}
 			}

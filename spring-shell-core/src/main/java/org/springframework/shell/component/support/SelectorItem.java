@@ -27,10 +27,10 @@ public interface SelectorItem<T> extends Nameable, Matchable, Enableable, Itemab
 		return new SelectorItemWrapper<T>(name, item, enabled);
 	}
 
-	public static class SelectorItemWrapper<T> implements SelectorItem<T> {
-		private String name;
-		private boolean enabled;
-		private T item;
+	class SelectorItemWrapper<T> implements SelectorItem<T> {
+		private final String name;
+		private final boolean enabled;
+		private final T item;
 
 		public SelectorItemWrapper(String name, T item) {
 			this(name, item, true);

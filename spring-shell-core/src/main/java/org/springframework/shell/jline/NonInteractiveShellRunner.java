@@ -65,11 +65,11 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		List<String> commands = this.argsToShellCommand.apply(args);
-		InputProvider inputProvider = new StringInputProvider(commands);
+		InputProvider inputProvider = new StringInputProvider( commands );
 		shell.run(inputProvider);
 	}
 
-	private class StringInputProvider implements InputProvider {
+	private static class StringInputProvider implements InputProvider {
 
 		private final List<String> commands;
 

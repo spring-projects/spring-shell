@@ -44,7 +44,7 @@ public class ComponentCommands extends AbstractShellComponent {
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
 		if (mask) {
-			component.setMaskCharater('*');
+			component.setMaskCharacter( '*');
 		}
 		StringInputContext context = component.run(StringInputContext.empty());
 		return "Got value " + context.getResultValue();

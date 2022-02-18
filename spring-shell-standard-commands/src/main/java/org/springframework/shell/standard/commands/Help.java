@@ -189,11 +189,11 @@ public class Help extends AbstractShellComponent {
 
 	private void documentOptions(AttributedStringBuilder result, List<ParameterDescription> parameterDescriptions) {
 		if (!parameterDescriptions.isEmpty()) {
-			result.append("OPTIONS", AttributedStyle.BOLD).append("\n");
+			result.append("OPTIONS", AttributedStyle.BOLD).append('\n');
 		}
 		for (ParameterDescription description : parameterDescriptions) {
-			result.append("\t").append(description.keys().stream().collect(Collectors.joining(" or ")),
-					AttributedStyle.BOLD);
+			result.append('\t').append( String.join( " or ", description.keys() ),
+										AttributedStyle.BOLD);
 			if (description.formal().length() > 0) {
 				if (!description.keys().isEmpty()) {
 					result.append("  ");

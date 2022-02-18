@@ -44,7 +44,7 @@ public class JCommanderParameterResolverTest {
 
 	private static final Method COMMAND_METHOD = ReflectionUtils.findMethod(MyLordCommands.class, "genesis", FieldCollins.class);
 
-	private JCommanderParameterResolver resolver = new JCommanderParameterResolver();
+	private final JCommanderParameterResolver resolver = new JCommanderParameterResolver();
 
 	@Test
 	public void testSupportsJCommanderPojos() throws Exception {
@@ -52,7 +52,7 @@ public class JCommanderParameterResolverTest {
 	}
 
 	@Test
-	public void testDoesNotSupportsNonJCommanderPojos() throws Exception {
+	public void testDoesNotSupportsNonJCommanderPojos() {
 		Method method = ReflectionUtils.findMethod(MyLordCommands.class, "apocalypse", String.class);
 
 		assertThat(resolver.supports(Utils.createMethodParameter(method, 0))).isFalse();
@@ -75,7 +75,7 @@ public class JCommanderParameterResolverTest {
 	public void testDescribe() {
 		MethodParameter methodParameter = Utils.createMethodParameter(COMMAND_METHOD, 0);
 
-		Stream<ParameterDescription> desciptions = resolver.describe(methodParameter);
+		Stream<ParameterDescription> descriptions = resolver.describe(methodParameter);
 		ParameterDescription name = new ParameterDescription(methodParameter, "string")
 			.keys(Arrays.asList("--name", "-n"))
 			.help("what's in a name?")
@@ -87,7 +87,7 @@ public class JCommanderParameterResolverTest {
 			.defaultValue("[]")
 			.mandatoryKey(false)
 			.help("rest");
-		assertThat(desciptions).contains(name, level, rest);
+		assertThat(descriptions).contains(name, level, rest);
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class JCommanderParameterResolverTest {
 	public void testCannotComplete() {
 		MethodParameter methodParameter = Utils.createMethodParameter(COMMAND_METHOD, 0);
 
-		CompletionContext context = new CompletionContext(Arrays.asList("--name"), 0, 0);
+		CompletionContext context = new CompletionContext( singletonList( "--name" ), 0, 0);
 		Stream<String> proposals = resolver.complete(methodParameter, context).stream().map(CompletionProposal::value);
 		assertThat(proposals).isEmpty();
 	}

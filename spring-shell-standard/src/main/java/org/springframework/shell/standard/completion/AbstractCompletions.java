@@ -77,7 +77,7 @@ public abstract class AbstractCompletions {
 		Map<String, MethodTarget> commandsByName = commandRegistry.listCommands();
 		HashMap<String, DefaultCommandModelCommand> commands = new HashMap<>();
 		HashSet<CommandModelCommand> topCommands = new HashSet<>();
-		commandsByName.entrySet().stream()
+		commandsByName.entrySet()
 			.forEach(entry -> {
 				String key = entry.getKey();
 				String[] splitKeys = key.split(" ");
@@ -98,7 +98,7 @@ public abstract class AbstractCompletions {
 					List<ParameterDescription> parameterDescriptions = getParameterDescriptions(methodTarget);
 					List<DefaultCommandModelOption> options = parameterDescriptions.stream()
 							.flatMap(pd -> pd.keys().stream())
-							.map(k -> new DefaultCommandModelOption(k))
+							.map(k -> new DefaultCommandModelOption( k ) )
 							.collect(Collectors.toList());
 					if (i == splitKeys.length - 1) {
 						command.addOptions(options);
@@ -244,10 +244,10 @@ public abstract class AbstractCompletions {
 
 	class DefaultCommandModelCommand implements CommandModelCommand {
 
-		private String fullCommand;
-		private String mainCommand;
-		private List<CommandModelCommand> commands = new ArrayList<>();
-		private List<CommandModelOption> options = new ArrayList<>();
+		private final String fullCommand;
+		private final String mainCommand;
+		private final List<CommandModelCommand> commands = new ArrayList<>();
+		private final List<CommandModelOption> options = new ArrayList<>();
 
 		DefaultCommandModelCommand(String fullCommand, String mainCommand) {
 			this.fullCommand = fullCommand;
@@ -341,9 +341,9 @@ public abstract class AbstractCompletions {
 		}
 	}
 
-	class DefaultCommandModelOption implements CommandModelOption {
+	static class DefaultCommandModelOption implements CommandModelOption {
 
-		private String option;
+		private final String option;
 
 		public DefaultCommandModelOption(String option) {
 			this.option = option;
@@ -396,10 +396,10 @@ public abstract class AbstractCompletions {
 				String template = resourceAsString(resourceLoader.getResource(groupResource));
 				STGroup group = new STGroupString(template);
 				ST st = group.getInstanceOf(instance);
-				defaultAttributes.entrySet().stream().forEach(entry -> {
+				defaultAttributes.entrySet().forEach( entry -> {
 					String key = entry.getKey();
 					List<Object> values = entry.getValue();
-					values.stream().forEach(v -> {
+					values.forEach( v -> {
 						st.add(key, v);
 					});
 				});
@@ -412,7 +412,7 @@ public abstract class AbstractCompletions {
 		@Override
 		public String build() {
 			StringBuilder buf = new StringBuilder();
-			operations.stream().forEach(operation -> {
+			operations.forEach( operation -> {
 				buf.append(operation.get());
 			});
 			return buf.toString();

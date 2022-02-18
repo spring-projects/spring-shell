@@ -27,5 +27,5 @@ package org.springframework.shell.table;
  */
 public interface Formatter {
 
-	public String[] format(Object value);
+	String[] format( Object value );
 }

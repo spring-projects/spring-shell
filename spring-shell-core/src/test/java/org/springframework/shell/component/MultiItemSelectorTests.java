@@ -39,20 +39,20 @@ import static org.springframework.shell.component.ShellAssertions.assertStringOr
 
 public class MultiItemSelectorTests extends AbstractShellTests {
 
-	private static SimplePojo SIMPLE_POJO_1 = SimplePojo.of("data1");
-	private static SimplePojo SIMPLE_POJO_2 = SimplePojo.of("data2");
-	private static SimplePojo SIMPLE_POJO_3 = SimplePojo.of("data3");
-	private static SimplePojo SIMPLE_POJO_4 = SimplePojo.of("data4");
-	private static SimplePojo SIMPLE_POJO_5 = SimplePojo.of("data5");
-	private static SimplePojo SIMPLE_POJO_6 = SimplePojo.of("data6");
-	private static SimplePojo SIMPLE_POJO_7 = SimplePojo.of("data7");
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_1 = SelectorItem.of("simplePojo1", SIMPLE_POJO_1);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_2 = SelectorItem.of("simplePojo2", SIMPLE_POJO_2);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_3 = SelectorItem.of("simplePojo3", SIMPLE_POJO_3);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_4 = SelectorItem.of("simplePojo4", SIMPLE_POJO_4);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_5 = SelectorItem.of("simplePojo5", SIMPLE_POJO_5);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_6 = SelectorItem.of("simplePojo6", SIMPLE_POJO_6);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_7 = SelectorItem.of("simplePojo7", SIMPLE_POJO_7, false);
+	private static final SimplePojo SIMPLE_POJO_1 = SimplePojo.of( "data1");
+	private static final SimplePojo SIMPLE_POJO_2 = SimplePojo.of( "data2");
+	private static final SimplePojo SIMPLE_POJO_3 = SimplePojo.of( "data3");
+	private static final SimplePojo SIMPLE_POJO_4 = SimplePojo.of( "data4");
+	private static final SimplePojo SIMPLE_POJO_5 = SimplePojo.of( "data5");
+	private static final SimplePojo SIMPLE_POJO_6 = SimplePojo.of( "data6");
+	private static final SimplePojo SIMPLE_POJO_7 = SimplePojo.of( "data7");
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_1 = SelectorItem.of( "simplePojo1", SIMPLE_POJO_1);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_2 = SelectorItem.of( "simplePojo2", SIMPLE_POJO_2);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_3 = SelectorItem.of( "simplePojo3", SIMPLE_POJO_3);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_4 = SelectorItem.of( "simplePojo4", SIMPLE_POJO_4);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_5 = SelectorItem.of( "simplePojo5", SIMPLE_POJO_5);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_6 = SelectorItem.of( "simplePojo6", SIMPLE_POJO_6);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_7 = SelectorItem.of( "simplePojo7", SIMPLE_POJO_7, false);
 
 	private ExecutorService service;
 	private CountDownLatch latch;

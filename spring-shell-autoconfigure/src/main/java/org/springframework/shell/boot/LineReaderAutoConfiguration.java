@@ -39,15 +39,15 @@ import org.springframework.shell.CommandRegistry;
 @Configuration(proxyBeanMethods = false)
 public class LineReaderAutoConfiguration {
 
-	private Terminal terminal;
+	private final Terminal terminal;
 
-	private Completer completer;
+	private final Completer completer;
 
-	private Parser parser;
+	private final Parser parser;
 
-	private CommandRegistry commandRegistry;
+	private final CommandRegistry commandRegistry;
 
-	private org.jline.reader.History jLineHistory;
+	private final org.jline.reader.History jLineHistory;
 
 	@Value("${spring.application.name:spring-shell}.log")
 	private String historyPath;

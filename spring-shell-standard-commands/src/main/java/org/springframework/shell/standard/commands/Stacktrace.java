@@ -44,7 +44,7 @@ public class Stacktrace extends AbstractShellComponent {
 	 */
 	public interface Command {}
 
-	private ObjectProvider<ThrowableResultHandler> throwableResultHandler;
+	private final ObjectProvider<ThrowableResultHandler> throwableResultHandler;
 
 	public Stacktrace(ObjectProvider<ThrowableResultHandler> throwableResultHandler) {
 		this.throwableResultHandler = throwableResultHandler;

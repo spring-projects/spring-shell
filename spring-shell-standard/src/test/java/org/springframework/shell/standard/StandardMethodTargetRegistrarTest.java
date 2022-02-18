@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 public class StandardMethodTargetRegistrarTest {
 
-    private StandardMethodTargetRegistrar registrar = new StandardMethodTargetRegistrar();
+    private final StandardMethodTargetRegistrar registrar = new StandardMethodTargetRegistrar();
     private ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(new DefaultShellContext());
 
     @Test

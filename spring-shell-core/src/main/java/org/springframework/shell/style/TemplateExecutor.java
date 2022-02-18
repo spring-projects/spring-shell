@@ -36,7 +36,7 @@ public class TemplateExecutor {
 	private final static Logger log = LoggerFactory.getLogger(TemplateExecutor.class);
 	private final static STErrorListener ERROR_LISTENER = new LoggingSTErrorListener();
 	private final ThemeResolver themeResolver;
-	private StringToStyleExpressionRenderer renderer;
+	private final StringToStyleExpressionRenderer renderer;
 
 	public TemplateExecutor(ThemeResolver themeResolver) {
 		this.themeResolver = themeResolver;
@@ -57,7 +57,7 @@ public class TemplateExecutor {
 
 		ST st = new ST(group, template);
 		if (attributes != null) {
-			attributes.entrySet().stream().forEach(e -> st.add(e.getKey(), e.getValue()));
+			attributes.entrySet().forEach( e -> st.add( e.getKey(), e.getValue()));
 		}
 		String templateRendered = st.render();
 		return themeResolver.evaluateExpression(templateRendered);
@@ -81,7 +81,7 @@ public class TemplateExecutor {
 			throw new IllegalArgumentException("template instance 'main' not found from a group");
 		}
 		if (attributes != null) {
-			attributes.entrySet().stream().forEach(e -> st.add(e.getKey(), e.getValue()));
+			attributes.entrySet().forEach( e -> st.add( e.getKey(), e.getValue()));
 		}
 		String templateRendered = st.render();
 		log.debug("Rendered template {}", templateRendered);

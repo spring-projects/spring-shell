@@ -76,11 +76,11 @@ public class BeanListTableModelTest extends AbstractTestWithSample {
 	}
 
 	public static class Person {
-		private int age;
+		private final int age;
 
-		private String firstName;
+		private final String firstName;
 
-		private String lastName;
+		private final String lastName;
 
 		public Person(String firstName, String lastName, int age) {
 			this.age = age;

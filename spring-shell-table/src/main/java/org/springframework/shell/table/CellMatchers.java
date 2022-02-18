@@ -27,11 +27,7 @@ public class CellMatchers {
 	 * @return a matcher that applies to every cell of the table.
 	 */
 	public static CellMatcher table() {
-		return new CellMatcher() {
-			public boolean matches(int row, int column, TableModel model) {
-				return true;
-			}
-		};
+		return ( row, column, model ) -> true;
 	}
 
 	/**

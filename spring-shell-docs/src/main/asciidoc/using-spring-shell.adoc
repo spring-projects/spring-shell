@@ -215,7 +215,7 @@ prone to ambiguity). Consider the following command definition:
 ----
 ====
 
-Given the preceding command definiton, the following invocations are all equivalent, as shown in the output:
+Given the preceding command definition, the following invocations are all equivalent, as shown in the output:
 
 ====
 [source, bash]
@@ -830,7 +830,7 @@ Type `help <command>` to learn more.
 Typing `help <command>` shows more detailed information about a command, including the available parameters, their
 type, whether they are mandatory or not, and other details.
 
-The follwoing listing shows the `help` command applied to itself:
+The following listing shows the `help` command applied to itself:
 
 ====
 ----
@@ -883,7 +883,7 @@ The `history` command shows history of a commands which has been executed.
 ==== Completion
 
 The `completion` command set allows you to create _scripts_ files which can be used
-with am OS shell implementations to provide completion. This is very usefull when
+with am OS shell implementations to provide completion. This is very useful when
 working with non-interactive mode.
 
 Currently only implementation is for _bash_ which works with `bash` sub-command.
@@ -1160,8 +1160,8 @@ public class CustomPromptProvider implements PromptProvider {
 
 ==== Customizing Command Line Options Behavior
 
-There can be exactly one shell spesific `ShellApplicationRunner` which simply extends
-Boot's `ApplicationRunner`. Default behariour is to have actual runner logic in
+There can be exactly one shell specific `ShellApplicationRunner` which simply extends
+Boot's `ApplicationRunner`. Default behaviour is to have actual runner logic in
 various `ShellRunner` implementations where candidate will be picked up.
 
 [IMPORTANT]

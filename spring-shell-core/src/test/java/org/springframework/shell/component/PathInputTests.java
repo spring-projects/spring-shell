@@ -85,7 +85,7 @@ public class PathInputTests extends AbstractShellTests {
 			latch1.countDown();
 		});
 
-		TestBuffer testBuffer = new TestBuffer().append("tmp").cr();
+		TestBuffer testBuffer = new TestBuffer().append( "tmp").cr();
 		write(testBuffer.getBytes());
 
 		latch1.await(2, TimeUnit.SECONDS);

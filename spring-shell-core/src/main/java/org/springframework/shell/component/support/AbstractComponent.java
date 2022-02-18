@@ -288,7 +288,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 * @return a context
 	 */
 	protected T runPreRunHandlers(T context) {
-		this.preRunHandlers.stream().forEach(c -> c.accept(context));
+		this.preRunHandlers.forEach( c -> c.accept( context));
 		return context;
 	}
 
@@ -299,7 +299,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 * @return a context
 	 */
 	protected T runPostRunHandlers(T context) {
-		this.postRunHandlers.stream().forEach(c -> c.accept(context));
+		this.postRunHandlers.forEach( c -> c.accept( context));
 		return context;
 	}
 

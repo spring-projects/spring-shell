@@ -28,5 +28,5 @@ import org.jline.reader.ParsedLine;
 @FunctionalInterface
 public interface CompletingParsedLine {
 
-	public CharSequence emit(CharSequence candidate);
+	CharSequence emit( CharSequence candidate );
 }

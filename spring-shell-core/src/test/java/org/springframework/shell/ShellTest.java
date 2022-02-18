@@ -66,7 +66,7 @@ public class ShellTest {
 
 	@BeforeEach
 	public void setUp() {
-		shell.parameterResolvers = Arrays.asList(parameterResolver);
+		shell.parameterResolvers = Collections.singletonList( parameterResolver );
 	}
 
 	@Test
@@ -169,9 +169,9 @@ public class ShellTest {
 		shell.run(inputProvider);
 	}
 
-	// no need to test as we're moving away from postconstruct
+	// no need to test as we're moving away from post-construct
 	// @Test
-	public void parametersSupported() throws Exception {
+	public void parametersSupported() {
 		when(parameterResolver.supports(any())).thenReturn(false);
 		shell.applicationContext = mock(ApplicationContext.class);
 		when(shell.applicationContext.getBeansOfType(MethodTargetRegistrar.class))

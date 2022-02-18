@@ -84,15 +84,15 @@ public enum BorderStyle {
 
 	;
 
-	private char vertical;
+	private final char vertical;
 
-	private char horizontal;
+	private final char horizontal;
 
 	public static final char NONE = '\u0000';
 
-	private static Map<Long, Character> CORNERS = new HashMap<Long, Character>();
+	private static final Map<Long, Character> CORNERS = new HashMap<Long, Character>();
 
-	private static Map<Character, Character> EQUIVALENTS = new HashMap<Character, Character>();
+	private static final Map<Character, Character> EQUIVALENTS = new HashMap<Character, Character>();
 
 	public char verticalGlyph() {
 		return vertical;

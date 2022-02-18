@@ -55,7 +55,7 @@ public class ParameterValidationExceptionResultHandler
 	protected void doHandleResult(ParameterValidationException result) {
 		terminal.writer().println(new AttributedString("The following constraints were not met:",
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
-		result.getConstraintViolations().stream()
+		result.getConstraintViolations()
 				.forEach(v -> {
 					Optional<Integer> parameterIndex = StreamSupport.stream(v.getPropertyPath().spliterator(), false)
 							.filter(n -> n.getKind() == ElementKind.PARAMETER)
@@ -73,7 +73,7 @@ public class ParameterValidationExceptionResultHandler
 						ansi.append(" ").append(description.formal(), AttributedStyle.DEFAULT.foreground(AttributedStyle.RED).underline());
 						String msg = String.format(" : %s (You passed '%s')",
 								v.getMessage(),
-								String.valueOf(v.getInvalidValue())
+												   v.getInvalidValue()
 						);
 						ansi.append(msg, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
 

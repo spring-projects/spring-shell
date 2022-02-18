@@ -30,7 +30,7 @@ public class TableModelBuilder<T> {
 
 	public static final int DEFAULT_ROW_CAPACITY = 3;
 
-	private List<List<T>> rows = new ArrayList<List<T>>();
+	private final List<List<T>> rows = new ArrayList<List<T>>();
 
 	private int previousRowSize = -1;
 

@@ -30,6 +30,6 @@ public interface CommandRegistry {
 	/**
 	 * Return the mapping from command trigger keywords to implementation.
 	 */
-	public Map<String, MethodTarget> listCommands();
+	Map<String, MethodTarget> listCommands();
 
 }

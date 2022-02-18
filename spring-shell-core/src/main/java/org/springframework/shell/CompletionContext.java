@@ -58,7 +58,7 @@ public class CompletionContext {
 	}
 
 	public String upToCursor() {
-		String start = words.subList(0, wordIndex).stream().collect(Collectors.joining(" "));
+		String start = String.join( " ", words.subList( 0, wordIndex ) );
 		if (wordIndex < words.size()) {
 			if (!start.isEmpty()) {
 				start += " ";

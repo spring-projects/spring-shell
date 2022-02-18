@@ -138,8 +138,8 @@ public class JCommanderParameterResolver implements ParameterResolver {
 	}
 
 	// Java 9+ warn if you try to reflect on JDK types
-	private static boolean isLegalReflectiveAccess(Class<?> clzz) {
-		return (!clzz.getName().startsWith("java"));
+	private static boolean isLegalReflectiveAccess(Class<?> clazz) {
+		return !clazz.getName().startsWith( "java");
 	}
 
 	@Override

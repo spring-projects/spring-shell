@@ -28,7 +28,6 @@ import org.jline.utils.AttributedString;
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.support.AbstractTextComponent;
-import org.springframework.shell.component.support.AbstractTextComponent.TextComponentContext;
 import org.springframework.util.StringUtils;
 
 /**
@@ -63,7 +62,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	 *
 	 * @param maskCharacter a mask character
 	 */
-	public void setMaskCharater(Character maskCharacter) {
+	public void setMaskCharacter( Character maskCharacter) {
 		this.maskCharacter = maskCharacter;
 	}
 

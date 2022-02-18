@@ -36,7 +36,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Base {@ResultHandlerService} implementation suitable for use in most
+ * Base {@link ResultHandlerService} implementation suitable for use in most
  * environments.
  *
  * @author Janne Valkealahti
@@ -89,7 +89,7 @@ public class GenericResultHandlerService implements ResultHandlerService {
 	}
 
 	/**
-	 * Add a generic result handler this this registry.
+	 * Add a generic result handler this registry.
 	 *
 	 * @param handler the generic result handler
 	 */
@@ -168,12 +168,10 @@ public class GenericResultHandlerService implements ResultHandlerService {
 
 		@Nullable
 		public GenericResultHandler getHandler(TypeDescriptor resultType) {
-			for (GenericResultHandler handler : this.handlers) {
-				if (handler.matches(resultType)) {
-					return handler;
-				}
-			}
-			return null;
+			return this.handlers.stream()
+					.filter( handler -> handler.matches( resultType ) )
+					.findFirst()
+					.orElse( null );
 		}
 
 		@Override

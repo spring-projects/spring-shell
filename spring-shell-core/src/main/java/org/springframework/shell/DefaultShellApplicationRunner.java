@@ -49,7 +49,7 @@ public class DefaultShellApplicationRunner implements ShellApplicationRunner {
 		// Looks like with fatjar it comes on a correct order from
 		// a context(not really sure if that's how spring context works) but
 		// not with native, so call AnnotationAwareOrderComparator manually.
-		Collections.sort(shellRunners, new AnnotationAwareOrderComparator());
+		shellRunners.sort( new AnnotationAwareOrderComparator() );
 		this.shellRunners = shellRunners;
 	}
 

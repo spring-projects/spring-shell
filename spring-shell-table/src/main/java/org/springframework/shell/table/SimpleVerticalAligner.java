@@ -33,8 +33,8 @@ public enum SimpleVerticalAligner implements Aligner {
 		int blanksBefore = 0;
 		int blanksAfter = 0;
 		boolean atLeastOneNonEmptyRow = false;
-		for (int row = 0; row < text.length; row++) {
-			if (text[row] == null || text[row].trim().equals("")) {
+		for ( String s : text ) {
+			if ( s == null || s.trim().equals( "" ) ) {
 				blanksBefore++;
 			}
 			else {

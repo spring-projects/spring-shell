@@ -32,7 +32,7 @@ import org.springframework.shell.context.ShellContext;
 public class ConfigurableCommandRegistry implements CommandRegistry {
 
 	private final ShellContext shellContext;
-	private Map<String, MethodTarget> commands = new HashMap<>();
+	private final Map<String, MethodTarget> commands = new HashMap<>();
 
 	public ConfigurableCommandRegistry(ShellContext shellContext) {
 		this.shellContext = shellContext;

@@ -54,7 +54,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 
 	private ApplicationContext applicationContext;
 
-	private Map<String, MethodTarget> commands = new HashMap<>();
+	private final Map<String, MethodTarget> commands = new HashMap<>();
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {

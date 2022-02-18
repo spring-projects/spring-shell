@@ -33,7 +33,7 @@ public interface Aligner {
 	 * </p>
 	 * 
 	 * @param text the text to align
-	 * @param cellWidth the width of of the table cell
+	 * @param cellWidth the width of the table cell
 	 * @param cellHeight the height of the table cell
 	 * @return the aligned text, in a {@code cellHeight} element array
 	 */

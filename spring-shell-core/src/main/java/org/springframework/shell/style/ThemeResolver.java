@@ -29,9 +29,9 @@ import org.jline.utils.AttributedStyle;
  */
 public class ThemeResolver {
 
-	private StyleSource styleSource = new MemoryStyleSource();
-	private StyleResolver styleResolver = new StyleResolver(styleSource, "default");
-	private StyleExpression styleExpression = new StyleExpression(styleResolver);
+	private final StyleSource styleSource = new MemoryStyleSource();
+	private final StyleResolver styleResolver = new StyleResolver( styleSource, "default");
+	private final StyleExpression styleExpression = new StyleExpression( styleResolver);
 	private final Theme theme;
 
 	public ThemeResolver(ThemeRegistry themeRegistry, String themeName) {

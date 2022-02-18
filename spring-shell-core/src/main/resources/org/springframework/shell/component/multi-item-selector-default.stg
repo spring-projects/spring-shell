@@ -41,7 +41,7 @@ info(model) ::= <<
 [Use arrows to move]<info_filter(model)>
 >>
 
-// get comma delited string
+// get comma delimited string
 comma_delimited(values) ::= <%
 <values; separator=",">
 %>

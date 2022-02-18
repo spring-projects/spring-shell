@@ -23,7 +23,7 @@ import static org.springframework.util.ReflectionUtils.findMethod;
 /**
  * Illustrative functional tests for the Spring Shell Calculator application. These
  * functional tests use Spring Shell commands auto-wired by the Spring Test Runner outside
- * of the shell, to test functionality of the commands.
+ * the shell, to test functionality of the commands.
  *
  * @author Sualeh Fatehi
  */

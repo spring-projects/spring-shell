@@ -43,9 +43,9 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 
 	private Throwable lastError;
 
-	private CommandRegistry commandRegistry;
+	private final CommandRegistry commandRegistry;
 
-	private ObjectProvider<InteractiveShellRunner> interactiveRunner;
+	private final ObjectProvider<InteractiveShellRunner> interactiveRunner;
 
 	public ThrowableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
 			ObjectProvider<InteractiveShellRunner> interactiveRunner) {
@@ -78,7 +78,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 				throw (Error) result;
 			}
 			else {
-				throw new RuntimeException((Throwable) result);
+				throw new RuntimeException( result );
 			}
 		}
 	}

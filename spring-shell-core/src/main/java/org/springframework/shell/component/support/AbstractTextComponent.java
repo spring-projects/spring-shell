@@ -162,7 +162,7 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		/**
 		 * Message levels which can be used to alter how message is shown.
 		 */
-		public enum MessageLevel {
+		enum MessageLevel {
 			INFO,
 			WARN,
 			ERROR

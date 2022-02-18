@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -110,7 +111,7 @@ public class HelpTest {
 
 	private String sample() throws IOException {
 		InputStream is = new ClassPathResource(HelpTest.class.getSimpleName() + "-" + testName + ".txt", HelpTest.class).getInputStream();
-		return FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")).replace("&", "");
+		return FileCopyUtils.copyToString(new InputStreamReader( is, StandardCharsets.UTF_8 )).replace( "&", "");
 	}
 
 	@Configuration

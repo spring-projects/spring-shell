@@ -153,7 +153,7 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 				})
 				.collect(Collectors.toList());
 			attributes.put("rows", rows);
-			// finally wrap it into 'model' as that's what
+			// finally, wrap it into 'model' as that's what
 			// we expect in stg template.
 			Map<String, Object> model = new HashMap<>();
 			model.put("model", attributes);
