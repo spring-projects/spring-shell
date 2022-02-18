@@ -71,6 +71,8 @@ public abstract class AbstractShellComponent implements ApplicationContextAware,
         terminalProvider = applicationContext.getBeanProvider(Terminal.class);
         commandRegistryProvider = applicationContext.getBeanProvider(CommandRegistry.class);
         parameterResolverProvider = applicationContext.getBeanProvider(ParameterResolver.class);
+        templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
+        themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
     }
 
     protected ApplicationContext getApplicationContext() {
