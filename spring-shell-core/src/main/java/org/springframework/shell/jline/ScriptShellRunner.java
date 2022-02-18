@@ -40,9 +40,15 @@ import org.springframework.util.ObjectUtils;
  * @author Eric Bottard
  */
 //tag::documentation[]
-@Order(InteractiveShellRunner.PRECEDENCE - 100)
+@Order(ScriptShellRunner.PRECEDENCE)
 public class ScriptShellRunner implements ShellRunner {
 //end::documentation[]
+
+	/**
+	 * The precedence at which this runner is ordered by the DefaultApplicationRunner - which also controls
+	 * the order it is consulted on the ability to handle the current shell.
+	 */
+	public static final int PRECEDENCE = InteractiveShellRunner.PRECEDENCE - 100;
 
 	private final Parser parser;
 
