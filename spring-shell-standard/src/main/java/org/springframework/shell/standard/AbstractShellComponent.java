@@ -24,18 +24,24 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ParameterResolver;
 import org.springframework.shell.Shell;
+import org.springframework.shell.style.TemplateExecutor;
+import org.springframework.shell.style.ThemeResolver;
 
 /**
  * Base class helping to build shell components.
  *
  * @author Janne Valkealahti
  */
-public class AbstractShellComponent implements ApplicationContextAware, InitializingBean {
+public abstract class AbstractShellComponent implements ApplicationContextAware, InitializingBean, ResourceLoaderAware {
 
     private ApplicationContext applicationContext;
+
+    private ResourceLoader resourceLoader;
 
     private ObjectProvider<Shell> shellProvider;
 
@@ -45,9 +51,18 @@ public class AbstractShellComponent implements ApplicationContextAware, Initiali
 
     private ObjectProvider<ParameterResolver> parameterResolverProvider;
 
+    private ObjectProvider<TemplateExecutor> templateExecutorProvider;
+
+    private ObjectProvider<ThemeResolver> themeResolverProvider;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 
     @Override
@@ -56,6 +71,14 @@ public class AbstractShellComponent implements ApplicationContextAware, Initiali
         terminalProvider = applicationContext.getBeanProvider(Terminal.class);
         commandRegistryProvider = applicationContext.getBeanProvider(CommandRegistry.class);
         parameterResolverProvider = applicationContext.getBeanProvider(ParameterResolver.class);
+    }
+
+    protected ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    protected ResourceLoader getResourceLoader() {
+        return resourceLoader;
     }
 
     protected Shell getShell() {
@@ -72,5 +95,13 @@ public class AbstractShellComponent implements ApplicationContextAware, Initiali
 
     protected Stream<ParameterResolver> getParameterResolver() {
         return parameterResolverProvider.orderedStream();
+    }
+
+    protected TemplateExecutor getTemplateExecutor() {
+        return templateExecutorProvider.getObject();
+    }
+
+    protected ThemeResolver getThemeResolver() {
+        return themeResolverProvider.getObject();
     }
 }

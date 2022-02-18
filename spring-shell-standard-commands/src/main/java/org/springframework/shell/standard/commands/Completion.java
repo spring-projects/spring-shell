@@ -17,7 +17,6 @@ package org.springframework.shell.standard.commands;
 
 import java.util.stream.Collectors;
 
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
@@ -30,7 +29,7 @@ import org.springframework.shell.standard.completion.BashCompletions;
  * @author Janne Valkealahti
  */
 @ShellComponent
-public class Completion extends AbstractShellComponent implements ResourceLoaderAware {
+public class Completion extends AbstractShellComponent {
 
 	/**
 	 * Marker interface used in auto-config.

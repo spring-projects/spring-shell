@@ -20,43 +20,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.ConfirmationInput;
-import org.springframework.shell.component.MultiItemSelector;
-import org.springframework.shell.component.PathInput;
-import org.springframework.shell.component.SingleItemSelector;
-import org.springframework.shell.component.StringInput;
 import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
+import org.springframework.shell.component.MultiItemSelector;
 import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
+import org.springframework.shell.component.PathInput;
 import org.springframework.shell.component.PathInput.PathInputContext;
+import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
+import org.springframework.shell.component.StringInput;
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.style.TemplateExecutor;
 
 @ShellComponent
-public class ComponentCommands extends AbstractShellComponent implements ResourceLoaderAware {
-
-	private ResourceLoader resourceLoader;
-
-	@Autowired
-	private TemplateExecutor templateExecutor;
-
-	@Override
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
-	}
+public class ComponentCommands extends AbstractShellComponent {
 
 	@ShellMethod(key = "component string", value = "String input", group = "Components")
 	public String stringInput(boolean mask) {
 		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
-		component.setResourceLoader(resourceLoader);
-		component.setTemplateExecutor(templateExecutor);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
 		if (mask) {
 			component.setMaskCharater('*');
 		}
@@ -67,8 +53,8 @@ public class ComponentCommands extends AbstractShellComponent implements Resourc
 	@ShellMethod(key = "component path", value = "Path input", group = "Components")
 	public String pathInput() {
 		PathInput component = new PathInput(getTerminal(), "Enter value");
-		component.setResourceLoader(resourceLoader);
-		component.setTemplateExecutor(templateExecutor);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
 		PathInputContext context = component.run(PathInputContext.empty());
 		return "Got value " + context.getResultValue();
 	}
@@ -76,8 +62,8 @@ public class ComponentCommands extends AbstractShellComponent implements Resourc
 	@ShellMethod(key = "component confirmation", value = "Confirmation input", group = "Components")
 	public String confirmationInput(boolean no) {
 		ConfirmationInput component = new ConfirmationInput(getTerminal(), "Enter value", !no);
-		component.setResourceLoader(resourceLoader);
-		component.setTemplateExecutor(templateExecutor);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
 		ConfirmationInputContext context = component.run(ConfirmationInputContext.empty());
 		return "Got value " + context.getResultValue();
 	}
@@ -89,8 +75,8 @@ public class ComponentCommands extends AbstractShellComponent implements Resourc
 		items.add(SelectorItem.of("key2", "value2"));
 		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
 				items, "testSimple", null);
-		component.setResourceLoader(resourceLoader);
-		component.setTemplateExecutor(templateExecutor);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
 		SingleItemSelectorContext<String, SelectorItem<String>> context = component
 				.run(SingleItemSelectorContext.empty());
 		String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
@@ -105,8 +91,8 @@ public class ComponentCommands extends AbstractShellComponent implements Resourc
 		items.add(SelectorItem.of("key3", "value3"));
 		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
 				items, "testSimple", null);
-		component.setResourceLoader(resourceLoader);
-		component.setTemplateExecutor(templateExecutor);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
 		MultiItemSelectorContext<String, SelectorItem<String>> context = component
 				.run(MultiItemSelectorContext.empty());
 		String result = context.getResultItems().stream()

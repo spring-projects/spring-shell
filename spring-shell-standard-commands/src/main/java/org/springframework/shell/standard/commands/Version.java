@@ -27,7 +27,6 @@ import org.jline.utils.AttributedString;
 
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.standard.AbstractShellComponent;
@@ -43,7 +42,7 @@ import org.springframework.util.StringUtils;
  * @author Janne Valkealahti
  */
 @ShellComponent
-public class Version extends AbstractShellComponent implements ResourceLoaderAware {
+public class Version extends AbstractShellComponent {
 
 	/**
 	 * Marker interface used in auto-config.
@@ -68,11 +67,6 @@ public class Version extends AbstractShellComponent implements ResourceLoaderAwa
 
 	public Version(TemplateExecutor templateExecutor) {
 		this.templateExecutor = templateExecutor;
-	}
-
-	@Override
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
 	}
 
 	@ShellMethod(key = "version", value = "Show version info")
