@@ -20,13 +20,15 @@ import org.jline.style.StyleResolver;
 import org.jline.style.StyleSource;
 import org.jline.utils.AttributedStyle;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThemeSettingsTests {
 
 	@Test
-	public void test() {
+	public void testGeneratedStyle() {
 		ThemeSettings themeSettings = ThemeSettings.themeSettings();
 		String resolveTag = themeSettings.resolveTag(ThemeSettings.TAG_TITLE);
 		assertThat(resolveTag).isEqualTo("bold,fg:bright-white");
@@ -38,4 +40,24 @@ public class ThemeSettingsTests {
 				.isEqualTo(AttributedStyle.DEFAULT.foreground(AttributedStyle.BRIGHT + AttributedStyle.WHITE).bold());
 	}
 
+	@ParameterizedTest
+	@ValueSource(strings = {
+			ThemeSettings.TAG_TITLE,
+			ThemeSettings.TAG_VALUE,
+			ThemeSettings.TAG_LIST_KEY,
+			ThemeSettings.TAG_LIST_VALUE,
+			ThemeSettings.TAG_LEVEL_INFO,
+			ThemeSettings.TAG_LEVEL_WARN,
+			ThemeSettings.TAG_LEVEL_ERROR,
+			ThemeSettings.TAG_ITEM_ENABLED,
+			ThemeSettings.TAG_ITEM_DISABLED,
+			ThemeSettings.TAG_ITEM_SELECTED,
+			ThemeSettings.TAG_ITEM_UNSELECTED,
+			ThemeSettings.TAG_ITEM_SELECTOR,
+			ThemeSettings.TAG_HIGHLIGHT })
+	public void testTags(String tag) {
+		ThemeSettings themeSettings = ThemeSettings.themeSettings();
+		String resolveTag = themeSettings.resolveTag(ThemeSettings.TAG_TITLE);
+		assertThat(resolveTag).isNotNull();
+	}
 }

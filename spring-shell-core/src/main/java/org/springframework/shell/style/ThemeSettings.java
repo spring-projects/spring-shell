@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.style;
 
+import java.util.Arrays;
+
 /**
  * {@link ThemeSettings} is storing {@link Theme} related settings together and
  * is base class for further customizations.
@@ -89,6 +91,11 @@ public abstract class ThemeSettings {
 	 */
 	public final static String TAG_ITEM_SELECTOR = "item-selector";
 
+	/**
+	 * Styling for something which is highlighted.
+	 */
+	public final static String TAG_HIGHLIGHT = "highlight";
+
 	public String title() {
 		return "bold,fg:bright-white";
 	}
@@ -137,6 +144,10 @@ public abstract class ThemeSettings {
 		return "bold,fg:bright-cyan";
 	}
 
+	public String highlight() {
+		return "bold";
+	}
+
 	/**
 	 * Resolve a theme setting from a given tag.
 	 *
@@ -169,6 +180,8 @@ public abstract class ThemeSettings {
 				return itemUnselected();
 			case TAG_ITEM_SELECTOR:
 				return itemSelector();
+			case TAG_HIGHLIGHT:
+				return highlight();
 		}
 		throw new IllegalArgumentException(String.format("Unknown tag '%s'", tag));
 	}
@@ -180,6 +193,29 @@ public abstract class ThemeSettings {
 	 */
 	public static ThemeSettings themeSettings() {
 		return new DefaultThemeSettings();
+	}
+
+	/**
+	 * Gets all tags.
+	 *
+	 * @return array of all tags
+	 */
+	public static String[] tags() {
+		return new String[] {
+				TAG_TITLE,
+				TAG_VALUE,
+				TAG_LIST_KEY,
+				TAG_LIST_VALUE,
+				TAG_LEVEL_INFO,
+				TAG_LEVEL_WARN,
+				TAG_LEVEL_ERROR,
+				TAG_ITEM_ENABLED,
+				TAG_ITEM_DISABLED,
+				TAG_ITEM_SELECTED,
+				TAG_ITEM_UNSELECTED,
+				TAG_ITEM_SELECTOR,
+				TAG_HIGHLIGHT
+		};
 	}
 
 	private static class DefaultThemeSettings extends ThemeSettings {
