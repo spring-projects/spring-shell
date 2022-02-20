@@ -4,13 +4,17 @@ info(model) ::= <%
   <if(model.maskedInput)>
     <model.maskedInput>
   <else>
-    <("[Default "); format="value"><model.defaultValue; format="value"><("]"); format="value">
+    <if(model.defaultValue)>
+      <("[Default "); format="value"><model.defaultValue; format="value"><("]"); format="value">
+    <endif>
   <endif>
 <else>
   <if(model.input)>
     <model.input>
   <else>
-    <("[Default "); format="value"><model.defaultValue; format="value"><("]"); format="value">
+    <if(model.defaultValue)>
+      <("[Default "); format="value"><model.defaultValue; format="value"><("]"); format="value">
+    <endif>
   <endif>
 <endif>
 %>
