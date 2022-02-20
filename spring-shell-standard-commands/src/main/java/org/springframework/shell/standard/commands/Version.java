@@ -52,7 +52,6 @@ public class Version extends AbstractShellComponent {
 
 	private BuildProperties buildProperties;
 	private GitProperties gitProperties;
-	private ResourceLoader resourceLoader;
 	private TemplateExecutor templateExecutor;
 	private String template;
 	private boolean showBuildGroup;
@@ -71,7 +70,7 @@ public class Version extends AbstractShellComponent {
 
 	@ShellMethod(key = "version", value = "Show version info")
 	public AttributedString version() {
-		String templateResource = resourceAsString(resourceLoader.getResource(template));
+		String templateResource = resourceAsString(getResourceLoader().getResource(template));
 
 		Map<String, Object> attributes = new HashMap<>();
 		String buildGroup = null;
