@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.style;
 
-import java.util.Arrays;
-
 /**
  * {@link ThemeSettings} is storing {@link Theme} related settings together and
  * is base class for further customizations.
