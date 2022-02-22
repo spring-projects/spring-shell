@@ -58,14 +58,14 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private Parser lineParser;
 
-	private Function<ApplicationArguments, List<String>> commandsFromInputArgs;
+	private Function<ApplicationArguments, List<String>> commandsFromInputArgs = args -> args
+			.getSourceArgs().length == 0 ? Collections.emptyList()
+					: Collections.singletonList(String.join(" ", args.getSourceArgs()));
 
 	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext) {
 		this.shell = shell;
 		this.shellContext = shellContext;
 		this.lineParser = new DefaultParser();
-		this.commandsFromInputArgs = (args) ->
-				Collections.singletonList(String.join(" ", args.getSourceArgs()));
 	}
 
 	/**
