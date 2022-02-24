@@ -1024,6 +1024,374 @@ AttributedStyle style = themeResolver.resolveStyle(resolvedStyle);
 ----
 ====
 
+[[uicomponents]]
+=== UI Components
+
+Starting from _2.1.x_ there is a new component model which provides
+easier way to create higher level user interaction for usual use cases
+like asking input in a various forms. These usually are just plain text
+input or choosing something from a list.
+
+Templates for build-in components are in classpath under
+_org/springframework/shell/component_.
+
+Build-in components generally follow logic:
+
+* Enter run loop for user input
+* Generate component related context
+* Render runtime status of a component state
+* Exit
+* Render final status of a component state
+
+==== Component Render
+
+There are two ways to implement component rendering, firstly fully
+programmatically or secondly using a _ANTLR Stringtemplate_. Though
+strictly speaking there is just a simple `Function` renderer interface
+which takes `Context` as an input and outputs a list of `AttributedString`
+but this allows to choose between _templating_ and _code_.
+
+Templating is a good choice if you don't need to anything complex or
+you just want to slightly modify existing component layouts. Rendering
+via code then gives you flexibility to do whatever you need.
+
+Programmatic way to render is simple as to create a `Function`:
+
+====
+[source, java]
+----
+class StringInputCustomRenderer implements Function<StringInputContext, List<AttributedString>> {
+	@Override
+	public List<AttributedString> apply(StringInputContext context) {
+		AttributedStringBuilder builder = new AttributedStringBuilder();
+		builder.append(context.getName());
+		builder.append(" ");
+		if (context.getResultValue() != null) {
+			builder.append(context.getResultValue());
+		}
+		else  {
+			String input = context.getInput();
+			if (StringUtils.hasText(input)) {
+				builder.append(input);
+			}
+			else {
+				builder.append("[Default " + context.getDefaultValue() + "]");
+			}
+		}
+		return Arrays.asList(builder.toAttributedString());
+	}
+}
+----
+====
+
+And then hook it with a component:
+
+====
+[source, java]
+----
+@ShellMethod(key = "component stringcustom", value = "String input", group = "Components")
+public String stringInputCustom(boolean mask) {
+	StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue",
+			new StringInputCustomRenderer());
+	component.setResourceLoader(getResourceLoader());
+	component.setTemplateExecutor(getTemplateExecutor());
+	if (mask) {
+		component.setMaskCharater('*');
+	}
+	StringInputContext context = component.run(StringInputContext.empty());
+	return "Got value " + context.getResultValue();
+}
+----
+====
+
+Component have their own context but usually shares some functionality
+from a parent component types, those context variables are shown below.
+
+[[textcomponentcontext-template-variables]]
+.TextComponentContext Template Variables
+|===
+|Key |Description
+
+|resultValue
+|Value after component renders its result.
+
+|name
+|Name of a component, aka its title.
+
+|message
+|Possible message set for component.
+
+|messageLevel
+|Level of a message, either INFO, WARN or ERROR
+
+|hasMessageLevelInfo
+|Return true if level is INFO, false otherwise.
+
+|hasMessageLevelWarn
+|Return true if level is WARN, false otherwise.
+
+|hasMessageLevelError
+|Return true if level is ERROR, false otherwise.
+
+|input
+|Raw user input.
+
+|===
+
+
+[[selectorcomponentcontext-template-variables]]
+.SelectorComponentContext Template Variables
+|===
+|Key |Description
+
+|name
+|Name of a component, aka title.
+
+|input
+|Raw user input, mostly for filter.
+
+|itemStates
+|Full list of item states.
+
+|itemStateView
+|Visible list of item states.
+
+|isResult
+|Return if context is in a result mode.
+
+|cursorRow
+|Current cursor row in a selector
+
+|===
+
+
+==== Build-in Components
+
+===== String Input
+
+Used to ask a simple text input from a user, optionally masking values
+if content contains something sensitive.
+
+====
+[source, java]
+----
+@ShellComponent
+public class ComponentCommands extends AbstractShellComponent {
+
+	@ShellMethod(key = "component string", value = "String input", group = "Components")
+	public String stringInput(boolean mask) {
+		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		if (mask) {
+			component.setMaskCharater('*');
+		}
+		StringInputContext context = component.run(StringInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+}
+----
+====
+
+image::images/component-text-input-1.svg[text input]
+
+Context object is `StringInputContext`.
+
+[[stringinputcontext-template-variables]]
+.StringInputContext Template Variables
+|===
+|Key |Description
+
+|defaultValue
+|Default value if set, null otherwise.
+
+|maskedInput
+|Masked input value
+
+|maskedResultValue
+|Masked result value
+
+|maskCharacter
+|Mask character if set, null otherwise.
+
+|hasMaskCharacter
+|Is true if mask character is set, false otherwise.
+
+|model
+|Parent context variables <<textcomponentcontext-template-variables>>
+|===
+
+===== Path Input
+
+Used to ask a `Path` from a user and gives additional info about a path itself.
+
+====
+[source, java]
+----
+@ShellComponent
+public class ComponentCommands extends AbstractShellComponent {
+
+	@ShellMethod(key = "component path", value = "Path input", group = "Components")
+	public String pathInput() {
+		PathInput component = new PathInput(getTerminal(), "Enter value");
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		PathInputContext context = component.run(PathInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+}
+----
+====
+
+image::images/component-path-input-1.svg[text input]
+
+Context object is `PathInputContext`.
+
+[[pathinputcontext-template-variables]]
+.PathInputContext Template Variables
+|===
+|Key |Description
+
+|model
+|Parent context variables <<textcomponentcontext-template-variables>>
+|===
+
+===== Confirmation
+
+Used to ask a simple confirmation from a user and essentially is
+yes/no question.
+
+====
+[source, java]
+----
+@ShellComponent
+public class ComponentCommands extends AbstractShellComponent {
+
+	@ShellMethod(key = "component confirmation", value = "Confirmation input", group = "Components")
+	public String confirmationInput(boolean no) {
+		ConfirmationInput component = new ConfirmationInput(getTerminal(), "Enter value", !no);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		ConfirmationInputContext context = component.run(ConfirmationInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+}
+----
+====
+
+image::images/component-confirmation-1.svg[text input]
+
+Context object is `ConfirmationInputContext`.
+
+[[confirmationinputcontext-template-variables]]
+.ConfirmationInputContext Template Variables
+|===
+|Key |Description
+
+|defaultValue
+|Default value, either true or false.
+
+|model
+|Parent context variables <<textcomponentcontext-template-variables>>
+|===
+
+===== Single Select
+
+Used to ask an item from a list and is essentially similar to simple
+dropbox implementation.
+
+====
+[source, java]
+----
+@ShellComponent
+public class ComponentCommands extends AbstractShellComponent {
+
+	@ShellMethod(key = "component single", value = "Single selector", group = "Components")
+	public String singleSelector() {
+		List<SelectorItem<String>> items = new ArrayList<>();
+		items.add(SelectorItem.of("key1", "value1"));
+		items.add(SelectorItem.of("key2", "value2"));
+		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+				items, "testSimple", null);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		SingleItemSelectorContext<String, SelectorItem<String>> context = component
+				.run(SingleItemSelectorContext.empty());
+		String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
+		return "Got value " + result;
+	}
+}
+----
+====
+
+image::images/component-single-select-1.svg[text input]
+
+Context object is `SingleItemSelectorContext`.
+
+[[singleitemselectorcontext-template-variables]]
+.SingleItemSelectorContext Template Variables
+|===
+|Key |Description
+
+|value
+|Returned value when component exists.
+
+|rows
+|Visible items where rows list contains maps of name and selected items.
+
+|model
+|Parent context variables <<selectorcomponentcontext-template-variables>>
+|===
+
+===== Multi Select
+
+Used to ask an items from a list.
+
+====
+[source, java]
+----
+@ShellComponent
+public class ComponentCommands extends AbstractShellComponent {
+
+	@ShellMethod(key = "component multi", value = "Multi selector", group = "Components")
+	public String multiSelector() {
+		List<SelectorItem<String>> items = new ArrayList<>();
+		items.add(SelectorItem.of("key1", "value1"));
+		items.add(SelectorItem.of("key2", "value2", false));
+		items.add(SelectorItem.of("key3", "value3"));
+		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
+				items, "testSimple", null);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		MultiItemSelectorContext<String, SelectorItem<String>> context = component
+				.run(MultiItemSelectorContext.empty());
+		String result = context.getResultItems().stream()
+				.map(si -> si.getItem())
+				.collect(Collectors.joining(","));
+		return "Got value " + result;
+	}
+}
+----
+====
+
+image::images/component-multi-select-1.svg[text input]
+
+Context object is `MultiItemSelectorContext`.
+
+[[multiitemselectorcontext-template-variables]]
+.MultiItemSelectorContext Template Variables
+|===
+|Key |Description
+
+|values
+|Returned values when component exists.
+
+|rows
+|Visible items where rows list contains maps of name, selected, onrow and enabled items.
+
+|model
+|Parent context variables <<selectorcomponentcontext-template-variables>>
+|===
 
 === Customizing the Shell
 
