@@ -13,7 +13,7 @@
 
 	<description>Spring Shell reference documentation</description>
 	<properties>
-		<asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
+		<asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
 		<asciidoctorj.pdf.version>1.5.4</asciidoctorj.pdf.version>
 		<asciidoctorj.epub.version>1.5.1</asciidoctorj.epub.version>
 		<asciidoctorj.version>2.5.1</asciidoctorj.version>
@@ -165,8 +165,8 @@
 						</goals>
 						<configuration>
 							<backend>html5</backend>
-							<sourceHighlighter>highlight.js</sourceHighlighter>
 							<attributes>
+								<source-highlighter>highlight.js</source-highlighter>
 								<project-version>${project.version}</project-version>
 								<project-artifactId>${project.artifactId}</project-artifactId>
 								<toc>left</toc>
