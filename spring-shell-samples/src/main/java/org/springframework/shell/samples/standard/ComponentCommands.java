@@ -16,9 +16,14 @@
 package org.springframework.shell.samples.standard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStringBuilder;
 
 import org.springframework.shell.component.ConfirmationInput;
 import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
@@ -34,6 +39,7 @@ import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.util.StringUtils;
 
 @ShellComponent
 public class ComponentCommands extends AbstractShellComponent {
@@ -99,5 +105,43 @@ public class ComponentCommands extends AbstractShellComponent {
 				.map(si -> si.getItem())
 				.collect(Collectors.joining(","));
 		return "Got value " + result;
+	}
+
+	@ShellMethod(key = "component stringcustom", value = "String input", group = "Components")
+	public String stringInputCustom(boolean mask) {
+		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue",
+				new StringInputCustomRenderer());
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		if (mask) {
+			component.setMaskCharater('*');
+		}
+		StringInputContext context = component.run(StringInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+
+	private static class StringInputCustomRenderer implements Function<StringInputContext, List<AttributedString>> {
+
+		@Override
+		public List<AttributedString> apply(StringInputContext context) {
+			AttributedStringBuilder builder = new AttributedStringBuilder();
+			builder.append(context.getName());
+			builder.append(" ");
+
+			if (context.getResultValue() != null) {
+				builder.append(context.getResultValue());
+			}
+			else  {
+				String input = context.getInput();
+				if (StringUtils.hasText(input)) {
+					builder.append(input);
+				}
+				else {
+					builder.append("[Default " + context.getDefaultValue() + "]");
+				}
+			}
+
+			return Arrays.asList(builder.toAttributedString());
+		}
 	}
 }
