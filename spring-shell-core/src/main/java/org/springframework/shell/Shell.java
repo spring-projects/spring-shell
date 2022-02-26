@@ -22,13 +22,11 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -36,7 +34,6 @@ import javax.validation.ValidatorFactory;
 import org.jline.utils.Signals;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.util.ReflectionUtils;
@@ -66,14 +63,9 @@ public class Shell {
 	 */
 	public static final Object NO_INPUT = new Object();
 
-	@Autowired
-	protected ApplicationContext applicationContext;
-
-	private CommandRegistry commandRegistry;
+	private final CommandRegistry commandRegistry;
 
 	private Validator validator = Utils.defaultValidator();
-
-	protected Map<String, MethodTarget> methodTargets = new HashMap<>();
 
 	protected List<ParameterResolver> parameterResolvers;
 
@@ -91,13 +83,6 @@ public class Shell {
 	@Autowired(required = false)
 	public void setValidatorFactory(ValidatorFactory validatorFactory) {
 		this.validator = validatorFactory.getValidator();
-	}
-
-	@PostConstruct
-	public void gatherMethodTargets() throws Exception {
-		methodTargets = commandRegistry.listCommands();
-		methodTargets.values()
-				.forEach(this::validateParameterResolvers);
 	}
 
 	@Autowired
@@ -158,6 +143,7 @@ public class Shell {
 
 		List<String> words = input.words();
 		if (command != null) {
+			Map<String, MethodTarget> methodTargets = commandRegistry.listCommands();
 			MethodTarget methodTarget = methodTargets.get(command);
 			Availability availability = methodTarget.getAvailability();
 			if (availability.isAvailable()) {
@@ -240,6 +226,7 @@ public class Shell {
 		if (best != null) {
 			CompletionContext argsContext = context.drop(best.split(" ").length);
 			// Try to complete arguments
+			Map<String, MethodTarget> methodTargets = commandRegistry.listCommands();
 			MethodTarget methodTarget = methodTargets.get(best);
 			Method method = methodTarget.getMethod();
 
@@ -260,6 +247,7 @@ public class Shell {
 		// Workaround for https://github.com/spring-projects/spring-shell/issues/150
 		// (sadly, this ties this class to JLine somehow)
 		int lastWordStart = prefix.lastIndexOf(' ') + 1;
+		Map<String, MethodTarget> methodTargets = commandRegistry.listCommands();
 		return methodTargets.entrySet().stream()
 				.filter(e -> e.getKey().startsWith(prefix))
 				.map(e -> toCommandProposal(e.getKey().substring(lastWordStart), e.getValue()))
@@ -314,29 +302,15 @@ public class Shell {
 	}
 
 	/**
-	 * Verifies that we have at least one {@link ParameterResolver} that supports each of the
-	 * {@link MethodParameter}s in the method.
-	 */
-	private void validateParameterResolvers(MethodTarget methodTarget) {
-		Utils.createMethodParameters(methodTarget.getMethod())
-				.forEach(parameter -> {
-					parameterResolvers.stream()
-							.filter(resolver -> resolver.supports(parameter))
-							.findFirst()
-							.orElseThrow(() -> new ParameterResolverMissingException(parameter));
-				});
-	}
-
-	/**
 	 * Returns the longest command that can be matched as first word(s) in the given buffer.
 	 *
 	 * @return a valid command name, or {@literal null} if none matched
 	 */
 	private String findLongestCommand(String prefix) {
+		Map<String, MethodTarget> methodTargets = commandRegistry.listCommands();
 		String result = methodTargets.keySet().stream()
 				.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))
 				.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
 		return "".equals(result) ? null : result;
 	}
-
 }

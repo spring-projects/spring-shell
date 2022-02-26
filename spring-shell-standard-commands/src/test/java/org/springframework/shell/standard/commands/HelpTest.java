@@ -123,26 +123,39 @@ public class HelpTest {
 
 		@Bean
 		public CommandRegistry shell() {
-			return () -> {
-				Map<String, MethodTarget> result = new HashMap<>();
-				MethodTarget methodTarget = MethodTarget.of("firstCommand", commands(), new Command.Help("A rather extensive description of some command."));
-				result.put("first-command", methodTarget);
-				result.put("1st-command", methodTarget);
 
-				methodTarget = MethodTarget.of("secondCommand", commands(), new Command.Help("The second command. This one is known under several aliases as well."));
-				result.put("second-command", methodTarget);
-				result.put("yet-another-command", methodTarget);
+			return new CommandRegistry() {
 
-				methodTarget = MethodTarget.of("thirdCommand", commands(), new Command.Help("The last command."));
-				result.put("third-command", methodTarget);
+				@Override
+				public Map<String, MethodTarget> listCommands() {
+					Map<String, MethodTarget> result = new HashMap<>();
+					MethodTarget methodTarget = MethodTarget.of("firstCommand", commands(), new Command.Help("A rather extensive description of some command."));
+					result.put("first-command", methodTarget);
+					result.put("1st-command", methodTarget);
 
-				methodTarget = MethodTarget.of("firstCommandInGroup", commands(), new Command.Help("The first command in a separate group.", "Example Group"));
-				result.put("first-group-command", methodTarget);
+					methodTarget = MethodTarget.of("secondCommand", commands(), new Command.Help("The second command. This one is known under several aliases as well."));
+					result.put("second-command", methodTarget);
+					result.put("yet-another-command", methodTarget);
 
-				methodTarget = MethodTarget.of("secondCommandInGroup", commands(), new Command.Help("The second command in a separate group.", "Example Group"));
-				result.put("second-group-command", methodTarget);
+					methodTarget = MethodTarget.of("thirdCommand", commands(), new Command.Help("The last command."));
+					result.put("third-command", methodTarget);
 
-				return result;
+					methodTarget = MethodTarget.of("firstCommandInGroup", commands(), new Command.Help("The first command in a separate group.", "Example Group"));
+					result.put("first-group-command", methodTarget);
+
+					methodTarget = MethodTarget.of("secondCommandInGroup", commands(), new Command.Help("The second command in a separate group.", "Example Group"));
+					result.put("second-group-command", methodTarget);
+
+					return result;
+				}
+
+				@Override
+				public void addCommand(String name, MethodTarget target) {
+				}
+
+				@Override
+				public void removeCommand(String name) {
+				}
 			};
 		}
 

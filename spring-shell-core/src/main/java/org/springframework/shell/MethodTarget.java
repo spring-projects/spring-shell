@@ -72,6 +72,14 @@ public class MethodTarget implements Command {
 	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
 	 * in case of overloaded method.
 	 */
+	public static MethodTarget of(String name, Object bean, String description, String group) {
+		return of(name, bean, new Help(description, group));
+	}
+
+	/**
+	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
+	 * in case of overloaded method.
+	 */
 	public static MethodTarget of(String name, Object bean, Help help) {
 		return of(name, bean, help, null);
 	}
