@@ -58,6 +58,16 @@ public class ConfigurableCommandRegistry implements CommandRegistry {
 				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 	}
 
+	@Override
+	public void addCommand(String name, MethodTarget target) {
+		commands.put(name, target);
+	}
+
+	@Override
+	public void removeCommand(String name) {
+		commands.remove(name);
+	}
+
 	public void register(String name, MethodTarget target) {
 		MethodTarget previous = commands.get(name);
 		if (previous != null) {

@@ -19,7 +19,9 @@ package org.springframework.shell;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,15 +31,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.springframework.context.ApplicationContext;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -53,6 +51,9 @@ public class ShellTest {
 
 	@Mock
 	ResultHandlerService resultHandlerService;
+
+	@Mock
+	CommandRegistry commandRegistry;
 
 	@Mock
 	private ParameterResolver parameterResolver;
@@ -77,7 +78,8 @@ public class ShellTest {
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
 		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
-		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
+		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("hello world",
+				MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -95,7 +97,8 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
-		shell.methodTargets = Collections.singletonMap("bonjour", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
+		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("bonjour",
+				MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -112,7 +115,8 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "helloworld how are you doing ?");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
-		shell.methodTargets = Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
+		when(commandRegistry.listCommands()).thenReturn(
+				Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -131,7 +135,8 @@ public class ShellTest {
 		when(parameterResolver.resolve(any(), any())).thenReturn(valueResult);
 		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
-		shell.methodTargets = Collections.singletonMap("hello world", MethodTarget.of("helloWorld", this, new Command.Help("Say hello")));
+		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("hello world",
+				MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -149,7 +154,8 @@ public class ShellTest {
 		when(inputProvider.readInput()).thenReturn(() -> "fail");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(SomeException.class));
 
-		shell.methodTargets = Collections.singletonMap("fail", MethodTarget.of("failing", this, new Command.Help("Will throw an exception")));
+		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("fail",
+				MethodTarget.of("failing", this, new Command.Help("Will throw an exception"))));
 
 		try {
 			shell.run(inputProvider);
@@ -169,36 +175,19 @@ public class ShellTest {
 		shell.run(inputProvider);
 	}
 
-	// no need to test as we're moving away from postconstruct
-	// @Test
-	public void parametersSupported() throws Exception {
-		when(parameterResolver.supports(any())).thenReturn(false);
-		shell.applicationContext = mock(ApplicationContext.class);
-		when(shell.applicationContext.getBeansOfType(MethodTargetRegistrar.class))
-				.thenReturn(Collections.singletonMap("foo", r -> {
-					r.register("hw", MethodTarget.of("helloWorld", this, new Command.Help("hellow world")));
-				}));
-
-		assertThatThrownBy(() -> {
-			shell.gatherMethodTargets();
-		}).isInstanceOf(ParameterResolverMissingException.class);
-	}
-
-	// @Test
+	@Test
 	public void commandNameCompletion() throws Exception {
-		shell.applicationContext = mock(ApplicationContext.class);
+		Map<String, MethodTarget> methodTargets = new HashMap<>();
+		methodTargets.put("hello world", MethodTarget.of("helloWorld", this, new Command.Help("hellow world")));
+		methodTargets.put("another command", MethodTarget.of("helloWorld", this, new Command.Help("another command")));
 		when(parameterResolver.supports(any())).thenReturn(true);
-		when(shell.applicationContext.getBeansOfType(MethodTargetRegistrar.class))
-				.thenReturn(Collections.singletonMap("foo", r -> {
-					r.register("hello world", MethodTarget.of("helloWorld", this, new Command.Help("hellow world")));
-					r.register("another command", MethodTarget.of("helloWorld", this, new Command.Help("another command")));
-				}));
-		shell.gatherMethodTargets();
+		when(commandRegistry.listCommands()).thenReturn(methodTargets);
 
 		// Invoke at very start
 		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList(""), 0, "".length()))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
-		assertThat(proposals).containsExactly("another command", "hello world");
+		assertThat(proposals).containsExactlyInAnyOrder("another command", "hello world");
+		// assertThat(proposals).containsExactly("another command", "hello world");
 
 		// Invoke in middle of first word
 		proposals = shell.complete(new CompletionContext(Arrays.asList("hel"), 0, "hel".length()))
