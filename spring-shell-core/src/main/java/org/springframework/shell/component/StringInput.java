@@ -68,7 +68,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	}
 
 	@Override
-	protected StringInputContext getThisContext(ComponentContext<?> context) {
+	public StringInputContext getThisContext(ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
