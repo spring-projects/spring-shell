@@ -219,7 +219,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 * @param context the context
 	 * @return a component context
 	 */
-	protected abstract T getThisContext(ComponentContext<?> context);
+	public abstract T getThisContext(ComponentContext<?> context);
 
 	/**
 	 * Read input.

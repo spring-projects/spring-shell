@@ -63,7 +63,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 	}
 
 	@Override
-	protected ConfirmationInputContext getThisContext(ComponentContext<?> context) {
+	public ConfirmationInputContext getThisContext(ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}

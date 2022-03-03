@@ -52,7 +52,7 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 	}
 
 	@Override
-	protected SingleItemSelectorContext<T, I> getThisContext(ComponentContext<?> context) {
+	public SingleItemSelectorContext<T, I> getThisContext(ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}

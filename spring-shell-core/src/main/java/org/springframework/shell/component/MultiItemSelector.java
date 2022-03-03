@@ -52,7 +52,7 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 	}
 
 	@Override
-	protected MultiItemSelectorContext<T, I> getThisContext(ComponentContext<?> context) {
+	public MultiItemSelectorContext<T, I> getThisContext(ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}

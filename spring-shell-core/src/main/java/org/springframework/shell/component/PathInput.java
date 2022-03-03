@@ -60,7 +60,7 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 	}
 
 	@Override
-	protected PathInputContext getThisContext(ComponentContext<?> context) {
+	public PathInputContext getThisContext(ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
