@@ -70,11 +70,10 @@ public interface ComponentFlow {
 	/**
 	 * Gets a new instance of an input wizard builder.
 	 *
-	 * @param terminal the terminal
 	 * @return the input wizard builder
 	 */
-	public static Builder builder(Terminal terminal) {
-		return new DefaultBuilder(terminal);
+	public static Builder builder() {
+		return new DefaultBuilder();
 	}
 
 	/**
@@ -136,6 +135,14 @@ public interface ComponentFlow {
 		MultiItemSelectorSpec withMultiItemSelector(String id);
 
 		/**
+		 * Sets a {@link Terminal}.
+		 *
+		 * @param terminal the terminal
+		 * @return a builder
+		 */
+		Builder terminal(Terminal terminal);
+
+		/**
 		 * Sets a {@link ResourceLoader}.
 		 *
 		 * @param resourceLoader the resource loader
@@ -152,6 +159,20 @@ public interface ComponentFlow {
 		Builder templateExecutor(TemplateExecutor templateExecutor);
 
 		/**
+		 * Clones existing builder.
+		 *
+		 * @return a builder
+		 */
+		Builder clone();
+
+		/**
+		 * Resets existing builder.
+		 *
+		 * @return a builder
+		 */
+		Builder reset();
+
+		/**
 		 * Builds instance of input wizard.
 		 *
 		 * @return instance of input wizard
@@ -161,7 +182,6 @@ public interface ComponentFlow {
 
 	static abstract class BaseBuilder implements Builder {
 
-		private Terminal terminal;
 		private final List<BaseStringInput> stringInputs = new ArrayList<>();
 		private final List<BasePathInput> pathInputs = new ArrayList<>();
 		private final List<BaseConfirmationInput> confirmationInputs = new ArrayList<>();
@@ -169,11 +189,11 @@ public interface ComponentFlow {
 		private final List<BaseMultiItemSelector> multiItemSelectors = new ArrayList<>();
 		private final AtomicInteger order = new AtomicInteger();
 		private final HashSet<String> uniqueIds = new HashSet<>();
+		private Terminal terminal;
 		private ResourceLoader resourceLoader;
 		private TemplateExecutor templateExecutor;
 
-		BaseBuilder(Terminal terminal) {
-			this.terminal = terminal;
+		BaseBuilder() {
 		}
 
 		@Override
@@ -208,6 +228,12 @@ public interface ComponentFlow {
 		}
 
 		@Override
+		public Builder terminal(Terminal terminal) {
+			this.terminal = terminal;
+			return this;
+		}
+
+		@Override
 		public Builder resourceLoader(ResourceLoader resourceLoader) {
 			this.resourceLoader = resourceLoader;
 			return this;
@@ -216,6 +242,23 @@ public interface ComponentFlow {
 		@Override
 		public Builder templateExecutor(TemplateExecutor templateExecutor) {
 			this.templateExecutor = templateExecutor;
+			return this;
+		}
+
+		@Override
+		public Builder clone() {
+			return new DefaultBuilder(this);
+		}
+
+		@Override
+		public Builder reset() {
+			stringInputs.clear();
+			pathInputs.clear();
+			confirmationInputs.clear();
+			singleItemSelectors.clear();
+			multiItemSelectors.clear();
+			order.set(0);
+			uniqueIds.clear();
 			return this;
 		}
 
@@ -249,6 +292,10 @@ public interface ComponentFlow {
 			multiItemSelectors.add(input);
 		}
 
+		Terminal getTerminal() {
+			return terminal;
+		}
+
 		ResourceLoader getResourceLoader() {
 			return resourceLoader;
 		}
@@ -267,8 +314,14 @@ public interface ComponentFlow {
 
 	static class DefaultBuilder extends BaseBuilder {
 
-		DefaultBuilder(Terminal terminal) {
-			super(terminal);
+		DefaultBuilder() {
+			super();
+		}
+
+		DefaultBuilder(BaseBuilder other) {
+			terminal(other.getTerminal());
+			resourceLoader(other.getResourceLoader());
+			templateExecutor(other.getTemplateExecutor());
 		}
 	}
 

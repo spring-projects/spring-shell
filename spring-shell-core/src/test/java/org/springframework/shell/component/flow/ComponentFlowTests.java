@@ -41,7 +41,8 @@ public class ComponentFlowTests extends AbstractShellTests {
 		single1SelectItems.put("key2", "value2");
 		List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
 				SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
-		ComponentFlow wizard = ComponentFlow.builder(getTerminal())
+		ComponentFlow wizard = ComponentFlow.builder()
+				.terminal(getTerminal())
 				.resourceLoader(getResourceLoader())
 				.templateExecutor(getTemplateExecutor())
 				.withStringInput("field1")
@@ -107,7 +108,8 @@ public class ComponentFlowTests extends AbstractShellTests {
 
 	@Test
 	public void testSkipsGivenComponents() throws InterruptedException {
-		ComponentFlow wizard = ComponentFlow.builder(getTerminal())
+		ComponentFlow wizard = ComponentFlow.builder()
+			.terminal(getTerminal())
 			.withStringInput("id1")
 				.name("name")
 				.resultValue("value1")
@@ -154,7 +156,8 @@ public class ComponentFlowTests extends AbstractShellTests {
 
 		@Test
 		public void testChoosesDynamically() throws InterruptedException {
-			ComponentFlow wizard = ComponentFlow.builder(getTerminal())
+			ComponentFlow wizard = ComponentFlow.builder()
+				.terminal(getTerminal())
 				.resourceLoader(getResourceLoader())
 				.templateExecutor(getTemplateExecutor())
 				.withStringInput("id1")
