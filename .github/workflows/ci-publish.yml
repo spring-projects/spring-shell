@@ -19,23 +19,20 @@ jobs:
       with:
         distribution: adopt
         java-version: 8
-    - uses: jfrog/setup-jfrog-cli@v1
+    - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 1.46.4
+        version: 2.13.0
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.jfArtifactorySpring }}
     - name: Configure JFrog Cli
       run: |
         jfrog rt mvnc \
-          --server-id-resolve=repo.spring.io \
-          --server-id-deploy=repo.spring.io \
-          --repo-resolve-releases=libs-milestone \
-          --repo-resolve-snapshots=libs-snapshot \
-          --repo-deploy-releases=release \
-          --repo-deploy-snapshots=snapshot
+          --server-id-deploy repo.spring.io \
+          --repo-deploy-releases release \
+          --repo-deploy-snapshots snapshot
         echo JFROG_CLI_BUILD_NAME=spring-shell-main >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Build and Publish
       run: |
-        jfrog rt mvn -B clean install -DskipTests
+        jfrog rt mvn clean install -B -DskipTests
         jfrog rt build-publish
