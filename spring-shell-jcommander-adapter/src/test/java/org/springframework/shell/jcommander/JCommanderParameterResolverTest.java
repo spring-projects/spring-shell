@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.jcommander;
 
 import java.lang.reflect.Method;
@@ -22,6 +21,8 @@ import java.util.Collections;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
@@ -47,11 +48,13 @@ public class JCommanderParameterResolverTest {
 	private JCommanderParameterResolver resolver = new JCommanderParameterResolver();
 
 	@Test
+	@DisabledOnJre({JRE.JAVA_17})
 	public void testSupportsJCommanderPojos() throws Exception {
 		assertThat(resolver.supports(Utils.createMethodParameter(COMMAND_METHOD, 0))).isEqualTo(true);
 	}
 
 	@Test
+	@DisabledOnJre({JRE.JAVA_17})
 	public void testDoesNotSupportsNonJCommanderPojos() throws Exception {
 		Method method = ReflectionUtils.findMethod(MyLordCommands.class, "apocalypse", String.class);
 
