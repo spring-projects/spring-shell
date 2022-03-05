@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.component.flow.ComponentFlow;
 import org.springframework.shell.component.flow.SelectItem;
 import org.springframework.shell.standard.AbstractShellComponent;
@@ -29,6 +30,9 @@ import org.springframework.shell.standard.ShellMethod;
 @ShellComponent
 public class ComponentFlowCommands extends AbstractShellComponent {
 
+	@Autowired
+	private ComponentFlow.Builder componentFlowBuilder;
+
 	@ShellMethod(key = "flow showcase", value = "Showcase", group = "Flow")
 	public void showcase() {
 		Map<String, String> single1SelectItems = new HashMap<>();
@@ -36,9 +40,7 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 		single1SelectItems.put("key2", "value2");
 		List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
 				SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
-		ComponentFlow flow = ComponentFlow.builder(getTerminal())
-				.resourceLoader(getResourceLoader())
-				.templateExecutor(getTemplateExecutor())
+		ComponentFlow flow = componentFlowBuilder.clone().reset()
 				.withStringInput("field1")
 					.name("Field1")
 					.defaultValue("defaultField1Value")
@@ -69,9 +71,7 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("Field1", "field1");
 		single1SelectItems.put("Field2", "field2");
-		ComponentFlow flow = ComponentFlow.builder(getTerminal())
-				.resourceLoader(getResourceLoader())
-				.templateExecutor(getTemplateExecutor())
+		ComponentFlow flow = componentFlowBuilder.clone().reset()
 				.withSingleItemSelector("single1")
 					.name("Single1")
 					.selectItems(single1SelectItems)
