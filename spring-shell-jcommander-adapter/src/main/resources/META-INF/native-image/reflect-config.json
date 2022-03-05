@@ -1,0 +1,18 @@
+[
+  {
+    "name":"com.beust.jcommander.JCommander"
+  },
+  {
+    "name":"com.beust.jcommander.converters.IntegerConverter",
+    "queryAllDeclaredConstructors":true,
+    "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+  },
+  {
+    "name":"com.beust.jcommander.validators.NoValidator",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"com.beust.jcommander.validators.NoValueValidator",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  }
+]

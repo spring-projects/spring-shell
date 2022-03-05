@@ -32,6 +32,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.jline.utils.Signals;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -55,6 +57,7 @@ import org.springframework.util.ReflectionUtils;
  */
 public class Shell {
 
+	private final static Logger log = LoggerFactory.getLogger(Shell.class);
 	private final ResultHandlerService resultHandlerService;
 
 	/**
@@ -287,14 +290,17 @@ public class Shell {
 	 * parameters that could not be resolved
 	 */
 	private Object[] resolveArgs(Method method, List<String> wordsForArgs) {
+		log.debug("Resolving args {} {}", method, wordsForArgs);
 		List<MethodParameter> parameters = Utils.createMethodParameters(method).collect(Collectors.toList());
 		Object[] args = new Object[parameters.size()];
 		Arrays.fill(args, UNRESOLVED);
 		for (ParameterResolver resolver : parameterResolvers) {
+			log.debug("Resolving args with {}", resolver);
 			for (int argIndex = 0; argIndex < args.length; argIndex++) {
 				MethodParameter parameter = parameters.get(argIndex);
 				if (args[argIndex] == UNRESOLVED && resolver.supports(parameter)) {
 					args[argIndex] = resolver.resolve(parameter, wordsForArgs).resolvedValue();
+					log.debug("Resolved {} {} {} {}", method, args[argIndex], resolver, parameter);
 				}
 			}
 		}
