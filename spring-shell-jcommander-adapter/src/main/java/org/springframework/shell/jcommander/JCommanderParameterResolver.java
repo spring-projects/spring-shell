@@ -1,19 +1,18 @@
 /*
-	* Copyright 2015 the original author or authors.
-	*
-	* Licensed under the Apache License, Version 2.0 (the "License");
-	* you may not use this file except in compliance with the License.
-	* You may obtain a copy of the License at
-	*
-	*      https://www.apache.org/licenses/LICENSE-2.0
-	*
-	* Unless required by applicable law or agreed to in writing, software
-	* distributed under the License is distributed on an "AS IS" BASIS,
-	* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	* See the License for the specific language governing permissions and
-	* limitations under the License.
-	*/
-
+ * Copyright 2015-2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.shell.jcommander;
 
 import java.lang.annotation.Annotation;
@@ -34,6 +33,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.ParametersDelegate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ import static org.springframework.shell.Utils.unCamelify;
  */
 public class JCommanderParameterResolver implements ParameterResolver {
 
+	private final static Logger log = LoggerFactory.getLogger(JCommanderParameterResolver.class);
 	private static final Collection<Class<? extends Annotation>> JCOMMANDER_ANNOTATIONS = Arrays.asList(Parameter.class,
 			DynamicParameter.class, ParametersDelegate.class);
 
@@ -71,27 +73,25 @@ public class JCommanderParameterResolver implements ParameterResolver {
 		AtomicBoolean isSupported = new AtomicBoolean(false);
 		Class<?> parameterType = parameter.getParameterType();
 
-		if (isLegalReflectiveAccess(parameterType)) {
-			ReflectionUtils.doWithFields(parameterType, field -> {
-				if (isLegalReflectiveAccess(field.getType())) {
-					ReflectionUtils.makeAccessible(field);
-					boolean hasAnnotation = Arrays.stream(field.getAnnotations())
-							.map(Annotation::annotationType)
-							.anyMatch(JCOMMANDER_ANNOTATIONS::contains);
-					isSupported.compareAndSet(false, hasAnnotation);
-				}
-			});
+		log.debug("isLegalReflectiveAccess before");
+		ReflectionUtils.doWithFields(parameterType, field -> {
+			ReflectionUtils.makeAccessible(field);
+			boolean hasAnnotation = Arrays.stream(field.getAnnotations())
+					.map(Annotation::annotationType)
+					.anyMatch(JCOMMANDER_ANNOTATIONS::contains);
+			isSupported.compareAndSet(false, hasAnnotation);
+			log.debug("isLegalReflectiveAccess fields {}", hasAnnotation);
+		});
 
-			ReflectionUtils.doWithMethods(parameterType, method -> {
-				if (isLegalReflectiveAccess(method.getDeclaringClass())) {
-					ReflectionUtils.makeAccessible(method);
-					boolean hasAnnotation = Arrays.stream(method.getAnnotations())
-							.map(Annotation::annotationType)
-							.anyMatch(Parameter.class::equals);
-					isSupported.compareAndSet(false, hasAnnotation);
-				}
-			});
-		}
+		ReflectionUtils.doWithMethods(parameterType, method -> {
+			ReflectionUtils.makeAccessible(method);
+			boolean hasAnnotation = Arrays.stream(method.getAnnotations())
+					.map(Annotation::annotationType)
+					.anyMatch(Parameter.class::equals);
+			isSupported.compareAndSet(false, hasAnnotation);
+			log.debug("isLegalReflectiveAccess methods {}", hasAnnotation);
+		});
+		log.debug("isLegalReflectiveAccess supports {}", isSupported.get());
 		return isSupported.get();
 	}
 
@@ -135,11 +135,6 @@ public class JCommanderParameterResolver implements ParameterResolver {
 		return Stream.concat(
 				jCommander.getParameters().stream(),
 				jCommander.getMainParameterValue() != null ? Stream.of(jCommander.getMainParameterValue()) : Stream.empty());
-	}
-
-	// Java 9+ warn if you try to reflect on JDK types
-	private static boolean isLegalReflectiveAccess(Class<?> clzz) {
-		return (!clzz.getName().startsWith("java"));
 	}
 
 	@Override
