@@ -54,7 +54,7 @@ public class ComponentFlowAutoConfiguration {
 		@Bean
 		@ConditionalOnMissingBean
 		@Order(0)
-		public ComponentFlowCustomizer exchangeStrategiesCustomizer(ObjectProvider<Terminal> terminal,
+		public ComponentFlowCustomizer shellCommonComponentFlowCustomizer(ObjectProvider<Terminal> terminal,
 				ObjectProvider<ResourceLoader> resourceLoader, ObjectProvider<TemplateExecutor> templateExecutor) {
 			return new CommonComponentFlowCustomizer(terminal, resourceLoader, templateExecutor);
 		}
