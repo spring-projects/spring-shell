@@ -50,30 +50,16 @@ public class StyleCommands {
 	@ShellMethod(key = "style values", value = "Showcase colors and styles", group = "Styles")
 	public AttributedString stylesValues() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
-		combinations1().stream()
-				.forEach(spec -> {
-					AttributedStyle style = themeResolver.resolveStyle(spec);
-					AttributedString styledStr = new AttributedString(spec, style);
-					builder.append(String.format("%-25s", spec));
-					builder.append(" ");
-					builder.append(styledStr);
-					builder.append("\n");
-				});
+		styleCombinations().stream()
+				.forEach(spec -> renderStyleOrRgbSpec(spec, builder));
 		return builder.toAttributedString();
 	}
 
 	@ShellMethod(key = "style rgb", value = "Showcase colors and styles", group = "Styles")
 	public AttributedString stylesRgb() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
-		combinations2().stream()
-				.forEach(spec -> {
-					AttributedStyle style = themeResolver.resolveStyle(spec);
-					AttributedString styledStr = new AttributedString(spec, style);
-					builder.append(String.format("%-25s", spec));
-					builder.append(" ");
-					builder.append(styledStr);
-					builder.append("\n");
-				});
+		rgbCombinations().stream()
+				.forEach(spec -> renderStyleOrRgbSpec(spec, builder));
 		return builder.toAttributedString();
 	}
 
@@ -93,7 +79,16 @@ public class StyleCommands {
 		return builder.toAttributedString();
 	}
 
-	private List<String> combinations1() {
+	private void renderStyleOrRgbSpec(String spec, AttributedStringBuilder builder) {
+		AttributedStyle style = themeResolver.resolveStyle(spec);
+		AttributedString styledStr = new AttributedString(spec, style);
+		builder.append(String.format("%-25s", spec));
+		builder.append(" ");
+		builder.append(styledStr);
+		builder.append("\n");
+	}
+
+	private List<String> styleCombinations() {
 		List<String> styles = new ArrayList<>();
 		colorGround.stream().forEach(ground -> {
 			colors.stream().forEach(color -> {
@@ -105,7 +100,7 @@ public class StyleCommands {
 		return styles;
 	}
 
-	private List<String> combinations2() {
+	private List<String> rgbCombinations() {
 		List<String> styles = new ArrayList<>();
 		rgbRedHue.stream().forEach(rgb -> {
 			styles.add(String.format("inverse,fg-rgb:%s", rgb));
