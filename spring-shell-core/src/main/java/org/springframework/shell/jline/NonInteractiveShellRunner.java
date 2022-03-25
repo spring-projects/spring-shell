@@ -44,15 +44,13 @@ import org.springframework.shell.context.ShellContext;
  * @author Chris Bono
  */
 @Order(NonInteractiveShellRunner.PRECEDENCE)
-public class NonInteractiveShellRunner implements ShellRunner {
+public class NonInteractiveShellRunner extends AbstractShellRunner{
 
 	/**
 	 * The precedence at which this runner is ordered by the DefaultApplicationRunner - which also controls
 	 * the order it is consulted on the ability to handle the current shell.
 	 */
 	public static final int PRECEDENCE = InteractiveShellRunner.PRECEDENCE - 50;
-
-	private final Shell shell;
 
 	private final ShellContext shellContext;
 
@@ -63,7 +61,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 					: Collections.singletonList(String.join(" ", args.getSourceArgs()));
 
 	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext) {
-		this.shell = shell;
+		super(shell);
 		this.shellContext = shellContext;
 		this.lineParser = new DefaultParser();
 	}

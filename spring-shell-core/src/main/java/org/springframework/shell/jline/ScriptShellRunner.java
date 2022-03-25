@@ -41,7 +41,7 @@ import org.springframework.util.ObjectUtils;
  */
 //tag::documentation[]
 @Order(ScriptShellRunner.PRECEDENCE)
-public class ScriptShellRunner implements ShellRunner {
+public class ScriptShellRunner extends AbstractShellRunner{
 //end::documentation[]
 
 	/**
@@ -52,11 +52,9 @@ public class ScriptShellRunner implements ShellRunner {
 
 	private final Parser parser;
 
-	private final Shell shell;
-
 	public ScriptShellRunner(Parser parser, Shell shell) {
+		super(shell);
 		this.parser = parser;
-		this.shell = shell;
 	}
 
 	@Override

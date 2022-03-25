@@ -41,7 +41,7 @@ import org.springframework.shell.context.ShellContext;
  * @author Chris Bono
  */
 @Order(InteractiveShellRunner.PRECEDENCE)
-public class InteractiveShellRunner implements ShellRunner {
+public class InteractiveShellRunner extends AbstractShellRunner {
 
 	/**
 	 * The precedence at which this runner is ordered by the DefaultApplicationRunner - which also controls
@@ -53,16 +53,14 @@ public class InteractiveShellRunner implements ShellRunner {
 
 	private final PromptProvider promptProvider;
 
-	private final Shell shell;
-
 	private final ShellContext shellContext;
 
 	public InteractiveShellRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell,
 			ShellContext shellContext) {
+		super(shell);
+		this.shellContext = shellContext;
 		this.lineReader = lineReader;
 		this.promptProvider = promptProvider;
-		this.shell = shell;
-		this.shellContext = shellContext;
 	}
 
 	@Override
