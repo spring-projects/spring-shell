@@ -41,10 +41,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.shell.Command;
-import org.springframework.shell.CommandRegistry;
-import org.springframework.shell.MethodTarget;
-import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.*;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -129,21 +126,21 @@ public class HelpTest {
 				@Override
 				public Map<String, MethodTarget> listCommands() {
 					Map<String, MethodTarget> result = new HashMap<>();
-					MethodTarget methodTarget = MethodTarget.of("firstCommand", commands(), new Command.Help("A rather extensive description of some command."));
+					MethodTarget methodTarget = MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("firstCommand", commands(), new Command.Help("A rather extensive description of some command."));
 					result.put("first-command", methodTarget);
 					result.put("1st-command", methodTarget);
 
-					methodTarget = MethodTarget.of("secondCommand", commands(), new Command.Help("The second command. This one is known under several aliases as well."));
+					methodTarget = MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("secondCommand", commands(), new Command.Help("The second command. This one is known under several aliases as well."));
 					result.put("second-command", methodTarget);
 					result.put("yet-another-command", methodTarget);
 
-					methodTarget = MethodTarget.of("thirdCommand", commands(), new Command.Help("The last command."));
+					methodTarget = MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("thirdCommand", commands(), new Command.Help("The last command."));
 					result.put("third-command", methodTarget);
 
-					methodTarget = MethodTarget.of("firstCommandInGroup", commands(), new Command.Help("The first command in a separate group.", "Example Group"));
+					methodTarget = MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("firstCommandInGroup", commands(), new Command.Help("The first command in a separate group.", "Example Group"));
 					result.put("first-group-command", methodTarget);
 
-					methodTarget = MethodTarget.of("secondCommandInGroup", commands(), new Command.Help("The second command in a separate group.", "Example Group"));
+					methodTarget = MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("secondCommandInGroup", commands(), new Command.Help("The second command in a separate group.", "Example Group"));
 					result.put("second-group-command", methodTarget);
 
 					return result;

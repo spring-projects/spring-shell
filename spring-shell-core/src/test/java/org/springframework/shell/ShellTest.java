@@ -79,7 +79,7 @@ public class ShellTest {
 		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
 		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("hello world",
-				MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
+				MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -98,7 +98,7 @@ public class ShellTest {
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
 		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("bonjour",
-				MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
+				MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -116,7 +116,7 @@ public class ShellTest {
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
 		when(commandRegistry.listCommands()).thenReturn(
-				Collections.singletonMap("hello", MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
+				Collections.singletonMap("hello", MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -136,7 +136,7 @@ public class ShellTest {
 		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
 		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("hello world",
-				MethodTarget.of("helloWorld", this, new Command.Help("Say hello"))));
+				MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("helloWorld", this, new Command.Help("Say hello"))));
 
 		try {
 			shell.run(inputProvider);
@@ -155,7 +155,7 @@ public class ShellTest {
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(SomeException.class));
 
 		when(commandRegistry.listCommands()).thenReturn(Collections.singletonMap("fail",
-				MethodTarget.of("failing", this, new Command.Help("Will throw an exception"))));
+				MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("failing", this, new Command.Help("Will throw an exception"))));
 
 		try {
 			shell.run(inputProvider);
@@ -178,8 +178,8 @@ public class ShellTest {
 	@Test
 	public void commandNameCompletion() throws Exception {
 		Map<String, MethodTarget> methodTargets = new HashMap<>();
-		methodTargets.put("hello world", MethodTarget.of("helloWorld", this, new Command.Help("hellow world")));
-		methodTargets.put("another command", MethodTarget.of("helloWorld", this, new Command.Help("another command")));
+		methodTargets.put("hello world", MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("helloWorld", this, new Command.Help("hellow world")));
+		methodTargets.put("another command", MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("helloWorld", this, new Command.Help("another command")));
 		when(parameterResolver.supports(any())).thenReturn(true);
 		when(commandRegistry.listCommands()).thenReturn(methodTargets);
 

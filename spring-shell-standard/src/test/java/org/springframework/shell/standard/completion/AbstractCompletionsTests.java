@@ -25,10 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.CommandRegistry;
-import org.springframework.shell.ConfigurableCommandRegistry;
-import org.springframework.shell.MethodTarget;
-import org.springframework.shell.ParameterResolver;
+import org.springframework.shell.*;
 import org.springframework.shell.context.DefaultShellContext;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -56,10 +53,10 @@ public class AbstractCompletionsTests {
 		Method method3 = ReflectionUtils.findMethod(TestCommands.class, "test3");
 		Method method4 = ReflectionUtils.findMethod(TestCommands.class, "test4", String.class);
 
-		MethodTarget methodTarget1 = new MethodTarget(method1, commands, "help");
-		MethodTarget methodTarget2 = new MethodTarget(method2, commands, "help");
-		MethodTarget methodTarget3 = new MethodTarget(method3, commands, "help");
-		MethodTarget methodTarget4 = new MethodTarget(method4, commands, "help");
+		MethodTarget methodTarget1 = MethodTargetFactory.createForAllMethodsWithHelpString(method1, commands, "help");
+		MethodTarget methodTarget2 = MethodTargetFactory.createForAllMethodsWithHelpString(method2, commands, "help");
+		MethodTarget methodTarget3 = MethodTargetFactory.createForAllMethodsWithHelpString(method3, commands, "help");
+		MethodTarget methodTarget4 = MethodTargetFactory.createForAllMethodsWithHelpString(method4, commands, "help");
 
 		commandRegistry.register("test1", methodTarget1);
 		commandRegistry.register("test2", methodTarget2);

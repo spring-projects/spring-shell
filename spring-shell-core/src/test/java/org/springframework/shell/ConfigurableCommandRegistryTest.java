@@ -33,17 +33,17 @@ public class ConfigurableCommandRegistryTest {
 	@Test
 	public void testRegistration() {
 		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(new DefaultShellContext());
-		registry.register("foo", MethodTarget.of("toString", this, new Command.Help("some command")));
+		registry.register("foo", MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("toString", this, new Command.Help("some command")));
 		assertThat(registry.listCommands()).containsKeys("foo");
 	}
 
 	@Test
 	public void testDoubleRegistration() {
 		ConfigurableCommandRegistry registry = new ConfigurableCommandRegistry(new DefaultShellContext());
-		registry.register("foo", MethodTarget.of("toString", this, new Command.Help("some command")));
+		registry.register("foo", MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("toString", this, new Command.Help("some command")));
 
 		assertThatThrownBy(() -> {
-			registry.register("foo", MethodTarget.of("hashCode", this, new Command.Help("some command")));
+			registry.register("foo", MethodTargetFactory.createForUniqueMethodWithoutAvailabilityIndicator("hashCode", this, new Command.Help("some command")));
 		}).isInstanceOf(IllegalArgumentException.class)
 				.hasMessageContaining("foo")
 				.hasMessageContaining("toString")

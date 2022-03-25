@@ -16,8 +16,6 @@
 package org.springframework.shell;
 
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import org.springframework.shell.context.InteractionMode;
@@ -44,18 +42,6 @@ public class MethodTarget implements Command {
 	 */
 	private final Supplier<Availability> availabilityIndicator;
 
-	public MethodTarget(Method method, Object bean, String help) {
-		this(method, bean, new Help(help, null), null);
-	}
-
-	public MethodTarget(Method method, Object bean, String help, Supplier<Availability> availabilityIndicator) {
-		this(method, bean, new Help(help, null), availabilityIndicator);
-	}
-
-	public MethodTarget(Method method, Object bean, Help help, Supplier<Availability> availabilityIndicator) {
-		this(method, bean, help, availabilityIndicator, null);
-	}
-
 	public MethodTarget(Method method, Object bean, Help help, Supplier<Availability> availabilityIndicator, InteractionMode interactionMode) {
 		Assert.notNull(method, "Method cannot be null");
 		Assert.notNull(bean, "Bean cannot be null");
@@ -66,36 +52,6 @@ public class MethodTarget implements Command {
 		this.help = help;
 		this.availabilityIndicator = availabilityIndicator != null ? availabilityIndicator : () -> Availability.available();
 		this.interactionMode = interactionMode;
-	}
-
-	/**
-	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
-	 * in case of overloaded method.
-	 */
-	public static MethodTarget of(String name, Object bean, String description, String group) {
-		return of(name, bean, new Help(description, group));
-	}
-
-	/**
-	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
-	 * in case of overloaded method.
-	 */
-	public static MethodTarget of(String name, Object bean, Help help) {
-		return of(name, bean, help, null);
-	}
-
-	/**
-	 * Construct a MethodTarget for the unique method named {@literal name} on the given object. Fails with an exception
-	 * in case of overloaded method.
-	 */
-	public static MethodTarget of(String name, Object bean, Help help, Supplier<Availability> availabilityIndicator) {
-		Set<Method> found = new HashSet<>();
-		ReflectionUtils.doWithMethods(bean.getClass(), found::add, m -> m.getName().equals(name));
-		if (found.size() != 1) {
-			throw new IllegalArgumentException(String.format("Could not find unique method named '%s' on object of class %s. Found %s",
-				name, bean.getClass(), found));
-		}
-		return new MethodTarget(found.iterator().next(), bean, help, availabilityIndicator);
 	}
 
 	public Method getMethod() {

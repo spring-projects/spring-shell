@@ -16,6 +16,7 @@
 package org.springframework.shell.samples.standard;
 
 import org.springframework.shell.MethodTarget;
+import org.springframework.shell.MethodTargetFactory;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -28,9 +29,9 @@ public class RegisterCommands extends AbstractShellComponent {
 
     @ShellMethod(key = "register add", value = "Register commands", group = "Register Commands")
     public String register() {
-		MethodTarget target1 = MethodTarget.of("dynamic1", pojoMethods, "Dynamic1 command", "Register Commands");
-		MethodTarget target2 = MethodTarget.of("dynamic2", pojoMethods, "Dynamic2 command", "Register Commands");
-		MethodTarget target3 = MethodTarget.of("dynamic3", pojoMethods, "Dynamic3 command", "Register Commands");
+		MethodTarget target1 = MethodTargetFactory.createForUniqueMethodWithoutHelpCommand("dynamic1", pojoMethods, "Dynamic1 command", "Register Commands");
+		MethodTarget target2 = MethodTargetFactory.createForUniqueMethodWithoutHelpCommand("dynamic2", pojoMethods, "Dynamic2 command", "Register Commands");
+		MethodTarget target3 = MethodTargetFactory.createForUniqueMethodWithoutHelpCommand("dynamic3", pojoMethods, "Dynamic3 command", "Register Commands");
 		getCommandRegistry().addCommand("register dynamic1", target1);
 		getCommandRegistry().addCommand("register dynamic2", target2);
 		getCommandRegistry().addCommand("register dynamic3", target3);
