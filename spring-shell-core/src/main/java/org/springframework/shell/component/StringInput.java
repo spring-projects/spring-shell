@@ -27,8 +27,8 @@ import org.jline.utils.AttributedString;
 
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
-import org.springframework.shell.component.support.AbstractTextComponent;
-import org.springframework.shell.component.support.AbstractTextComponent.TextComponentContext;
+import org.springframework.shell.component.support.*;
+import org.springframework.shell.component.support.operation.*;
 import org.springframework.util.StringUtils;
 
 /**
@@ -41,6 +41,14 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	private final String defaultValue;
 	private StringInputContext currentContext;
 	private Character maskCharacter;
+
+	private static final Operation OPERATION_CHARACTER_OBJ = new OperationChar();
+
+	private static final Operation OPERATION_BACKSPACE_OBJ = new OperationBackspace();
+
+	private static final Operation OPERATION_EXIT_OBJ = new OperationExit();
+
+	private static final Operation NO_OPERATION_OBJ = new NoOperation();
 
 	public StringInput(Terminal terminal) {
 		this(terminal, null, null, null);
@@ -83,38 +91,21 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	@Override
 	protected boolean read(BindingReader bindingReader, KeyMap<String> keyMap, StringInputContext context) {
 		String operation = bindingReader.readBinding(keyMap);
-		String input;
+		getAppropriateOperation(operation).read(bindingReader, context);
+		return OPERATION_EXIT.equals(operation);
+	}
+
+	private Operation getAppropriateOperation(String operation) {
 		switch (operation) {
 			case OPERATION_CHAR:
-				String lastBinding = bindingReader.getLastBinding();
-				input = context.getInput();
-				if (input == null) {
-					input = lastBinding;
-				}
-				else {
-					input = input + lastBinding;
-				}
-				context.setInput(input);
-				break;
+				return OPERATION_CHARACTER_OBJ;
 			case OPERATION_BACKSPACE:
-				input = context.getInput();
-				if (StringUtils.hasLength(input)) {
-					input = input.length() > 1 ? input.substring(0, input.length() - 1) : null;
-				}
-				context.setInput(input);
-				break;
+				return OPERATION_BACKSPACE_OBJ;
 			case OPERATION_EXIT:
-				if (StringUtils.hasText(context.getInput())) {
-					context.setResultValue(context.getInput());
-				}
-				else if (context.getDefaultValue() != null) {
-					context.setResultValue(context.getDefaultValue());
-				}
-				return true;
+				return OPERATION_EXIT_OBJ;
 			default:
-				break;
+				return NO_OPERATION_OBJ;
 		}
-		return false;
 	}
 
 	public interface StringInputContext extends TextComponentContext<String, StringInputContext> {
