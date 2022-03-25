@@ -41,7 +41,7 @@ public class TemplateExecutorTests {
 
 			@Override
 			public ThemeSettings getSettings() {
-				return ThemeSettings.themeSettings();
+				return ThemeSettingsFactory.themeSettings();
 			}
 		});
 		themeResolver = new ThemeResolver(themeRegistry, "default");

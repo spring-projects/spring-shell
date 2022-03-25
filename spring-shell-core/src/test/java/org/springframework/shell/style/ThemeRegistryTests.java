@@ -24,7 +24,7 @@ public class ThemeRegistryTests {
 	@Test
 	public void test() {
 		ThemeRegistry registry = new ThemeRegistry();
-		Theme theme = Theme.of("name1", ThemeSettings.themeSettings());
+		Theme theme = Theme.of("name1", ThemeSettingsFactory.themeSettings());
 		registry.register(theme);
 		assertThat(registry.get("name1")).isSameAs(theme);
 		assertThat(registry.get("name2")).isNull();

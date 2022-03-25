@@ -34,7 +34,7 @@ public class ThemeResolverTests {
 
 			@Override
 			public ThemeSettings getSettings() {
-				return ThemeSettings.themeSettings();
+				return ThemeSettingsFactory.themeSettings();
 			}
 		});
 		ThemeResolver themeResolver = new ThemeResolver(themeRegistry, "default");

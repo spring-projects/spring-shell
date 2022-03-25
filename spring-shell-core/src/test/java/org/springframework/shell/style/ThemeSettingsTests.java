@@ -29,7 +29,7 @@ public class ThemeSettingsTests {
 
 	@Test
 	public void testGeneratedStyle() {
-		ThemeSettings themeSettings = ThemeSettings.themeSettings();
+		ThemeSettings themeSettings = ThemeSettingsFactory.themeSettings();
 		String resolveTag = themeSettings.resolveTag(ThemeSettings.TAG_TITLE);
 		assertThat(resolveTag).isEqualTo("bold,fg:bright-white");
 
@@ -56,7 +56,7 @@ public class ThemeSettingsTests {
 			ThemeSettings.TAG_ITEM_SELECTOR,
 			ThemeSettings.TAG_HIGHLIGHT })
 	public void testTags(String tag) {
-		ThemeSettings themeSettings = ThemeSettings.themeSettings();
+		ThemeSettings themeSettings = ThemeSettingsFactory.themeSettings();
 		String resolveTag = themeSettings.resolveTag(ThemeSettings.TAG_TITLE);
 		assertThat(resolveTag).isNotNull();
 	}

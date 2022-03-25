@@ -185,15 +185,6 @@ public abstract class ThemeSettings {
 	}
 
 	/**
-	 * Creates an instance of a default settings.
-	 *
-	 * @return a default theme settings
-	 */
-	public static ThemeSettings themeSettings() {
-		return new DefaultThemeSettings();
-	}
-
-	/**
 	 * Gets all tags.
 	 *
 	 * @return array of all tags
@@ -214,8 +205,5 @@ public abstract class ThemeSettings {
 				TAG_ITEM_SELECTOR,
 				TAG_HIGHLIGHT
 		};
-	}
-
-	private static class DefaultThemeSettings extends ThemeSettings {
 	}
 }

@@ -19,11 +19,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.style.TemplateExecutor;
-import org.springframework.shell.style.Theme;
-import org.springframework.shell.style.ThemeRegistry;
-import org.springframework.shell.style.ThemeResolver;
-import org.springframework.shell.style.ThemeSettings;
+import org.springframework.shell.style.*;
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(SpringShellProperties.class)
@@ -32,7 +28,7 @@ public class ThemingAutoConfiguration {
 	@Bean
 	public ThemeRegistry themeRegistry(ObjectProvider<Theme> themes) {
 		ThemeRegistry registry = new ThemeRegistry();
-		registry.register(Theme.of("default", ThemeSettings.themeSettings()));
+		registry.register(Theme.of("default", ThemeSettingsFactory.themeSettings()));
 		themes.orderedStream().forEachOrdered(registry::register);
 		return registry;
 	}

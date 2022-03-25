@@ -33,11 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.style.TemplateExecutor;
-import org.springframework.shell.style.Theme;
-import org.springframework.shell.style.ThemeRegistry;
-import org.springframework.shell.style.ThemeResolver;
-import org.springframework.shell.style.ThemeSettings;
+import org.springframework.shell.style.*;
 
 import static org.jline.keymap.KeyMap.del;
 
@@ -69,7 +65,7 @@ public abstract class AbstractShellTests {
 
 			@Override
 			public ThemeSettings getSettings() {
-				return ThemeSettings.themeSettings();
+				return ThemeSettingsFactory.themeSettings();
 			}
 		});
 		ThemeResolver themeResolver = new ThemeResolver(themeRegistry, "default");
