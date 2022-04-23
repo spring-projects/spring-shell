@@ -1,11 +1,11 @@
 = Spring Shell Reference Documentation
-Eric Bottard; Janne Valkealahti; Jay Bryant;
+Eric Bottard; Janne Valkealahti; Jay Bryant, Corneil du Plessis;
 :doctype: book
 :hide-uri-scheme:
 :icons: font
 :experimental: // For kbd: macro
+:spring-shell-starter: spring-shell-starter
 
-ifdef::backend-html5[]
 *{projectVersion}*
 
 (C) 2017 - 2022 VMware, Inc.
@@ -15,10 +15,8 @@ others, provided that you do not charge any fee for such copies and further
 provided that each copy contains this Copyright Notice, whether distributed in
 print or electronically._
 
-// ======================================================================================
+include::introduction.adoc[]
 
-include::what-is-spring-shell.adoc[]
+include::getting-started.adoc[]
 
-include::using-spring-shell.adoc[]
-
-// include::extending-spring-shell.adoc[]
+include::using-shell.adoc[]

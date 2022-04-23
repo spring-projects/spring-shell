@@ -1,0 +1,31 @@
+[[native]]
+=== Native Support
+
+Re-work with _2.1.x_ brings in an experimental support for compiling shell application
+into _native_ application with _GraalVM_ and _spring-native_. As underlying _jline_
+library works with _GraalVM_ most of a things should just work.
+
+Project can be compiled with native profile to get sample compiled as an native
+application:
+
+====
+----
+$ ./mvnw clean package -Pnative
+----
+====
+
+You can then run sample either with interactive or non-interactive mode:
+
+====
+----
+$ ./spring-shell-samples/target/spring-shell-samples help
+AVAILABLE COMMANDS
+
+Built-In Commands
+        completion bash: Generate bash completion script
+        help: Display help about available commands.
+        history: Display or save the history of previously run commands
+        script: Read and execute commands from a file.
+...
+----
+====
