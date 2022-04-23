@@ -1,0 +1,16 @@
+=== Interaction Mode
+
+Starting from _2.1.x_ a build-in support has been added to distinguish between interactive
+and non-interactive modes. This has been added so that it's easier to use shell as a
+simple command-line tool without requiring customisation to accomplish that.
+
+Currently interactive mode is entered if any command line options are passed when starting
+or running a shell from a command-line. This especially works well when shell application
+is compiled with <<native>>.
+
+Some commands may not have any usefull meaning if running on interactive mode
+or vice versa on non-interactive mode. For example a build-in `exit` command
+have no meaning in non-interactive mode as it's used to exit interactive mode.
+
+Annotation `@ShellMethod` has a field `interactionMode` which can be used to instruct
+shell when particular command is available.

@@ -1,0 +1,139 @@
+[[built-in-commands]]
+=== Built-In Commands
+
+Any application built by using the `{starter-artifactId}` artifact
+(or, to be more precise, the `spring-shell-standard-commands` dependency) comes with a set of built-in commands.
+You can override or disable these commands individually (see <<overriding-or-disabling-built-in-commands>>).
+However, if they are not overridden or disabled, this section describes their behavior.
+
+[[help-command]]
+==== Help
+
+Running a shell application often implies that the user is in a graphically limited
+environment. Also, while we are nearly always connected in the era of mobile phones,
+accessing a web browser or any other rich UI application (such as a PDF viewer) may not always
+be possible. This is why it is important that the shell commands are correctly self documented, and this is where the `help`
+command comes in.
+
+Typing `help` + `ENTER` lists all the commands known to the shell (including <<dynamic-command-availability,unavailable>> commands)
+and a short description of what they do, similar to the following:
+
+====
+[source]
+----
+shell:>help
+AVAILABLE COMMANDS
+        add: Add numbers together.
+      * authenticate: Authenticate with the system.
+      * blow-up: Blow Everything up.
+        clear: Clear the shell screen.
+        connect: Connect to the system
+        disconnect: Disconnect from the system.
+        exit, quit: Exit the shell.
+        help: Display help about available commands.
+        register module: Register a new module.
+        script: Read and execute commands from a file.
+        stacktrace: Display the full stacktrace of the last error.
+
+Commands marked with (*) are currently unavailable.
+Type `help <command>` to learn more.
+----
+====
+
+Typing `help <command>` shows more detailed information about a command, including the available parameters, their
+type, whether they are mandatory or not, and other details.
+
+The follwoing listing shows the `help` command applied to itself:
+
+====
+----
+shell:>help help
+
+
+NAME
+	help - Display help about available commands.
+
+SYNOPSYS
+	help [[-C] string]
+
+OPTIONS
+	-C or --command  string
+		The command to obtain help for.  [Optional, default = <none>]
+----
+====
+
+==== Clear
+The `clear` command does what you would expect and clears the screen, resetting the prompt
+in the top left corner.
+
+==== Exit
+
+The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
+closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all
+commands to disk, so that they are available again (see <<interacting-with-the-shell>>) on the next launch.
+
+==== Stacktrace
+
+When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
+so as not to overflow the user with too much information.
+There are cases though when understanding what exactly happened is important (especially if the exception has a nested cause).
+
+To this end, Spring Shell remembers the last exception that occurred, and the user can later use the `stacktrace`
+command to print all the details on the console.
+
+[[script-command]]
+==== Script
+
+The `script` command accepts a local file as an argument and replays commands found there, one at a time.
+
+Reading from the file behaves exactly like inside the interactive shell, so lines starting with `//` are considered
+to be comments and are ignored, while lines ending with `\` trigger line continuation.
+
+==== History
+
+The `history` command shows history of a commands which has been executed.
+
+==== Completion
+
+The `completion` command set allows you to create _scripts_ files which can be used
+with am OS shell implementations to provide completion. This is very usefull when
+working with non-interactive mode.
+
+Currently only implementation is for _bash_ which works with `bash` sub-command.
+
+==== Version
+
+The `version` command shows existing _build_ and _git_ info by integrating into
+Boot's `BuildProperties` and `GitProperties` if those exists in a shell app.
+On default only version info is shown and other can be enabled via configuration
+options.
+
+Settings are under `spring.shell.command.version` where you can use `enabled` to
+disable command and optionally define your own template with `template`. Options
+`show-build-artifact`, `show-build-group`, `show-build-name`, `show-build-time`,
+`show-build-version`, `show-git-branch`, `show-git-commit-id`,
+`show-git-short-commit-id` and `show-git-commit-time` can be used to control
+fields in a default template.
+
+Template default to `classpath:template/version-default.st` and you can define
+your own, for example having:
+
+====
+[source]
+----
+<buildVersion>
+----
+====
+
+Which would simply output something like:
+
+====
+[source]
+----
+X.X.X
+----
+====
+
+Attributes added to default template rendering are `buildVersion`, `buildGroup`,
+`buildGroup`, `buildName`, `buildTime`, `gitShortCommitId`, `gitCommitId`,
+`gitBranch` and `gitCommitTime`.

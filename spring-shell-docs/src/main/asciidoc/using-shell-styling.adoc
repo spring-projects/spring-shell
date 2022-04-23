@@ -1,0 +1,49 @@
+[[styling]]
+=== Styling
+
+Starting with _2.1.x_ there is a support for centrally handling styling and theming.
+There is a default theme named _default_ which can be changed using property
+`spring.shell.theme.name`.
+
+To create a new theme register new `Theme` bean with custom `ThemeSettings` where
+you can tweak styles.
+
+====
+[source, java]
+----
+@Configuration
+static class CustomThemeConfig {
+
+	@Bean
+	public Theme myTheme() {
+		return new Theme() {
+			@Override
+			public String getName() {
+				return "mytheme";
+			}
+			@Override
+			public ThemeSettings getSettings() {
+				return new MyThemeSettings();
+			}
+		};
+	}
+}
+
+static class MyThemeSettings extends ThemeSettings {
+}
+----
+====
+
+`ThemeResolver` can be used to resolve styles if you want to create
+_jline_ styled strings programmatically.
+
+====
+[source, java]
+----
+@Autowired
+private ThemeResolver themeResolver;
+
+String resolvedStyle = themeResolver.resolveTag(TAG_TITLE);
+AttributedStyle style = themeResolver.resolveStyle(resolvedStyle);
+----
+====

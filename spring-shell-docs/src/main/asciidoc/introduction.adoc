@@ -1,5 +1,6 @@
-== What is Spring Shell?
+== Introduction
 
+=== What is Spring Shell?
 Not all applications need a fancy web user interface!
 Sometimes, interacting with an application through an interactive terminal is
 the most appropriate way to get things done.

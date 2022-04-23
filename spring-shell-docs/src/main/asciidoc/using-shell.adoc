@@ -1,0 +1,33 @@
+== Using Spring Shell
+This section describes how to use Spring Shell.
+
+[IMPORTANT]
+====
+_Spring Shell 2.1.x_ is a major rework to bring codebase up-to-date with
+existing _Spring Boot_ versions, adding new features and especially
+making it work with _GraalVM_ which makes command-line applications much
+more relevant on a java space. Moving to new major version also allows
+us to clean up codebase and make some needed breaking changes.
+====
+
+include::using-shell-write-command.adoc[]
+
+include::using-shell-invoke-command.adoc[]
+
+include::using-shell-validate-command.adoc[]
+
+include::using-shell-availability.adoc[]
+
+include::using-shell-organize.adoc[]
+
+include::using-shell-built-in.adoc[]
+
+include::using-shell-interaction-mode.adoc[]
+
+include::using-shell-native.adoc[]
+
+include::using-shell-styling.adoc[]
+
+include::using-shell-ui-components.adoc[]
+
+include::using-shell-customize.adoc[]
