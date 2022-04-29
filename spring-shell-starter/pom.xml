@@ -32,10 +32,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-jcommander-adapter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-table</artifactId>
 		</dependency>
 	</dependencies>
