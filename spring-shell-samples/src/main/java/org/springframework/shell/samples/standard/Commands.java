@@ -71,6 +71,11 @@ public class Commands {
 		return a + b + c;
 	}
 
+	@ShellMethod("Concat strings.")
+	public String concat(String a, String b, String c) {
+		return a + b + c;
+	}
+
 	@ShellMethod("Fails with an exception. Shows enum conversion.")
 	public void fail(ElementType elementType) {
 		throw new IllegalArgumentException("You said " + elementType);

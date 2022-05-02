@@ -3,12 +3,11 @@ org.springframework.shell.boot.ShellContextAutoConfiguration,\
 org.springframework.shell.boot.SpringShellAutoConfiguration,\
 org.springframework.shell.boot.ShellRunnerAutoConfiguration,\
 org.springframework.shell.boot.ApplicationRunnerAutoConfiguration,\
-org.springframework.shell.boot.CommandRegistryAutoConfiguration,\
+org.springframework.shell.boot.CommandCatalogAutoConfiguration,\
 org.springframework.shell.boot.LineReaderAutoConfiguration,\
 org.springframework.shell.boot.CompleterAutoConfiguration,\
 org.springframework.shell.boot.JLineAutoConfiguration,\
 org.springframework.shell.boot.JLineShellAutoConfiguration,\
-org.springframework.shell.boot.JCommanderParameterResolverAutoConfiguration,\
 org.springframework.shell.boot.ParameterResolverAutoConfiguration,\
 org.springframework.shell.boot.StandardAPIAutoConfiguration,\
 org.springframework.shell.boot.ThemingAutoConfiguration,\

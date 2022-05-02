@@ -1,0 +1,3 @@
+=== Command Parser
+Before a command can be executed we need to parse commands and options provided by a user. Parsing
+sits between _command registration_ and _command execution_.

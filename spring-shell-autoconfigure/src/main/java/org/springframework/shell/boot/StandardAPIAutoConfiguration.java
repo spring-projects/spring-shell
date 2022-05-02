@@ -18,8 +18,8 @@ package org.springframework.shell.boot;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.MethodTargetRegistrar;
+import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.EnumValueProvider;
 import org.springframework.shell.standard.FileValueProvider;
@@ -35,7 +35,7 @@ import org.springframework.shell.standard.ValueProvider;
 public class StandardAPIAutoConfiguration {
 
 	@Bean
-	public ValueProvider commandValueProvider(CommandRegistry commandRegistry) {
+	public ValueProvider commandValueProvider(CommandCatalog commandRegistry) {
 		return new CommandValueProvider(commandRegistry);
 	}
 

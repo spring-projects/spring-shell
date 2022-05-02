@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.standard.commands;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -37,24 +36,26 @@ import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
-import org.springframework.shell.MethodTarget;
 import org.springframework.shell.ParameterDescription;
 import org.springframework.shell.Utils;
+import org.springframework.shell.command.CommandOption;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.util.StringUtils;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * A command to display help about all available commands.
  *
  * @author Eric Bottard
+ * @author Janne Valkealahti
  */
 @ShellComponent
 public class Help extends AbstractShellComponent {
@@ -116,16 +117,17 @@ public class Help extends AbstractShellComponent {
 	 * Return a description of a specific command. Uses a layout inspired by *nix man pages.
 	 */
 	private CharSequence documentCommand(String command) {
-		MethodTarget methodTarget = getCommandRegistry().listCommands().get(command);
-		if (methodTarget == null) {
+		Map<String, CommandRegistration> registrations = getCommandCatalog().getRegistrations();
+		CommandRegistration registration = registrations.get(command);
+		if (registration == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
 		}
 
 		AttributedStringBuilder result = new AttributedStringBuilder().append("\n\n");
-		List<ParameterDescription> parameterDescriptions = getParameterDescriptions(methodTarget);
+		List<ParameterDescription> parameterDescriptions = getParameterDescriptions(registration);
 
 		// NAME
-		documentCommandName(result, command, methodTarget.getHelp());
+		documentCommandName(result, command, registration.getHelp());
 
 		// SYNOPSYS
 		documentSynopsys(result, command, parameterDescriptions);
@@ -134,10 +136,10 @@ public class Help extends AbstractShellComponent {
 		documentOptions(result, parameterDescriptions);
 
 		// ALSO KNOWN AS
-		documentAliases(result, command, methodTarget);
+		documentAliases(result, command, registrations, registration);
 
 		// AVAILABILITY
-		documentAvailability(result, methodTarget);
+		documentAvailability(result, registration);
 
 		result.append("\n");
 		return result;
@@ -242,12 +244,13 @@ public class Help extends AbstractShellComponent {
 		}
 	}
 
-	private void documentAliases(AttributedStringBuilder result, String command, MethodTarget methodTarget) {
-		Set<String> aliases = getCommandRegistry().listCommands().entrySet().stream()
-				.filter(e -> e.getValue().equals(methodTarget))
-				.map(Map.Entry::getKey)
-				.filter(c -> !command.equals(c))
-				.collect(toCollection(TreeSet::new));
+	private void documentAliases(AttributedStringBuilder result, String command,
+			Map<String, CommandRegistration> registrations, CommandRegistration registration) {
+		List<String> aliases = registrations.entrySet().stream()
+			.filter(e -> e.getValue().equals(registration))
+			.map(Map.Entry::getKey)
+			.filter(c -> !command.equals(c))
+			.collect(Collectors.toList());
 
 		if (!aliases.isEmpty()) {
 			result.append("ALSO KNOWN AS", AttributedStyle.BOLD).append("\n");
@@ -257,8 +260,8 @@ public class Help extends AbstractShellComponent {
 		}
 	}
 
-	private void documentAvailability(AttributedStringBuilder result, MethodTarget methodTarget) {
-		Availability availability = methodTarget.getAvailability();
+	private void documentAvailability(AttributedStringBuilder result, CommandRegistration registration) {
+		Availability availability = registration.getAvailability();
 		if (!availability.isAvailable()) {
 			result.append("CURRENTLY UNAVAILABLE", AttributedStyle.BOLD).append("\n");
 			result.append('\t').append("This command is currently not available because ")
@@ -272,20 +275,21 @@ public class Help extends AbstractShellComponent {
 	}
 
 	private CharSequence listCommands() {
-		Map<String, MethodTarget> commandsByName = getCommandRegistry().listCommands();
-
 		AttributedStringBuilder result = new AttributedStringBuilder();
 		result.append("AVAILABLE COMMANDS\n\n", AttributedStyle.BOLD);
 
-		SortedMap<String, Map<String, MethodTarget>> commandsByGroupAndName = commandsByName.entrySet().stream()
-				.collect(groupingBy(e -> e.getValue().getGroup(), TreeMap::new, // group by and sort by command group
-						toMap(Entry::getKey, Entry::getValue)));
-		// display groups, sorted alphabetically, "Default" first
+		SortedMap<String, Map<String, CommandRegistration>> commandsByGroupAndName = getCommandCatalog().getRegistrations().entrySet().stream()
+			.collect(Collectors.groupingBy(
+				e -> StringUtils.hasText(e.getValue().getGroup()) ? e.getValue().getGroup() : "",
+				TreeMap::new,
+				Collectors.toMap(Entry::getKey, Entry::getValue)
+			));
+
 		commandsByGroupAndName.forEach((group, commandsInGroup) -> {
 			if (showGroups) {
 				result.append("".equals(group) ? "Default" : group, AttributedStyle.BOLD).append('\n');
 			}
-			Map<MethodTarget, SortedSet<String>> commandNamesByMethod = commandsInGroup.entrySet().stream()
+			Map<CommandRegistration, SortedSet<String>> commandNamesByMethod = commandsInGroup.entrySet().stream()
 					.collect(groupingBy(Entry::getValue, // group by command method
 							mapping(Entry::getKey, toCollection(TreeSet::new)))); // sort command names
 			// display commands, sorted alphabetically by their first alias
@@ -304,19 +308,15 @@ public class Help extends AbstractShellComponent {
 			}
 		});
 
-		if (commandsByName.values().stream().distinct().anyMatch(m -> !isAvailable(m))) {
-			result.append("Commands marked with (*) are currently unavailable.\nType `help <command>` to learn more.\n\n");
-		}
-
 		return result;
 	}
 
-	private Comparator<Entry<MethodTarget, SortedSet<String>>> sortByFirstCommandName() {
+	private Comparator<Entry<CommandRegistration, SortedSet<String>>> sortByFirstCommandName() {
 		return Comparator.comparing(e -> e.getValue().first());
 	}
 
-	private boolean isAvailable(MethodTarget methodTarget) {
-		return methodTarget.getAvailability().isAvailable();
+	private boolean isAvailable(CommandRegistration methodTarget) {
+		return true;
 	}
 
 	private void appendUnderlinedFormal(AttributedStringBuilder result, ParameterDescription description) {
@@ -330,12 +330,50 @@ public class Help extends AbstractShellComponent {
 		}
 	}
 
-	private List<ParameterDescription> getParameterDescriptions(MethodTarget methodTarget) {
-		return Utils.createMethodParameters(methodTarget.getMethod())
-				.flatMap(mp -> getParameterResolver().filter(pr -> pr.supports(mp)).limit(1L)
-						.flatMap(pr -> pr.describe(mp)))
-				.collect(Collectors.toList());
+	private List<ParameterDescription> getParameterDescriptions(CommandRegistration registration) {
+		List<CommandOption> options = registration.getOptions();
+		List<ParameterDescription> descriptions = new ArrayList<>();
 
+		for (CommandOption option : options) {
+
+			ParameterDescription description = new ParameterDescription();
+			if (option.getType() != null) {
+				description.type(option.getType().toString());
+				description.formal(option.getType().toClass().getSimpleName());
+			}
+			else {
+				description.formal("");
+			}
+			description.help(option.getDescription());
+			description.mandatoryKey(option.isRequired());
+			if (option.getType() != null && option.getType().isAssignableFrom(boolean.class)) {
+				description.defaultValue("false");
+			}
+			else {
+				description.defaultValue(option.getDefaultValue());
+			}
+
+			List<String> keys = new ArrayList<>();
+			if (option.getLongNames() != null) {
+				for (String ln : option.getLongNames()) {
+					keys.add("--" + ln);
+				}
+			}
+			if (option.getShortNames() != null) {
+				for (Character sn : option.getShortNames()) {
+					keys.add("-" + String.valueOf(sn));
+				}
+			}
+			description.keys(keys);
+
+			descriptions.add(description);
+		}
+
+		// return Utils.createMethodParameters(registration.getTarget().getMethod())
+		// 		.flatMap(mp -> getParameterResolver().filter(pr -> pr.supports(mp)).limit(1L)
+		// 				.flatMap(pr -> pr.describe(mp)))
+		// 		.collect(Collectors.toList());
+		return descriptions;
 	}
 
 	private static class DummyContext implements MessageInterpolator.Context {
@@ -361,5 +399,4 @@ public class Help extends AbstractShellComponent {
 			return null;
 		}
 	}
-
 }

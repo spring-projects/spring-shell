@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.springframework.shell.boot;
 
 import java.util.Set;
 
+import org.jline.terminal.Terminal;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
@@ -27,10 +29,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
 import org.springframework.shell.Shell;
+import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.result.GenericResultHandlerService;
 import org.springframework.shell.result.ResultHandlerConfig;
 
@@ -61,7 +63,7 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	public Shell shell(ResultHandlerService resultHandlerService, CommandRegistry commandRegistry) {
-		return new Shell(resultHandlerService, commandRegistry);
+	public Shell shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal) {
+		return new Shell(resultHandlerService, commandRegistry, terminal);
 	}
 }

@@ -35,14 +35,9 @@ import javax.validation.metadata.ElementDescriptor;
 public class ParameterDescription {
 
 	/**
-	 * The original method parameter this is describing.
-	 */
-	private final MethodParameter parameter;
-
-	/**
 	 * A string representation of the type of the parameter.
 	 */
-	private final String type;
+	private String type;
 
 	/**
 	 * A string representation of the parameter, as it should appear in a parameter list.
@@ -85,15 +80,8 @@ public class ParameterDescription {
 	 */
 	private ElementDescriptor elementDescriptor;
 
-	public ParameterDescription(MethodParameter parameter, String type) {
-		this.parameter = parameter;
+	public void type(String type) {
 		this.type = type;
-		this.formal = type;
-	}
-
-	public static ParameterDescription outOf(MethodParameter parameter) {
-		Class<?> type = parameter.getParameterType();
-		return new ParameterDescription(parameter, Utils.unCamelify(type.getSimpleName()));
 	}
 
 	public ParameterDescription help(String help) {
@@ -171,17 +159,13 @@ public class ParameterDescription {
 		return String.format("%s %s", keys.isEmpty() ? "" : keys().iterator().next(), formal());
 	}
 
-	public MethodParameter parameter() {
-		return parameter;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ParameterDescription that = (ParameterDescription) o;
 		return mandatoryKey == that.mandatoryKey &&
-			Objects.equals(parameter, that.parameter) &&
+			// Objects.equals(parameter, that.parameter) &&
 			Objects.equals(type, that.type) &&
 			Objects.equals(formal, that.formal) &&
 			Objects.equals(defaultValue, that.defaultValue) &&
@@ -192,6 +176,6 @@ public class ParameterDescription {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(parameter, type, formal, defaultValue, defaultValueWhenFlag, keys, mandatoryKey, help);
+		return Objects.hash(type, formal, defaultValue, defaultValueWhenFlag, keys, mandatoryKey, help);
 	}
 }

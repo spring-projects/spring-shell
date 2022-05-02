@@ -4,22 +4,22 @@ NAME
 	first-command - A rather extensive description of some command.
 
 SYNOPSYS
-	first-command [-r]  [-f]  [[-n] int]  [-o] float float float  
+	first-command [[-r] boolean]  [[-f] boolean]  [[-n] int]  [-o] float[]  
 
 OPTIONS
-	-r	Whether to delete recursively
+	-r  boolean
+		Whether to delete recursively
 		[Optional, default = false]
 
-	-f or --force
+	-f  boolean
 		Do not ask for confirmation. YOLO
 		[Optional, default = false]
 
 	-n  int
 		The answer to everything
 		[Optional, default = 42]
-		[must be less than or equal to 5]
 
-	-o  float float float
+	-o  float[]
 		Some other parameters
 		[Mandatory]
 

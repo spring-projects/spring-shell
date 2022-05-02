@@ -1,5 +1,6 @@
 [[uicomponents]]
 === UI Components
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Starting from _2.1.x_ there is a new component model which provides
 easier way to create higher level user interaction for usual use cases
@@ -32,49 +33,18 @@ via code then gives you flexibility to do whatever you need.
 Programmatic way to render is simple as to create a `Function`:
 
 ====
-[source, java]
+[source, java, indent=0]
 ----
-class StringInputCustomRenderer implements Function<StringInputContext, List<AttributedString>> {
-	@Override
-	public List<AttributedString> apply(StringInputContext context) {
-		AttributedStringBuilder builder = new AttributedStringBuilder();
-		builder.append(context.getName());
-		builder.append(" ");
-		if (context.getResultValue() != null) {
-			builder.append(context.getResultValue());
-		}
-		else  {
-			String input = context.getInput();
-			if (StringUtils.hasText(input)) {
-				builder.append(input);
-			}
-			else {
-				builder.append("[Default " + context.getDefaultValue() + "]");
-			}
-		}
-		return Arrays.asList(builder.toAttributedString());
-	}
-}
+include::{snippets}/UiComponentSnippets.java[tag=snippet1]
 ----
 ====
 
 And then hook it with a component:
 
 ====
-[source, java]
+[source, java, indent=0]
 ----
-@ShellMethod(key = "component stringcustom", value = "String input", group = "Components")
-public String stringInputCustom(boolean mask) {
-	StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue",
-			new StringInputCustomRenderer());
-	component.setResourceLoader(getResourceLoader());
-	component.setTemplateExecutor(getTemplateExecutor());
-	if (mask) {
-		component.setMaskCharater('*');
-	}
-	StringInputContext context = component.run(StringInputContext.empty());
-	return "Got value " + context.getResultValue();
-}
+include::{snippets}/UiComponentSnippets.java[tag=snippet2]
 ----
 ====
 
@@ -147,25 +117,12 @@ Used to ask a simple text input from a user, optionally masking values
 if content contains something sensitive.
 
 ====
-[source, java]
+[source, java, indent=0]
 ----
-@ShellComponent
-public class ComponentCommands extends AbstractShellComponent {
-
-	@ShellMethod(key = "component string", value = "String input", group = "Components")
-	public String stringInput(boolean mask) {
-		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
-		component.setResourceLoader(getResourceLoader());
-		component.setTemplateExecutor(getTemplateExecutor());
-		if (mask) {
-			component.setMaskCharater('*');
-		}
-		StringInputContext context = component.run(StringInputContext.empty());
-		return "Got value " + context.getResultValue();
-	}
-}
+include::{snippets}/UiComponentSnippets.java[tag=snippet3]
 ----
 ====
+
 
 image::images/component-text-input-1.svg[text input]
 
@@ -200,20 +157,9 @@ Context object is `StringInputContext`.
 Used to ask a `Path` from a user and gives additional info about a path itself.
 
 ====
-[source, java]
+[source, java, indent=0]
 ----
-@ShellComponent
-public class ComponentCommands extends AbstractShellComponent {
-
-	@ShellMethod(key = "component path", value = "Path input", group = "Components")
-	public String pathInput() {
-		PathInput component = new PathInput(getTerminal(), "Enter value");
-		component.setResourceLoader(getResourceLoader());
-		component.setTemplateExecutor(getTemplateExecutor());
-		PathInputContext context = component.run(PathInputContext.empty());
-		return "Got value " + context.getResultValue();
-	}
-}
+include::{snippets}/UiComponentSnippets.java[tag=snippet4]
 ----
 ====
 
@@ -236,20 +182,9 @@ Used to ask a simple confirmation from a user and essentially is
 yes/no question.
 
 ====
-[source, java]
+[source, java, indent=0]
 ----
-@ShellComponent
-public class ComponentCommands extends AbstractShellComponent {
-
-	@ShellMethod(key = "component confirmation", value = "Confirmation input", group = "Components")
-	public String confirmationInput(boolean no) {
-		ConfirmationInput component = new ConfirmationInput(getTerminal(), "Enter value", !no);
-		component.setResourceLoader(getResourceLoader());
-		component.setTemplateExecutor(getTemplateExecutor());
-		ConfirmationInputContext context = component.run(ConfirmationInputContext.empty());
-		return "Got value " + context.getResultValue();
-	}
-}
+include::{snippets}/UiComponentSnippets.java[tag=snippet5]
 ----
 ====
 
@@ -275,26 +210,9 @@ Used to ask an item from a list and is essentially similar to simple
 dropbox implementation.
 
 ====
-[source, java]
+[source, java, indent=0]
 ----
-@ShellComponent
-public class ComponentCommands extends AbstractShellComponent {
-
-	@ShellMethod(key = "component single", value = "Single selector", group = "Components")
-	public String singleSelector() {
-		List<SelectorItem<String>> items = new ArrayList<>();
-		items.add(SelectorItem.of("key1", "value1"));
-		items.add(SelectorItem.of("key2", "value2"));
-		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-				items, "testSimple", null);
-		component.setResourceLoader(getResourceLoader());
-		component.setTemplateExecutor(getTemplateExecutor());
-		SingleItemSelectorContext<String, SelectorItem<String>> context = component
-				.run(SingleItemSelectorContext.empty());
-		String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
-		return "Got value " + result;
-	}
-}
+include::{snippets}/UiComponentSnippets.java[tag=snippet6]
 ----
 ====
 
@@ -322,29 +240,9 @@ Context object is `SingleItemSelectorContext`.
 Used to ask an items from a list.
 
 ====
-[source, java]
+[source, java, indent=0]
 ----
-@ShellComponent
-public class ComponentCommands extends AbstractShellComponent {
-
-	@ShellMethod(key = "component multi", value = "Multi selector", group = "Components")
-	public String multiSelector() {
-		List<SelectorItem<String>> items = new ArrayList<>();
-		items.add(SelectorItem.of("key1", "value1"));
-		items.add(SelectorItem.of("key2", "value2", false));
-		items.add(SelectorItem.of("key3", "value3"));
-		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
-				items, "testSimple", null);
-		component.setResourceLoader(getResourceLoader());
-		component.setTemplateExecutor(getTemplateExecutor());
-		MultiItemSelectorContext<String, SelectorItem<String>> context = component
-				.run(MultiItemSelectorContext.empty());
-		String result = context.getResultItems().stream()
-				.map(si -> si.getItem())
-				.collect(Collectors.joining(","));
-		return "Got value " + result;
-	}
-}
+include::{snippets}/UiComponentSnippets.java[tag=snippet7]
 ----
 ====
 

@@ -10,7 +10,9 @@ more relevant on a java space. Moving to new major version also allows
 us to clean up codebase and make some needed breaking changes.
 ====
 
-include::using-shell-write-command.adoc[]
+include::using-shell-basics.adoc[]
+
+include::using-shell-define-command.adoc[]
 
 include::using-shell-invoke-command.adoc[]
 

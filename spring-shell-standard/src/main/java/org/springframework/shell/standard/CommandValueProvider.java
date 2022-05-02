@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.core.MethodParameter;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.command.CommandCatalog;
 
 /**
  * A {@link ValueProvider} that can be used to auto-complete names of shell commands.
@@ -31,15 +31,15 @@ import org.springframework.shell.CompletionProposal;
  */
 public class CommandValueProvider extends ValueProviderSupport {
 
-	private final CommandRegistry commandRegistry;
+	private final CommandCatalog commandRegistry;
 
-	public CommandValueProvider(CommandRegistry commandRegistry) {
+	public CommandValueProvider(CommandCatalog commandRegistry) {
 		this.commandRegistry = commandRegistry;
 	}
 
 	@Override
 	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints) {
-		return commandRegistry.listCommands().keySet().stream()
+		return commandRegistry.getRegistrations().keySet().stream()
 			.map(CompletionProposal::new)
 			.collect(Collectors.toList());
 	}

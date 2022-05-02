@@ -15,7 +15,10 @@
  */
 package org.springframework.shell.samples.standard;
 
-import org.springframework.shell.MethodTarget;
+import java.util.function.Function;
+
+import org.springframework.shell.command.CommandContext;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -24,42 +27,90 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class RegisterCommands extends AbstractShellComponent {
 
+	private final static String GROUP = "Register Commands";
 	private final PojoMethods pojoMethods = new PojoMethods();
+	private final CommandRegistration registered1;
+	private final CommandRegistration registered2;
+	private final CommandRegistration registered3;
 
-    @ShellMethod(key = "register add", value = "Register commands", group = "Register Commands")
+	public RegisterCommands() {
+		registered1 = CommandRegistration.builder()
+			.command("register registered1")
+			.group(GROUP)
+			.help("registered1 command")
+			.withTarget()
+				.method(pojoMethods, "registered1")
+				.and()
+			.build();
+		registered2 = CommandRegistration.builder()
+			.command("register registered2")
+			.help("registered2 command")
+			.group(GROUP)
+			.withTarget()
+				.method(pojoMethods, "registered2")
+				.and()
+			.withOption()
+				.longNames("arg1")
+				.and()
+			.build();
+		registered3 = CommandRegistration.builder()
+			.command("register registered3")
+			.help("registered3 command")
+			.group(GROUP)
+			.withTarget()
+				.method(pojoMethods, "registered3")
+				.and()
+			.build();
+	}
+
+    @ShellMethod(key = "register add", value = "Register commands", group = GROUP)
     public String register() {
-		MethodTarget target1 = MethodTarget.of("dynamic1", pojoMethods, "Dynamic1 command", "Register Commands");
-		MethodTarget target2 = MethodTarget.of("dynamic2", pojoMethods, "Dynamic2 command", "Register Commands");
-		MethodTarget target3 = MethodTarget.of("dynamic3", pojoMethods, "Dynamic3 command", "Register Commands");
-		getCommandRegistry().addCommand("register dynamic1", target1);
-		getCommandRegistry().addCommand("register dynamic2", target2);
-		getCommandRegistry().addCommand("register dynamic3", target3);
-		return "Registered commands dynamic1, dynamic2, dynamic3";
+		getCommandCatalog().register(registered1, registered2, registered3);
+		registerFunctionCommand("register registered4");
+		return "Registered commands registered1, registered2, registered3, registered4";
     }
 
-    @ShellMethod(key = "register remove", value = "Deregister commands", group = "Register Commands")
+    @ShellMethod(key = "register remove", value = "Deregister commands", group = GROUP)
     public String deregister() {
-		getCommandRegistry().removeCommand("register dynamic1");
-		getCommandRegistry().removeCommand("register dynamic2");
-		getCommandRegistry().removeCommand("register dynamic3");
-		return "Deregistered commands dynamic1, dynamic2, dynamic3";
+		getCommandCatalog().unregister("register registered1", "register registered2", "register registered3",
+				"register registered4");
+		return "Deregistered commands registered1, registered2, registered3, registered4";
     }
+
+	private void registerFunctionCommand(String command) {
+		Function<CommandContext, String> function = ctx -> {
+			String arg1 = ctx.getOptionValue("arg1");
+			return String.format("hi, arg1 value is '%s'", arg1);
+		};
+		CommandRegistration registration = CommandRegistration.builder()
+			.command(command)
+			.help("registered4 command")
+			.group(GROUP)
+			.withTarget()
+				.function(function)
+				.and()
+			.withOption()
+				.longNames("arg1")
+				.and()
+			.build();
+		getCommandCatalog().register(registration);
+	}
 
 	public static class PojoMethods {
 
 		@ShellMethod
-		public String dynamic1() {
-			return "dynamic1";
+		public String registered1() {
+			return "registered1";
 		}
 
 		@ShellMethod
-		public String dynamic2(String arg1) {
-			return "dynamic2" + arg1;
+		public String registered2(String arg1) {
+			return "registered2" + arg1;
 		}
 
 		@ShellMethod
-		public String dynamic3(@ShellOption(defaultValue = ShellOption.NULL) String arg1) {
-			return "dynamic3" + arg1;
+		public String registered3(@ShellOption(defaultValue = ShellOption.NULL) String arg1) {
+			return "registered3" + arg1;
 		}
 	}
 }

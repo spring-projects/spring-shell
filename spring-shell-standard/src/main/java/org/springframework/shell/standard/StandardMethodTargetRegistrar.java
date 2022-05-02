@@ -26,20 +26,25 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.messaging.handler.invocation.InvocableHandlerMethod;
 import org.springframework.shell.Availability;
-import org.springframework.shell.Command;
-import org.springframework.shell.ConfigurableCommandRegistry;
-import org.springframework.shell.MethodTarget;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.Utils;
+import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandRegistration.Builder;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
-
-import static org.springframework.util.StringUtils.collectionToDelimitedString;
 
 /**
  * The standard implementation of {@link MethodTargetRegistrar} for new shell
@@ -49,12 +54,12 @@ import static org.springframework.util.StringUtils.collectionToDelimitedString;
  * @author Eric Bottard
  * @author Florent Biville
  * @author Camilo Gonzalez
+ * @author Janne Valkealahti
  */
 public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, ApplicationContextAware {
 
+	private final Logger log = LoggerFactory.getLogger(StandardMethodTargetRegistrar.class);
 	private ApplicationContext applicationContext;
-
-	private Map<String, MethodTarget> commands = new HashMap<>();
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
@@ -62,7 +67,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 	}
 
 	@Override
-	public void register(ConfigurableCommandRegistry registry) {
+	public void register(CommandCatalog registry) {
 		Map<String, Object> commandBeans = applicationContext.getBeansWithAnnotation(ShellComponent.class);
 		for (Object bean : commandBeans.values()) {
 			Class<?> clazz = bean.getClass();
@@ -74,11 +79,75 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 				}
 				String group = getOrInferGroup(method);
 				for (String key : keys) {
+					log.debug("Registering with keys='{}' key='{}'", keys, key);
 					Supplier<Availability> availabilityIndicator = findAvailabilityIndicator(keys, bean, method);
-					MethodTarget target = new MethodTarget(method, bean, new Command.Help(shellMapping.value(), group),
-							availabilityIndicator, shellMapping.interactionMode());
-					registry.register(key, target);
-					commands.put(key, target);
+
+					Builder builder = CommandRegistration.builder()
+						.command(key)
+						.group(group)
+						.help(shellMapping.value())
+						.interactionMode(shellMapping.interactionMode())
+						.availability(availabilityIndicator);
+
+					InvocableHandlerMethod ihm = new InvocableHandlerMethod(bean, method);
+					for (MethodParameter mp : ihm.getMethodParameters()) {
+
+						ShellOption so = mp.getParameterAnnotation(ShellOption.class);
+						log.debug("Registering with mp='{}' so='{}'", mp, so);
+						if (so != null) {
+							List<String> longNames = new ArrayList<>();
+							List<Character> shortNames = new ArrayList<>();
+							if (!ObjectUtils.isEmpty(so.value())) {
+								Arrays.asList(so.value()).stream().forEach(o -> {
+									String stripped = StringUtils.trimLeadingCharacter(o, '-');
+									log.debug("Registering o='{}' stripped='{}'", o, stripped);
+									if (o.length() == stripped.length() + 2) {
+										longNames.add(stripped);
+									}
+									else if (o.length() == stripped.length() + 1 && stripped.length() == 1) {
+										shortNames.add(stripped.charAt(0));
+									}
+								});
+							}
+							else {
+								// ShellOption value not defined
+								mp.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
+								String longName = mp.getParameterName();
+								Class<?> parameterType = mp.getParameterType();
+								if (longName != null) {
+									log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
+									longNames.add(longName);
+								}
+							}
+							if (!longNames.isEmpty() || !shortNames.isEmpty()) {
+								log.debug("Registering longNames='{}' shortNames='{}'", longNames, shortNames);
+								builder.withOption()
+									.type(mp.getParameterType())
+									.longNames(longNames.toArray(new String[0]))
+									.shortNames(shortNames.toArray(new Character[0]))
+									.position(mp.getParameterIndex())
+									.description(so.help());
+							}
+						}
+						else {
+							mp.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
+							String longName = mp.getParameterName();
+							Class<?> parameterType = mp.getParameterType();
+							if (longName != null) {
+								log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
+								builder.withOption()
+									.longNames(longName)
+									.type(parameterType)
+									.required()
+									.position(mp.getParameterIndex());
+							}
+						}
+					}
+
+					builder.withTarget().method(bean, method);
+
+					CommandRegistration registration = builder.build();
+					registry.register(registration);
 				}
 			}, method -> method.getAnnotation(ShellMethod.class) != null);
 		}
@@ -189,11 +258,5 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 		else {
 			return null;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + " contributing "
-				+ collectionToDelimitedString(commands.keySet(), ", ", "[", "]");
 	}
 }

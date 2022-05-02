@@ -1,0 +1,15 @@
+[appendix]
+[#appendix-tech-intro]
+== Techical Introduction
+This section contains information for a developers and others who would like to know more about how _spring-shell_
+internally works and what are its design decisions.
+
+include::appendices-techical-intro-registration.adoc[]
+
+include::appendices-techical-intro-parser.adoc[]
+
+include::appendices-techical-intro-execution.adoc[]
+
+include::appendices-techical-intro-commandcontext.adoc[]
+
+include::appendices-techical-intro-commandcatalog.adoc[]

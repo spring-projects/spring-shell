@@ -1,0 +1,14 @@
+[[using-shell-basics]]
+=== Basics
+You are here to learn basics of a _spring shell_. Before going forward to define actual _commands_ and _options_
+lets take this moment to go trough some fundamental concepts of a _spring shell_.
+
+Essentially few things needs to happen before you have a working _spring shell_ app:
+
+- Create a _spring boot_ application
+- Define commands and its option
+- Package an application
+- Execute either interactively or non-interactively
+
+You will get a full working _spring shell_ application without defining any user level commands
+as some basic build-in commands are provided out of a box like `help` and `history`.

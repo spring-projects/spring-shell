@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.result;
 
 import org.jline.terminal.Terminal;
@@ -22,8 +21,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.TerminalSizeAware;
+import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.jline.InteractiveShellRunner;
 
 /**
@@ -57,9 +56,13 @@ public class ResultHandlerConfig {
 	}
 
 	@Bean
-	public ThrowableResultHandler throwableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
-		ObjectProvider<InteractiveShellRunner> interactiveApplicationRunner) {
-		return new ThrowableResultHandler(terminal, commandRegistry, interactiveApplicationRunner);
+	public CommandParserExceptionsExceptionResultHandler commandParserExceptionsExceptionResultHandler(Terminal terminal) {
+		return new CommandParserExceptionsExceptionResultHandler(terminal);
 	}
 
+	@Bean
+	public ThrowableResultHandler throwableResultHandler(Terminal terminal, CommandCatalog commandCatalog,
+		ObjectProvider<InteractiveShellRunner> interactiveApplicationRunner) {
+		return new ThrowableResultHandler(terminal, commandCatalog, interactiveApplicationRunner);
+	}
 }
