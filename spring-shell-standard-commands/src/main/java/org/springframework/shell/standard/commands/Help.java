@@ -92,7 +92,7 @@ public class Help extends AbstractShellComponent {
 	@ShellMethod(value = "Display help about available commands.", prefix = "-")
 	public CharSequence help(
 			@ShellOption(defaultValue = ShellOption.NULL, valueProvider = CommandValueProvider.class, value = { "-C",
-					"--command" }, help = "The command to obtain help for.") String command)
+					"--command" }, help = "The command to obtain help for.", arity = Integer.MAX_VALUE) String command)
 			throws IOException {
 		if (command == null) {
 			return listCommands();

@@ -15,14 +15,14 @@
  */
 package org.springframework.shell.samples.standard;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.command.CommandCatalog.CommandResolver;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandResolver;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -83,7 +83,7 @@ public class ResolvedCommands {
 
 	static class Server1CommandResolver implements CommandResolver {
 
-		private final Map<String, CommandRegistration> registrations = new HashMap<>();
+		private final List<CommandRegistration> registrations = new ArrayList<>();
 		boolean enabled = false;
 
 		Server1CommandResolver() {
@@ -97,18 +97,18 @@ public class ResolvedCommands {
 					})
 					.and()
 				.build();
-			registrations.put("resolve server1 command1", resolved1);
+			registrations.add(resolved1);
 		}
 
 		@Override
-		public Map<String, CommandRegistration> resolve() {
-			return enabled ? registrations : Collections.emptyMap();
+		public List<CommandRegistration> resolve() {
+			return enabled ? registrations : Collections.emptyList();
 		}
 	}
 
 	static class Server2CommandResolver implements CommandResolver {
 
-		private final Map<String, CommandRegistration> registrations = new HashMap<>();
+		private final List<CommandRegistration> registrations = new ArrayList<>();
 		boolean enabled = false;
 
 		Server2CommandResolver() {
@@ -132,13 +132,13 @@ public class ResolvedCommands {
 					})
 					.and()
 				.build();
-			registrations.put("resolve server2 command1", resolved1);
-			registrations.put("resolve server2 command2", resolved2);
+			registrations.add(resolved1);
+			registrations.add(resolved2);
 		}
 
 		@Override
-		public Map<String, CommandRegistration> resolve() {
-			return enabled ? registrations : Collections.emptyMap();
+		public List<CommandRegistration> resolve() {
+			return enabled ? registrations : Collections.emptyList();
 		}
 	}
 }

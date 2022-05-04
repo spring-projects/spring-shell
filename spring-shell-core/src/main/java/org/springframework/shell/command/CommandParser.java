@@ -15,10 +15,12 @@
  */
 package org.springframework.shell.command;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Deque;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -214,20 +216,35 @@ public interface CommandParser {
 				}
 			});
 
-			Map<Integer, CommandOption> collect = options.stream()
+			Deque<ParserResult> queue = new ArrayDeque<>(parserResults.results);
+			options.stream()
 				.filter(o -> o.getPosition() > -1)
-				.collect(Collectors.toMap(o -> o.getPosition(), o -> o));
-			for (int i = 0; i < parserResults.results.size(); i++) {
-				ParserResult pr = parserResults.results.get(i);
-				if (pr.option == null) {
-					CommandOption mapped = collect.get(i);
-					if (mapped != null) {
-						// TODO: should have and handle arity
-						results.add(new DefaultCommandParserResult(mapped, pr.args.get(0)));
-						requiredOptions.remove(mapped);
+				.sorted(Comparator.comparingInt(o -> o.getPosition()))
+				.forEach(o -> {
+					int arityMin = o.getArityMin();
+					int arityMax = o.getArityMax();
+					List<String> oargs = new ArrayList<>();
+					if (arityMin > -1) {
+						for (int i = 0; i < arityMax; i++) {
+							ParserResult pop = null;
+							if (!queue.isEmpty()) {
+								pop = queue.pop();
+							}
+							else {
+								break;
+							}
+							if (pop != null && pop.option == null) {
+								if (!pop.args.isEmpty()) {
+									oargs.add(pop.args.stream().collect(Collectors.joining(" ")));
+								}
+							}
+						}
 					}
-				}
-			}
+					if (!oargs.isEmpty()) {
+						results.add(new DefaultCommandParserResult(o, oargs.stream().collect(Collectors.joining(" "))));
+						requiredOptions.remove(o);
+					}
+				});
 
 			requiredOptions.stream().forEach(o -> {
 				String ln = o.getLongNames() != null ? Stream.of(o.getLongNames()).collect(Collectors.joining(",")) : "";
@@ -348,34 +365,51 @@ public interface CommandParser {
 			}
 
 			private ConvertArgumentsHolder convertArguments(CommandOption option, List<String> arguments) {
+				Object value = null;
+				List<String> unmapped = new ArrayList<>();
+
 				ResolvableType type = option.getType();
+				int arityMin = option.getArityMin();
+				int arityMax = option.getArityMax();
+
+				if (arityMin < 0 && type != null) {
+					if (type.isAssignableFrom(boolean.class)) {
+						arityMin = 1;
+						arityMax = 1;
+					}
+				}
+
 				if (type != null && type.isAssignableFrom(boolean.class)) {
 					if (arguments.size() == 0) {
-						return ConvertArgumentsHolder.of(true);
+						value = true;
 					}
 					else {
-						return ConvertArgumentsHolder.of(Boolean.parseBoolean(arguments.get(0)));
+						value = Boolean.parseBoolean(arguments.get(0));
 					}
 				}
 				else if (type != null && type.isArray()) {
-					return ConvertArgumentsHolder.of(arguments.stream().collect(Collectors.toList()).toArray());
+					value = arguments.stream().collect(Collectors.toList()).toArray();
 				}
 				else {
-					if (arguments.isEmpty()) {
-						return ConvertArgumentsHolder.of();
-					}
-					else {
-						if (arguments.size() == 0) {
-							return ConvertArgumentsHolder.of();
-						}
-						else if (arguments.size() == 1) {
-							return ConvertArgumentsHolder.of(arguments.get(0));
+					if (!arguments.isEmpty()) {
+						if (arguments.size() == 1) {
+							value = arguments.get(0);
 						}
 						else {
-							return ConvertArgumentsHolder.of(arguments.get(0), arguments.subList(1, arguments.size()));
+							if (arityMax > 0) {
+								int limit = Math.min(arguments.size(), arityMax);
+								value = arguments.stream().limit(limit).collect(Collectors.joining(" "));
+								unmapped.addAll(arguments.subList(limit, arguments.size()));
+							}
+							else {
+								value = arguments.get(0);
+								unmapped.addAll(arguments.subList(1, arguments.size()));
+							}
 						}
 					}
 				}
+
+				return ConvertArgumentsHolder.of(value, unmapped);
 			}
 
 			private static class ConvertArgumentsHolder {
@@ -387,14 +421,6 @@ public interface CommandParser {
 					if (unmapped != null) {
 						this.unmapped.addAll(unmapped);
 					}
-				}
-
-				static ConvertArgumentsHolder of() {
-					return new ConvertArgumentsHolder(null, null);
-				}
-
-				static ConvertArgumentsHolder of(Object value) {
-					return new ConvertArgumentsHolder(value, null);
 				}
 
 				static ConvertArgumentsHolder of(Object value, List<String> unmapped) {

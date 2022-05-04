@@ -18,6 +18,7 @@ package org.springframework.shell.command;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.core.ResolvableType;
+import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.TargetInfo.TargetType;
 import org.springframework.shell.context.InteractionMode;
 
@@ -41,7 +42,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getGroup()).isNull();
 		assertThat(registration.getInteractionMode()).isEqualTo(InteractionMode.ALL);
 
@@ -65,7 +66,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 
 		registration = CommandRegistration.builder()
 			.command("command1", "command2")
@@ -73,7 +74,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1", "command2");
+		assertThat(registration.getCommand()).isEqualTo("command1 command2");
 
 		registration = CommandRegistration.builder()
 			.command("command1 command2")
@@ -81,7 +82,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1", "command2");
+		assertThat(registration.getCommand()).isEqualTo("command1 command2");
 
 		registration = CommandRegistration.builder()
 			.command(" command1  command2 ")
@@ -89,7 +90,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1", "command2");
+		assertThat(registration.getCommand()).isEqualTo("command1 command2");
 	}
 
 	@Test
@@ -161,7 +162,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getHelp()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getLongNames()).containsExactly("arg1");
@@ -180,7 +181,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.method(pojo1, "method3", String.class)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getHelp()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 	}
@@ -199,7 +200,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getHelp()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('v');
@@ -221,7 +222,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getHelp()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('v');
@@ -293,7 +294,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getHelp()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getDefaultValue()).isEqualTo("defaultValue");
@@ -314,9 +315,43 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getCommands()).containsExactly("command1");
+		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getOptions()).hasSize(2);
 		assertThat(registration.getOptions().get(0).getPosition()).isEqualTo(1);
 		assertThat(registration.getOptions().get(1).getPosition()).isEqualTo(-1);
 	}
+
+	@Test
+	public void testArityViaInts() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.arity(0, 0)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+			assertThat(registration.getOptions()).hasSize(1);
+			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(0);
+		}
+
+	@Test
+	public void testArityViaEnum() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.arity(OptionArity.ZERO)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+			assertThat(registration.getOptions()).hasSize(1);
+			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(0);
+		}
 }

@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
+import org.springframework.shell.command.CommandRegistration.OptionArity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -104,6 +105,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 				.longNames("arg1")
 				.description("some arg1")
 				.position(0)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withTarget()
 				.method(pojo1, "method4")
@@ -141,6 +143,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 				.longNames("arg1")
 				.description("some arg1")
 				.position(0)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withTarget()
 				.method(pojo1, "method4")
@@ -149,6 +152,26 @@ public class CommandExecutionTests extends AbstractCommandTests {
 		execution.evaluate(r1, new String[]{"myarg1value1", "myarg1value2"});
 		assertThat(pojo1.method4Count).isEqualTo(1);
 		assertThat(pojo1.method4Arg1).isEqualTo("myarg1value1");
+	}
+
+	@Test
+	public void testMethodMultiPositionalArgsAll() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.help("help")
+			.withOption()
+				.longNames("arg1")
+				.description("some arg1")
+				.position(0)
+				.arity(OptionArity.ONE_OR_MORE)
+				.and()
+			.withTarget()
+				.method(pojo1, "method4")
+				.and()
+			.build();
+		execution.evaluate(r1, new String[]{"myarg1value1", "myarg1value2"});
+		assertThat(pojo1.method4Count).isEqualTo(1);
+		assertThat(pojo1.method4Arg1).isEqualTo("myarg1value1 myarg1value2");
 	}
 
 	@Test
@@ -219,16 +242,19 @@ public class CommandExecutionTests extends AbstractCommandTests {
 				.longNames("arg1")
 				.description("some arg1")
 				.position(0)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withOption()
 				.longNames("arg2")
 				.description("some arg2")
 				.position(1)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withOption()
 				.longNames("arg3")
 				.description("some arg3")
 				.position(2)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withTarget()
 				.method(pojo1, "method6")
@@ -256,16 +282,19 @@ public class CommandExecutionTests extends AbstractCommandTests {
 				.longNames("arg1")
 				.description("some arg1")
 				.position(0)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withOption()
 				.longNames("arg2")
 				.description("some arg2")
 				.position(1)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withOption()
 				.longNames("arg3")
 				.description("some arg3")
 				.position(2)
+				.arity(OptionArity.EXACTLY_ONE)
 				.and()
 			.withTarget()
 				.method(pojo1, "method6")

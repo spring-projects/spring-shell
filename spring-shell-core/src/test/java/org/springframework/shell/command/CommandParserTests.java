@@ -81,6 +81,21 @@ public class CommandParserTests extends AbstractCommandTests {
 	}
 
 	@Test
+	public void testMultipleArgsWithMultiValues() {
+		CommandOption option1 = longOption("arg1", null, false, null, 1, 2);
+		CommandOption option2 = longOption("arg2", null, false, null, 1, 2);
+		List<CommandOption> options = Arrays.asList(option1, option2);
+		String[] args = new String[]{"--arg1", "foo1", "foo2", "--arg2", "bar1", "bar2"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(2);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo("foo1 foo2");
+		assertThat(results.results().get(1).option()).isSameAs(option2);
+		assertThat(results.results().get(1).value()).isEqualTo("bar1 bar2");
+		assertThat(results.positional()).isEmpty();
+	}
+
+	@Test
 	public void testBooleanWithoutArg() {
 		ResolvableType type = ResolvableType.forType(boolean.class);
 		CommandOption option1 = shortOption('v', type);
@@ -170,18 +185,29 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.positional()).containsExactly("foo");
 	}
 
-	// TODO: test for missing arity functionality
-	// @Test
-	// public void testNonMappedArgWithoutOption() {
-	// 	CommandOption option1 = longOption("arg1", true, 0);
-	// 	List<CommandOption> options = Arrays.asList(option1);
-	// 	String[] args = new String[]{"value", "foo"};
-	// 	CommandParserResults results = parser.parse(options, args);
-	// 	assertThat(results.results()).hasSize(1);
-	// 	assertThat(results.results().get(0).option()).isSameAs(option1);
-	// 	assertThat(results.results().get(0).value()).isEqualTo("value foo");
-	// 	assertThat(results.positional()).containsExactly("value", "foo");
-	// }
+	@Test
+	public void testNonMappedArgWithoutOption() {
+		CommandOption option1 = longOption("arg1", 0, 1, 2);
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"value", "foo"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo("value foo");
+		assertThat(results.positional()).containsExactly("value", "foo");
+	}
+
+	@Test
+	public void testNonMappedArgWithoutOptionHavingType() {
+		CommandOption option1 = longOption("arg1", ResolvableType.forType(String.class), false, 0, 1, 2);
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"value", "foo"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo("value foo");
+		assertThat(results.positional()).containsExactly("value", "foo");
+	}
 
 	@Test
 	public void testShortOptionsCombined() {
@@ -268,8 +294,8 @@ public class CommandParserTests extends AbstractCommandTests {
 
 	@Test
 	public void testMapPositionalArgs1() {
-		CommandOption option1 = longOption("arg1", false, 0);
-		CommandOption option2 = longOption("arg2", false, 1);
+		CommandOption option1 = longOption("arg1", 0, 1, 1);
+		CommandOption option2 = longOption("arg2", 1, 1, 2);
 		List<CommandOption> options = Arrays.asList(option1, option2);
 		String[] args = new String[]{"--arg1", "1", "2"};
 		CommandParserResults results = parser.parse(options, args);
@@ -282,8 +308,8 @@ public class CommandParserTests extends AbstractCommandTests {
 
 	@Test
 	public void testMapPositionalArgs2() {
-		CommandOption option1 = longOption("arg1", false, 0);
-		CommandOption option2 = longOption("arg2", false, 1);
+		CommandOption option1 = longOption("arg1", 0, 1, 1);
+		CommandOption option2 = longOption("arg2", 1, 1, 2);
 		List<CommandOption> options = Arrays.asList(option1, option2);
 		String[] args = new String[]{"1", "2"};
 		CommandParserResults results = parser.parse(options, args);
@@ -306,12 +332,17 @@ public class CommandParserTests extends AbstractCommandTests {
 		return longOption(name, type, false, null);
 	}
 
-	private static CommandOption longOption(String name, boolean required, int position) {
-		return longOption(name, null, required, position);
+	private static CommandOption longOption(String name, int position, int arityMin, int arityMax) {
+		return longOption(name, null, false, position, arityMin, arityMax);
 	}
 
 	private static CommandOption longOption(String name, ResolvableType type, boolean required, Integer position) {
-		return CommandOption.of(new String[] { name }, new Character[0], "desc", type, required, null, position);
+		return longOption(name, type, required, position, null, null);
+	}
+
+	private static CommandOption longOption(String name, ResolvableType type, boolean required, Integer position, Integer arityMin, Integer arityMax) {
+		return CommandOption.of(new String[] { name }, new Character[0], "desc", type, required, null, position,
+				arityMin, arityMax);
 	}
 
 	private static CommandOption shortOption(char name) {

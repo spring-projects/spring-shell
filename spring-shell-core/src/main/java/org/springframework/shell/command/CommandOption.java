@@ -74,6 +74,20 @@ public interface CommandOption {
 	int getPosition();
 
 	/**
+	 * Gets a minimum arity.
+	 *
+	 * @return the minimum arity
+	 */
+	int getArityMin();
+
+	/**
+	 * Gets a maximum arity.
+	 *
+	 * @return the maximum arity
+	 */
+	int getArityMax();
+
+	/**
 	 * Gets an instance of a default {@link CommandOption}.
 	 *
 	 * @param longNames the long names
@@ -82,7 +96,7 @@ public interface CommandOption {
 	 * @return default command option
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description) {
-		return of(longNames, shortNames, description, null, false, null, null);
+		return of(longNames, shortNames, description, null, false, null, null, null, null);
 	}
 
 	/**
@@ -96,7 +110,7 @@ public interface CommandOption {
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
 			ResolvableType type) {
-		return of(longNames, shortNames, description, type, false, null, null);
+		return of(longNames, shortNames, description, type, false, null, null, null, null);
 	}
 
 	/**
@@ -109,11 +123,14 @@ public interface CommandOption {
 	 * @param required the required flag
 	 * @param defaultValue the default value
 	 * @param position the position value
+	 * @param arityMin the min arity
+	 * @param arityMax the max arity
 	 * @return default command option
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
-			ResolvableType type, boolean required, String defaultValue, Integer position) {
-		return new DefaultCommandOption(longNames, shortNames, description, type, required, defaultValue, position);
+			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin, Integer arityMax) {
+		return new DefaultCommandOption(longNames, shortNames, description, type, required, defaultValue, position,
+				arityMin, arityMax);
 	}
 
 	/**
@@ -128,9 +145,12 @@ public interface CommandOption {
 		private boolean required;
 		private String defaultValue;
 		private int position;
+		private int arityMin;
+		private int arityMax;
 
 		public DefaultCommandOption(String[] longNames, Character[] shortNames, String description,
-				ResolvableType type, boolean required, String defaultValue, Integer position) {
+				ResolvableType type, boolean required, String defaultValue, Integer position,
+				Integer arityMin, Integer arityMax) {
 			this.longNames = longNames != null ? longNames : new String[0];
 			this.shortNames = shortNames != null ? shortNames : new Character[0];
 			this.description = description;
@@ -138,6 +158,8 @@ public interface CommandOption {
 			this.required = required;
 			this.defaultValue = defaultValue;
 			this.position = position != null && position > -1 ? position : -1 ;
+			this.arityMin = arityMin != null ? arityMin : -1;
+			this.arityMax = arityMax != null ? arityMax : -1;
 		}
 
 		@Override
@@ -173,6 +195,16 @@ public interface CommandOption {
 		@Override
 		public int getPosition() {
 			return position;
+		}
+
+		@Override
+		public int getArityMin() {
+			return arityMin;
+		}
+
+		@Override
+		public int getArityMax() {
+			return arityMax;
 		}
 	}
 }

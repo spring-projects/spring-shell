@@ -15,13 +15,11 @@
  */
 package org.springframework.shell.command;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
-
-import org.springframework.shell.command.CommandCatalog.CommandResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,10 +61,10 @@ public class CommandCatalogTests extends AbstractCommandTests {
 		boolean enabled = true;
 
 		@Override
-		public Map<String, CommandRegistration> resolve() {
-			HashMap<String, CommandRegistration> regs = new HashMap<>();
+		public List<CommandRegistration> resolve() {
+			List<CommandRegistration> regs = new ArrayList<>();
 			if (enabled) {
-				regs.put("group1 sub1", r1);
+				regs.add(r1);
 			}
 			return regs;
 		}

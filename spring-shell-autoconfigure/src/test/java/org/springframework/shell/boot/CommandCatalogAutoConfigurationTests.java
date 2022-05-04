@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.CommandCatalog.CommandResolver;
+import org.springframework.shell.command.CommandResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -73,7 +73,7 @@ public class CommandCatalogAutoConfigurationTests {
 
 		@Bean
 		CommandResolver customCommandResolver() {
-			return () -> Collections.emptyMap();
+			return () -> Collections.emptyList();
 		}
 	}
 

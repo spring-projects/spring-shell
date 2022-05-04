@@ -16,17 +16,15 @@
 package org.springframework.shell.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
-import org.springframework.util.StringUtils;
 
 /**
  * Interface defining contract to handle existing {@link CommandRegistration}s.
@@ -58,41 +56,11 @@ public interface CommandCatalog {
 
 	/**
 	 * Gets all {@link CommandRegistration}s mapped with their names.
+	 * Returned map is a copy and cannot be used to register new commands.
 	 *
 	 * @return all command registrations
 	 */
 	Map<String, CommandRegistration> getRegistrations();
-
-	/**
-	 * Interface to resolve currently existing commands. It is useful to have fully
-	 * dynamic set of commands which may exists only if some conditions in a running
-	 * shell are met. For example if shell is targeting arbitrary server environment
-	 * some commands may or may not exist depending on a runtime state.
-	 */
-	@FunctionalInterface
-	interface CommandResolver {
-
-		/**
-		 * Resolve a map of commands.
-		 *
-		 * @return a map of commands
-		 */
-		Map<String, CommandRegistration> resolve();
-	}
-
-	/**
-	 * Interface to customize a {@link CommandCatalog}.
-	 */
-	@FunctionalInterface
-	interface CommandCatalogCustomizer {
-
-		/**
-		 * Customize a command catalog.
-		 *
-		 * @param commandCatalog a command catalog
-		 */
-		void customize(CommandCatalog commandCatalog);
-	}
 
 	/**
 	 * Gets an instance of a default {@link CommandCatalog}.
@@ -119,7 +87,7 @@ public interface CommandCatalog {
 	 */
 	static class DefaultCommandCatalog implements CommandCatalog {
 
-		private final HashMap<String, CommandRegistration> commandRegistrations = new HashMap<>();
+		private final Map<String, CommandRegistration> commandRegistrations = new HashMap<>();
 		private final Collection<CommandResolver> resolvers = new ArrayList<>();
 		private final ShellContext shellContext;
 
@@ -133,7 +101,7 @@ public interface CommandCatalog {
 		@Override
 		public void register(CommandRegistration... registration) {
 			for (CommandRegistration r : registration) {
-				String commandName = commandName(r.getCommands());
+				String commandName = r.getCommand();
 				commandRegistrations.put(commandName, r);
 			}
 		}
@@ -141,7 +109,7 @@ public interface CommandCatalog {
 		@Override
 		public void unregister(CommandRegistration... registration) {
 			for (CommandRegistration r : registration) {
-				String commandName = commandName(r.getCommands());
+				String commandName = r.getCommand();
 				commandRegistrations.remove(commandName);
 			}
 		}
@@ -155,35 +123,46 @@ public interface CommandCatalog {
 
 		@Override
 		public Map<String, CommandRegistration> getRegistrations() {
-			HashMap<String, CommandRegistration> regs = new HashMap<>();
+			Map<String, CommandRegistration> regs = new HashMap<>();
 			regs.putAll(commandRegistrations);
 			for (CommandResolver resolver : resolvers) {
-				regs.putAll(resolver.resolve());
+				resolver.resolve().stream().forEach(r -> {
+					regs.put(r.getCommand(), r);
+				});
 			}
 			return regs.entrySet().stream()
-				.filter(e -> {
-					InteractionMode mim = e.getValue().getInteractionMode();
-					InteractionMode cim = shellContext != null ? shellContext.getInteractionMode() : InteractionMode.ALL;
-					if (mim == null || cim == null || mim == InteractionMode.ALL) {
-						return true;
-					}
-					else if (mim == InteractionMode.INTERACTIVE) {
-						return cim == InteractionMode.INTERACTIVE || cim == InteractionMode.ALL;
-					}
-					else if (mim == InteractionMode.NONINTERACTIVE) {
-						return cim == InteractionMode.NONINTERACTIVE || cim == InteractionMode.ALL;
-					}
-					return true;
-				})
+				.filter(filterByInteractionMode(shellContext))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		}
 
-		private static String commandName(String[] commands) {
-			return Arrays.asList(commands).stream()
-				.flatMap(c -> Stream.of(c.split(" ")))
-				.filter(c -> StringUtils.hasText(c))
-				.map(c -> c.trim())
-				.collect(Collectors.joining(" "));
+		/**
+		 * Filter registration entries by currently set mode. Having it set to ALL or null
+		 * effectively disables filtering as as we only care if mode is set to interactive
+		 * or non-interactive.
+		 */
+		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(ShellContext shellContext) {
+			return e -> {
+				InteractionMode mim = e.getValue().getInteractionMode();
+				InteractionMode cim = shellContext != null ? shellContext.getInteractionMode() : InteractionMode.ALL;
+				if (mim == null || cim == null || mim == InteractionMode.ALL) {
+					return true;
+				}
+				else if (mim == InteractionMode.INTERACTIVE) {
+					return cim == InteractionMode.INTERACTIVE || cim == InteractionMode.ALL;
+				}
+				else if (mim == InteractionMode.NONINTERACTIVE) {
+					return cim == InteractionMode.NONINTERACTIVE || cim == InteractionMode.ALL;
+				}
+				return true;
+			};
 		}
+
+		// private static String commandName(String[] commands) {
+		// 	return Arrays.asList(commands).stream()
+		// 		.flatMap(c -> Stream.of(c.split(" ")))
+		// 		.filter(c -> StringUtils.hasText(c))
+		// 		.map(c -> c.trim())
+		// 		.collect(Collectors.joining(" "));
+		// }
 	}
 }

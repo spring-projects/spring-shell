@@ -39,7 +39,6 @@ import org.springframework.shell.command.CommandExecution.CommandExecutionExcept
 import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.completion.CompletionResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * Main class implementing a shell loop.
@@ -149,8 +148,7 @@ public class Shell {
 
 			Optional<CommandRegistration> commandRegistration = commandRegistry.getRegistrations().values().stream()
 				.filter(r -> {
-					String c = StringUtils.arrayToDelimitedString(r.getCommands(), " ");
-					return c.equals(command);
+					return r.getCommand().equals(command);
 				})
 				.findFirst();
 
@@ -252,11 +250,10 @@ public class Shell {
 		int lastWordStart = prefix.lastIndexOf(' ') + 1;
 		return commandRegistry.getRegistrations().values().stream()
 			.filter(r -> {
-				String c = StringUtils.arrayToDelimitedString(r.getCommands(), " ");
-				return c.startsWith(prefix);
+				return r.getCommand().startsWith(prefix);
 			})
 			.map(r -> {
-				String c = StringUtils.arrayToDelimitedString(r.getCommands(), " ");
+				String c = r.getCommand();
 				c = c.substring(lastWordStart);
 				return toCommandProposal(c, r);
 			})

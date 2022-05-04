@@ -43,11 +43,11 @@ import org.springframework.util.StringUtils;
 public interface CommandRegistration {
 
 	/**
-	 * Gets an array of commands for this registration.
+	 * Gets a command for this registration.
 	 *
-	 * @return array of commands
+	 * @return command
 	 */
-	String[] getCommands();
+	String getCommand();
 
 	/**
 	 * Gets an {@link InteractionMode}.
@@ -177,11 +177,36 @@ public interface CommandRegistration {
 		OptionSpec position(Integer position);
 
 		/**
+		 * Define an {@code arity} for an option.
+		 *
+		 * @param min the min arity
+		 * @param max the max arity
+		 * @return option spec for chaining
+		 */
+		OptionSpec arity(int min, int max);
+
+		/**
+		 * Define an {@code arity} for an option.
+		 *
+		 * @param arity the arity
+		 * @return option spec for chaining
+		 */
+		OptionSpec arity(OptionArity arity);
+
+		/**
 		 * Return a builder for chaining.
 		 *
 		 * @return a builder for chaining
 		 */
 		Builder and();
+	}
+
+	public enum OptionArity {
+		ZERO,
+		ZERO_OR_ONE,
+		EXACTLY_ONE,
+		ZERO_OR_MORE,
+		ONE_OR_MORE
 	}
 
 	/**
@@ -413,6 +438,8 @@ public interface CommandRegistration {
 		private boolean required;
 		private String defaultValue;
 		private Integer position;
+		private Integer arityMin;
+		private Integer arityMax;
 
 		DefaultOptionSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -466,6 +493,46 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public OptionSpec arity(int min, int max) {
+			Assert.isTrue(min > -1, "arity min must be 0 or more");
+			Assert.isTrue(max >= min, "arity max must be equal more than min");
+			this.arityMin = min;
+			this.arityMax = max;
+			return this;
+		}
+
+		@Override
+		public OptionSpec arity(OptionArity arity) {
+			switch (arity) {
+				case ZERO:
+					this.arityMin = 0;
+					this.arityMax = 0;
+					break;
+				case ZERO_OR_ONE:
+					this.arityMin = 0;
+					this.arityMax = Integer.MAX_VALUE;
+					break;
+				case EXACTLY_ONE:
+					this.arityMin = 1;
+					this.arityMax = 1;
+					break;
+				case ZERO_OR_MORE:
+					this.arityMin = 0;
+					this.arityMax = Integer.MAX_VALUE;
+					break;
+				case ONE_OR_MORE:
+					this.arityMin = 1;
+					this.arityMax = Integer.MAX_VALUE;
+					break;
+				default:
+					this.arityMin = 0;
+					this.arityMax = 0;
+					break;
+			}
+			return this;
+		}
+
+		@Override
 		public Builder and() {
 			return builder;
 		}
@@ -496,6 +563,14 @@ public interface CommandRegistration {
 
 		public Integer getPosition() {
 			return position;
+		}
+
+		public Integer getArityMin() {
+			return arityMin;
+		}
+
+		public Integer getArityMax() {
+			return arityMax;
 		}
 	}
 
@@ -546,7 +621,7 @@ public interface CommandRegistration {
 
 	static class DefaultCommandRegistration implements CommandRegistration {
 
-		private String[] commands;
+		private String command;
 		private InteractionMode interactionMode;
 		private String help;
 		private String group;
@@ -558,7 +633,7 @@ public interface CommandRegistration {
 		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String help,
 				String group, String description, Supplier<Availability> availability,
 				List<DefaultOptionSpec> optionSpecs, DefaultTargetSpec targetSpec) {
-			this.commands = commands;
+			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.help = help;
 			this.group = group;
@@ -569,8 +644,8 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public String[] getCommands() {
-			return commands;
+		public String getCommand() {
+			return command;
 		}
 
 		@Override
@@ -602,7 +677,7 @@ public interface CommandRegistration {
 		public List<CommandOption> getOptions() {
 			return optionSpecs.stream()
 				.map(o -> CommandOption.of(o.getLongNames(), o.getShortNames(), o.getDescription(), o.getType(),
-						o.isRequired(), o.getDefaultValue(), o.getPosition()))
+						o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax()))
 				.collect(Collectors.toList());
 		}
 
@@ -618,6 +693,14 @@ public interface CommandRegistration {
 				return TargetInfo.of(targetSpec.consumer);
 			}
 			throw new IllegalArgumentException("No bean, function or consumer defined");
+		}
+
+		private static String commandArrayToName(String[] commands) {
+			return Arrays.asList(commands).stream()
+				.flatMap(c -> Stream.of(c.split(" ")))
+				.filter(c -> StringUtils.hasText(c))
+				.map(c -> c.trim())
+				.collect(Collectors.joining(" "));
 		}
 	}
 

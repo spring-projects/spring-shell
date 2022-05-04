@@ -41,6 +41,7 @@ import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.Builder;
+import org.springframework.shell.command.CommandRegistration.OptionSpec;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
@@ -121,12 +122,15 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 							}
 							if (!longNames.isEmpty() || !shortNames.isEmpty()) {
 								log.debug("Registering longNames='{}' shortNames='{}'", longNames, shortNames);
-								builder.withOption()
+								OptionSpec optionSpec = builder.withOption()
 									.type(mp.getParameterType())
 									.longNames(longNames.toArray(new String[0]))
 									.shortNames(shortNames.toArray(new Character[0]))
 									.position(mp.getParameterIndex())
 									.description(so.help());
+								if (so.arity() > -1) {
+									optionSpec.arity(0, so.arity());
+								}
 							}
 						}
 						else {

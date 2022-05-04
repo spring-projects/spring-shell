@@ -24,9 +24,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.CommandCatalog.CommandCatalogCustomizer;
-import org.springframework.shell.command.CommandCatalog.CommandResolver;
+import org.springframework.shell.command.CommandResolver;
 
 @Configuration(proxyBeanMethods = false)
 public class CommandCatalogAutoConfiguration {

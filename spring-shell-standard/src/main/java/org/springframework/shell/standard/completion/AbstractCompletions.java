@@ -41,7 +41,6 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 /**
  * Base class for completion script commands providing functionality for
@@ -74,7 +73,7 @@ public abstract class AbstractCompletions {
 		HashSet<CommandModelCommand> topCommands = new HashSet<>();
 		commandsByName.stream()
 			.forEach(registration -> {
-				String key = StringUtils.arrayToDelimitedString(registration.getCommands(), " ");
+				String key = registration.getCommand();
 				String[] splitKeys = key.split(" ");
 				String commandKey = "";
 				for (int i = 0; i < splitKeys.length; i++) {
