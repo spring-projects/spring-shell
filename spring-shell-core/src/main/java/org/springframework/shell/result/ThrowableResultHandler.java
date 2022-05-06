@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.ResultHandler;
+import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.jline.InteractiveShellRunner;
 import org.springframework.util.StringUtils;
 
@@ -43,14 +43,14 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 
 	private Throwable lastError;
 
-	private CommandRegistry commandRegistry;
+	private CommandCatalog commandCatalog;
 
 	private ObjectProvider<InteractiveShellRunner> interactiveRunner;
 
-	public ThrowableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
+	public ThrowableResultHandler(Terminal terminal, CommandCatalog commandCatalog,
 			ObjectProvider<InteractiveShellRunner> interactiveRunner) {
 		super(terminal);
-		this.commandRegistry = commandRegistry;
+		this.commandCatalog = commandCatalog;
 		this.interactiveRunner = interactiveRunner;
 	}
 
@@ -60,7 +60,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 		String toPrint = StringUtils.hasLength(result.getMessage()) ? result.getMessage() : result.toString();
 		terminal.writer().println(new AttributedString(toPrint,
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
-		if (interactiveRunner.getIfAvailable() != null && commandRegistry.listCommands().containsKey(DETAILS_COMMAND_NAME)) {
+		if (interactiveRunner.getIfAvailable() != null && commandCatalog.getRegistrations().keySet().contains(DETAILS_COMMAND_NAME)) {
 			terminal.writer().println(
 				new AttributedStringBuilder()
 					.append("Details of the error have been omitted. You can use the ", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))

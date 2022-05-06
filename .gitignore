@@ -10,6 +10,8 @@ target/
 *.iws
 .DS_Store
 spring-shell.log
+shell.log
+shell.log.*.gz
 
 # Visual Studio Code
 .vscode/*

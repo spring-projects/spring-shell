@@ -29,11 +29,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.core.MethodParameter;
-import org.springframework.shell.CommandRegistry;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.MethodTarget;
 import org.springframework.shell.Utils;
+import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 public class CommandValueProviderTest {
 
 	@Mock
-	private CommandRegistry shell;
+	private CommandCatalog catalog;
 
 	@BeforeEach
 	public void setUp() {
@@ -56,7 +56,7 @@ public class CommandValueProviderTest {
 
 	@Test
 	public void testValues() {
-		CommandValueProvider valueProvider = new CommandValueProvider(shell);
+		CommandValueProvider valueProvider = new CommandValueProvider(catalog);
 
 		Method help = ReflectionUtils.findMethod(Command.class, "help", String.class);
 		MethodParameter methodParameter = Utils.createMethodParameter(help, 0);
@@ -64,12 +64,12 @@ public class CommandValueProviderTest {
 		boolean supports = valueProvider.supports(methodParameter, completionContext);
 
 		assertThat(supports).isEqualTo(true);
+		Map<String, CommandRegistration> registrations = new HashMap<>();
+		registrations.put("me", null);
+		registrations.put("meow", null);
+		registrations.put("yourself", null);
 
-		Map<String, MethodTarget> commands = new HashMap<>();
-		commands.put("me", null);
-		commands.put("meow", null);
-		commands.put("yourself", null);
-		when(shell.listCommands()).thenReturn(commands);
+		when(catalog.getRegistrations()).thenReturn(registrations);
 		List<CompletionProposal> proposals = valueProvider.complete(methodParameter, completionContext, new String[0]);
 
 		assertThat(proposals).extracting("value", String.class)

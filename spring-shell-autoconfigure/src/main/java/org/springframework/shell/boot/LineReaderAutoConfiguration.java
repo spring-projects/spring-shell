@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.shell.CommandRegistry;
+import org.springframework.shell.command.CommandCatalog;
 
 @Configuration(proxyBeanMethods = false)
 public class LineReaderAutoConfiguration {
@@ -45,7 +45,7 @@ public class LineReaderAutoConfiguration {
 
 	private Parser parser;
 
-	private CommandRegistry commandRegistry;
+	private CommandCatalog commandRegistry;
 
 	private org.jline.reader.History jLineHistory;
 
@@ -53,7 +53,7 @@ public class LineReaderAutoConfiguration {
 	private String historyPath;
 
 	public LineReaderAutoConfiguration(Terminal terminal, Completer completer, Parser parser,
-			CommandRegistry commandRegistry, org.jline.reader.History jLineHistory) {
+			CommandCatalog commandRegistry, org.jline.reader.History jLineHistory) {
 		this.terminal = terminal;
 		this.completer = completer;
 		this.parser = parser;
@@ -79,7 +79,7 @@ public class LineReaderAutoConfiguration {
 					public AttributedString highlight(LineReader reader, String buffer) {
 						int l = 0;
 						String best = null;
-						for (String command : commandRegistry.listCommands().keySet()) {
+						for (String command : commandRegistry.getRegistrations().keySet()) {
 							if (buffer.startsWith(command) && command.length() > l) {
 								l = command.length();
 								best = command;

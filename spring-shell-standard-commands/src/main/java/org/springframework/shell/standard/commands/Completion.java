@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.standard.commands;
 
-import java.util.stream.Collectors;
-
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
@@ -51,8 +49,7 @@ public class Completion extends AbstractShellComponent {
 
 	@ShellMethod(key = "completion bash", value = "Generate bash completion script")
 	public String bash() {
-		BashCompletions bashCompletions = new BashCompletions(resourceLoader, getCommandRegistry(),
-				getParameterResolver().collect(Collectors.toList()));
+		BashCompletions bashCompletions = new BashCompletions(resourceLoader, getCommandCatalog());
 		return bashCompletions.generate(rootCommand);
 	}
 }

@@ -22,8 +22,9 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.shell.ParameterResolver;
 import org.springframework.shell.Shell;
+import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;
 import org.springframework.shell.jline.NonInteractiveShellRunner;
@@ -46,7 +47,8 @@ class ShellRunnerAutoConfigurationTests {
 			.withBean(LineReader.class, () -> mock(LineReader.class))
 			.withBean(Parser.class, () -> mock(Parser.class))
 			.withBean(ShellContext.class, () -> mock(ShellContext.class))
-			.withBean(ParameterResolver.class, () -> mock(ParameterResolver.class));
+			.withBean(CompletionResolver.class, () -> mock(CompletionResolver.class))
+			.withBean(CommandExecutionHandlerMethodArgumentResolvers.class, () -> mock(CommandExecutionHandlerMethodArgumentResolvers.class));
 
 	@Nested
 	class Interactive {

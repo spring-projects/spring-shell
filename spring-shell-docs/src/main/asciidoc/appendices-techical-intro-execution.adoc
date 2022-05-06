@@ -1,0 +1,3 @@
+=== Command Execution
+When _command parsing_ has done its job togethere with resolving _command registration_, execution
+will do the hard work and execute a real user level code.

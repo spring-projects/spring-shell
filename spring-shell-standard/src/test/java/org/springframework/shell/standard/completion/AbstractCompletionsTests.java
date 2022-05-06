@@ -15,26 +15,15 @@
  */
 package org.springframework.shell.standard.completion;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.CommandRegistry;
-import org.springframework.shell.ConfigurableCommandRegistry;
-import org.springframework.shell.MethodTarget;
-import org.springframework.shell.ParameterResolver;
-import org.springframework.shell.context.DefaultShellContext;
+import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.standard.StandardParameterResolver;
 import org.springframework.shell.standard.completion.AbstractCompletions.CommandModel;
-import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,30 +32,50 @@ public class AbstractCompletionsTests {
 	@Test
 	public void testBasicModelGeneration() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry(new DefaultShellContext());
-		List<ParameterResolver> parameterResolvers = new ArrayList<>();
-		StandardParameterResolver resolver = new StandardParameterResolver(new DefaultConversionService(),
-				Collections.emptySet());
-		parameterResolvers.add(resolver);
+		CommandCatalog commandCatalog = CommandCatalog.of();
 
 		TestCommands commands = new TestCommands();
 
-		Method method1 = ReflectionUtils.findMethod(TestCommands.class, "test1", String.class);
-		Method method2 = ReflectionUtils.findMethod(TestCommands.class, "test2");
-		Method method3 = ReflectionUtils.findMethod(TestCommands.class, "test3");
-		Method method4 = ReflectionUtils.findMethod(TestCommands.class, "test4", String.class);
+		CommandRegistration registration1 = CommandRegistration.builder()
+			.command("test1")
+			.withTarget()
+				.method(commands, "test1")
+				.and()
+			.withOption()
+				.longNames("param1")
+				.and()
+			.build();
 
-		MethodTarget methodTarget1 = new MethodTarget(method1, commands, "help");
-		MethodTarget methodTarget2 = new MethodTarget(method2, commands, "help");
-		MethodTarget methodTarget3 = new MethodTarget(method3, commands, "help");
-		MethodTarget methodTarget4 = new MethodTarget(method4, commands, "help");
+		CommandRegistration registration2 = CommandRegistration.builder()
+			.command("test2")
+			.withTarget()
+				.method(commands, "test2")
+				.and()
+			.build();
 
-		commandRegistry.register("test1", methodTarget1);
-		commandRegistry.register("test2", methodTarget2);
-		commandRegistry.register("test3", methodTarget3);
-		commandRegistry.register("test3 test4", methodTarget4);
+		CommandRegistration registration3 = CommandRegistration.builder()
+			.command("test3")
+			.withTarget()
+				.method(commands, "test3")
+				.and()
+			.build();
 
-		TestCompletions completions = new TestCompletions(resourceLoader, commandRegistry, parameterResolvers);
+		CommandRegistration registration4 = CommandRegistration.builder()
+			.command("test3", "test4")
+			.withTarget()
+				.method(commands, "test4")
+				.and()
+			.withOption()
+				.longNames("param4")
+				.and()
+			.build();
+
+		commandCatalog.register(registration1);
+		commandCatalog.register(registration2);
+		commandCatalog.register(registration3);
+		commandCatalog.register(registration4);
+
+		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
 		CommandModel commandModel = completions.testCommandModel();
 		assertThat(commandModel.getCommands()).hasSize(3);
 		assertThat(commandModel.getCommands().stream().map(c -> c.getMainCommand())).containsExactlyInAnyOrder("test1", "test2",
@@ -92,9 +101,8 @@ public class AbstractCompletionsTests {
 	@Test
 	public void testBuilder() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry(new DefaultShellContext());
-		List<ParameterResolver> parameterResolvers = new ArrayList<>();
-		TestCompletions completions = new TestCompletions(resourceLoader, commandRegistry, parameterResolvers);
+		CommandCatalog commandCatalog = CommandCatalog.of();
+		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
 
 		String result = completions.testBuilder()
 				.attribute("x", "command")
@@ -106,9 +114,8 @@ public class AbstractCompletionsTests {
 
 	private static class TestCompletions extends AbstractCompletions {
 
-		public TestCompletions(ResourceLoader resourceLoader, CommandRegistry commandRegistry,
-				List<ParameterResolver> parameterResolvers) {
-			super(resourceLoader, commandRegistry, parameterResolvers);
+		public TestCompletions(ResourceLoader resourceLoader, CommandCatalog commandCatalog) {
+			super(resourceLoader, commandCatalog);
 		}
 
 		CommandModel testCommandModel() {

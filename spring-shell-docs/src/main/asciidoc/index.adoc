@@ -20,3 +20,5 @@ include::introduction.adoc[]
 include::getting-started.adoc[]
 
 include::using-shell.adoc[]
+
+include::appendices.adoc[]

@@ -20,7 +20,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -129,5 +132,38 @@ public class Utils {
 	 */
 	public static Validator defaultValidator() {
 		return DEFAULT_VALIDATOR;
+	}
+
+	/**
+	 * Split array into list of lists by predicate
+	 *
+	 * @param array the array
+	 * @param predicate the predicate
+	 * @return the list of lists
+	 */
+	public static <T> List<List<T>> split(T[] array, Predicate<T> predicate) {
+		List<T> list = Arrays.asList(array);
+		boolean[] boundaries = new boolean[array.length];
+		List<List<T>> split = new ArrayList<>();
+
+		for (int i = 0; i < array.length; i++) {
+			boundaries[i] = predicate.test(array[i]);
+		}
+
+		int tail = 0;
+		for (int i = 0; i < boundaries.length; i++) {
+			if (boundaries[i]) {
+				if (tail < i) {
+					split.add(list.subList(tail, i));
+				}
+				tail = i;
+			}
+		}
+
+		if (tail < array.length) {
+			split.add(list.subList(tail, array.length));
+		}
+
+		return split;
 	}
 }

@@ -15,17 +15,16 @@
  */
 package org.springframework.shell.standard.completion;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.shell.ConfigurableCommandRegistry;
-import org.springframework.shell.ParameterResolver;
-import org.springframework.shell.context.DefaultShellContext;
+import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandContext;
+import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,11 +47,71 @@ public class BashCompletionsTests {
 	}
 
 	@Test
-	public void testDoesNotError() {
-		ConfigurableCommandRegistry commandRegistry = new ConfigurableCommandRegistry(new DefaultShellContext());
-		List<ParameterResolver> parameterResolvers = new ArrayList<>();
-		BashCompletions completions = new BashCompletions(context, commandRegistry, parameterResolvers);
+	public void testNoCommands() {
+		CommandCatalog commandCatalog = CommandCatalog.of();
+		BashCompletions completions = new BashCompletions(context, commandCatalog);
 		String bash = completions.generate("root-command");
 		assertThat(bash).contains("root-command");
+	}
+
+	@Test
+	public void testCommandFromMethod() {
+		CommandCatalog commandCatalog = CommandCatalog.of();
+		registerFromMethod(commandCatalog);
+		BashCompletions completions = new BashCompletions(context, commandCatalog);
+		String bash = completions.generate("root-command");
+		System.out.println(bash);
+		assertThat(bash).contains("root-command");
+		assertThat(bash).contains("commands+=(\"testmethod1\")");
+		assertThat(bash).contains("_root-command_testmethod1()");
+		assertThat(bash).contains("two_word_flags+=(\"--arg1\")");
+	}
+
+	@Test
+	public void testCommandFromFunction() {
+		CommandCatalog commandCatalog = CommandCatalog.of();
+		registerFromFunction(commandCatalog, "testmethod1");
+		BashCompletions completions = new BashCompletions(context, commandCatalog);
+		String bash = completions.generate("root-command");
+		assertThat(bash).contains("root-command");
+		assertThat(bash).contains("commands+=(\"testmethod1\")");
+		assertThat(bash).contains("_root-command_testmethod1()");
+		assertThat(bash).contains("two_word_flags+=(\"--arg1\")");
+	}
+
+	private void registerFromMethod(CommandCatalog commandCatalog) {
+		Pojo1 pojo1 = new Pojo1();
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("testmethod1")
+			.withTarget()
+				.method(pojo1, "method1")
+				.and()
+			.withOption()
+				.longNames("arg1")
+				.and()
+			.build();
+		commandCatalog.register(registration);
+	}
+
+	private void registerFromFunction(CommandCatalog commandCatalog, String command) {
+		Function<CommandContext, String> function = ctx -> {
+			String arg1 = ctx.getOptionValue("arg1");
+			return String.format("hi, arg1 value is '%s'", arg1);
+		};
+		CommandRegistration registration = CommandRegistration.builder()
+			.command(command)
+			.withTarget()
+				.function(function)
+				.and()
+			.withOption()
+				.longNames("arg1")
+				.and()
+			.build();
+		commandCatalog.register(registration);
+	}
+
+	protected static class Pojo1 {
+
+		void method1() {}
 	}
 }

@@ -128,6 +128,22 @@
 							</resources>
 						</configuration>
 					</execution>
+					<execution>
+						<id>copy-asciidoc-snippets</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/refdocs/snippets/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/test/java/org/springframework/shell/docs</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -223,6 +239,7 @@
 						<version>${project.version}</version>
 						<projectName>${project.name}</projectName>
 						<projectVersion>${project.version}</projectVersion>
+						<snippets>${project.build.directory}/refdocs/snippets/</snippets>
 						<allow-uri-read>true</allow-uri-read>
 						<toclevels>4</toclevels>
 						<numbered>true</numbered>
