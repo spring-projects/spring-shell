@@ -1,7 +1,15 @@
 import 'jest-extended';
 import waitForExpect from 'wait-for-expect';
 import { Cli } from 'spring-shell-e2e';
-import { nativeDesc, jarDesc, jarCommand, nativeCommand, jarOptions } from '../src/utils';
+import {
+  nativeDesc,
+  jarDesc,
+  jarCommand,
+  nativeCommand,
+  jarOptions,
+  waitForExpectDefaultTimeout,
+  waitForExpectDefaultInterval
+} from '../src/utils';
 
 // all flow commands
 describe('flow commands', () => {
@@ -46,8 +54,8 @@ describe('flow commands', () => {
   };
 
   beforeEach(async () => {
-    waitForExpect.defaults.timeout = 3000;
-    waitForExpect.defaults.interval = 100;
+    waitForExpect.defaults.timeout = waitForExpectDefaultTimeout;
+    waitForExpect.defaults.interval = waitForExpectDefaultInterval;
   }, 300000);
 
   afterEach(async () => {
