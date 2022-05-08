@@ -26,10 +26,12 @@ describe('flow commands', () => {
   const flowConditionalField2SkipsFields1 = async (cli: Cli) => {
     cli.run();
 
+    // windows on gh actions may take quite a bit of time to start
+    // so use long timeout
     await waitForExpect(async () => {
       const screen = cli.screen();
       expect(screen).toEqual(expect.arrayContaining([expect.stringContaining('Single1')]));
-    });
+    }, 60000);
 
     await cli.keyDown();
     await waitForExpect(async () => {
