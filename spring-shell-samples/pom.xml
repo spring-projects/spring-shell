@@ -14,6 +14,10 @@
 
 	<description>Examples of using Spring Shell 2</description>
 
+	<properties>
+		<spring-native.version>0.11.1</spring-native.version>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -37,7 +41,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-starter</artifactId>
+			<artifactId>spring-shell-starter-jna</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.experimental</groupId>
+			<artifactId>spring-aot</artifactId>
+			<version>${spring-native.version}</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
@@ -45,9 +55,6 @@
         <profile>
             <id>native</id>
 			<!-- needs GRAALVM_HOME to point to graal tools -->
-			<properties>
-				<spring-native.version>0.11.1</spring-native.version>
-			</properties>
             <dependencies>
 				<dependency>
 					<groupId>org.springframework.experimental</groupId>

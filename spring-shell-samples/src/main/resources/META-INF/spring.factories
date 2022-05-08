@@ -1,0 +1,2 @@
+org.springframework.nativex.type.NativeConfiguration=\
+org.springframework.shell.samples.config.SpringShellNativeConfiguration

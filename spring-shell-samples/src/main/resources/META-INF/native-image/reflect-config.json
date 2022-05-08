@@ -1,9 +1,0 @@
-[
-  {
-    "name":"org.springframework.shell.samples.jcommander.Args",
-    "allDeclaredFields":true,
-    "queryAllDeclaredMethods":true,
-    "queryAllDeclaredConstructors":true,
-    "methods":[{"name":"<init>","parameterTypes":[] }]
-  }
-]
