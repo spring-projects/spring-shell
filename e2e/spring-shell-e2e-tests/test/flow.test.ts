@@ -8,7 +8,8 @@ import {
   nativeCommand,
   jarOptions,
   waitForExpectDefaultTimeout,
-  waitForExpectDefaultInterval
+  waitForExpectDefaultInterval,
+  testTimeout
 } from '../src/utils';
 
 // all flow commands
@@ -56,11 +57,11 @@ describe('flow commands', () => {
   beforeEach(async () => {
     waitForExpect.defaults.timeout = waitForExpectDefaultTimeout;
     waitForExpect.defaults.interval = waitForExpectDefaultInterval;
-  }, 300000);
+  }, testTimeout);
 
   afterEach(async () => {
     cli?.dispose();
-  }, 100000);
+  }, testTimeout);
 
   /**
    * native commands
@@ -70,13 +71,17 @@ describe('flow commands', () => {
       command = nativeCommand;
     });
 
-    it(flowConditionalField2SkipsFields1Desc, async () => {
-      cli = new Cli({
-        command: command,
-        options: [...options, ...flowConditionalCommand]
-      });
-      await flowConditionalField2SkipsFields1(cli);
-    });
+    it(
+      flowConditionalField2SkipsFields1Desc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...flowConditionalCommand]
+        });
+        await flowConditionalField2SkipsFields1(cli);
+      },
+      testTimeout
+    );
   });
 
   /**
@@ -88,12 +93,16 @@ describe('flow commands', () => {
       options = jarOptions;
     });
 
-    it(flowConditionalField2SkipsFields1Desc, async () => {
-      cli = new Cli({
-        command: command,
-        options: [...options, ...flowConditionalCommand]
-      });
-      await flowConditionalField2SkipsFields1(cli);
-    });
+    it(
+      flowConditionalField2SkipsFields1Desc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...flowConditionalCommand]
+        });
+        await flowConditionalField2SkipsFields1(cli);
+      },
+      testTimeout
+    );
   });
 });

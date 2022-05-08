@@ -8,7 +8,8 @@ import {
   nativeCommand,
   jarOptions,
   waitForExpectDefaultTimeout,
-  waitForExpectDefaultInterval
+  waitForExpectDefaultInterval,
+  testTimeout
 } from '../src/utils';
 
 // all buildin commands
@@ -34,11 +35,11 @@ describe('builtin commands', () => {
   beforeEach(async () => {
     waitForExpect.defaults.timeout = waitForExpectDefaultTimeout;
     waitForExpect.defaults.interval = waitForExpectDefaultInterval;
-  }, 300000);
+  }, testTimeout);
 
   afterEach(async () => {
     cli?.dispose();
-  }, 100000);
+  }, testTimeout);
 
   /**
    * native commands
@@ -48,13 +49,17 @@ describe('builtin commands', () => {
       command = nativeCommand;
     });
 
-    it(versionReturnsInfoDesc, async () => {
-      cli = new Cli({
-        command: command,
-        options: [...options, ...versionCommand]
-      });
-      await versionReturnsInfo(cli);
-    });
+    it(
+      versionReturnsInfoDesc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...versionCommand]
+        });
+        await versionReturnsInfo(cli);
+      },
+      testTimeout
+    );
   });
 
   /**
@@ -66,12 +71,16 @@ describe('builtin commands', () => {
       options = jarOptions;
     });
 
-    it(versionReturnsInfoDesc, async () => {
-      cli = new Cli({
-        command: command,
-        options: [...options, ...versionCommand]
-      });
-      await versionReturnsInfo(cli);
-    });
+    it(
+      versionReturnsInfoDesc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...versionCommand]
+        });
+        await versionReturnsInfo(cli);
+      },
+      testTimeout
+    );
   });
 });

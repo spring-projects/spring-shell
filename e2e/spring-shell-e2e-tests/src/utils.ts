@@ -18,3 +18,4 @@ export const nativeCommand = cliPath;
 export const jarOptions = ['-jar', jarPath];
 export const waitForExpectDefaultTimeout = 10000;
 export const waitForExpectDefaultInterval = 100;
+export const testTimeout = 20000;
