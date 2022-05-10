@@ -33,6 +33,8 @@ jobs:
         echo JFROG_CLI_BUILD_NAME=spring-shell-main >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Build and Publish
+      env:
+        DISABLE_SAMPLES: true
       run: |
         jfrog rt mvn clean install -B -DskipTests
         jfrog rt build-publish

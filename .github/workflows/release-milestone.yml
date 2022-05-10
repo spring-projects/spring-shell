@@ -43,6 +43,8 @@ jobs:
           -B
         echo PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) >> $GITHUB_ENV
     - name: Build and Publish
+      env:
+        DISABLE_SAMPLES: true
       run: |
         jfrog rt build-clean
         jfrog rt mvn clean install \

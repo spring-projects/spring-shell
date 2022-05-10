@@ -12,8 +12,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '8', '11', '17' ]
-    name: CI Build ${{ matrix.java }}
+        include:
+          - nickname: linux jdk8
+            java: 8
+            disable-samples: true
+          - nickname: linux jdk11
+            java: 11
+            disable-samples: false
+          - nickname: linux jdk17
+            java: 17
+            disable-samples: false
+    name: CI Build ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
@@ -21,8 +30,12 @@ jobs:
           distribution: adopt
           java-version: ${{ matrix.java }}
           cache: maven
-      - run: ./mvnw -B package
+      - name: Build
+        env:
+          DISABLE_SAMPLES: ${{ matrix.disable-samples }}
+        run: ./mvnw -B package
   publish:
+    if: github.repository_owner == 'spring-projects'
     needs: [build]
     name: Call Publish Snapshot
     uses: spring-projects/spring-shell/.github/workflows/ci-publish.yml@main

@@ -225,7 +225,8 @@
 			<id>samples</id>
 			<activation>
 				<property>
-					<name>!env.DISABLE_SAMPLES</name>
+					<name>env.DISABLE_SAMPLES</name>
+					<value>!true</value>
 				</property>
 			</activation>
 			<modules>
