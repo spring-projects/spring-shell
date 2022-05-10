@@ -3,9 +3,10 @@ package org.springframework.shell.boot;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.messaging.handler.annotation.support.HeadersMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.shell.command.ArgumentHeaderMethodArgumentResolver;
@@ -24,12 +25,13 @@ public class ParameterResolverAutoConfiguration {
 	}
 
 	@Bean
-	public CommandExecutionHandlerMethodArgumentResolvers commandExecutionHandlerMethodArgumentResolvers() {
+	public CommandExecutionHandlerMethodArgumentResolvers commandExecutionHandlerMethodArgumentResolvers(
+			@Qualifier("shellConversionService") ConversionService shellConversionService) {
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
-		resolvers.add(new ArgumentHeaderMethodArgumentResolver(new DefaultConversionService(), null));
+		resolvers.add(new ArgumentHeaderMethodArgumentResolver(shellConversionService, null));
 		resolvers.add(new HeadersMethodArgumentResolver());
 		resolvers.add(new CommandContextMethodArgumentResolver());
-		resolvers.add(new ShellOptionMethodArgumentResolver(new DefaultConversionService(), null));
+		resolvers.add(new ShellOptionMethodArgumentResolver(shellConversionService, null));
 		return new CommandExecutionHandlerMethodArgumentResolvers(resolvers);
 	}
 }
