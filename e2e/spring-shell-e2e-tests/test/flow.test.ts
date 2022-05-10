@@ -66,11 +66,12 @@ describe('flow commands', () => {
   }, testTimeout);
 
   /**
-   * native commands
+   * fatjar commands
    */
-  describe(nativeDesc, () => {
+  describe(jarDesc, () => {
     beforeAll(() => {
-      command = nativeCommand;
+      command = jarCommand;
+      options = jarOptions;
     });
 
     it(
@@ -87,12 +88,12 @@ describe('flow commands', () => {
   });
 
   /**
-   * fatjar commands
+   * native commands
    */
-  describe(jarDesc, () => {
+   describe(nativeDesc, () => {
     beforeAll(() => {
-      command = jarCommand;
-      options = jarOptions;
+      command = nativeCommand;
+      options = [];
     });
 
     it(

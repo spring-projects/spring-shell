@@ -17,6 +17,7 @@ export class Cli {
   private cols: number = 80;
   private rows: number = 20;
   private exit: Promise<number> | undefined;
+  private hasExit: boolean = false;
 
   constructor(private options: CliOptions) {
     if (options.keyWait) {
@@ -31,20 +32,22 @@ export class Cli {
   }
 
   public run(): void {
-    this.pty = pty.spawn(this.options.command, this.options.options || [], {
-      name: 'xterm-256color',
-      cols: this.cols,
-      rows: this.rows
-    });
     this.term = new Terminal({
       cols: this.cols,
       rows: this.rows
+    });
+    this.pty = pty.spawn(this.options.command, this.options.options || [], {
+      name: 'xterm-256color',
+      cols: this.cols,
+      rows: this.rows,
+      useConpty: false
     });
     this.pty.onData(data => {
       this.term?.write(data);
     });
     this.exit = new Promise(resolve => {
       this.pty?.onExit(data => {
+        this.hasExit = true;
         resolve(data.exitCode);
       });
     });
@@ -109,12 +112,12 @@ export class Cli {
     if (this.isDisposed) {
       return;
     }
-    if (this.pty) {
-      this.pty.kill();
+    try {
+      this.pty?.kill();
+    } catch (error) {
+      console.log(error);
     }
-    if (this.term) {
-      this.term.dispose();
-    }
+    this.term?.dispose();
     this.isDisposed = true;
   }
 

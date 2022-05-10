@@ -11,7 +11,7 @@ jobs:
       matrix:
         include:
           - nickname: win
-            os: windows-2019
+            os: windows-latest
             graal: 22.0.0.2
           - nickname: macos
             os: macos-latest
@@ -36,7 +36,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
       - run: |
           ./mvnw clean package -Pnative
       - uses: actions/upload-artifact@v2
