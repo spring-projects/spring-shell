@@ -5,3 +5,4 @@ include::using-shell-components-ui.adoc[]
 
 include::using-shell-components-builtin.adoc[]
 
+include::using-shell-components-flow.adoc[]

@@ -1,4 +1,4 @@
-[[uicomponents]]
+[[using-shell-components-ui]]
 ==== UI Components
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
