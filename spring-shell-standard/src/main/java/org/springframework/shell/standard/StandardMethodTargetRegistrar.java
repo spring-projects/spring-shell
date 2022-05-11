@@ -131,6 +131,10 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 								if (so.arity() > -1) {
 									optionSpec.arity(0, so.arity());
 								}
+								if (!ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)
+										&& !ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NULL)) {
+									optionSpec.defaultValue(so.defaultValue());
+								}
 							}
 						}
 						else {

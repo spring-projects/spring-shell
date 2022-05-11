@@ -323,4 +323,40 @@ public class StandardMethodTargetRegistrarTests {
 		public void foo3() {
 		}
 	}
+
+	@Test
+	public void testOptionUseDefaultValue() {
+	    shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
+		applicationContext = new AnnotationConfigApplicationContext(DefaultValuesCommands.class);
+		registrar.setApplicationContext(applicationContext);
+	    registrar.register(catalog);
+
+		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getDefaultValue()).isEqualTo("arg1Value");
+
+		assertThat(catalog.getRegistrations().get("foo2")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo2").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getDefaultValue()).isNull();
+
+		assertThat(catalog.getRegistrations().get("foo3")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo3").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getDefaultValue()).isNull();
+	}
+
+	@ShellComponent
+	public static class DefaultValuesCommands {
+
+		@ShellMethod(value = "foo1")
+		public void foo1(@ShellOption(defaultValue = "arg1Value") String arg1) {
+		}
+
+		@ShellMethod(value = "foo2")
+		public void foo2(@ShellOption(defaultValue = ShellOption.NONE) String arg1) {
+		}
+
+		@ShellMethod(value = "foo")
+		public void foo3(@ShellOption(defaultValue = ShellOption.NULL) String arg1) {
+		}
+	}
 }
