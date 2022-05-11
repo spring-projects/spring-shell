@@ -18,6 +18,7 @@ package org.springframework.shell.command;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
@@ -313,6 +314,21 @@ public interface CommandParser {
 						}
 					})
 					.collect(Collectors.toList());
+
+				// Check options which didn't get matched and add parser result
+				// for those having default value.
+				List<CommandOption> defaultValueOptionsToCheck = new ArrayList<>(options);
+				results.stream()
+					.forEach(pr -> {
+						if (pr.option != null) {
+							defaultValueOptionsToCheck.remove(pr.option);
+						}
+					});
+					defaultValueOptionsToCheck.stream()
+					.filter(co -> co.getDefaultValue() != null)
+					.forEach(co -> {
+						results.add(ParserResult.of(co, Collections.emptyList(), co.getDefaultValue(), null));
+					});
 				return ParserResults.of(results);
 			}
 

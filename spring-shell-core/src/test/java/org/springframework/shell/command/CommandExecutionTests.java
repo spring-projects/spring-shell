@@ -422,6 +422,25 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
+	public void testDefaultValue() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.defaultValue("defaultValue1")
+				// .position(0)
+				// .arity(OptionArity.EXACTLY_ONE)
+				.and()
+			.withTarget()
+				.method(pojo1, "method4")
+				.and()
+			.build();
+		execution.evaluate(r1, new String[]{});
+		assertThat(pojo1.method4Count).isEqualTo(1);
+		assertThat(pojo1.method4Arg1).isEqualTo("defaultValue1");
+	}
+
+	@Test
 	public void testRequiredArg() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
