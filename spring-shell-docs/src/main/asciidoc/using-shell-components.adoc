@@ -1,0 +1,7 @@
+[[using-shell-components]]
+=== Components
+
+include::using-shell-components-ui.adoc[]
+
+include::using-shell-components-builtin.adoc[]
+

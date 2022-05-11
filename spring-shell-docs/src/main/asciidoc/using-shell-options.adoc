@@ -1,0 +1,6 @@
+[[using-shell-options]]
+=== Options
+
+include::using-shell-options-generic.adoc[]
+
+include::using-shell-options-validation.adoc[]

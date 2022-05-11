@@ -1,0 +1,11 @@
+==== Programmatic Model
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+`CommandRegistration` can be defined as a `@Bean` and it's automatically registered.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationBeanSnippets.java[tag=snippet1]
+----
+====

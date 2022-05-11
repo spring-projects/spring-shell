@@ -1,5 +1,5 @@
 [[styling]]
-=== Styling
+==== Styling
 
 Starting with _2.1.x_ there is a support for centrally handling styling and theming.
 There is a default theme named _default_ which can be changed using property

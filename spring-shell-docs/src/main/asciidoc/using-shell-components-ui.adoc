@@ -1,5 +1,5 @@
 [[uicomponents]]
-=== UI Components
+==== UI Components
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Starting from _2.1.x_ there is a new component model which provides
@@ -18,7 +18,7 @@ Build-in components generally follow logic:
 * Exit
 * Render final status of a component state
 
-==== Component Render
+===== Component Render
 
 There are two ways to implement component rendering, firstly fully
 programmatically or secondly using a _ANTLR Stringtemplate_. Though
@@ -109,9 +109,9 @@ from a parent component types, those context variables are shown below.
 |===
 
 
-==== Build-in Components
+===== Build-in Components
 
-===== String Input
+====== String Input
 
 Used to ask a simple text input from a user, optionally masking values
 if content contains something sensitive.
@@ -152,7 +152,7 @@ Context object is `StringInputContext`.
 |Parent context variables <<textcomponentcontext-template-variables>>
 |===
 
-===== Path Input
+====== Path Input
 
 Used to ask a `Path` from a user and gives additional info about a path itself.
 
@@ -176,7 +176,7 @@ Context object is `PathInputContext`.
 |Parent context variables <<textcomponentcontext-template-variables>>
 |===
 
-===== Confirmation
+====== Confirmation
 
 Used to ask a simple confirmation from a user and essentially is
 yes/no question.
@@ -204,7 +204,7 @@ Context object is `ConfirmationInputContext`.
 |Parent context variables <<textcomponentcontext-template-variables>>
 |===
 
-===== Single Select
+====== Single Select
 
 Used to ask an item from a list and is essentially similar to simple
 dropbox implementation.
@@ -235,7 +235,7 @@ Context object is `SingleItemSelectorContext`.
 |Parent context variables <<selectorcomponentcontext-template-variables>>
 |===
 
-===== Multi Select
+====== Multi Select
 
 Used to ask an items from a list.
 

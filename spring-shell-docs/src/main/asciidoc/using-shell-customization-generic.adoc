@@ -1,7 +1,7 @@
-=== Customizing the Shell
+==== Customizing the Shell
 
 [[overriding-or-disabling-built-in-commands]]
-==== Overriding or Disabling Built-In Commands
+===== Overriding or Disabling Built-In Commands
 
 Spring Shell provides <<built-in-commands,Built-in commands>> to let people achieve everyday tasks that many if not
 all shell applications need. If you are not happy with the way they behave, though, you can disable or override them,
@@ -33,7 +33,7 @@ dependencies, don't include that one in. The follwoing example shows how to excl
 =====
 
 [[disabling-specific-commands]]
-===== Disabling Specific Commands
+====== Disabling Specific Commands
 
 To disable a single built-in command, set the `spring.shell.command.<command>.enabled` property to `false` in the
 application `Environment`. One way to do so is to pass extra arguments to the Boot application in your `main()`
@@ -51,7 +51,7 @@ entry point:
 <1> This disables the integrated `help` command
 ====
 
-===== Overriding Specific Commands
+====== Overriding Specific Commands
 
 If, instead of disabling a command, you would rather provide your own implementation, then you can either:
 
@@ -87,7 +87,7 @@ always welcome!
 
 // TBD
 
-==== PromptProvider
+===== PromptProvider
 After each command invocation, the shell waits for new input from the user, displaying
 a prompt in yellow:
 
@@ -133,7 +133,7 @@ public class CustomPromptProvider implements PromptProvider {
 ----
 ====
 
-==== Customizing Command Line Options Behavior
+===== Customizing Command Line Options Behavior
 
 There can be exactly one shell spesific `ShellApplicationRunner` which simply extends
 Boot's `ApplicationRunner`. Default behariour is to have actual runner logic in
@@ -151,7 +151,7 @@ You can override bean type of `ShellApplicationRunner` if there's a need to
 customise shell running logic.
 ====
 
-==== Customizing Arguments Conversion
+===== Customizing Arguments Conversion
 
 Conversion from text input to actual method arguments uses the standard Spring
 https://docs.spring.io/spring/docs/4.3.11.RELEASE/spring-framework-reference/htmlsingle/#core-convert[conversion] mechanism.

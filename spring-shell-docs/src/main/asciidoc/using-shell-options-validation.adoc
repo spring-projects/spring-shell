@@ -1,5 +1,5 @@
 [[validating-command-arguments]]
-=== Validating Command Arguments
+==== Validating Command Arguments
 
 Spring Shell integrates with the https://beanvalidation.org/[Bean Validation API] to support
 automatic and self-documenting constraints on command parameters.

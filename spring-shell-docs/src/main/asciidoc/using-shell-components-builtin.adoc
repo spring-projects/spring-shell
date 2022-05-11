@@ -1,5 +1,5 @@
 [[built-in-commands]]
-=== Built-In Commands
+==== Built-In Commands
 
 Any application built by using the `{starter-artifactId}` artifact
 (or, to be more precise, the `spring-shell-standard-commands` dependency) comes with a set of built-in commands.
@@ -7,7 +7,7 @@ You can override or disable these commands individually (see <<overriding-or-dis
 However, if they are not overridden or disabled, this section describes their behavior.
 
 [[help-command]]
-==== Help
+===== Help
 
 Running a shell application often implies that the user is in a graphically limited
 environment. Also, while we are nearly always connected in the era of mobile phones,
@@ -62,17 +62,17 @@ OPTIONS
 ----
 ====
 
-==== Clear
+===== Clear
 The `clear` command does what you would expect and clears the screen, resetting the prompt
 in the top left corner.
 
-==== Exit
+===== Exit
 
 The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
 closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all
 commands to disk, so that they are available again (see <<interacting-with-the-shell>>) on the next launch.
 
-==== Stacktrace
+===== Stacktrace
 
 When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
 so as not to overflow the user with too much information.
@@ -82,18 +82,18 @@ To this end, Spring Shell remembers the last exception that occurred, and the us
 command to print all the details on the console.
 
 [[script-command]]
-==== Script
+===== Script
 
 The `script` command accepts a local file as an argument and replays commands found there, one at a time.
 
 Reading from the file behaves exactly like inside the interactive shell, so lines starting with `//` are considered
 to be comments and are ignored, while lines ending with `\` trigger line continuation.
 
-==== History
+===== History
 
 The `history` command shows history of a commands which has been executed.
 
-==== Completion
+===== Completion
 
 The `completion` command set allows you to create _scripts_ files which can be used
 with am OS shell implementations to provide completion. This is very usefull when
@@ -101,7 +101,7 @@ working with non-interactive mode.
 
 Currently only implementation is for _bash_ which works with `bash` sub-command.
 
-==== Version
+===== Version
 
 The `version` command shows existing _build_ and _git_ info by integrating into
 Boot's `BuildProperties` and `GitProperties` if those exists in a shell app.

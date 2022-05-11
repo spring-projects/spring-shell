@@ -1,4 +1,6 @@
-=== Interaction Mode
+=== Execution
+
+==== Interaction Mode
 
 Starting from _2.1.x_ a build-in support has been added to distinguish between interactive
 and non-interactive modes. This has been added so that it's easier to use shell as a

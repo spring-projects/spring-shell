@@ -12,24 +12,14 @@ us to clean up codebase and make some needed breaking changes.
 
 include::using-shell-basics.adoc[]
 
-include::using-shell-define-command.adoc[]
+include::using-shell-commands.adoc[]
 
-include::using-shell-invoke-command.adoc[]
+include::using-shell-options.adoc[]
 
-include::using-shell-validate-command.adoc[]
+include::using-shell-building.adoc[]
 
-include::using-shell-availability.adoc[]
+include::using-shell-components.adoc[]
 
-include::using-shell-organize.adoc[]
+include::using-shell-customization.adoc[]
 
-include::using-shell-built-in.adoc[]
-
-include::using-shell-interaction-mode.adoc[]
-
-include::using-shell-native.adoc[]
-
-include::using-shell-styling.adoc[]
-
-include::using-shell-ui-components.adoc[]
-
-include::using-shell-customize.adoc[]
+include::using-shell-execution.adoc[]

@@ -1,0 +1,6 @@
+[[using-shell-customization]]
+=== Customization
+
+include::using-shell-customization-generic.adoc[]
+
+include::using-shell-customization-styling.adoc[]

@@ -1,17 +1,6 @@
-=== Define a Command
+==== Annotation Model
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-In this section we go through an actual command registration and leave command options
-and execution later in a documentation. More detailed info can be found from
-<<appendix-tech-intro-registration>>.
-
-There are two different ways to define a command. Firstly through an annotation model and
-secondly through programmatic model. Annotation model if where you define your methods
-in a class and annotate class and methods with a spesific annotations. Programmatic model
-is where things are done on a more low level ways by defining command registrations either
-as beans or registering those with a command catalog dynamically.
-
-==== Annotation Model
 When you use the standard API, methods on beans are turned into executable commands, provided that:
 
 * The bean class bears the `@ShellComponent` annotation. This is used to restrict the set of beans
@@ -67,14 +56,4 @@ If you set multiple keys for a single method, the command is registered with tho
 The command key can contain pretty much any character, including spaces. When coming up with names though,
 keep in mind that consistency is often appreciated by users (that is, you should avoid mixing dashed-names with
 spaced names and other inconsistencies).
-====
-
-==== Programmatic Model
-`CommandRegistration` can be defined as a `@Bean` and it's automatically registered.
-
-====
-[source, java, indent=0]
-----
-include::{snippets}/CommandRegistrationBeanSnippets.java[tag=snippet1]
-----
 ====

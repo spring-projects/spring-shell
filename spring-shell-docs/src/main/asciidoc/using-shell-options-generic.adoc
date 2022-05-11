@@ -1,8 +1,8 @@
-=== Invoking your Commands
+==== Invoking your Commands
 
 This section addresses how you can control the way in which your commands are invoked.
 
-==== By Name Versus Positional Parameters
+===== By Name Versus Positional Parameters
 
 As seen <<documenting-the-command,earlier>>, decorating a method with `@ShellMethod` is the sole requirement for creating a command.
 
@@ -51,7 +51,7 @@ You said a=1, b=2, c=3
 <5> The non by-name parameters are resolved in the order in which they appear.
 ====
 
-===== Customizing the Named Parameter Keys
+====== Customizing the Named Parameter Keys
 
 As seen <<your-first-command,earlier>>, the default strategy for deriving the key for a named parameter is to use the Java
 name of the method signature and prefix it with two dashes (`--`). You can customize this in two ways:
@@ -91,7 +91,7 @@ built-in <<help-command,`help`>> command:
 =====
 
 [[optional-parameters-default-values]]
-==== Optional Parameters and Default Values
+===== Optional Parameters and Default Values
 
 Spring Shell provides the ability to give parameters default values, which lets users omit
 those parameters. Consider the following command definition:
@@ -117,7 +117,7 @@ Hello World
 ----
 ====
 
-==== Parameter Arity
+===== Parameter Arity
 Up to now, it has always been assumed that each parameter maps to a single word entered by the user.
 Situations may arise, though, when a parameter value should be multi-valued. This is driven by the `arity()`
 attribute of the `@ShellOption` annotation. You can use a collection or array for the parameter type and specify how
@@ -157,7 +157,7 @@ shell:>add --numbers 1 --numbers 2 --numbers 3.3
 ====
 =====
 
-===== Varying Amount Arity
+====== Varying Amount Arity
 
 The above example demonstrates requiring a known, constant arity for a parameter, three in this case. Allowing any number of multiple values of a parameter can be achieved by leaving `arity` unspecified and using Spring's built-in comma separated value parsing for collections and/or arrays:
 [source, java]
@@ -182,7 +182,7 @@ shell:>add --numbers 1,2,3.3,4,5
 ----
 ====
 
-===== Special Handling of Boolean Parameters
+====== Special Handling of Boolean Parameters
 
 When it comes to parameter arity, one kind of parameter receives a special treatment by default, as
 is often the case in command-line utilities.
@@ -233,7 +233,7 @@ If you would like to allow this behavior (and forego the flag approach), then fo
 =====
 
 [[quotes-handling]]
-==== Quotes Handling
+===== Quotes Handling
 
 Spring Shell takes user input and tokenizes it into words, splitting on space characters.
 If the user wants to provide a parameter value that contains spaces, that value needs to be quoted.
@@ -307,7 +307,7 @@ You said This is a single value
 ====
 
 [[interacting-with-the-shell]]
-==== Interacting with the Shell
+===== Interacting with the Shell
 
 The Spring Shell project builds on top of the https://github.com/jline/jline3[JLine] library and, as a result, brings
 a lot of nice interactive features, some of which are detailed in this section.

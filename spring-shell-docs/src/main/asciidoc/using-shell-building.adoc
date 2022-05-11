@@ -1,5 +1,8 @@
+[[using-shell-building]]
+=== Building
+
 [[native]]
-=== Native Support
+==== Native Support
 
 Re-work with _2.1.x_ brings in an experimental support for compiling shell application
 into _native_ application with _GraalVM_ and _spring-native_. As underlying _jline_
