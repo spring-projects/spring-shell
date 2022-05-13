@@ -555,8 +555,20 @@ public interface ComponentFlow {
 				List<SelectorItem<String>> selectorItems = input.getSelectItems().entrySet().stream()
 					.map(e -> SelectorItem.of(e.getKey(), e.getValue()))
 					.collect(Collectors.toList());
+
+				// setup possible item for initial expose
+				String defaultSelect = input.getDefaultSelect();
+				Stream<SelectorItem<String>> defaultCheckStream = StringUtils.hasText(defaultSelect)
+						? selectorItems.stream()
+						: Stream.empty();
+				SelectorItem<String> defaultExpose = defaultCheckStream
+					.filter(si -> ObjectUtils.nullSafeEquals(defaultSelect, si.getName()))
+					.findFirst()
+					.orElse(null);
+
 				SingleItemSelector<String, SelectorItem<String>> selector = new SingleItemSelector<>(terminal,
 						selectorItems, input.getName(), input.getComparator());
+				selector.setDefaultExpose(defaultExpose);
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
 					if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
 							&& StringUtils.hasText(input.getResultValue())) {

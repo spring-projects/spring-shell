@@ -31,6 +31,7 @@ import org.springframework.shell.component.context.BaseComponentContext;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.support.AbstractSelectorComponent.SelectorComponentContext;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import static org.jline.keymap.KeyMap.ctrl;
@@ -54,6 +55,8 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 	private boolean stale = false;
 	private AtomicInteger start = new AtomicInteger(0);
 	private AtomicInteger pos = new AtomicInteger(0);
+	private I defaultExpose;
+	private boolean expose = false;
 
 	public AbstractSelectorComponent(Terminal terminal, String name, List<I> items, boolean exitSelects,
 			Comparator<I> comparator) {
@@ -96,6 +99,18 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 	}
 
 	/**
+	 * Sets default expose item when component start.
+	 *
+	 * @param defaultExpose the default item
+	 */
+	public void setDefaultExpose(I defaultExpose) {
+		this.defaultExpose = defaultExpose;
+		if (defaultExpose != null) {
+			expose = true;
+		}
+	}
+
+	/**
 	 * Gets items.
 	 *
 	 * @return a list of items
@@ -120,6 +135,7 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 	@Override
 	protected C runInternal(C context) {
 		C thisContext = getThisContext(context);
+		initialExpose(thisContext);
 		ItemStateViewProjection buildItemStateView = buildItemStateView(start.get(), thisContext);
 		List<ItemState<I>> itemStateView = buildItemStateView.items;
 		thisContext.setItemStateView(itemStateView);
@@ -222,6 +238,33 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		buildItemStateView = buildItemStateView(start.get(), thisContext);
 		thisContext.setItemStateView(buildItemStateView.items);
 		return false;
+	}
+
+	private void initialExpose(C context) {
+		if (!expose) {
+			return;
+		}
+		expose = false;
+		List<ItemState<I>> itemStates = context.getItemStates();
+		if (itemStates == null) {
+			AtomicInteger index = new AtomicInteger(0);
+			itemStates = context.getItems().stream()
+					.sorted(comparator)
+					.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled()))
+					.collect(Collectors.toList());
+		}
+		for (int i = 0; i < itemStates.size(); i++) {
+			if (ObjectUtils.nullSafeEquals(itemStates.get(i).getName(), defaultExpose.getName())) {
+				if (i < maxItems) {
+					this.pos.set(i);
+				}
+				else {
+					this.pos.set(maxItems - 1);
+					this.start.set(i - maxItems + 1);
+				}
+				break;
+			}
+		}
 	}
 
 	private ItemStateViewProjection buildItemStateView(int skip, SelectorComponentContext<T, I, ?> context) {
