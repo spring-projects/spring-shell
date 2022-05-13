@@ -41,6 +41,7 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	private String resultValue;
 	private ResultMode resultMode;
 	private Map<String, String> selectItems = new HashMap<>();
+	private String defaultSelect;
 	private Comparator<SelectorItem<String>> comparator;
 	private Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
 	private Integer maxItems;
@@ -81,6 +82,12 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	@Override
 	public SingleItemSelectorSpec selectItems(Map<String, String> selectItems) {
 		this.selectItems.putAll(selectItems);
+		return this;
+	}
+
+	@Override
+	public SingleItemSelectorSpec defaultSelect(String name) {
+		this.defaultSelect = name;
 		return this;
 	}
 
@@ -158,6 +165,10 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 
 	public Map<String, String> getSelectItems() {
 		return selectItems;
+	}
+
+	public String getDefaultSelect() {
+		return defaultSelect;
 	}
 
 	public Comparator<SelectorItem<String>> getComparator() {

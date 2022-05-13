@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.component.flow.ComponentFlow;
@@ -26,6 +28,7 @@ import org.springframework.shell.component.flow.SelectItem;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
 public class ComponentFlowCommands extends AbstractShellComponent {
@@ -86,6 +89,25 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 					.name("Field2")
 					.defaultValue("defaultField2Value")
 					.next(ctx -> null)
+					.and()
+				.build();
+		flow.run();
+	}
+
+	@ShellMethod(key = "flow autoselect", value = "Autoselect item", group = "Flow")
+	public void autoselect(
+			@ShellOption(defaultValue = "Field3") String defaultValue
+		) {
+		Map<String, String> single1SelectItems = IntStream.range(1, 10)
+			.boxed()
+			.collect(Collectors.toMap(i -> "Field" + i, i -> "field" + i));
+
+		ComponentFlow flow = componentFlowBuilder.clone().reset()
+				.withSingleItemSelector("single1")
+					.name("Single1")
+					.selectItems(single1SelectItems)
+					.defaultSelect(defaultValue)
+					.sort((o1, o2) -> o1.getName().compareTo(o2.getName()))
 					.and()
 				.build();
 		flow.run();

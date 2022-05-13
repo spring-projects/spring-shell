@@ -154,56 +154,89 @@ public class ComponentFlowTests extends AbstractShellTests {
 			assertThat(id4).containsExactlyInAnyOrder("value4");
 		}
 
-		@Test
-		public void testChoosesDynamically() throws InterruptedException {
-			ComponentFlow wizard = ComponentFlow.builder()
+	@Test
+	public void testChoosesDynamically() throws InterruptedException {
+		ComponentFlow wizard = ComponentFlow.builder()
+			.terminal(getTerminal())
+			.resourceLoader(getResourceLoader())
+			.templateExecutor(getTemplateExecutor())
+			.withStringInput("id1")
+				.name("name")
+				.next(ctx -> ctx.get("id1"))
+				.and()
+			.withStringInput("id2")
+				.name("name")
+				.resultValue("value2")
+				.resultMode(ResultMode.ACCEPT)
+				.next(ctx -> null)
+				.and()
+			.withStringInput("id3")
+				.name("name")
+				.resultValue("value3")
+				.resultMode(ResultMode.ACCEPT)
+				.next(ctx -> null)
+				.and()
+			.build();
+
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		CountDownLatch latch = new CountDownLatch(1);
+		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
+		service.execute(() -> {
+			result.set(wizard.run());
+			latch.countDown();
+		});
+
+		// id1
+		TestBuffer testBuffer = new TestBuffer().append("id3").cr();
+		write(testBuffer.getBytes());
+		// id3
+		testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+		latch.await(4, TimeUnit.SECONDS);
+		ComponentFlowResult inputWizardResult = result.get();
+		assertThat(inputWizardResult).isNotNull();
+		String id1 = inputWizardResult.getContext().get("id1");
+		// TODO: should be able to check if variable exists
+		// String id2 = inputWizardResult.getContext().get("id2");
+		String id3 = inputWizardResult.getContext().get("id3");
+		assertThat(id1).isEqualTo("id3");
+		// assertThat(id2).isNull();
+		assertThat(id3).isEqualTo("value3");
+	}
+
+	@Test
+	public void testAutoShowsDefault() throws InterruptedException {
+		Map<String, String> single1SelectItems = new HashMap<>();
+		single1SelectItems.put("key1", "value1");
+		single1SelectItems.put("key2", "value2");
+		ComponentFlow wizard = ComponentFlow.builder()
 				.terminal(getTerminal())
 				.resourceLoader(getResourceLoader())
 				.templateExecutor(getTemplateExecutor())
-				.withStringInput("id1")
-					.name("name")
-					.next(ctx -> ctx.get("id1"))
-					.and()
-				.withStringInput("id2")
-					.name("name")
-					.resultValue("value2")
-					.resultMode(ResultMode.ACCEPT)
-					.next(ctx -> null)
-					.and()
-				.withStringInput("id3")
-					.name("name")
-					.resultValue("value3")
-					.resultMode(ResultMode.ACCEPT)
-					.next(ctx -> null)
+				.withSingleItemSelector("single1")
+					.name("Single1")
+					.selectItems(single1SelectItems)
+					.defaultSelect("key2")
 					.and()
 				.build();
 
-				ExecutorService service = Executors.newFixedThreadPool(1);
-				CountDownLatch latch = new CountDownLatch(1);
-				AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		CountDownLatch latch = new CountDownLatch(1);
+		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
 
-				service.execute(() -> {
-					result.set(wizard.run());
-					latch.countDown();
-				});
+		service.execute(() -> {
+			result.set(wizard.run());
+			latch.countDown();
+		});
 
-				// id1
-				TestBuffer testBuffer = new TestBuffer().append("id3").cr();
-				write(testBuffer.getBytes());
+		TestBuffer testBuffer = new TestBuffer();
+		testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
 
-				// id3
-				testBuffer = new TestBuffer().cr();
-				write(testBuffer.getBytes());
-
-				latch.await(4, TimeUnit.SECONDS);
-				ComponentFlowResult inputWizardResult = result.get();
-				assertThat(inputWizardResult).isNotNull();
-				String id1 = inputWizardResult.getContext().get("id1");
-				// TODO: should be able to check if variable exists
-				// String id2 = inputWizardResult.getContext().get("id2");
-				String id3 = inputWizardResult.getContext().get("id3");
-				assertThat(id1).isEqualTo("id3");
-				// assertThat(id2).isNull();
-				assertThat(id3).isEqualTo("value3");
-		}
+		latch.await(4, TimeUnit.SECONDS);
+		ComponentFlowResult inputWizardResult = result.get();
+		assertThat(inputWizardResult).isNotNull();
+		String single1 = inputWizardResult.getContext().get("single1");
+		assertThat(single1).isEqualTo("value2");
+	}
 }

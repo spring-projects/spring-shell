@@ -77,6 +77,14 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 	SingleItemSelectorSpec selectItems(Map<String, String> selectItems);
 
 	/**
+	 * Automatically selects and exposes a given item.
+	 *
+	 * @param name the name
+	 * @return a builder
+	 */
+	SingleItemSelectorSpec defaultSelect(String name);
+
+	/**
 	 * Sets a {@link Comparator} for sorting items.
 	 *
 	 * @param comparator the item comparator
