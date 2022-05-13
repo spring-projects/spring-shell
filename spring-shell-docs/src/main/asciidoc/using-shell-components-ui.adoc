@@ -18,6 +18,12 @@ Build-in components generally follow logic:
 * Exit
 * Render final status of a component state
 
+[NOTE]
+====
+<<using-shell-components-flow>> gives better interface defining flow of a
+components which better suited for defining interactive command flows.
+====
+
 ===== Component Render
 
 There are two ways to implement component rendering, firstly fully
