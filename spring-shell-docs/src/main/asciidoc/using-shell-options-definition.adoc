@@ -1,0 +1,35 @@
+[[using-shell-options-definition]]
+==== Definition
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Options can be defined within a target method as annotations in a method arguments
+or with programmatically with `CommandRegistration`.
+
+Having a target method with argument is automatically registered with a matching
+argument name.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-without-annotation]
+----
+====
+
+`@ShellOption` annotation can be used to define an option name if you
+don't want it to be same as argument name.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation]
+----
+====
+
+Programmatic way with `CommandRegistration` is to use method adding a long name.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-longarg]
+----
+====

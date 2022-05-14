@@ -1,6 +1,20 @@
 [[using-shell-options]]
 === Options
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-include::using-shell-options-generic.adoc[]
+Command line arguments can be separated into options and positional parameters.
+Following sections describes features how options are defined and used.
+
+include::using-shell-options-definition.adoc[]
+
+include::using-shell-options-short.adoc[]
+
+include::using-shell-options-arity.adoc[]
+
+include::using-shell-options-positional.adoc[]
+
+include::using-shell-options-optional.adoc[]
+
+include::using-shell-options-default.adoc[]
 
 include::using-shell-options-validation.adoc[]

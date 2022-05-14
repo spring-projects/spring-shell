@@ -12,3 +12,17 @@ Essentially few things needs to happen before you have a working _spring shell_ 
 
 You will get a full working _spring shell_ application without defining any user level commands
 as some basic build-in commands are provided out of a box like `help` and `history`.
+
+[NOTE]
+====
+Throughout this documentation we make a references to configuring something using
+annotations which mostly relates to use of `@ShellMethod` and `@ShellOption` and
+programmatic way which relates to use of `CommandRegistration`.
+
+Programmatic model is how things are actually registered even if you use annotations.
+Annotations `@ShellMethod` and `@ShellOption` are considered as legacy feature
+which we don't yet want to remove. `CommandRegistration` is a new development
+model where new features are added. We are most likely going to replace existing
+annotations with something better order to support new features in a
+`CommandRegistration` model.
+====

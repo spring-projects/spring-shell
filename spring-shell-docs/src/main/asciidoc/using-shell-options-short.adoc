@@ -1,0 +1,27 @@
+[[using-shell-options-short]]
+==== Short Format
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Short style _POSIX_ option in most is just a synonym to long format but
+adds additional feature to combine those options together. Having short
+options _a_, _b_, _c_ can be used as `-abc`.
+
+Programmatically short option is defined by using short name function.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-shortarg]
+----
+====
+
+Short option with combined format is powerful if type is defined as a flag
+which means type is a _boolean_. That way you can define a presense of a flags
+as `-abc`, `-abc true` or `-abc false`.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-shortargbooleans]
+----
+====

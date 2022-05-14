@@ -1,5 +1,5 @@
 [[validating-command-arguments]]
-==== Validating Command Arguments
+==== Validation
 
 Spring Shell integrates with the https://beanvalidation.org/[Bean Validation API] to support
 automatic and self-documenting constraints on command parameters.
@@ -27,7 +27,10 @@ The following constraints were not met:
 ----
 ====
 
+[NOTE]
 .Applies to All Command Implementations
-NOTE: It is important to note that bean validation applies to all command implementations, whether
-they use the "standard" API or any other API, through the use of an adapter
+====
+It is important to note that bean validation applies to all command implementations,
+whether they use the "standard" API or any other API, through the use of an adapter
 (see <<support-for-shell-1-and-jcommander,Supporting Other APIs>>)
+====

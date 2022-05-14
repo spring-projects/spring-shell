@@ -1,0 +1,13 @@
+[[using-shell-options-optional]]
+==== Optional Value
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Option is either required or not and it generally speaking depends on
+a command target how this behaves.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-optional]
+----
+====
