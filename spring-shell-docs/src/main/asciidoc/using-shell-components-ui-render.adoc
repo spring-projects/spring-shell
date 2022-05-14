@@ -1,0 +1,91 @@
+[[using-shell-components-ui-render]]
+===== Component Render
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+There are two ways to implement component rendering, firstly fully
+programmatically or secondly using a _ANTLR Stringtemplate_. Though
+strictly speaking there is just a simple `Function` renderer interface
+which takes `Context` as an input and outputs a list of `AttributedString`
+but this allows to choose between _templating_ and _code_.
+
+Templating is a good choice if you don't need to anything complex or
+you just want to slightly modify existing component layouts. Rendering
+via code then gives you flexibility to do whatever you need.
+
+Programmatic way to render is simple as to create a `Function`:
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet1]
+----
+====
+
+And then hook it with a component:
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet2]
+----
+====
+
+Component have their own context but usually shares some functionality
+from a parent component types, those context variables are shown below.
+
+[[textcomponentcontext-template-variables]]
+.TextComponentContext Template Variables
+|===
+|Key |Description
+
+|resultValue
+|Value after component renders its result.
+
+|name
+|Name of a component, aka its title.
+
+|message
+|Possible message set for component.
+
+|messageLevel
+|Level of a message, either INFO, WARN or ERROR
+
+|hasMessageLevelInfo
+|Return true if level is INFO, false otherwise.
+
+|hasMessageLevelWarn
+|Return true if level is WARN, false otherwise.
+
+|hasMessageLevelError
+|Return true if level is ERROR, false otherwise.
+
+|input
+|Raw user input.
+
+|===
+
+
+[[selectorcomponentcontext-template-variables]]
+.SelectorComponentContext Template Variables
+|===
+|Key |Description
+
+|name
+|Name of a component, aka title.
+
+|input
+|Raw user input, mostly for filter.
+
+|itemStates
+|Full list of item states.
+
+|itemStateView
+|Visible list of item states.
+
+|isResult
+|Return if context is in a result mode.
+
+|cursorRow
+|Current cursor row in a selector
+
+|===

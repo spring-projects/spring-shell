@@ -1,0 +1,42 @@
+[[using-shell-components-ui-singleselect]]
+===== Single Select
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Used to ask an item from a list and is essentially similar to simple
+dropbox implementation.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet6]
+----
+====
+
+image::images/component-single-select-1.svg[text input]
+
+Context object is `SingleItemSelectorContext`.
+
+[[singleitemselectorcontext-template-variables]]
+.SingleItemSelectorContext Template Variables
+|===
+|Key |Description
+
+|value
+|Returned value when component exists.
+
+|rows
+|Visible items where rows list contains maps of name and selected items.
+
+|model
+|Parent context variables <<selectorcomponentcontext-template-variables>>
+|===
+
+It's possible to pre-select an item by defining it to get exposed. This is
+useful if default is known and user can then just hit enter.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet8]
+----
+====

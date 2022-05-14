@@ -130,9 +130,9 @@ public class UiComponentSnippets {
 
 			@ShellMethod(key = "component single", value = "Single selector", group = "Components")
 			public String singleSelector() {
-				List<SelectorItem<String>> items = new ArrayList<>();
-				items.add(SelectorItem.of("key1", "value1"));
-				items.add(SelectorItem.of("key2", "value2"));
+				SelectorItem<String> i1 = SelectorItem.of("key1", "value1");
+				SelectorItem<String> i2 = SelectorItem.of("key2", "value2");
+				List<SelectorItem<String>> items = Arrays.asList(i1, i2);
 				SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
 						items, "testSimple", null);
 				component.setResourceLoader(getResourceLoader());
@@ -171,4 +171,29 @@ public class UiComponentSnippets {
 		}
 		// end::snippet7[]
 	}
+
+	class Dump7 {
+		@ShellComponent
+		public class ComponentCommands extends AbstractShellComponent {
+
+			@ShellMethod(key = "component single", value = "Single selector", group = "Components")
+			public String singleSelector() {
+				// tag::snippet8[]
+				SelectorItem<String> i1 = SelectorItem.of("key1", "value1");
+				SelectorItem<String> i2 = SelectorItem.of("key2", "value2");
+				List<SelectorItem<String>> items = Arrays.asList(i1, i2);
+				SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+						items, "testSimple", null);
+				component.setDefaultExpose(i2);
+				// end::snippet8[]
+				component.setResourceLoader(getResourceLoader());
+				component.setTemplateExecutor(getTemplateExecutor());
+				SingleItemSelectorContext<String, SelectorItem<String>> context = component
+						.run(SingleItemSelectorContext.empty());
+				String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
+				return "Got value " + result;
+			}
+		}
+	}
+
 }

@@ -1,0 +1,29 @@
+[[using-shell-components-ui-confirmation]]
+===== Confirmation
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Used to ask a simple confirmation from a user and essentially is
+yes/no question.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet5]
+----
+====
+
+image::images/component-confirmation-1.svg[text input]
+
+Context object is `ConfirmationInputContext`.
+
+[[confirmationinputcontext-template-variables]]
+.ConfirmationInputContext Template Variables
+|===
+|Key |Description
+
+|defaultValue
+|Default value, either true or false.
+
+|model
+|Parent context variables <<textcomponentcontext-template-variables>>
+|===

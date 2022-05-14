@@ -1,0 +1,31 @@
+[[using-shell-components-ui-multiselect]]
+===== Multi Select
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Used to ask an items from a list.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet7]
+----
+====
+
+image::images/component-multi-select-1.svg[text input]
+
+Context object is `MultiItemSelectorContext`.
+
+[[multiitemselectorcontext-template-variables]]
+.MultiItemSelectorContext Template Variables
+|===
+|Key |Description
+
+|values
+|Returned values when component exists.
+
+|rows
+|Visible items where rows list contains maps of name, selected, onrow and enabled items.
+
+|model
+|Parent context variables <<selectorcomponentcontext-template-variables>>
+|===

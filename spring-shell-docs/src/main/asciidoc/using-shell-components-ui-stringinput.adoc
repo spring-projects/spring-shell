@@ -1,0 +1,42 @@
+[[using-shell-components-ui-stringinput]]
+===== String Input
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Used to ask a simple text input from a user, optionally masking values
+if content contains something sensitive.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet3]
+----
+====
+
+
+image::images/component-text-input-1.svg[text input]
+
+Context object is `StringInputContext`.
+
+[[stringinputcontext-template-variables]]
+.StringInputContext Template Variables
+|===
+|Key |Description
+
+|defaultValue
+|Default value if set, null otherwise.
+
+|maskedInput
+|Masked input value
+
+|maskedResultValue
+|Masked result value
+
+|maskCharacter
+|Mask character if set, null otherwise.
+
+|hasMaskCharacter
+|Is true if mask character is set, false otherwise.
+
+|model
+|Parent context variables <<textcomponentcontext-template-variables>>
+|===
