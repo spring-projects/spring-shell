@@ -2,7 +2,7 @@
 ==== Flow
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-When using <<using-shell-components-flow>> to build something which involves
+When using <<using-shell-components-ui>> to build something which involves
 use of a multiple components your implemention may become a bit cluttered.
 Nothing wrong with that but to ease these use cases we've build a
 `ComponentFlow` which is able to hook multiple component executions together
