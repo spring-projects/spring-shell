@@ -11,3 +11,13 @@ a command target how this behaves.
 include::{snippets}/OptionSnippets.java[tag=option-registration-optional]
 ----
 ====
+
+With an annotation model there is no direct way to define if argument is
+optional, instead it's instructed to be _NULL_.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation-optional]
+----
+====

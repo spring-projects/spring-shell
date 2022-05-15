@@ -42,3 +42,12 @@ include::{snippets}/OptionSnippets.java[tag=option-registration-arityenum]
 |ONE_OR_MORE
 |1 / Integer MAX
 |===
+
+Annotation model only supports defining _max_ value of an arity.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation-arity]
+----
+====

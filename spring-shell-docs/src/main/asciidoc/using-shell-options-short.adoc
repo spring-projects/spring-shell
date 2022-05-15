@@ -25,3 +25,12 @@ as `-abc`, `-abc true` or `-abc false`.
 include::{snippets}/OptionSnippets.java[tag=option-registration-shortargbooleans]
 ----
 ====
+
+With annotation model you can define short argument directly.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation-shortarg]
+----
+====

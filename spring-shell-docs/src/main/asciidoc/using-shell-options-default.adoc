@@ -13,3 +13,12 @@ based on a default value.
 include::{snippets}/OptionSnippets.java[tag=option-registration-default]
 ----
 ====
+
+With an annotation model default value can be defined.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation-default]
+----
+====

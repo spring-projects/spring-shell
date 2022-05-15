@@ -22,6 +22,46 @@ public class OptionSnippets {
 		// end::option-without-annotation[]
 	}
 
+	class Dump3 {
+		// tag::option-with-annotation-shortarg[]
+		public String example(
+			@ShellOption(value = { "-a" }) String arg1,
+			@ShellOption(value = { "-b" }) String arg2,
+			@ShellOption(value = { "-c" }) String arg3
+		) {
+			return "Hello " + arg1;
+		}
+		// end::option-with-annotation-shortarg[]
+	}
+
+	class Dump4 {
+		// tag::option-with-annotation-arity[]
+		public String example(@ShellOption(arity = 1) String arg1) {
+			return "Hello " + arg1;
+		}
+		// end::option-with-annotation-arity[]
+	}
+
+	class Dump5 {
+		// tag::option-with-annotation-optional[]
+		public String example(
+			@ShellOption(defaultValue = ShellOption.NULL) String arg1
+		) {
+			return "Hello " + arg1;
+		}
+		// end::option-with-annotation-optional[]
+	}
+
+	class Dump6 {
+		// tag::option-with-annotation-default[]
+		public String example(
+			@ShellOption(defaultValue = "defaultValue") String arg1
+		) {
+			return "Hello " + arg1;
+		}
+		// end::option-with-annotation-default[]
+	}
+
 	public void dump1() {
 
 		// tag::option-registration-longarg[]
