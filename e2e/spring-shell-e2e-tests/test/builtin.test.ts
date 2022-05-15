@@ -44,7 +44,7 @@ describe('builtin commands', () => {
   /**
    * fatjar commands
    */
-   describe(jarDesc, () => {
+  describe(jarDesc, () => {
     beforeAll(() => {
       command = jarCommand;
       options = jarOptions;

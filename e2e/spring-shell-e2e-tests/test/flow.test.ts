@@ -90,7 +90,7 @@ describe('flow commands', () => {
   /**
    * native commands
    */
-   describe(nativeDesc, () => {
+  describe(nativeDesc, () => {
     beforeAll(() => {
       command = nativeCommand;
       options = [];
