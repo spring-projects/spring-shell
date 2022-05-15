@@ -1,0 +1,44 @@
+= Spring Shell E2E
+
+Testing shell features within unit tests is not always enough to have a full coverage as shell
+applications has been traditionally been difficult to test as there is too many moving parts.
+While it is relative easy to test parts of a java code in your `spring-shell` app, knowing those
+will actualy execute with as run in a hosting environment is totally different topic. As
+spring-shell` application can be run on a different environment either a simple `spring-boot` app
+via java runtime environment or via `graalvm` build binary many things can simply go wrong.
+
+`spring-shell-e2e` is a node module which uses `node-pty` and `xterm.js` to run your
+shell application whether you run shell in any ways as it just assumes a command runs
+a shell application. Relationship between `node-pty` and `xterm.js` is that _pty_ environment
+is providing underlying host capabilities running shell applications and _xterm_ having
+a knowledge to translate all shell command sequinces to a representive text.
+
+[NOTE]
+====
+We chose to use javascript space for e2e framework as it provides a good set of
+libraries to work with various environments and is much more close to native
+environment what we could do from a java space.
+====
+
+`spring-shell-e2e-tests` is simply using `spring-shell-e2e` to implement _e2e_ tests and
+runs both _fatjar_ and _native_ built apps.
+
+`spring-shell-e2e` is work-in-progress so it's not yet published into _npmjs_.
+
+Generic workflow to run `spring-shell-e2e-tests` is:
+
+====
+[source, bash]
+----
+spring-shell
+$ ./mvnw clean package -DskipTests
+
+spring-shell/e2e/spring-shell-e2e
+$ npm install
+$ npm run build
+
+spring-shell/e2e/spring-shell-e2e-tests
+$ npm install
+$ npm test
+----
+====
