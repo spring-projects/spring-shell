@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.springframework.shell.boot;
 
 import org.jline.reader.impl.history.DefaultHistory;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +29,7 @@ public class JLineAutoConfiguration {
 	public static class JLineHistoryConfiguration {
 
 		@Bean
-		public org.jline.reader.History history(@Value("${spring.application.name:spring-shell}.log") String historyPath) {
+		public org.jline.reader.History history() {
 			return new DefaultHistory();
 		}
 	}

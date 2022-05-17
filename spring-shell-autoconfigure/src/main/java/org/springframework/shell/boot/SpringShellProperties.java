@@ -25,18 +25,36 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "spring.shell")
 public class SpringShellProperties {
 
+	private History history = new History();
+	private Config config = new Config();
 	private Script script = new Script();
 	private Interactive interactive = new Interactive();
 	private Noninteractive noninteractive = new Noninteractive();
 	private Theme theme = new Theme();
 	private Command command = new Command();
 
-	public void setScript(Script script) {
-		this.script = script;
+	public void setConfig(Config config) {
+		this.config = config;
+	}
+
+	public Config getConfig() {
+		return config;
+	}
+
+	public History getHistory() {
+		return history;
+	}
+
+	public void setHistory(History history) {
+		this.history = history;
 	}
 
 	public Script getScript() {
 		return script;
+	}
+
+	public void setScript(Script script) {
+		this.script = script;
 	}
 
 	public void setInteractive(Interactive interactive) {
@@ -69,6 +87,50 @@ public class SpringShellProperties {
 
 	public void setCommand(Command command) {
 		this.command = command;
+	}
+
+	public static class Config {
+
+		private String env;
+		private String location;
+
+		public String getEnv() {
+			return env;
+		}
+
+		public void setEnv(String env) {
+			this.env = env;
+		}
+
+		public String getLocation() {
+			return location;
+		}
+
+		public void setLocation(String location) {
+			this.location = location;
+		}
+	}
+
+	public static class History {
+
+		private String name;
+		private boolean enabled = true;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
 	}
 
 	public static class Script {

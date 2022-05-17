@@ -2,6 +2,11 @@ spring:
   main:
     banner-mode: off
   shell:
+    config:
+      env: SPRING_SHELL_SAMPLES_USER_HOME
+      location: "{userconfig}/spring-shell-samples"
+    history:
+      name: spring-shell-samples-history.log
     command:
       completion:
         root-command: spring-shell-samples
