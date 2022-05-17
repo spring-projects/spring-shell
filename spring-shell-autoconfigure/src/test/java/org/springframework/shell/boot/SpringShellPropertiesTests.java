@@ -33,6 +33,10 @@ public class SpringShellPropertiesTests {
 				.withUserConfiguration(Config1.class)
 				.run((context) -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
+					assertThat(properties.getHistory().isEnabled()).isTrue();
+					assertThat(properties.getHistory().getName()).isNull();
+					assertThat(properties.getConfig().getLocation()).isNull();
+					assertThat(properties.getConfig().getEnv()).isNull();
 					assertThat(properties.getScript().isEnabled()).isTrue();
 					assertThat(properties.getInteractive().isEnabled()).isTrue();
 					assertThat(properties.getNoninteractive().isEnabled()).isTrue();
@@ -63,6 +67,10 @@ public class SpringShellPropertiesTests {
 	@Test
 	public void setProperties() {
 		this.contextRunner
+				.withPropertyValues("spring.shell.history.enabled=false")
+				.withPropertyValues("spring.shell.history.name=fakename")
+				.withPropertyValues("spring.shell.config.location=fakelocation")
+				.withPropertyValues("spring.shell.config.env=FAKE_ENV")
 				.withPropertyValues("spring.shell.script.enabled=false")
 				.withPropertyValues("spring.shell.interactive.enabled=false")
 				.withPropertyValues("spring.shell.noninteractive.enabled=false")
@@ -90,6 +98,10 @@ public class SpringShellPropertiesTests {
 				.withUserConfiguration(Config1.class)
 				.run((context) -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
+					assertThat(properties.getHistory().isEnabled()).isFalse();
+					assertThat(properties.getHistory().getName()).isEqualTo("fakename");
+					assertThat(properties.getConfig().getLocation()).isEqualTo("fakelocation");
+					assertThat(properties.getConfig().getEnv()).isEqualTo("FAKE_ENV");
 					assertThat(properties.getScript().isEnabled()).isFalse();
 					assertThat(properties.getInteractive().isEnabled()).isFalse();
 					assertThat(properties.getNoninteractive().isEnabled()).isFalse();

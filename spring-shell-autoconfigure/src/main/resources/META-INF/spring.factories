@@ -6,6 +6,7 @@ org.springframework.shell.boot.ApplicationRunnerAutoConfiguration,\
 org.springframework.shell.boot.CommandCatalogAutoConfiguration,\
 org.springframework.shell.boot.LineReaderAutoConfiguration,\
 org.springframework.shell.boot.CompleterAutoConfiguration,\
+org.springframework.shell.boot.UserConfigAutoConfiguration,\
 org.springframework.shell.boot.JLineAutoConfiguration,\
 org.springframework.shell.boot.JLineShellAutoConfiguration,\
 org.springframework.shell.boot.ParameterResolverAutoConfiguration,\
