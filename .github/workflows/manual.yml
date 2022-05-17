@@ -44,3 +44,9 @@ jobs:
             spring-shell-samples/target/*.jar
             spring-shell-samples/target/spring-shell-samples
             spring-shell-samples/target/spring-shell-samples.exe
+      - uses: actions/upload-artifact@v2
+        with:
+          name: surefire-reports-${{ matrix.nickname }}
+          retention-days: 1
+          path: |
+            */target/surefire-reports/*
