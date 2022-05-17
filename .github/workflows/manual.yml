@@ -1,0 +1,46 @@
+name: Manual
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nickname: win
+            os: windows-latest
+            graal: 22.1.0
+          - nickname: macos
+            os: macos-latest
+            graal: 22.1.0
+          - nickname: linux
+            os: ubuntu-latest
+            graal: 22.1.0
+    name: Build ${{ matrix.nickname }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 11
+          cache: maven
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: ${{ matrix.graal }}
+          java-version: 11
+          components: native-image
+          set-java-home: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          ./mvnw clean package -Pnative
+      - uses: actions/upload-artifact@v2
+        with:
+          name: spring-shell-samples-${{ matrix.nickname }}
+          retention-days: 1
+          path: |
+            spring-shell-samples/target/*.jar
+            spring-shell-samples/target/spring-shell-samples
+            spring-shell-samples/target/spring-shell-samples.exe
