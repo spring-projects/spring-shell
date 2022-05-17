@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.boot;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.jline.reader.Completer;
 import org.jline.reader.History;
@@ -108,7 +108,7 @@ public class LineReaderAutoConfigurationTests {
 
 		@Bean
 		UserConfigPathProvider mockUserConfigPathProvider() {
-			return () -> Path.of("mockpath");
+			return () -> Paths.get("mockpath");
 		}
 	}
 }
