@@ -17,6 +17,7 @@ package org.springframework.shell.samples.standard;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -77,4 +78,32 @@ public class E2ECommands {
 				.and()
 			.build();
 	}
+
+	@ShellMethod(key = "e2e anno boolean-arity1-default-true")
+	public String testBooleanArity1DefaultTrue(
+		@ShellOption(value = "--overwrite", arity = 1, defaultValue = "true") Boolean overwrite
+	) {
+		return "Hello " + overwrite;
+	}
+
+	@Bean
+	public CommandRegistration testBooleanArity1DefaultTrueRegistration() {
+		return CommandRegistration.builder()
+			.command("e2e", "reg", "boolean-arity1-default-true")
+			.group("E2E Commands")
+			.withOption()
+				.longNames("overwrite")
+				.type(Boolean.class)
+				.defaultValue("true")
+				.arity(OptionArity.ZERO_OR_ONE)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					Boolean overwrite = ctx.getOptionValue("overwrite");
+					return "Hello " + overwrite;
+				})
+				.and()
+			.build();
+	}
+
 }
