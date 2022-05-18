@@ -104,7 +104,7 @@ public interface CommandExecution {
 				throw new CommandParserExceptionsException("Command parser resulted errors", results.errors());
 			}
 
-			CommandContext ctx = CommandContext.of(args, results, terminal);
+			CommandContext ctx = CommandContext.of(args, results, terminal, registration);
 
 			Object res = null;
 

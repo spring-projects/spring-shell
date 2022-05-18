@@ -55,6 +55,13 @@ public interface CommandContext {
 	CommandParserResults getParserResults();
 
 	/**
+	 * Gets a command registration.
+	 *
+	 * @return the command registration
+	 */
+	CommandRegistration getCommandRegistration();
+
+	/**
 	 * Gets an mapped option value.
 	 *
 	 * @param <T> the type to map to
@@ -76,10 +83,12 @@ public interface CommandContext {
 	 * @param args the arguments
 	 * @param results the results
 	 * @param terminal the terminal
+	 * @param commandRegistration the command registration
 	 * @return a command context
 	 */
-	static CommandContext of(String[] args, CommandParserResults results, Terminal terminal) {
-		return new DefaultCommandContext(args, results, terminal);
+	static CommandContext of(String[] args, CommandParserResults results, Terminal terminal,
+			CommandRegistration commandRegistration) {
+		return new DefaultCommandContext(args, results, terminal, commandRegistration);
 	}
 
 	/**
@@ -87,14 +96,17 @@ public interface CommandContext {
 	 */
 	static class DefaultCommandContext implements CommandContext {
 
-		private String[] args;
-		private CommandParserResults results;
-		private Terminal terminal;
+		private final String[] args;
+		private final CommandParserResults results;
+		private final Terminal terminal;
+		private final CommandRegistration commandRegistration;
 
-		DefaultCommandContext(String[] args, CommandParserResults results, Terminal terminal) {
+		DefaultCommandContext(String[] args, CommandParserResults results, Terminal terminal,
+				CommandRegistration commandRegistration) {
 			this.args = args;
 			this.results = results;
 			this.terminal = terminal;
+			this.commandRegistration = commandRegistration;
 		}
 
 		@Override
@@ -110,6 +122,11 @@ public interface CommandContext {
 		@Override
 		public CommandParserResults getParserResults() {
 			return results;
+		}
+
+		@Override
+		public CommandRegistration getCommandRegistration() {
+			return commandRegistration;
 		}
 
 		@Override

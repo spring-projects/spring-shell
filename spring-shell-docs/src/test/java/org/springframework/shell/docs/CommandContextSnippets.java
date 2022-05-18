@@ -22,7 +22,7 @@ import org.springframework.shell.command.CommandContext;
 @SuppressWarnings("unused")
 public class CommandContextSnippets {
 
-	CommandContext ctx = CommandContext.of(null, null, null);
+	CommandContext ctx = CommandContext.of(null, null, null, null);
 
 	void dump1() {
 		// tag::snippet1[]
