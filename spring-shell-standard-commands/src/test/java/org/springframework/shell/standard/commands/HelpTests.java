@@ -91,7 +91,7 @@ public class HelpTests {
 	public void testCommandHelp() throws Exception {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("first-command")
-			.help("A rather extensive description of some command.")
+			.description("A rather extensive description of some command.")
 			.withTarget()
 				.method(commandsPojo, "firstCommand")
 				.and()
@@ -127,7 +127,7 @@ public class HelpTests {
 	public void testCommandList() throws Exception {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("first-command")
-			.help("A rather extensive description of some command.")
+			.description("A rather extensive description of some command.")
 			.withTarget()
 				.method(commandsPojo, "firstCommand")
 				.and()
@@ -140,7 +140,7 @@ public class HelpTests {
 
 		CommandRegistration registration2 = CommandRegistration.builder()
 			.command("second-command")
-			.help("The second command. This one is known under several aliases as well.")
+			.description("The second command. This one is known under several aliases as well.")
 			.withTarget()
 				.method(commandsPojo, "secondCommand")
 				.and()
@@ -150,7 +150,7 @@ public class HelpTests {
 
 		CommandRegistration registration3 = CommandRegistration.builder()
 			.command("second-command")
-			.help("The last command.")
+			.description("The last command.")
 			.withTarget()
 				.method(commandsPojo, "thirdCommand")
 				.and()
@@ -159,7 +159,7 @@ public class HelpTests {
 
 		CommandRegistration registration4 = CommandRegistration.builder()
 			.command("first-group-command")
-			.help("The first command in a separate group.")
+			.description("The first command in a separate group.")
 			.group("Example Group")
 			.withTarget()
 				.method(commandsPojo, "firstCommandInGroup")
@@ -169,7 +169,7 @@ public class HelpTests {
 
 		CommandRegistration registration5 = CommandRegistration.builder()
 			.command("second-group-command")
-			.help("The second command in a separate group.")
+			.description("The second command in a separate group.")
 			.group("Example Group")
 			.withTarget()
 				.method(commandsPojo, "secondCommandInGroup")

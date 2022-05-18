@@ -49,7 +49,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testFunctionExecution() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -66,7 +66,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodExecution1() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -84,7 +84,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodExecution2() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -102,7 +102,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodSinglePositionalArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -122,7 +122,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodSingleWithNamedArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.and()
@@ -140,7 +140,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodMultiPositionalArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -160,7 +160,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodMultiPositionalArgsAll() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -180,7 +180,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodMultipleArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -210,7 +210,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodMultipleIntArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -239,7 +239,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodMultiplePositionalStringArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -279,7 +279,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testMethodMultiplePositionalStringArgsMixed(String arg) {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -315,7 +315,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testShortCombinedWithoutValue() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('a')
 				.description("short arg a")
@@ -345,7 +345,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testShortCombinedSomeHavingValue() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('a')
 				.description("short arg a")
@@ -375,7 +375,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testFloatArrayOne() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.type(float[].class)
@@ -393,7 +393,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	public void testFloatArrayTwo() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.type(float[].class)

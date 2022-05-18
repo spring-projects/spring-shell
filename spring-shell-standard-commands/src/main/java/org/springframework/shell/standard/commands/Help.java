@@ -127,7 +127,7 @@ public class Help extends AbstractShellComponent {
 		List<ParameterDescription> parameterDescriptions = getParameterDescriptions(registration);
 
 		// NAME
-		documentCommandName(result, command, registration.getHelp());
+		documentCommandName(result, command, registration.getDescription());
 
 		// SYNOPSYS
 		documentSynopsys(result, command, parameterDescriptions);
@@ -300,7 +300,7 @@ public class Help extends AbstractShellComponent {
 						.append(prefix)
 						.append(String.join(", ", e.getValue()), AttributedStyle.BOLD)
 						.append(": ")
-						.append(e.getKey().getHelp())
+						.append(e.getKey().getDescription())
 						.append('\n');
 			});
 			if (showGroups) {

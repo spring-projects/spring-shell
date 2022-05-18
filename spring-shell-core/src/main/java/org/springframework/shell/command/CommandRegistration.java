@@ -57,13 +57,6 @@ public interface CommandRegistration {
 	InteractionMode getInteractionMode();
 
 	/**
-	 * Get help for a command.
-	 *
-	 * @return the help
-	 */
-	String getHelp();
-
-	/**
 	 * Get group for a command.
 	 *
 	 * @return the group
@@ -382,12 +375,12 @@ public interface CommandRegistration {
 		Builder interactionMode(InteractionMode mode);
 
 		/**
-		 * Define a simple help text for a command.
+		 * Define a description text for a command.
 		 *
-		 * @param help the help text
+		 * @param help the description text
 		 * @return builder for chaining
 		 */
-		Builder help(String help);
+		Builder description(String description);
 
 		/**
 		 * Define an {@link Availability} suppliear for a command.
@@ -623,19 +616,17 @@ public interface CommandRegistration {
 
 		private String command;
 		private InteractionMode interactionMode;
-		private String help;
 		private String group;
 		private String description;
 		private Supplier<Availability> availability;
 		private List<DefaultOptionSpec> optionSpecs;
 		private DefaultTargetSpec targetSpec;
 
-		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String help,
-				String group, String description, Supplier<Availability> availability,
-				List<DefaultOptionSpec> optionSpecs, DefaultTargetSpec targetSpec) {
+		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String group,
+				String description, Supplier<Availability> availability, List<DefaultOptionSpec> optionSpecs,
+				DefaultTargetSpec targetSpec) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
-			this.help = help;
 			this.group = group;
 			this.description = description;
 			this.availability = availability;
@@ -651,11 +642,6 @@ public interface CommandRegistration {
 		@Override
 		public InteractionMode getInteractionMode() {
 			return interactionMode;
-		}
-
-		@Override
-		public String getHelp() {
-			return help;
 		}
 
 		@Override
@@ -712,7 +698,6 @@ public interface CommandRegistration {
 
 		private String[] commands;
 		private InteractionMode interactionMode = InteractionMode.ALL;
-		private String help;
 		private String group;
 		private String description;
 		private Supplier<Availability> availability;
@@ -738,8 +723,8 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public Builder help(String help) {
-			this.help = help;
+		public Builder description(String description) {
+			this.description = description;
 			return this;
 		}
 
@@ -774,7 +759,7 @@ public interface CommandRegistration {
 			Assert.notNull(commands, "command cannot be empty");
 			Assert.notNull(targetSpec, "target cannot be empty");
 			Assert.state(!(targetSpec.bean != null && targetSpec.function != null), "only one target can exist");
-			return new DefaultCommandRegistration(commands, interactionMode, help, group, description, availability,
+			return new DefaultCommandRegistration(commands, interactionMode, group, description, availability,
 					optionSpecs, targetSpec);
 		}
 	}

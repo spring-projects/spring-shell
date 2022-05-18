@@ -86,7 +86,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 					Builder builder = CommandRegistration.builder()
 						.command(key)
 						.group(group)
-						.help(shellMapping.value())
+						.description(shellMapping.value())
 						.interactionMode(shellMapping.interactionMode())
 						.availability(availabilityIndicator);
 

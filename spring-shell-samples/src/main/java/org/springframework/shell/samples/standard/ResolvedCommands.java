@@ -90,7 +90,7 @@ public class ResolvedCommands {
 			CommandRegistration resolved1 = CommandRegistration.builder()
 				.command("resolve server1 command1")
 				.group(GROUP)
-				.help("server1 command1")
+				.description("server1 command1")
 				.withTarget()
 					.function(ctx -> {
 						return "hi from server1 command1";
@@ -115,7 +115,7 @@ public class ResolvedCommands {
 			CommandRegistration resolved1 = CommandRegistration.builder()
 				.command("resolve server2 command1")
 				.group(GROUP)
-				.help("server2 command1")
+				.description("server2 command1")
 				.withTarget()
 					.function(ctx -> {
 						return "hi from server2 command1";
@@ -125,7 +125,7 @@ public class ResolvedCommands {
 			CommandRegistration resolved2 = CommandRegistration.builder()
 				.command("resolve server2 command2")
 				.group(GROUP)
-				.help("server2 command2")
+				.description("server2 command2")
 				.withTarget()
 					.function(ctx -> {
 						return "hi from server2 command2";

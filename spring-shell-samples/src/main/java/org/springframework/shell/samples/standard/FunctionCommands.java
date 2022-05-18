@@ -26,7 +26,7 @@ public class FunctionCommands {
 	public CommandRegistration commandRegistration1() {
 		return CommandRegistration.builder()
 			.command("function", "command1")
-			.help("function sample")
+			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
 				.function(ctx -> {
@@ -44,7 +44,7 @@ public class FunctionCommands {
 	public CommandRegistration commandRegistration2() {
 		return CommandRegistration.builder()
 			.command("function", "command2")
-			.help("function sample")
+			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
 				.function(ctx -> {
@@ -73,7 +73,7 @@ public class FunctionCommands {
 	public CommandRegistration commandRegistration3() {
 		return CommandRegistration.builder()
 			.command("function", "command3")
-			.help("function sample")
+			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
 				.consumer(ctx -> {
@@ -92,7 +92,7 @@ public class FunctionCommands {
 	public CommandRegistration commandRegistration4() {
 		return CommandRegistration.builder()
 			.command("function", "command4")
-			.help("function sample")
+			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
 				.consumer(ctx -> {

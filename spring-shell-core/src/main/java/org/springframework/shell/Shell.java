@@ -271,7 +271,7 @@ public class Shell {
 		return new CompletionProposal(command)
 				.dontQuote(true)
 				.category("Available commands")
-				.description(registration.getHelp());
+				.description(registration.getDescription());
 	}
 
 	/**

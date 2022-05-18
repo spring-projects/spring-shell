@@ -153,7 +153,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	public void testSimpleFullRegistrationWithFunction() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -163,7 +163,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
-		assertThat(registration.getHelp()).isEqualTo("help");
+		assertThat(registration.getDescription()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getLongNames()).containsExactly("arg1");
 	}
@@ -172,7 +172,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	public void testSimpleFullRegistrationWithMethod() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.longNames("arg1")
 				.description("some arg1")
@@ -182,7 +182,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
-		assertThat(registration.getHelp()).isEqualTo("help");
+		assertThat(registration.getDescription()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 	}
 
@@ -190,7 +190,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	public void testOptionWithType() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('v')
 				.type(boolean.class)
@@ -201,7 +201,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
-		assertThat(registration.getHelp()).isEqualTo("help");
+		assertThat(registration.getDescription()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('v');
 		assertThat(registration.getOptions().get(0).getType()).isEqualTo(ResolvableType.forType(boolean.class));
@@ -211,7 +211,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	public void testOptionWithRequired() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('v')
 				.type(boolean.class)
@@ -223,14 +223,14 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
-		assertThat(registration.getHelp()).isEqualTo("help");
+		assertThat(registration.getDescription()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('v');
 		assertThat(registration.getOptions().get(0).isRequired()).isTrue();
 
 		registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('v')
 				.type(boolean.class)
@@ -247,7 +247,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 
 		registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('v')
 				.type(boolean.class)
@@ -263,7 +263,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 
 		registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('v')
 				.type(boolean.class)
@@ -283,7 +283,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	public void testOptionWithDefaultValue() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
-			.help("help")
+			.description("help")
 			.withOption()
 				.shortNames('v')
 				.type(boolean.class)
@@ -295,7 +295,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
-		assertThat(registration.getHelp()).isEqualTo("help");
+		assertThat(registration.getDescription()).isEqualTo("help");
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getDefaultValue()).isEqualTo("defaultValue");
 	}
