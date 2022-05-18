@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.jline.terminal.Terminal;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
@@ -44,7 +45,7 @@ import org.springframework.shell.result.ResultHandlerConfig;
 public class SpringShellAutoConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean(ConversionService.class)
+	@ConditionalOnMissingBean(value = ConversionService.class, name = { "shellConversionService" })
 	public ConversionService shellConversionService(ApplicationContext applicationContext) {
 		FormattingConversionService service = new FormattingConversionService();
 		DefaultConversionService.addDefaultConverters(service);
@@ -63,7 +64,10 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	public Shell shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal) {
-		return new Shell(resultHandlerService, commandRegistry, terminal);
+	public Shell shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal,
+			@Qualifier("shellConversionService") ConversionService shellConversionService) {
+		Shell shell = new Shell(resultHandlerService, commandRegistry, terminal);
+		shell.setConversionService(shellConversionService);
+		return shell;
 	}
 }

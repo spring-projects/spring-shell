@@ -93,6 +93,8 @@ public class InvocableShellMethod {
 
 	private Validator validator;
 
+	private ConversionService conversionService = new DefaultConversionService();
+
 	/**
 	 * Create an instance from a bean instance and a method.
 	 */
@@ -144,6 +146,17 @@ public class InvocableShellMethod {
 		this.bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
 		ReflectionUtils.makeAccessible(this.bridgedMethod);
 		this.parameters = initMethodParameters();
+	}
+
+	/**
+	 * Sets a conversion service
+	 *
+	 * @param conversionService the conversion service
+	 */
+	public void setConversionService(ConversionService conversionService) {
+		if (conversionService != null) {
+			this.conversionService = conversionService;
+		}
 	}
 
 	/**
@@ -226,7 +239,6 @@ public class InvocableShellMethod {
 	 * <p>The resulting array will be passed into {@link #doInvoke}.
 	 */
 	protected Object[] getMethodArgumentValues(Message<?> message, Object... providedArgs) throws Exception {
-		ConversionService conversionService = new DefaultConversionService();
 		MethodParameter[] parameters = getMethodParameters();
 		if (ObjectUtils.isEmpty(parameters)) {
 			return EMPTY_ARGS;

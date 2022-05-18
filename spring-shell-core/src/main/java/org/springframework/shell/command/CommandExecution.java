@@ -26,7 +26,6 @@ import org.jline.terminal.Terminal;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.messaging.support.MessageBuilder;
@@ -60,7 +59,7 @@ public interface CommandExecution {
 	 * @return default command execution
 	 */
 	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers) {
-		return new DefaultCommandExecution(resolvers, null, null);
+		return new DefaultCommandExecution(resolvers, null, null, null);
 	}
 
 	/**
@@ -69,11 +68,12 @@ public interface CommandExecution {
 	 * @param resolvers the handler method argument resolvers
 	 * @param validator the validator
 	 * @param terminal the terminal
+	 * @param conversionService the conversion services
 	 * @return default command execution
 	 */
 	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-			Terminal terminal) {
-		return new DefaultCommandExecution(resolvers, validator, terminal);
+			Terminal terminal, ConversionService conversionService) {
+		return new DefaultCommandExecution(resolvers, validator, terminal, conversionService);
 	}
 
 	/**
@@ -84,18 +84,20 @@ public interface CommandExecution {
 		private List<? extends HandlerMethodArgumentResolver> resolvers;
 		private Validator validator;
 		private Terminal terminal;
+		private ConversionService conversionService;
 
 		public DefaultCommandExecution(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-				Terminal terminal) {
+				Terminal terminal, ConversionService conversionService) {
 			this.resolvers = resolvers;
 			this.validator = validator;
 			this.terminal = terminal;
+			this.conversionService = conversionService;
 		}
 
 		public Object evaluate(CommandRegistration registration, String[] args) {
 
 			List<CommandOption> options = registration.getOptions();
-			CommandParser parser = CommandParser.of();
+			CommandParser parser = CommandParser.of(conversionService);
 			CommandParserResults results = parser.parse(options, args);
 
 			if (!results.errors().isEmpty()) {
@@ -135,13 +137,14 @@ public interface CommandExecution {
 					messageBuilder.setHeader(CommandContextMethodArgumentResolver.HEADER_COMMAND_CONTEXT, ctx);
 
 					InvocableShellMethod invocableShellMethod = new InvocableShellMethod(targetInfo.getBean(), targetInfo.getMethod());
+					invocableShellMethod.setConversionService(conversionService);
 					invocableShellMethod.setValidator(validator);
 					ShellMethodArgumentResolverComposite argumentResolvers = new ShellMethodArgumentResolverComposite();
 					if (resolvers != null) {
 						argumentResolvers.addResolvers(resolvers);
 					}
 					if (!paramValues.isEmpty()) {
-						argumentResolvers.addResolver(new ParamNameHandlerMethodArgumentResolver(paramValues));
+						argumentResolvers.addResolver(new ParamNameHandlerMethodArgumentResolver(paramValues, conversionService));
 					}
 					invocableShellMethod.setMessageMethodArgumentResolvers(argumentResolvers);
 
@@ -160,10 +163,11 @@ public interface CommandExecution {
 	static class ParamNameHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
 		private final Map<String, Object> paramValues = new HashMap<>();
-		ConversionService conversionService = new DefaultConversionService();
+		private final ConversionService conversionService;
 
-		ParamNameHandlerMethodArgumentResolver(Map<String, Object> paramValues) {
+		ParamNameHandlerMethodArgumentResolver(Map<String, Object> paramValues, ConversionService conversionService) {
 			this.paramValues.putAll(paramValues);
+			this.conversionService = conversionService;
 		}
 
 		@Override

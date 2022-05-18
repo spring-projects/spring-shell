@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandExecution;
 import org.springframework.shell.command.CommandExecution.CommandExecutionException;
@@ -61,6 +63,7 @@ public class Shell {
 	private final CommandCatalog commandRegistry;
 	protected List<CompletionResolver> completionResolvers = new ArrayList<>();
 	private CommandExecutionHandlerMethodArgumentResolvers argumentResolvers;
+	private ConversionService conversionService = new DefaultConversionService();
 
 	/**
 	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid
@@ -85,6 +88,10 @@ public class Shell {
 	@Autowired
 	public void setArgumentResolvers(CommandExecutionHandlerMethodArgumentResolvers argumentResolvers) {
 		this.argumentResolvers = argumentResolvers;
+	}
+
+	public void setConversionService(ConversionService shellConversionService) {
+		this.conversionService = shellConversionService;
 	}
 
 	@Autowired(required = false)
@@ -159,7 +166,7 @@ public class Shell {
 				Object sh = Signals.register("INT", () -> commandThread.interrupt());
 				try {
 					CommandExecution execution = CommandExecution
-							.of(argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal);
+							.of(argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal, conversionService);
 					return execution.evaluate(commandRegistration.get(), wordsForArgs.toArray(new String[0]));
 				}
 				catch (UndeclaredThrowableException e) {

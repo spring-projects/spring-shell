@@ -23,6 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.core.ResolvableType;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandParser.CommandParserResults;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +35,8 @@ public class CommandParserTests extends AbstractCommandTests {
 
 	@BeforeEach
 	public void setupCommandParserTests() {
-		parser = CommandParser.of();
+		ConversionService conversionService = new DefaultConversionService();
+		parser = CommandParser.of(conversionService);
 	}
 
 	@Test
@@ -318,6 +321,20 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results().get(1).option()).isSameAs(option2);
 		assertThat(results.results().get(0).value()).isEqualTo("1");
 		assertThat(results.results().get(1).value()).isEqualTo("2");
+	}
+
+	@Test
+	public void testBooleanWithDefault() {
+		ResolvableType type = ResolvableType.forType(boolean.class);
+		CommandOption option1 = CommandOption.of(new String[] { "arg1" }, new Character[0], "description", type, false,
+				"true", null, null, null);
+
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(true);
 	}
 
 	private static CommandOption longOption(String name) {

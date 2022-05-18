@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.core.ResolvableType;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.Utils;
 import org.springframework.util.StringUtils;
 
@@ -127,7 +128,17 @@ public interface CommandParser {
 	 * @return instance of a default command parser
 	 */
 	static CommandParser of() {
-		return new DefaultCommandParser();
+		return of(null);
+	}
+
+	/**
+	 * Gets an instance of a default command parser.
+	 *
+	 * @param conversionService the conversion service
+	 * @return instance of a default command parser
+	 */
+	static CommandParser of(ConversionService conversionService) {
+		return new DefaultCommandParser(conversionService);
 	}
 
 	/**
@@ -189,6 +200,12 @@ public interface CommandParser {
 	 * Default implementation of a {@link CommandParser}.
 	 */
 	static class DefaultCommandParser implements CommandParser {
+
+		private final ConversionService conversionService;
+
+		DefaultCommandParser(ConversionService conversionService) {
+			this.conversionService = conversionService;
+		}
 
 		@Override
 		public CommandParserResults parse(List<CommandOption> options, String[] args) {
@@ -293,7 +310,7 @@ public interface CommandParser {
 		 * Parser works on a results from a lexer. It looks for given options
 		 * and builds parsing results.
 		 */
-		private static class Parser {
+		private class Parser {
 			ParserResults visit(List<List<String>> lexerResults, List<CommandOption> options) {
 				List<ParserResult> results = lexerResults.stream()
 					.flatMap(lr -> {
@@ -327,7 +344,13 @@ public interface CommandParser {
 					defaultValueOptionsToCheck.stream()
 					.filter(co -> co.getDefaultValue() != null)
 					.forEach(co -> {
-						results.add(ParserResult.of(co, Collections.emptyList(), co.getDefaultValue(), null));
+						Object value = co.getDefaultValue();
+						if (conversionService != null && co.getType() != null) {
+							if (conversionService.canConvert(co.getDefaultValue().getClass(), co.getType().getRawClass())) {
+								value = conversionService.convert(co.getDefaultValue(), co.getType().getRawClass());
+							}
+						}
+						results.add(ParserResult.of(co, Collections.emptyList(), value, null));
 					});
 				return ParserResults.of(results);
 			}
@@ -425,10 +448,10 @@ public interface CommandParser {
 					}
 				}
 
-				return ConvertArgumentsHolder.of(value, unmapped);
+				return new ConvertArgumentsHolder(value, unmapped);
 			}
 
-			private static class ConvertArgumentsHolder {
+			private class ConvertArgumentsHolder {
 				Object value;
 				final List<String> unmapped = new ArrayList<>();
 
@@ -437,10 +460,6 @@ public interface CommandParser {
 					if (unmapped != null) {
 						this.unmapped.addAll(unmapped);
 					}
-				}
-
-				static ConvertArgumentsHolder of(Object value, List<String> unmapped) {
-					return new ConvertArgumentsHolder(value, unmapped);
 				}
 			}
 		}
