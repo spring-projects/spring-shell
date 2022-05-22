@@ -44,6 +44,11 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.style.TemplateExecutor;
+import org.springframework.shell.style.Theme;
+import org.springframework.shell.style.ThemeRegistry;
+import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.style.ThemeSettings;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.FileCopyUtils;
@@ -124,7 +129,33 @@ public class HelpTests {
 	}
 
 	@Test
-	public void testCommandList() throws Exception {
+	public void testCommandListDefault() throws Exception {
+		registerCommandListCommands();
+		String list = this.help.help(null).toString();
+		assertThat(list).isEqualTo(sample());
+	}
+
+	@Test
+	public void testCommandListFlat() throws Exception {
+		registerCommandListCommands();
+		this.help.setShowGroups(false);
+		String list = this.help.help(null).toString();
+		assertThat(list).isEqualTo(sample());
+	}
+
+	@Test
+	public void testUnknownCommand() throws Exception {
+		assertThatThrownBy(() -> {
+			this.help.help("some unknown command");
+		}).isInstanceOf(IllegalArgumentException.class);
+	}
+
+	private String sample() throws IOException {
+		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt", HelpTests.class).getInputStream();
+		return FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")).replace("&", "");
+	}
+
+	private void registerCommandListCommands() throws Exception {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("first-command")
 			.description("A rather extensive description of some command.")
@@ -176,21 +207,6 @@ public class HelpTests {
 				.and()
 			.build();
 		registrations.put("second-group-command", registration5);
-
-		String list = this.help.help(null).toString();
-		assertThat(list).isEqualTo(sample());
-	}
-
-	@Test
-	public void testUnknownCommand() throws Exception {
-		assertThatThrownBy(() -> {
-			this.help.help("some unknown command");
-		}).isInstanceOf(IllegalArgumentException.class);
-	}
-
-	private String sample() throws IOException {
-		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt", HelpTests.class).getInputStream();
-		return FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")).replace("&", "");
 	}
 
 	@Configuration
@@ -198,13 +214,15 @@ public class HelpTests {
 
 		@Bean
 		public Help help() {
-			return new Help();
+			ThemeRegistry registry = new ThemeRegistry();
+			registry.register(Theme.of("default", ThemeSettings.themeSettings()));
+			ThemeResolver resolver = new ThemeResolver(registry, "default");
+			TemplateExecutor executor = new TemplateExecutor(resolver);
+			Help help = new Help(executor);
+			help.setCommandTemplate("classpath:template/help-command-default.stg");
+			help.setCommandsTemplate("classpath:template/help-commands-default.stg");
+			return help;
 		}
-
-		// @Bean
-		// public ParameterResolver parameterResolver() {
-		// 	return new StandardParameterResolver(new DefaultConversionService(), Collections.emptySet());
-		// }
 	}
 
 	@ShellComponent

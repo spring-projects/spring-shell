@@ -1,0 +1,12 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "template/.*.st"
+      },
+      {
+        "pattern": "template/.*.stg"
+      }
+    ]
+  }
+}

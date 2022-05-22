@@ -1,0 +1,67 @@
+// NAME
+name(commandName, commandShortDesc) ::= <<
+<("NAME"); format="highlight">
+       <commandName> - <commandShortDesc>
+>>
+
+// SYNOPSIS
+synopsisOption(option) ::= <%
+<if(option.required)>
+<("[")>
+<endif>
+
+<first(option.arguments)> <(option.type)>
+
+<if(option.required)>
+<("]")>
+<endif>
+%>
+
+synopsis(commandName, options) ::= <<
+<("SYNOPSIS"); format="highlight">
+       <(commandName); format="highlight"> <options: { o | <synopsisOption(o)>}; separator=" ">
+>>
+
+// OPTIONS
+arguments(arguments) ::= <<
+<arguments: { a | <a>}; separator=" or ">
+>>
+
+type(type) ::= <<
+<type>
+>>
+
+required(option) ::= <%
+[
+<if(option.required)>
+<("Mandatory")>
+<else>
+<("Optional")>
+<endif>
+<if(option.hasDefaultValue)>
+<(", default = ")><(option.defaultValue)>
+<endif>
+]
+%>
+
+option(option) ::= <<
+<arguments(option.arguments)> <type(option.type)>
+<option.description>
+<required(option)>
+
+
+>>
+
+options(options) ::= <<
+<("OPTIONS"); format="highlight">
+       <options:{ o | <option(o)>}>
+>>
+
+// main
+main(model) ::= <<
+<name(model.name, model.description)>
+
+<synopsis(model.name, model.parameters)>
+
+<options(model.parameters)>
+>>
