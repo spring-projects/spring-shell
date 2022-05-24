@@ -1,9 +1,9 @@
 AVAILABLE COMMANDS
 
 Default
-       first-command: A rather extensive description of some command.
-       second-command: The second command. This one is known under several aliases as well.
-       second-command: The last command.
+       1st-command: A rather extensive description of some command.
+       yet-another-command: The second command. This one is known under several aliases as well.
+       third-command: The last command.
        second-command: The second command. This one is known under several aliases as well.
        first-command: A rather extensive description of some command.
 

@@ -103,6 +103,9 @@ public interface CommandCatalog {
 			for (CommandRegistration r : registration) {
 				String commandName = r.getCommand();
 				commandRegistrations.put(commandName, r);
+				for (CommandAlias a : r.getAliases()) {
+					commandRegistrations.put(a.getCommand(), r);
+				}
 			}
 		}
 
@@ -111,6 +114,9 @@ public interface CommandCatalog {
 			for (CommandRegistration r : registration) {
 				String commandName = r.getCommand();
 				commandRegistrations.remove(commandName);
+				for (CommandAlias a : r.getAliases()) {
+					commandRegistrations.remove(a.getCommand());
+				}
 			}
 		}
 
@@ -156,13 +162,5 @@ public interface CommandCatalog {
 				return true;
 			};
 		}
-
-		// private static String commandName(String[] commands) {
-		// 	return Arrays.asList(commands).stream()
-		// 		.flatMap(c -> Stream.of(c.split(" ")))
-		// 		.filter(c -> StringUtils.hasText(c))
-		// 		.map(c -> c.trim())
-		// 		.collect(Collectors.joining(" "));
-		// }
 	}
 }

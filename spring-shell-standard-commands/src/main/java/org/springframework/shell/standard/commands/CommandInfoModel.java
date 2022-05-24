@@ -43,10 +43,11 @@ class CommandInfoModel {
 	/**
 	 * Builds {@link CommandInfoModel} from {@link CommandRegistration}.
 	 *
+	 * @param name the command name
 	 * @param registration the command registration
 	 * @return the command info model
 	 */
-	static CommandInfoModel of(CommandRegistration registration) {
+	static CommandInfoModel of(String name, CommandRegistration registration) {
 		List<CommandOption> options = registration.getOptions();
 		List<CommandParameterInfoModel> parameters = options.stream()
 			.map(o -> {
@@ -62,7 +63,6 @@ class CommandInfoModel {
 			})
 			.collect(Collectors.toList());
 
-		String name = registration.getCommand();
 		String description = registration.getDescription();
 		return new CommandInfoModel(name, description, parameters);
 	}

@@ -62,8 +62,8 @@ class GroupsInfoModel {
 		// build model
 		List<GroupCommandInfoModel> gcims = commandsByGroupAndName.entrySet().stream()
 			.map(e -> {
-				List<CommandInfoModel> cims = e.getValue().values().stream()
-					.map(CommandInfoModel::of)
+				List<CommandInfoModel> cims = e.getValue().entrySet().stream()
+					.map(ee -> CommandInfoModel.of(ee.getKey(), ee.getValue()))
 					.collect(Collectors.toList());
 				return GroupCommandInfoModel.of(e.getKey(), cims);
 			})

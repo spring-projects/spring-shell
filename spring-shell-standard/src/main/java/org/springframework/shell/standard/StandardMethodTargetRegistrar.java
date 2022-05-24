@@ -79,84 +79,88 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 					keys = new String[] { Utils.unCamelify(method.getName()) };
 				}
 				String group = getOrInferGroup(method);
-				for (String key : keys) {
-					log.debug("Registering with keys='{}' key='{}'", keys, key);
-					Supplier<Availability> availabilityIndicator = findAvailabilityIndicator(keys, bean, method);
 
-					Builder builder = CommandRegistration.builder()
-						.command(key)
-						.group(group)
-						.description(shellMapping.value())
-						.interactionMode(shellMapping.interactionMode())
-						.availability(availabilityIndicator);
+				String key = keys[0];
+				log.debug("Registering with keys='{}' key='{}'", keys, key);
+				Supplier<Availability> availabilityIndicator = findAvailabilityIndicator(keys, bean, method);
 
-					InvocableHandlerMethod ihm = new InvocableHandlerMethod(bean, method);
-					for (MethodParameter mp : ihm.getMethodParameters()) {
+				Builder builder = CommandRegistration.builder()
+					.command(key)
+					.group(group)
+					.description(shellMapping.value())
+					.interactionMode(shellMapping.interactionMode())
+					.availability(availabilityIndicator);
 
-						ShellOption so = mp.getParameterAnnotation(ShellOption.class);
-						log.debug("Registering with mp='{}' so='{}'", mp, so);
-						if (so != null) {
-							List<String> longNames = new ArrayList<>();
-							List<Character> shortNames = new ArrayList<>();
-							if (!ObjectUtils.isEmpty(so.value())) {
-								Arrays.asList(so.value()).stream().forEach(o -> {
-									String stripped = StringUtils.trimLeadingCharacter(o, '-');
-									log.debug("Registering o='{}' stripped='{}'", o, stripped);
-									if (o.length() == stripped.length() + 2) {
-										longNames.add(stripped);
-									}
-									else if (o.length() == stripped.length() + 1 && stripped.length() == 1) {
-										shortNames.add(stripped.charAt(0));
-									}
-								});
-							}
-							else {
-								// ShellOption value not defined
-								mp.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
-								String longName = mp.getParameterName();
-								Class<?> parameterType = mp.getParameterType();
-								if (longName != null) {
-									log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
-									longNames.add(longName);
+				for (int i = 1; i < keys.length; i++) {
+					builder.withAlias().command(keys[i]).group(group);
+				}
+
+				InvocableHandlerMethod ihm = new InvocableHandlerMethod(bean, method);
+				for (MethodParameter mp : ihm.getMethodParameters()) {
+
+					ShellOption so = mp.getParameterAnnotation(ShellOption.class);
+					log.debug("Registering with mp='{}' so='{}'", mp, so);
+					if (so != null) {
+						List<String> longNames = new ArrayList<>();
+						List<Character> shortNames = new ArrayList<>();
+						if (!ObjectUtils.isEmpty(so.value())) {
+							Arrays.asList(so.value()).stream().forEach(o -> {
+								String stripped = StringUtils.trimLeadingCharacter(o, '-');
+								log.debug("Registering o='{}' stripped='{}'", o, stripped);
+								if (o.length() == stripped.length() + 2) {
+									longNames.add(stripped);
 								}
-							}
-							if (!longNames.isEmpty() || !shortNames.isEmpty()) {
-								log.debug("Registering longNames='{}' shortNames='{}'", longNames, shortNames);
-								OptionSpec optionSpec = builder.withOption()
-									.type(mp.getParameterType())
-									.longNames(longNames.toArray(new String[0]))
-									.shortNames(shortNames.toArray(new Character[0]))
-									.position(mp.getParameterIndex())
-									.description(so.help());
-								if (so.arity() > -1) {
-									optionSpec.arity(0, so.arity());
+								else if (o.length() == stripped.length() + 1 && stripped.length() == 1) {
+									shortNames.add(stripped.charAt(0));
 								}
-								if (!ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)
-										&& !ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NULL)) {
-									optionSpec.defaultValue(so.defaultValue());
-								}
-							}
+							});
 						}
 						else {
+							// ShellOption value not defined
 							mp.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
 							String longName = mp.getParameterName();
 							Class<?> parameterType = mp.getParameterType();
 							if (longName != null) {
 								log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
-								builder.withOption()
-									.longNames(longName)
-									.type(parameterType)
-									.required()
-									.position(mp.getParameterIndex());
+								longNames.add(longName);
+							}
+						}
+						if (!longNames.isEmpty() || !shortNames.isEmpty()) {
+							log.debug("Registering longNames='{}' shortNames='{}'", longNames, shortNames);
+							OptionSpec optionSpec = builder.withOption()
+								.type(mp.getParameterType())
+								.longNames(longNames.toArray(new String[0]))
+								.shortNames(shortNames.toArray(new Character[0]))
+								.position(mp.getParameterIndex())
+								.description(so.help());
+							if (so.arity() > -1) {
+								optionSpec.arity(0, so.arity());
+							}
+							if (!ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)
+									&& !ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NULL)) {
+								optionSpec.defaultValue(so.defaultValue());
 							}
 						}
 					}
-
-					builder.withTarget().method(bean, method);
-
-					CommandRegistration registration = builder.build();
-					registry.register(registration);
+					else {
+						mp.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
+						String longName = mp.getParameterName();
+						Class<?> parameterType = mp.getParameterType();
+						if (longName != null) {
+							log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
+							builder.withOption()
+								.longNames(longName)
+								.type(parameterType)
+								.required()
+								.position(mp.getParameterIndex());
+						}
+					}
 				}
+
+				builder.withTarget().method(bean, method);
+
+				CommandRegistration registration = builder.build();
+				registry.register(registration);
 			}, method -> method.getAnnotation(ShellMethod.class) != null);
 		}
 	}

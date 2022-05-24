@@ -19,9 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.constraints.Max;
@@ -32,10 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -62,10 +59,9 @@ public class HelpTests {
 
 	private static Locale previousLocale;
 	private String testName;
-	private Map<String, CommandRegistration> registrations = new HashMap<>();
 	private CommandsPojo commandsPojo = new CommandsPojo();
 
-	@MockBean
+	@Autowired
 	private CommandCatalog commandCatalog;
 
 	@Autowired
@@ -84,12 +80,14 @@ public class HelpTests {
 
 	@BeforeEach
 	public void setup(TestInfo testInfo) {
-		registrations.clear();
 		Optional<Method> testMethod = testInfo.getTestMethod();
 		if (testMethod.isPresent()) {
 			this.testName = testMethod.get().getName();
 		}
-		Mockito.when(commandCatalog.getRegistrations()).thenReturn(registrations);
+		Collection<CommandRegistration> regs = this.commandCatalog.getRegistrations().values();
+		regs.stream().forEach(r -> {
+			this.commandCatalog.unregister(r);
+		});
 	}
 
 	@Test
@@ -122,8 +120,7 @@ public class HelpTests {
 				.type(float[].class)
 				.and()
 			.build();
-		registrations.put("first-command", registration);
-		registrations.put("1st-command", registration);
+		commandCatalog.register(registration);
 		CharSequence help = this.help.help("first-command").toString();
 		assertThat(help).isEqualTo(sample());
 	}
@@ -159,6 +156,9 @@ public class HelpTests {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("first-command")
 			.description("A rather extensive description of some command.")
+			.withAlias()
+				.command("1st-command")
+				.and()
 			.withTarget()
 				.method(commandsPojo, "firstCommand")
 				.and()
@@ -166,27 +166,28 @@ public class HelpTests {
 				.shortNames('r')
 				.and()
 			.build();
-		registrations.put("first-command", registration1);
-		registrations.put("1st-command", registration1);
+		commandCatalog.register(registration1);
 
 		CommandRegistration registration2 = CommandRegistration.builder()
 			.command("second-command")
 			.description("The second command. This one is known under several aliases as well.")
+			.withAlias()
+				.command("yet-another-command")
+				.and()
 			.withTarget()
 				.method(commandsPojo, "secondCommand")
 				.and()
 			.build();
-		registrations.put("second-command", registration2);
-		registrations.put("yet-another-command", registration2);
+		commandCatalog.register(registration2);
 
 		CommandRegistration registration3 = CommandRegistration.builder()
-			.command("second-command")
+			.command("third-command")
 			.description("The last command.")
 			.withTarget()
 				.method(commandsPojo, "thirdCommand")
 				.and()
 			.build();
-		registrations.put("third-command", registration3);
+		commandCatalog.register(registration3);
 
 		CommandRegistration registration4 = CommandRegistration.builder()
 			.command("first-group-command")
@@ -196,7 +197,7 @@ public class HelpTests {
 				.method(commandsPojo, "firstCommandInGroup")
 				.and()
 			.build();
-		registrations.put("first-group-command", registration4);
+		commandCatalog.register(registration4);
 
 		CommandRegistration registration5 = CommandRegistration.builder()
 			.command("second-group-command")
@@ -206,11 +207,16 @@ public class HelpTests {
 				.method(commandsPojo, "secondCommandInGroup")
 				.and()
 			.build();
-		registrations.put("second-group-command", registration5);
+		commandCatalog.register(registration5);
 	}
 
 	@Configuration
 	static class Config {
+
+		@Bean
+		public CommandCatalog commandCatalog() {
+			return CommandCatalog.of();
+		}
 
 		@Bean
 		public Help help() {

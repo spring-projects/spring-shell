@@ -92,6 +92,13 @@ public interface CommandRegistration {
 	List<CommandOption> getOptions();
 
 	/**
+	 * Gets an aliases.
+	 *
+	 * @return the aliases
+	 */
+	List<CommandAlias> getAliases();
+
+	/**
 	 * Gets a new instance of a {@link Buidler}.
 	 *
 	 * @return a new builder instance
@@ -351,6 +358,35 @@ public interface CommandRegistration {
 	}
 
 	/**
+	 * Spec defining an alias.
+	 */
+	public interface AliasSpec {
+
+		/**
+		 * Define commands for an alias.
+		 *
+		 * @param commands the commands
+		 * @return a target spec for chaining
+		 */
+		AliasSpec command(String... commands);
+
+		/**
+		 * Define group for an alias.
+		 *
+		 * @param group the group
+		 * @return a target spec for chaining
+		 */
+		AliasSpec group(String group);
+
+		/**
+		 * Return a builder for chaining.
+		 *
+		 * @return a builder for chaining
+		 */
+		Builder and();
+	}
+
+	/**
 	 * Builder interface for {@link CommandRegistration}.
 	 */
 	public interface Builder {
@@ -412,6 +448,13 @@ public interface CommandRegistration {
 		 * @return target spec for chaining
 		 */
 		TargetSpec withTarget();
+
+		/**
+		 * Define an alias what this command should execute
+		 *
+		 * @return alias spec for chaining
+		 */
+		AliasSpec withAlias();
 
 		/**
 		 * Builds a {@link CommandRegistration}.
@@ -612,6 +655,40 @@ public interface CommandRegistration {
 		}
 	}
 
+	static class DefaultAliasSpec implements AliasSpec {
+
+		private BaseBuilder builder;
+		private String[] commands;
+		private String group;
+
+		DefaultAliasSpec(BaseBuilder builder) {
+			this.builder = builder;
+		}
+
+		@Override
+		public AliasSpec command(String... commands) {
+			Assert.notNull(commands, "commands must be set");
+			this.commands = Arrays.asList(commands).stream()
+				.flatMap(c -> Stream.of(c.split(" ")))
+				.filter(c -> StringUtils.hasText(c))
+				.map(c -> c.trim())
+				.collect(Collectors.toList())
+				.toArray(new String[0]);
+			return this;
+		}
+
+		@Override
+		public AliasSpec group(String group) {
+			this.group = group;
+			return this;
+		}
+
+		@Override
+		public Builder and() {
+			return builder;
+		}
+	}
+
 	static class DefaultCommandRegistration implements CommandRegistration {
 
 		private String command;
@@ -621,10 +698,11 @@ public interface CommandRegistration {
 		private Supplier<Availability> availability;
 		private List<DefaultOptionSpec> optionSpecs;
 		private DefaultTargetSpec targetSpec;
+		private List<DefaultAliasSpec> aliasSpecs;
 
 		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String group,
 				String description, Supplier<Availability> availability, List<DefaultOptionSpec> optionSpecs,
-				DefaultTargetSpec targetSpec) {
+				DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.group = group;
@@ -632,6 +710,7 @@ public interface CommandRegistration {
 			this.availability = availability;
 			this.optionSpecs = optionSpecs;
 			this.targetSpec = targetSpec;
+			this.aliasSpecs = aliasSpecs;
 		}
 
 		@Override
@@ -681,6 +760,15 @@ public interface CommandRegistration {
 			throw new IllegalArgumentException("No bean, function or consumer defined");
 		}
 
+		@Override
+		public List<CommandAlias> getAliases() {
+			return this.aliasSpecs.stream()
+				.map(spec -> {
+					return CommandAlias.of(commandArrayToName(spec.commands), spec.group);
+				})
+				.collect(Collectors.toList());
+		}
+
 		private static String commandArrayToName(String[] commands) {
 			return Arrays.asList(commands).stream()
 				.flatMap(c -> Stream.of(c.split(" ")))
@@ -702,6 +790,7 @@ public interface CommandRegistration {
 		private String description;
 		private Supplier<Availability> availability;
 		private List<DefaultOptionSpec> optionSpecs = new ArrayList<>();
+		private List<DefaultAliasSpec> aliasSpecs = new ArrayList<>();
 		private DefaultTargetSpec targetSpec;
 
 		@Override
@@ -755,12 +844,19 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public AliasSpec withAlias() {
+			DefaultAliasSpec spec = new DefaultAliasSpec(this);
+			this.aliasSpecs.add(spec);
+			return spec;
+		};
+
+		@Override
 		public CommandRegistration build() {
 			Assert.notNull(commands, "command cannot be empty");
 			Assert.notNull(targetSpec, "target cannot be empty");
 			Assert.state(!(targetSpec.bean != null && targetSpec.function != null), "only one target can exist");
 			return new DefaultCommandRegistration(commands, interactionMode, group, description, availability,
-					optionSpecs, targetSpec);
+					optionSpecs, targetSpec, aliasSpecs);
 		}
 	}
 }

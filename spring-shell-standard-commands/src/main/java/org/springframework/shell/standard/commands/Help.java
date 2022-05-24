@@ -136,7 +136,7 @@ public class Help extends AbstractShellComponent {
 		boolean isStg = this.commandTemplate.endsWith(".stg");
 
 		Map<String, Object> model = new HashMap<>();
-		model.put("model", CommandInfoModel.of(registration));
+		model.put("model", CommandInfoModel.of(command, registration));
 
 		String templateResource = resourceAsString(getResourceLoader().getResource(this.commandTemplate));
 		return isStg ? this.templateExecutor.renderGroup(templateResource, model)
