@@ -1,0 +1,32 @@
+name() ::= <<
+<("AVAILABLE COMMANDS"); format="highlight">
+
+>>
+
+command(command) ::= <<
+<(command.name); format="highlight"><(":"); format="highlight"> <command.description>
+
+>>
+
+commandGroup(commandGroup) ::= <<
+<(commandGroup.group); format="highlight">
+       <commandGroup.commands:{ c | <command(c)>}>
+
+>>
+
+groups(groups) ::= <<
+<groups:{ g | <commandGroup(g)>}>
+>>
+
+flat(commands) ::= <<
+<commands:{ c | <command(c)>}>
+>>
+
+main(model) ::= <<
+<name()>
+<if(model.showGroups)>
+<groups(model.groups)>
+<else>
+<flat(model.commands)>
+<endif>
+>>

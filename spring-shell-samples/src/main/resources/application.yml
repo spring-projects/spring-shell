@@ -8,6 +8,8 @@ spring:
     history:
       name: spring-shell-samples-history.log
     command:
+      help:
+        grouping-mode: group
       completion:
         root-command: spring-shell-samples
 ## disable console logging

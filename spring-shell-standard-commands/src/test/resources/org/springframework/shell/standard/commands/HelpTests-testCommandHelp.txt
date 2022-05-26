@@ -1,28 +1,23 @@
-
-
 NAME
-	first-command - A rather extensive description of some command.
+       first-command - A rather extensive description of some command.
 
-SYNOPSYS
-	first-command [[-r] boolean]  [[-f] boolean]  [[-n] int]  [-o] float[]  
+SYNOPSIS
+       first-command -r boolean -f boolean -n int -o float[]
 
 OPTIONS
-	-r  boolean
-		Whether to delete recursively
-		[Optional, default = false]
+       -r boolean
+       Whether to delete recursively
+       [Optional]
 
-	-f  boolean
-		Do not ask for confirmation. YOLO
-		[Optional, default = false]
+       -f boolean
+       Do not ask for confirmation. YOLO
+       [Optional]
 
-	-n  int
-		The answer to everything
-		[Optional, default = 42]
+       -n int
+       The answer to everything
+       [Optional, default = 42]
 
-	-o  float[]
-		Some other parameters
-		[Mandatory]
-
-ALSO KNOWN AS
-	1st-command
+       -o float[]
+       Some other parameters
+       [Optional]
 

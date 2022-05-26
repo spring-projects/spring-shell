@@ -354,4 +354,31 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
 			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(0);
 		}
+
+
+	@Test
+	public void testAliases() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.group("Test Group")
+			.withAlias()
+				.command("alias1")
+				.group("Alias Group")
+				.and()
+			.withAlias()
+				.command("alias2")
+				.group("Alias Group")
+				.and()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getCommand()).isEqualTo("command1");
+		assertThat(registration.getGroup()).isEqualTo("Test Group");
+		assertThat(registration.getAliases()).hasSize(2);
+		assertThat(registration.getAliases().stream().map(CommandAlias::getCommand)).containsExactlyInAnyOrder("alias1",
+				"alias2");
+		assertThat(registration.getAliases().get(0).getGroup()).isEqualTo("Alias Group");
+		assertThat(registration.getAliases().get(1).getGroup()).isEqualTo("Alias Group");
+	}
 }

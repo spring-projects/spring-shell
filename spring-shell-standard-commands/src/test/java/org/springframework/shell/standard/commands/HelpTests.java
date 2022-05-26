@@ -19,9 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.constraints.Max;
@@ -32,10 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -44,6 +41,11 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.style.TemplateExecutor;
+import org.springframework.shell.style.Theme;
+import org.springframework.shell.style.ThemeRegistry;
+import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.style.ThemeSettings;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.FileCopyUtils;
@@ -57,10 +59,9 @@ public class HelpTests {
 
 	private static Locale previousLocale;
 	private String testName;
-	private Map<String, CommandRegistration> registrations = new HashMap<>();
 	private CommandsPojo commandsPojo = new CommandsPojo();
 
-	@MockBean
+	@Autowired
 	private CommandCatalog commandCatalog;
 
 	@Autowired
@@ -79,12 +80,14 @@ public class HelpTests {
 
 	@BeforeEach
 	public void setup(TestInfo testInfo) {
-		registrations.clear();
 		Optional<Method> testMethod = testInfo.getTestMethod();
 		if (testMethod.isPresent()) {
 			this.testName = testMethod.get().getName();
 		}
-		Mockito.when(commandCatalog.getRegistrations()).thenReturn(registrations);
+		Collection<CommandRegistration> regs = this.commandCatalog.getRegistrations().values();
+		regs.stream().forEach(r -> {
+			this.commandCatalog.unregister(r);
+		});
 	}
 
 	@Test
@@ -117,66 +120,22 @@ public class HelpTests {
 				.type(float[].class)
 				.and()
 			.build();
-		registrations.put("first-command", registration);
-		registrations.put("1st-command", registration);
+		commandCatalog.register(registration);
 		CharSequence help = this.help.help("first-command").toString();
 		assertThat(help).isEqualTo(sample());
 	}
 
 	@Test
-	public void testCommandList() throws Exception {
-		CommandRegistration registration1 = CommandRegistration.builder()
-			.command("first-command")
-			.description("A rather extensive description of some command.")
-			.withTarget()
-				.method(commandsPojo, "firstCommand")
-				.and()
-			.withOption()
-				.shortNames('r')
-				.and()
-			.build();
-		registrations.put("first-command", registration1);
-		registrations.put("1st-command", registration1);
+	public void testCommandListDefault() throws Exception {
+		registerCommandListCommands();
+		String list = this.help.help(null).toString();
+		assertThat(list).isEqualTo(sample());
+	}
 
-		CommandRegistration registration2 = CommandRegistration.builder()
-			.command("second-command")
-			.description("The second command. This one is known under several aliases as well.")
-			.withTarget()
-				.method(commandsPojo, "secondCommand")
-				.and()
-			.build();
-		registrations.put("second-command", registration2);
-		registrations.put("yet-another-command", registration2);
-
-		CommandRegistration registration3 = CommandRegistration.builder()
-			.command("second-command")
-			.description("The last command.")
-			.withTarget()
-				.method(commandsPojo, "thirdCommand")
-				.and()
-			.build();
-		registrations.put("third-command", registration3);
-
-		CommandRegistration registration4 = CommandRegistration.builder()
-			.command("first-group-command")
-			.description("The first command in a separate group.")
-			.group("Example Group")
-			.withTarget()
-				.method(commandsPojo, "firstCommandInGroup")
-				.and()
-			.build();
-		registrations.put("first-group-command", registration4);
-
-		CommandRegistration registration5 = CommandRegistration.builder()
-			.command("second-group-command")
-			.description("The second command in a separate group.")
-			.group("Example Group")
-			.withTarget()
-				.method(commandsPojo, "secondCommandInGroup")
-				.and()
-			.build();
-		registrations.put("second-group-command", registration5);
-
+	@Test
+	public void testCommandListFlat() throws Exception {
+		registerCommandListCommands();
+		this.help.setShowGroups(false);
 		String list = this.help.help(null).toString();
 		assertThat(list).isEqualTo(sample());
 	}
@@ -193,18 +152,83 @@ public class HelpTests {
 		return FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")).replace("&", "");
 	}
 
+	private void registerCommandListCommands() throws Exception {
+		CommandRegistration registration1 = CommandRegistration.builder()
+			.command("first-command")
+			.description("A rather extensive description of some command.")
+			.withAlias()
+				.command("1st-command")
+				.and()
+			.withTarget()
+				.method(commandsPojo, "firstCommand")
+				.and()
+			.withOption()
+				.shortNames('r')
+				.and()
+			.build();
+		commandCatalog.register(registration1);
+
+		CommandRegistration registration2 = CommandRegistration.builder()
+			.command("second-command")
+			.description("The second command. This one is known under several aliases as well.")
+			.withAlias()
+				.command("yet-another-command")
+				.and()
+			.withTarget()
+				.method(commandsPojo, "secondCommand")
+				.and()
+			.build();
+		commandCatalog.register(registration2);
+
+		CommandRegistration registration3 = CommandRegistration.builder()
+			.command("third-command")
+			.description("The last command.")
+			.withTarget()
+				.method(commandsPojo, "thirdCommand")
+				.and()
+			.build();
+		commandCatalog.register(registration3);
+
+		CommandRegistration registration4 = CommandRegistration.builder()
+			.command("first-group-command")
+			.description("The first command in a separate group.")
+			.group("Example Group")
+			.withTarget()
+				.method(commandsPojo, "firstCommandInGroup")
+				.and()
+			.build();
+		commandCatalog.register(registration4);
+
+		CommandRegistration registration5 = CommandRegistration.builder()
+			.command("second-group-command")
+			.description("The second command in a separate group.")
+			.group("Example Group")
+			.withTarget()
+				.method(commandsPojo, "secondCommandInGroup")
+				.and()
+			.build();
+		commandCatalog.register(registration5);
+	}
+
 	@Configuration
 	static class Config {
 
 		@Bean
-		public Help help() {
-			return new Help();
+		public CommandCatalog commandCatalog() {
+			return CommandCatalog.of();
 		}
 
-		// @Bean
-		// public ParameterResolver parameterResolver() {
-		// 	return new StandardParameterResolver(new DefaultConversionService(), Collections.emptySet());
-		// }
+		@Bean
+		public Help help() {
+			ThemeRegistry registry = new ThemeRegistry();
+			registry.register(Theme.of("default", ThemeSettings.themeSettings()));
+			ThemeResolver resolver = new ThemeResolver(registry, "default");
+			TemplateExecutor executor = new TemplateExecutor(resolver);
+			Help help = new Help(executor);
+			help.setCommandTemplate("classpath:template/help-command-default.stg");
+			help.setCommandsTemplate("classpath:template/help-commands-default.stg");
+			return help;
+		}
 	}
 
 	@ShellComponent

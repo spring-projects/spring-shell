@@ -188,6 +188,8 @@ public class SpringShellProperties {
 	public static class HelpCommand {
 
 		private boolean enabled = true;
+		private String commandTemplate = "classpath:template/help-command-default.stg";
+		private String commandsTemplate = "classpath:template/help-commands-default.stg";
 		private GroupingMode groupingMode = GroupingMode.GROUP;
 
 		public boolean isEnabled() {
@@ -196,6 +198,22 @@ public class SpringShellProperties {
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
+		}
+
+		public String getCommandTemplate() {
+			return commandTemplate;
+		}
+
+		public void setCommandTemplate(String commandTemplate) {
+			this.commandTemplate = commandTemplate;
+		}
+
+		public String getCommandsTemplate() {
+			return commandsTemplate;
+		}
+
+		public void setCommandsTemplate(String commandsTemplate) {
+			this.commandsTemplate = commandsTemplate;
 		}
 
 		public GroupingMode getGroupingMode() {

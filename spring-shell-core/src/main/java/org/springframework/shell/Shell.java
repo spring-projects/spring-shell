@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.shell.command.CommandAlias;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandExecution;
 import org.springframework.shell.command.CommandExecution.CommandExecutionException;
@@ -155,7 +156,15 @@ public class Shell {
 
 			Optional<CommandRegistration> commandRegistration = commandRegistry.getRegistrations().values().stream()
 				.filter(r -> {
-					return r.getCommand().equals(command);
+					if (r.getCommand().equals(command)) {
+						return true;
+					}
+					for (CommandAlias a : r.getAliases()) {
+						if (a.getCommand().equals(command)) {
+							return true;
+						}
+					}
+					return false;
 				})
 				.findFirst();
 
@@ -255,14 +264,12 @@ public class Shell {
 		// Workaround for https://github.com/spring-projects/spring-shell/issues/150
 		// (sadly, this ties this class to JLine somehow)
 		int lastWordStart = prefix.lastIndexOf(' ') + 1;
-		return commandRegistry.getRegistrations().values().stream()
-			.filter(r -> {
-				return r.getCommand().startsWith(prefix);
-			})
-			.map(r -> {
-				String c = r.getCommand();
+		return commandRegistry.getRegistrations().entrySet().stream()
+			.filter(e -> e.getKey().startsWith(prefix))
+			.map(e -> {
+				String c = e.getKey();
 				c = c.substring(lastWordStart);
-				return toCommandProposal(c, r);
+				return toCommandProposal(c, e.getValue());
 			})
 			.collect(Collectors.toList());
 	}

@@ -44,6 +44,8 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getCommand().getClear().isEnabled()).isTrue();
 					assertThat(properties.getCommand().getHelp().isEnabled()).isTrue();
 					assertThat(properties.getCommand().getHelp().getGroupingMode()).isEqualTo(GroupingMode.GROUP);
+					assertThat(properties.getCommand().getHelp().getCommandTemplate()).isNotNull();
+					assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isNotNull();
 					assertThat(properties.getCommand().getHistory().isEnabled()).isTrue();
 					assertThat(properties.getCommand().getQuit().isEnabled()).isTrue();
 					assertThat(properties.getCommand().getScript().isEnabled()).isTrue();
@@ -78,6 +80,8 @@ public class SpringShellPropertiesTests {
 				.withPropertyValues("spring.shell.command.clear.enabled=false")
 				.withPropertyValues("spring.shell.command.help.enabled=false")
 				.withPropertyValues("spring.shell.command.help.grouping-mode=flat")
+				.withPropertyValues("spring.shell.command.help.command-template=fake1")
+				.withPropertyValues("spring.shell.command.help.commands-template=fake2")
 				.withPropertyValues("spring.shell.command.history.enabled=false")
 				.withPropertyValues("spring.shell.command.quit.enabled=false")
 				.withPropertyValues("spring.shell.command.script.enabled=false")
@@ -109,6 +113,8 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getCommand().getClear().isEnabled()).isFalse();
 					assertThat(properties.getCommand().getHelp().isEnabled()).isFalse();
 					assertThat(properties.getCommand().getHelp().getGroupingMode()).isEqualTo(GroupingMode.FLAT);
+					assertThat(properties.getCommand().getHelp().getCommandTemplate()).isEqualTo("fake1");
+					assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isEqualTo("fake2");
 					assertThat(properties.getCommand().getHistory().isEnabled()).isFalse();
 					assertThat(properties.getCommand().getQuit().isEnabled()).isFalse();
 					assertThat(properties.getCommand().getScript().isEnabled()).isFalse();

@@ -55,11 +55,13 @@ public class StandardCommandsAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(Help.Command.class)
 	@ConditionalOnProperty(prefix = "spring.shell.command.help", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public Help help(SpringShellProperties properties) {
-		Help help = new Help();
+	public Help help(SpringShellProperties properties, ObjectProvider<TemplateExecutor> templateExecutor) {
+		Help help = new Help(templateExecutor.getIfAvailable());
 		if (properties.getCommand().getHelp().getGroupingMode() == GroupingMode.FLAT) {
 			help.setShowGroups(false);
 		}
+		help.setCommandTemplate(properties.getCommand().getHelp().getCommandTemplate());
+		help.setCommandsTemplate(properties.getCommand().getHelp().getCommandsTemplate());
 		return help;
 	}
 

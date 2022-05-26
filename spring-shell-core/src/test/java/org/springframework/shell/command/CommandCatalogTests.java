@@ -41,6 +41,22 @@ public class CommandCatalogTests extends AbstractCommandTests {
 	}
 
 	@Test
+	public void testCommandAliases () {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("group1 sub1")
+			.withAlias()
+				.command("group1 sub2")
+				.and()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		CommandCatalog catalog = CommandCatalog.of();
+		catalog.register(r1);
+		assertThat(catalog.getRegistrations()).hasSize(2);
+	}
+
+	@Test
 	public void testResolver() {
 		// catalog itself would not have any registered command but
 		// this custom resolver adds one which may dymanically go away.
