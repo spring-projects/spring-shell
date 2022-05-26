@@ -229,6 +229,9 @@
 					<value>!true</value>
 				</property>
 			</activation>
+			<properties>
+				<java.version>11</java.version>
+			</properties>
 			<modules>
 				<module>spring-shell-samples</module>
 			</modules>
