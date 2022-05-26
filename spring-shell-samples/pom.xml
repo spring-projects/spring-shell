@@ -51,6 +51,17 @@
 		</dependency>
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>spring-releases</id>
+			<name>Spring Releases</name>
+			<url>https://repo.spring.io/release</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<profiles>
         <profile>
             <id>native</id>
