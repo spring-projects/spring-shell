@@ -2,13 +2,13 @@
 === Command Registration
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-Defining a command registation is a first step to introduce a structure of a commands and its options
-and parameters. This is loosely decoupled what happens later like parsing command-line and executing
-actual target code. Essentially it is a definition of an command API shown to a user.
+Defining a command registration is a first step to introducing the structure of a command and its options
+and parameters. This is loosely decoupled from what happens later, such as parsing command-line input and running
+actual target code. Essentially, it is the definition of a command API that is shown to a user.
 
 ==== Commands
-Command in a `spring-shell` structure is defined as an array of commands. This will give
-you something like:
+A command in a `spring-shell` structure is defined as an array of commands. This yields a
+structure similar to the following example:
 
 ====
 [source, bash]
@@ -20,27 +20,25 @@ command2 sub2 subsub2
 ----
 ====
 
-[NOTE]
-====
-We don't currently support mapping commands to explicit parent if sub-commands are defined.
-For example there can't be `command1 sub1` and `command1 sub1 subsub1` registered.
-====
+NOTE: We do not currently support mapping commands to an explicit parent if sub-commands are defined.
+For example, `command1 sub1` and `command1 sub1 subsub1` cannot both be registered.
 
 ==== Interaction Mode
-Spring Shell has been designed to work on two modes one being interactive which essentially
-is a `REPL` where you have an active shell instance throughout commands and secondly
-non-interactive mode where commands are executed one by one from a command line.
+Spring Shell has been designed to work on two modes: interactive (which essentially
+is a `REPL` where you have an active shell instance throughout a series of commands) and
+non-interactive (where commands are executed one by one from a command line).
 
-Differentation between these modes are mostly around limitations what can be done
-in each mode as for example it would not be feasible to show what was a previous stacktrace
-of a command if shell is not alive anymore and generally things around information
-if shell is alive or not.
+Differentation between these modes is mostly around limitations about what can be done
+in each mode. For example, it would not be feasible to show what was a previous stacktrace
+of a command if the shell is no longer active. Generally, whether the shell is still active
+dictates the available information.
 
-Also being on an active `REPL` session may provide more info about what user has been
+Also, being on an active `REPL` session may provide more information about what the user has been
 doing within an active session.
 
 ==== Options
-Options can be defined as long and short where prefixing is `--` and `-` respectively.
+Options can be defined as long and short, where the prefixing is `--` and `-`, respectively.
+The following examples show long and short options:
 
 ====
 [source, java, indent=0]
@@ -57,11 +55,12 @@ include::{snippets}/CommandRegistrationSnippets.java[tag=snippet2]
 ====
 
 ==== Target
-Target defines what is an execution target of a command. It can be a _method_ in a `POJO`,
-`Consumer` or `Function`.
+The target defines the execution target of a command. It can be a method in a POJO,
+a `Consumer`, or a `Function`.
 
 ===== Method
-Using a `Method` is a way to define target as a method in an existing pojo.
+Using a `Method` in an existing POJO is one way to define a target.
+Consider the following class:
 
 ====
 [source, java, indent=0]
@@ -70,7 +69,7 @@ include::{snippets}/CommandTargetSnippets.java[tag=snippet11]
 ----
 ====
 
-Having existing class shown above you can then register its method.
+Given the existing class shown in the preceding listing, you can then register its method:
 
 ====
 [source, java, indent=0]
@@ -81,9 +80,9 @@ include::{snippets}/CommandTargetSnippets.java[tag=snippet12]
 
 ===== Function
 Using a `Function` as a target gives a lot of flexibility to handle what
-happens in a command execution as you can handle many things manually using
-a `CommandContext` given to a `Function`. Return type from a `Function` is
-then what gets printed into a shell as a result.
+happens in a command execution, because you can handle many things manually by using
+a `CommandContext` given to a `Function`. The return type from a `Function` is
+then what gets printed into the shell as a result. Consider the following example:
 
 ====
 [source, java, indent=0]
@@ -93,10 +92,10 @@ include::{snippets}/CommandTargetSnippets.java[tag=snippet2]
 ====
 
 ===== Consumer
-Using a `Consumer` is basically same as `Function` with difference being
-that there is not return type. If you need to print something into a shell
+Using a `Consumer` is basically the same as using a `Function`, with the difference being
+that there is no return type. If you need to print something into a shell,
 you can get a reference to a `Terminal` from a context and print something
-through it.
+through it. Consider the following example:
 
 ====
 [source, java, indent=0]

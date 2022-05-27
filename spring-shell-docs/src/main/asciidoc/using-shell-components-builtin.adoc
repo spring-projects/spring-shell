@@ -2,17 +2,18 @@
 ==== Built-In Commands
 
 Any application built by using the `{starter-artifactId}` artifact
-(or, to be more precise, the `spring-shell-standard-commands` dependency) comes with a set of built-in commands.
+(which equates to the `spring-shell-standard-commands` dependency) comes with a set of built-in commands.
 You can override or disable these commands individually (see <<overriding-or-disabling-built-in-commands>>).
 However, if they are not overridden or disabled, this section describes their behavior.
 
 [[help-command]]
 ===== Help
 
-Running a shell application often implies that the user is in a graphically limited environment. Also, while we are
-nearly always connected in the era of mobile phones, accessing a web browser or any other rich UI application
-(such as a PDF viewer) may not always be possible. This is why it is important that the shell commands are correctly
-self documented, and this is where the `help` command comes in.
+Running a shell application often implies that the user is in a graphically limited
+environment. Also, while we are nearly always connected in the era of mobile phones,
+accessing a web browser or any other rich UI application (such as a PDF viewer) may not always
+be possible. This is why it is important that the shell commands are correctly self-documented, and this is where the `help`
+command comes in.
 
 Typing `help` + `ENTER` lists all the commands known to the shell (including <<dynamic-command-availability,unavailable>> commands)
 and a short description of what they do, similar to the following:
@@ -97,7 +98,7 @@ commands to disk, so that they are available again (see <<interacting-with-the-s
 
 When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
 so as not to overflow the user with too much information.
-There are cases though when understanding what exactly happened is important (especially if the exception has a nested cause).
+There are cases, though, when understanding what exactly happened is important (especially if the exception has a nested cause).
 
 To this end, Spring Shell remembers the last exception that occurred, and the user can later use the `stacktrace`
 command to print all the details on the console.
@@ -112,47 +113,44 @@ to be comments and are ignored, while lines ending with `\` trigger line continu
 
 ===== History
 
-The `history` command shows history of a commands which has been executed.
+The `history` command shows the history of commands that has been executed.
 
-There are few configuration options which can be used to configure behaviour
-of a history. History is kept in a log file which is enabled by default and can
-be turned off using `spring.shell.history.enabled`. Name of a log file
-is resolved from `spring.application.name` and defaults to _spring-shell.log_
-which can be changed using `spring.shell.history.name`.
+There are a few configuration options that you can use to configure behavior
+of a history. History is kept in a log file, which is enabled by default and can
+be turned off by setting `spring.shell.history.enabled`. The name of a log file
+is resolved from `spring.application.name` and defaults to `spring-shell.log`,
+which you can change by setting `spring.shell.history.name`.
 
-On default a log file is generated to a current working directory which can be
-changed using `spring.shell.config.location`. This property can contain
-a placeholder _{userconfig}_ which resolves to a common shared config directory.
+By default, a log file is generated to a current working directory, which you can dictate
+by setting `spring.shell.config.location`. This property can contain
+a placeholder (`{userconfig}`), which resolves to a common shared config directory.
 
-[TIP]
-====
-Check how sample app works as it's using these options.
-====
+TIP: Run the Spring Shell application to see how the sample application works as it uses these options.
 
 ===== Completion
 
-The `completion` command set allows you to create _scripts_ files which can be used
-with am OS shell implementations to provide completion. This is very usefull when
+The `completion` command set lets you create script files that can be used
+with am OS shell implementations to provide completion. This is very useful when
 working with non-interactive mode.
 
-Currently only implementation is for _bash_ which works with `bash` sub-command.
+Currently, the only implementation is for bash, which works with `bash` sub-command.
 
 ===== Version
 
-The `version` command shows existing _build_ and _git_ info by integrating into
-Boot's `BuildProperties` and `GitProperties` if those exists in a shell app.
-On default only version info is shown and other can be enabled via configuration
+The `version` command shows existing build and git info by integrating into
+Boot's `BuildProperties` and `GitProperties` if those exist in the shell application.
+By default, only version information is shown, and you can enable other information through configuration
 options.
 
-Settings are under `spring.shell.command.version` where you can use `enabled` to
-disable command and optionally define your own template with `template`. Options
+The relevant settings are under `spring.shell.command.version`, where you can use `enabled` to
+disable a command and, optionally, define your own template with `template`. You can use the
 `show-build-artifact`, `show-build-group`, `show-build-name`, `show-build-time`,
 `show-build-version`, `show-git-branch`, `show-git-commit-id`,
-`show-git-short-commit-id` and `show-git-commit-time` can be used to control
+`show-git-short-commit-id` and `show-git-commit-time` commands to control
 fields in a default template.
 
-Template default to `classpath:template/version-default.st` and you can define
-your own, for example having:
+The template defaults to `classpath:template/version-default.st`, and you can define
+your own, as the following example shows:
 
 ====
 [source]
@@ -161,7 +159,7 @@ your own, for example having:
 ----
 ====
 
-Which would simply output something like:
+This setting would output something like the following:
 
 ====
 [source]
@@ -170,6 +168,6 @@ X.X.X
 ----
 ====
 
-Attributes added to default template rendering are `buildVersion`, `buildGroup`,
+You can add the following attributes to the default template rendering: `buildVersion`, `buildGroup`,
 `buildGroup`, `buildName`, `buildTime`, `gitShortCommitId`, `gitCommitId`,
-`gitBranch` and `gitCommitTime`.
+`gitBranch`, and `gitCommitTime`.

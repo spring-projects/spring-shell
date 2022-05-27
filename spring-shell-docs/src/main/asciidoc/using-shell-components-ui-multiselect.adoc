@@ -2,7 +2,8 @@
 ===== Multi Select
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-Used to ask an items from a list.
+The multi select component asks a user to select multiple items from a list.
+The following listing shows an example:
 
 ====
 [source, java, indent=0]
@@ -11,21 +12,23 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet7]
 ----
 ====
 
+The following image shows a typical multi-select component:
+
 image::images/component-multi-select-1.svg[text input]
 
-Context object is `MultiItemSelectorContext`.
+The context object is `MultiItemSelectorContext`. The following table describes its context variables:
 
 [[multiitemselectorcontext-template-variables]]
 .MultiItemSelectorContext Template Variables
 |===
 |Key |Description
 
-|values
-|Returned values when component exists.
+|`values`
+|The values returned when the component exists.
 
-|rows
-|Visible items where rows list contains maps of name, selected, onrow and enabled items.
+|`rows`
+|The visible items, where rows contain maps of name, selected, on-row, and enabled items.
 
-|model
-|Parent context variables <<selectorcomponentcontext-template-variables>>
+|`model`
+|The parent context variables (see <<selectorcomponentcontext-template-variables>>).
 |===

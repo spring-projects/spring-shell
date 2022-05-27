@@ -3,11 +3,11 @@ This section describes how to use Spring Shell.
 
 [IMPORTANT]
 ====
-_Spring Shell 2.1.x_ is a major rework to bring codebase up-to-date with
-existing _Spring Boot_ versions, adding new features and especially
-making it work with _GraalVM_ which makes command-line applications much
-more relevant on a java space. Moving to new major version also allows
-us to clean up codebase and make some needed breaking changes.
+Spring Shell 2.1.x is a major rework to bring the codebase up to date with
+existing Spring Boot versions, adding new features and, especially,
+making it work with GraalVM which makes command-line applications much
+more relevant in a Java space. Moving to a new major version also lets
+us clean up the codebase and make some needed breaking changes.
 ====
 
 include::using-shell-basics.adoc[]

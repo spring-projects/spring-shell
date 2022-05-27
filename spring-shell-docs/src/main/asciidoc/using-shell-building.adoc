@@ -1,15 +1,16 @@
 [[using-shell-building]]
 === Building
 
+This section covers how to build a Spring Shell application.
+
 [[native]]
 ==== Native Support
 
-Re-work with _2.1.x_ brings in an experimental support for compiling shell application
-into _native_ application with _GraalVM_ and _spring-native_. As underlying _jline_
-library works with _GraalVM_ most of a things should just work.
+Version 2.1.x includes experimental support for compiling Spring Shell applications
+into native applications with GraalVM and Spring Native. Because the underlying JLine
+library works with GraalVM, most things should just work.
 
-Project can be compiled with native profile to get sample compiled as an native
-application:
+You can compile the project with a native profile to get a native application:
 
 ====
 ----
@@ -17,7 +18,7 @@ $ ./mvnw clean package -Pnative
 ----
 ====
 
-You can then run sample either with interactive or non-interactive mode:
+You can then run the application in either interactive or non-interactive mode:
 
 ====
 ----

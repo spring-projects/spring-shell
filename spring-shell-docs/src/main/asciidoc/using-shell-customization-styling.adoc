@@ -1,12 +1,12 @@
 [[styling]]
 ==== Styling
 
-Starting with _2.1.x_ there is a support for centrally handling styling and theming.
-There is a default theme named _default_ which can be changed using property
-`spring.shell.theme.name`.
+Version 2.1.x introduced support for centrally handling styling and theming.
+You can change the default theme (named `default`)by setting the
+`spring.shell.theme.name` property.
 
-To create a new theme register new `Theme` bean with custom `ThemeSettings` where
-you can tweak styles.
+To create a new theme, register a new `Theme` bean with custom `ThemeSettings`. This new bean
+lets you tweak styles. The following example shows how to do so:
 
 ====
 [source, java]
@@ -34,8 +34,8 @@ static class MyThemeSettings extends ThemeSettings {
 ----
 ====
 
-`ThemeResolver` can be used to resolve styles if you want to create
-_jline_ styled strings programmatically.
+You can use `ThemeResolver` to resolve styles if you want to create
+JLine-styled strings programmatically. The following example shows how to do so:
 
 ====
 [source, java]
