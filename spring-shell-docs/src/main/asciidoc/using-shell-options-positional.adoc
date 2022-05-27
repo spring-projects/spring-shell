@@ -2,7 +2,7 @@
 ==== Positional
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-Positional information is mostly related to a command target method.
+Positional information is mostly related to a command target method:
 
 ====
 [source, java, indent=0]

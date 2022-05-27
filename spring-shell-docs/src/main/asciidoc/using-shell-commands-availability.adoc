@@ -3,13 +3,13 @@
 
 Registered commands do not always make sense, due to the internal state of the application.
 For example, there may be a `download` command, but it only works once the user has used `connect` on a remote
-server. Now, if the user tries to use the `download` command, the shell should gracefully explain that
-the command exist but that it is not available at the time.
+server. Now, if the user tries to use the `download` command, the shell should explain that
+the command exists but that it is not available at the time.
 Spring Shell lets you do that, even letting you provide a short explanation of the reason for
 the command not being available.
 
 There are three possible ways for a command to indicate availability.
-They all leverage a no-arg method that returns an instance of `Availability`.
+They all use a no-arg method that returns an instance of `Availability`.
 Consider the following example:
 
 ====
@@ -87,7 +87,7 @@ can provide an explicit name by using the `@ShellMethodAvailability` annotation:
 <1> the names have to match
 ====
 
-Lastly, it is often the case that several commands in the same class share the same internal state and, thus,
+Finally, it is often the case that several commands in the same class share the same internal state and, thus,
 should all be available or unavailable as a group. Instead of having to stick the `@ShellMethodAvailability`
 on all command methods, Spring Shell lets you flip things around and put the `@ShellMethodAvailabilty`
 annotation on the availability method, specifying the names of the commands that it controls:

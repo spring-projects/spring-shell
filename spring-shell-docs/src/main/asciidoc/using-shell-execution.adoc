@@ -1,18 +1,20 @@
 === Execution
 
+This section describes how to set up a Spring Shell to work in interactive mode.
+
 ==== Interaction Mode
 
-Starting from _2.1.x_ a build-in support has been added to distinguish between interactive
-and non-interactive modes. This has been added so that it's easier to use shell as a
-simple command-line tool without requiring customisation to accomplish that.
+Version 2.1.x introduced built-in support to distinguish between interactive
+and non-interactive modes. This makes it easier to use the shell as a
+simple command-line tool without requiring customization.
 
-Currently interactive mode is entered if any command line options are passed when starting
-or running a shell from a command-line. This especially works well when shell application
+Currently, interactive mode is entered if any command line options are passed when starting
+or running a shell from a command line. This works especially well when a shell application
 is compiled with <<native>>.
 
-Some commands may not have any usefull meaning if running on interactive mode
-or vice versa on non-interactive mode. For example a build-in `exit` command
-have no meaning in non-interactive mode as it's used to exit interactive mode.
+Some commands may not have any useful meanings when they run in interactive mode
+or (conversely) in non-interactive mode. For example, a built-in `exit` command would
+have no meaning in non-interactive mode, because it is used to exit interactive mode.
 
-Annotation `@ShellMethod` has a field `interactionMode` which can be used to instruct
-shell when particular command is available.
+The `@ShellMethod` annotation has a field called `interactionMode` that you can use to inform
+shell about when a particular command is available.

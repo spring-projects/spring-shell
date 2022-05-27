@@ -4,7 +4,7 @@
 Spring Shell integrates with the https://beanvalidation.org/[Bean Validation API] to support
 automatic and self-documenting constraints on command parameters.
 
-Annotations found on command parameters as well as annotations at the method level are
+Annotations found on command parameters and annotations at the method level are
 honored and trigger validation prior to the command executing. Consider the following command:
 
 ====
@@ -31,6 +31,6 @@ The following constraints were not met:
 .Applies to All Command Implementations
 ====
 It is important to note that bean validation applies to all command implementations,
-whether they use the "standard" API or any other API, through the use of an adapter
-(see <<support-for-shell-1-and-jcommander,Supporting Other APIs>>)
+whether they use the "`standard`" API or any other API, through the use of an adapter
+(see <<support-for-shell-1-and-jcommander,Supporting Other APIs>>).
 ====

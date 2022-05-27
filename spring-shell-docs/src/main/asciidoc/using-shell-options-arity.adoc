@@ -2,9 +2,9 @@
 ==== Arity
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-Sometimes you want to have more fine control of how many parameters with an option
-are processed when parsing operation happens. Arity is defined as min and max
-values where min must be positive integer and max has to be more or equal to min.
+Sometimes, you want to have more fine control of how many parameters with an option
+are processed when parsing operations happen. Arity is defined as min and max
+values, where min must be a positive integer and max has to be more or equal to min.
 
 ====
 [source, java, indent=0]
@@ -13,8 +13,8 @@ include::{snippets}/OptionSnippets.java[tag=option-registration-arityints]
 ----
 ====
 
-Arity can also be defined as an `OptionArity` enum which are shortcuts
-with table shown below.
+Arity can also be defined as an `OptionArity` enum, which are shortcuts
+within the following table:
 
 ====
 [source, java, indent=0]
@@ -43,7 +43,7 @@ include::{snippets}/OptionSnippets.java[tag=option-registration-arityenum]
 |1 / Integer MAX
 |===
 
-Annotation model only supports defining _max_ value of an arity.
+The annotation model supports defining only the max value of an arity.
 
 ====
 [source, java, indent=0]

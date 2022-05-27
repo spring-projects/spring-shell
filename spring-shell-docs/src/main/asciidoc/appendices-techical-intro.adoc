@@ -1,8 +1,8 @@
 [appendix]
 [#appendix-tech-intro]
-== Techical Introduction
-This section contains information for a developers and others who would like to know more about how _spring-shell_
-internally works and what are its design decisions.
+== Appendix: Techical Introduction
+This appendix contains information for developers and others who would like to know more about how Spring Shell
+works internally and what its design decisions are.
 
 include::appendices-techical-intro-registration.adoc[]
 

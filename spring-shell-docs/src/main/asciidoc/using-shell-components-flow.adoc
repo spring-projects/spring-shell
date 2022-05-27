@@ -2,13 +2,13 @@
 ==== Flow
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-When using <<using-shell-components-ui>> to build something which involves
-use of a multiple components your implemention may become a bit cluttered.
-Nothing wrong with that but to ease these use cases we've build a
-`ComponentFlow` which is able to hook multiple component executions together
-as a _flow_.
+When you use <<using-shell-components-ui>> to build something that involves
+use of a multiple components, your implementation may become a bit cluttered.
+To ease these use cases, we added a
+`ComponentFlow` that can hook multiple component executions together
+as a "`flow`".
 
-Here is some examples of a flows and what it looks like in a shell:
+The following listings show examples of flows and their output in a shell:
 
 ====
 [source, java, indent=0]
@@ -29,5 +29,5 @@ include::{snippets}/FlowComponentSnippets.java[tag=snippet2]
 
 image::images/component-flow-conditional-1.svg[text input]
 
-Results from running a flow returns `ComponentFlowResult` which you can
-use to do furher actions.
+TIP: The result from running a flow returns `ComponentFlowResult`, which you can
+use to do further actions.

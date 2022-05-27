@@ -1,3 +1,3 @@
 === Command Execution
-When _command parsing_ has done its job togethere with resolving _command registration_, execution
-will do the hard work and execute a real user level code.
+When command parsing has done its job and command registration has been resolved, command execution
+does the hard work of running the code.

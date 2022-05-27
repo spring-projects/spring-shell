@@ -2,8 +2,8 @@
 ==== Optional Value
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-Option is either required or not and it generally speaking depends on
-a command target how this behaves.
+An option is either required or not and, generally speaking, how it behavesit depends on
+a command target:
 
 ====
 [source, java, indent=0]
@@ -12,8 +12,8 @@ include::{snippets}/OptionSnippets.java[tag=option-registration-optional]
 ----
 ====
 
-With an annotation model there is no direct way to define if argument is
-optional, instead it's instructed to be _NULL_.
+In the annotation model, there is no direct way to define if argument is
+optional. Instead, it is instructed to be `NULL`.:
 
 ====
 [source, java, indent=0]
