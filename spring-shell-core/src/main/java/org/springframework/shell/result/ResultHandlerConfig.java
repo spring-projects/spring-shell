@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.TerminalSizeAware;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;
 
 /**
@@ -62,7 +63,7 @@ public class ResultHandlerConfig {
 
 	@Bean
 	public ThrowableResultHandler throwableResultHandler(Terminal terminal, CommandCatalog commandCatalog,
-		ObjectProvider<InteractiveShellRunner> interactiveApplicationRunner) {
-		return new ThrowableResultHandler(terminal, commandCatalog, interactiveApplicationRunner);
+			ShellContext shellContext, ObjectProvider<InteractiveShellRunner> interactiveApplicationRunner) {
+		return new ThrowableResultHandler(terminal, commandCatalog, shellContext, interactiveApplicationRunner);
 	}
 }
