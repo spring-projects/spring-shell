@@ -121,7 +121,8 @@ public class HelpTests {
 				.and()
 			.build();
 		commandCatalog.register(registration);
-		CharSequence help = this.help.help("first-command").toString();
+		String help = this.help.help("first-command").toString();
+		help = removeNewLines(help);
 		assertThat(help).isEqualTo(sample());
 	}
 
@@ -129,6 +130,7 @@ public class HelpTests {
 	public void testCommandListDefault() throws Exception {
 		registerCommandListCommands();
 		String list = this.help.help(null).toString();
+		list = removeNewLines(list);
 		assertThat(list).isEqualTo(sample());
 	}
 
@@ -137,6 +139,7 @@ public class HelpTests {
 		registerCommandListCommands();
 		this.help.setShowGroups(false);
 		String list = this.help.help(null).toString();
+		list = removeNewLines(list);
 		assertThat(list).isEqualTo(sample());
 	}
 
@@ -147,9 +150,13 @@ public class HelpTests {
 		}).isInstanceOf(IllegalArgumentException.class);
 	}
 
+	private String removeNewLines(String str) {
+		return str.replace("\r", "").replace("\n", "");
+	}
+
 	private String sample() throws IOException {
 		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt", HelpTests.class).getInputStream();
-		return FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")).replace("&", "");
+		return removeNewLines(FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")));
 	}
 
 	private void registerCommandListCommands() throws Exception {
