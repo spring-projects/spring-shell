@@ -1,0 +1,60 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Sample interactive",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples"
+        },
+        {
+            "type": "java",
+            "name": "Sample help",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "help"
+        },
+        {
+            "type": "java",
+            "name": "Sample fail noarg",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "fail"
+        },
+        {
+            "type": "java",
+            "name": "Sample fail arg",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "fail --elementType TYPE"
+        },
+        {
+            "type": "java",
+            "name": "e2e exit-code noarg",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "e2e reg exit-code"
+        },
+        {
+            "type": "java",
+            "name": "e2e exit-code arg hi",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "e2e reg exit-code --arg1 hi"
+        },
+        {
+            "type": "java",
+            "name": "e2e exit-code arg fun",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "e2e reg exit-code --arg1 fun"
+        }
+    ]
+}

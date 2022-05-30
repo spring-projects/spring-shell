@@ -99,6 +99,13 @@ public interface CommandRegistration {
 	List<CommandAlias> getAliases();
 
 	/**
+	 * Gets an exit code.
+	 *
+	 * @return the exit code
+	 */
+	CommandExitCode getExitCode();
+
+	/**
 	 * Gets a new instance of a {@link Buidler}.
 	 *
 	 * @return a new builder instance
@@ -387,6 +394,35 @@ public interface CommandRegistration {
 	}
 
 	/**
+	 * Spec defining an exit code.
+	 */
+	public interface ExitCodeSpec {
+
+		/**
+		 * Define mapping from exception to code.
+		 *
+		 * @param e the exception
+		 * @param code the exit code
+		 * @return a target spec for chaining
+		 */
+		ExitCodeSpec map(Class<? extends Throwable> e, int code);
+
+		/**
+		 *
+		 * @param function
+		 * @return
+		 */
+		ExitCodeSpec map(Function<Throwable, Integer> function);
+
+		/**
+		 * Return a builder for chaining.
+		 *
+		 * @return a builder for chaining
+		 */
+		Builder and();
+	}
+
+	/**
 	 * Builder interface for {@link CommandRegistration}.
 	 */
 	public interface Builder {
@@ -455,6 +491,13 @@ public interface CommandRegistration {
 		 * @return alias spec for chaining
 		 */
 		AliasSpec withAlias();
+
+		/**
+		 * Define an exit code what this command should execute
+		 *
+		 * @return exit code spec for chaining
+		 */
+		ExitCodeSpec withExitCode();
 
 		/**
 		 * Builds a {@link CommandRegistration}.
@@ -689,6 +732,39 @@ public interface CommandRegistration {
 		}
 	}
 
+	static class DefaultExitCodeSpec implements ExitCodeSpec {
+
+		private BaseBuilder builder;
+		private final List<Function<Throwable, Integer>> functions = new ArrayList<>();
+
+		DefaultExitCodeSpec(BaseBuilder builder) {
+			this.builder = builder;
+		}
+
+		@Override
+		public ExitCodeSpec map(Class<? extends Throwable> e, int code) {
+			Function<Throwable, Integer> f = t -> {
+				if (ObjectUtils.nullSafeEquals(t.getClass(), e)) {
+					return code;
+				}
+				return 0;
+			};
+			this.functions.add(f);
+			return this;
+		}
+
+		@Override
+		public ExitCodeSpec map(Function<Throwable, Integer> function) {
+			this.functions.add(function);
+			return this;
+		}
+
+		@Override
+		public Builder and() {
+			return builder;
+		}
+	}
+
 	static class DefaultCommandRegistration implements CommandRegistration {
 
 		private String command;
@@ -699,10 +775,11 @@ public interface CommandRegistration {
 		private List<DefaultOptionSpec> optionSpecs;
 		private DefaultTargetSpec targetSpec;
 		private List<DefaultAliasSpec> aliasSpecs;
+		private DefaultExitCodeSpec exitCodeSpec;
 
 		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String group,
 				String description, Supplier<Availability> availability, List<DefaultOptionSpec> optionSpecs,
-				DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs) {
+				DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs, DefaultExitCodeSpec exitCodeSpec) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.group = group;
@@ -711,6 +788,7 @@ public interface CommandRegistration {
 			this.optionSpecs = optionSpecs;
 			this.targetSpec = targetSpec;
 			this.aliasSpecs = aliasSpecs;
+			this.exitCodeSpec = exitCodeSpec;
 		}
 
 		@Override
@@ -769,6 +847,16 @@ public interface CommandRegistration {
 				.collect(Collectors.toList());
 		}
 
+		@Override
+		public CommandExitCode getExitCode() {
+			if (this.exitCodeSpec == null) {
+				return CommandExitCode.of();
+			}
+			else {
+				return CommandExitCode.of(exitCodeSpec.functions);
+			}
+		}
+
 		private static String commandArrayToName(String[] commands) {
 			return Arrays.asList(commands).stream()
 				.flatMap(c -> Stream.of(c.split(" ")))
@@ -792,6 +880,7 @@ public interface CommandRegistration {
 		private List<DefaultOptionSpec> optionSpecs = new ArrayList<>();
 		private List<DefaultAliasSpec> aliasSpecs = new ArrayList<>();
 		private DefaultTargetSpec targetSpec;
+		private DefaultExitCodeSpec exitCodeSpec;
 
 		@Override
 		public Builder command(String... commands) {
@@ -848,7 +937,14 @@ public interface CommandRegistration {
 			DefaultAliasSpec spec = new DefaultAliasSpec(this);
 			this.aliasSpecs.add(spec);
 			return spec;
-		};
+		}
+
+		@Override
+		public ExitCodeSpec withExitCode() {
+			DefaultExitCodeSpec spec = new DefaultExitCodeSpec(this);
+			this.exitCodeSpec = spec;
+			return spec;
+		}
 
 		@Override
 		public CommandRegistration build() {
@@ -856,7 +952,7 @@ public interface CommandRegistration {
 			Assert.notNull(targetSpec, "target cannot be empty");
 			Assert.state(!(targetSpec.bean != null && targetSpec.function != null), "only one target can exist");
 			return new DefaultCommandRegistration(commands, interactionMode, group, description, availability,
-					optionSpecs, targetSpec, aliasSpecs);
+					optionSpecs, targetSpec, aliasSpecs, exitCodeSpec);
 		}
 	}
 }

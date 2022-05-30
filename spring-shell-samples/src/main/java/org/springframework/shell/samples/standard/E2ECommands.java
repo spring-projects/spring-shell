@@ -106,4 +106,41 @@ public class E2ECommands {
 			.build();
 	}
 
+	@Bean
+	public CommandRegistration testExitCodeRegistration() {
+		return CommandRegistration.builder()
+			.command("e2e", "reg", "exit-code")
+			.group("E2E Commands")
+			.withOption()
+				.longNames("arg1")
+				.required()
+				.and()
+			.withTarget()
+				.consumer(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					throw new MyException(arg1);
+				})
+				.and()
+			.withExitCode()
+				.map(MyException.class, 3)
+				.map(t -> {
+					String msg = t.getMessage();
+					if (msg != null && msg.contains("ok")) {
+						return 0;
+					}
+					else if (msg != null && msg.contains("fun")) {
+						return 4;
+					}
+					return 0;
+				})
+				.and()
+			.build();
+	}
+
+	static class MyException extends RuntimeException {
+
+		MyException(String msg) {
+			super(msg);
+		}
+	}
 }

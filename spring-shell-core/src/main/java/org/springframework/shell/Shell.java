@@ -15,12 +15,12 @@
  */
 package org.springframework.shell;
 
-import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.validation.Validator;
@@ -42,6 +42,9 @@ import org.springframework.shell.command.CommandExecution.CommandExecutionExcept
 import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.completion.CompletionResolver;
+import org.springframework.shell.context.InteractionMode;
+import org.springframework.shell.context.ShellContext;
+import org.springframework.shell.exit.ExitCodeMappings;
 
 /**
  * Main class implementing a shell loop.
@@ -65,6 +68,8 @@ public class Shell {
 	protected List<CompletionResolver> completionResolvers = new ArrayList<>();
 	private CommandExecutionHandlerMethodArgumentResolvers argumentResolvers;
 	private ConversionService conversionService = new DefaultConversionService();
+	private final ShellContext shellContext;
+	private final ExitCodeMappings exitCodeMappings;
 
 	/**
 	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid
@@ -74,10 +79,13 @@ public class Shell {
 
 	private Validator validator = Utils.defaultValidator();
 
-	public Shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal) {
+	public Shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal,
+			ShellContext shellContext, ExitCodeMappings exitCodeMappings) {
 		this.resultHandlerService = resultHandlerService;
 		this.commandRegistry = commandRegistry;
 		this.terminal = terminal;
+		this.shellContext = shellContext;
+		this.exitCodeMappings = exitCodeMappings;
 	}
 
 	@Autowired
@@ -108,7 +116,7 @@ public class Shell {
 	 * (<em>e.g.</em> a {@literal script} command).
 	 * </p>
 	 */
-	public void run(InputProvider inputProvider) throws IOException {
+	public void run(InputProvider inputProvider) throws Exception {
 		Object result = null;
 		while (!(result instanceof ExitRequest)) { // Handles ExitRequest thrown from Quit command
 			Input input;
@@ -129,6 +137,18 @@ public class Shell {
 			result = evaluate(input);
 			if (result != NO_INPUT && !(result instanceof ExitRequest)) {
 				resultHandlerService.handle(result);
+			}
+
+			// throw if not in interactive mode so that boot's exit code feature
+			// can contribute exit code. we can't throw when in interactive mode as
+			// that would exit a shell
+			if (this.shellContext != null && this.shellContext.getInteractionMode() != InteractionMode.INTERACTIVE) {
+				if (result instanceof CommandExecution.CommandParserExceptionsException) {
+					throw (CommandExecution.CommandParserExceptionsException) result;
+				}
+				else if (result instanceof Exception) {
+					throw (Exception) result;
+				}
 			}
 		}
 	}
@@ -169,6 +189,12 @@ public class Shell {
 				.findFirst();
 
 			if (commandRegistration.isPresent()) {
+				if (this.exitCodeMappings != null) {
+					List<Function<Throwable, Integer>> mappingFunctions = commandRegistration.get().getExitCode()
+							.getMappingFunctions();
+					this.exitCodeMappings.reset(mappingFunctions);
+				}
+
 				List<String> wordsForArgs = wordsForArguments(command, words);
 
 				Thread commandThread = Thread.currentThread();
