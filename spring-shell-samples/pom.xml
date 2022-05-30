@@ -15,7 +15,7 @@
 	<description>Examples of using Spring Shell 2</description>
 
 	<properties>
-		<spring-native.version>0.11.5</spring-native.version>
+		<spring-native.version>0.12.0</spring-native.version>
 	</properties>
 
 	<build>
