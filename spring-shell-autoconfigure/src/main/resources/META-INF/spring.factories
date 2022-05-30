@@ -1,4 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.springframework.shell.boot.ExitCodeAutoConfiguration,\
 org.springframework.shell.boot.ShellContextAutoConfiguration,\
 org.springframework.shell.boot.SpringShellAutoConfiguration,\
 org.springframework.shell.boot.ShellRunnerAutoConfiguration,\

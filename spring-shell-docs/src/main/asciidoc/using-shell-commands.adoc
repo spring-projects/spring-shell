@@ -18,3 +18,5 @@ include::using-shell-commands-programmaticmodel.adoc[]
 include::using-shell-commands-organize.adoc[]
 
 include::using-shell-commands-availability.adoc[]
+
+include::using-shell-commands-exitcode.adoc[]

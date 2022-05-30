@@ -336,7 +336,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			assertThat(registration.getOptions()).hasSize(1);
 			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
 			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(0);
-		}
+	}
 
 	@Test
 	public void testArityViaEnum() {
@@ -353,8 +353,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			assertThat(registration.getOptions()).hasSize(1);
 			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
 			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(0);
-		}
-
+	}
 
 	@Test
 	public void testAliases() {
@@ -380,5 +379,33 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				"alias2");
 		assertThat(registration.getAliases().get(0).getGroup()).isEqualTo("Alias Group");
 		assertThat(registration.getAliases().get(1).getGroup()).isEqualTo("Alias Group");
+	}
+
+	@Test
+	public void testExitCodes() {
+		CommandRegistration registration;
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getExitCode()).isNotNull();
+		assertThat(registration.getExitCode().getMappingFunctions()).hasSize(0);
+
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.withExitCode()
+				.map(RuntimeException.class, 1)
+				.map(IllegalArgumentException.class, 2)
+				.map(e -> 1)
+				.map(e -> 2)
+				.and()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getExitCode()).isNotNull();
+		assertThat(registration.getExitCode().getMappingFunctions()).hasSize(4);
 	}
 }

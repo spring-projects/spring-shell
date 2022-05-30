@@ -34,6 +34,8 @@ import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
 import org.springframework.shell.Shell;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.context.ShellContext;
+import org.springframework.shell.exit.ExitCodeMappings;
 import org.springframework.shell.result.GenericResultHandlerService;
 import org.springframework.shell.result.ResultHandlerConfig;
 
@@ -65,8 +67,9 @@ public class SpringShellAutoConfiguration {
 
 	@Bean
 	public Shell shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal,
-			@Qualifier("shellConversionService") ConversionService shellConversionService) {
-		Shell shell = new Shell(resultHandlerService, commandRegistry, terminal);
+			@Qualifier("shellConversionService") ConversionService shellConversionService, ShellContext shellContext,
+			ExitCodeMappings exitCodeMappings) {
+		Shell shell = new Shell(resultHandlerService, commandRegistry, terminal, shellContext, exitCodeMappings);
 		shell.setConversionService(shellConversionService);
 		return shell;
 	}

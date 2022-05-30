@@ -15,7 +15,6 @@
  */
 package org.springframework.shell;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +70,7 @@ public class ShellTests {
 	}
 
 	@Test
-	public void commandMatch() throws IOException {
+	public void commandMatch() throws Exception {
 		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?");
 		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
@@ -97,7 +96,7 @@ public class ShellTests {
 	}
 
 	@Test
-	public void commandNotFound() throws IOException {
+	public void commandNotFound() throws Exception {
 		when(inputProvider.readInput()).thenReturn(() -> "hello world how are you doing ?");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
@@ -122,7 +121,7 @@ public class ShellTests {
 
 	@Test
 	// See https://github.com/spring-projects/spring-shell/issues/142
-	public void commandNotFoundPrefix() throws IOException {
+	public void commandNotFoundPrefix() throws Exception {
 		when(inputProvider.readInput()).thenReturn(() -> "helloworld how are you doing ?");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(CommandNotFound.class));
 
@@ -146,7 +145,7 @@ public class ShellTests {
 	}
 
 	@Test
-	public void noCommand() throws IOException {
+	public void noCommand() throws Exception {
 		when(inputProvider.readInput()).thenReturn(() -> "", () -> "hello world how are you doing ?", null);
 		doThrow(new Exit()).when(resultHandlerService).handle(any());
 
@@ -172,7 +171,7 @@ public class ShellTests {
 	}
 
 	@Test
-	public void commandThrowingAnException() throws IOException {
+	public void commandThrowingAnException() throws Exception {
 		when(inputProvider.readInput()).thenReturn(() -> "fail");
 		doThrow(new Exit()).when(resultHandlerService).handle(isA(SomeException.class));
 
@@ -199,7 +198,7 @@ public class ShellTests {
 	}
 
 	@Test
-	public void comments() throws IOException {
+	public void comments() throws Exception {
 		when(inputProvider.readInput()).thenReturn(() -> "// This is a comment", (Input) null);
 
 		shell.run(inputProvider);

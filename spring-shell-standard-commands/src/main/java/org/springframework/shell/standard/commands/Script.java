@@ -17,7 +17,6 @@ package org.springframework.shell.standard.commands;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.Reader;
 
 import org.jline.reader.Parser;
@@ -57,7 +56,7 @@ public class Script extends AbstractShellComponent {
     }
 
     @ShellMethod(value = "Read and execute commands from a file.")
-    public void script(File file) throws IOException {
+    public void script(File file) throws Exception {
         Reader reader = new FileReader(file);
         try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
             getShell().run(inputProvider);

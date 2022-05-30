@@ -1,0 +1,37 @@
+/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.springframework.shell.exit;
+
+import java.util.List;
+import java.util.function.Function;
+
+/**
+ * Interface used with implementation of a boot's ExitCodeExceptionMapper
+ * in a context of spring-shell spesific one. Mostly needed not to have a
+ * direct dependencies to boot classes as currently only one implementation
+ * instance can exist which we need to reset between command executions.
+ *
+ * @author Janne Valkealahti
+ */
+public interface ExitCodeMappings {
+
+	/**
+	 * Reset mappings into a given functions.
+	 *
+	 * @param functions the mapping functions
+	 */
+	void reset(List<Function<Throwable, Integer>> functions);
+}
