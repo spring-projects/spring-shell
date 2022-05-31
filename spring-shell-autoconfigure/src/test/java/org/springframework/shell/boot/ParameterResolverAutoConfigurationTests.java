@@ -21,10 +21,10 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
 import org.springframework.shell.completion.CompletionResolver;
+import org.springframework.shell.config.ShellConversionServiceSupplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,31 +49,12 @@ public class ParameterResolverAutoConfigurationTests {
 				});
 	}
 
-	@Test
-	void multipleConversionServiceBeans() {
-		this.contextRunner
-				.withUserConfiguration(CustomShellConversionServiceConfiguration.class,
-						ExtraConversionServiceConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(CommandExecutionHandlerMethodArgumentResolvers.class);
-				});
-	}
-
 	@Configuration
 	static class CustomShellConversionServiceConfiguration {
 
 		@Bean
-		ConversionService shellConversionService() {
-			return new DefaultConversionService();
-		}
-	}
-
-	@Configuration
-	static class ExtraConversionServiceConfiguration {
-
-		@Bean
-		ConversionService conversionService() {
-			return new DefaultConversionService();
+		ShellConversionServiceSupplier shellConversionServiceSupplier() {
+			return () -> new DefaultConversionService();
 		}
 	}
 }

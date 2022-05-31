@@ -20,20 +20,19 @@ import java.util.Set;
 
 import org.jline.terminal.Terminal;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
 import org.springframework.shell.Shell;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.config.ShellConversionServiceSupplier;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.exit.ExitCodeMappings;
 import org.springframework.shell.result.GenericResultHandlerService;
@@ -47,13 +46,13 @@ import org.springframework.shell.result.ResultHandlerConfig;
 public class SpringShellAutoConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean(value = ConversionService.class, name = { "shellConversionService" })
-	public ConversionService shellConversionService(ApplicationContext applicationContext) {
+	@ConditionalOnMissingBean
+	public ShellConversionServiceSupplier shellConversionServiceSupplier(ApplicationContext applicationContext) {
 		FormattingConversionService service = new FormattingConversionService();
 		DefaultConversionService.addDefaultConverters(service);
 		DefaultConversionService.addCollectionConverters(service);
 		ApplicationConversionService.addBeans(service, applicationContext);
-		return service;
+		return () -> service;
 	}
 
 	@Bean
@@ -67,10 +66,10 @@ public class SpringShellAutoConfiguration {
 
 	@Bean
 	public Shell shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal,
-			@Qualifier("shellConversionService") ConversionService shellConversionService, ShellContext shellContext,
+			ShellConversionServiceSupplier shellConversionServiceSupplier, ShellContext shellContext,
 			ExitCodeMappings exitCodeMappings) {
 		Shell shell = new Shell(resultHandlerService, commandRegistry, terminal, shellContext, exitCodeMappings);
-		shell.setConversionService(shellConversionService);
+		shell.setConversionService(shellConversionServiceSupplier.get());
 		return shell;
 	}
 }
