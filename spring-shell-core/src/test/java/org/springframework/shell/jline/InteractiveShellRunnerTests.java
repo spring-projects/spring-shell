@@ -8,7 +8,8 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 import org.junit.jupiter.api.Test;
 import org.springframework.shell.ExitRequest;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -39,14 +40,15 @@ public class InteractiveShellRunnerTests {
         // clear with ctrl + c
         outIn.write('a');
         outIn.write(3); // ctrl + c
-        assertDoesNotThrow(jLineInputProvider::readInput);
+
+        assertThatNoException().isThrownBy(jLineInputProvider::readInput);
 
         // exit with ctrl + c
         outIn.write(3);
-        assertThrows(ExitRequest.class, jLineInputProvider::readInput);
+        assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
 
         // exit with ctrl + d
         outIn.write(4); // ctrl + d
-        assertThrows(ExitRequest.class, jLineInputProvider::readInput);
+        assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
     }
 }
