@@ -140,7 +140,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 									&& !ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NULL)) {
 								optionSpec.defaultValue(so.defaultValue());
 							}
-							else {
+							if (ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)) {
 								optionSpec.required();
 							}
 						}

@@ -120,6 +120,29 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
+	public void testOptionOptionalWithAnnotation() {
+		applicationContext = new AnnotationConfigApplicationContext(Sample3.class);
+		registrar.setApplicationContext(applicationContext);
+		registrar.register(catalog);
+		Map<String, CommandRegistration> registrations = catalog.getRegistrations();
+		assertThat(registrations).hasSize(1);
+
+		assertThat(registrations.get("say-hello")).isNotNull();
+		assertThat(registrations.get("say-hello").getOptions()).hasSize(1);
+		assertThat(registrations.get("say-hello").getOptions().get(0).isRequired()).isFalse();
+		assertThat(registrations.get("say-hello").getOptions().get(0).getDefaultValue()).isNull();
+	}
+
+	@ShellComponent
+	public static class Sample3 {
+
+		@ShellMethod("some command")
+		public String sayHello(@ShellOption( defaultValue = ShellOption.NULL) String what) {
+			return "hello " + what;
+		}
+	}
+
+	@Test
 	public void testAvailabilityIndicators() {
 		applicationContext = new AnnotationConfigApplicationContext(SampleWithAvailability.class);
 		SampleWithAvailability sample = applicationContext.getBean(SampleWithAvailability.class);
