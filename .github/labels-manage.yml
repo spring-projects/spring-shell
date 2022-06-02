@@ -10,6 +10,9 @@
 - name: area/tests
   color: F9D0C4
   description: Belongs to tests
+- name: area/aot
+  color: F9D0C4
+  description: Belongs aot and native
 
 - name: automation/rlnotes-header
   color: EDEDED
