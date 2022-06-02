@@ -64,7 +64,7 @@ public class StandardMethodTargetRegistrarTests {
 
 	@Test
 	public void testRegistrations() {
-		applicationContext = new AnnotationConfigApplicationContext(Sample.class);
+		applicationContext = new AnnotationConfigApplicationContext(Sample1.class);
 		registrar.setApplicationContext(applicationContext);
 		registrar.register(catalog);
 		Map<String, CommandRegistration> registrations = catalog.getRegistrations();
@@ -74,6 +74,7 @@ public class StandardMethodTargetRegistrarTests {
 		assertThat(registrations.get("say-hello").getAvailability()).isNotNull();
 		assertThat(registrations.get("say-hello").getOptions()).hasSize(1);
 		assertThat(registrations.get("say-hello").getOptions().get(0).getLongNames()).containsExactly("what");
+		assertThat(registrations.get("say-hello").getOptions().get(0).isRequired()).isTrue();
 
 		assertThat(registrations.get("hi")).isNotNull();
 		assertThat(registrations.get("hi").getAvailability()).isNotNull();
@@ -83,7 +84,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@ShellComponent
-	public static class Sample {
+	public static class Sample1 {
 
 		@ShellMethod("some command")
 		public String sayHello(String what) {
@@ -93,6 +94,28 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "method with alias", key = {"hi", "alias"})
 		public String greet(String what) {
 			return "hi " + what;
+		}
+	}
+
+	@Test
+	public void testOptionRequiredWithAnnotation() {
+		applicationContext = new AnnotationConfigApplicationContext(Sample2.class);
+		registrar.setApplicationContext(applicationContext);
+		registrar.register(catalog);
+		Map<String, CommandRegistration> registrations = catalog.getRegistrations();
+		assertThat(registrations).hasSize(1);
+
+		assertThat(registrations.get("say-hello")).isNotNull();
+		assertThat(registrations.get("say-hello").getOptions()).hasSize(1);
+		assertThat(registrations.get("say-hello").getOptions().get(0).isRequired()).isTrue();
+	}
+
+	@ShellComponent
+	public static class Sample2 {
+
+		@ShellMethod("some command")
+		public String sayHello(@ShellOption String what) {
+			return "hello " + what;
 		}
 	}
 
