@@ -54,7 +54,8 @@ public class ExitCodeAutoConfiguration {
 			if (exception.getCause() instanceof CommandExecution.CommandParserExceptionsException) {
 				return 2;
 			}
-			return 1;
+			// only map parsing error so that other mappers can do their job
+			return 0;
 		}
 	}
 
