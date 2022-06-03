@@ -7,6 +7,7 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest'
   },
+  reporters: ['default', 'jest-junit'],
   verbose: true,
   setupFilesAfterEnv: ['jest-extended', '@alex_neo/jest-expect-message']
 }
