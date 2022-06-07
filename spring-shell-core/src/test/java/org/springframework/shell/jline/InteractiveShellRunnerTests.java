@@ -1,5 +1,11 @@
 package org.springframework.shell.jline;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CountDownLatch;
+
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Attributes;
@@ -7,15 +13,12 @@ import org.jline.terminal.impl.ExternalTerminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.shell.ExitRequest;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CountDownLatch;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class InteractiveShellRunnerTests {
 
