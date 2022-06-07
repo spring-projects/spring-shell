@@ -16,6 +16,7 @@
 
 package org.springframework.shell.jline;
 
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.UserInterruptException;
 import org.jline.utils.AttributedString;
@@ -100,6 +101,9 @@ public class InteractiveShellRunner implements ShellRunner {
 				} else {
 					return Input.EMPTY;
 				}
+			}
+			catch (EndOfFileException e) {
+				throw new ExitRequest(1);
 			}
 			return new ParsedLineInput(lineReader.getParsedLine());
 		}
