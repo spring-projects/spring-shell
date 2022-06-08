@@ -195,6 +195,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.shortNames('v')
 				.type(boolean.class)
 				.description("some arg1")
+				.label("mylabel")
 				.and()
 			.withTarget()
 				.function(function1)
@@ -205,6 +206,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('v');
 		assertThat(registration.getOptions().get(0).getType()).isEqualTo(ResolvableType.forType(boolean.class));
+		assertThat(registration.getOptions().get(0).getLabel()).isEqualTo("mylabel");
 	}
 
 	@Test

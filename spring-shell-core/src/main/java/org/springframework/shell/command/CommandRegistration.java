@@ -201,6 +201,14 @@ public interface CommandRegistration {
 		OptionSpec arity(OptionArity arity);
 
 		/**
+		 * Define a {@code label} for an option.
+		 *
+		 * @param label the label
+		 * @return option spec for chaining
+		 */
+		OptionSpec label(String label);
+
+		/**
 		 * Return a builder for chaining.
 		 *
 		 * @return a builder for chaining
@@ -519,6 +527,7 @@ public interface CommandRegistration {
 		private Integer position;
 		private Integer arityMin;
 		private Integer arityMax;
+		private String label;
 
 		DefaultOptionSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -612,6 +621,12 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public OptionSpec label(String label) {
+			this.label = label;
+			return this;
+		}
+
+		@Override
 		public Builder and() {
 			return builder;
 		}
@@ -650,6 +665,10 @@ public interface CommandRegistration {
 
 		public Integer getArityMax() {
 			return arityMax;
+		}
+
+		public String getLabel() {
+			return label;
 		}
 	}
 
@@ -820,7 +839,8 @@ public interface CommandRegistration {
 		public List<CommandOption> getOptions() {
 			return optionSpecs.stream()
 				.map(o -> CommandOption.of(o.getLongNames(), o.getShortNames(), o.getDescription(), o.getType(),
-						o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax()))
+						o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
+						o.getLabel()))
 				.collect(Collectors.toList());
 		}
 

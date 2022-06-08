@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Model encapsulating info about {@code command}.
@@ -51,7 +52,7 @@ class CommandInfoModel {
 		List<CommandOption> options = registration.getOptions();
 		List<CommandParameterInfoModel> parameters = options.stream()
 			.map(o -> {
-				String type = o.getType() == null ? "String" : ClassUtils.getShortName(o.getType().getRawClass());
+				String type = commandOptionType(o);
 				List<String> arguments = Stream.concat(
 						Stream.of(o.getLongNames()).map(a -> "--" + a),
 						Stream.of(o.getShortNames()).map(s -> "-" + s))
@@ -65,6 +66,15 @@ class CommandInfoModel {
 
 		String description = registration.getDescription();
 		return new CommandInfoModel(name, description, parameters);
+	}
+
+	private static String commandOptionType(CommandOption o) {
+		if (StringUtils.hasText(o.getLabel())) {
+			return o.getLabel();
+		}
+		else {
+			return o.getType() == null ? "String" : ClassUtils.getShortName(o.getType().getRawClass());
+		}
 	}
 
 	public String getName() {

@@ -88,6 +88,13 @@ public interface CommandOption {
 	int getArityMax();
 
 	/**
+	 * Gets a label.
+	 *
+	 * @return the label
+	 */
+	String getLabel();
+
+	/**
 	 * Gets an instance of a default {@link CommandOption}.
 	 *
 	 * @param longNames the long names
@@ -96,7 +103,7 @@ public interface CommandOption {
 	 * @return default command option
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description) {
-		return of(longNames, shortNames, description, null, false, null, null, null, null);
+		return of(longNames, shortNames, description, null, false, null, null, null, null, null);
 	}
 
 	/**
@@ -110,7 +117,7 @@ public interface CommandOption {
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
 			ResolvableType type) {
-		return of(longNames, shortNames, description, type, false, null, null, null, null);
+		return of(longNames, shortNames, description, type, false, null, null, null, null, null);
 	}
 
 	/**
@@ -125,12 +132,14 @@ public interface CommandOption {
 	 * @param position the position value
 	 * @param arityMin the min arity
 	 * @param arityMax the max arity
+	 * @param label the label
 	 * @return default command option
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
-			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin, Integer arityMax) {
+			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin,
+			Integer arityMax, String label) {
 		return new DefaultCommandOption(longNames, shortNames, description, type, required, defaultValue, position,
-				arityMin, arityMax);
+				arityMin, arityMax, label);
 	}
 
 	/**
@@ -147,10 +156,11 @@ public interface CommandOption {
 		private int position;
 		private int arityMin;
 		private int arityMax;
+		private String label;
 
 		public DefaultCommandOption(String[] longNames, Character[] shortNames, String description,
 				ResolvableType type, boolean required, String defaultValue, Integer position,
-				Integer arityMin, Integer arityMax) {
+				Integer arityMin, Integer arityMax, String label) {
 			this.longNames = longNames != null ? longNames : new String[0];
 			this.shortNames = shortNames != null ? shortNames : new Character[0];
 			this.description = description;
@@ -160,6 +170,7 @@ public interface CommandOption {
 			this.position = position != null && position > -1 ? position : -1 ;
 			this.arityMin = arityMin != null ? arityMin : -1;
 			this.arityMax = arityMax != null ? arityMax : -1;
+			this.label = label;
 		}
 
 		@Override
@@ -205,6 +216,11 @@ public interface CommandOption {
 		@Override
 		public int getArityMax() {
 			return arityMax;
+		}
+
+		@Override
+		public String getLabel() {
+			return label;
 		}
 	}
 }
