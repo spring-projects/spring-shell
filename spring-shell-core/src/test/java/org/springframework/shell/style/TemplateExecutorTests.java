@@ -41,7 +41,7 @@ public class TemplateExecutorTests {
 
 			@Override
 			public ThemeSettings getSettings() {
-				return ThemeSettings.themeSettings();
+				return ThemeSettings.defaults();
 			}
 		});
 		themeResolver = new ThemeResolver(themeRegistry, "default");
@@ -70,7 +70,7 @@ public class TemplateExecutorTests {
 	@Test
 	public void testWithTheme() {
 		TemplateExecutor executor = new TemplateExecutor(themeResolver);
-		String template = "<foo; format=\"title\">";
+		String template = "<foo; format=\"style-title\">";
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put("foo", "bar");
 		AttributedString result = executor.render(template, attributes);
@@ -84,7 +84,7 @@ public class TemplateExecutorTests {
 	@Test
 	public void testNullDontStyle() {
 		TemplateExecutor executor = new TemplateExecutor(themeResolver);
-		String template = "<foo; format=\"list-key\">";
+		String template = "<foo; format=\"style-list-key\">";
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put("foo", "bar");
 		AttributedString result = executor.render(template, attributes);

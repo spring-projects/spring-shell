@@ -15,17 +15,24 @@
  */
 package org.springframework.shell.boot;
 
+import java.util.stream.Stream;
+
+import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.InstanceOfAssertFactory;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.style.FigureSettings;
+import org.springframework.shell.style.StyleSettings;
 import org.springframework.shell.style.TemplateExecutor;
 import org.springframework.shell.style.Theme;
 import org.springframework.shell.style.ThemeRegistry;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeSettings;
+import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,19 +42,22 @@ public class ThemingAutoConfigurationTests {
 			.withConfiguration(AutoConfigurations.of(ThemingAutoConfiguration.class));
 
 	@Test
-	public void testDefaults() {
+	void createsDefaultBeans() {
 		this.contextRunner
 				.run(context -> {
 					assertThat(context).hasSingleBean(TemplateExecutor.class);
 					assertThat(context).hasSingleBean(ThemeRegistry.class);
 					ThemeRegistry registry = context.getBean(ThemeRegistry.class);
 					assertThat(registry.get("default")).isNotNull();
+					assertThat(registry.get("dump")).isNotNull();
 					assertThat(context).hasSingleBean(ThemeResolver.class);
+					ThemeResolver resolver = context.getBean(ThemeResolver.class);
+					assertThat(resolver).extracting("theme").asInstanceOf(THEME).hasName("default", "dump");
 				});
 	}
 
 	@Test
-	public void testRegistersCustomTheme() {
+	public void canRegisterCustomTheme() {
 		this.contextRunner
 				.withUserConfiguration(CustomThemeConfig.class)
 				.run(context -> {
@@ -79,5 +89,36 @@ public class ThemingAutoConfigurationTests {
 	}
 
 	static class MyThemeSettings extends ThemeSettings {
+		MyThemeSettings() {
+			super(StyleSettings.defaults(), FigureSettings.defaults());
+		}
 	}
+
+	InstanceOfAssertFactory<Theme, ThemeAssert> THEME = new InstanceOfAssertFactory<>(Theme.class,
+			ThemeAssertions::assertThat);
+
+	static class ThemeAssertions {
+
+		public static ThemeAssert assertThat(Theme actual) {
+			return new ThemeAssert(actual);
+		}
+	}
+
+	static class ThemeAssert extends AbstractAssert<ThemeAssert, Theme> {
+
+		public ThemeAssert(Theme actual) {
+			super(actual, ThemeAssert.class);
+		}
+
+		public ThemeAssert hasName(String... names) {
+			isNotNull();
+			boolean match = Stream.of(names).filter(n -> actual.getName().equals(n)).findFirst().isPresent();
+			if (!match) {
+				failWithMessage("Expected theme to have names %s but was %s",
+						StringUtils.arrayToCommaDelimitedString(names), actual.getName());
+			}
+			return this;
+		}
+	}
+
 }

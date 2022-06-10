@@ -45,7 +45,7 @@ public class StringToStyleExpressionRenderer implements AttributeRenderer<String
 			return value;
 		}
 		else {
-			return String.format("@{%s %s}", themeResolver.resolveTag(formatString), value);
+			return String.format("@{%s %s}", themeResolver.resolveStyleTag(formatString), value);
 		}
 	}
 }

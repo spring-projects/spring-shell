@@ -1,6 +1,6 @@
 // NAME
 name(commandName, commandShortDesc) ::= <<
-<("NAME"); format="highlight">
+<("NAME"); format="style-highlight">
        <commandName> - <commandShortDesc>
 >>
 
@@ -18,8 +18,8 @@ synopsisOption(option) ::= <%
 %>
 
 synopsis(commandName, options) ::= <<
-<("SYNOPSIS"); format="highlight">
-       <(commandName); format="highlight"> <options: { o | <synopsisOption(o)>}; separator=" ">
+<("SYNOPSIS"); format="style-highlight">
+       <(commandName); format="style-highlight"> <options: { o | <synopsisOption(o)>}; separator=" ">
 >>
 
 // OPTIONS
@@ -53,7 +53,7 @@ option(option) ::= <<
 >>
 
 options(options) ::= <<
-<("OPTIONS"); format="highlight">
+<("OPTIONS"); format="style-highlight">
        <options:{ o | <option(o)>}>
 >>
 

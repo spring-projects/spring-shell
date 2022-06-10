@@ -1,30 +1,30 @@
 // used to select style if item is selected/unselected
 selected_style(flag) ::= <%
-<if(flag)>item-selected<else>item-unselected<endif>
+<if(flag)>style-item-selected<else>style-item-unselected<endif>
 %>
 
 // selector rows
 select_item(item) ::= <%
 <if(item.onrow)>
-  <("> "); format="item-selector">
+  <({<figures.rightPointingQuotation> }); format="style-item-selector">
 <else>
   <("  ")>
 <endif>
 
 <if(item.enabled)>
   <if(item.selected)>
-    <("[x]"); format=selected_style(item.selected)> <item.name>
+    <({<figures.checkboxOn> }); format=selected_style(item.selected)> <item.name>
   <else>
-    <("[ ]"); format=selected_style(item.selected)> <item.name>
+    <({<figures.checkboxOff> }); format=selected_style(item.selected)> <item.name>
   <endif>
 <else>
-  <("[ ]"); format="item-disabled"> <item.name; format="item-disabled">
+  <({<figures.checkboxOff> }); format="style-item-disabled"> <item.name; format="style-item-disabled">
 <endif>
 %>
 
 // start '? xxx' shows both running and result
 question_name(model) ::= <<
-<("?"); format="list-value"> <model.name; format="title">
+<({<figures.questionMark>}); format="style-list-value"> <model.name; format="style-title">
 >>
 
 // within info section, dedicated instructions for user
@@ -48,7 +48,7 @@ comma_delimited(values) ::= <%
 
 // component result
 result(model) ::= <<
-<question_name(model)> <(comma_delimited(model.values)); format="value">
+<question_name(model)> <(comma_delimited(model.values)); format="style-value">
 >>
 
 // component is running

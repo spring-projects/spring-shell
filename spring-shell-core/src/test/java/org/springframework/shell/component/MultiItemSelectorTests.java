@@ -96,7 +96,7 @@ public class MultiItemSelectorTests extends AbstractShellTests {
 	public void testItemsShownWithDisabled() {
 		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_7));
 		await().atMost(Duration.ofSeconds(4))
-				.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("[ ] simplePojo1", "[ ] simplePojo7"));
+				.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("[ ]  simplePojo1", "[ ]  simplePojo7"));
 	}
 
 	@Test

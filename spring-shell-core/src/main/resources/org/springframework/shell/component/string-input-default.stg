@@ -5,7 +5,7 @@ info(model) ::= <%
     <model.maskedInput>
   <else>
     <if(model.defaultValue)>
-      <("[Default "); format="value"><model.defaultValue; format="value"><("]"); format="value">
+      <("[Default "); format="style-value"><model.defaultValue; format="style-value"><("]"); format="style-value">
     <endif>
   <endif>
 <else>
@@ -13,7 +13,7 @@ info(model) ::= <%
     <model.input>
   <else>
     <if(model.defaultValue)>
-      <("[Default "); format="value"><model.defaultValue; format="value"><("]"); format="value">
+      <("[Default "); format="style-value"><model.defaultValue; format="style-value"><("]"); format="style-value">
     <endif>
   <endif>
 <endif>
@@ -21,12 +21,12 @@ info(model) ::= <%
 
 // start '? xxx' shows both running and result
 question_name(model) ::= <<
-<("?"); format="list-value"> <model.name; format="title">
+<({<figures.questionMark>}); format="style-list-value"> <model.name; format="style-title">
 >>
 
 // component result
 result(model) ::= <<
-<question_name(model)> <model.maskedResultValue; format="value">
+<question_name(model)> <model.maskedResultValue; format="style-value">
 >>
 
 // component is running

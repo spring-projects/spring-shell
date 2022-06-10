@@ -54,8 +54,18 @@ public class ThemeResolver {
 	 * @param tag the tag
 	 * @return a style
 	 */
-	public String resolveTag(String tag) {
-		return theme.getSettings().resolveTag(tag);
+	public String resolveStyleTag(String tag) {
+		return theme.getSettings().styles().resolveTag(tag);
+	}
+
+	/**
+	 * Resolve figure from a tag with activated theme.
+	 *
+	 * @param tag the tag
+	 * @return a style
+	 */
+	public String resolveFigureTag(String tag) {
+		return theme.getSettings().figures().resolveTag(tag);
 	}
 
 	/**

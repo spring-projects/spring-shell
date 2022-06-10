@@ -16,6 +16,8 @@
 package org.springframework.shell.style;
 
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
@@ -75,6 +77,11 @@ public class TemplateExecutor {
 		STGroup group = new STGroupString(template);
 		group.setListener(ERROR_LISTENER);
 		group.registerRenderer(String.class, renderer);
+
+		// define styled figures as dictionary
+		Map<String, Object> figureDict = Stream.of(FigureSettings.tags())
+			.collect(Collectors.toMap(tag -> tag, tag -> this.themeResolver.resolveFigureTag(tag)));
+		group.defineDictionary("figures", figureDict);
 
 		ST st = group.getInstanceOf("main");
 		if (st == null) {

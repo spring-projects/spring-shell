@@ -1,15 +1,15 @@
 name() ::= <<
-<("AVAILABLE COMMANDS"); format="highlight">
+<("AVAILABLE COMMANDS"); format="style-highlight">
 
 >>
 
 command(command) ::= <<
-<(command.name); format="highlight"><(":"); format="highlight"> <command.description>
+<(command.name); format="style-highlight"><(":"); format="style-highlight"> <command.description>
 
 >>
 
 commandGroup(commandGroup) ::= <<
-<(commandGroup.group); format="highlight">
+<(commandGroup.group); format="style-highlight">
        <commandGroup.commands:{ c | <command(c)>}>
 
 >>

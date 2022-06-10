@@ -174,7 +174,7 @@ public class SpringShellProperties {
 
 	public static class Theme {
 
-		private String name = "default";
+		private String name;
 
 		public String getName() {
 			return name;
