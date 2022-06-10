@@ -29,8 +29,8 @@ public class ThemeSettingsTests {
 
 	@Test
 	public void testGeneratedStyle() {
-		ThemeSettings themeSettings = ThemeSettings.themeSettings();
-		String resolveTag = themeSettings.resolveTag(ThemeSettings.TAG_TITLE);
+		ThemeSettings themeSettings = ThemeSettings.defaults();
+		String resolveTag = themeSettings.styles().resolveTag(StyleSettings.TAG_TITLE);
 		assertThat(resolveTag).isEqualTo("bold,fg:bright-white");
 
 		StyleSource styleSource = new MemoryStyleSource();
@@ -42,22 +42,22 @@ public class ThemeSettingsTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = {
-			ThemeSettings.TAG_TITLE,
-			ThemeSettings.TAG_VALUE,
-			ThemeSettings.TAG_LIST_KEY,
-			ThemeSettings.TAG_LIST_VALUE,
-			ThemeSettings.TAG_LEVEL_INFO,
-			ThemeSettings.TAG_LEVEL_WARN,
-			ThemeSettings.TAG_LEVEL_ERROR,
-			ThemeSettings.TAG_ITEM_ENABLED,
-			ThemeSettings.TAG_ITEM_DISABLED,
-			ThemeSettings.TAG_ITEM_SELECTED,
-			ThemeSettings.TAG_ITEM_UNSELECTED,
-			ThemeSettings.TAG_ITEM_SELECTOR,
-			ThemeSettings.TAG_HIGHLIGHT })
+			StyleSettings.TAG_TITLE,
+			StyleSettings.TAG_VALUE,
+			StyleSettings.TAG_LIST_KEY,
+			StyleSettings.TAG_LIST_VALUE,
+			StyleSettings.TAG_LEVEL_INFO,
+			StyleSettings.TAG_LEVEL_WARN,
+			StyleSettings.TAG_LEVEL_ERROR,
+			StyleSettings.TAG_ITEM_ENABLED,
+			StyleSettings.TAG_ITEM_DISABLED,
+			StyleSettings.TAG_ITEM_SELECTED,
+			StyleSettings.TAG_ITEM_UNSELECTED,
+			StyleSettings.TAG_ITEM_SELECTOR,
+			StyleSettings.TAG_HIGHLIGHT })
 	public void testTags(String tag) {
-		ThemeSettings themeSettings = ThemeSettings.themeSettings();
-		String resolveTag = themeSettings.resolveTag(ThemeSettings.TAG_TITLE);
+		ThemeSettings themeSettings = ThemeSettings.defaults();
+		String resolveTag = themeSettings.styles().resolveTag(StyleSettings.TAG_TITLE);
 		assertThat(resolveTag).isNotNull();
 	}
 }

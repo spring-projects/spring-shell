@@ -40,7 +40,7 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getScript().isEnabled()).isTrue();
 					assertThat(properties.getInteractive().isEnabled()).isTrue();
 					assertThat(properties.getNoninteractive().isEnabled()).isTrue();
-					assertThat(properties.getTheme().getName()).isEqualTo("default");
+					assertThat(properties.getTheme().getName()).isNull();
 					assertThat(properties.getCommand().getClear().isEnabled()).isTrue();
 					assertThat(properties.getCommand().getHelp().isEnabled()).isTrue();
 					assertThat(properties.getCommand().getHelp().getGroupingMode()).isEqualTo(GroupingMode.GROUP);

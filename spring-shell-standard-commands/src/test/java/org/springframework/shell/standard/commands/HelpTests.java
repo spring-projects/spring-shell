@@ -228,7 +228,7 @@ public class HelpTests {
 		@Bean
 		public Help help() {
 			ThemeRegistry registry = new ThemeRegistry();
-			registry.register(Theme.of("default", ThemeSettings.themeSettings()));
+			registry.register(Theme.of("default", ThemeSettings.defaults()));
 			ThemeResolver resolver = new ThemeResolver(registry, "default");
 			TemplateExecutor executor = new TemplateExecutor(resolver);
 			Help help = new Help(executor);

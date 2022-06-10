@@ -15,18 +15,7 @@
  */
 package org.springframework.shell.style;
 
-import org.junit.jupiter.api.Test;
+import java.util.function.Supplier;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class ThemeRegistryTests {
-
-	@Test
-	public void test() {
-		ThemeRegistry registry = new ThemeRegistry();
-		Theme theme = Theme.of("name1", ThemeSettings.defaults());
-		registry.register(theme);
-		assertThat(registry.get("name1")).isSameAs(theme);
-		assertThat(registry.get("name2")).isNull();
-	}
+public interface ThemeActive extends Supplier<String> {
 }

@@ -69,7 +69,7 @@ public abstract class AbstractShellTests {
 
 			@Override
 			public ThemeSettings getSettings() {
-				return ThemeSettings.themeSettings();
+				return ThemeSettings.defaults();
 			}
 		});
 		ThemeResolver themeResolver = new ThemeResolver(themeRegistry, "default");

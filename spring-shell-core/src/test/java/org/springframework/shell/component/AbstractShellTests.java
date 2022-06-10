@@ -64,15 +64,15 @@ public abstract class AbstractShellTests {
 		themeRegistry.register(new Theme() {
 			@Override
 			public String getName() {
-				return "default";
+				return "dump";
 			}
 
 			@Override
 			public ThemeSettings getSettings() {
-				return ThemeSettings.themeSettings();
+				return ThemeSettings.dump();
 			}
 		});
-		ThemeResolver themeResolver = new ThemeResolver(themeRegistry, "default");
+		ThemeResolver themeResolver = new ThemeResolver(themeRegistry, "dump");
 		templateExecutor = new TemplateExecutor(themeResolver);
 
         resourceLoader = new DefaultResourceLoader();

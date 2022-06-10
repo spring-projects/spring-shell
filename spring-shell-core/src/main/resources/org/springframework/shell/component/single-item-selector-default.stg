@@ -1,7 +1,7 @@
 // selector rows
 select_item(item) ::= <%
 <if(item.selected)>
-<("> "); format="item-selector"><item.name; format="item-selector">
+<({<figures.rightPointingQuotation> }); format="style-item-selector"><item.name; format="style-item-selector">
 <else>
 <("  ")><item.name>
 <endif>
@@ -9,7 +9,7 @@ select_item(item) ::= <%
 
 // start '? xxx' shows both running and result
 question_name(model) ::= <<
-<("?"); format="list-value"> <model.name; format="title">
+<({<figures.questionMark>}); format="style-list-value"> <model.name; format="style-title">
 >>
 
 // within info section, dedicated instructions for user
@@ -28,7 +28,7 @@ info(model) ::= <<
 
 // component result
 result(model) ::= <<
-<question_name(model)> <model.value; format="value">
+<question_name(model)> <model.value; format="style-value">
 >>
 
 // component is running

@@ -34,11 +34,11 @@ public class ThemeResolverTests {
 
 			@Override
 			public ThemeSettings getSettings() {
-				return ThemeSettings.themeSettings();
+				return ThemeSettings.defaults();
 			}
 		});
 		ThemeResolver themeResolver = new ThemeResolver(themeRegistry, "default");
-		assertThat(themeResolver.resolveTag(ThemeSettings.TAG_TITLE)).isEqualTo("bold,fg:bright-white");
+		assertThat(themeResolver.resolveStyleTag(StyleSettings.TAG_TITLE)).isEqualTo("bold,fg:bright-white");
 		assertThat(themeResolver.resolveStyle("bold")).isEqualTo(AttributedStyle.BOLD);
 		assertThat(themeResolver.evaluateExpression("@{bold foo}"))
 				.isEqualTo(new AttributedString("foo", AttributedStyle.BOLD));
