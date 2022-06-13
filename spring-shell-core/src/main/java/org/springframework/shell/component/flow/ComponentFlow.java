@@ -521,6 +521,11 @@ public interface ComponentFlow {
 			return confirmationInputs.stream().map(input -> {
 				ConfirmationInput selector = new ConfirmationInput(terminal, input.getName(), input.getDefaultValue());
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
+						if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
+								&& input.getResultValue() != null) {
+							context.put(input.getId(), input.getResultValue());
+							return context;
+						}
 						selector.setResourceLoader(resourceLoader);
 						selector.setTemplateExecutor(templateExecutor);
 						if (StringUtils.hasText(input.getTemplateLocation())) {

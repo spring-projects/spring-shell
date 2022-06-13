@@ -35,6 +35,8 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 
 	private String name;
 	private Boolean defaultValue;
+	private Boolean resultValue;
+	private ResultMode resultMode;
 	private Function<ConfirmationInputContext, List<AttributedString>> renderer;
 	private List<Consumer<ConfirmationInputContext>> preHandlers = new ArrayList<>();
 	private List<Consumer<ConfirmationInputContext>> postHandlers = new ArrayList<>();
@@ -49,6 +51,18 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 	@Override
 	public ConfirmationInputSpec name(String name) {
 		this.name = name;
+		return this;
+	}
+
+	@Override
+	public ConfirmationInputSpec resultValue(Boolean resultValue) {
+		this.resultValue = resultValue;
+		return this;
+	}
+
+	@Override
+	public ConfirmationInputSpec resultMode(ResultMode resultMode) {
+		this.resultMode = resultMode;
 		return this;
 	}
 
@@ -111,6 +125,14 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 
 	public boolean getDefaultValue() {
 		return defaultValue != null ? defaultValue : true;
+	}
+
+	public Boolean getResultValue() {
+		return resultValue;
+	}
+
+	public ResultMode getResultMode() {
+		return resultMode;
 	}
 
 	public Function<ConfirmationInputContext, List<AttributedString>> getRenderer() {

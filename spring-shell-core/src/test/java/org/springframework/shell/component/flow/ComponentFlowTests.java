@@ -128,6 +128,10 @@ public class ComponentFlowTests extends AbstractShellTests {
 				.resultValues(Arrays.asList("value4"))
 				.resultMode(ResultMode.ACCEPT)
 				.and()
+			.withConfirmationInput("id5")
+				.resultValue(false)
+				.resultMode(ResultMode.ACCEPT)
+				.and()
 			.build();
 
 			ExecutorService service = Executors.newFixedThreadPool(1);
@@ -147,11 +151,13 @@ public class ComponentFlowTests extends AbstractShellTests {
 			Path id2 = inputWizardResult.getContext().get("id2");
 			String id3 = inputWizardResult.getContext().get("id3");
 			List<String> id4 = inputWizardResult.getContext().get("id4");
+			Boolean id5 = inputWizardResult.getContext().get("id5");
 
 			assertThat(id1).isEqualTo("value1");
 			assertThat(id2.toString()).contains("value2");
 			assertThat(id3).isEqualTo("value3");
 			assertThat(id4).containsExactlyInAnyOrder("value4");
+			assertThat(id5).isFalse();
 		}
 
 	@Test

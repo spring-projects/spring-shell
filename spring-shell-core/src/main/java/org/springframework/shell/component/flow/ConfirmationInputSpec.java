@@ -39,6 +39,21 @@ public interface ConfirmationInputSpec extends BaseInputSpec<ConfirmationInputSp
 	 * @return a builder
 	 */
 	ConfirmationInputSpec name(String name);
+	/**
+	 * Sets a result value.
+	 *
+	 * @param resultValue the result value
+	 * @return a builder
+	 */
+	ConfirmationInputSpec resultValue(Boolean resultValue);
+
+	/**
+	 * Sets a result mode.
+	 *
+	 * @param resultMode the result mode
+	 * @return a builder
+	 */
+	ConfirmationInputSpec resultMode(ResultMode resultMode);
 
 	/**
 	 * Sets a default value.
