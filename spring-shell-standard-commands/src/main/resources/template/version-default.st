@@ -1,27 +1,27 @@
 <if(buildVersion)>
-<("Build Version"); format="list-key">: <buildVersion; format="list-value">
+<("Build Version"); format="style-list-key">: <buildVersion; format="style-list-value">
 <endif>
 <if(buildGroup)>
-<("Build Group"); format="list-key">: <buildGroup; format="list-value">
+<("Build Group"); format="style-list-key">: <buildGroup; format="style-list-value">
 <endif>
 <if(buildArtifact)>
-<("Build Artifact"); format="list-key">: <buildArtifact; format="list-value">
+<("Build Artifact"); format="style-list-key">: <buildArtifact; format="style-list-value">
 <endif>
 <if(buildName)>
-<("Build Name"); format="list-key">: <buildName; format="list-value">
+<("Build Name"); format="style-list-key">: <buildName; format="style-list-value">
 <endif>
 <if(buildTime)>
-<("Build Time"); format="list-key">: <buildTime; format="list-value">
+<("Build Time"); format="style-list-key">: <buildTime; format="style-list-value">
 <endif>
 <if(gitShortCommitId)>
-<("Git Short Commit Id"); format="list-key">: <gitShortCommitId; format="list-value">
+<("Git Short Commit Id"); format="style-list-key">: <gitShortCommitId; format="style-list-value">
 <endif>
 <if(gitCommitId)>
-<("Git Commit Id"); format="list-key">: <gitCommitId; format="list-value">
+<("Git Commit Id"); format="style-list-key">: <gitCommitId; format="style-list-value">
 <endif>
 <if(gitBranch)>
-<("Git Branch"); format="list-key">: <gitBranch; format="list-value">
+<("Git Branch"); format="style-list-key">: <gitBranch; format="style-list-value">
 <endif>
 <if(gitCommitTime)>
-<("Git Commit Time"); format="list-key">: <gitCommitTime; format="list-value">
+<("Git Commit Time"); format="style-list-key">: <gitCommitTime; format="style-list-value">
 <endif>
