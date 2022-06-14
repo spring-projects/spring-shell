@@ -26,11 +26,3 @@ The following constraints were not met:
 	--password string : size must be between 8 and 40 (You passed 'hello')
 ----
 ====
-
-[NOTE]
-.Applies to All Command Implementations
-====
-It is important to note that bean validation applies to all command implementations,
-whether they use the "`standard`" API or any other API, through the use of an adapter
-(see <<support-for-shell-1-and-jcommander,Supporting Other APIs>>).
-====

@@ -3,6 +3,4 @@
 
 This section describes how you can customize the shell.
 
-include::using-shell-customization-generic.adoc[]
-
 include::using-shell-customization-styling.adoc[]

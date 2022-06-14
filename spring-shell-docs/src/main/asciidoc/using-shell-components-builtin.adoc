@@ -1,11 +1,6 @@
 [[built-in-commands]]
 ==== Built-In Commands
 
-Any application built by using the `{starter-artifactId}` artifact
-(which equates to the `spring-shell-standard-commands` dependency) comes with a set of built-in commands.
-You can override or disable these commands individually (see <<overriding-or-disabling-built-in-commands>>).
-However, if they are not overridden or disabled, this section describes their behavior.
-
 [[help-command]]
 ===== Help
 
@@ -92,7 +87,7 @@ in the top left corner.
 
 The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
 closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all
-commands to disk, so that they are available again (see <<interacting-with-the-shell>>) on the next launch.
+commands to disk, so that they are available again on the next launch.
 
 ===== Stacktrace
 
