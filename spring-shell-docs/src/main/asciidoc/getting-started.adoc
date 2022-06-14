@@ -14,13 +14,11 @@ and configures the `spring-boot-maven-plugin` to generate an executable über-ja
 ====
 [source, xml]
 ----
-...
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
     </dependency>
-    ...
 </dependencies>
 ----
 ====
@@ -35,13 +33,11 @@ configuring only the necessary beans as needed:
 ====
 [source, xml, subs=attributes+]
 ----
-...
 <dependency>
     <groupId>org.springframework.shell</groupId>
     <artifactId>{spring-shell-starter}</artifactId>
     <version>{project-version}</version>
 </dependency>
-...
 ----
 ====
 
@@ -95,9 +91,6 @@ java -jar target/demo-0.0.1-SNAPSHOT.jar
 ----
 ====
 
-You are greeted by the following screen (the banner comes from Spring Boot and can be
-https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-banner[customized]:
-
 ====
 [source]
 ----
@@ -110,7 +103,7 @@ A yellow `shell:>` prompt invites you to type commands. Type `add 1 2`, press `E
 ====
 [source, bash]
 ----
-shell:>add 1 2
+shell:>add --a 1 --b 2
 3
 ----
 ====
