@@ -1,0 +1,37 @@
+[[using-shell-options-label]]
+==== Label
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+_Option Label_ has no functional behaviour within a shell itself other than
+what a default `help` command outputs. Within a command documentation
+a type of an option is documented but this is not always super useful. Thus
+you may want to give better descriptive word for an option.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-label]
+----
+====
+
+Defining label is then shown in `help`.
+
+====
+[source, bash]
+----
+my-shell:>help mycommand
+NAME
+       mycommand -
+
+SYNOPSIS
+       mycommand --arg1 String --arg2 MYLABEL
+
+OPTIONS
+       --arg1 String
+       [Optional]
+
+       --arg2 MYLABEL
+       [Optional]
+
+----
+====

@@ -18,3 +18,5 @@ include::using-shell-options-optional.adoc[]
 include::using-shell-options-default.adoc[]
 
 include::using-shell-options-validation.adoc[]
+
+include::using-shell-options-label.adoc[]

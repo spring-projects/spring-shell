@@ -163,6 +163,17 @@ public class OptionSnippets {
 			.build();
 		// end::option-registration-default[]
 
+		// tag::option-registration-label[]
+		CommandRegistration.builder()
+			.withOption()
+				.longNames("arg1")
+				.and()
+			.withOption()
+				.longNames("arg2")
+				.label("MYLABEL")
+				.and()
+			.build();
+		// end::option-registration-label[]
 	}
 
 }
