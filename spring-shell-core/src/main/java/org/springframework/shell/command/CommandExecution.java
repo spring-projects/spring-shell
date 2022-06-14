@@ -29,6 +29,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.shell.Availability;
+import org.springframework.shell.CommandNotCurrentlyAvailable;
 import org.springframework.shell.command.CommandParser.CommandParserException;
 import org.springframework.shell.command.CommandParser.CommandParserResults;
 import org.springframework.shell.command.CommandRegistration.TargetInfo;
@@ -95,6 +97,11 @@ public interface CommandExecution {
 		}
 
 		public Object evaluate(CommandRegistration registration, String[] args) {
+			// fast fail with availability before doing anything else
+			Availability availability = registration.getAvailability();
+			if (availability != null && !availability.isAvailable()) {
+				return new CommandNotCurrentlyAvailable(registration.getCommand(), availability);
+			}
 
 			List<CommandOption> options = registration.getOptions();
 			CommandParser parser = CommandParser.of(conversionService);
