@@ -36,11 +36,14 @@ class GroupsInfoModel {
 	private boolean showGroups = true;
 	private final List<GroupCommandInfoModel> groups;
 	private final List<CommandInfoModel> commands;
+	private boolean hasUnavailableCommands = false;
 
-	GroupsInfoModel(boolean showGroups, List<GroupCommandInfoModel> groups, List<CommandInfoModel> commands) {
+	GroupsInfoModel(boolean showGroups, List<GroupCommandInfoModel> groups, List<CommandInfoModel> commands,
+			boolean hasUnavailableCommands) {
 		this.showGroups = showGroups;
 		this.groups = groups;
 		this.commands = commands;
+		this.hasUnavailableCommands = hasUnavailableCommands;
 	}
 
 	/**
@@ -71,7 +74,17 @@ class GroupsInfoModel {
 		List<CommandInfoModel> commands = gcims.stream()
 			.flatMap(gcim -> gcim.getCommands().stream())
 			.collect(Collectors.toList());
-		return new GroupsInfoModel(showGroups, gcims, commands);
+		boolean hasUnavailableCommands = commands.stream()
+			.map(c -> {
+				if (c.getAvailability() != null) {
+					return c.getAvailability().getAvailable();
+				}
+				return true;
+			})
+			.filter(a -> !a)
+			.findFirst()
+			.isPresent();
+		return new GroupsInfoModel(showGroups, gcims, commands, hasUnavailableCommands);
 	}
 
 	public boolean getShowGroups() {
@@ -84,5 +97,9 @@ class GroupsInfoModel {
 
 	public List<CommandInfoModel> getCommands() {
 		return commands;
+	}
+
+	public boolean getHasUnavailableCommands() {
+		return hasUnavailableCommands;
 	}
 }

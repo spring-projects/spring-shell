@@ -57,6 +57,15 @@ options(options) ::= <<
        <options:{ o | <option(o)>}>
 >>
 
+// AVAILABILITY
+availability(availability) ::= <<
+<if(!availability.available)>
+
+<("CURRENTLY UNAVAILABLE"); format="style-highlight">
+       <availability.reason>
+<endif>
+>>
+
 // main
 main(model) ::= <<
 <name(model.name, model.description)>
@@ -64,4 +73,5 @@ main(model) ::= <<
 <synopsis(model.name, model.parameters)>
 
 <options(model.parameters)>
+<availability(model.availability)>
 >>

@@ -18,6 +18,7 @@ package org.springframework.shell.command;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.core.ResolvableType;
+import org.springframework.shell.Availability;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.TargetInfo.TargetType;
 import org.springframework.shell.context.InteractionMode;
@@ -409,5 +410,28 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			.build();
 		assertThat(registration.getExitCode()).isNotNull();
 		assertThat(registration.getExitCode().getMappingFunctions()).hasSize(4);
+	}
+
+	@Test
+	public void testAvailability() {
+		CommandRegistration registration;
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getAvailability()).isNotNull();
+		assertThat(registration.getAvailability().isAvailable()).isTrue();
+
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.availability(() -> Availability.unavailable("fake"))
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getAvailability()).isNotNull();
+		assertThat(registration.getAvailability().isAvailable()).isFalse();
 	}
 }

@@ -26,6 +26,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
+import org.springframework.shell.Availability;
+import org.springframework.shell.CommandNotCurrentlyAvailable;
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 
@@ -458,5 +460,23 @@ public class CommandExecutionTests extends AbstractCommandTests {
 		assertThatThrownBy(() -> {
 			execution.evaluate(r1, new String[]{});
 		}).isInstanceOf(CommandParserExceptionsException.class);
+	}
+
+	@Test
+	public void testCommandNotAvailable() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.description("help")
+			.withOption()
+				.longNames("arg1")
+				.description("some arg1")
+				.and()
+			.availability(() -> Availability.unavailable("fake reason"))
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		Object result = execution.evaluate(r1, new String[]{"--arg1", "myarg1value"});
+		assertThat(result).isInstanceOf(CommandNotCurrentlyAvailable.class);
 	}
 }

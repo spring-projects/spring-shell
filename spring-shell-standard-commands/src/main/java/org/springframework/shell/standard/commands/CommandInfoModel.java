@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.shell.Availability;
 import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.util.ClassUtils;
@@ -34,11 +35,14 @@ class CommandInfoModel {
 	private String name;
 	private String description;
 	private List<CommandParameterInfoModel> parameters;
+	private CommandAvailabilityInfoModel availability;
 
-	CommandInfoModel(String name, String description, List<CommandParameterInfoModel> parameters) {
+	CommandInfoModel(String name, String description, List<CommandParameterInfoModel> parameters,
+			CommandAvailabilityInfoModel availability) {
 		this.name = name;
 		this.description = description;
 		this.parameters = parameters;
+		this.availability = availability;
 	}
 
 	/**
@@ -65,7 +69,15 @@ class CommandInfoModel {
 			.collect(Collectors.toList());
 
 		String description = registration.getDescription();
-		return new CommandInfoModel(name, description, parameters);
+		boolean available = true;
+		String availReason = "";
+		if (registration.getAvailability() != null) {
+			Availability a = registration.getAvailability();
+			available = a.isAvailable();
+			availReason = a.getReason();
+		}
+		CommandAvailabilityInfoModel availModel = CommandAvailabilityInfoModel.of(available, availReason);
+		return new CommandInfoModel(name, description, parameters, availModel);
 	}
 
 	private static String commandOptionType(CommandOption o) {
@@ -87,5 +99,9 @@ class CommandInfoModel {
 
 	public List<CommandParameterInfoModel> getParameters() {
 		return parameters;
+	}
+
+	public CommandAvailabilityInfoModel getAvailability() {
+		return availability;
 	}
 }

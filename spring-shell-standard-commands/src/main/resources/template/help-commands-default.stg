@@ -3,8 +3,21 @@ name() ::= <<
 
 >>
 
+availability(availability) ::= <%
+<if(!availability.available)>
+<("* "); format="style-highlight">
+<endif>
+%>
+
+availabilityDesc(hasUnavailableCommands) ::= <<
+<if(hasUnavailableCommands)>
+<("Commands marked with (*) are currently unavailable.")>
+<("Type `help <command>` to learn more.")>
+<endif>
+>>
+
 command(command) ::= <<
-<(command.name); format="style-highlight"><(":"); format="style-highlight"> <command.description>
+<availability(command.availability)><(command.name); format="style-highlight"><(":"); format="style-highlight"> <command.description>
 
 >>
 
@@ -29,4 +42,5 @@ main(model) ::= <<
 <else>
 <flat(model.commands)>
 <endif>
+<availabilityDesc(model.hasUnavailableCommands)>
 >>
