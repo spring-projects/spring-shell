@@ -14,5 +14,13 @@
   {
     "name": "org.springframework.shell.standard.commands.GroupsInfoModel",
     "allDeclaredMethods": true
+  },
+  {
+    "name": "org.springframework.shell.standard.commands.CommandParameterInfoModel",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.springframework.shell.standard.commands.CommandAvailabilityInfoModel",
+    "allDeclaredMethods": true
   }
 ]
