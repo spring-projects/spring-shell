@@ -15,12 +15,16 @@
  */
 package org.springframework.shell.component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jline.terminal.impl.DumbTerminal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,6 +62,34 @@ public class StringInputTests extends AbstractShellTests {
 			service.shutdown();
 		}
 		service = null;
+	}
+
+	@Test
+	void testNoTty() throws Exception {
+		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DumbTerminal dumbTerminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
+
+		ComponentContext<?> empty = ComponentContext.empty();
+		StringInput component1 = new StringInput(dumbTerminal, "component1", "component1ResultValue");
+		component1.setPrintResults(true);
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+
+		service.execute(() -> {
+			StringInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+			latch1.countDown();
+		});
+
+		TestBuffer testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+		StringInputContext run1Context = result1.get();
+
+		assertThat(run1Context).isNotNull();
+		assertThat(run1Context.getResultValue()).isNull();
 	}
 
 	@Test

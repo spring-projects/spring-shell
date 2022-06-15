@@ -15,6 +15,9 @@
  */
 package org.springframework.shell.component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +28,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
+import org.jline.terminal.Terminal;
+import org.jline.terminal.impl.DumbTerminal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,6 +78,19 @@ public class MultiItemSelectorTests extends AbstractShellTests {
 			service.shutdown();
 		}
 		service = null;
+	}
+
+	@Test
+	void testNoTty() throws Exception {
+		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DumbTerminal dumbTerminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
+
+		scheduleSelect(dumbTerminal);
+		awaitLatch();
+
+		List<SelectorItem<SimplePojo>> selected = result.get();
+		assertThat(selected).isNull();
 	}
 
 	@Test
@@ -192,12 +210,21 @@ public class MultiItemSelectorTests extends AbstractShellTests {
 				SELECTOR_ITEM_4));
 	}
 
+	private void scheduleSelect(Terminal terminal) {
+		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3, SELECTOR_ITEM_4), null,
+				terminal);
+	}
+
 	private void scheduleSelect(List<SelectorItem<SimplePojo>> items) {
 		scheduleSelect(items, null);
 	}
 
 	private void scheduleSelect(List<SelectorItem<SimplePojo>> items, Integer maxItems) {
-		MultiItemSelector<SimplePojo, SelectorItem<SimplePojo>> selector = new MultiItemSelector<>(getTerminal(),
+		scheduleSelect(items, maxItems, getTerminal());
+	}
+
+	private void scheduleSelect(List<SelectorItem<SimplePojo>> items, Integer maxItems, Terminal terminal) {
+		MultiItemSelector<SimplePojo, SelectorItem<SimplePojo>> selector = new MultiItemSelector<>(terminal,
 				items, "testSimple", null);
 		selector.setResourceLoader(new DefaultResourceLoader());
 		selector.setTemplateExecutor(getTemplateExecutor());

@@ -210,6 +210,10 @@ public interface CommandExecution {
 			this.parserExceptions = parserExceptions;
 		}
 
+		public static CommandParserExceptionsException of(String message, List<CommandParserException> parserExceptions) {
+			return new CommandParserExceptionsException(message, parserExceptions);
+		}
+
 		public List<CommandParserException> getParserExceptions() {
 			return parserExceptions;
 		}

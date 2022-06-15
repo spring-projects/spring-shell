@@ -57,6 +57,14 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 	<T> T get(Object key, Class<T> type);
 
 	/**
+	 * Check if a context contains a key.
+	 *
+	 * @param key the key
+	 * @return true if context contains key
+	 */
+	boolean containsKey(Object key);
+
+	/**
 	 * Put an entry into a context.
 	 *
 	 * @param key the entry key

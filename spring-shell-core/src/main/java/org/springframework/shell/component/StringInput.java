@@ -24,6 +24,8 @@ import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
@@ -38,6 +40,7 @@ import org.springframework.util.StringUtils;
  */
 public class StringInput extends AbstractTextComponent<String, StringInputContext> {
 
+	private final static Logger log = LoggerFactory.getLogger(StringInput.class);
 	private final String defaultValue;
 	private StringInputContext currentContext;
 	private Character maskCharacter;
@@ -83,6 +86,10 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	@Override
 	protected boolean read(BindingReader bindingReader, KeyMap<String> keyMap, StringInputContext context) {
 		String operation = bindingReader.readBinding(keyMap);
+		log.debug("Binding read result {}", operation);
+		if (operation == null) {
+			return true;
+		}
 		String input;
 		switch (operation) {
 			case OPERATION_CHAR:
