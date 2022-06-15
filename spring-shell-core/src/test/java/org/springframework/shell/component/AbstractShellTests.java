@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jline.keymap.KeyMap;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.impl.DumbTerminal;
 import org.jline.utils.AttributedString;
@@ -79,6 +80,7 @@ public abstract class AbstractShellTests {
 
         pipedInputStream.connect(pipedOutputStream);
 		terminal = new DumbTerminal("terminal", "ansi", pipedInputStream, consoleOut, StandardCharsets.UTF_8);
+        terminal.setSize(new Size(1, 1));
 
         executorService.execute(() -> {
             try {

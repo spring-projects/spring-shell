@@ -66,7 +66,10 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 
 	@Override
 	protected C runInternal(C context) {
-		loop(context);
+		// if there's no tty don't try to loop as it would then cause user interaction
+		if (hasTty()) {
+			loop(context);
+		}
 		return context;
 	}
 

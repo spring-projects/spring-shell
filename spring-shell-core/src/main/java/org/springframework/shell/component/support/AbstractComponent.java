@@ -33,6 +33,7 @@ import org.jline.keymap.KeyMap;
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
+import org.jline.terminal.impl.DumbTerminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp.Capability;
@@ -153,7 +154,8 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 		context = runPreRunHandlers(getThisContext(context));
 		T run = runInternal(getThisContext(context));
 		context = runPostRunHandlers(getThisContext(context));
-		if (printResults) {
+		// if there's no tty don't try to print results as it'd be pointless
+		if (printResults && hasTty()) {
 			printResults(context);
 		}
 		return run;
@@ -184,6 +186,22 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 */
 	public void setTemplateLocation(String templateLocation) {
 		this.templateLocation = templateLocation;
+	}
+
+	/**
+	 * Checks if this component has an existing {@code tty}.
+	 *
+	 * @return true if component has tty
+	 */
+	protected boolean hasTty() {
+		boolean hasTty = true;
+		if (this.terminal instanceof DumbTerminal) {
+			if (this.terminal.getSize().getRows() == 0) {
+				hasTty = false;
+			}
+		}
+		log.debug("Terminal is {} with size {}, marking hasTty as {}", this.terminal, this.terminal.getSize(), hasTty);
+		return hasTty;
 	}
 
 	/**

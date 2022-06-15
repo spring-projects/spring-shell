@@ -15,7 +15,10 @@
  */
 package org.springframework.shell.component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import com.google.common.jimfs.Jimfs;
+import org.jline.terminal.impl.DumbTerminal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,6 +71,36 @@ public class PathInputTests extends AbstractShellTests {
 		}
 		fileSystem = null;
 		pathProvider = null;
+	}
+
+	@Test
+	void testNoTty() throws Exception {
+		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DumbTerminal dumbTerminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
+
+		Path path = fileSystem.getPath("tmp");
+		Files.createDirectories(path);
+		ComponentContext<?> empty = ComponentContext.empty();
+		PathInput component1 = new PathInput(dumbTerminal, "component1");
+		component1.setPathProvider(pathProvider);
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+
+		service.execute(() -> {
+			PathInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+			latch1.countDown();
+		});
+
+		TestBuffer testBuffer = new TestBuffer().append("tmp").cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+		PathInputContext run1Context = result1.get();
+
+		assertThat(run1Context).isNotNull();
+		assertThat(run1Context.getResultValue()).isNull();
 	}
 
 	@Test

@@ -70,7 +70,10 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 	@Override
 	protected MultiItemSelectorContext<T, I> runInternal(MultiItemSelectorContext<T, I> context) {
 		super.runInternal(context);
-		loop(context);
+		// if there's no tty don't try to loop as it would then cause user interaction
+		if (hasTty()) {
+			loop(context);
+		}
 		return context;
 	}
 

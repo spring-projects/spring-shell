@@ -15,6 +15,9 @@
  */
 package org.springframework.shell.component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +28,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jline.terminal.Terminal;
+import org.jline.terminal.impl.DumbTerminal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,6 +98,19 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 	}
 
 	@Test
+	void testNoTty() throws Exception {
+		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DumbTerminal dumbTerminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
+
+		scheduleSelect(dumbTerminal);
+		awaitLatch();
+
+		Optional<SelectorItem<SimplePojo>> selected = result.get();
+		assertThat(selected).isEmpty();
+	}
+
+	@Test
 	public void testSelectFirst() throws InterruptedException {
 		scheduleSelect();
 
@@ -156,9 +174,13 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 		assertThat(selected).isNotEmpty();
 	}
 
+	private void scheduleSelect(Terminal terminal) {
+		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3, SELECTOR_ITEM_4), null,
+				terminal);
+	}
+
 	private void scheduleSelect() {
-		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3,
-				SELECTOR_ITEM_4));
+		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3, SELECTOR_ITEM_4));
 	}
 
 	private void scheduleSelect(List<SelectorItem<SimplePojo>> items) {
@@ -166,7 +188,11 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 	}
 
 	private void scheduleSelect(List<SelectorItem<SimplePojo>> items, Integer maxItems) {
-		SingleItemSelector<SimplePojo, SelectorItem<SimplePojo>> selector = new SingleItemSelector<>(getTerminal(),
+		scheduleSelect(items, maxItems, getTerminal());
+	}
+
+	private void scheduleSelect(List<SelectorItem<SimplePojo>> items, Integer maxItems, Terminal terminal) {
+		SingleItemSelector<SimplePojo, SelectorItem<SimplePojo>> selector = new SingleItemSelector<>(terminal,
 				items, "testSimple", null);
 		selector.setResourceLoader(new DefaultResourceLoader());
 		selector.setTemplateExecutor(getTemplateExecutor());
