@@ -32,6 +32,21 @@ describe('builtin commands', () => {
     await expect(cli.exitCode()).resolves.toBe(0);
   };
 
+  /**
+   * test for command help command returns expected info
+   */
+   const commandHelpReturnsInfoDesc = 'command help returns info';
+   const commandHelpCommand = ['help help'];
+   const commandHelpReturnsInfo = async (cli: Cli) => {
+     cli.run();
+     await waitForExpect(async () => {
+       const screen = cli.screen();
+       expect(screen).toEqual(expect.arrayContaining([expect.stringContaining('OPTIONS')]));
+       expect(screen).not.toEqual(expect.arrayContaining([expect.stringContaining('CURRENTLY UNAVAILABLE')]));
+     });
+     await expect(cli.exitCode()).resolves.toBe(0);
+   };
+
   beforeEach(async () => {
     waitForExpect.defaults.timeout = waitForExpectDefaultTimeout;
     waitForExpect.defaults.interval = waitForExpectDefaultInterval;
@@ -61,6 +76,18 @@ describe('builtin commands', () => {
       },
       testTimeout
     );
+
+    it(
+      commandHelpReturnsInfoDesc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...commandHelpCommand]
+        });
+        await commandHelpReturnsInfo(cli);
+      },
+      testTimeout
+    );
   });
 
   /**
@@ -80,6 +107,18 @@ describe('builtin commands', () => {
           options: [...options, ...versionCommand]
         });
         await versionReturnsInfo(cli);
+      },
+      testTimeout
+    );
+
+    it(
+      commandHelpReturnsInfoDesc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...commandHelpCommand]
+        });
+        await commandHelpReturnsInfo(cli);
       },
       testTimeout
     );
