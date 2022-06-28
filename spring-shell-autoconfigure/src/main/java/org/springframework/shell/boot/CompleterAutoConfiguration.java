@@ -52,7 +52,7 @@ public class CompleterAutoConfiguration {
 		public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
 			CompletingParsedLine cpl = (line instanceof CompletingParsedLine) ? ((CompletingParsedLine) line) : t -> t;
 
-			CompletionContext context = new CompletionContext(sanitizeInput(line.words()), line.wordIndex(), line.wordCursor());
+			CompletionContext context = new CompletionContext(sanitizeInput(line.words()), line.wordIndex(), line.wordCursor(), null, null);
 
 			List<CompletionProposal> proposals = shell.complete(context);
 			proposals.stream()

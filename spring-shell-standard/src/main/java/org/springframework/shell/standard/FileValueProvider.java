@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 
@@ -36,29 +35,25 @@ import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
  * current working directory.
  *
  * @author Eric Bottard
+ * @author Janne Valkealahti
  */
 public class FileValueProvider implements ValueProvider {
-    @Override
-    public boolean supports(MethodParameter parameter, CompletionContext completionContext) {
-        return parameter.getParameterType().equals(File.class);
-    }
 
-    @Override
-    public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints) {
-
+	@Override
+	public List<CompletionProposal> complete(CompletionContext completionContext) {
         String input = completionContext.currentWordUpToCursor();
         int lastSlash = input.lastIndexOf(File.separatorChar);
         Path dir = lastSlash > -1 ? Paths.get(input.substring(0, lastSlash+1)) : Paths.get("");
         String prefix = input.substring(lastSlash + 1, input.length());
 
         try {
-            return Files.find(dir, 1, (p, a) -> p.getFileName() != null && p.getFileName().toString().startsWith(prefix), FOLLOW_LINKS)
+            return Files
+                    .find(dir, 1, (p, a) -> p.getFileName() != null && p.getFileName().toString().startsWith(prefix),
+                            FOLLOW_LINKS)
                     .map(p -> new CompletionProposal(p.toString()))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
-    }
-
+	}
 }

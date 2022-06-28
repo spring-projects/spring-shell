@@ -15,7 +15,12 @@
  */
 package org.springframework.shell.command;
 
+import java.util.List;
+import java.util.function.Function;
+
 import org.springframework.core.ResolvableType;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
 
 /**
  * Interface representing an option in a command.
@@ -95,6 +100,13 @@ public interface CommandOption {
 	String getLabel();
 
 	/**
+	 * Gets a completion function.
+	 *
+	 * @return the completion function
+	 */
+	Function<CompletionContext, List<CompletionProposal>> getCompletion();
+
+	/**
 	 * Gets an instance of a default {@link CommandOption}.
 	 *
 	 * @param longNames the long names
@@ -103,7 +115,7 @@ public interface CommandOption {
 	 * @return default command option
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description) {
-		return of(longNames, shortNames, description, null, false, null, null, null, null, null);
+		return of(longNames, shortNames, description, null, false, null, null, null, null, null, null);
 	}
 
 	/**
@@ -117,7 +129,7 @@ public interface CommandOption {
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
 			ResolvableType type) {
-		return of(longNames, shortNames, description, type, false, null, null, null, null, null);
+		return of(longNames, shortNames, description, type, false, null, null, null, null, null, null);
 	}
 
 	/**
@@ -133,13 +145,14 @@ public interface CommandOption {
 	 * @param arityMin the min arity
 	 * @param arityMax the max arity
 	 * @param label the label
+	 * @param completion the completion
 	 * @return default command option
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
 			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin,
-			Integer arityMax, String label) {
+			Integer arityMax, String label, Function<CompletionContext, List<CompletionProposal>> completion) {
 		return new DefaultCommandOption(longNames, shortNames, description, type, required, defaultValue, position,
-				arityMin, arityMax, label);
+				arityMin, arityMax, label, completion);
 	}
 
 	/**
@@ -157,10 +170,12 @@ public interface CommandOption {
 		private int arityMin;
 		private int arityMax;
 		private String label;
+		private Function<CompletionContext, List<CompletionProposal>> completion;
 
 		public DefaultCommandOption(String[] longNames, Character[] shortNames, String description,
 				ResolvableType type, boolean required, String defaultValue, Integer position,
-				Integer arityMin, Integer arityMax, String label) {
+				Integer arityMin, Integer arityMax, String label,
+				Function<CompletionContext, List<CompletionProposal>> completion) {
 			this.longNames = longNames != null ? longNames : new String[0];
 			this.shortNames = shortNames != null ? shortNames : new Character[0];
 			this.description = description;
@@ -171,6 +186,7 @@ public interface CommandOption {
 			this.arityMin = arityMin != null ? arityMin : -1;
 			this.arityMax = arityMax != null ? arityMax : -1;
 			this.label = label;
+			this.completion = completion;
 		}
 
 		@Override
@@ -221,6 +237,11 @@ public interface CommandOption {
 		@Override
 		public String getLabel() {
 			return label;
+		}
+
+		@Override
+		public Function<CompletionContext, List<CompletionProposal>> getCompletion() {
+			return completion;
 		}
 	}
 }

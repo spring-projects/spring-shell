@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.standard;
 
-
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -28,13 +25,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -44,7 +38,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Eric Bottard
  */
-public class CommandValueProviderTest {
+public class CommandValueProviderTests {
 
 	@Mock
 	private CommandCatalog catalog;
@@ -58,30 +52,17 @@ public class CommandValueProviderTest {
 	public void testValues() {
 		CommandValueProvider valueProvider = new CommandValueProvider(catalog);
 
-		Method help = ReflectionUtils.findMethod(Command.class, "help", String.class);
-		MethodParameter methodParameter = Utils.createMethodParameter(help, 0);
-		CompletionContext completionContext = new CompletionContext(Arrays.asList("help", "m"), 0, 0);
-		boolean supports = valueProvider.supports(methodParameter, completionContext);
+		CompletionContext completionContext = new CompletionContext(Arrays.asList("help", "m"), 0, 0, null, null);
 
-		assertThat(supports).isEqualTo(true);
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("me", null);
 		registrations.put("meow", null);
 		registrations.put("yourself", null);
 
 		when(catalog.getRegistrations()).thenReturn(registrations);
-		List<CompletionProposal> proposals = valueProvider.complete(methodParameter, completionContext, new String[0]);
+		List<CompletionProposal> proposals = valueProvider.complete(completionContext);
 
 		assertThat(proposals).extracting("value", String.class)
 			.contains("me", "meow", "yourself");
 	}
-
-
-	public static class Command {
-
-		public void help(@ShellOption(valueProvider = CommandValueProvider.class) String command) {
-
-		}
-	}
-
 }

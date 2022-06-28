@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -38,6 +39,7 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandAlias;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandExecution;
+import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandExecution.CommandExecutionException;
 import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
 import org.springframework.shell.command.CommandRegistration;
@@ -45,6 +47,7 @@ import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.exit.ExitCodeMappings;
+import org.springframework.util.StringUtils;
 
 /**
  * Main class implementing a shell loop.
@@ -275,15 +278,81 @@ public class Shell {
 		String best = findLongestCommand(prefix);
 		if (best != null) {
 			CompletionContext argsContext = context.drop(best.split(" ").length);
-			// Try to complete arguments
 			CommandRegistration registration = commandRegistry.getRegistrations().get(best);
 
 			for (CompletionResolver resolver : completionResolvers) {
 				List<CompletionProposal> resolved = resolver.resolve(registration, argsContext);
 				candidates.addAll(resolved);
 			}
+
+			// Try to complete arguments
+			List<CommandOption> matchedArgOptions = new ArrayList<>();
+			if (argsContext.getWords().size() > 0) {
+				matchedArgOptions.addAll(matchOptions(registration.getOptions(), argsContext.getWords().get(0)));
+			}
+
+			List<CompletionProposal> argProposals =	matchedArgOptions.stream()
+				.flatMap(o -> {
+					Function<CompletionContext, List<CompletionProposal>> completion = o.getCompletion();
+					if (completion != null) {
+						List<CompletionProposal> apply = completion.apply(argsContext.commandOption(o));
+						return apply.stream();
+					}
+					return Stream.empty();
+				})
+				.collect(Collectors.toList());
+
+			candidates.addAll(argProposals);
 		}
 		return candidates;
+	}
+
+	private List<CommandOption> matchOptions(List<CommandOption> options, String arg) {
+		List<CommandOption> matched = new ArrayList<>();
+		String trimmed = StringUtils.trimLeadingCharacter(arg, '-');
+		int count = arg.length() - trimmed.length();
+		if (count == 1) {
+			if (trimmed.length() == 1) {
+				Character trimmedChar = trimmed.charAt(0);
+				options.stream()
+					.filter(o -> {
+						for (Character sn : o.getShortNames()) {
+							if (trimmedChar.equals(sn)) {
+								return true;
+							}
+						}
+						return false;
+					})
+				.findFirst()
+				.ifPresent(o -> matched.add(o));
+			}
+			else if (trimmed.length() > 1) {
+				trimmed.chars().mapToObj(i -> (char)i)
+					.forEach(c -> {
+						options.stream().forEach(o -> {
+							for (Character sn : o.getShortNames()) {
+								if (c.equals(sn)) {
+									matched.add(o);
+								}
+							}
+						});
+					});
+			}
+		}
+		else if (count == 2) {
+			options.stream()
+				.filter(o -> {
+					for (String ln : o.getLongNames()) {
+						if (trimmed.equals(ln)) {
+							return true;
+						}
+					}
+					return false;
+				})
+				.findFirst()
+				.ifPresent(o -> matched.add(o));
+		}
+		return matched;
 	}
 
 	private List<CompletionProposal> commandsStartingWith(String prefix) {

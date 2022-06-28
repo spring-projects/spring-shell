@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,12 @@ import java.lang.annotation.ElementType;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
+import javax.validation.constraints.Size;
+
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.standard.ValueProviderSupport;
-import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.Size;
 
 /**
  * Example commands for the Shell 2 Standard resolver.
@@ -59,11 +53,6 @@ public class Commands {
 	@ShellMethod("Shows support for boolean parameters, with arity=0.")
 	public void shutdown(@ShellOption(arity = 0) boolean force) {
 		System.out.println("You passed " + force);
-	}
-
-	@ShellMethod("Test completion of special values.")
-	public void quote(@ShellOption(valueProvider = FunnyValuesProvider.class) String text) {
-		System.out.println("You said " + text);
 	}
 
 	@ShellMethod("Add numbers.")
@@ -96,26 +85,5 @@ public class Commands {
 			}
 		};
 		return iterable;
-	}
-}
-
-/**
- * A {@link org.springframework.shell.standard.ValueProvider} that emits values with special characters
- * (quotes, escapes, <em>etc.</em>)
- *
- * @author Eric Bottard
- */
-@Component
-class FunnyValuesProvider extends ValueProviderSupport {
-
-	private final static String[] VALUES = new String[] {
-		"hello world",
-		"I'm quoting \"The Daily Mail\"",
-		"10 \\ 3 = 3"
-	};
-
-	@Override
-	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints) {
-		return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
 	}
 }
