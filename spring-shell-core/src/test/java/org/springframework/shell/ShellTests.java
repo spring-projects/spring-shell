@@ -224,37 +224,37 @@ public class ShellTests {
 		when(commandRegistry.getRegistrations()).thenReturn(registrations);
 
 		// Invoke at very start
-		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList(""), 0, "".length()))
+		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList(""), 0, "".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactlyInAnyOrder("another command", "hello world");
 
 		// Invoke in middle of first word
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hel"), 0, "hel".length()))
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hel"), 0, "hel".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactly("hello world");
 
 		// Invoke at end of first word (no space after yet)
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hello"), 0, "hello".length()))
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello"), 0, "hello".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactly("hello world");
 
 		// Invoke after first word / start of second word
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", ""), 1, "".length()))
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", ""), 1, "".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactly("world");
 
 		// Invoke in middle of second word
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "wo"), 1, "wo".length()))
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "wo"), 1, "wo".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactly("world");
 
 		// Invoke at end of whole command (no space after yet)
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world"), 1, "world".length()))
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world"), 1, "world".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactly("world");
 
 		// Invoke in middle of second word
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length()))
+		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).isEmpty();
 	}
@@ -287,7 +287,7 @@ public class ShellTests {
 		registrations.put("hello world", registration1);
 		when(commandRegistry.getRegistrations()).thenReturn(registrations);
 
-		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length()))
+		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactlyInAnyOrder("--arg1");
 	}
@@ -311,7 +311,7 @@ public class ShellTests {
 		registrations.put("hello world", registration1);
 		when(commandRegistry.getRegistrations()).thenReturn(registrations);
 
-		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length()))
+		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
 				.stream().map(CompletionProposal::value).collect(Collectors.toList());
 		assertThat(proposals).containsExactlyInAnyOrder("--arg1");
 	}

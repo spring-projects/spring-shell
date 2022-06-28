@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ package org.springframework.shell.standard;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.core.MethodParameter;
+import org.springframework.core.ResolvableType;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.command.CommandOption;
 
 /**
  * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed parameters.
@@ -30,21 +31,28 @@ import org.springframework.shell.CompletionProposal;
 public class EnumValueProvider implements ValueProvider {
 
 	@Override
-	public boolean supports(MethodParameter parameter, CompletionContext completionContext) {
-		return Enum.class.isAssignableFrom(parameter.getParameterType());
-	}
-
-	@Override
-	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext, String[] hints) {
+	public List<CompletionProposal> complete(CompletionContext completionContext) {
 		List<CompletionProposal> result = new ArrayList<>();
-		for (Object v : parameter.getParameterType().getEnumConstants()) {
-			Enum<?> e = (Enum<?>) v;
-			String prefix = completionContext.currentWordUpToCursor();
-			if (prefix == null) {
-				prefix = "";
-			}
-			if (e.name().startsWith(prefix)) {
-				result.add(new CompletionProposal(e.name()));
+		CommandOption commandOption = completionContext.getCommandOption();
+		if (commandOption != null) {
+			ResolvableType type = commandOption.getType();
+			if (type != null) {
+				Class<?> clazz = type.getRawClass();
+				if (clazz != null) {
+					Object[] enumConstants = clazz.getEnumConstants();
+					if (enumConstants != null) {
+						for (Object v : enumConstants) {
+							Enum<?> e = (Enum<?>) v;
+							String prefix = completionContext.currentWordUpToCursor();
+							if (prefix == null) {
+								prefix = "";
+							}
+							if (e.name().startsWith(prefix)) {
+								result.add(new CompletionProposal(e.name()));
+							}
+						}
+					}
+				}
 			}
 		}
 		return result;

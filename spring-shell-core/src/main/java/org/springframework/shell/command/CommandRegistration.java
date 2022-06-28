@@ -29,6 +29,8 @@ import java.util.stream.Stream;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 import org.springframework.shell.Availability;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -207,6 +209,14 @@ public interface CommandRegistration {
 		 * @return option spec for chaining
 		 */
 		OptionSpec label(String label);
+
+		/**
+		 * Define a {@code completion function} for an option.
+		 *
+		 * @param completion the completion function
+		 * @return option spec for chaining
+		 */
+		OptionSpec completion(Function<CompletionContext, List<CompletionProposal>> completion);
 
 		/**
 		 * Return a builder for chaining.
@@ -528,6 +538,7 @@ public interface CommandRegistration {
 		private Integer arityMin;
 		private Integer arityMax;
 		private String label;
+		private Function<CompletionContext, List<CompletionProposal>> completion;
 
 		DefaultOptionSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -627,6 +638,12 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public OptionSpec completion(Function<CompletionContext, List<CompletionProposal>> completion) {
+			this.completion = completion;
+			return this;
+		}
+
+		@Override
 		public Builder and() {
 			return builder;
 		}
@@ -669,6 +686,10 @@ public interface CommandRegistration {
 
 		public String getLabel() {
 			return label;
+		}
+
+		public Function<CompletionContext, List<CompletionProposal>> getCompletion() {
+			return completion;
 		}
 	}
 
@@ -840,7 +861,7 @@ public interface CommandRegistration {
 			return optionSpecs.stream()
 				.map(o -> CommandOption.of(o.getLongNames(), o.getShortNames(), o.getDescription(), o.getType(),
 						o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
-						o.getLabel()))
+						o.getLabel(), o.getCompletion()))
 				.collect(Collectors.toList());
 		}
 

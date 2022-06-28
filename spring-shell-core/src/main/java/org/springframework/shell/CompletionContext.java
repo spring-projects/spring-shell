@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.shell.command.CommandOption;
+import org.springframework.shell.command.CommandRegistration;
+
 /**
  * Represents the buffer context in which completion was triggered.
  *
@@ -33,16 +36,22 @@ public class CompletionContext {
 
 	private final int position;
 
+	private final CommandOption commandOption;
+
+	private final CommandRegistration commandRegistration;
+
 	/**
 	 *
 	 * @param words words in the buffer, excluding words for the command name
 	 * @param wordIndex the index of the word the cursor is in
 	 * @param position the position inside the current word where the cursor is
 	 */
-	public CompletionContext(List<String> words, int wordIndex, int position) {
+	public CompletionContext(List<String> words, int wordIndex, int position, CommandRegistration commandRegistration,  CommandOption commandOption) {
 		this.words = words;
 		this.wordIndex = wordIndex;
 		this.position = position;
+		this.commandRegistration = commandRegistration;
+		this.commandOption = commandOption;
 	}
 
 	public List<String> getWords() {
@@ -55,6 +64,14 @@ public class CompletionContext {
 
 	public int getPosition() {
 		return position;
+	}
+
+	public CommandOption getCommandOption() {
+		return commandOption;
+	}
+
+	public CommandRegistration getCommandRegistration() {
+		return commandRegistration;
 	}
 
 	public String upToCursor() {
@@ -84,6 +101,11 @@ public class CompletionContext {
 	 * Return a copy of this context, as if the first {@literal nbWords} were not present
 	 */
 	public CompletionContext drop(int nbWords) {
-		return new CompletionContext(new ArrayList<String>(words.subList(nbWords, words.size())), wordIndex-nbWords, position);
+		return new CompletionContext(new ArrayList<String>(words.subList(nbWords, words.size())), wordIndex - nbWords,
+				position, commandRegistration, commandOption);
+	}
+
+	public CompletionContext commandOption(CommandOption commandOption) {
+		return new CompletionContext(words, wordIndex, position, commandRegistration, commandOption);
 	}
 }

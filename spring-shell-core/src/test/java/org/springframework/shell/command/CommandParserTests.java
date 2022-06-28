@@ -327,7 +327,7 @@ public class CommandParserTests extends AbstractCommandTests {
 	public void testBooleanWithDefault() {
 		ResolvableType type = ResolvableType.forType(boolean.class);
 		CommandOption option1 = CommandOption.of(new String[] { "arg1" }, new Character[0], "description", type, false,
-				"true", null, null, null, null);
+				"true", null, null, null, null, null);
 
 		List<CommandOption> options = Arrays.asList(option1);
 		String[] args = new String[]{};
@@ -359,7 +359,7 @@ public class CommandParserTests extends AbstractCommandTests {
 
 	private static CommandOption longOption(String name, ResolvableType type, boolean required, Integer position, Integer arityMin, Integer arityMax) {
 		return CommandOption.of(new String[] { name }, new Character[0], "desc", type, required, null, position,
-				arityMin, arityMax, null);
+				arityMin, arityMax, null, null);
 	}
 
 	private static CommandOption shortOption(char name) {

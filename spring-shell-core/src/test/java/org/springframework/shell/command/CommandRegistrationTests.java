@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.command;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 
 import org.springframework.core.ResolvableType;
@@ -433,5 +435,24 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			.build();
 		assertThat(registration.getAvailability()).isNotNull();
 		assertThat(registration.getAvailability().isAvailable()).isFalse();
+	}
+
+	@Test
+	public void testOptionWithCompletion() {
+		CommandRegistration registration;
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.completion(ctx -> {
+					return new ArrayList<>();
+				})
+				.and()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0).getCompletion()).isNotNull();
 	}
 }
