@@ -13,3 +13,5 @@ include::appendices-techical-intro-execution.adoc[]
 include::appendices-techical-intro-commandcontext.adoc[]
 
 include::appendices-techical-intro-commandcatalog.adoc[]
+
+include::appendices-techical-intro-theming.adoc[]
