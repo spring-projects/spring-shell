@@ -27,12 +27,13 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.style.FigureSettings;
 import org.springframework.shell.style.StyleSettings;
 import org.springframework.shell.style.ThemeResolver;
 
 @ShellComponent
-public class StyleCommands {
+public class ThemeCommands {
 
 	List<String> colorGround = Arrays.asList("fg", "bg");
 	List<String> colors = Arrays.asList("black", "red", "green", "yellow", "blue", "magenta", "cyan", "white");
@@ -49,8 +50,8 @@ public class StyleCommands {
 	@Autowired
 	private ThemeResolver themeResolver;
 
-	@ShellMethod(key = "style values", value = "Showcase colors and styles", group = "Styles")
-	public AttributedString stylesValues() {
+	@ShellMethod(key = "theme showcase values", value = "Showcase colors and styles", group = "Styles")
+	public AttributedString showcaseValues() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		combinations1().stream()
 				.forEach(spec -> {
@@ -64,8 +65,8 @@ public class StyleCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "style rgb", value = "Showcase colors and styles", group = "Styles")
-	public AttributedString stylesRgb() {
+	@ShellMethod(key = "theme showcase rgb", value = "Showcase colors and styles with rgb", group = "Styles")
+	public AttributedString showcaseRgb() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		combinations2().stream()
 				.forEach(spec -> {
@@ -79,8 +80,8 @@ public class StyleCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "style theme", value = "Showcase colors and styles", group = "Styles")
-	public AttributedString stylesTheme() {
+	@ShellMethod(key = "theme style list", value = "List styles", group = "Styles")
+	public AttributedString styleList() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		themeTags.stream()
 				.forEach(tag -> {
@@ -95,8 +96,31 @@ public class StyleCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "style figure", value = "Showcase figures", group = "Styles")
-	public AttributedString stylesFigures() {
+	@ShellMethod(key = "theme style resolve", value = "Resolve given style", group = "Styles")
+	public AttributedString styleResolve(
+		@ShellOption(value = "--spec", defaultValue = "default") String spec
+	) {
+		AttributedStringBuilder builder = new AttributedStringBuilder();
+		AttributedStyle style = themeResolver.resolveStyle(spec);
+		AttributedString styledStr = new AttributedString(spec, style);
+		builder.append(styledStr);
+		builder.append("\n");
+		return builder.toAttributedString();
+	}
+
+	@ShellMethod(key = "theme expression resolve", value = "Resolve given style expression", group = "Styles")
+	public AttributedString expressionResolve(
+		@ShellOption(value = "--expression", defaultValue = "hi @{bold from} expression") String expression
+	) {
+		AttributedStringBuilder builder = new AttributedStringBuilder();
+		AttributedString styledStr = themeResolver.evaluateExpression(expression);
+		builder.append(styledStr);
+		builder.append("\n");
+		return builder.toAttributedString();
+	}
+
+	@ShellMethod(key = "theme figure list", value = "List figures", group = "Styles")
+	public AttributedString figureList() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		Stream.of(FigureSettings.tags())
 				.forEach(tag -> {
@@ -136,7 +160,7 @@ public class StyleCommands {
 	private List<String> combinations3() {
 		List<String> styles = new ArrayList<>();
 		Arrays.asList("fg").stream().forEach(ground -> {
-			colors.stream().forEach(color -> {
+			Arrays.asList("white").stream().forEach(color -> {
 				named.stream().forEach(named -> {
 					styles.add(String.format("%s,%s:%s", named, ground, color));
 				});
