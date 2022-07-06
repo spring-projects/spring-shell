@@ -16,28 +16,31 @@
 package org.springframework.shell.completion;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.command.CommandRegistration;
 
 /**
  * Default implementation of a {@link CompletionResolver}.
  *
  * @author Janne Valkealahti
  */
-public class DefaultCompletionResolver implements CompletionResolver {
+public class RegistrationOptionsCompletionResolver implements CompletionResolver {
 
 	@Override
-	public List<CompletionProposal> resolve(CommandRegistration registration, CompletionContext context) {
+	public List<CompletionProposal> apply(CompletionContext context) {
+		if (context.getCommandRegistration() == null) {
+			return Collections.emptyList();
+		}
 		List<CompletionProposal> candidates = new ArrayList<>();
-		registration.getOptions().stream()
+		context.getCommandRegistration().getOptions().stream()
 			.flatMap(o -> Stream.of(o.getLongNames()))
 			.map(ln -> new CompletionProposal("--" + ln))
 			.forEach(candidates::add);
-		registration.getOptions().stream()
+		context.getCommandRegistration().getOptions().stream()
 			.flatMap(o -> Stream.of(o.getShortNames()))
 			.map(ln -> new CompletionProposal("-" + ln))
 			.forEach(candidates::add);

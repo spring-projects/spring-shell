@@ -15,12 +15,8 @@
  */
 package org.springframework.shell.command;
 
-import java.util.List;
-import java.util.function.Function;
-
 import org.springframework.core.ResolvableType;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.completion.CompletionResolver;
 
 /**
  * Interface representing an option in a command.
@@ -104,7 +100,7 @@ public interface CommandOption {
 	 *
 	 * @return the completion function
 	 */
-	Function<CompletionContext, List<CompletionProposal>> getCompletion();
+	CompletionResolver getCompletion();
 
 	/**
 	 * Gets an instance of a default {@link CommandOption}.
@@ -150,7 +146,7 @@ public interface CommandOption {
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
 			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin,
-			Integer arityMax, String label, Function<CompletionContext, List<CompletionProposal>> completion) {
+			Integer arityMax, String label, CompletionResolver completion) {
 		return new DefaultCommandOption(longNames, shortNames, description, type, required, defaultValue, position,
 				arityMin, arityMax, label, completion);
 	}
@@ -170,12 +166,12 @@ public interface CommandOption {
 		private int arityMin;
 		private int arityMax;
 		private String label;
-		private Function<CompletionContext, List<CompletionProposal>> completion;
+		private CompletionResolver completion;
 
 		public DefaultCommandOption(String[] longNames, Character[] shortNames, String description,
 				ResolvableType type, boolean required, String defaultValue, Integer position,
 				Integer arityMin, Integer arityMax, String label,
-				Function<CompletionContext, List<CompletionProposal>> completion) {
+				CompletionResolver completion) {
 			this.longNames = longNames != null ? longNames : new String[0];
 			this.shortNames = shortNames != null ? shortNames : new Character[0];
 			this.description = description;
@@ -240,7 +236,7 @@ public interface CommandOption {
 		}
 
 		@Override
-		public Function<CompletionContext, List<CompletionProposal>> getCompletion() {
+		public CompletionResolver getCompletion() {
 			return completion;
 		}
 	}

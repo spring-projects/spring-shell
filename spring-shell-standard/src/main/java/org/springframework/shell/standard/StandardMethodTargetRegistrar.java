@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -37,7 +36,6 @@ import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.messaging.handler.invocation.InvocableHandlerMethod;
 import org.springframework.shell.Availability;
-import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.Utils;
@@ -45,6 +43,7 @@ import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.Builder;
 import org.springframework.shell.command.CommandRegistration.OptionSpec;
+import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.standard.ShellOption.NoValueProvider;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -149,12 +148,12 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 								optionSpec.required();
 							}
 							if (!ClassUtils.isAssignable(NoValueProvider.class, so.valueProvider())) {
-								Function<CompletionContext, List<CompletionProposal>> completionFunction = ctx -> {
+								CompletionResolver completionResolver = ctx -> {
 									ValueProvider valueProviderBean = this.applicationContext.getBean(so.valueProvider());
 									List<CompletionProposal> complete = valueProviderBean.complete(ctx);
 									return complete;
 								};
-								optionSpec.completion(completionFunction);
+								optionSpec.completion(completionResolver);
 							}
 						}
 					}

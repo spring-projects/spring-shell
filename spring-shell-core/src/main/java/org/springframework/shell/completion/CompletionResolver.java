@@ -16,24 +16,16 @@
 package org.springframework.shell.completion;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.command.CommandRegistration;
 
 /**
  * Interface resolving completion proposals.
  *
  * @author Janne Valkealahti
  */
-public interface CompletionResolver {
-
-	/**
-	 * Resolve completions.
-	 *
-	 * @param registration the command registration
-	 * @param context the completion context
-	 * @return list of resolved completions
-	 */
-	List<CompletionProposal> resolve(CommandRegistration registration, CompletionContext context);
+@FunctionalInterface
+public interface CompletionResolver extends Function<CompletionContext, List<CompletionProposal>> {
 }

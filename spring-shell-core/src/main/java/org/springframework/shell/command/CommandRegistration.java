@@ -29,8 +29,7 @@ import java.util.stream.Stream;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 import org.springframework.shell.Availability;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -216,7 +215,7 @@ public interface CommandRegistration {
 		 * @param completion the completion function
 		 * @return option spec for chaining
 		 */
-		OptionSpec completion(Function<CompletionContext, List<CompletionProposal>> completion);
+		OptionSpec completion(CompletionResolver completion);
 
 		/**
 		 * Return a builder for chaining.
@@ -538,7 +537,7 @@ public interface CommandRegistration {
 		private Integer arityMin;
 		private Integer arityMax;
 		private String label;
-		private Function<CompletionContext, List<CompletionProposal>> completion;
+		private CompletionResolver completion;
 
 		DefaultOptionSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -638,7 +637,7 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public OptionSpec completion(Function<CompletionContext, List<CompletionProposal>> completion) {
+		public OptionSpec completion(CompletionResolver completion) {
 			this.completion = completion;
 			return this;
 		}
@@ -688,7 +687,7 @@ public interface CommandRegistration {
 			return label;
 		}
 
-		public Function<CompletionContext, List<CompletionProposal>> getCompletion() {
+		public CompletionResolver getCompletion() {
 			return completion;
 		}
 	}

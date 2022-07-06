@@ -105,7 +105,17 @@ public class CompletionContext {
 				position, commandRegistration, commandOption);
 	}
 
+	/**
+	 * Return a copy of this context with given command option.
+	 */
 	public CompletionContext commandOption(CommandOption commandOption) {
+		return new CompletionContext(words, wordIndex, position, commandRegistration, commandOption);
+	}
+
+	/**
+	 * Return a copy of this context with given command registration.
+	 */
+	public CompletionContext commandRegistration(CommandRegistration commandRegistration) {
 		return new CompletionContext(words, wordIndex, position, commandRegistration, commandOption);
 	}
 }

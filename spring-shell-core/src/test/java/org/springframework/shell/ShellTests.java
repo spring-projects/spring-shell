@@ -30,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.completion.CompletionResolver;
+import org.springframework.shell.completion.RegistrationOptionsCompletionResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -56,9 +56,6 @@ public class ShellTests {
 	@Mock
 	CommandCatalog commandRegistry;
 
-	@Mock
-	private CompletionResolver completionResolver;
-
 	@InjectMocks
 	private Shell shell;
 
@@ -66,7 +63,7 @@ public class ShellTests {
 
 	@BeforeEach
 	public void setUp() {
-		shell.setCompletionResolvers(Arrays.asList(completionResolver));
+		shell.setCompletionResolvers(Arrays.asList(new RegistrationOptionsCompletionResolver()));
 	}
 
 	@Test
@@ -272,7 +269,6 @@ public class ShellTests {
 
 	@Test
 	public void completionArgWithMethod() throws Exception {
-		when(completionResolver.resolve(any(), any())).thenReturn(Arrays.asList(new CompletionProposal("--arg1")));
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
@@ -294,7 +290,6 @@ public class ShellTests {
 
 	@Test
 	public void completionArgWithFunction() throws Exception {
-		when(completionResolver.resolve(any(), any())).thenReturn(Arrays.asList(new CompletionProposal("--arg1")));
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()

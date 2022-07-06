@@ -277,11 +277,12 @@ public class Shell {
 
 		String best = findLongestCommand(prefix);
 		if (best != null) {
-			CompletionContext argsContext = context.drop(best.split(" ").length);
+			context = context.drop(best.split(" ").length);
 			CommandRegistration registration = commandRegistry.getRegistrations().get(best);
+			CompletionContext argsContext = context.commandRegistration(registration);
 
 			for (CompletionResolver resolver : completionResolvers) {
-				List<CompletionProposal> resolved = resolver.resolve(registration, argsContext);
+				List<CompletionProposal> resolved = resolver.apply(argsContext);
 				candidates.addAll(resolved);
 			}
 
