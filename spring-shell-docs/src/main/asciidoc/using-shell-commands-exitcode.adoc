@@ -1,5 +1,5 @@
 [[dynamic-command-exitcode]]
-==== Exit Code
+=== Exit Code
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Many command line applications when applicable return an _exit code_ which running environment

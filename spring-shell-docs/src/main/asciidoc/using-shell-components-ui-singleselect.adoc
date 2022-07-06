@@ -1,5 +1,5 @@
 [[using-shell-components-ui-singleselect]]
-===== Single Select
+==== Single Select
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 A single select component asks a user to choose one item from a list. It is similar to a simple

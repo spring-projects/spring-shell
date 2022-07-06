@@ -1,8 +1,8 @@
-=== Execution
+== Execution
 
 This section describes how to set up a Spring Shell to work in interactive mode.
 
-==== Interaction Mode
+=== Interaction Mode
 
 Version 2.1.x introduced built-in support to distinguish between interactive
 and non-interactive modes. This makes it easier to use the shell as a

@@ -1,10 +1,10 @@
 [[using-shell-building]]
-=== Building
+== Building
 
 This section covers how to build a Spring Shell application.
 
 [[native]]
-==== Native Support
+=== Native Support
 
 Version 2.1.x includes experimental support for compiling Spring Shell applications
 into native applications with GraalVM and Spring Native. Because the underlying JLine

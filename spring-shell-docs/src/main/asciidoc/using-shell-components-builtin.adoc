@@ -1,8 +1,8 @@
 [[built-in-commands]]
-==== Built-In Commands
+=== Built-In Commands
 
 [[help-command]]
-===== Help
+==== Help
 
 Running a shell application often implies that the user is in a graphically limited
 environment. Also, while we are nearly always connected in the era of mobile phones,
@@ -79,17 +79,17 @@ script: Read and execute commands from a file.
 ----
 ====
 
-===== Clear
+==== Clear
 The `clear` command does what you would expect and clears the screen, resetting the prompt
 in the top left corner.
 
-===== Exit
+==== Exit
 
 The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
 closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all
 commands to disk, so that they are available again on the next launch.
 
-===== Stacktrace
+==== Stacktrace
 
 When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
 so as not to overflow the user with too much information.
@@ -99,14 +99,14 @@ To this end, Spring Shell remembers the last exception that occurred, and the us
 command to print all the details on the console.
 
 [[script-command]]
-===== Script
+==== Script
 
 The `script` command accepts a local file as an argument and replays commands found there, one at a time.
 
 Reading from the file behaves exactly like inside the interactive shell, so lines starting with `//` are considered
 to be comments and are ignored, while lines ending with `\` trigger line continuation.
 
-===== History
+==== History
 
 The `history` command shows the history of commands that has been executed.
 
@@ -122,7 +122,7 @@ a placeholder (`{userconfig}`), which resolves to a common shared config directo
 
 TIP: Run the Spring Shell application to see how the sample application works as it uses these options.
 
-===== Completion
+==== Completion
 
 The `completion` command set lets you create script files that can be used
 with am OS shell implementations to provide completion. This is very useful when
@@ -130,7 +130,7 @@ working with non-interactive mode.
 
 Currently, the only implementation is for bash, which works with `bash` sub-command.
 
-===== Version
+==== Version
 
 The `version` command shows existing build and git info by integrating into
 Boot's `BuildProperties` and `GitProperties` if those exist in the shell application.

@@ -1,5 +1,5 @@
 [[using-shell-options-optional]]
-==== Optional Value
+=== Optional Value
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 An option is either required or not and, generally speaking, how it behavesit depends on

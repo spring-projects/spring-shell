@@ -1,5 +1,5 @@
 [[using-shell-components-ui-stringinput]]
-===== String Input
+==== String Input
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 The string input component asks a user for simple text input, optionally masking values

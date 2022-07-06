@@ -1,5 +1,5 @@
 [[using-shell-options-definition]]
-==== Definition
+=== Definition
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Options can be defined within a target method as annotations in a method arguments

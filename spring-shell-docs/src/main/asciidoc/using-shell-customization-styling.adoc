@@ -1,5 +1,5 @@
 [[theming]]
-==== Theming
+=== Theming
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Current terminal implementations are rich in features and can usually show

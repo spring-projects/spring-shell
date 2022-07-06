@@ -1,5 +1,5 @@
 [[using-shell-options-arity]]
-==== Arity
+=== Arity
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Sometimes, you want to have more fine control of how many parameters with an option

@@ -1,5 +1,5 @@
 [[using-shell-options]]
-=== Options
+== Options
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Command line arguments can be separated into options and positional parameters.

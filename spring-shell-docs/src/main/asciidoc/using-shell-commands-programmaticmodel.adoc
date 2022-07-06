@@ -1,4 +1,4 @@
-==== Programmatic Model
+=== Programmatic Model
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 In the programmatic model, `CommandRegistration` is defined as a `@Bean`, and it is automatically registered:

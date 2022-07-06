@@ -1,5 +1,5 @@
 [[using-shell-components-flow]]
-==== Flow
+=== Flow
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 When you use <<using-shell-components-ui>> to build something that involves
