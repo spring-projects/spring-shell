@@ -42,6 +42,15 @@ jobs:
           -DnewVersion='${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${{ github.event.inputs.milestone }}' \
           -B
         echo PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) >> $GITHUB_ENV
+    - name: Tag Release
+      env:
+        PROJECT_VERSION: ${{ env.PROJECT_VERSION }}
+      run: |
+        git config --global user.name github-actions[bot]
+        git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
+        git checkout -b $PROJECT_VERSION
+        git commit -a -m "Release $PROJECT_VERSION"
+        git tag "v$PROJECT_VERSION"
     - name: Build and Publish
       env:
         DISABLE_SAMPLES: true
@@ -50,12 +59,12 @@ jobs:
         jfrog rt mvn clean install \
           -DskipTests -U -B
         jfrog rt build-publish
-    - name: Tag Release
-      uses: jvalkeal/build-zoo-handler@v0.0.4
-      with:
-        tag-release-branch: ${{ env.PROJECT_VERSION }}
-        tag-release-tag: ${{ env.PROJECT_VERSION }}
-        tag-release-tag-prefix: v
+    - name: Push Release
+      env:
+        PROJECT_VERSION: ${{ env.PROJECT_VERSION }}
+      run: |
+        git push origin $PROJECT_VERSION
+        git push --tags origin
     - name: Output
       id: output
       env:
