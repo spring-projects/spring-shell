@@ -122,6 +122,7 @@ a placeholder (`{userconfig}`), which resolves to a common shared config directo
 
 TIP: Run the Spring Shell application to see how the sample application works as it uses these options.
 
+[[built-in-commands-completion]]
 ==== Completion
 
 The `completion` command set lets you create script files that can be used

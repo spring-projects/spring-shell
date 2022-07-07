@@ -4,6 +4,8 @@ include::using-shell-commands.adoc[]
 
 include::using-shell-options.adoc[]
 
+include::using-shell-completion.adoc[]
+
 include::using-shell-building.adoc[]
 
 include::using-shell-components.adoc[]
