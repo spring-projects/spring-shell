@@ -16,8 +16,12 @@ availabilityDesc(hasUnavailableCommands) ::= <<
 <endif>
 >>
 
+commandName(command) ::= <%
+<[command.name, command.aliases]; format="style-highlight", separator=", ">
+%>
+
 command(command) ::= <<
-<availability(command.availability)><(command.name); format="style-highlight"><(":"); format="style-highlight"> <command.description>
+<availability(command.availability)><commandName(command); format="style-highlight"><(":"); format="style-highlight"> <command.description>
 
 >>
 
