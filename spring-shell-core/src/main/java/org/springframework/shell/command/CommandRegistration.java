@@ -608,7 +608,7 @@ public interface CommandRegistration {
 					break;
 				case ZERO_OR_ONE:
 					this.arityMin = 0;
-					this.arityMax = Integer.MAX_VALUE;
+					this.arityMax = 1;
 					break;
 				case EXACTLY_ONE:
 					this.arityMin = 1;

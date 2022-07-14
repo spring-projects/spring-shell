@@ -42,6 +42,7 @@ import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.Builder;
+import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.OptionSpec;
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.standard.ShellOption.NoValueProvider;
@@ -131,14 +132,26 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 						}
 						if (!longNames.isEmpty() || !shortNames.isEmpty()) {
 							log.debug("Registering longNames='{}' shortNames='{}'", longNames, shortNames);
+							Class<?> parameterType = mp.getParameterType();
 							OptionSpec optionSpec = builder.withOption()
-								.type(mp.getParameterType())
+								.type(parameterType)
 								.longNames(longNames.toArray(new String[0]))
 								.shortNames(shortNames.toArray(new Character[0]))
 								.position(mp.getParameterIndex())
 								.description(so.help());
 							if (so.arity() > -1) {
 								optionSpec.arity(0, so.arity());
+							}
+							else {
+								if (ClassUtils.isAssignable(boolean.class, parameterType)) {
+									optionSpec.arity(OptionArity.ZERO);
+								}
+								else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
+									optionSpec.arity(OptionArity.ZERO);
+								}
+								else {
+									optionSpec.arity(OptionArity.EXACTLY_ONE);
+								}
 							}
 							if (!ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)
 									&& !ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NULL)) {
@@ -163,11 +176,20 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 						Class<?> parameterType = mp.getParameterType();
 						if (longName != null) {
 							log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
-							builder.withOption()
+							OptionSpec optionSpec = builder.withOption()
 								.longNames(longName)
 								.type(parameterType)
 								.required()
 								.position(mp.getParameterIndex());
+							if (ClassUtils.isAssignable(boolean.class, parameterType)) {
+								optionSpec.arity(OptionArity.ZERO);
+							}
+							else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
+								optionSpec.arity(OptionArity.ZERO);
+							}
+							else {
+								optionSpec.arity(OptionArity.EXACTLY_ONE);
+							}
 						}
 					}
 				}
