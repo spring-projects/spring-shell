@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.standard.commands;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -54,13 +55,17 @@ class GroupsInfoModel {
 	 * @return a groups info model
 	 */
 	static GroupsInfoModel of(boolean showGroups, Map<String, CommandRegistration> registrations) {
+		// throw away registrations aliases as those are then handled in a model
 		// collect commands into groups with sorting
-		SortedMap<String, Map<String, CommandRegistration>> commandsByGroupAndName = registrations.entrySet().stream()
+		HashSet<CommandRegistration> regsWithoutAliases = new HashSet<>(registrations.values());
+		SortedMap<String, Map<String, CommandRegistration>> commandsByGroupAndName = regsWithoutAliases.stream()
+			.collect(Collectors.toMap(r -> r.getCommand(), r -> r)).entrySet().stream()
 			.collect(Collectors.groupingBy(
 				e -> StringUtils.hasText(e.getValue().getGroup()) ? e.getValue().getGroup() : "Default",
 				TreeMap::new,
 				Collectors.toMap(Entry::getKey, Entry::getValue)
 			));
+
 
 		// build model
 		List<GroupCommandInfoModel> gcims = commandsByGroupAndName.entrySet().stream()

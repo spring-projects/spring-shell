@@ -66,6 +66,14 @@ availability(availability) ::= <<
 <endif>
 >>
 
+// ALIASES
+aliases(aliases) ::= <<
+<if(aliases)>
+<("ALSO KNOWN AS"); format="style-highlight">
+       <(aliases); separator=", ">
+<endif>
+>>
+
 // main
 main(model) ::= <<
 <name(model.name, model.description)>
@@ -74,4 +82,5 @@ main(model) ::= <<
 
 <options(model.parameters)>
 <availability(model.availability)>
+<aliases(model.aliases)>
 >>

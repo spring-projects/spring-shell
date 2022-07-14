@@ -33,13 +33,15 @@ import org.springframework.util.StringUtils;
 class CommandInfoModel {
 
 	private String name;
+	private List<String> aliases;
 	private String description;
 	private List<CommandParameterInfoModel> parameters;
 	private CommandAvailabilityInfoModel availability;
 
-	CommandInfoModel(String name, String description, List<CommandParameterInfoModel> parameters,
+	CommandInfoModel(String name, List<String> aliases, String description, List<CommandParameterInfoModel> parameters,
 			CommandAvailabilityInfoModel availability) {
 		this.name = name;
+		this.aliases = aliases;
 		this.description = description;
 		this.parameters = parameters;
 		this.availability = availability;
@@ -68,6 +70,9 @@ class CommandInfoModel {
 			})
 			.collect(Collectors.toList());
 
+		List<String> aliases = registration.getAliases().stream().map(ca -> ca.getCommand())
+				.collect(Collectors.toList());
+
 		String description = registration.getDescription();
 		boolean available = true;
 		String availReason = "";
@@ -77,7 +82,7 @@ class CommandInfoModel {
 			availReason = a.getReason();
 		}
 		CommandAvailabilityInfoModel availModel = CommandAvailabilityInfoModel.of(available, availReason);
-		return new CommandInfoModel(name, description, parameters, availModel);
+		return new CommandInfoModel(name, aliases, description, parameters, availModel);
 	}
 
 	private static String commandOptionType(CommandOption o) {
@@ -91,6 +96,10 @@ class CommandInfoModel {
 
 	public String getName() {
 		return name;
+	}
+
+	public List<String> getAliases() {
+		return this.aliases;
 	}
 
 	public String getDescription() {
