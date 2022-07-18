@@ -617,7 +617,7 @@ public interface ComponentFlow {
 		private Stream<OrderedInputOperation> multiItemSelectorsStream() {
 			return multiInputs.stream().map(input -> {
 				List<SelectorItem<String>> selectorItems = input.getSelectItems().stream()
-						.map(si -> SelectorItem.of(si.name(), si.item(), si.enabled()))
+						.map(si -> SelectorItem.of(si.name(), si.item(), si.enabled(), si.selected()))
 						.collect(Collectors.toList());
 				MultiItemSelector<String, SelectorItem<String>> selector = new MultiItemSelector<>(terminal,
 						selectorItems, input.getName(), input.getComparator());

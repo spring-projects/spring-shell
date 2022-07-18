@@ -25,11 +25,13 @@ public class DefaultSelectItem implements SelectItem {
 	private String name;
 	private String item;
 	private boolean enabled;
+	private boolean selected;
 
-	public DefaultSelectItem(String name, String item, boolean enabled) {
+	public DefaultSelectItem(String name, String item, boolean enabled, boolean selected) {
 		this.name = name;
 		this.item = item;
 		this.enabled = enabled;
+		this.selected = selected;
 	}
 
 	@Override
@@ -45,5 +47,10 @@ public class DefaultSelectItem implements SelectItem {
 	@Override
 	public boolean enabled() {
 		return enabled;
+	}
+
+	@Override
+	public boolean selected() {
+		return selected;
 	}
 }

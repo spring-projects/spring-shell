@@ -51,13 +51,15 @@ public class MultiItemSelectorTests extends AbstractShellTests {
 	private static SimplePojo SIMPLE_POJO_5 = SimplePojo.of("data5");
 	private static SimplePojo SIMPLE_POJO_6 = SimplePojo.of("data6");
 	private static SimplePojo SIMPLE_POJO_7 = SimplePojo.of("data7");
+	private static SimplePojo SIMPLE_POJO_8 = SimplePojo.of("data8");
 	private static SelectorItem<SimplePojo> SELECTOR_ITEM_1 = SelectorItem.of("simplePojo1", SIMPLE_POJO_1);
 	private static SelectorItem<SimplePojo> SELECTOR_ITEM_2 = SelectorItem.of("simplePojo2", SIMPLE_POJO_2);
 	private static SelectorItem<SimplePojo> SELECTOR_ITEM_3 = SelectorItem.of("simplePojo3", SIMPLE_POJO_3);
 	private static SelectorItem<SimplePojo> SELECTOR_ITEM_4 = SelectorItem.of("simplePojo4", SIMPLE_POJO_4);
 	private static SelectorItem<SimplePojo> SELECTOR_ITEM_5 = SelectorItem.of("simplePojo5", SIMPLE_POJO_5);
 	private static SelectorItem<SimplePojo> SELECTOR_ITEM_6 = SelectorItem.of("simplePojo6", SIMPLE_POJO_6);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_7 = SelectorItem.of("simplePojo7", SIMPLE_POJO_7, false);
+	private static SelectorItem<SimplePojo> SELECTOR_ITEM_7 = SelectorItem.of("simplePojo7", SIMPLE_POJO_7, false, false);
+	private static SelectorItem<SimplePojo> SELECTOR_ITEM_8 = SelectorItem.of("simplePojo8", SIMPLE_POJO_8, false, true);
 
 	private ExecutorService service;
 	private CountDownLatch latch;
@@ -203,6 +205,22 @@ public class MultiItemSelectorTests extends AbstractShellTests {
 		assertThat(selected).hasSize(1);
 		Stream<String> datas = selected.stream().map(SelectorItem::getItem).map(SimplePojo::getData);
 		assertThat(datas).containsExactlyInAnyOrder("data4");
+	}
+	
+	@Test
+	public void testDefaultSelection() throws InterruptedException {
+		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_7, SELECTOR_ITEM_8));
+
+		TestBuffer testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+
+		awaitLatch();
+
+		List<SelectorItem<SimplePojo>> selected = result.get();
+		assertThat(selected).hasSize(1);
+		Stream<String> datas = selected.stream().map(SelectorItem::getItem).map(SimplePojo::getData);
+		assertThat(datas).containsExactlyInAnyOrder("data8");
+		assertThat(consoleOut()).contains("testSimple data8");
 	}
 
 	private void scheduleSelect() {
