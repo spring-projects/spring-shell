@@ -405,4 +405,42 @@ public class StandardMethodTargetRegistrarTests {
 		public void foo3(@ShellOption(defaultValue = ShellOption.NULL) String arg1) {
 		}
 	}
+
+	@Test
+	public void testOptionValuesWithBoolean() {
+		applicationContext = new AnnotationConfigApplicationContext(ValuesWithBoolean.class);
+		registrar.setApplicationContext(applicationContext);
+		registrar.register(catalog);
+
+		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getDefaultValue()).isEqualTo("false");
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).isRequired()).isFalse();
+
+		assertThat(catalog.getRegistrations().get("foo2")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo2").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getDefaultValue()).isEqualTo("true");
+		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).isRequired()).isFalse();
+
+		assertThat(catalog.getRegistrations().get("foo3")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo3").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).isRequired()).isFalse();
+		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getDefaultValue()).isEqualTo("false");
+	}
+
+	@ShellComponent
+	public static class ValuesWithBoolean {
+
+		@ShellMethod(value = "foo1")
+		public void foo1(@ShellOption(defaultValue = "false") boolean arg1) {
+		}
+
+		@ShellMethod(value = "foo2")
+		public void foo2(@ShellOption(defaultValue = "true") boolean arg1) {
+		}
+
+		@ShellMethod(value = "foo3")
+		public void foo3(@ShellOption boolean arg1) {
+		}
+	}
 }

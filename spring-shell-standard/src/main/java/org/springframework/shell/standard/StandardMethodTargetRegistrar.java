@@ -158,7 +158,13 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 								optionSpec.defaultValue(so.defaultValue());
 							}
 							if (ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)) {
-								optionSpec.required();
+								if (ClassUtils.isAssignable(boolean.class, parameterType)) {
+									optionSpec.required(false);
+									optionSpec.defaultValue("false");
+								}
+								else {
+									optionSpec.required();
+								}
 							}
 							if (!ClassUtils.isAssignable(NoValueProvider.class, so.valueProvider())) {
 								CompletionResolver completionResolver = ctx -> {
