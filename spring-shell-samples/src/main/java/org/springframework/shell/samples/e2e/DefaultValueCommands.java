@@ -53,4 +53,83 @@ public class DefaultValueCommands extends BaseE2ECommands {
 				.and()
 			.build();
 	}
+
+	@ShellMethod(key = LEGACY_ANNO + "default-value-boolean1", group = GROUP)
+	public String testDefaultValueBoolean1(
+		@ShellOption(defaultValue = "false") boolean arg1
+	) {
+		return "Hello " + arg1;
+	}
+
+	@Bean
+	public CommandRegistration testDefaultValueBoolean1Registration() {
+		return CommandRegistration.builder()
+			.command(REG, "default-value-boolean1")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.defaultValue("false")
+				.type(boolean.class)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					boolean arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
+			.build();
+	}
+
+	@ShellMethod(key = LEGACY_ANNO + "default-value-boolean2", group = GROUP)
+	public String testDefaultValueBoolean2(
+		@ShellOption(defaultValue = "true") boolean arg1
+	) {
+		return "Hello " + arg1;
+	}
+
+	@Bean
+	public CommandRegistration testDefaultValueBoolean2Registration() {
+		return CommandRegistration.builder()
+			.command(REG, "default-value-boolean2")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.defaultValue("true")
+				.type(boolean.class)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					boolean arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
+			.build();
+	}
+
+	@ShellMethod(key = LEGACY_ANNO + "default-value-boolean3", group = GROUP)
+	public String testDefaultValueBoolean3(
+		@ShellOption boolean arg1
+	) {
+		return "Hello " + arg1;
+	}
+
+	@Bean
+	public CommandRegistration testDefaultValueBoolean3Registration() {
+		return CommandRegistration.builder()
+			.command(REG, "default-value-boolean3")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.required(false)
+				.type(boolean.class)
+				.defaultValue("false")
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					boolean arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
+			.build();
+	}
 }
