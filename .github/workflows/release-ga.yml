@@ -18,7 +18,7 @@ jobs:
         maven-version: 3.8.4
     - uses: jfrog/setup-jfrog-cli@v1
       with:
-        version: 1.46.4
+        version: 1.50.0
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
@@ -147,3 +147,38 @@ jobs:
           --draft \
           --title "$PROJECT_VERSION" \
           --notes-file $RELEASE_NOTES_FILE
+
+  central:
+    runs-on: ubuntu-latest
+    needs: ghrelease
+    environment: central
+    steps:
+    - uses: actions/checkout@v2
+    - uses: jfrog/setup-jfrog-cli@v1
+      with:
+        version: 1.50.0
+      env:
+        JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+    - name: Configure JFrog Cli
+      run: |
+        echo JFROG_CLI_BUILD_NAME=spring-shell-main-release >> $GITHUB_ENV
+        echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
+    - name: Download Release Files
+      run: |
+        jfrog rt download \
+          --spec .github/release-files-spec.json \
+          --spec-vars "buildname=$JFROG_CLI_BUILD_NAME;buildnumber=$JFROG_CLI_BUILD_NUMBER"
+    - uses: jvalkeal/nexus-sync@v0
+      with:
+        url: ${{ secrets.OSSRH_URL }}
+        username: ${{ secrets.OSSRH_S01_TOKEN_USERNAME }}
+        password: ${{ secrets.OSSRH_S01_TOKEN_PASSWORD }}
+        staging-profile-name: ${{ secrets.OSSRH_STAGING_PROFILE_NAME }}
+        create: true
+        upload: true
+        close: true
+        release: true
+        generate-checksums: true
+        pgp-sign: true
+        pgp-sign-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        pgp-sign-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
