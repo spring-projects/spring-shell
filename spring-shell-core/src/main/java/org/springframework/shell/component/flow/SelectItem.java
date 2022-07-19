@@ -43,6 +43,11 @@ public interface SelectItem {
 	 */
 	boolean enabled();
 
+	/**
+	 * Return if the item is selected.
+	 * 
+	 * @return if item is selected
+	 */
 	boolean selected();
 
 	public static SelectItem of(String name, String item) {
