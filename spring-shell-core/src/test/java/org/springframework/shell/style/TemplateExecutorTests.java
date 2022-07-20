@@ -75,8 +75,7 @@ public class TemplateExecutorTests {
 		attributes.put("foo", "bar");
 		AttributedString result = executor.render(template, attributes);
 		AttributedString equalTo = new AttributedStringBuilder()
-				.append("bar",
-						AttributedStyle.DEFAULT.foreground(AttributedStyle.BRIGHT + AttributedStyle.WHITE).bold())
+				.append("bar", AttributedStyle.DEFAULT.bold())
 				.toAttributedString();
 		assertThat(result).isEqualTo(equalTo);
 	}

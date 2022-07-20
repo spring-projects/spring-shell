@@ -31,13 +31,12 @@ public class ThemeSettingsTests {
 	public void testGeneratedStyle() {
 		ThemeSettings themeSettings = ThemeSettings.defaults();
 		String resolveTag = themeSettings.styles().resolveTag(StyleSettings.TAG_TITLE);
-		assertThat(resolveTag).isEqualTo("bold,fg:bright-white");
+		assertThat(resolveTag).isEqualTo("bold");
 
 		StyleSource styleSource = new MemoryStyleSource();
 		StyleResolver styleResolver = new StyleResolver(styleSource, "default");
 		AttributedStyle style = styleResolver.resolve(resolveTag);
-		assertThat(style)
-				.isEqualTo(AttributedStyle.DEFAULT.foreground(AttributedStyle.BRIGHT + AttributedStyle.WHITE).bold());
+		assertThat(style).isEqualTo(AttributedStyle.DEFAULT.bold());
 	}
 
 	@ParameterizedTest
