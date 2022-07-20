@@ -32,6 +32,7 @@ import org.springframework.shell.component.support.Enableable;
 import org.springframework.shell.component.support.Itemable;
 import org.springframework.shell.component.support.Matchable;
 import org.springframework.shell.component.support.Nameable;
+import org.springframework.shell.component.support.Selectable;
 import org.springframework.shell.component.support.AbstractSelectorComponent.SelectorComponentContext;
 import org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
 
@@ -40,7 +41,7 @@ import org.springframework.shell.component.SingleItemSelector.SingleItemSelector
  *
  * @author Janne Valkealahti
  */
-public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable & Itemable<T>>
+public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable & Selectable & Itemable<T>>
 		extends AbstractSelectorComponent<T, SingleItemSelectorContext<T, I>, I> {
 
 	private SingleItemSelectorContext<T, I> currentContext;

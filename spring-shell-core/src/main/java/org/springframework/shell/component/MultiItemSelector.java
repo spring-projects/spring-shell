@@ -32,6 +32,7 @@ import org.springframework.shell.component.support.Enableable;
 import org.springframework.shell.component.support.Itemable;
 import org.springframework.shell.component.support.Matchable;
 import org.springframework.shell.component.support.Nameable;
+import org.springframework.shell.component.support.Selectable;
 import org.springframework.shell.component.support.AbstractSelectorComponent.SelectorComponentContext;
 import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
 
@@ -40,7 +41,7 @@ import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorCo
  *
  * @author Janne Valkealahti
  */
-public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & Itemable<T>>
+public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & Selectable & Itemable<T>>
 		extends AbstractSelectorComponent<T, MultiItemSelectorContext<T, I>, I> {
 
 	private MultiItemSelectorContext<T, I> currentContext;

@@ -45,7 +45,7 @@ import static org.jline.keymap.KeyMap.key;
  *
  * @author Janne Valkealahti
  */
-public abstract class AbstractSelectorComponent<T, C extends SelectorComponentContext<T, I, C>, I extends Nameable & Matchable & Enableable & Itemable<T>>
+public abstract class AbstractSelectorComponent<T, C extends SelectorComponentContext<T, I, C>, I extends Nameable & Matchable & Enableable & Selectable & Itemable<T>>
 		extends AbstractComponent<C> {
 
 	private final static Logger log = LoggerFactory.getLogger(AbstractSelectorComponent.class);
@@ -257,7 +257,7 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 			AtomicInteger index = new AtomicInteger(0);
 			itemStates = context.getItems().stream()
 					.sorted(comparator)
-					.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled()))
+					.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled(), item.isSelected()))
 					.collect(Collectors.toList());
 		}
 		for (int i = 0; i < itemStates.size(); i++) {
@@ -280,7 +280,7 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 			AtomicInteger index = new AtomicInteger(0);
 			itemStates = context.getItems().stream()
 					.sorted(comparator)
-					.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled()))
+					.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled(), item.isSelected()))
 					.collect(Collectors.toList());
 			context.setItemStates(itemStates);
 		}
@@ -547,11 +547,12 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		boolean enabled;
 		int index;
 
-		ItemState(I item, String name, int index, boolean enabled) {
+		ItemState(I item, String name, int index, boolean enabled, boolean selected) {
 			this.item = item;
 			this.name = name;
 			this.index = index;
 			this.enabled = enabled;
+			this.selected = selected;
 		}
 
 		public boolean matches(String match) {
@@ -574,8 +575,8 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 			return enabled;
 		}
 
-		static <I extends Matchable> ItemState<I> of(I item, String name, int index, boolean enabled) {
-			return new ItemState<I>(item, name, index, enabled);
+		static <I extends Matchable> ItemState<I> of(I item, String name, int index, boolean enabled, boolean selected) {
+			return new ItemState<I>(item, name, index, enabled, selected);
 		}
 	}
 

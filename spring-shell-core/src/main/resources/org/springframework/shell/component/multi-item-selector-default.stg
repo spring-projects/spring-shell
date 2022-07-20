@@ -18,7 +18,11 @@ select_item(item) ::= <%
     <({<figures.checkboxOff> }); format=selected_style(item.selected)> <item.name>
   <endif>
 <else>
-  <({<figures.checkboxOff> }); format="style-item-disabled"> <item.name; format="style-item-disabled">
+  <if(item.selected)>
+     <({<figures.checkboxOn> }); format="style-item-disabled"> <item.name; format="style-item-disabled">
+  <else>
+    <({<figures.checkboxOff> }); format="style-item-disabled"> <item.name; format="style-item-disabled">
+  <endif>  
 <endif>
 %>
 

@@ -170,7 +170,7 @@ public class UiComponentSnippets {
 			public String multiSelector() {
 				List<SelectorItem<String>> items = new ArrayList<>();
 				items.add(SelectorItem.of("key1", "value1"));
-				items.add(SelectorItem.of("key2", "value2", false));
+				items.add(SelectorItem.of("key2", "value2", false, true));
 				items.add(SelectorItem.of("key3", "value3"));
 				MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
 						items, "testSimple", null);
