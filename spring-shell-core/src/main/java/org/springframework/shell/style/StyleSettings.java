@@ -92,7 +92,7 @@ public abstract class StyleSettings {
 	public final static String TAG_HIGHLIGHT = "style-highlight";
 
 	public String title() {
-		return "bold,fg:bright-white";
+		return "bold";
 	}
 
 	public String value() {
