@@ -79,6 +79,107 @@ script: Read and execute commands from a file.
 ----
 ====
 
+Output from `help` and `help <commmand>` are both templated with a default implementation
+which can be changed.
+
+Option `spring.shell.command.help.commands-template` defaults to
+`classpath:template/help-commands-default.stg` and is passed `GroupsInfoModel`
+as a model.
+
+Option `spring.shell.command.help.command-template` defaults to
+`classpath:template/help-command-default.stg` and is passed `CommandInfoModel`
+as a model.
+
+[[groupsinfomodel-variables]]
+.GroupsInfoModel Variables
+|===
+|Key |Description
+
+|`showGroups`
+|`true` if showing groups is enabled. Otherwise, false.
+
+|`groups`
+|The commands variables (see <<groupcommandinfomodel-variables>>).
+
+|`commands`
+|The commands variables (see <<commandinfomodel-variables>>).
+
+|`hasUnavailableCommands`
+|`true` if there is unavailable commands. Otherwise, false.
+|===
+
+[[groupcommandinfomodel-variables]]
+.GroupCommandInfoModel Variables
+|===
+|Key |Description
+
+|`group`
+|The name of a group, if set. Otherwise, empty.
+
+|`commands`
+|The commands, if set. Otherwise, empty. Type is a multi value, see <<commandinfomodel-variables>>.
+|===
+
+[[commandinfomodel-variables]]
+.CommandInfoModel Variables
+|===
+|Key |Description
+
+|`name`
+|The name of a command, if set. Otherwise, null. Type is string and contains full command.
+
+|`names`
+|The names of a command, if set. Otherwise, null. Type is multi value essentially `name` splitted.
+
+|`aliases`
+|The possible aliases, if set. Type is multi value with strings.
+
+|`description`
+|The description of a command, if set. Otherwise, null.
+
+|`parameters`
+|The parameters variables, if set. Otherwise empty. Type is a multi value, see <<commandparameterinfomodel-variables>>.
+
+|`availability`
+|The availability variables (see <<commandavailabilityinfomodel-variables>>).
+|===
+
+[[commandparameterinfomodel-variables]]
+.CommandParameterInfoModel Variables
+|===
+|Key |Description
+
+|`type`
+|The type of a parameter if set. Otherwise, null.
+
+|`arguments`
+|The arguments, if set. Otherwise, null. Type is multi value with strings.
+
+|`required`
+|`true` if required. Otherwise, false.
+
+|`description`
+|The description of a parameter, if set. Otherwise, null.
+
+|`defaultValue`
+|The default value of a parameter, if set. Otherwise, null.
+
+|`hasDefaultValue`
+|`true` if defaultValue exists. Otherwise, false.
+|===
+
+[[commandavailabilityinfomodel-variables]]
+.CommandAvailabilityInfoModel Variables
+|===
+|Key |Description
+
+|`available`
+|`true` if available. Otherwise, false.
+
+|`reason`
+|The reason if not available if set. Otherwise, null.
+|===
+
 ==== Clear
 The `clear` command does what you would expect and clears the screen, resetting the prompt
 in the top left corner.

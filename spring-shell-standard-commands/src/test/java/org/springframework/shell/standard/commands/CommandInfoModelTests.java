@@ -36,6 +36,28 @@ public class CommandInfoModelTests {
 	}
 
 	@Test
+	void hasGivenNames() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("main1")
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
+		assertThat(cim.getNames()).containsExactly("main1");
+
+		r1 = CommandRegistration.builder()
+			.command("main1 sub1")
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+
+		cim = CommandInfoModel.of("main1 sub1", r1);
+		assertThat(cim.getNames()).containsExactly("main1", "sub1");
+	}
+
+	@Test
 	void hasGivenDescription() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("main1")

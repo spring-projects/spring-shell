@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.standard.commands;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -96,6 +97,10 @@ class CommandInfoModel {
 
 	public String getName() {
 		return name;
+	}
+
+	public List<String> getNames() {
+		return Arrays.asList(name.split(" "));
 	}
 
 	public List<String> getAliases() {
