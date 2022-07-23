@@ -5,6 +5,30 @@
 	<artifactId>spring-shell-dependencies</artifactId>
 	<packaging>pom</packaging>
 	<name>Spring Shell Bill of Materials</name>
+	<description>Spring Shell (Bill of Materials)</description>
+	<url>https://github.com/spring-projects/spring-shell</url>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Pivotal</name>
+			<email>info@pivotal.io</email>
+			<organization>Pivotal Software, Inc.</organization>
+			<organizationUrl>https://www.spring.io</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<url>https://github.com/spring-projects/spring-shell</url>
+		<connection>scm:git:git://github.com/spring-projects/spring-shell.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/spring-projects/spring-shell.git</developerConnection>
+	</scm>
 
 	<dependencyManagement>
 		<dependencies>
