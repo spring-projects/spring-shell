@@ -1,7 +1,6 @@
-= Spring Shell 2
+= Spring Shell
 
-Spring Shell 2.1.x is a work to solely depend on Spring Boot 2.x and not trying to keep
-any backward compatibility with older Spring Shell 1.x nor Spring Boot 1.x.
+Active development branch is `2.1.x` and `main` branch is development branch targeting `Spring Boot 3.x` and `Spring Framework 6.x`.
 
 == Building
 ```
