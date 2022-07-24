@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: 17
     - uses: jvalkeal/setup-maven@v1
       with:
         maven-version: 3.8.4

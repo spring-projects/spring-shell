@@ -13,15 +13,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - nickname: linux jdk8
-            java: 8
-            disable-samples: true
-          - nickname: linux jdk11
-            java: 11
-            disable-samples: false
           - nickname: linux jdk17
             java: 17
-            disable-samples: false
+            disable-samples: true
     name: CI Build ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v2

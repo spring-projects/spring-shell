@@ -75,6 +75,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 	@Override
 	public void register(CommandCatalog registry) {
 		Map<String, Object> commandBeans = applicationContext.getBeansWithAnnotation(ShellComponent.class);
+		log.debug("Found commandBeans to register {}", commandBeans);
 		for (Object bean : commandBeans.values()) {
 			Class<?> clazz = bean.getClass();
 			ReflectionUtils.doWithMethods(clazz, method -> {

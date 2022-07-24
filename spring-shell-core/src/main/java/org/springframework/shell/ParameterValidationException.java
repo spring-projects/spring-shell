@@ -15,8 +15,9 @@
  */
 package org.springframework.shell;
 
-import javax.validation.ConstraintViolation;
 import java.util.Set;
+
+import jakarta.validation.ConstraintViolation;
 
 /**
  * Thrown when one or more parameters fail bean validation constraints.

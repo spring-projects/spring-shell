@@ -22,20 +22,15 @@ jobs:
     name: Build ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          distribution: adopt
-          java-version: 11
-          cache: maven
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ matrix.graal }}
-          java-version: 11
+          java-version: 17
           components: native-image
-          set-java-home: false
+          set-java-home: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          ./mvnw clean package -Pnative
+          ./mvnw clean package -Pnativex
       - uses: actions/upload-artifact@v2
         with:
           name: spring-shell-samples-${{ matrix.nickname }}

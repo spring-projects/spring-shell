@@ -19,6 +19,7 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.jline.PromptProvider;
@@ -35,7 +36,11 @@ import org.springframework.shell.jline.PromptProvider;
 public class SpringShellSample {
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(SpringShellSample.class, args);
+		SpringApplication application = new SpringApplication(SpringShellSample.class);
+		application.setBannerMode(Mode.OFF);
+		application.run(args);
+		// TODO: follow up with boot why spring.main.banner-mode=off doesn't work
+		// SpringApplication.run(SpringShellSample.class, args);
 	}
 
 	@Bean

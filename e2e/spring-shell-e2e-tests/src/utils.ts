@@ -7,8 +7,8 @@ export const cliPathRelative = isWindows
   ? '..\\..\\spring-shell-samples\\target\\spring-shell-samples.exe'
   : '../../spring-shell-samples/target/spring-shell-samples';
 export const jarPathRelative = isWindows
-  ? '..\\..\\spring-shell-samples\\target\\spring-shell-samples-2.1.0-SNAPSHOT-exec.jar'
-  : '../../spring-shell-samples/target/spring-shell-samples-2.1.0-SNAPSHOT-exec.jar';
+  ? '..\\..\\spring-shell-samples\\target\\spring-shell-samples-3.0.0-SNAPSHOT-exec.jar'
+  : '../../spring-shell-samples/target/spring-shell-samples-3.0.0-SNAPSHOT-exec.jar';
 export const cliPath = path.resolve(cliPathRelative);
 export const jarPath = path.resolve(jarPathRelative);
 export const nativeDesc = 'native';

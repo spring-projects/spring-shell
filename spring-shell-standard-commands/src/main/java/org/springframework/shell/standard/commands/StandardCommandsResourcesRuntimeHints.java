@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.docs;
+package org.springframework.shell.standard.commands;
 
-import jakarta.validation.constraints.Null;
+import org.springframework.aot.hint.RuntimeHints;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
 
-import org.springframework.shell.command.CommandContext;
+/**
+ * {@link RuntimeHintsRegistrar} for Shell Standard Commands resources.
+ *
+ * @author Janne Valkealahti
+ */
+class StandardCommandsResourcesRuntimeHints implements RuntimeHintsRegistrar {
 
-@SuppressWarnings("unused")
-public class CommandContextSnippets {
-
-	CommandContext ctx = CommandContext.of(null, null, null, null);
-
-	void dump1() {
-		// tag::snippet1[]
-		String arg = ctx.getOptionValue("arg");
-		// end::snippet1[]
+	@Override
+	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+		hints.resources()
+			.registerPattern("template/*.st")
+			.registerPattern("template/*.stg");
 	}
-
-	void dump2() {
-		// tag::snippet2[]
-		ctx.getTerminal().writer().println("hi");
-		// end::snippet2[]
-	}
-
 }

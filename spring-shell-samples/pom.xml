@@ -14,10 +14,6 @@
 
 	<description>Examples of using Spring Shell 2</description>
 
-	<properties>
-		<spring-native.version>0.12.0</spring-native.version>
-	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -44,10 +40,9 @@
 			<artifactId>spring-shell-starter-jna</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.experimental</groupId>
-			<artifactId>spring-aot</artifactId>
-			<version>${spring-native.version}</version>
-			<optional>true</optional>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -64,14 +59,9 @@
 
 	<profiles>
         <profile>
-            <id>native</id>
+            <id>nativex</id>
 			<!-- needs GRAALVM_HOME to point to graal tools -->
             <dependencies>
-				<dependency>
-					<groupId>org.springframework.experimental</groupId>
-					<artifactId>spring-native</artifactId>
-					<version>${spring-native.version}</version>
-				</dependency>
                 <!-- Required with Maven Surefire 2.x -->
                 <dependency>
                     <groupId>org.junit.platform</groupId>
@@ -81,52 +71,37 @@
             </dependencies>
             <build>
                 <plugins>
-			        <plugin>
-			            <groupId>org.springframework.experimental</groupId>
-			            <artifactId>spring-aot-maven-plugin</artifactId>
-			            <version>${spring-native.version}</version>
-			            <executions>
-			                <execution>
-			                    <id>generate</id>
-			                    <goals>
-			                        <goal>generate</goal>
-			                    </goals>
-			                </execution>
-			            </executions>
-			        </plugin>
-                    <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                        <version>0.9.9</version>
-                        <extensions>true</extensions>
-                        <executions>
-                            <execution>
-                                <id>build-native</id>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                                <phase>package</phase>
-                            </execution>
-                            <execution>
-                                <id>test-native</id>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                                <phase>test</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <!-- ... -->
-                        </configuration>
-                    </plugin>
-                    <!-- Avoid a clash between Spring Boot repackaging and native-maven-plugin -->
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <classifier>exec</classifier>
-                        </configuration>
-                    </plugin>
+
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>aot-generate</id>
+								<goals>
+									<goal>aot-generate</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>repackage</id>
+								<configuration>
+									<classifier>exec</classifier>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<executions>
+							<execution>
+							<id>build-native</id>
+							<goals>
+								<goal>build</goal>
+							</goals>
+							</execution>
+						</executions>
+					</plugin>
                 </plugins>
             </build>
 			<pluginRepositories>

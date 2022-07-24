@@ -1,9 +1,0 @@
-{
-  "resources": {
-    "includes": [
-      {
-        "pattern": "org/springframework/shell/component/.*.stg"
-      }
-    ]
-  }
-}

@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
-import javax.validation.constraints.Max;
+import jakarta.validation.constraints.Max;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

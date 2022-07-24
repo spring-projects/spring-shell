@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 
 import org.jline.terminal.Terminal;
 
