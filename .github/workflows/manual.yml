@@ -12,13 +12,13 @@ jobs:
         include:
           - nickname: win
             os: windows-latest
-            graal: 22.1.0
+            graal: 22.2.0
           - nickname: macos
             os: macos-latest
-            graal: 22.1.0
+            graal: 22.2.0
           - nickname: linux
             os: ubuntu-latest
-            graal: 22.1.0
+            graal: 22.2.0
     name: Build ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v2
