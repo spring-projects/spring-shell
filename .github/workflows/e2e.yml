@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: '16'
       - run: |
-          ./mvnw clean package -Pnative
+          ./mvnw clean package -Pnativex
       - uses: actions/upload-artifact@v2
         with:
           name: spring-shell-samples-${{ matrix.nickname }}
