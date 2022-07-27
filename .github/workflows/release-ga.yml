@@ -16,9 +16,9 @@ jobs:
     - uses: jvalkeal/setup-maven@v1
       with:
         maven-version: 3.8.4
-    - uses: jfrog/setup-jfrog-cli@v1
+    - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 1.50.0
+        version: 2.3.0
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
@@ -74,9 +74,9 @@ jobs:
     environment: promote
     steps:
     - uses: actions/checkout@v2
-    - uses: jfrog/setup-jfrog-cli@v1
+    - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 1.50.0
+        version: 2.3.0
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
@@ -154,9 +154,9 @@ jobs:
     environment: central
     steps:
     - uses: actions/checkout@v2
-    - uses: jfrog/setup-jfrog-cli@v1
+    - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 1.50.0
+        version: 2.3.0
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
