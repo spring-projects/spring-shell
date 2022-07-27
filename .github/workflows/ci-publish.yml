@@ -21,7 +21,7 @@ jobs:
         java-version: 17
     - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 2.3.0
+        version: 2.21.5
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.jfArtifactorySpring }}
     - name: Configure JFrog Cli

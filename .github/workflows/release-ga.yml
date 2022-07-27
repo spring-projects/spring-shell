@@ -18,7 +18,7 @@ jobs:
         maven-version: 3.8.4
     - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 2.3.0
+        version: 2.21.5
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
@@ -76,7 +76,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 2.3.0
+        version: 2.21.5
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
@@ -156,7 +156,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: jfrog/setup-jfrog-cli@v2
       with:
-        version: 2.3.0
+        version: 2.21.5
       env:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
