@@ -26,6 +26,9 @@
 		<jline.version>3.21.0</jline.version>
 		<antlr-st4.version>4.3.1</antlr-st4.version>
 		<jimfs.version>1.2</jimfs.version>
+		<!-- https://github.com/spring-projects/spring-shell/issues/486 -->
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
 	</properties>
 
 	<modules>
