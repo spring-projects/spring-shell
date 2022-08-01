@@ -298,7 +298,6 @@ public class InvocableShellMethod {
 		try {
 			if (validator != null) {
 				Method bridgedMethod = getBridgedMethod();
-				Validator validator = Utils.defaultValidator();
 				Set<ConstraintViolation<Object>> constraintViolations = validator.forExecutables()
 						.validateParameters(getBean(), bridgedMethod, args);
 				if (constraintViolations.size() > 0) {
