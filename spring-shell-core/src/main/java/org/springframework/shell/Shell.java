@@ -288,8 +288,8 @@ public class Shell {
 
 			// Try to complete arguments
 			List<CommandOption> matchedArgOptions = new ArrayList<>();
-			if (argsContext.getWords().size() > 0) {
-				matchedArgOptions.addAll(matchOptions(registration.getOptions(), argsContext.getWords().get(0)));
+			if (argsContext.getWords().size() > 0 && argsContext.getWordIndex() > 0 && argsContext.getWords().size() > argsContext.getWordIndex()) {
+				matchedArgOptions.addAll(matchOptions(registration.getOptions(), argsContext.getWords().get(argsContext.getWordIndex() - 1)));
 			}
 
 			List<CompletionProposal> argProposals =	matchedArgOptions.stream()
