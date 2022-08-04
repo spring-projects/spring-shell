@@ -38,11 +38,15 @@ public class RegistrationOptionsCompletionResolver implements CompletionResolver
 		List<CompletionProposal> candidates = new ArrayList<>();
 		context.getCommandRegistration().getOptions().stream()
 			.flatMap(o -> Stream.of(o.getLongNames()))
-			.map(ln -> new CompletionProposal("--" + ln))
+			.map(ln -> "--" + ln)
+			.filter(ln -> !context.getWords().contains(ln))
+			.map(CompletionProposal::new)
 			.forEach(candidates::add);
 		context.getCommandRegistration().getOptions().stream()
 			.flatMap(o -> Stream.of(o.getShortNames()))
-			.map(ln -> new CompletionProposal("-" + ln))
+			.map(ln -> "-" + ln)
+			.filter(ln -> !context.getWords().contains(ln))
+			.map(CompletionProposal::new)
 			.forEach(candidates::add);
 		return candidates;
 	}

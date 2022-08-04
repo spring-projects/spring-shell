@@ -311,6 +311,39 @@ public class ShellTests {
 		assertThat(proposals).containsExactlyInAnyOrder("--arg1");
 	}
 
+	@Test
+	public void shouldCompleteWithCorrectArgument() throws Exception {
+		CommandRegistration registration1 = CommandRegistration.builder()
+			.command("hello world")
+			.withTarget()
+				.method(this, "helloWorld")
+				.and()
+			.withOption()
+				.longNames("arg1")
+				.completion(ctx -> Arrays.asList("arg1Comp1").stream().map(CompletionProposal::new).collect(Collectors.toList()))
+				.and()
+			.withOption()
+				.longNames("arg2")
+				.completion(ctx -> Arrays.asList("arg2Comp1").stream().map(CompletionProposal::new).collect(Collectors.toList()))
+				.and()
+			.build();
+		Map<String, CommandRegistration> registrations = new HashMap<>();
+		registrations.put("hello world", registration1);
+		when(commandRegistry.getRegistrations()).thenReturn(registrations);
+
+		List<String> proposals1 = shell.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg1", ""), 3, "".length(), null, null))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals1).containsExactlyInAnyOrder("--arg2", "arg1Comp1");
+
+		List<String> proposals2 = shell.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg1", "xxx", "--arg2", ""), 5, "".length(), null, null))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals2).containsExactlyInAnyOrder("arg2Comp1");
+
+		List<String> proposals3 = shell.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg2", "xxx", "--arg1", ""), 5, "".length(), null, null))
+				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		assertThat(proposals3).containsExactlyInAnyOrder("arg1Comp1");
+	}
+
 	private static class Exit extends RuntimeException {
 	}
 
