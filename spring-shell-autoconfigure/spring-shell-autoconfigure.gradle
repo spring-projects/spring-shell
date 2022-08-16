@@ -1,0 +1,14 @@
+plugins {
+	id 'org.springframework.shell.module'
+}
+
+description = 'Spring Shell Autoconfigure'
+
+dependencies {
+	management platform(project(":spring-shell-management"))
+	implementation 'org.springframework.boot:spring-boot-autoconfigure'
+	implementation project(':spring-shell-core')
+	implementation project(':spring-shell-standard')
+	implementation project(':spring-shell-standard-commands')
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

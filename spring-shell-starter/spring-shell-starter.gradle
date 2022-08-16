@@ -1,0 +1,15 @@
+plugins {
+	id 'org.springframework.shell.starter'
+}
+
+description = 'Spring Shell Starter'
+
+dependencies {
+	management platform(project(":spring-shell-management"))
+	api(project(":spring-shell-autoconfigure"))
+	api(project(":spring-shell-core"))
+	api(project(":spring-shell-standard"))
+	api(project(":spring-shell-standard-commands"))
+	api(project(":spring-shell-table"))
+	api 'org.springframework.boot:spring-boot-starter'
+}

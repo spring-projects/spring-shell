@@ -3,7 +3,11 @@
 .settings/
 
 target/
+build/
+bin/
+.jfrog/
 
+.gradle
 .idea/
 *.iml
 *.ipr

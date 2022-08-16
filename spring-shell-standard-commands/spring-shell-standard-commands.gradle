@@ -1,0 +1,12 @@
+plugins {
+	id 'org.springframework.shell.module'
+}
+
+description = 'Spring Shell Standard Commands'
+
+dependencies {
+	management platform(project(":spring-shell-management"))
+	implementation project(':spring-shell-core')
+	implementation project(':spring-shell-standard')
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

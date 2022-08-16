@@ -1,0 +1,36 @@
+pluginManagement {
+	repositories {
+		maven { url 'https://repo.spring.io/plugins-release' }
+		mavenCentral()
+		gradlePluginPortal()
+		maven { url 'https://repo.spring.io/release' }
+		if (version.contains('-')) {
+			maven { url 'https://repo.spring.io/milestone' }
+		}
+		if (version.endsWith('-SNAPSHOT')) {
+			maven { url 'https://repo.spring.io/snapshot' }
+		}
+	}
+	plugins {
+		id 'org.springframework.boot' version "$springBootVersion"
+	}
+}
+
+rootProject.name = 'spring-shell'
+
+include 'spring-shell-autoconfigure'
+include 'spring-shell-core'
+include 'spring-shell-core-test-support'
+include 'spring-shell-management'
+include 'spring-shell-dependencies'
+include 'spring-shell-docs'
+include 'spring-shell-samples'
+include 'spring-shell-standard'
+include 'spring-shell-standard-commands'
+include 'spring-shell-starter'
+include 'spring-shell-starter-jna'
+include 'spring-shell-table'
+
+rootProject.children.each {project ->
+	project.buildFileName = "${project.name}.gradle"
+}
