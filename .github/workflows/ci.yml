@@ -48,6 +48,7 @@ jobs:
         run: |
           jf rt gradlec \
             --use-wrapper \
+            --uses-plugin \
             --deploy-ivy-desc=false \
             --server-id-resolve repo.spring.io \
             --server-id-deploy repo.spring.io \
