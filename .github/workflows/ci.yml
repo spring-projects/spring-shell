@@ -23,15 +23,40 @@ jobs:
         with:
           distribution: adopt
           java-version: ${{ matrix.java }}
-          cache: maven
+          cache: gradle
       - name: Build
         env:
           DISABLE_SAMPLES: ${{ matrix.disable-samples }}
-        run: ./mvnw -B package
+        run: ./gradlew build
   publish:
     if: github.repository_owner == 'spring-projects'
     needs: [build]
-    name: Call Publish Snapshot
-    uses: spring-projects/spring-shell/.github/workflows/ci-publish.yml@main
-    secrets:
-      jfArtifactorySpring: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 17
+          cache: gradle
+      - uses: jfrog/setup-jfrog-cli@v2
+        with:
+          version: 2.21.5
+        env:
+          JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+      - name: Configure JFrog Cli
+        run: |
+          jf rt gradlec \
+            --use-wrapper \
+            --deploy-ivy-desc=false \
+            --server-id-resolve repo.spring.io \
+            --server-id-deploy repo.spring.io \
+            --repo-resolve snapshot \
+            --repo-deploy snapshot
+          echo JFROG_CLI_BUILD_NAME=spring-shell-main >> $GITHUB_ENV
+          echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
+      - name: Build and Publish
+        env:
+          DISABLE_SAMPLES: true
+        run: |
+          jf rt gradle build distZip artifactoryPublish
+          jf rt build-publish
