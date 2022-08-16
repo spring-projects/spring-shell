@@ -29,6 +29,7 @@ jobs:
           DISABLE_SAMPLES: ${{ matrix.disable-samples }}
         run: ./gradlew build
   publish:
+    runs-on: ubuntu-latest
     if: github.repository_owner == 'spring-projects'
     needs: [build]
     steps:
