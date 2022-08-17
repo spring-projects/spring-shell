@@ -57,7 +57,7 @@ Details of the error have been omitted. You can use the stacktrace command to pr
 ----
 ====
 
-Information about currently unavailable commands is also used in the integrated help. See <<help-command>>.
+Information about currently unavailable commands is also used in the integrated help. See <<built-in-commands-help>>.
 
 [TIP]
 ====

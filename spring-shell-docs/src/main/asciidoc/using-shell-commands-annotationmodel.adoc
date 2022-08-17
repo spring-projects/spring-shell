@@ -24,7 +24,7 @@ include::{snippets}/AnnotationRegistrationSnippets.java[tag=snippet1]
 
 The only required attribute of the `@ShellMethod` annotation is its `value` attribute, which should have
 a short, one-sentence, description of what the command does. This lets your users
-get consistent help about your commands without having to leave the shell (see <<help-command>>).
+get consistent help about your commands without having to leave the shell (see <<built-in-commands-help>>).
 
 NOTE: The description of your command should be short -- no more than one or two sentences. For better
 consistency, it should start with a capital letter and end with a period.
