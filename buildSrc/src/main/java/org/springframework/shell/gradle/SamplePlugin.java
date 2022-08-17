@@ -30,5 +30,6 @@ class SamplePlugin implements Plugin<Project> {
 		PluginManager pluginManager = project.getPluginManager();
 		pluginManager.apply(JavaPlugin.class);
 		pluginManager.apply(ManagementConfigurationPlugin.class);
+		new JavaConventions().apply(project);
 	}
 }
