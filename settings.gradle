@@ -1,6 +1,5 @@
 pluginManagement {
 	repositories {
-		maven { url 'https://repo.spring.io/plugins-release' }
 		mavenCentral()
 		gradlePluginPortal()
 		maven { url 'https://repo.spring.io/release' }
@@ -14,10 +13,31 @@ pluginManagement {
 	plugins {
 		id 'org.springframework.boot' version "$springBootVersion"
 		id 'org.graalvm.buildtools.native' version "$nativeBuildToolsVersion"
+		id 'com.gradle.enterprise' version "$gradleEnterpriseVersion"
+		id 'io.spring.ge.conventions' version "$springGeConventionsVersion"
 	}
 }
 
+plugins {
+	id "com.gradle.enterprise"
+	id "io.spring.ge.conventions"
+}
+
 rootProject.name = 'spring-shell'
+
+settings.gradle.projectsLoaded {
+	gradleEnterprise {
+		buildScan {
+			def buildDir = settings.gradle.rootProject.getBuildDir()
+			buildDir.mkdirs()
+			new File(buildDir, "build-scan-uri.txt").text = "build scan not generated"
+			buildScanPublished { scan ->
+				buildDir.mkdirs()
+				new File(buildDir, "build-scan-uri.txt").text = "<${scan.buildScanUri}|build scan>\n"
+			}
+		}
+	}
+}
 
 include 'spring-shell-autoconfigure'
 include 'spring-shell-core'
