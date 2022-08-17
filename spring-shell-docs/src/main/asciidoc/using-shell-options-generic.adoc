@@ -77,7 +77,7 @@ For such a setup, the possible parameter keys are `-a`, `-b` and `--third`.
 =====
 You can specify several keys for a single parameter. If you do so, these keys are mutually exclusive (only one of them can be used) ways
 to specify the same parameter. The following example shows the signature of the
-built-in <<help-command,`help`>> command:
+built-in <<built-in-commands-help,`help`>> command:
 
 ====
 [source, java]
