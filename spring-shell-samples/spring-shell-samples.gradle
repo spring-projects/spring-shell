@@ -12,6 +12,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+springBoot {
+	buildInfo()
+}
+
 // TODO: workaround until boot's aot plugin automatically extends
 //       from all super configurations like graalvm's plugin does.
 configurations {
