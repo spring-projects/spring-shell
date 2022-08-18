@@ -1,6 +1,9 @@
 - name: area/dependencies
   color: F9D0C4
   description: Belongs project dependencies
+- name: area/build
+  color: F9D0C4
+  description: Belongs project build
 - name: area/documentation
   color: F9D0C4
   description: Belongs to documentation
