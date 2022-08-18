@@ -80,10 +80,11 @@ public @interface ShellOption {
 
 	/**
 	 * Used to indicate to the framework that the given parameter should NOT be resolved by
-	 * {@link StandardParameterResolver}. This is useful if several implementations of
-	 * {@link org.springframework.shell.ParameterResolver} are present, given that the standard one can work with no
+	 * {@code StandardParameterResolver}. This is useful if several implementations of
+	 * {@code org.springframework.shell.ParameterResolver} are present, given that the standard one can work with no
 	 * annotation at all.
-	 * @return true to indicate that the {@link StandardParameterResolver} should not be used for this parameter
+	 * Note that this is not used anymore!
+	 * @return true to indicate that the {@code StandardParameterResolver} should not be used for this parameter
 	 */
 	boolean optOut() default false;
 
