@@ -1,19 +1,17 @@
 = Spring Shell
 
-Active development branch is `2.1.x` and `main` branch is development branch targeting `Spring Boot 3.x` and `Spring Framework 6.x`.
+Active development branch is `main` targeting work for `3.0.x` and `2.1.x` is for maintaining current latest release.
 
 == Building
-```
-./mvnw package
-```
 
-== Running
-The project comes with a sample application, showcasing the various ways you can write commands.
+Building and running tests:
 
 ```
-./mvnw install
-./mvnw -pl spring-shell-samples spring-boot:run
+./gradlew build
 ```
 
-From there, try typing `help` or `help <commmand>` at the shell prompt.
+Publishing to local maven cache:
 
+```
+./gradlew publishToMavenLocal
+```
