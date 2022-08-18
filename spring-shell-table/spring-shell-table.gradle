@@ -8,5 +8,6 @@ dependencies {
 	management platform(project(":spring-shell-management"))
 	api('org.springframework:spring-core')
 	api('org.springframework:spring-context')
+	compileOnly 'com.google.code.findbugs:jsr305'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

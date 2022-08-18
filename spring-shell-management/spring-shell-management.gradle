@@ -15,5 +15,6 @@ dependencies {
 		api "org.jline:jline-terminal-jna:$jlineVersion"
 		api "org.antlr:ST4:$st4Version"
 		api "com.google.jimfs:jimfs:$jimfsVersion"
+		api "com.google.code.findbugs:jsr305:$findbugsVersion"
 	}
 }
