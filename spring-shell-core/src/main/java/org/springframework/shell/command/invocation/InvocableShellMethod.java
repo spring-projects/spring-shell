@@ -435,7 +435,8 @@ public class InvocableShellMethod {
 
 	/**
 	 * If the provided instance contains a bean name rather than an object instance,
-	 * the bean name is resolved before a {@link HandlerMethod} is created and returned.
+	 * the bean name is resolved before a {@link InvocableShellMethod} is created and
+	 * returned.
 	 */
 	public InvocableShellMethod createWithResolvedBean() {
 		Object handler = this.bean;

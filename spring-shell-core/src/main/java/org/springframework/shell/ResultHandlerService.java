@@ -33,7 +33,7 @@ public interface ResultHandlerService {
 	void handle(@Nullable Object result);
 
 	/**
-	 * Handle result to the specified {@ resultType}.
+	 * Handle result to the specified {@link TypeDescriptor}.
 	 *
 	 * @param result the result
 	 * @param resultType the result type

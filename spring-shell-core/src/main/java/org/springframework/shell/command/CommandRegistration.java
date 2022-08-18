@@ -107,7 +107,7 @@ public interface CommandRegistration {
 	CommandExitCode getExitCode();
 
 	/**
-	 * Gets a new instance of a {@link Buidler}.
+	 * Gets a new instance of a {@link Builder}.
 	 *
 	 * @return a new builder instance
 	 */
@@ -466,7 +466,7 @@ public interface CommandRegistration {
 		/**
 		 * Define a description text for a command.
 		 *
-		 * @param help the description text
+		 * @param description the description text
 		 * @return builder for chaining
 		 */
 		Builder description(String description);

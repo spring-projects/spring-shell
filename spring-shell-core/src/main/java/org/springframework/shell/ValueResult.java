@@ -19,13 +19,11 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.naming.spi.ResolveResult;
-
 import org.springframework.core.MethodParameter;
 
 /**
- * A {@link ResolveResult} for a successful {@link ParameterResolver#resolve} operation.
- * 
+ * A result for a successful resolve operation.
+ *
  * @author Camilo Gonzalez
  */
 public class ValueResult {
@@ -41,10 +39,10 @@ public class ValueResult {
 	public ValueResult(MethodParameter methodParameter, Object resolvedValue) {
 		this(methodParameter, resolvedValue, new BitSet(), new BitSet());
 	}
-	
+
 	public ValueResult(MethodParameter methodParameter, Object resolvedValue, BitSet wordsUsed,
 			BitSet wordsUsedForValue) {
-		
+
 		this.methodParameter = methodParameter;
 		this.resolvedValue = resolvedValue;
 		this.wordsUsed = wordsUsed == null ? new BitSet() : wordsUsed;
@@ -52,8 +50,7 @@ public class ValueResult {
 	}
 
 	/**
-	 * The {@link MethodParameter} that was the target of the {@link ParameterResolver#resolve}
-	 * operation.
+	 * The {@link MethodParameter} that was the target of the resolve operation.
 	 */
 	public MethodParameter methodParameter() {
 		return methodParameter;

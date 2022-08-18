@@ -179,9 +179,10 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 
 	/**
 	 * Resolves the given parameter type and value name into an argument value.
+	 *
 	 * @param parameter the method parameter to resolve to an argument value
 	 * @param message the current request
-	 * @param name the name of the value being resolved
+	 * @param names the name of the values being resolved
 	 * @return the resolved argument. May be {@code null}
 	 * @throws Exception in case of errors
 	 */
@@ -193,6 +194,7 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 	 * Invoked when a value is required, but {@link #resolveArgumentInternal}
 	 * returned {@code null} and there is no default value. Sub-classes can
 	 * throw an appropriate exception for this case.
+	 *
 	 * @param names the name for the value
 	 * @param parameter the target method parameter
 	 * @param message the message being processed
