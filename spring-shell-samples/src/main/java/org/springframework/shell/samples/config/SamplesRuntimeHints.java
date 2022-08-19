@@ -25,7 +25,6 @@ import org.springframework.aot.hint.ResourceHints;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.aot.hint.TypeReference;
-import org.springframework.util.ClassUtils;
 
 public class SamplesRuntimeHints implements RuntimeHintsRegistrar {
 
@@ -58,20 +57,6 @@ public class SamplesRuntimeHints implements RuntimeHintsRegistrar {
 				"org.jline.terminal.impl.jna.win.Kernel32$FOCUS_EVENT_RECORD",
 				"org.jline.terminal.impl.jna.win.Kernel32$SMALL_RECT",
 				"org.jline.terminal.impl.jna.win.Kernel32$UnionChar");
-		// from spring-native sb-3.0.x branch
-		registerHibernateValidatorHints(hints, classLoader);
-	}
-
-	private void registerHibernateValidatorHints(RuntimeHints hints, ClassLoader classLoader) {
-		if (!ClassUtils.isPresent("org.hibernate.validator.HibernateValidator", classLoader)) {
-			return;
-		}
-		hints.reflection().registerType(TypeReference.of("org.hibernate.validator.internal.util.logging.Log_$logger"),
-			hint -> hint.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerType(
-			TypeReference.of("org.hibernate.validator.internal.util.logging.Messages_$bundle"),
-				hint -> hint.withField("INSTANCE", fieldHint -> {
-			}));
 	}
 
 	private void registerResources(ResourceHints resource) {

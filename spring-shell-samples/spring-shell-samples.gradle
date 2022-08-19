@@ -16,6 +16,12 @@ springBoot {
 	buildInfo()
 }
 
+graalvmNative {
+	metadataRepository {
+		version = "0.1.1"
+	}
+}
+
 // TODO: workaround until boot's aot plugin automatically extends
 //       from all super configurations like graalvm's plugin does.
 configurations {
