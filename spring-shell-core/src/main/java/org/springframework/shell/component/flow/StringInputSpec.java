@@ -114,7 +114,8 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 	StringInputSpec storeResult(boolean store);
 
 	/**
-	 * Define a function which may return id of a next component to go.
+	 * Define a function which may return id of a next component to go. Returning a
+	 * {@code null} or non existent id indicates that flow should stop.
 	 *
 	 * @param next next component function
 	 * @return a builder
