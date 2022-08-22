@@ -421,11 +421,19 @@ public interface ComponentFlow {
 				context = node.data.getOperation().apply(context);
 				if (node.data.next != null) {
 					Optional<String> n = node.data.next.apply(context);
-					if (n.isPresent()) {
+					if (n == null) {
+						// actual function returned null optional which is case
+						// when no next function was set. this is different
+						// than when null is returned for next.
+						node = node.next;
+					}
+					else if (n.isPresent()) {
+						// user returned value
 						node = oiol.get(n.get());
 					}
 					else {
-						node = node.next;
+						// user returned null
+						node = null;
 					}
 				}
 				else {
@@ -474,7 +482,7 @@ public interface ComponentFlow {
 				Function<StringInputContext, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
 						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: Optional.empty();
+						: null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
@@ -512,7 +520,7 @@ public interface ComponentFlow {
 				Function<PathInputContext, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
 						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: Optional.empty();
+						: null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
@@ -550,7 +558,7 @@ public interface ComponentFlow {
 				Function<ConfirmationInputContext, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
 						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: Optional.empty();
+						: null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
@@ -609,7 +617,7 @@ public interface ComponentFlow {
 				Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
 						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: Optional.empty();
+						: null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
@@ -654,7 +662,7 @@ public interface ComponentFlow {
 				Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
 						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: Optional.empty();
+						: null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
