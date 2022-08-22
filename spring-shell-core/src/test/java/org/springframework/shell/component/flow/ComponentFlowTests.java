@@ -161,7 +161,7 @@ public class ComponentFlowTests extends AbstractShellTests {
 		}
 
 	@Test
-	public void testChoosesDynamically() throws InterruptedException {
+	public void testChoosesDynamicallyShouldJumpOverAndStop() throws InterruptedException {
 		ComponentFlow wizard = ComponentFlow.builder()
 			.terminal(getTerminal())
 			.resourceLoader(getResourceLoader())
@@ -202,12 +202,106 @@ public class ComponentFlowTests extends AbstractShellTests {
 		ComponentFlowResult inputWizardResult = result.get();
 		assertThat(inputWizardResult).isNotNull();
 		String id1 = inputWizardResult.getContext().get("id1");
-		// TODO: should be able to check if variable exists
-		// String id2 = inputWizardResult.getContext().get("id2");
 		String id3 = inputWizardResult.getContext().get("id3");
 		assertThat(id1).isEqualTo("id3");
-		// assertThat(id2).isNull();
 		assertThat(id3).isEqualTo("value3");
+		assertThat(inputWizardResult.getContext().containsKey("id2")).isFalse();
+	}
+
+	@Test
+	public void testChoosesDynamicallyShouldNotContinueToNext() throws InterruptedException {
+		ComponentFlow wizard = ComponentFlow.builder()
+			.terminal(getTerminal())
+			.resourceLoader(getResourceLoader())
+			.templateExecutor(getTemplateExecutor())
+			.withStringInput("id1")
+				.name("name")
+				.next(ctx -> ctx.get("id1"))
+				.and()
+			.withStringInput("id2")
+				.name("name")
+				.resultValue("value2")
+				.resultMode(ResultMode.ACCEPT)
+				.next(ctx -> null)
+				.and()
+			.withStringInput("id3")
+				.name("name")
+				.resultValue("value3")
+				.resultMode(ResultMode.ACCEPT)
+				.next(ctx -> null)
+				.and()
+			.build();
+
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		CountDownLatch latch = new CountDownLatch(1);
+		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
+		service.execute(() -> {
+			result.set(wizard.run());
+			latch.countDown();
+		});
+
+		// id1
+		TestBuffer testBuffer = new TestBuffer().append("id2").cr();
+		write(testBuffer.getBytes());
+		// id2
+		testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+		latch.await(4, TimeUnit.SECONDS);
+		ComponentFlowResult inputWizardResult = result.get();
+		assertThat(inputWizardResult).isNotNull();
+		String id1 = inputWizardResult.getContext().get("id1");
+		String id2 = inputWizardResult.getContext().get("id2");
+		assertThat(id1).isEqualTo("id2");
+		assertThat(id2).isEqualTo("value2");
+		assertThat(inputWizardResult.getContext().containsKey("id3")).isFalse();
+	}
+
+	@Test
+	public void testChoosesNonExistingComponent() throws InterruptedException {
+		ComponentFlow wizard = ComponentFlow.builder()
+			.terminal(getTerminal())
+			.resourceLoader(getResourceLoader())
+			.templateExecutor(getTemplateExecutor())
+			.withStringInput("id1")
+				.name("name")
+				.next(ctx -> ctx.get("id1"))
+				.and()
+			.withStringInput("id2")
+				.name("name")
+				.resultValue("value2")
+				.resultMode(ResultMode.ACCEPT)
+				.next(ctx -> null)
+				.and()
+			.withStringInput("id3")
+				.name("name")
+				.resultValue("value3")
+				.resultMode(ResultMode.ACCEPT)
+				.next(ctx -> null)
+				.and()
+			.build();
+
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		CountDownLatch latch = new CountDownLatch(1);
+		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
+		service.execute(() -> {
+			result.set(wizard.run());
+			latch.countDown();
+		});
+
+		// id1
+		TestBuffer testBuffer = new TestBuffer().append("fake").cr();
+		write(testBuffer.getBytes());
+
+		// don't execute id2 or id3
+		testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+		latch.await(4, TimeUnit.SECONDS);
+		ComponentFlowResult inputWizardResult = result.get();
+		assertThat(inputWizardResult).isNotNull();
+		String id1 = inputWizardResult.getContext().get("id1");
+		assertThat(id1).isEqualTo("fake");
+		assertThat(inputWizardResult.getContext().containsKey("id2")).isFalse();
+		assertThat(inputWizardResult.getContext().containsKey("id3")).isFalse();
 	}
 
 	@Test
