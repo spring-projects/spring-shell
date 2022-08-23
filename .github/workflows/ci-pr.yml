@@ -21,7 +21,8 @@ jobs:
         with:
           distribution: adopt
           java-version: ${{ matrix.java }}
+          cache: gradle
       - name: Build
         env:
           DISABLE_SAMPLES: ${{ matrix.disable-samples }}
-        run: ./mvnw -B package
+        run: ./gradlew build
