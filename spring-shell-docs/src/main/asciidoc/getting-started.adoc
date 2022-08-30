@@ -7,7 +7,7 @@ has a simple command to add two numbers.
 Starting with version 2, Spring Shell has been rewritten from the ground up with various
 enhancements in mind, one of which is easy integration with Spring Boot.
 
-For the purpose of this tutorial, we create a simple Boot application by
+For the purpose of this tutorial, we create a simple Spring Boot application by
 using https://start.spring.io. This minimal application depends only on `spring-boot-starter`
 and configures the `spring-boot-maven-plugin` to generate an executable über-jar:
 
