@@ -274,8 +274,7 @@ public class SamplesRuntimeHints implements RuntimeHintsRegistrar {
 
 		registerForJni(jni, reachableType, "java.nio.Buffer",
 			Methods.of(
-				Method.of("array"),
-				Method.of("arrayOffset")
+				Method.of("position")
 			),
 			Fields.of());
 
