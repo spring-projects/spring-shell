@@ -142,7 +142,7 @@ public class ExtendedDefaultParser implements Parser {
 		}
 
 		String openingQuote = quoteStart >= 0 ? line.substring(quoteStart, quoteStart + 1) : null;
-		return new ExtendedArgumentList(line, words, wordIndex, wordCursor, cursor, openingQuote);
+		return wrap(new ExtendedArgumentList(line, words, wordIndex, wordCursor, cursor, openingQuote));
 	}
 
 	/**
@@ -319,6 +319,47 @@ public class ExtendedDefaultParser implements Parser {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Another shameful copy from JLine's {@link org.jline.reader.impl.LineReaderImpl}  ；）
+	 *
+	 * Used to wrap {@link org.jline.reader.ParsedLine} into {@link org.jline.reader.CompletingParsedLine}
+	 */
+	private static org.jline.reader.CompletingParsedLine wrap(ParsedLine line) {
+		if (line instanceof org.jline.reader.CompletingParsedLine) {
+			return (org.jline.reader.CompletingParsedLine) line;
+		} else {
+			return new org.jline.reader.CompletingParsedLine() {
+				public String word() {
+					return line.word();
+				}
+				public int wordCursor() {
+					return line.wordCursor();
+				}
+				public int wordIndex() {
+					return line.wordIndex();
+				}
+				public List<String> words() {
+					return line.words();
+				}
+				public String line() {
+					return line.line();
+				}
+				public int cursor() {
+					return line.cursor();
+				}
+				public CharSequence escape(CharSequence candidate, boolean complete) {
+					return candidate;
+				}
+				public int rawWordCursor() {
+					return wordCursor();
+				}
+				public int rawWordLength() {
+					return word().length();
+				}
+			};
+		}
 	}
 
 }
