@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.config;
+package org.springframework.shell;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.aot.hint.TypeHint;
 import org.springframework.aot.hint.TypeReference;
 
-public class SamplesRuntimeHints implements RuntimeHintsRegistrar {
+public class JnaRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {

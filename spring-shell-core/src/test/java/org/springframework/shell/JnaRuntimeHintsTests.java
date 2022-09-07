@@ -1,4 +1,4 @@
-package org.springframework.shell.samples.config;
+package org.springframework.shell;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -14,7 +14,7 @@ import org.springframework.aot.hint.TypeReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SamplesRuntimeHintsTests {
+public class JnaRuntimeHintsTests {
 
 	@Test
 	void test() {
@@ -35,7 +35,7 @@ public class SamplesRuntimeHintsTests {
 
 	private ReflectionHints registerHints() {
 		RuntimeHints hints = new RuntimeHints();
-		new SamplesRuntimeHints().registerHints(hints, getClass().getClassLoader());
+		new JnaRuntimeHints().registerHints(hints, getClass().getClassLoader());
 		return hints.reflection();
 	}
 
