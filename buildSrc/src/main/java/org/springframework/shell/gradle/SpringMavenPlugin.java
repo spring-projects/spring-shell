@@ -15,12 +15,17 @@
  */
 package org.springframework.shell.gradle;
 
+import java.util.List;
+import java.util.ListIterator;
+
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.attributes.Usage;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.plugins.PluginManager;
 import org.gradle.api.publish.PublishingExtension;
+import org.gradle.api.publish.VariantVersionMappingStrategy;
 import org.gradle.api.publish.maven.MavenPom;
 import org.gradle.api.publish.maven.MavenPomDeveloperSpec;
 import org.gradle.api.publish.maven.MavenPomIssueManagement;
@@ -29,6 +34,8 @@ import org.gradle.api.publish.maven.MavenPomOrganization;
 import org.gradle.api.publish.maven.MavenPomScm;
 import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin;
+
+import groovy.util.Node;
 
 public class SpringMavenPlugin implements Plugin<Project> {
 
@@ -64,6 +71,25 @@ public class SpringMavenPlugin implements Plugin<Project> {
 		pom.developers(this::customizeDevelopers);
 		pom.scm(scm -> customizeScm(scm, project));
 		pom.issueManagement(this::customizeIssueManagement);
+
+		// TODO: find something better not to add dependencyManagement in pom
+		//       which result spring-shell-management in it. spring-shell-dependencies
+		//       has its own dependencyManagement which we need to keep
+		if (!project.getName().equals("spring-shell-dependencies")) {
+			pom.withXml(xxx -> {
+				Node pomNode = xxx.asNode();
+				List<?> childs = pomNode.children();
+				ListIterator<?> iter = childs.listIterator();
+				while (iter.hasNext()) {
+					Object next = iter.next();
+					if (next instanceof Node) {
+						if (((Node)next).name().toString().equals("{http://maven.apache.org/POM/4.0.0}dependencyManagement")) {
+							iter.remove();
+						}
+					}
+				}
+			});
+		}
 	}
 
 	private void customizeOrganization(MavenPomOrganization organization) {
