@@ -21,6 +21,7 @@ import java.util.Map;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.plugins.PluginManager;
+import org.gradle.api.publish.tasks.GenerateModuleMetadata;
 import org.jfrog.build.extractor.clientConfiguration.ArtifactSpec;
 import org.jfrog.build.extractor.clientConfiguration.ArtifactSpecs;
 import org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin;
@@ -34,6 +35,10 @@ public class ArtifactoryConventions {
 	void apply(Project project) {
 		PluginManager pluginManager = project.getPluginManager();
 		pluginManager.apply(ArtifactoryPlugin.class);
+
+		project.getTasks().withType(GenerateModuleMetadata.class, metadata -> {
+			metadata.setEnabled(false);
+		});
 
 		project.getPlugins().withType(ArtifactoryPlugin.class, artifactory -> {
 			Task task = project.getTasks().findByName(ArtifactoryTask.ARTIFACTORY_PUBLISH_TASK_NAME);

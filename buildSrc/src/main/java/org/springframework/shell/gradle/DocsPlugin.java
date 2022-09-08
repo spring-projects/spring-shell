@@ -36,6 +36,7 @@ import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaLibraryPlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.PluginManager;
+import org.gradle.api.publish.tasks.GenerateModuleMetadata;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.file.CopySpec;
@@ -57,6 +58,10 @@ class DocsPlugin implements Plugin<Project> {
 		pluginManager.apply(AsciidoctorJPlugin.class);
 
 		configureAdocPlugins(project);
+
+		project.getTasks().withType(GenerateModuleMetadata.class, metadata -> {
+			metadata.setEnabled(false);
+		});
 	}
 
 	private void configureAdocPlugins(Project project) {
