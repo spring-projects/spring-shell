@@ -6,7 +6,7 @@ description = 'Spring Shell Documentation'
 
 dependencies {
 	management platform(project(":spring-shell-management"))
-	implementation project(':spring-shell-starter')
+	implementation project(':spring-shell-starters:spring-shell-starter')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

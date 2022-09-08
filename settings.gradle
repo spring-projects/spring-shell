@@ -48,10 +48,18 @@ include 'spring-shell-docs'
 include 'spring-shell-samples'
 include 'spring-shell-standard'
 include 'spring-shell-standard-commands'
-include 'spring-shell-starter'
-include 'spring-shell-starter-jna'
 include 'spring-shell-table'
 
-rootProject.children.each {project ->
-	project.buildFileName = "${project.name}.gradle"
+file("${rootDir}/spring-shell-starters").eachDirMatch(~/spring-shell-starter.*/) {
+	include "spring-shell-starters:${it.name}"
+}
+
+rootProject.children.each { project ->
+	if (project.name == 'spring-shell-starters') {
+		project.children.each { subproject ->
+		subproject.buildFileName = "${subproject.name}.gradle"
+		}
+	} else {
+		project.buildFileName = "${project.name}.gradle"
+	}
 }

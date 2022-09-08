@@ -8,7 +8,7 @@ description = 'Spring Shell Samples'
 
 dependencies {
 	management platform(project(":spring-shell-management"))
-	implementation project(':spring-shell-starter-jna')
+	implementation project(':spring-shell-starters:spring-shell-starter-jna')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
