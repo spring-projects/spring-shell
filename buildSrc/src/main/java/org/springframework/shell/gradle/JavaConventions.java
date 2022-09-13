@@ -17,10 +17,17 @@ package org.springframework.shell.gradle;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.gradle.api.JavaVersion;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaBasePlugin;
+import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.api.tasks.javadoc.Javadoc;
 import org.gradle.api.tasks.testing.Test;
@@ -38,6 +45,7 @@ class JavaConventions {
 			configureJavaConventions(project);
 			configureJavadocConventions(project);
 			configureTestConventions(project);
+			configureJarManifestConventions(project);
 		});
 	}
 
@@ -78,5 +86,37 @@ class JavaConventions {
 		project.getTasks().withType(Test.class, test -> {
 			test.useJUnitPlatform();
 		});
+	}
+
+	private void configureJarManifestConventions(Project project) {
+		SourceSetContainer sourceSets = project.getExtensions().getByType(SourceSetContainer.class);
+		Set<String> sourceJarTaskNames = sourceSets.stream().map(SourceSet::getSourcesJarTaskName)
+				.collect(Collectors.toSet());
+		Set<String> javadocJarTaskNames = sourceSets.stream().map(SourceSet::getJavadocJarTaskName)
+				.collect(Collectors.toSet());
+
+		project.getTasks().withType(Jar.class, jar -> {
+			jar.manifest(manifest -> {
+				Map<String, Object> attributes = new TreeMap<>();
+				attributes.put("Automatic-Module-Name", project.getName().replace("-", "."));
+				attributes.put("Build-Jdk-Spec", SOURCE_AND_TARGET_COMPATIBILITY);
+				attributes.put("Built-By", "Spring");
+				attributes.put("Implementation-Title",
+						determineImplementationTitle(project, sourceJarTaskNames, javadocJarTaskNames, jar));
+				attributes.put("Implementation-Version", project.getVersion());
+				manifest.attributes(attributes);
+			});
+		});
+	}
+
+	private String determineImplementationTitle(Project project, Set<String> sourceJarTaskNames,
+			Set<String> javadocJarTaskNames, Jar jar) {
+		if (sourceJarTaskNames.contains(jar.getName())) {
+			return "Source for " + project.getName();
+		}
+		if (javadocJarTaskNames.contains(jar.getName())) {
+			return "Javadoc for " + project.getName();
+		}
+		return "Jar for " + project.getName();
 	}
 }

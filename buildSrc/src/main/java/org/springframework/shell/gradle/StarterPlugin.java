@@ -35,5 +35,6 @@ class StarterPlugin implements Plugin<Project> {
 		pluginManager.apply(SpringMavenPlugin.class);
 
 		new ArtifactoryConventions().apply(project);
+		new JavaConventions().apply(project);
 	}
 }
