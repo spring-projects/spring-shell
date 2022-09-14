@@ -26,6 +26,7 @@ import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.jline.ExtendedDefaultParser;
@@ -38,9 +39,11 @@ import org.springframework.shell.jline.PromptProvider;
  * @author Florent Biville
  */
 @Configuration(proxyBeanMethods = false)
+@ConditionalOnProperty(prefix = "spring.shell.jline-shell", value = "enabled", havingValue = "true", matchIfMissing = true)
 public class JLineShellAutoConfiguration {
 
 	@Bean(destroyMethod = "close")
+	@ConditionalOnMissingBean(Terminal.class)
 	public Terminal terminal() {
 		try {
 			return TerminalBuilder.builder().build();
@@ -57,6 +60,7 @@ public class JLineShellAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(Parser.class)
 	public Parser parser() {
 		ExtendedDefaultParser parser = new ExtendedDefaultParser();
 		parser.setEofOnUnclosedQuote(true);
