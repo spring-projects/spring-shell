@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.aot.hint.ExecutableMode;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.ProxyHints;
 import org.springframework.aot.hint.ReflectionHints;
@@ -360,7 +361,7 @@ public class JnaRuntimeHints implements RuntimeHintsRegistrar {
 		}
 
 		void withHints(TypeHint.Builder hint) {
-			hint.withMethod(name, asTypeReferences());
+			hint.withMethod(name, asTypeReferences(), ExecutableMode.INVOKE);
 		}
 	}
 
