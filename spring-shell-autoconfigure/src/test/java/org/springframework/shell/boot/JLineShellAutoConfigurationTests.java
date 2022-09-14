@@ -4,7 +4,6 @@ import org.jline.reader.Parser;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -22,44 +21,41 @@ class JLineShellAutoConfigurationTests {
             .withConfiguration(AutoConfigurations.of(JLineShellAutoConfiguration.class));
 
 
-    @Nested
-    class JLineShell {
-        @Test
-        void enabledByDefault() {
-            contextRunner.run(context -> {
-                assertThat(context).hasSingleBean(Terminal.class);
-                assertThat(context).hasSingleBean(PromptProvider.class);
-                assertThat(context).hasSingleBean(Parser.class);
-            });
-        }
+    @Test
+    void shouldCreateDefaultBeans_WhenInitialCtx_GivenConfigByDefault() {
+        contextRunner.run(context -> {
+            assertThat(context).hasSingleBean(Terminal.class);
+            assertThat(context).hasSingleBean(PromptProvider.class);
+            assertThat(context).hasSingleBean(Parser.class);
+        });
+    }
 
-        @Test
-        void disabledWhenPropertySet() {
-            contextRunner.withPropertyValues("spring.shell.jline-shell.enabled:false")
-                    .run(context -> {
-                        assertThat(context).doesNotHaveBean(Terminal.class);
-                        assertThat(context).doesNotHaveBean(PromptProvider.class);
-                        assertThat(context).doesNotHaveBean(Parser.class);
-                    });
-        }
+    @Test
+    void shouldNotCreateBeans_WhenInitialCtx_GivenDisablePropertyConfig() {
+        contextRunner.withPropertyValues("spring.shell.jline-shell.enabled:false")
+                .run(context -> {
+                    assertThat(context).doesNotHaveBean(Terminal.class);
+                    assertThat(context).doesNotHaveBean(PromptProvider.class);
+                    assertThat(context).doesNotHaveBean(Parser.class);
+                });
+    }
 
-        @Test
-        void disabledWhenCustomBeanSet() {
-            contextRunner.withUserConfiguration(MockConfiguration.class)
-                    .run(context -> {
-                        assertThat(context).hasSingleBean(Terminal.class);
-                        final Terminal terminal = context.getBean(Terminal.class);
-                        assertThat(terminal.getBufferSize()).isSameAs(MockConfiguration.MOCK_BUFFER_SIZE);
+    @Test
+    void shouldCreateCustomBeans_WhenInitialCtx_GivenCustomConfig() {
+        contextRunner.withUserConfiguration(MockConfiguration.class)
+                .run(context -> {
+                    assertThat(context).hasSingleBean(Terminal.class);
+                    final Terminal terminal = context.getBean(Terminal.class);
+                    assertThat(terminal.getBufferSize()).isSameAs(MockConfiguration.MOCK_BUFFER_SIZE);
 
-                        assertThat(context).hasSingleBean(Parser.class);
-                        final Parser parser = context.getBean(Parser.class);
-                        assertThat(parser.getCommand("cmd")).isEqualTo(MockConfiguration.MOCK_COMMAND_LINE);
+                    assertThat(context).hasSingleBean(Parser.class);
+                    final Parser parser = context.getBean(Parser.class);
+                    assertThat(parser.getCommand("cmd")).isEqualTo(MockConfiguration.MOCK_COMMAND_LINE);
 
-                        assertThat(context).hasSingleBean(PromptProvider.class);
-                        final PromptProvider promptProvider = context.getBean(PromptProvider.class);
-                        assertThat(promptProvider.getPrompt()).isEqualTo(MockConfiguration.MOCK_ATTR_STRING);
-                    });
-        }
+                    assertThat(context).hasSingleBean(PromptProvider.class);
+                    final PromptProvider promptProvider = context.getBean(PromptProvider.class);
+                    assertThat(promptProvider.getPrompt()).isEqualTo(MockConfiguration.MOCK_ATTR_STRING);
+                });
     }
 
     @Configuration(proxyBeanMethods = false)
@@ -83,7 +79,7 @@ class JLineShellAutoConfigurationTests {
         }
 
         @Bean
-        PromptProvider mocPromptProvider() {
+        PromptProvider mockPromptProvider() {
             final PromptProvider promptProvider = mock(PromptProvider.class);
             when(promptProvider.getPrompt()).thenReturn(MOCK_ATTR_STRING);
             return promptProvider;
