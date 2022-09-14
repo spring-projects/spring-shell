@@ -1,0 +1,27 @@
+$ $JAVA_HOME/bin/java -jar demo-0.0.1-SNAPSHOT.jar
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::       (v{spring-boot-version})
+
+2022-09-13T18:42:12.818+01:00  INFO 12644 --- [           main] com.example.demo.DemoApplication
+: Starting DemoApplication using Java 17.0.4 on ...
+2022-09-13T18:42:12.821+01:00  INFO 12644 --- [           main] com.example.demo.DemoApplication
+: No active profile set, falling back to 1 default profile: "default"
+2022-09-13T18:42:13.606+01:00  INFO 12644 --- [           main] com.example.demo.DemoApplication
+: Started DemoApplication in 1.145 seconds (process running for 1.578)
+shell:>help
+AVAILABLE COMMANDS
+
+Built-In Commands
+       help: Display help about available commands
+       stacktrace: Display the full stacktrace of the last error.
+       clear: Clear the shell screen.
+       quit, exit: Exit the shell.
+       history: Display or save the history of previously run commands
+       version: Show version info
+       script: Read and execute commands from a file.

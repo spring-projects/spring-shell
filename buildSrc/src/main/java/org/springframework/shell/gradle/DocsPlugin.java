@@ -33,6 +33,7 @@ import org.asciidoctor.gradle.jvm.AsciidoctorTask;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.plugins.JavaLibraryPlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.PluginManager;
@@ -57,20 +58,26 @@ class DocsPlugin implements Plugin<Project> {
 		pluginManager.apply(SpringMavenPlugin.class);
 		pluginManager.apply(AsciidoctorJPlugin.class);
 
-		configureAdocPlugins(project);
+		ExtractVersionConstraints dependencyVersions = project.getTasks().create("dependencyVersions",
+			ExtractVersionConstraints.class, task -> {
+				task.enforcedPlatform(":spring-shell-management");
+			});
+
+		configureAdocPlugins(project, dependencyVersions);
 
 		project.getTasks().withType(GenerateModuleMetadata.class, metadata -> {
 			metadata.setEnabled(false);
 		});
 	}
 
-	private void configureAdocPlugins(Project project) {
+	private void configureAdocPlugins(Project project, ExtractVersionConstraints dependencyVersions) {
 		project.getPlugins().withType(AsciidoctorJPlugin.class, (asciidoctorPlugin) -> {
 			createDefaultAsciidoctorRepository(project);
 			makeAllWarningsFatal(project);
 			Sync unzipResources = createUnzipDocumentationResourcesTask(project);
 			Sync snippetsResources = createSnippetsResourcesTask(project);
 			project.getTasks().withType(AbstractAsciidoctorTask.class, (asciidoctorTask) -> {
+				asciidoctorTask.dependsOn(dependencyVersions);
 				asciidoctorTask.dependsOn(unzipResources);
 				asciidoctorTask.dependsOn(snippetsResources);
 				// configureExtensions(project, asciidoctorTask);
@@ -94,12 +101,13 @@ class DocsPlugin implements Plugin<Project> {
 								// For now copy the entire sourceDir over so that include files are
 								// available in the intermediateWorkDir
 								resourcesSrcDirSpec.include("images/*");
+								resourcesSrcDirSpec.include("code/*");
 							}
 						});
 					}
 				});
 				if (asciidoctorTask instanceof AsciidoctorTask) {
-					configureHtmlOnlyAttributes(project, asciidoctorTask);
+					configureHtmlOnlyAttributes(project, asciidoctorTask, dependencyVersions);
 				}
 			});
 		});
@@ -179,7 +187,26 @@ class DocsPlugin implements Plugin<Project> {
 		asciidoctorTask.options(Collections.singletonMap("doctype", "book"));
 	}
 
-	private void configureHtmlOnlyAttributes(Project project, AbstractAsciidoctorTask asciidoctorTask) {
+	private void configureHtmlOnlyAttributes(Project project, AbstractAsciidoctorTask asciidoctorTask,
+			ExtractVersionConstraints dependencyVersions) {
+
+		asciidoctorTask.doFirst(new Action<Task>() {
+
+			@Override
+			public void execute(Task arg0) {
+				asciidoctorTask.getAttributeProviders().add(new AsciidoctorAttributeProvider() {
+					@Override
+					public Map<String, Object> getAttributes() {
+						Map<String, String> versionConstraints = dependencyVersions.getVersionConstraints();
+						Map<String, Object> attrs = new HashMap<>();
+						attrs.put("spring-version", versionConstraints.get("org.springframework:spring-core"));
+						attrs.put("spring-boot-version", versionConstraints.get("org.springframework.boot:spring-boot"));
+						return attrs;
+					}
+				});
+			}
+		});
+
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put("toc", "left");
 		attributes.put("source-highlighter", "highlight.js");
@@ -195,8 +222,7 @@ class DocsPlugin implements Plugin<Project> {
 				Object version = project.getVersion();
 				Map<String, Object> attrs = new HashMap<>();
 				if (version != null && version.toString() != Project.DEFAULT_VERSION) {
-					attrs.put("revnumber", version);
-					attrs.put("projectVersion", version);
+					attrs.put("project-version", version);
 				}
 				return attrs;
 			}

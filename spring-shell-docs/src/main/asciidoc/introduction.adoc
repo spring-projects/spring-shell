@@ -12,12 +12,3 @@ the familiar Spring programming model.
 Spring Shell includes advanced features (such as parsing, tab completion, colorization of
 output, fancy ASCII-art table display, input conversion, and validation), freeing you
 to focus on core command logic.
-
-[IMPORTANT]
-====
-Spring Shell 2.1.x is a major rework to bring the codebase up to date with
-existing Spring Boot versions, adding new features and, especially,
-making it work with GraalVM which makes command-line applications much
-more relevant in a Java space. Moving to a new major version also lets
-us clean up the codebase and make some needed breaking changes.
-====

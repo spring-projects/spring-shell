@@ -6,7 +6,7 @@ Eric Bottard; Janne Valkealahti; Jay Bryant; Corneil du Plessis
 :experimental: // For kbd: macro
 :spring-shell-starter: spring-shell-starter
 
-*{projectVersion}*
+*{project-version}*
 
 (C) 2017 - 2022 VMware, Inc.
 
