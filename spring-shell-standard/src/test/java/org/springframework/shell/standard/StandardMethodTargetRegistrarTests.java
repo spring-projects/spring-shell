@@ -443,4 +443,22 @@ public class StandardMethodTargetRegistrarTests {
 		public void foo3(@ShellOption boolean arg1) {
 		}
 	}
+
+	@ShellComponent(prefix = "prefix-")
+	public static class ShellComponentWithPrefix {
+
+		@ShellMethod(value = "foo1")
+		public void foo1(@ShellOption(defaultValue = "false") boolean arg1) {
+		}
+
+	}
+
+	@Test
+	void testShellComponentWithPrefix() {
+		applicationContext = new AnnotationConfigApplicationContext(ShellComponentWithPrefix.class);
+		registrar.setApplicationContext(applicationContext);
+		registrar.register(catalog);
+
+		assertThat(catalog.getRegistrations().get("prefix-foo1")).isNotNull();
+	}
 }

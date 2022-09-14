@@ -45,4 +45,9 @@ public @interface ShellComponent {
 	 * @return the suggested component name, if any
 	 */
 	String value() default "";
+	/**
+	 * Used to be the common prefix for all ShellMethod in this component.
+	 * @return the common prefix, if any
+	 */
+	String prefix() default "";
 }

@@ -78,12 +78,21 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 		log.debug("Found commandBeans to register {}", commandBeans);
 		for (Object bean : commandBeans.values()) {
 			Class<?> clazz = bean.getClass();
+			final ShellComponent shellComponent = clazz.getAnnotation(ShellComponent.class);
+			final String prefix = shellComponent.prefix();
 			ReflectionUtils.doWithMethods(clazz, method -> {
 				ShellMethod shellMapping = method.getAnnotation(ShellMethod.class);
 				String[] keys = shellMapping.key();
 				if (keys.length == 0) {
 					keys = new String[] { Utils.unCamelify(method.getName()) };
 				}
+
+				if (StringUtils.hasLength(prefix)) {
+					for (int i = 0; i < keys.length; i++) {
+						keys[i] = prefix + keys[i];
+					}
+				}
+
 				String group = getOrInferGroup(method);
 
 				String key = keys[0];
