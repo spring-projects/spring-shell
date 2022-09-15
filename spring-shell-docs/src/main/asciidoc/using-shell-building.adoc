@@ -6,30 +6,67 @@ This section covers how to build a Spring Shell application.
 [[native]]
 === Native Support
 
-Version 2.1.x includes experimental support for compiling Spring Shell applications
-into native applications with GraalVM and Spring Native. Because the underlying JLine
-library works with GraalVM, most things should just work.
+Support for compiling _Spring Shell_ application into a _GraalVM_ binary
+mostly comes from _Spring Framework_ and _Spring Boot_ where feature is
+called _AOT_. Ahead of Time means that application context is prepared
+during the compilation time to being ready for _GraalVM_ generation.
 
-You can compile the project with a native profile to get a native application:
+Building atop of _AOT_ features from a framework _Spring Shell_ has its
+own _GraalVM_ configuration providing hints what should exist in
+a binary. Usually trouble comes from a 3rd party libraries which doesn't
+yet contain _GraalVM_ related configurations or those configurations
+are incomplete.
+
+IMPORTANT: It is requred to use _GraalVM Reachability Metadata Repository_ which
+provides some missing hints for 3rd party libraries. Also you need to have
+_GraalVM_ installed and `JAVA_HOME` pointing to that.
+
+For _gradle_ add graalvm's native plugin and configure metadata repository.
 
 ====
+[source, groovy, subs=attributes+]
 ----
-$ ./mvnw clean package -Pnative
+plugins {
+	id 'org.graalvm.buildtools.native' version '0.9.13'
+}
+
+graalvmNative {
+	metadataRepository {
+		version = "0.1.2"
+	}
+}
 ----
 ====
 
-You can then run the application in either interactive or non-interactive mode:
+When gradle build is run with `./gradlew nativeCompile` you should get binary
+under `build/native/nativeCompile` directory.
+
+For `maven` use `spring-boot-starter-parent` as parent and you'll get `native`
+profile which can be used to do a compilation. You need to configure metadata repository
 
 ====
+[source, xml, subs=attributes+]
 ----
-$ ./spring-shell-samples/target/spring-shell-samples help
-AVAILABLE COMMANDS
-
-Built-In Commands
-        completion bash: Generate bash completion script
-        help: Display help about available commands.
-        history: Display or save the history of previously run commands
-        script: Read and execute commands from a file.
-...
+<build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <metadataRepository>
+                        <version>0.1.2</version>
+                    </metadataRepository>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+</build>
 ----
 ====
+
+When maven build is run with `./mvnw package -Pnative` you should get binary
+under `target` directory.
+
+If everything went well this binary can be run as is instead of executing
+boot application jar via jvm.
