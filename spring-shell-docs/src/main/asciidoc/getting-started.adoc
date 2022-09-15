@@ -92,6 +92,9 @@ include::code/getting-started-run-noninteractive.out[]
 ----
 ====
 
+TIP: Check out <<using-shell-customization-logging>> making logging to work
+better with shell apps.
+
 [[using-spring-shell-your-first-command]]
 === Your First Command
 
