@@ -31,16 +31,6 @@ class JLineShellAutoConfigurationTests {
     }
 
     @Test
-    void shouldNotCreateBeans_WhenInitialCtx_GivenDisablePropertyConfig() {
-        contextRunner.withPropertyValues("spring.shell.jline-shell.enabled:false")
-                .run(context -> {
-                    assertThat(context).doesNotHaveBean(Terminal.class);
-                    assertThat(context).doesNotHaveBean(PromptProvider.class);
-                    assertThat(context).doesNotHaveBean(Parser.class);
-                });
-    }
-
-    @Test
     void shouldCreateCustomBeans_WhenInitialCtx_GivenCustomConfig() {
         contextRunner.withUserConfiguration(MockConfiguration.class)
                 .run(context -> {

@@ -39,7 +39,6 @@ import org.springframework.shell.jline.PromptProvider;
  * @author Florent Biville
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(prefix = "spring.shell.jline-shell", value = "enabled", havingValue = "true", matchIfMissing = true)
 public class JLineShellAutoConfiguration {
 
 	@Bean(destroyMethod = "close")
