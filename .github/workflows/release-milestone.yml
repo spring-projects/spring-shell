@@ -31,7 +31,7 @@ jobs:
           --server-id-deploy=repo.spring.io \
           --repo-deploy-releases=libs-staging-local \
           --repo-deploy-snapshots=libs-staging-local
-        echo JFROG_CLI_BUILD_NAME=spring-shell-main-milestone >> $GITHUB_ENV
+        echo JFROG_CLI_BUILD_NAME=spring-shell-21x-milestone >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Configure Milestone Version
       run: |
@@ -89,7 +89,7 @@ jobs:
           --server-id-deploy=repo.spring.io \
           --repo-deploy-releases=libs-staging-local \
           --repo-deploy-snapshots=libs-staging-local
-        echo JFROG_CLI_BUILD_NAME=spring-shell-main-milestone >> $GITHUB_ENV
+        echo JFROG_CLI_BUILD_NAME=spring-shell-21x-milestone >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Promote Build
       run: |

@@ -27,7 +27,7 @@ jobs:
           --server-id-deploy=repo.spring.io \
           --repo-deploy-releases=libs-staging-local \
           --repo-deploy-snapshots=libs-staging-local
-        echo JFROG_CLI_BUILD_NAME=spring-shell-main-release >> $GITHUB_ENV
+        echo JFROG_CLI_BUILD_NAME=spring-shell-21x-release >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Configure GA Version
       run: |
@@ -85,7 +85,7 @@ jobs:
           --server-id-deploy=repo.spring.io \
           --repo-deploy-releases=libs-staging-local \
           --repo-deploy-snapshots=libs-staging-local
-        echo JFROG_CLI_BUILD_NAME=spring-shell-main-release >> $GITHUB_ENV
+        echo JFROG_CLI_BUILD_NAME=spring-shell-21x-release >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Promote Build
       run: |
@@ -161,7 +161,7 @@ jobs:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
-        echo JFROG_CLI_BUILD_NAME=spring-shell-main-release >> $GITHUB_ENV
+        echo JFROG_CLI_BUILD_NAME=spring-shell-21x-release >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Download Release Files
       run: |

@@ -38,6 +38,6 @@ jobs:
     if: github.repository_owner == 'spring-projects'
     needs: [build]
     name: Call Publish Snapshot
-    uses: spring-projects/spring-shell/.github/workflows/ci-publish.yml@main
+    uses: spring-projects/spring-shell/.github/workflows/ci-publish.yml@2.1.x
     secrets:
       jfArtifactorySpring: ${{ secrets.JF_ARTIFACTORY_SPRING }}
