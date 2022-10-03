@@ -27,12 +27,12 @@ For _gradle_ add graalvm's native plugin and configure metadata repository.
 [source, groovy, subs=attributes+]
 ----
 plugins {
-	id 'org.graalvm.buildtools.native' version '0.9.13'
+	id 'org.graalvm.buildtools.native' version '0.9.14'
 }
 
 graalvmNative {
 	metadataRepository {
-		version = "0.1.2"
+		version = "0.2.0"
 	}
 }
 ----
@@ -55,7 +55,7 @@ profile which can be used to do a compilation. You need to configure metadata re
                 <artifactId>native-maven-plugin</artifactId>
                 <configuration>
                     <metadataRepository>
-                        <version>0.1.2</version>
+                        <version>0.2.0</version>
                     </metadataRepository>
                 </configuration>
             </plugin>
@@ -64,6 +64,9 @@ profile which can be used to do a compilation. You need to configure metadata re
 </build>
 ----
 ====
+
+NOTE: If you rely on `spring-boot-starter-parent` it manages `native-maven-plugin`
+version which is kept up to date.
 
 When maven build is run with `./mvnw package -Pnative` you should get binary
 under `target` directory.
