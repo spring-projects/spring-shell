@@ -76,6 +76,9 @@
 - name: status/closed-as-stale
   color: FEF2C0
   description: Closed as has been stale
+- name: status/first-timers-only
+  color: FEF2C0
+  description: An issue that can only be worked on by brand new contributors
 
 - name: type/automated-pr
   color: D4C5F9
