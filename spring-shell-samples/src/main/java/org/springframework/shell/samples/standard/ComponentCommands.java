@@ -39,6 +39,7 @@ import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.util.StringUtils;
 
 @ShellComponent
@@ -75,10 +76,16 @@ public class ComponentCommands extends AbstractShellComponent {
 	}
 
 	@ShellMethod(key = "component single", value = "Single selector", group = "Components")
-	public String singleSelector() {
+	public String singleSelector(
+		@ShellOption(defaultValue = ShellOption.NULL) Boolean longKeys
+	) {
 		List<SelectorItem<String>> items = new ArrayList<>();
 		items.add(SelectorItem.of("key1", "value1"));
 		items.add(SelectorItem.of("key2", "value2"));
+		if (longKeys != null && longKeys == true) {
+			items.add(SelectorItem.of("key3 long long long long long", "value3"));
+			items.add(SelectorItem.of("key4 long long long long long long long long long long", "value4"));
+		}
 		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
 				items, "testSimple", null);
 		component.setResourceLoader(getResourceLoader());
@@ -90,11 +97,17 @@ public class ComponentCommands extends AbstractShellComponent {
 	}
 
 	@ShellMethod(key = "component multi", value = "Multi selector", group = "Components")
-	public String multiSelector() {
+	public String multiSelector(
+		@ShellOption(defaultValue = ShellOption.NULL) Boolean longKeys
+	) {
 		List<SelectorItem<String>> items = new ArrayList<>();
 		items.add(SelectorItem.of("key1", "value1"));
 		items.add(SelectorItem.of("key2", "value2", false, true));
 		items.add(SelectorItem.of("key3", "value3"));
+		if (longKeys != null && longKeys == true) {
+			items.add(SelectorItem.of("key4 long long long long long", "value4", false, true));
+			items.add(SelectorItem.of("key5 long long long long long long long long long long", "value5"));
+		}
 		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
 				items, "testSimple", null);
 		component.setResourceLoader(getResourceLoader());

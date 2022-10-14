@@ -81,6 +81,20 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 	Stream<Map.Entry<Object, Object>> stream();
 
 	/**
+	 * Get terminal width.
+	 *
+	 * @return a terminal width
+	 */
+	Integer getTerminalWidth();
+
+	/**
+	 * Set terminal width.
+	 *
+	 * @param terminalWidth the width
+	 */
+	void setTerminalWidth(Integer terminalWidth);
+
+	/**
 	 * Gets context values as a map. Every context implementation can
 	 * do their own model as essentially what matter is a one coming
 	 * out from a last child which is one most likely to feed into

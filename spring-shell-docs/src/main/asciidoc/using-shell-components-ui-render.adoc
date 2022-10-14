@@ -89,3 +89,14 @@ from a parent component types. The following tables show those context variables
 |The current cursor row in a selector.
 
 |===
+
+
+[[componentcontext-template-variables]]
+.ComponentContext Template Variables
+|===
+|Key |Description
+
+|`terminalWidth`
+|The width of terminal, type is _Integer_ and defaults to _NULL_ if not set.
+
+|===
