@@ -1,9 +1,13 @@
 // selector rows
-select_item(item) ::= <%
+truncate(name,model) ::= <%
+<name; format={truncate-width:<model.terminalWidth>-prefix:2}>
+%>
+
+select_item(item,model) ::= <%
 <if(item.selected)>
-<({<figures.rightPointingQuotation> }); format="style-item-selector"><item.name; format="style-item-selector">
+<({<figures.rightPointingQuotation> }); format="style-item-selector"><({<truncate(item.name,model)>}); format="style-item-selector">
 <else>
-<("  ")><item.name>
+<("  ")><truncate(item.name,model)>
 <endif>
 %>
 
@@ -34,7 +38,7 @@ result(model) ::= <<
 // component is running
 running(model) ::= <<
 <question_name(model)> <info(model)>
-<model.rows:{x|<select_item(x)>}; separator="\n">
+<model.rows:{x|<select_item(x,model)>}; separator="\n">
 >>
 
 // main - hardcoded name

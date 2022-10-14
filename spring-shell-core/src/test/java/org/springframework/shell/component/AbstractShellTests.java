@@ -80,7 +80,7 @@ public abstract class AbstractShellTests {
 
         pipedInputStream.connect(pipedOutputStream);
 		terminal = new DumbTerminal("terminal", "ansi", pipedInputStream, consoleOut, StandardCharsets.UTF_8);
-        terminal.setSize(new Size(1, 1));
+        terminal.setSize(new Size(80, 24));
 
         executorService.execute(() -> {
             try {

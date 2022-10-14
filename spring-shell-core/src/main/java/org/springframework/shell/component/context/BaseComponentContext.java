@@ -30,6 +30,8 @@ import java.util.stream.Stream;
 public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedHashMap<Object, Object>
 		implements ComponentContext<C> {
 
+	private Integer terminalWidth;
+
 	@Override
 	public Object get(Object key) {
 		Object o = super.get(key);
@@ -61,11 +63,27 @@ public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedH
 	}
 
 	@Override
+	public Integer getTerminalWidth() {
+		return terminalWidth;
+	}
+
+	@Override
+	public void setTerminalWidth(Integer terminalWidth) {
+		this.terminalWidth = terminalWidth;
+	}
+
+	@Override
 	public Map<String, Object> toTemplateModel() {
 		Map<String, Object> attributes = new HashMap<>();
 		// hardcoding enclosed map values into 'rawValues'
 		// as it may contain anything
 		attributes.put("rawValues", this);
+		attributes.put("terminalWidth", terminalWidth);
 		return attributes;
+	}
+
+	@Override
+	public String toString() {
+		return "BaseComponentContext [terminalWidth=" + terminalWidth + "]";
 	}
 }

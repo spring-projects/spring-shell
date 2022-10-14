@@ -59,6 +59,7 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 		}
 		currentContext = SingleItemSelectorContext.empty(getItemMapper());
 		currentContext.setName(name);
+		currentContext.setTerminalWidth(getTerminal().getWidth());
 		if (currentContext.getItems() == null) {
 			currentContext.setItems(getItems());
 		}
