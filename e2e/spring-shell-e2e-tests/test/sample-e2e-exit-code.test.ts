@@ -23,7 +23,7 @@ describe('e2e commands exit-code', () => {
     cli.run();
     await waitForExpect(async () => {
       const screen = cli.screen();
-      expect(screen).toEqual(expect.arrayContaining([expect.stringContaining('Missing option')]));
+      expect(screen).toEqual(expect.arrayContaining([expect.stringContaining('Missing mandatory option')]));
     });
     await expect(cli.exitCode()).resolves.toBe(2);
   };

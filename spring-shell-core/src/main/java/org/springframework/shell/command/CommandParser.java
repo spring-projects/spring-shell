@@ -484,7 +484,7 @@ public interface CommandParser {
 		}
 	}
 
-	static class CommandParserException extends RuntimeException {
+	public static class CommandParserException extends RuntimeException {
 
 		public CommandParserException(String message) {
 			super(message);
@@ -499,7 +499,7 @@ public interface CommandParser {
 		}
 	}
 
-	static class MissingOptionException extends CommandParserException {
+	public static class MissingOptionException extends CommandParserException {
 
 		private CommandOption option;
 

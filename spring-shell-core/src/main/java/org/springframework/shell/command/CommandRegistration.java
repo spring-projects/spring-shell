@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -105,6 +106,13 @@ public interface CommandRegistration {
 	 * @return the exit code
 	 */
 	CommandExitCode getExitCode();
+
+	/**
+	 * Gets an exception resolvers.
+	 *
+	 * @return the exception resolvers
+	 */
+	List<CommandExceptionResolver> getExceptionResolvers();
 
 	/**
 	 * Gets a new instance of a {@link Builder}.
@@ -440,6 +448,27 @@ public interface CommandRegistration {
 	}
 
 	/**
+	 * Spec defining an error handling.
+	 */
+	public interface ErrorHandlingSpec {
+
+		/**
+		 * Add {@link CommandExceptionResolver}.
+		 *
+		 * @param resolver the resolver
+		 * @return a error handling for chaining
+		 */
+		ErrorHandlingSpec resolver(CommandExceptionResolver resolver);
+
+		/**
+		 * Return a builder for chaining.
+		 *
+		 * @return a builder for chaining
+		 */
+		Builder and();
+	}
+
+	/**
 	 * Builder interface for {@link CommandRegistration}.
 	 */
 	public interface Builder {
@@ -515,6 +544,13 @@ public interface CommandRegistration {
 		 * @return exit code spec for chaining
 		 */
 		ExitCodeSpec withExitCode();
+
+		/**
+		 * Define an error handling what this command should use
+		 *
+		 * @return error handling spec for chaining
+		 */
+		ErrorHandlingSpec withErrorHandling();
 
 		/**
 		 * Builds a {@link CommandRegistration}.
@@ -804,6 +840,27 @@ public interface CommandRegistration {
 		}
 	}
 
+	static class DefaultErrorHandlingSpec implements ErrorHandlingSpec {
+
+		private BaseBuilder builder;
+		private final List<CommandExceptionResolver> resolvers = new ArrayList<>();
+
+		DefaultErrorHandlingSpec(BaseBuilder builder) {
+			this.builder = builder;
+		}
+
+		@Override
+		public ErrorHandlingSpec resolver(CommandExceptionResolver resolver) {
+			this.resolvers.add(resolver);
+			return this;
+		}
+
+		@Override
+		public Builder and() {
+			return builder;
+		}
+	}
+
 	static class DefaultCommandRegistration implements CommandRegistration {
 
 		private String command;
@@ -815,10 +872,12 @@ public interface CommandRegistration {
 		private DefaultTargetSpec targetSpec;
 		private List<DefaultAliasSpec> aliasSpecs;
 		private DefaultExitCodeSpec exitCodeSpec;
+		private DefaultErrorHandlingSpec errorHandlingSpec;
 
 		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String group,
 				String description, Supplier<Availability> availability, List<DefaultOptionSpec> optionSpecs,
-				DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs, DefaultExitCodeSpec exitCodeSpec) {
+				DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs, DefaultExitCodeSpec exitCodeSpec,
+				DefaultErrorHandlingSpec errorHandlingSpec) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.group = group;
@@ -828,6 +887,7 @@ public interface CommandRegistration {
 			this.targetSpec = targetSpec;
 			this.aliasSpecs = aliasSpecs;
 			this.exitCodeSpec = exitCodeSpec;
+			this.errorHandlingSpec = errorHandlingSpec;
 		}
 
 		@Override
@@ -897,6 +957,16 @@ public interface CommandRegistration {
 			}
 		}
 
+		@Override
+		public List<CommandExceptionResolver> getExceptionResolvers() {
+			if (this.errorHandlingSpec == null) {
+				return Collections.emptyList();
+			}
+			else {
+				return this.errorHandlingSpec.resolvers;
+			}
+		}
+
 		private static String commandArrayToName(String[] commands) {
 			return Arrays.asList(commands).stream()
 				.flatMap(c -> Stream.of(c.split(" ")))
@@ -921,6 +991,7 @@ public interface CommandRegistration {
 		private List<DefaultAliasSpec> aliasSpecs = new ArrayList<>();
 		private DefaultTargetSpec targetSpec;
 		private DefaultExitCodeSpec exitCodeSpec;
+		private DefaultErrorHandlingSpec errorHandlingSpec;
 
 		@Override
 		public Builder command(String... commands) {
@@ -987,12 +1058,19 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public ErrorHandlingSpec withErrorHandling() {
+			DefaultErrorHandlingSpec spec = new DefaultErrorHandlingSpec(this);
+			this.errorHandlingSpec = spec;
+			return spec;
+		}
+
+		@Override
 		public CommandRegistration build() {
 			Assert.notNull(commands, "command cannot be empty");
 			Assert.notNull(targetSpec, "target cannot be empty");
 			Assert.state(!(targetSpec.bean != null && targetSpec.function != null), "only one target can exist");
 			return new DefaultCommandRegistration(commands, interactionMode, group, description, availability,
-					optionSpecs, targetSpec, aliasSpecs, exitCodeSpec);
+					optionSpecs, targetSpec, aliasSpecs, exitCodeSpec, errorHandlingSpec);
 		}
 	}
 }

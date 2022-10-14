@@ -1,11 +1,49 @@
 [[dynamic-command-exitcode]]
-=== Exit Code
+=== Exception Handling
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Many command line applications when applicable return an _exit code_ which running environment
 can use to differentiate if command has been executed successfully or not. In a `spring-shell`
 this mostly relates when a command is run on a non-interactive mode meaning one command
 is always executed once with an instance of a `spring-shell`.
+
+==== Exception Resolving
+
+Unhandled exceptions will bubble up into shell's `ResultHandlerService` and then eventually
+handled by some instance of `ResultHandler`. Chain of `ExceptionResolver` implementations
+can be used to resolve exceptions and gives you flexibility to return message to get written
+into console together with exit code which are wrapped within `CommandHandlingResult`.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-resolver-class]
+----
+====
+
+`CommandExceptionResolver` implementations can be defined globally as beans or defined
+per `CommandRegistration` if it's applicable only for a particular command itself.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=example1]
+----
+====
+
+Use you own exception types which can also be an instance of boot's `ExitCodeGenerator` if
+you want to define exit code there.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-class]
+----
+====
+
+NOTE: With annotation based configuration exception resolving can only be customised globally
+
+==== Exit Code Mappings
 
 Default behaviour of an exit codes is as:
 
@@ -37,3 +75,4 @@ include::{snippets}/ExitCodeSnippets.java[tag=example1]
 ====
 
 NOTE: Exit codes cannot be customized with annotation based configuration
+

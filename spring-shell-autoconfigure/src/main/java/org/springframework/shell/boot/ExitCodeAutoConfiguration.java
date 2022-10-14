@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.springframework.boot.ExitCodeExceptionMapper;
+import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandExecution;
+import org.springframework.shell.exit.ExitCodeExceptionProvider;
 import org.springframework.shell.exit.ExitCodeMappings;
 
 /**
@@ -45,6 +47,12 @@ public class ExitCodeAutoConfiguration {
 	@ConditionalOnMissingBean
 	public ShellExitCodeMappingsExceptionMapper shellExitCodeMappingsExceptionMapper() {
 		return new ShellExitCodeMappingsExceptionMapper();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public ExitCodeExceptionProvider exitCodeExceptionProvider() {
+		return (exception, code) -> new ShellExitCodeException(exception, code);
 	}
 
 	static class ShellExitCodeExceptionMapper implements ExitCodeExceptionMapper {
@@ -83,6 +91,21 @@ public class ExitCodeAutoConfiguration {
 				}
 			}
 			return exitCode;
+		}
+	}
+
+	static class ShellExitCodeException extends RuntimeException implements ExitCodeGenerator {
+
+		private int code;
+
+		ShellExitCodeException(Throwable throwable, int code) {
+			super(throwable);
+			this.code = code;
+		}
+
+		@Override
+		public int getExitCode() {
+			return code;
 		}
 	}
 }
