@@ -19,4 +19,4 @@ include::using-shell-commands-organize.adoc[]
 
 include::using-shell-commands-availability.adoc[]
 
-include::using-shell-commands-exitcode.adoc[]
+include::using-shell-commands-exceptionhandling.adoc[]

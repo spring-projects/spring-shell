@@ -455,4 +455,34 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getCompletion()).isNotNull();
 	}
+
+	@Test
+	public void testErrorHandling() {
+		CommandExceptionResolver er1 = new CommandExceptionResolver() {
+			@Override
+			public CommandHandlingResult resolve(Exception e) {
+				return CommandHandlingResult.empty();
+			}
+		};
+		CommandRegistration registration;
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.withErrorHandling()
+				.resolver(er1)
+				.and()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getExceptionResolvers()).hasSize(1);
+		assertThat(registration.getExceptionResolvers().get(0)).isSameAs(er1);
+
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.getExceptionResolvers()).hasSize(0);
+	}
 }

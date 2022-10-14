@@ -201,7 +201,7 @@ public interface CommandExecution {
 		}
 	}
 
-	static class CommandParserExceptionsException extends RuntimeException {
+	public static class CommandParserExceptionsException extends RuntimeException {
 
 		private final List<CommandParserException> parserExceptions;
 

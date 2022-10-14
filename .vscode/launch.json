@@ -34,6 +34,38 @@
         },
         {
             "type": "java",
+            "name": "e2e reg error-handling",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "e2e reg error-handling"
+        },
+        {
+            "type": "java",
+            "name": "e2e reg error-handling arg1 throw1",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "e2e reg error-handling --arg1 throw1"
+        },
+        {
+            "type": "java",
+            "name": "e2e reg error-handling arg1 throw2",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "e2e reg error-handling --arg1 throw2"
+        },
+        {
+            "type": "java",
+            "name": "e2e reg error-handling arg1 throw3",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-samples",
+            "args": "e2e reg error-handling --arg1 throw3"
+        },
+        {
+            "type": "java",
             "name": "e2e exit-code noarg",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",

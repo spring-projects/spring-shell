@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.samples.e2e;
 
+import jakarta.validation.constraints.Min;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
@@ -27,31 +29,38 @@ import org.springframework.shell.standard.ShellOption;
  * @author Janne Valkealahti
  */
 @ShellComponent
-public class RequiredValueCommands extends BaseE2ECommands {
+public class ValidatedValueCommands extends BaseE2ECommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "required-value", group = GROUP)
-	public String testRequiredValueAnnotation(
-		@ShellOption(help = "Desc arg1") String arg1
+	@ShellMethod(key = LEGACY_ANNO + "validated-value", group = GROUP)
+	public String testValidatedValueAnnotation(
+		@ShellOption @Min(value = 1) Integer arg1,
+		@ShellOption @Min(value = 1) Integer arg2
 	) {
 		return "Hello " + arg1;
 	}
 
 	@Bean
-	public CommandRegistration testRequiredValueRegistration() {
+	public CommandRegistration testValidatedValueRegistration() {
 		return CommandRegistration.builder()
-			.command(REG, "required-value")
+			.command(REG, "validated-value")
 			.group(GROUP)
 			.withOption()
 				.longNames("arg1")
-				.description("Desc arg1")
+				.type(Integer.class)
+				.required()
+				.and()
+			.withOption()
+				.longNames("arg2")
+				.type(Integer.class)
 				.required()
 				.and()
 			.withTarget()
 				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
+					Integer arg1 = ctx.getOptionValue("arg1");
 					return "Hello " + arg1;
 				})
 				.and()
 			.build();
 	}
+
 }

@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-
 import org.jline.terminal.Terminal;
 import org.jline.utils.Signals;
 import org.slf4j.Logger;
@@ -39,13 +38,16 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandAlias;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandExecution;
-import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandExecution.CommandExecutionException;
 import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandExceptionResolver;
+import org.springframework.shell.command.CommandHandlingResult;
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
+import org.springframework.shell.exit.ExitCodeExceptionProvider;
 import org.springframework.shell.exit.ExitCodeMappings;
 import org.springframework.util.StringUtils;
 
@@ -73,6 +75,8 @@ public class Shell {
 	private ConversionService conversionService = new DefaultConversionService();
 	private final ShellContext shellContext;
 	private final ExitCodeMappings exitCodeMappings;
+	private Exception handlingResultNonInt = null;
+	private CommandHandlingResult processExceptionNonInt = null;
 
 	/**
 	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid
@@ -81,6 +85,7 @@ public class Shell {
 	protected static final Object UNRESOLVED = new Object();
 
 	private Validator validator = Utils.defaultValidator();
+	private List<CommandExceptionResolver> exceptionResolvers = new ArrayList<>();
 
 	public Shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal,
 			ShellContext shellContext, ExitCodeMappings exitCodeMappings) {
@@ -109,6 +114,18 @@ public class Shell {
 	@Autowired(required = false)
 	public void setValidatorFactory(ValidatorFactory validatorFactory) {
 		this.validator = validatorFactory.getValidator();
+	}
+
+	@Autowired(required = false)
+	public void setExceptionResolvers(List<CommandExceptionResolver> exceptionResolvers) {
+		this.exceptionResolvers = exceptionResolvers;
+	}
+
+	private ExitCodeExceptionProvider exitCodeExceptionProvider;
+
+	@Autowired(required = false)
+	public void setExitCodeExceptionProvider(ExitCodeExceptionProvider exitCodeExceptionProvider) {
+		this.exitCodeExceptionProvider = exitCodeExceptionProvider;
 	}
 
 	/**
@@ -152,6 +169,13 @@ public class Shell {
 				else if (result instanceof Exception) {
 					throw (Exception) result;
 				}
+				if (handlingResultNonInt instanceof CommandExecution.CommandParserExceptionsException) {
+					throw (CommandExecution.CommandParserExceptionsException) handlingResultNonInt;
+				}
+				else if (processExceptionNonInt != null && processExceptionNonInt.exitCode() != null
+						&& exitCodeExceptionProvider != null) {
+					throw exitCodeExceptionProvider.apply(null, processExceptionNonInt.exitCode());
+				}
 			}
 		}
 	}
@@ -165,73 +189,123 @@ public class Shell {
 	 * result
 	 * </p>
 	 */
-	public Object evaluate(Input input) {
+	private Object evaluate(Input input) {
 		if (noInput(input)) {
 			return NO_INPUT;
 		}
 
-		String line = input.words().stream().collect(Collectors.joining(" ")).trim();
+		List<String> words = input.words();
+		String line = words.stream().collect(Collectors.joining(" ")).trim();
 		String command = findLongestCommand(line);
 
-		List<String> words = input.words();
-		log.debug("Evaluate input with line=[{}], command=[{}]", line, command);
-		if (command != null) {
-
-			Optional<CommandRegistration> commandRegistration = commandRegistry.getRegistrations().values().stream()
-				.filter(r -> {
-					if (r.getCommand().equals(command)) {
-						return true;
-					}
-					for (CommandAlias a : r.getAliases()) {
-						if (a.getCommand().equals(command)) {
-							return true;
-						}
-					}
-					return false;
-				})
-				.findFirst();
-
-			if (commandRegistration.isPresent()) {
-				if (this.exitCodeMappings != null) {
-					List<Function<Throwable, Integer>> mappingFunctions = commandRegistration.get().getExitCode()
-							.getMappingFunctions();
-					this.exitCodeMappings.reset(mappingFunctions);
-				}
-
-				List<String> wordsForArgs = wordsForArguments(command, words);
-
-				Thread commandThread = Thread.currentThread();
-				Object sh = Signals.register("INT", () -> commandThread.interrupt());
-				try {
-					CommandExecution execution = CommandExecution
-							.of(argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal, conversionService);
-					return execution.evaluate(commandRegistration.get(), wordsForArgs.toArray(new String[0]));
-				}
-				catch (UndeclaredThrowableException e) {
-					if (e.getCause() instanceof InterruptedException || e.getCause() instanceof ClosedByInterruptException) {
-						Thread.interrupted(); // to reset interrupted flag
-					}
-					return e.getCause();
-				}
-				catch (CommandExecutionException e) {
-					return e.getCause();
-				}
-				catch (Exception e) {
-					return e;
-				}
-				finally {
-					Signals.unregister("INT", sh);
-				}
-			}
-			else {
-				return new CommandNotFound(words);
-			}
-		}
-		else {
+		if (command == null) {
 			return new CommandNotFound(words);
 		}
+
+		log.debug("Evaluate input with line=[{}], command=[{}]", line, command);
+
+		Optional<CommandRegistration> commandRegistration = commandRegistry.getRegistrations().values().stream()
+			.filter(r -> {
+				if (r.getCommand().equals(command)) {
+					return true;
+				}
+				for (CommandAlias a : r.getAliases()) {
+					if (a.getCommand().equals(command)) {
+						return true;
+					}
+				}
+				return false;
+			})
+			.findFirst();
+
+		if (commandRegistration.isEmpty()) {
+			return new CommandNotFound(words);
+		}
+
+		if (this.exitCodeMappings != null) {
+			List<Function<Throwable, Integer>> mappingFunctions = commandRegistration.get().getExitCode()
+					.getMappingFunctions();
+			this.exitCodeMappings.reset(mappingFunctions);
+		}
+
+		List<String> wordsForArgs = wordsForArguments(command, words);
+
+		Thread commandThread = Thread.currentThread();
+		Object sh = Signals.register("INT", () -> commandThread.interrupt());
+
+		CommandExecution execution = CommandExecution.of(
+				argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal,
+				conversionService);
+
+		List<CommandExceptionResolver> commandExceptionResolvers = commandRegistration.get().getExceptionResolvers();
+
+		Object evaluate = null;
+		Exception e = null;
+		try {
+			evaluate = execution.evaluate(commandRegistration.get(), wordsForArgs.toArray(new String[0]));
+		}
+		catch (UndeclaredThrowableException ute) {
+			if (ute.getCause() instanceof InterruptedException || ute.getCause() instanceof ClosedByInterruptException) {
+				Thread.interrupted(); // to reset interrupted flag
+			}
+			return ute.getCause();
+		}
+		catch (CommandExecutionException e1) {
+			return e1.getCause();
+		}
+		catch (Exception e2) {
+			e = e2;
+		}
+		finally {
+			Signals.unregister("INT", sh);
+		}
+		if (e != null) {
+			try {
+				CommandHandlingResult processException = processException(commandExceptionResolvers, e);
+				processExceptionNonInt = processException;
+				if (processException != null) {
+					handlingResultNonInt = e;
+					this.terminal.writer().append(processException.message());
+					this.terminal.writer().flush();
+					return null;
+				}
+			} catch (Exception e1) {
+				e = e1;
+			}
+		}
+		if (e != null) {
+			evaluate = e;
+		}
+		return evaluate;
 	}
 
+	private CommandHandlingResult processException(List<CommandExceptionResolver> commandExceptionResolvers, Exception e)
+			throws Exception {
+		CommandHandlingResult r = null;
+		for (CommandExceptionResolver resolver : commandExceptionResolvers) {
+			r = resolver.resolve(e);
+			if (r != null) {
+				break;
+			}
+		}
+		if (r == null) {
+			for (CommandExceptionResolver resolver : exceptionResolvers) {
+				r = resolver.resolve(e);
+				if (r != null) {
+					break;
+				}
+			}
+		}
+		if (r != null) {
+			if (r.isEmpty()) {
+				return null;
+			}
+			else {
+				return r;
+			}
+		}
+		throw e;
+	}
 
 	/**
 	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an

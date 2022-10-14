@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.TerminalSizeAware;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandParserExceptionResolver;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;
 
@@ -57,8 +58,8 @@ public class ResultHandlerConfig {
 	}
 
 	@Bean
-	public CommandParserExceptionsExceptionResultHandler commandParserExceptionsExceptionResultHandler(Terminal terminal) {
-		return new CommandParserExceptionsExceptionResultHandler(terminal);
+	public CommandParserExceptionResolver commandParserExceptionResolver() {
+		return new CommandParserExceptionResolver();
 	}
 
 	@Bean
