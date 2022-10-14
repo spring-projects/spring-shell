@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.samples.e2e;
 
+import java.io.PrintWriter;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
@@ -48,7 +50,14 @@ public class OptionTypeCommands extends BaseE2ECommands {
 				.label("MYLABEL")
 				.and()
 			.withTarget()
-				.consumer(ctx -> {})
+				.consumer(ctx -> {
+					PrintWriter writer = ctx.getTerminal().writer();
+					if (ctx.hasMappedOption("arg3")) {
+						int v = ctx.getOptionValue("arg3");
+						writer.append("arg3=" + Integer.toString(v) + "\n");
+					}
+					writer.flush();
+				})
 				.and()
 			.build();
 	}

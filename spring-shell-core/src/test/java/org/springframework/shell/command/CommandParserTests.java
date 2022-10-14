@@ -292,7 +292,7 @@ public class CommandParserTests extends AbstractCommandTests {
 		CommandParserResults results = parser.parse(options, args);
 		assertThat(results.results()).hasSize(1);
 		assertThat(results.results().get(0).option()).isSameAs(option1);
-		assertThat(results.results().get(0).value()).isEqualTo(new String[] { "1", "2" });
+		assertThat(results.results().get(0).value()).isEqualTo(new int[] { 1, 2 });
 	}
 
 	@Test
@@ -335,6 +335,34 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results()).hasSize(1);
 		assertThat(results.results().get(0).option()).isSameAs(option1);
 		assertThat(results.results().get(0).value()).isEqualTo(true);
+	}
+
+	@Test
+	public void testIntegerWithDefault() {
+		ResolvableType type = ResolvableType.forType(Integer.class);
+		CommandOption option1 = CommandOption.of(new String[] { "arg1" }, new Character[0], "description", type, false,
+				"1", null, null, null, null, null);
+
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(1);
+	}
+
+	@Test
+	public void testIntegerWithGivenValue() {
+		ResolvableType type = ResolvableType.forType(Integer.class);
+		CommandOption option1 = CommandOption.of(new String[] { "arg1" }, new Character[0], "description", type, false,
+				null, null, null, null, null, null);
+
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[] { "--arg1", "1" };
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(1);
 	}
 
 	private static CommandOption longOption(String name) {

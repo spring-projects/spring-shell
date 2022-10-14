@@ -323,6 +323,11 @@ public interface CommandParser {
 								List<String> subArgs = lr.subList(1, lr.size());
 								ConvertArgumentsHolder holder = convertArguments(o, subArgs);
 								Object value = holder.value;
+								if (conversionService != null && o.getType() != null && value != null) {
+									if (conversionService.canConvert(value.getClass(), o.getType().getRawClass())) {
+										value = conversionService.convert(value, o.getType().getRawClass());
+									}
+								}
 								Stream<ParserResult> unmapped = holder.unmapped.stream()
 									.map(um -> ParserResult.of(null, Arrays.asList(um), null, null));
 								Stream<ParserResult> res = Stream.of(ParserResult.of(o, subArgs, value, null));
@@ -341,7 +346,7 @@ public interface CommandParser {
 							defaultValueOptionsToCheck.remove(pr.option);
 						}
 					});
-					defaultValueOptionsToCheck.stream()
+				defaultValueOptionsToCheck.stream()
 					.filter(co -> co.getDefaultValue() != null)
 					.forEach(co -> {
 						Object value = co.getDefaultValue();
