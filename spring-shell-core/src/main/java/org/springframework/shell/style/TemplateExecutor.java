@@ -38,11 +38,13 @@ public class TemplateExecutor {
 	private final static Logger log = LoggerFactory.getLogger(TemplateExecutor.class);
 	private final static STErrorListener ERROR_LISTENER = new LoggingSTErrorListener();
 	private final ThemeResolver themeResolver;
-	private StringToStyleExpressionRenderer renderer;
+	private StringToStyleExpressionRenderer renderer1;
+	private PartsTextRenderer renderer2;
 
 	public TemplateExecutor(ThemeResolver themeResolver) {
 		this.themeResolver = themeResolver;
-		renderer = new StringToStyleExpressionRenderer(themeResolver);
+		renderer1 = new StringToStyleExpressionRenderer(themeResolver);
+		renderer2 = new PartsTextRenderer(themeResolver);
 	}
 
 	/**
@@ -55,7 +57,8 @@ public class TemplateExecutor {
 	public AttributedString render(String template, Map<String, Object> attributes) {
 		STGroup group = new STGroup();
 		group.setListener(ERROR_LISTENER);
-		group.registerRenderer(String.class, renderer);
+		group.registerRenderer(String.class, renderer1);
+		group.registerRenderer(PartsText.class, renderer2);
 
 		ST st = new ST(group, template);
 		if (attributes != null) {
@@ -76,7 +79,8 @@ public class TemplateExecutor {
 	public AttributedString renderGroup(String template, Map<String, Object> attributes) {
 		STGroup group = new STGroupString(template);
 		group.setListener(ERROR_LISTENER);
-		group.registerRenderer(String.class, renderer);
+		group.registerRenderer(String.class, renderer1);
+		group.registerRenderer(PartsText.class, renderer2);
 
 		// define styled figures as dictionary
 		Map<String, Object> figureDict = Stream.of(FigureSettings.tags())

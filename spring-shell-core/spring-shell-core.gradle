@@ -12,6 +12,7 @@ dependencies {
 	api('org.springframework:spring-messaging')
 	api('org.jline:jline')
 	api('org.antlr:ST4')
+	api('commons-io:commons-io')
 	compileOnly 'com.google.code.findbugs:jsr305'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.awaitility:awaitility'
