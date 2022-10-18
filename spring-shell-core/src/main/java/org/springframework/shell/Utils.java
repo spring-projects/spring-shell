@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,6 +36,7 @@ import jakarta.validation.ValidatorFactory;
 
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
+import org.springframework.shell.command.CommandRegistration;
 
 /**
  * Some text utilities.
@@ -165,5 +168,22 @@ public class Utils {
 		}
 
 		return split;
+	}
+
+	/**
+	 * Takes a map of command registrations and removes hidden commands from it.
+	 *
+	 * @param registrations a command registrations
+	 * @return same map with removed hidden commands
+	 */
+	public static Map<String, CommandRegistration> removeHiddenCommands(Map<String, CommandRegistration> registrations) {
+		Iterator<Map.Entry<String, CommandRegistration>> iter = registrations.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry<String, CommandRegistration> entry = iter.next();
+			if (entry.getValue().isHidden()) {
+				iter.remove();
+			}
+		}
+		return registrations;
 	}
 }

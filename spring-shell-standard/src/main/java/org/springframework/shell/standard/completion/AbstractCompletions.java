@@ -25,7 +25,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,6 +38,7 @@ import org.stringtemplate.v4.STGroupString;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.util.FileCopyUtils;
@@ -68,7 +71,8 @@ public abstract class AbstractCompletions {
 	 * all needed to build completions structure.
 	 */
 	protected CommandModel generateCommandModel() {
-		Collection<CommandRegistration> commandsByName = commandCatalog.getRegistrations().values();
+		Collection<CommandRegistration> commandsByName = Utils.removeHiddenCommands(commandCatalog.getRegistrations())
+				.values();
 		HashMap<String, DefaultCommandModelCommand> commands = new HashMap<>();
 		HashSet<CommandModelCommand> topCommands = new HashSet<>();
 		commandsByName.stream()

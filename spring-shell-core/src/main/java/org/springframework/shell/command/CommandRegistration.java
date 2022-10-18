@@ -66,6 +66,13 @@ public interface CommandRegistration {
 	String getGroup();
 
 	/**
+	 * Returns if command is hidden.
+	 *
+	 * @return true if command is hidden
+	 */
+	boolean isHidden();
+
+	/**
 	 * Get description for a command.
 	 *
 	 * @return the description
@@ -517,6 +524,22 @@ public interface CommandRegistration {
 		Builder group(String group);
 
 		/**
+		 * Define a command to be hidden.
+		 *
+		 * @return builder for chaining
+		 * @see #hidden(boolean)
+		 */
+		Builder hidden();
+
+		/**
+		 * Define a command to be hidden by a given flag.
+		 *
+		 * @param hidden the hidden flag
+		 * @return builder for chaining
+		 */
+		Builder hidden(boolean hidden);
+
+		/**
 		 * Define an option what this command should user for. Can be used multiple
 		 * times.
 		 *
@@ -866,6 +889,7 @@ public interface CommandRegistration {
 		private String command;
 		private InteractionMode interactionMode;
 		private String group;
+		private boolean hidden;
 		private String description;
 		private Supplier<Availability> availability;
 		private List<DefaultOptionSpec> optionSpecs;
@@ -875,12 +899,13 @@ public interface CommandRegistration {
 		private DefaultErrorHandlingSpec errorHandlingSpec;
 
 		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String group,
-				String description, Supplier<Availability> availability, List<DefaultOptionSpec> optionSpecs,
-				DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs, DefaultExitCodeSpec exitCodeSpec,
-				DefaultErrorHandlingSpec errorHandlingSpec) {
+				boolean hidden,	String description, Supplier<Availability> availability,
+				List<DefaultOptionSpec> optionSpecs, DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs,
+				DefaultExitCodeSpec exitCodeSpec, DefaultErrorHandlingSpec errorHandlingSpec) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.group = group;
+			this.hidden = hidden;
 			this.description = description;
 			this.availability = availability;
 			this.optionSpecs = optionSpecs;
@@ -903,6 +928,11 @@ public interface CommandRegistration {
 		@Override
 		public String getGroup() {
 			return group;
+		}
+
+		@Override
+		public boolean isHidden() {
+			return hidden;
 		}
 
 		@Override
@@ -985,6 +1015,7 @@ public interface CommandRegistration {
 		private String[] commands;
 		private InteractionMode interactionMode = InteractionMode.ALL;
 		private String group;
+		private boolean hidden;
 		private String description;
 		private Supplier<Availability> availability;
 		private List<DefaultOptionSpec> optionSpecs = new ArrayList<>();
@@ -1020,6 +1051,17 @@ public interface CommandRegistration {
 		@Override
 		public Builder group(String group) {
 			this.group = group;
+			return this;
+		}
+
+		@Override
+		public Builder hidden() {
+			return hidden(true);
+		}
+
+		@Override
+		public Builder hidden(boolean hidden) {
+			this.hidden = hidden;
 			return this;
 		}
 
@@ -1069,7 +1111,7 @@ public interface CommandRegistration {
 			Assert.notNull(commands, "command cannot be empty");
 			Assert.notNull(targetSpec, "target cannot be empty");
 			Assert.state(!(targetSpec.bean != null && targetSpec.function != null), "only one target can exist");
-			return new DefaultCommandRegistration(commands, interactionMode, group, description, availability,
+			return new DefaultCommandRegistration(commands, interactionMode, group, hidden, description, availability,
 					optionSpecs, targetSpec, aliasSpecs, exitCodeSpec, errorHandlingSpec);
 		}
 	}

@@ -18,7 +18,9 @@ package org.springframework.shell;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -196,7 +198,7 @@ public class Shell {
 
 		List<String> words = input.words();
 		String line = words.stream().collect(Collectors.joining(" ")).trim();
-		String command = findLongestCommand(line);
+		String command = findLongestCommand(line, false);
 
 		if (command == null) {
 			return new CommandNotFound(words);
@@ -349,7 +351,7 @@ public class Shell {
 		List<CompletionProposal> candidates = new ArrayList<>();
 		candidates.addAll(commandsStartingWith(prefix));
 
-		String best = findLongestCommand(prefix);
+		String best = findLongestCommand(prefix, true);
 		if (best != null) {
 			context = context.drop(best.split(" ").length);
 			CommandRegistration registration = commandRegistry.getRegistrations().get(best);
@@ -434,7 +436,7 @@ public class Shell {
 		// Workaround for https://github.com/spring-projects/spring-shell/issues/150
 		// (sadly, this ties this class to JLine somehow)
 		int lastWordStart = prefix.lastIndexOf(' ') + 1;
-		return commandRegistry.getRegistrations().entrySet().stream()
+		return Utils.removeHiddenCommands(commandRegistry.getRegistrations()).entrySet().stream()
 			.filter(e -> e.getKey().startsWith(prefix))
 			.map(e -> {
 				String c = e.getKey();
@@ -456,8 +458,12 @@ public class Shell {
 	 *
 	 * @return a valid command name, or {@literal null} if none matched
 	 */
-	private String findLongestCommand(String prefix) {
-		String result = commandRegistry.getRegistrations().keySet().stream()
+	private String findLongestCommand(String prefix, boolean filterHidden) {
+		Map<String, CommandRegistration> registrations = commandRegistry.getRegistrations();
+		if (filterHidden) {
+			registrations = Utils.removeHiddenCommands(registrations);
+		}
+		String result = registrations.keySet().stream()
 				.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))
 				.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
 		return "".equals(result) ? null : result;

@@ -21,11 +21,13 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.jline.utils.AttributedString;
 
 import org.springframework.core.io.Resource;
+import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.CommandValueProvider;
@@ -114,7 +116,8 @@ public class Help extends AbstractShellComponent {
 	}
 
 	private AttributedString renderCommands() {
-		Map<String, CommandRegistration> registrations = getCommandCatalog().getRegistrations();
+		Map<String, CommandRegistration> registrations = Utils
+				.removeHiddenCommands(getCommandCatalog().getRegistrations());
 
 		boolean isStg = this.commandTemplate.endsWith(".stg");
 
@@ -127,7 +130,8 @@ public class Help extends AbstractShellComponent {
 	}
 
 	private AttributedString renderCommand(String command) {
-		Map<String, CommandRegistration> registrations = getCommandCatalog().getRegistrations();
+		Map<String, CommandRegistration> registrations = Utils
+				.removeHiddenCommands(getCommandCatalog().getRegistrations());
 		CommandRegistration registration = registrations.get(command);
 		if (registration == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");

@@ -485,4 +485,42 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			.build();
 		assertThat(registration.getExceptionResolvers()).hasSize(0);
 	}
+
+	@Test
+	public void testHidden() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.isHidden()).isFalse();
+
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.hidden()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.isHidden()).isTrue();
+
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.hidden(false)
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.isHidden()).isFalse();
+
+		registration = CommandRegistration.builder()
+			.command("command1")
+			.hidden(true)
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		assertThat(registration.isHidden()).isTrue();
+	}
 }
