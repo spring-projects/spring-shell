@@ -2,6 +2,7 @@ Some info how screen recordings were made
 
 asciinema rec spring-shell-docs/src/main/asciidoc/asciinema/component-text-input-1.cast
 asciinema rec spring-shell-docs/src/main/asciidoc/asciinema/component-path-input-1.cast
+asciinema rec spring-shell-docs/src/main/asciidoc/asciinema/component-path-search-1.cast
 asciinema rec spring-shell-docs/src/main/asciidoc/asciinema/component-confirmation-1.cast
 asciinema rec spring-shell-docs/src/main/asciidoc/asciinema/component-single-select-1.cast
 asciinema rec spring-shell-docs/src/main/asciidoc/asciinema/component-multi-select-1.cast
@@ -14,6 +15,9 @@ svg-term \
 svg-term \
   --in spring-shell-docs/src/main/asciidoc/asciinema/component-path-input-1.cast \
   --out spring-shell-docs/src/main/asciidoc/images/component-path-input-1.svg
+svg-term \
+  --in spring-shell-docs/src/main/asciidoc/asciinema/component-path-search-1.cast \
+  --out spring-shell-docs/src/main/asciidoc/images/component-path-search-1.svg
 svg-term \
   --in spring-shell-docs/src/main/asciidoc/asciinema/component-confirmation-1.cast \
   --out spring-shell-docs/src/main/asciidoc/images/component-confirmation-1.svg

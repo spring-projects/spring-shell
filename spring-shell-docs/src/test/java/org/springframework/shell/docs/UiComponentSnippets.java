@@ -28,11 +28,14 @@ import org.jline.utils.AttributedStringBuilder;
 import org.springframework.shell.component.ConfirmationInput;
 import org.springframework.shell.component.MultiItemSelector;
 import org.springframework.shell.component.PathInput;
+import org.springframework.shell.component.PathSearch;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.StringInput;
 import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
 import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
 import org.springframework.shell.component.PathInput.PathInputContext;
+import org.springframework.shell.component.PathSearch.PathSearchConfig;
+import org.springframework.shell.component.PathSearch.PathSearchContext;
 import org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.support.SelectorItem;
@@ -109,7 +112,7 @@ public class UiComponentSnippets {
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
 
-			@ShellMethod(key = "component path", value = "Path input", group = "Components")
+			@ShellMethod(key = "component path input", value = "Path input", group = "Components")
 			public String pathInput() {
 				PathInput component = new PathInput(getTerminal(), "Enter value");
 				component.setResourceLoader(getResourceLoader());
@@ -211,4 +214,28 @@ public class UiComponentSnippets {
 		}
 	}
 
+	class Dump8 {
+		@ShellComponent
+		public class ComponentCommands extends AbstractShellComponent {
+
+			@ShellMethod(key = "component path input", value = "Path search", group = "Components")
+			public String pathSearch() {
+				// tag::snippet9[]
+				PathSearchConfig config = new PathSearch.PathSearchConfig();
+				config.setMaxPathsShow(5);
+				config.setMaxPathsSearch(100);
+				config.setSearchForward(true);
+				config.setSearchCaseSensitive(false);
+				config.setSearchNormalize(false);
+
+				PathSearch component = new PathSearch(getTerminal(), "Enter value", config);
+				component.setResourceLoader(getResourceLoader());
+				component.setTemplateExecutor(getTemplateExecutor());
+
+				PathSearchContext context = component.run(PathSearchContext.empty());
+				return "Got value " + context.getResultValue();
+				// end::snippet9[]
+			}
+		}
+	}
 }

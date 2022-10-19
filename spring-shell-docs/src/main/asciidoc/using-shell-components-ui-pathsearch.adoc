@@ -1,0 +1,32 @@
+[[using-shell-components-ui-pathsearch]]
+==== Path Search
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+The path search component asks base directory for scan and optional search expression.
+Results are shown in a single select list where user can pick a path.
+`PathSearchConfig` can be used to customise component behaviour.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet9]
+----
+====
+
+The following image shows typical output from a path search component:
+
+image::images/component-path-search-1.svg[text input]
+
+The context object is `PathSearchContext`. The following table describes its context variables:
+
+[[pathsearchcontext-template-variables]]
+.PathSearchContext Template Variables
+|===
+|Key |Description
+
+|`pathViewItems`
+|The items available for rendering search results.
+
+|`model`
+|The parent context variables (see <<textcomponentcontext-template-variables>>).
+|===
