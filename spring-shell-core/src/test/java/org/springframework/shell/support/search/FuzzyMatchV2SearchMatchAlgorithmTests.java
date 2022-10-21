@@ -146,7 +146,11 @@ class FuzzyMatchV2SearchMatchAlgorithmTests {
 			Arguments.of(false, true, "/tmp/test/suomi/O.txt", "oo", false, 12, 17, new int[] { 12, 16 },
 				SCORE_MATCH * 2 + BONUS_BOUNDARY_DELIMITER + SCORE_GAP_START + SCORE_GAP_EXTENSION * 2),
 			Arguments.of(false, true, "/tmp/test/suomi/Ö.txt", "oo", false, 12, 17, new int[] { 12, 16 },
-				SCORE_MATCH * 2 + BONUS_BOUNDARY_DELIMITER + SCORE_GAP_START + SCORE_GAP_EXTENSION * 2)
+				SCORE_MATCH * 2 + BONUS_BOUNDARY_DELIMITER + SCORE_GAP_START + SCORE_GAP_EXTENSION * 2),
+			Arguments.of(false, true, "spring-shell-core/build/test-results/test/TEST-org.springframework.shell.support.search.FuzzyMatchV2SearchMatchAlgorithmTests.xml", "class", false, 13, 74, new int[] { 13, 33, 59, 67, 73 },
+				48),
+			Arguments.of(false, true, "e2e/spring-shell-e2e-tests/node_modules/@babel/plugin-syntax-typescript/test/fixtures/disallow-jsx-ambiguity/type-parameter-unambiguous/output.js", "class", false, 66, 145, new int[] { 66, 90, 126, 134, 144 },
+				28)
 			);
 	}
 

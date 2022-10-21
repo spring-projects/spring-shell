@@ -44,37 +44,53 @@ public class PartsTextRenderer implements AttributeRenderer<PartsText> {
 		int width = values.width;
 		int max = width - prefix;
 		List<PartText> parts = value.getParts();
+
 		for (int i = 0; i < parts.size(); i++) {
-			PartText pt = parts.get(i);
-			String text;
+			PartText current = parts.get(i);
+			PartText next = i + 1 < parts.size() ? parts.get(i + 1) : null;
+
 			boolean doBreak = false;
+			String text = current.getText();
+			int currentLen = len + text.length();
+			int nextLen = next != null ? currentLen + next.getText().length() : -1;
 
-			int newLen = len + pt.getText().length();
-
-			// if current would take over max length
-			if (newLen > max) {
-				int l = max - len - dots;
-				text = String.format(locale, "%1." + l + "s.." , pt.getText());
+			if (currentLen > max - dots && nextLen > 0) {
+				int l = max - len;
+				int diff = l - text.length();
+				if (diff == 1) {
+					text = text.substring(0, text.length() - 1) + "..";
+				}
+				else if (diff == 0) {
+					text = String.format(locale, "%1." + (text.length() - 2) + "s.." , text);
+				}
+				else {
+					text = String.format(locale, "%1." + (l - dots) + "s.." , text);
+				}
 				doBreak = true;
 			}
-			// if next would take over max length
-			else if (i + 1 < parts.size() && newLen + parts.get(i + 1).getText().length() > max) {
-				int l = max - len - dots;
-				text = String.format(locale, "%1." + l + "s.." , pt.getText());
+			else if (currentLen == max - dots) {
+				text = text + "..";
 				doBreak = true;
 			}
-			// we're fine as is
-			else {
-				text = pt.getText();
+			else if (currentLen > max) {
+				int l = max - len - dots;
+				if (l == 0) {
+					text = "..";
+				}
+				else {
+					text = String.format(locale, "%1." + l + "s.." , text);
+				}
+				doBreak = true;
 			}
-			String tag = pt.isMatch() ? values.matchStyle : values.textStyle;
+
+			String tag = current.isMatch() ? values.matchStyle : values.textStyle;
 			buf.append(String.format("@{%s %s}", themeResolver.resolveStyleTag(tag), text));
-			len += pt.getText().length();
+			len += text.length();
+
 			if (doBreak) {
 				break;
 			}
 		}
-
 		return buf.toString();
 	}
 
