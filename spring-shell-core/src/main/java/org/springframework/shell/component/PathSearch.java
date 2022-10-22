@@ -235,7 +235,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 					if (!StringUtils.hasText(text)) {
 						text = ".";
 					}
-					PartsText partsText = PathSearchContext.ofNameMatchPartsx(text, positions);
+					PartsText partsText = PathSearchContext.ofPositions(text, positions);
 					PathViewItem item = new PathViewItem(scoredPath.getPath(), partsText, false);
 					return item;
 				})
@@ -438,13 +438,13 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		 * @param positions the positions array, expected to be ordered and no duplicates
 		 * @return parts text
 		 */
-		public static PartsText ofNameMatchPartsx(String text, int[] positions) {
+		public static PartsText ofPositions(String text, int[] positions) {
 			List<PartText> parts = new ArrayList<>();
 			if (positions.length == 0) {
-				parts.addAll(nameMatchPartsx(text, -1));
+				parts.addAll(ofPosition(text, -1));
 			}
 			else if (positions.length == 1 && positions[0] == text.length()) {
-				parts.addAll(nameMatchPartsx(text, text.length() - 1));
+				parts.addAll(ofPosition(text, text.length() - 1));
 			}
 			else {
 				int sidx = 0;
@@ -453,22 +453,22 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 					eidx = positions[i];
 					if (sidx < text.length()) {
 						String partText = text.substring(sidx, eidx + 1);
-						parts.addAll(nameMatchPartsx(partText, eidx - sidx));
+						parts.addAll(ofPosition(partText, eidx - sidx));
 					}
 					else {
-						parts.addAll(nameMatchPartsx(String.valueOf(text.charAt(text.length() - 1)), 0));
+						parts.addAll(ofPosition(String.valueOf(text.charAt(text.length() - 1)), 0));
 					}
 					sidx = eidx + 1;
 				}
 				if (sidx < text.length()) {
 					String partText = text.substring(sidx, text.length());
-					parts.addAll(nameMatchPartsx(partText, -1));
+					parts.addAll(ofPosition(partText, -1));
 				}
 			}
 			return PartsText.of(parts);
 		}
 
-		static List<PartText> nameMatchPartsx(String text, int position) {
+		static List<PartText> ofPosition(String text, int position) {
 			List<PartText> parts = new ArrayList<>();
 			if (position < 0) {
 				parts.add(PartText.of(text, false));

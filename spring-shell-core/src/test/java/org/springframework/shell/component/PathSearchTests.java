@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PathSearchTests {
 
-	static Stream<Arguments> testOfNameMatchParts() {
+	static Stream<Arguments> testParts() {
 		return Stream.of(
 			Arguments.of("0", new int[] { 0 },
 				Arrays.asList(PartText.of("0", true))),
@@ -95,9 +95,9 @@ public class PathSearchTests {
 
 	@ParameterizedTest
 	@MethodSource
-	void testOfNameMatchParts(String text, int[] positions, List<PartText> parts) {
-		PartsText ofNameMatchPartsx = PathSearchContext.ofNameMatchPartsx(text, positions);
-		List<PartText> res = ofNameMatchPartsx.getParts();
+	void testParts(String text, int[] positions, List<PartText> parts) {
+		PartsText partsText = PathSearchContext.ofPositions(text, positions);
+		List<PartText> res = partsText.getParts();
 		assertThat(res).hasSize(parts.size());
 		for (int i = 0; i < parts.size(); i++) {
 			assertThat(res.get(i).getText()).isEqualTo(parts.get(i).getText());
