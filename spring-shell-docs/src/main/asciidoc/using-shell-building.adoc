@@ -27,12 +27,12 @@ For _gradle_ add graalvm's native plugin and configure metadata repository.
 [source, groovy, subs=attributes+]
 ----
 plugins {
-	id 'org.graalvm.buildtools.native' version '0.9.14'
+	id 'org.graalvm.buildtools.native' version '0.9.16'
 }
 
 graalvmNative {
 	metadataRepository {
-		version = "0.2.0"
+        enabled = true
 	}
 }
 ----
@@ -55,7 +55,7 @@ profile which can be used to do a compilation. You need to configure metadata re
                 <artifactId>native-maven-plugin</artifactId>
                 <configuration>
                     <metadataRepository>
-                        <version>0.2.0</version>
+                        <enabled>true</enabled>
                     </metadataRepository>
                 </configuration>
             </plugin>
