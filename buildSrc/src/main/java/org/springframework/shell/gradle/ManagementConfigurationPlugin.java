@@ -52,6 +52,8 @@ public class ManagementConfigurationPlugin implements Plugin<Project> {
 				configurations.getByName("testFixturesCompileClasspath").extendsFrom(management);
 				configurations.getByName("testFixturesRuntimeClasspath").extendsFrom(management);
 			});
+			plugins.withType(OptionalDependenciesPlugin.class, (optionalDependencies) -> configurations
+				.getByName(OptionalDependenciesPlugin.OPTIONAL_CONFIGURATION_NAME).extendsFrom(management));
 			plugins.withType(MavenPublishPlugin.class, (mavenPublish) -> {
 				PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
 				publishing.getPublications().withType(MavenPublication.class, (mavenPublication -> {

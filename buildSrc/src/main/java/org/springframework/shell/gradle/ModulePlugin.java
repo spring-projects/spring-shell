@@ -30,6 +30,7 @@ class ModulePlugin implements Plugin<Project> {
 	public final void apply(Project project) {
 		PluginManager pluginManager = project.getPluginManager();
 		pluginManager.apply(JavaPlugin.class);
+		pluginManager.apply(OptionalDependenciesPlugin.class);
 		pluginManager.apply(ManagementConfigurationPlugin.class);
 		pluginManager.apply(JavaLibraryPlugin.class);
 		pluginManager.apply(SpringMavenPlugin.class);

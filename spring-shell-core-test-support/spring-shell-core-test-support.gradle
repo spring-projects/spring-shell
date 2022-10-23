@@ -7,5 +7,5 @@ description = 'Spring Shell Core Test Support'
 dependencies {
 	management platform(project(":spring-shell-management"))
 	implementation project(':spring-shell-core')
-	api('org.assertj:assertj-core')
+	optional('org.assertj:assertj-core')
 }
