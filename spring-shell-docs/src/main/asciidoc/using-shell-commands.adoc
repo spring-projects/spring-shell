@@ -14,3 +14,5 @@ include::using-shell-commands-availability.adoc[]
 include::using-shell-commands-exceptionhandling.adoc[]
 
 include::using-shell-commands-hidden.adoc[]
+
+include::using-shell-commands-interactionmode.adoc[]
