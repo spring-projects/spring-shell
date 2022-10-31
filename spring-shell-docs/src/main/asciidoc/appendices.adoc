@@ -1,1 +1,3 @@
 include::appendices-techical-intro.adoc[]
+
+include::appendices-debugging.adoc[]
