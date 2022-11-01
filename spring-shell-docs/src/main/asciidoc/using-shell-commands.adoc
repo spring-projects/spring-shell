@@ -16,3 +16,5 @@ include::using-shell-commands-exceptionhandling.adoc[]
 include::using-shell-commands-hidden.adoc[]
 
 include::using-shell-commands-interactionmode.adoc[]
+
+include::using-shell-commands-builtin.adoc[]
