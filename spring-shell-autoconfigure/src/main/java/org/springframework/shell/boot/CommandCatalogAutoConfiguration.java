@@ -19,16 +19,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
 
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class CommandCatalogAutoConfiguration {
 
 	@Bean

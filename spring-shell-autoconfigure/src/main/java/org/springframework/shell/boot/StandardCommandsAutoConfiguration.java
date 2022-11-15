@@ -19,6 +19,7 @@ package org.springframework.shell.boot;
 import org.jline.reader.Parser;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,9 +28,8 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.boot.SpringShellProperties.VersionCommand;
 import org.springframework.shell.boot.SpringShellProperties.HelpCommand.GroupingMode;
+import org.springframework.shell.boot.SpringShellProperties.VersionCommand;
 import org.springframework.shell.boot.condition.OnCompletionCommandCondition;
 import org.springframework.shell.result.ThrowableResultHandler;
 import org.springframework.shell.standard.commands.Clear;
@@ -47,7 +47,7 @@ import org.springframework.shell.style.TemplateExecutor;
  *
  * @author Eric Bottard
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnClass({ Help.Command.class })
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class StandardCommandsAutoConfiguration {

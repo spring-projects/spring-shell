@@ -16,10 +16,10 @@
 package org.springframework.shell.boot;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.style.TemplateExecutor;
 import org.springframework.shell.style.Theme;
 import org.springframework.shell.style.ThemeActive;
@@ -28,7 +28,7 @@ import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeSettings;
 import org.springframework.util.StringUtils;
 
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class ThemingAutoConfiguration {
 

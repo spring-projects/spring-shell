@@ -24,14 +24,14 @@ import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.CompletingParsedLine;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.Shell;
 
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class CompleterAutoConfiguration {
 
 	@Autowired

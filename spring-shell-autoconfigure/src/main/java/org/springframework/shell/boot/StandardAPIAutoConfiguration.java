@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package org.springframework.shell.boot;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.standard.CommandValueProvider;
@@ -31,7 +31,7 @@ import org.springframework.shell.standard.ValueProvider;
  *
  * @author Eric Bottard
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class StandardAPIAutoConfiguration {
 
 	@Bean

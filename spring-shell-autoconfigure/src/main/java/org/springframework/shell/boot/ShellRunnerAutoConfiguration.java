@@ -19,9 +19,9 @@ import org.jline.reader.LineReader;
 import org.jline.reader.Parser;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.Shell;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;
@@ -29,7 +29,7 @@ import org.springframework.shell.jline.NonInteractiveShellRunner;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.shell.jline.ScriptShellRunner;
 
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class ShellRunnerAutoConfiguration {
 
 	private Shell shell;

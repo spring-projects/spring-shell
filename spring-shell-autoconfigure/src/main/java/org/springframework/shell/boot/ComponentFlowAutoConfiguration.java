@@ -18,6 +18,7 @@ package org.springframework.shell.boot;
 import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -35,7 +36,7 @@ import org.springframework.shell.style.TemplateExecutor;
  *
  * @author Janne Valkealahti
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnClass(ComponentFlow.class)
 public class ComponentFlowAutoConfiguration {
 

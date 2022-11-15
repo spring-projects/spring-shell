@@ -18,8 +18,8 @@ package org.springframework.shell.boot;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.handler.annotation.support.HeadersMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.shell.command.ArgumentHeaderMethodArgumentResolver;
@@ -30,7 +30,7 @@ import org.springframework.shell.completion.RegistrationOptionsCompletionResolve
 import org.springframework.shell.config.ShellConversionServiceSupplier;
 import org.springframework.shell.standard.ShellOptionMethodArgumentResolver;
 
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class ParameterResolverAutoConfiguration {
 
 	@Bean

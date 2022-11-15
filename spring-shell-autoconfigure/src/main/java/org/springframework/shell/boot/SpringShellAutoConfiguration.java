@@ -20,11 +20,11 @@ import java.util.Set;
 
 import org.jline.terminal.Terminal;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.format.support.FormattingConversionService;
@@ -41,7 +41,7 @@ import org.springframework.shell.result.ResultHandlerConfig;
 /**
  * Creates supporting beans for running the Shell
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @Import(ResultHandlerConfig.class)
 public class SpringShellAutoConfiguration {
 

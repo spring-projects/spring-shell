@@ -21,10 +21,10 @@ import java.util.function.Function;
 
 import org.springframework.boot.ExitCodeExceptionMapper;
 import org.springframework.boot.ExitCodeGenerator;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandExecution;
 import org.springframework.shell.exit.ExitCodeExceptionProvider;
 import org.springframework.shell.exit.ExitCodeMappings;
@@ -34,7 +34,7 @@ import org.springframework.shell.exit.ExitCodeMappings;
  *
  * @author Janne Valkealahti
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class ExitCodeAutoConfiguration {
 
 	@Bean

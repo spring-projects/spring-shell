@@ -25,9 +25,9 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.jline.ExtendedDefaultParser;
 import org.springframework.shell.jline.PromptProvider;
 
@@ -37,7 +37,7 @@ import org.springframework.shell.jline.PromptProvider;
  * @author Eric Bottard
  * @author Florent Biville
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class JLineShellAutoConfiguration {
 
 	@Bean(destroyMethod = "close")
