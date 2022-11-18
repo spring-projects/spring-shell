@@ -16,12 +16,26 @@
 package org.springframework.shell.jline;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.boot.DefaultApplicationArguments;
+import org.springframework.shell.InputProvider;
+import org.springframework.shell.Shell;
+import org.springframework.shell.context.DefaultShellContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 public class NonInteractiveShellRunnerTests {
+
+	@Spy
+	@InjectMocks
+	private Shell shell;
 
 	@Test
 	public void testEmptyArgsDontRun() {
@@ -35,5 +49,38 @@ public class NonInteractiveShellRunnerTests {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(null, null);
 		DefaultApplicationArguments args = new DefaultApplicationArguments("hi");
 		assertThat(runner.canRun(args)).isTrue();
+	}
+
+	@Test
+	public void shouldQuoteWithWhitespace() throws Exception {
+		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
+		DefaultApplicationArguments args = new DefaultApplicationArguments("foo bar");
+		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
+		Mockito.doNothing().when(shell).run(valueCapture.capture());
+		runner.run(args);
+		InputProvider value = valueCapture.getValue();
+		assertThat(value.readInput().rawText()).isEqualTo("\"foo bar\"");
+	}
+
+	@Test
+	public void shouldNotQuoteIfQuoted() throws Exception {
+		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
+		DefaultApplicationArguments args = new DefaultApplicationArguments("'foo bar'");
+		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
+		Mockito.doNothing().when(shell).run(valueCapture.capture());
+		runner.run(args);
+		InputProvider value = valueCapture.getValue();
+		assertThat(value.readInput().rawText()).isEqualTo("'foo bar'");
+	}
+
+	@Test
+	public void shouldNotQuoteWithoutWhitespace() throws Exception {
+		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
+		DefaultApplicationArguments args = new DefaultApplicationArguments("foobar");
+		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
+		Mockito.doNothing().when(shell).run(valueCapture.capture());
+		runner.run(args);
+		InputProvider value = valueCapture.getValue();
+		assertThat(value.readInput().rawText()).isEqualTo("foobar");
 	}
 }

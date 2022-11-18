@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.jline;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -33,6 +34,7 @@ import org.springframework.shell.ShellRunner;
 import org.springframework.shell.Utils;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
+import org.springframework.util.StringUtils;
 
 /**
  * A {@link ShellRunner} that executes commands without entering interactive shell mode.
@@ -58,9 +60,32 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private Parser lineParser;
 
-	private Function<ApplicationArguments, List<String>> commandsFromInputArgs = args -> args
-			.getSourceArgs().length == 0 ? Collections.emptyList()
-					: Collections.singletonList(String.join(" ", args.getSourceArgs()));
+    private static final String SINGLE_QUOTE = "\'";
+    private static final String DOUBLE_QUOTE = "\"";
+
+	private Function<ApplicationArguments, List<String>> commandsFromInputArgs = args -> {
+		if (args.getSourceArgs().length == 0) {
+			return Collections.emptyList();
+		}
+		// re-quote if needed having whitespace
+		String raw = Arrays.stream(args.getSourceArgs())
+			.map(a -> {
+				if (!isQuoted(a) && StringUtils.containsWhitespace(a)) {
+					return "\"" + a + "\"";
+				}
+				return a;
+			})
+			.collect(Collectors.joining(" "));
+		return Collections.singletonList(raw);
+	};
+
+	private static boolean isQuoted(String str) {
+		if (str == null) {
+			return false;
+		}
+		return str.startsWith(SINGLE_QUOTE) && str.endsWith(SINGLE_QUOTE)
+				|| str.startsWith(DOUBLE_QUOTE) && str.endsWith(DOUBLE_QUOTE);
+	}
 
 	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext) {
 		this.shell = shell;
