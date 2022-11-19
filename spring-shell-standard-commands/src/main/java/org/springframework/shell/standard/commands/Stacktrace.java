@@ -54,8 +54,11 @@ public class Stacktrace extends AbstractShellComponent {
 			value = "Display the full stacktrace of the last error.",
 			interactionMode = InteractionMode.INTERACTIVE)
 	public void stacktrace() {
-		if (throwableResultHandler.getIfAvailable().getLastError() != null) {
-			throwableResultHandler.getIfAvailable().getLastError().printStackTrace(getTerminal().writer());
+		ThrowableResultHandler handler = throwableResultHandler.getIfAvailable();
+		if (handler != null) {
+			if (handler.getLastError() != null) {
+				handler.getLastError().printStackTrace(getTerminal().writer());
+			}
 		}
 	}
 }

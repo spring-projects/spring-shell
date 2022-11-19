@@ -72,9 +72,11 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 		}
 		currentContext = ConfirmationInputContext.of(defaultValue);
 		currentContext.setName(getName());
-		context.stream().forEach(e -> {
-			currentContext.put(e.getKey(), e.getValue());
-		});
+		if (context != null) {
+			context.stream().forEach(e -> {
+				currentContext.put(e.getKey(), e.getValue());
+			});
+		}
 		return currentContext;
 	}
 

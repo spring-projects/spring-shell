@@ -69,9 +69,11 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 		}
 		currentContext = PathInputContext.empty();
 		currentContext.setName(getName());
-		context.stream().forEach(e -> {
-			currentContext.put(e.getKey(), e.getValue());
-		});
+		if (context != null) {
+			context.stream().forEach(e -> {
+				currentContext.put(e.getKey(), e.getValue());
+			});
+		}
 		return currentContext;
 	}
 

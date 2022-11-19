@@ -124,9 +124,11 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		currentContext.setTerminalWidth(getTerminal().getWidth());
 		currentContext.setPathSearchConfig(this.config);
 		currentContext.setMessage("Type '<path> <pattern>' to search", MessageLevel.INFO);
-		context.stream().forEach(e -> {
-			currentContext.put(e.getKey(), e.getValue());
-		});
+		if (context != null) {
+			context.stream().forEach(e -> {
+				currentContext.put(e.getKey(), e.getValue());
+			});
+		}
 		return currentContext;
 	}
 

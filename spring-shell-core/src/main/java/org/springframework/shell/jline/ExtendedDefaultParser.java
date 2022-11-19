@@ -125,23 +125,24 @@ public class ExtendedDefaultParser implements Parser {
 			}
 		}
 
-		if (current.length() > 0 || cursor == line.length()) {
+		if (current.length() > 0 || (line != null && cursor == line.length())) {
 			words.add(current.toString());
 		}
 
-		if (cursor == line.length()) {
+		if (line != null && cursor == line.length()) {
 			wordIndex = words.size() - 1;
 			wordCursor = words.get(words.size() - 1).length();
 		}
 
-		if (eofOnEscapedNewLine && isEscapeChar(line, line.length() - 1)) {
+		if (eofOnEscapedNewLine && (line != null && isEscapeChar(line, line.length() - 1))) {
 			throw new EOFError(-1, -1, "Escaped new line", "newline");
 		}
 		if (eofOnUnclosedQuote && quoteStart >= 0 && context != ParseContext.COMPLETE) {
-			throw new EOFError(-1, -1, "Missing closing quote", line.charAt(quoteStart) == '\'' ? "quote" : "dquote");
+			throw new EOFError(-1, -1, "Missing closing quote",
+					(line != null && line.charAt(quoteStart) == '\'') ? "quote" : "dquote");
 		}
 
-		String openingQuote = quoteStart >= 0 ? line.substring(quoteStart, quoteStart + 1) : null;
+		String openingQuote = (quoteStart >= 0 && line != null) ? line.substring(quoteStart, quoteStart + 1) : null;
 		return wrap(new ExtendedArgumentList(line, words, wordIndex, wordCursor, cursor, openingQuote));
 	}
 

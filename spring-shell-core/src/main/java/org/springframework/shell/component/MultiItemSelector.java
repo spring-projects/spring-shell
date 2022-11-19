@@ -63,9 +63,11 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 		if (currentContext.getItems() == null) {
 			currentContext.setItems(getItems());
 		}
-		context.stream().forEach(e -> {
-			currentContext.put(e.getKey(), e.getValue());
-		});
+		if (context != null) {
+			context.stream().forEach(e -> {
+				currentContext.put(e.getKey(), e.getValue());
+			});
+		}
 		return currentContext;
 	}
 

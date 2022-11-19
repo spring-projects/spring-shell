@@ -50,7 +50,9 @@ public class ShellOptionMethodArgumentResolver extends AbstractArgumentMethodArg
 	protected NamedValueInfo createNamedValueInfo(MethodParameter parameter) {
 		ShellOption annot = parameter.getParameterAnnotation(ShellOption.class);
 		Assert.state(annot != null, "No ShellOption annotation");
-		List<String> names = Arrays.stream(annot.value()).map(v -> StringUtils.trimLeadingCharacter(v, '-')).collect(Collectors.toList());
+		List<String> names = Arrays.stream(annot != null ? annot.value() : new String[0])
+			.map(v -> StringUtils.trimLeadingCharacter(v, '-'))
+			.collect(Collectors.toList());
 		return new HeaderNamedValueInfo(annot, names);
 	}
 

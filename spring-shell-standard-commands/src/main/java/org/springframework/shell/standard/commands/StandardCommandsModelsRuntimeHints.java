@@ -23,6 +23,7 @@ import org.springframework.aot.hint.ReflectionHints;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.aot.hint.TypeReference;
+import org.springframework.lang.Nullable;
 
 /**
  * {@link RuntimeHintsRegistrar} for Shell Standard Commands temlate model classes.
@@ -32,7 +33,7 @@ import org.springframework.aot.hint.TypeReference;
 class StandardCommandsModelsRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
-	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 		ReflectionHints reflection = hints.reflection();
 		registerForDeclaredMethodsInvocation(reflection, CommandAvailabilityInfoModel.class, CommandInfoModel.class,
 				CommandParameterInfoModel.class, GroupCommandInfoModel.class, GroupsInfoModel.class);

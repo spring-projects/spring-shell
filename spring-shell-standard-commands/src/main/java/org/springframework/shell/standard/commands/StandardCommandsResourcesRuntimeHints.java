@@ -17,6 +17,7 @@ package org.springframework.shell.standard.commands;
 
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
+import org.springframework.lang.Nullable;
 
 /**
  * {@link RuntimeHintsRegistrar} for Shell Standard Commands resources.
@@ -26,7 +27,7 @@ import org.springframework.aot.hint.RuntimeHintsRegistrar;
 class StandardCommandsResourcesRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
-	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 		hints.resources()
 			.registerPattern("template/*.st")
 			.registerPattern("template/*.stg");
