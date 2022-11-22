@@ -183,8 +183,10 @@ public interface CommandExecution {
 			if (parameterName == null) {
 				return false;
 			}
+			Class<?> sourceType = paramValues.get(parameterName) != null ? paramValues.get(parameterName).getClass()
+					: null;
 			return paramValues.containsKey(parameterName) && conversionService
-					.canConvert(paramValues.get(parameterName).getClass(), parameter.getParameterType());
+					.canConvert(sourceType, parameter.getParameterType());
 		}
 
 		@Override
