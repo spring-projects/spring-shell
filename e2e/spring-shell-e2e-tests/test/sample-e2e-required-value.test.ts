@@ -18,7 +18,7 @@ describe('e2e commands required-value', () => {
   let options: string[] = [];
 
   const annoRequiredWithoutArgReturnsErrorDesc = 'required without arg returns error (anno)';
-  const annoRequiredWithoutArgCommand = ['e2e anno required-value'];
+  const annoRequiredWithoutArgCommand = ['e2e', 'anno', 'required-value'];
   const annoRequiredWithoutArgReturnsError = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -29,7 +29,7 @@ describe('e2e commands required-value', () => {
   };
 
   const regRequiredWithoutArgReturnsErrorDesc = 'required without arg returns error (reg)';
-  const regRequiredWithoutArgCommand = ['e2e reg required-value'];
+  const regRequiredWithoutArgCommand = ['e2e', 'reg', 'required-value'];
   const regRequiredWithoutArgReturnsError = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {

@@ -22,7 +22,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValue
    */
   const annoDefaultWithoutArgReturnsHiDesc = 'default without arg returns hi (anno)';
-  const annoDefaultWithoutArgCommand = ['e2e anno default-value'];
+  const annoDefaultWithoutArgCommand = ['e2e', 'anno', 'default-value'];
   const annoDefaultWithoutArgReturnsHi = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -36,7 +36,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueRegistration
    */
   const regDefaultWithoutArgReturnsHiDesc = 'default without arg returns hi (reg)';
-  const regDefaultWithoutArgCommand = ['e2e reg default-value'];
+  const regDefaultWithoutArgCommand = ['e2e', 'reg', 'default-value'];
   const regOptionalWithoutArgReturnsHi = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -50,7 +50,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValue
    */
   const annoDefaultWithArgReturnsFooDesc = 'default with arg returns foo (anno)';
-  const annoDefaultWithArgCommand = ['e2e anno default-value --arg1 foo'];
+  const annoDefaultWithArgCommand = ['e2e', 'anno', 'default-value', '--arg1', 'foo'];
   const annoDefaultWithArgReturnsFoo = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -64,7 +64,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueRegistration
    */
   const regDefaultWithArgReturnsFooDesc = 'default with arg returns foo (reg)';
-  const regDefaultWithArgCommand = ['e2e reg optional-value --arg1 foo'];
+  const regDefaultWithArgCommand = ['e2e', 'reg', 'optional-value', '--arg1', 'foo'];
   const regDefaultWithArgReturnsFoo = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -78,7 +78,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean1 - 1
    */
    const annoDefaultValueBoolean1WithoutArgReturnsFalseDesc = 'default boolean1 without arg returns false (anno)';
-   const annoDefaultValueBoolean1WithoutArgCommand = ['e2e anno default-value-boolean1'];
+   const annoDefaultValueBoolean1WithoutArgCommand = ['e2e', 'anno', 'default-value-boolean1'];
    const annoDefaultValueBoolean1WithoutArgReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -92,7 +92,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean1Registration - 1
    */
    const regDefaultValueBoolean1WithoutArgReturnsFalseDesc = 'default boolean1 without arg returns false (reg)';
-   const regDefaultValueBoolean1WithoutArgCommand = ['e2e reg default-value-boolean1'];
+   const regDefaultValueBoolean1WithoutArgCommand = ['e2e', 'reg', 'default-value-boolean1'];
    const regDefaultValueBoolean1WithoutArgReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -106,7 +106,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean1 - 2
    */
    const annoDefaultValueBoolean2WithArgReturnsTrueDesc = 'default boolean1 with arg returns true (anno)';
-   const annoDefaultValueBoolean2WithArgCommand = ['e2e anno default-value-boolean1 --arg1'];
+   const annoDefaultValueBoolean2WithArgCommand = ['e2e', 'anno', 'default-value-boolean1', '--arg1'];
    const annoDefaultValueBoolean2WithArgReturnsTrue = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -120,7 +120,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean1Registration - 2
    */
    const regDefaultValueBoolean2WithArgReturnsTrueDesc = 'default boolean1 with arg returns true (reg)';
-   const regDefaultValueBoolean2WithArgCommand = ['e2e reg default-value-boolean1 --arg1'];
+   const regDefaultValueBoolean2WithArgCommand = ['e2e', 'reg', 'default-value-boolean1', '--arg1'];
    const regDefaultValueBoolean2WithArgReturnsTrue = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -134,7 +134,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean1 - 3
    */
    const annoDefaultValueBoolean3WithArgReturnsFalseDesc = 'default boolean1 with arg returns false (anno)';
-   const annoDefaultValueBoolean3WithArgCommand = ['e2e anno default-value-boolean1 --arg1 false'];
+   const annoDefaultValueBoolean3WithArgCommand = ['e2e', 'anno', 'default-value-boolean1', '--arg1', 'false'];
    const annoDefaultValueBoolean3WithArgReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -148,7 +148,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean1Registration - 3
    */
    const regDefaultValueBoolean3WithArgReturnsFalseDesc = 'default boolean1 with arg returns false (reg)';
-   const regDefaultValueBoolean3WithArgCommand = ['e2e reg default-value-boolean1 --arg1 false'];
+   const regDefaultValueBoolean3WithArgCommand = ['e2e', 'reg', 'default-value-boolean1', '--arg1', 'false'];
    const regDefaultValueBoolean3WithArgReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -162,7 +162,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean2 - 1
    */
    const annoDefaultValueBoolean2WithoutArgReturnsTrueDesc = 'default boolean2 without arg returns true (anno)';
-   const annoDefaultValueBoolean2WithoutArgCommand = ['e2e anno default-value-boolean2'];
+   const annoDefaultValueBoolean2WithoutArgCommand = ['e2e', 'anno', 'default-value-boolean2'];
    const annoDefaultValueBoolean2WithoutArgReturnsTrue = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -176,7 +176,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean2Registration - 1
    */
    const regDefaultValueBoolean2WithoutArgReturnsTrueDesc = 'default boolean2 without arg returns true (reg)';
-   const regDefaultValueBoolean2WithoutArgCommand = ['e2e reg default-value-boolean2'];
+   const regDefaultValueBoolean2WithoutArgCommand = ['e2e', 'reg', 'default-value-boolean2'];
    const regDefaultValueBoolean2WithoutArgReturnsTrue = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -190,7 +190,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean3 - 1
    */
    const annoDefaultValueBoolean3WithoutArgReturnsFalseDesc = 'default boolean3 without arg returns false (anno)';
-   const annoDefaultValueBoolean3WithoutArgCommand = ['e2e anno default-value-boolean3'];
+   const annoDefaultValueBoolean3WithoutArgCommand = ['e2e', 'anno', 'default-value-boolean3'];
    const annoDefaultValueBoolean3WithoutArgReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -204,7 +204,7 @@ describe('e2e commands default-value', () => {
    * testDefaultValueBoolean3Registration - 1
    */
    const regDefaultValueBoolean3WithoutArgReturnsFalseDesc = 'default boolean3 without arg returns false (reg)';
-   const regDefaultValueBoolean3WithoutArgCommand = ['e2e reg default-value-boolean3'];
+   const regDefaultValueBoolean3WithoutArgCommand = ['e2e', 'reg', 'default-value-boolean3'];
    const regDefaultValueBoolean3WithoutArgReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {

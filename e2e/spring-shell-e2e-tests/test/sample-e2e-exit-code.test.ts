@@ -18,7 +18,7 @@ describe('e2e commands exit-code', () => {
   let options: string[] = [];
 
   const missingArgRet2Desc = 'missing arg returns 2';
-  const missingArgRet2Command = ['e2e reg exit-code'];
+  const missingArgRet2Command = ['e2e', 'reg', 'exit-code'];
   const missingArgRet2 = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -29,7 +29,7 @@ describe('e2e commands exit-code', () => {
   };
 
   const customArgRet3Desc = 'custom arg returns 3';
-  const customArgRet3Command = ['e2e reg exit-code --arg1 ok'];
+  const customArgRet3Command = ['e2e', 'reg', 'exit-code', '--arg1', 'ok'];
   const customArgRet3 = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -40,7 +40,7 @@ describe('e2e commands exit-code', () => {
   };
 
   const customArgRet4Desc = 'custom arg returns 4';
-  const customArgRet4Command = ['e2e reg exit-code --arg1 fun'];
+  const customArgRet4Command = ['e2e', 'reg', 'exit-code', '--arg1', 'fun'];
   const customArgRet4 = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {

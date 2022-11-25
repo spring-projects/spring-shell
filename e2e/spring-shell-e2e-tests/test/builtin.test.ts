@@ -36,7 +36,7 @@ describe('builtin commands', () => {
    * test for command help command returns expected info
    */
    const commandHelpReturnsInfoDesc = 'command help returns info';
-   const commandHelpCommand = ['help help'];
+   const commandHelpCommand = ['help', 'help'];
    const commandHelpReturnsInfo = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {

@@ -22,7 +22,7 @@ describe('e2e commands optional-value', () => {
    * testOptionalValue
    */
   const annoOptionalWithoutArgReturnsNullDesc = 'optional without arg returns null (anno)';
-  const annoOptionalWithoutArgCommand = ['e2e anno optional-value'];
+  const annoOptionalWithoutArgCommand = ['e2e', 'anno', 'optional-value'];
   const annoOptionalWithoutArgReturnsNull = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -36,7 +36,7 @@ describe('e2e commands optional-value', () => {
    * testOptionalValueRegistration
    */
   const regOptionalWithoutArgReturnsNullDesc = 'optional without arg returns null (reg)';
-  const regOptionalWithoutArgCommand = ['e2e reg optional-value'];
+  const regOptionalWithoutArgCommand = ['e2e', 'reg', 'optional-value'];
   const regOptionalWithoutArgReturnsNull = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -50,7 +50,7 @@ describe('e2e commands optional-value', () => {
    * testOptionalValue
    */
   const annoOptionalWithArgReturnsNullDesc = 'optional with arg returns hi (anno)';
-  const annoOptionalWithArgCommand = ['e2e anno optional-value --arg1 hi'];
+  const annoOptionalWithArgCommand = ['e2e', 'anno', 'optional-value', '--arg1', 'hi'];
   const annoOptionalWithArgReturnsNull = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -64,7 +64,7 @@ describe('e2e commands optional-value', () => {
    * testOptionalValueRegistration
    */
   const regOptionalWithArgReturnsHiDesc = 'optional with arg returns hi (reg)';
-  const regOptionalWithArgCommand = ['e2e reg optional-value --arg1 hi'];
+  const regOptionalWithArgCommand = ['e2e', 'reg', 'optional-value', '--arg1', 'hi'];
   const regOptionalWithArgReturnsHi = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {

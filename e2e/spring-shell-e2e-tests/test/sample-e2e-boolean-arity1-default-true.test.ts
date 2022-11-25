@@ -21,7 +21,7 @@ describe('e2e commands boolean-arity1-default-true', () => {
    * testBooleanArity1DefaultTrue
    */
   const annoDefaultWithoutOverwriteReturnsTrueDesc = 'default without overwrite returns true (anno)';
-  const annoDefaultWithoutOverwriteCommand = ['e2e anno boolean-arity1-default-true'];
+  const annoDefaultWithoutOverwriteCommand = ['e2e', 'anno', 'boolean-arity1-default-true'];
   const annoDefaultWithoutOverwriteReturnsTrue = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -35,7 +35,7 @@ describe('e2e commands boolean-arity1-default-true', () => {
    * testBooleanArity1DefaultTrueRegistration
    */
   const regDefaultWithoutOverwriteReturnsTrueDesc = 'default without overwrite returns true (reg)';
-  const regDefaultWithoutOverwriteCommand = ['e2e reg boolean-arity1-default-true'];
+  const regDefaultWithoutOverwriteCommand = ['e2e', 'reg', 'boolean-arity1-default-true'];
   const regOptionalWithoutOverwriteReturnsTrue = async (cli: Cli) => {
     cli.run();
     await waitForExpect(async () => {
@@ -49,7 +49,7 @@ describe('e2e commands boolean-arity1-default-true', () => {
    * testBooleanArity1DefaultTrue
    */
    const annoDefaultWithOverwriteFalseReturnsFalseDesc = 'default with overwrite false returns false (anno)';
-   const annoDefaultWithOverwriteFalseCommand = ['e2e anno boolean-arity1-default-true --overwrite false'];
+   const annoDefaultWithOverwriteFalseCommand = ['e2e', 'anno', 'boolean-arity1-default-true', '--overwrite', 'false'];
    const annoDefaultWithOverwriteFalseReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
@@ -63,7 +63,7 @@ describe('e2e commands boolean-arity1-default-true', () => {
     * testBooleanArity1DefaultTrueRegistration
     */
    const regDefaultWithOverwriteFalseReturnsFalseDesc = 'default with overwrite false returns false (reg)';
-   const regDefaultWithOverwriteFalseCommand = ['e2e reg boolean-arity1-default-true --overwrite false'];
+   const regDefaultWithOverwriteFalseCommand = ['e2e', 'reg', 'boolean-arity1-default-true', '--overwrite', 'false'];
    const regOptionalWithOverwriteFalseReturnsFalse = async (cli: Cli) => {
      cli.run();
      await waitForExpect(async () => {
