@@ -23,10 +23,18 @@ public class OptionSnippets {
 
 	class Dump1 {
 		// tag::option-with-annotation[]
-		public String example(@ShellOption(value = { "argx" }) String arg1) {
+		public String example(@ShellOption(value = { "--argx" }) String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-with-annotation[]
+	}
+
+	class Dump7 {
+		// tag::option-with-annotation-without-prefix[]
+		public String example(@ShellOption(value = { "argx" }) String arg1) {
+			return "Hello " + arg1;
+		}
+		// end::option-with-annotation-without-prefix[]
 	}
 
 	class Dump2 {

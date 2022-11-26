@@ -443,4 +443,44 @@ public class StandardMethodTargetRegistrarTests {
 		public void foo3(@ShellOption boolean arg1) {
 		}
 	}
+
+	@Test
+	public void testOptionWithoutHyphenRegisterFromDefaultPrefix() {
+		applicationContext = new AnnotationConfigApplicationContext(OptionWithoutHyphenRegisterFromDefaultPrefix.class);
+		registrar.setApplicationContext(applicationContext);
+		registrar.register(catalog);
+
+		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getLongNames()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getShortNames()).hasSize(0);
+	}
+
+	@ShellComponent
+	public static class OptionWithoutHyphenRegisterFromDefaultPrefix {
+
+		@ShellMethod(value = "foo1")
+		public void foo1(@ShellOption("xxx") boolean arg1) {
+		}
+	}
+
+	@Test
+	public void testOptionWithoutHyphenRegisterFromChangedPrefix() {
+		applicationContext = new AnnotationConfigApplicationContext(OptionWithoutHyphenRegisterFromChangedPrefix.class);
+		registrar.setApplicationContext(applicationContext);
+		registrar.register(catalog);
+
+		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getLongNames()).hasSize(0);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getShortNames()).hasSize(1);
+	}
+
+	@ShellComponent
+	public static class OptionWithoutHyphenRegisterFromChangedPrefix {
+
+		@ShellMethod(value = "foo1", prefix = "-")
+		public void foo1(@ShellOption("x") boolean arg1) {
+		}
+	}
 }
