@@ -119,6 +119,14 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 								else if (o.length() == stripped.length() + 1 && stripped.length() == 1) {
 									shortNames.add(stripped.charAt(0));
 								}
+								else if (o.length() == stripped.length()) {
+									if ("--".equals(shellMapping.prefix())) {
+										longNames.add(stripped);
+									}
+									else if ("-".equals(shellMapping.prefix()) && stripped.length() == 1) {
+										shortNames.add(stripped.charAt(0));
+									}
+								}
 							});
 						}
 						else {

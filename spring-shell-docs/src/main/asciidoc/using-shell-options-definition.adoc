@@ -25,6 +25,16 @@ include::{snippets}/OptionSnippets.java[tag=option-with-annotation]
 ----
 ====
 
+If option name is defined without prefix, either `-` or `--`, it is discovered
+from _ShellMethod#prefix_.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation-without-prefix]
+----
+====
+
 Programmatic way with `CommandRegistration` is to use method adding a long name.
 
 ====
