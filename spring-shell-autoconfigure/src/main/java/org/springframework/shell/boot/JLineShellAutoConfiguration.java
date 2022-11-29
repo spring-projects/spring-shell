@@ -25,6 +25,7 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -41,12 +42,14 @@ import org.springframework.shell.jline.PromptProvider;
 public class JLineShellAutoConfiguration {
 
 	@Bean(destroyMethod = "close")
-	public Terminal terminal() {
+	public Terminal terminal(ObjectProvider<TerminalCustomizer> customizers) {
 		try {
-			return TerminalBuilder.builder().build();
+			TerminalBuilder builder = TerminalBuilder.builder();
+			customizers.orderedStream().forEach(customizer -> customizer.customize(builder));
+			return builder.build();
 		}
 		catch (IOException e) {
-			throw new BeanCreationException("Could not create Terminal: " + e.getMessage());
+			throw new BeanCreationException("Could not create Terminal", e);
 		}
 	}
 
