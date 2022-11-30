@@ -36,7 +36,7 @@ describe('flow commands', () => {
     await cli.keyDown();
     await waitForExpect(async () => {
       const screen = cli.screen();
-      expect(screen).toEqual(expect.arrayContaining([expect.stringContaining('> Field2')]));
+      expect(screen).toEqual(expect.arrayContaining([expect.stringMatching(/[>❯] Field2/)]));
     });
 
     await cli.keyEnter();
