@@ -1,4 +1,5 @@
 import * as pty from 'node-pty';
+import * as os from 'os';
 import { Terminal } from 'xterm-headless';
 
 export interface CliOptions {
@@ -32,7 +33,10 @@ export class Cli {
   }
 
   public run(): void {
+    const isWindows = (os.platform() === 'win32')
     this.term = new Terminal({
+      allowProposedApi: true,
+      windowsMode: isWindows,
       cols: this.cols,
       rows: this.rows
     });

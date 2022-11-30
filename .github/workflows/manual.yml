@@ -13,12 +13,15 @@ jobs:
           - nickname: win
             os: windows-latest
             graal: 22.3.0
+            musl: false
           - nickname: macos
             os: macos-latest
             graal: 22.3.0
+            musl: false
           - nickname: linux
             os: ubuntu-latest
             graal: 22.3.0
+            musl: true
     name: Build ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v2
@@ -27,21 +30,15 @@ jobs:
           version: ${{ matrix.graal }}
           java-version: 17
           components: native-image
-          set-java-home: true
+          native-image-musl: ${{ matrix.musl }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          ./mvnw clean package -Pnativex
+          ./gradlew build nativeCompile -PspringShellSampleMusl=${{ matrix.musl }}
       - uses: actions/upload-artifact@v2
         with:
           name: spring-shell-samples-${{ matrix.nickname }}
           retention-days: 1
           path: |
-            spring-shell-samples/target/*.jar
-            spring-shell-samples/target/spring-shell-samples
-            spring-shell-samples/target/spring-shell-samples.exe
-      - uses: actions/upload-artifact@v2
-        with:
-          name: surefire-reports-${{ matrix.nickname }}
-          retention-days: 1
-          path: |
-            */target/surefire-reports/*
+            spring-shell-samples/build/libs/*.jar
+            spring-shell-samples/build/native/nativeCompile/spring-shell-samples
+            spring-shell-samples/build/native/nativeCompile/spring-shell-samples.exe
