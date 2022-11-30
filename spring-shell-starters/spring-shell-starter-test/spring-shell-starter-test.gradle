@@ -1,0 +1,12 @@
+plugins {
+	id 'org.springframework.shell.starter'
+}
+
+description = 'Spring Shell Starter Test'
+
+dependencies {
+	management platform(project(":spring-shell-management"))
+	api(project(':spring-shell-starters:spring-shell-starter'))
+	api(project(":spring-shell-test"))
+	api(project(":spring-shell-test-autoconfigure"))
+}

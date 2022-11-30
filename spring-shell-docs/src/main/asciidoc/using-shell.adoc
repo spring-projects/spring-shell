@@ -13,3 +13,5 @@ include::using-shell-components.adoc[]
 include::using-shell-customization.adoc[]
 
 include::using-shell-execution.adoc[]
+
+include::using-shell-testing.adoc[]

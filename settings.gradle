@@ -49,6 +49,8 @@ include 'spring-shell-samples'
 include 'spring-shell-standard'
 include 'spring-shell-standard-commands'
 include 'spring-shell-table'
+include 'spring-shell-test'
+include 'spring-shell-test-autoconfigure'
 
 file("${rootDir}/spring-shell-starters").eachDirMatch(~/spring-shell-starter.*/) {
 	include "spring-shell-starters:${it.name}"
