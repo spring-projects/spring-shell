@@ -16,6 +16,7 @@
 package org.springframework.shell.samples.e2e;
 
 import java.io.PrintWriter;
+import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
@@ -32,8 +33,8 @@ import org.springframework.shell.standard.ShellOption;
 public class OptionTypeCommands extends BaseE2ECommands {
 
 	@Bean
-	public CommandRegistration testOptionTypeRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration testOptionTypeRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "option-type")
 			.group(GROUP)
 			.withOption()
@@ -76,8 +77,8 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeStringRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration optionTypeStringRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "option-type-string")
 			.group(GROUP)
 			.withOption()
@@ -112,8 +113,8 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeBooleanRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration optionTypeBooleanRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "option-type-boolean")
 			.group(GROUP)
 			.withOption()
@@ -172,8 +173,8 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeIntegerRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration optionTypeIntegerRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "option-type-integer")
 			.group(GROUP)
 			.withOption()
@@ -212,8 +213,8 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeEnumRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration optionTypeEnumRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "option-type-enum")
 			.group(GROUP)
 			.withOption()

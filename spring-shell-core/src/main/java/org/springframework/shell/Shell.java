@@ -236,7 +236,7 @@ public class Shell {
 
 		CommandExecution execution = CommandExecution.of(
 				argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal,
-				conversionService);
+				conversionService, commandRegistry);
 
 		List<CommandExceptionResolver> commandExceptionResolvers = commandRegistration.get().getExceptionResolvers();
 

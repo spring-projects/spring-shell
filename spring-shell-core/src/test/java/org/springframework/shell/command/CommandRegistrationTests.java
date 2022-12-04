@@ -523,4 +523,24 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			.build();
 		assertThat(registration.isHidden()).isTrue();
 	}
+
+	@Test
+	public void testHelpOption() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withHelpOptions()
+				.enabled(true)
+				.longNames(new String[] { "help" })
+				.shortNames(new Character[] { 'h' })
+				.command("help")
+				.and()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0).getLongNames()).containsExactly("help");
+		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('h');
+	}
 }

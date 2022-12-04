@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.samples.e2e;
 
+import java.util.function.Supplier;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
@@ -37,8 +39,8 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration testDefaultValueRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "default-value")
 			.group(GROUP)
 			.withOption()
@@ -62,8 +64,8 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueBoolean1Registration() {
-		return CommandRegistration.builder()
+	public CommandRegistration testDefaultValueBoolean1Registration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "default-value-boolean1")
 			.group(GROUP)
 			.withOption()
@@ -88,8 +90,8 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueBoolean2Registration() {
-		return CommandRegistration.builder()
+	public CommandRegistration testDefaultValueBoolean2Registration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "default-value-boolean2")
 			.group(GROUP)
 			.withOption()
@@ -114,8 +116,8 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueBoolean3Registration() {
-		return CommandRegistration.builder()
+	public CommandRegistration testDefaultValueBoolean3Registration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "default-value-boolean3")
 			.group(GROUP)
 			.withOption()

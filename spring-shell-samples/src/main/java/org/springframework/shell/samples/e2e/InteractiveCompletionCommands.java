@@ -17,6 +17,7 @@ package org.springframework.shell.samples.e2e;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
@@ -40,10 +41,10 @@ public class InteractiveCompletionCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	CommandRegistration testInteractiveCompletion1Registration() {
+	CommandRegistration testInteractiveCompletion1Registration(Supplier<CommandRegistration.Builder> builder) {
 		Test1ValuesProvider test1ValuesProvider = new Test1ValuesProvider();
 		Test2ValuesProvider test2ValuesProvider = new Test2ValuesProvider();
-		return CommandRegistration.builder()
+		return builder.get()
 			.command(REG, "interactive-completion-1")
 			.group(GROUP)
 			.withOption()

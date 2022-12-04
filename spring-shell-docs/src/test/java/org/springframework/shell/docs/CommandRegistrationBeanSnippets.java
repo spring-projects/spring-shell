@@ -15,17 +15,44 @@
  */
 package org.springframework.shell.docs;
 
+import java.util.function.Supplier;
+
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.boot.CommandRegistrationCustomizer;
 import org.springframework.shell.command.CommandRegistration;
 
 public class CommandRegistrationBeanSnippets {
 
-	// tag::snippet1[]
-	@Bean
-	CommandRegistration commandRegistration() {
-		return CommandRegistration.builder()
-			.command("mycommand")
-			.build();
+	class Dump1 {
+		// tag::plain[]
+		@Bean
+		CommandRegistration commandRegistration() {
+			return CommandRegistration.builder()
+				.command("mycommand")
+				.build();
+		}
+		// end::plain[]
 	}
-	// end::snippet1[]
+
+	class Dump2 {
+		// tag::fromsupplier[]
+		@Bean
+		CommandRegistration commandRegistration(Supplier<CommandRegistration.Builder> builder) {
+			return builder.get()
+				.command("mycommand")
+				.build();
+		}
+		// end::fromsupplier[]
+	}
+
+	class Dump3 {
+		// tag::customizer[]
+		@Bean
+		CommandRegistrationCustomizer commandRegistrationCustomizerExample() {
+			return builder -> {
+				// customize instance of CommandRegistration.Builder
+			};
+		}
+		// end::customizer[]
+	}
 }

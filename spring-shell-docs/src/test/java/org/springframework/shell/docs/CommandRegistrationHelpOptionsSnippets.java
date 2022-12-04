@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.e2e;
-
-import java.util.function.Supplier;
+package org.springframework.shell.docs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
 
-@ShellComponent
-public class HiddenCommands extends BaseE2ECommands {
+class CommandRegistrationHelpOptionsSnippets {
 
-	@Bean
-	public CommandRegistration testHidden1Registration(Supplier<CommandRegistration.Builder> builder) {
-		return builder.get()
-			.command(REG, "hidden-1")
-			.group(GROUP)
-			.hidden()
-			.withTarget()
-				.function(ctx -> {
-					return "Hello from hidden command";
-				})
-				.and()
-			.build();
+	class Dump1 {
+		// tag::defaults[]
+		@Bean
+		CommandRegistration commandRegistration() {
+			return CommandRegistration.builder()
+				.command("mycommand")
+				.withHelpOptions()
+					.enabled(true)
+					.longNames("help")
+					.shortNames('h')
+					.command("help")
+					.and()
+				.build();
+		}
+		// end::defaults[]
 	}
+
 }

@@ -16,10 +16,14 @@
 
 package org.springframework.shell.boot;
 
+import java.util.function.Supplier;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.EnumValueProvider;
 import org.springframework.shell.standard.FileValueProvider;
@@ -50,7 +54,8 @@ public class StandardAPIAutoConfiguration {
 	}
 
 	@Bean
-	public MethodTargetRegistrar standardMethodTargetResolver() {
-		return new StandardMethodTargetRegistrar();
+	public MethodTargetRegistrar standardMethodTargetResolver(ApplicationContext applicationContext,
+			Supplier<CommandRegistration.Builder> builder) {
+		return new StandardMethodTargetRegistrar(applicationContext, builder);
 	}
 }

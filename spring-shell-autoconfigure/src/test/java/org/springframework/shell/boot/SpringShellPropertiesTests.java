@@ -63,6 +63,10 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getCommand().getVersion().isShowGitCommitId()).isFalse();
 					assertThat(properties.getCommand().getVersion().isShowGitShortCommitId()).isFalse();
 					assertThat(properties.getCommand().getVersion().isShowGitCommitTime()).isFalse();
+					assertThat(properties.getHelp().isEnabled()).isTrue();
+					assertThat(properties.getHelp().getCommand()).isEqualTo("help");
+					assertThat(properties.getHelp().getLongNames()).containsExactly("help");
+					assertThat(properties.getHelp().getShortNames()).containsExactly('h');
 				});
 	}
 
@@ -99,6 +103,10 @@ public class SpringShellPropertiesTests {
 				.withPropertyValues("spring.shell.command.version.show-git-commit-id=true")
 				.withPropertyValues("spring.shell.command.version.show-git-short-commit-id=true")
 				.withPropertyValues("spring.shell.command.version.show-git-commit-time=true")
+				.withPropertyValues("spring.shell.help.enabled=false")
+				.withPropertyValues("spring.shell.help.command=fake")
+				.withPropertyValues("spring.shell.help.long-names=fake")
+				.withPropertyValues("spring.shell.help.short-names=f")
 				.withUserConfiguration(Config1.class)
 				.run((context) -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
@@ -132,6 +140,24 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getCommand().getVersion().isShowGitCommitId()).isTrue();
 					assertThat(properties.getCommand().getVersion().isShowGitShortCommitId()).isTrue();
 					assertThat(properties.getCommand().getVersion().isShowGitCommitTime()).isTrue();
+					assertThat(properties.getHelp().isEnabled()).isFalse();
+					assertThat(properties.getHelp().getCommand()).isEqualTo("fake");
+					assertThat(properties.getHelp().getLongNames()).containsExactly("fake");
+					assertThat(properties.getHelp().getShortNames()).containsExactly('f');
+				});
+	}
+
+
+	@Test
+	public void essentiallyUnset() {
+		this.contextRunner
+				.withPropertyValues("spring.shell.help.long-names=")
+				.withPropertyValues("spring.shell.help.short-names=")
+				.withUserConfiguration(Config1.class)
+				.run((context) -> {
+					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
+					assertThat(properties.getHelp().getLongNames()).isEmpty();
+					assertThat(properties.getHelp().getShortNames()).isEmpty();
 				});
 	}
 

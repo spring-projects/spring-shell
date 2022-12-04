@@ -16,19 +16,23 @@
 package org.springframework.shell.boot;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.MethodTargetRegistrar;
+import org.springframework.shell.boot.SpringShellProperties.Help;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
 
 @AutoConfiguration
+@EnableConfigurationProperties(SpringShellProperties.class)
 public class CommandCatalogAutoConfiguration {
 
 	@Bean
@@ -53,6 +57,31 @@ public class CommandCatalogAutoConfiguration {
 			commandRegistrations.orderedStream().forEach(registration -> {
 				catalog.register(registration);
 			});
+		};
+	}
+
+	@Bean
+	public CommandRegistrationCustomizer helpOptionsCommandRegistrationCustomizer(SpringShellProperties properties) {
+		return registration -> {
+			Help help = properties.getHelp();
+			if (help.isEnabled()) {
+				registration.withHelpOptions()
+					.enabled(true)
+					.longNames(help.getLongNames())
+					.shortNames(help.getShortNames())
+					.command(help.getCommand());
+			}
+		};
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public Supplier<CommandRegistration.Builder> commandRegistrationBuilderSupplier(
+			ObjectProvider<CommandRegistrationCustomizer> customizerProvider) {
+		return () -> {
+			CommandRegistration.Builder builder = CommandRegistration.builder();
+			customizerProvider.orderedStream().forEach((customizer) -> customizer.customize(builder));
+			return builder;
 		};
 	}
 }

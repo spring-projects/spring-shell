@@ -122,6 +122,13 @@ public interface CommandRegistration {
 	List<CommandExceptionResolver> getExceptionResolvers();
 
 	/**
+	 * Gets a help option info.
+	 *
+	 * @return the help option info
+	 */
+	HelpOptionInfo getHelpOption();
+
+	/**
 	 * Gets a new instance of a {@link Builder}.
 	 *
 	 * @return a new builder instance
@@ -475,6 +482,125 @@ public interface CommandRegistration {
 		Builder and();
 	}
 
+	public interface HelpOptionInfo {
+
+		/**
+		 * Gets whether help options are enabled.
+		 *
+		 * @return whether help options are enabled
+		 */
+		boolean isEnabled();
+
+		/**
+		 * Gets long names options for help.
+		 *
+		 * @return long names options for help
+		 */
+		String[] getLongNames();
+
+		/**
+		 * Gets short names options for help.
+		 *
+		 * @return short names options for help
+		 */
+		Character[] getShortNames();
+
+		/**
+		 * Gets command for help.
+		 *
+		 * @return command for help
+		 */
+		String getCommand();
+
+		static HelpOptionInfo of() {
+			return of(false, null, null, null);
+		}
+
+		static HelpOptionInfo of(boolean enabled, String[] longNames, Character[] shortNames, String command) {
+			return new DefaultHelpOptionInfo(enabled, longNames, shortNames, command);
+		}
+
+		static class DefaultHelpOptionInfo implements HelpOptionInfo {
+
+			private final String command;
+			private final String[] longNames;
+			private final Character[] shortNames;
+			private final boolean enabled;
+
+			public DefaultHelpOptionInfo(boolean enabled, String[] longNames, Character[] shortNames, String command) {
+				this.command = command;
+				this.longNames = longNames;
+				this.shortNames = shortNames;
+				this.enabled = enabled;
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return enabled;
+			}
+
+			@Override
+			public String[] getLongNames() {
+				return longNames;
+			}
+
+			@Override
+			public Character[] getShortNames() {
+				return shortNames;
+			}
+
+			@Override
+			public String getCommand() {
+				return command;
+			}
+		}
+	}
+
+	/**
+	 * Spec defining help options.
+	 */
+	public interface HelpOptionsSpec {
+
+		/**
+		 * Whether help options are enabled.
+		 *
+		 * @param enabled the enabled flag
+		 * @return a help option for chaining
+		 */
+		HelpOptionsSpec enabled(boolean enabled);
+
+		/**
+		 * Sets long names options for help.
+		 *
+		 * @param longNames the long names
+		 * @return a help option for chaining
+		 */
+		HelpOptionsSpec longNames(String... longNames);
+
+		/**
+		 * Sets short names options for help.
+		 *
+		 * @param shortNames the short names
+		 * @return a help option for chaining
+		 */
+		HelpOptionsSpec shortNames(Character... shortNames);
+
+		/**
+		 * Sets command used for help.
+		 *
+		 * @param command the command
+		 * @return a help option for chaining
+		 */
+		HelpOptionsSpec command(String command);
+
+		/**
+		 * Return a builder for chaining.
+		 *
+		 * @return a builder for chaining
+		 */
+		Builder and();
+	}
+
 	/**
 	 * Builder interface for {@link CommandRegistration}.
 	 */
@@ -574,6 +700,13 @@ public interface CommandRegistration {
 		 * @return error handling spec for chaining
 		 */
 		ErrorHandlingSpec withErrorHandling();
+
+		/**
+		 * Define help options what this command should use.
+		 *
+		 * @return help options spec for chaining
+		 */
+		HelpOptionsSpec withHelpOptions();
 
 		/**
 		 * Builds a {@link CommandRegistration}.
@@ -884,6 +1017,57 @@ public interface CommandRegistration {
 		}
 	}
 
+	static class DefaultHelpOptionsSpec implements HelpOptionsSpec {
+
+		private BaseBuilder builder;
+		private String command;
+		private String[] longNames;
+		private Character[] shortNames;
+		private boolean enabled = true;
+
+		DefaultHelpOptionsSpec(BaseBuilder builder) {
+			this.builder = builder;
+		}
+
+		DefaultHelpOptionsSpec(BaseBuilder otherBuilder, DefaultHelpOptionsSpec otherSpec) {
+			this.builder = otherBuilder;
+			this.builder.helpOptionsSpec = this;
+			this.command = otherSpec.command;
+			this.longNames = otherSpec.longNames.clone();
+			this.shortNames = otherSpec.shortNames.clone();
+			this.enabled = otherSpec.enabled;
+		}
+
+		@Override
+		public HelpOptionsSpec command(String command) {
+			this.command = command;
+			return this;
+		}
+
+		@Override
+		public HelpOptionsSpec longNames(String... longNames) {
+				this.longNames = longNames;
+			return this;
+		}
+
+		@Override
+		public HelpOptionsSpec shortNames(Character... shortNames) {
+			this.shortNames = shortNames;
+			return this;
+		}
+
+		@Override
+		public HelpOptionsSpec enabled(boolean enabled) {
+			this.enabled = enabled;
+			return this;
+		}
+
+		@Override
+		public Builder and() {
+			return builder;
+		}
+	}
+
 	static class DefaultCommandRegistration implements CommandRegistration {
 
 		private String command;
@@ -897,11 +1081,12 @@ public interface CommandRegistration {
 		private List<DefaultAliasSpec> aliasSpecs;
 		private DefaultExitCodeSpec exitCodeSpec;
 		private DefaultErrorHandlingSpec errorHandlingSpec;
+		private DefaultHelpOptionsSpec helpOptionsSpec;
 
 		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String group,
 				boolean hidden,	String description, Supplier<Availability> availability,
 				List<DefaultOptionSpec> optionSpecs, DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs,
-				DefaultExitCodeSpec exitCodeSpec, DefaultErrorHandlingSpec errorHandlingSpec) {
+				DefaultExitCodeSpec exitCodeSpec, DefaultErrorHandlingSpec errorHandlingSpec, DefaultHelpOptionsSpec helpOptionsSpec) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.group = group;
@@ -913,6 +1098,7 @@ public interface CommandRegistration {
 			this.aliasSpecs = aliasSpecs;
 			this.exitCodeSpec = exitCodeSpec;
 			this.errorHandlingSpec = errorHandlingSpec;
+			this.helpOptionsSpec = helpOptionsSpec;
 		}
 
 		@Override
@@ -947,11 +1133,17 @@ public interface CommandRegistration {
 
 		@Override
 		public List<CommandOption> getOptions() {
-			return optionSpecs.stream()
+			List<CommandOption> options = optionSpecs.stream()
 				.map(o -> CommandOption.of(o.getLongNames(), o.getShortNames(), o.getDescription(), o.getType(),
 						o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
 						o.getLabel(), o.getCompletion()))
 				.collect(Collectors.toList());
+			if (helpOptionsSpec != null) {
+				String[] longNames = helpOptionsSpec.longNames != null ? helpOptionsSpec.longNames : null;
+				Character[] shortNames = helpOptionsSpec.shortNames != null ? helpOptionsSpec.shortNames : null;
+				options.add(CommandOption.of(longNames, shortNames, "help for " + command));
+			}
+			return options;
 		}
 
 		@Override
@@ -997,6 +1189,17 @@ public interface CommandRegistration {
 			}
 		}
 
+		@Override
+		public HelpOptionInfo getHelpOption() {
+			if (this.helpOptionsSpec == null) {
+				return HelpOptionInfo.of();
+			}
+			else {
+				return HelpOptionInfo.of(helpOptionsSpec.enabled, helpOptionsSpec.longNames, helpOptionsSpec.shortNames,
+						helpOptionsSpec.command);
+			}
+		}
+
 		private static String commandArrayToName(String[] commands) {
 			return Arrays.asList(commands).stream()
 				.flatMap(c -> Stream.of(c.split(" ")))
@@ -1007,10 +1210,9 @@ public interface CommandRegistration {
 	}
 
 	static class DefaultBuilder extends BaseBuilder {
-
 	}
 
-	static class BaseBuilder implements Builder {
+	static abstract class BaseBuilder implements Builder {
 
 		private String[] commands;
 		private InteractionMode interactionMode = InteractionMode.ALL;
@@ -1023,6 +1225,7 @@ public interface CommandRegistration {
 		private DefaultTargetSpec targetSpec;
 		private DefaultExitCodeSpec exitCodeSpec;
 		private DefaultErrorHandlingSpec errorHandlingSpec;
+		private DefaultHelpOptionsSpec helpOptionsSpec;
 
 		@Override
 		public Builder command(String... commands) {
@@ -1107,12 +1310,20 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public HelpOptionsSpec withHelpOptions() {
+			if (this.helpOptionsSpec == null) {
+				this.helpOptionsSpec = new DefaultHelpOptionsSpec(this);
+			}
+			return this.helpOptionsSpec;
+		}
+
+		@Override
 		public CommandRegistration build() {
 			Assert.notNull(commands, "command cannot be empty");
 			Assert.notNull(targetSpec, "target cannot be empty");
 			Assert.state(!(targetSpec.bean != null && targetSpec.function != null), "only one target can exist");
 			return new DefaultCommandRegistration(commands, interactionMode, group, hidden, description, availability,
-					optionSpecs, targetSpec, aliasSpecs, exitCodeSpec, errorHandlingSpec);
+					optionSpecs, targetSpec, aliasSpecs, exitCodeSpec, errorHandlingSpec, helpOptionsSpec);
 		}
 	}
 }

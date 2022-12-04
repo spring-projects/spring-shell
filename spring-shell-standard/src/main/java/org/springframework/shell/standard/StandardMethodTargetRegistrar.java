@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -62,14 +61,16 @@ import org.springframework.util.StringUtils;
  * @author Camilo Gonzalez
  * @author Janne Valkealahti
  */
-public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, ApplicationContextAware {
+public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 
 	private final Logger log = LoggerFactory.getLogger(StandardMethodTargetRegistrar.class);
 	private ApplicationContext applicationContext;
+	private Supplier<CommandRegistration.Builder> commandRegistrationBuilderSupplier;
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) {
+	public StandardMethodTargetRegistrar(ApplicationContext applicationContext,
+			Supplier<CommandRegistration.Builder> commandRegistrationBuilderSupplier) {
 		this.applicationContext = applicationContext;
+		this.commandRegistrationBuilderSupplier = commandRegistrationBuilderSupplier;
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 				log.debug("Registering with keys='{}' key='{}'", keys, key);
 				Supplier<Availability> availabilityIndicator = findAvailabilityIndicator(keys, bean, method);
 
-				Builder builder = CommandRegistration.builder()
+				Builder builder = commandRegistrationBuilderSupplier.get()
 					.command(key)
 					.group(group)
 					.description(shellMapping.value())
@@ -210,7 +211,6 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 				}
 
 				builder.withTarget().method(bean, method);
-
 				CommandRegistration registration = builder.build();
 				registry.register(registration);
 			}, method -> method.getAnnotation(ShellMethod.class) != null);

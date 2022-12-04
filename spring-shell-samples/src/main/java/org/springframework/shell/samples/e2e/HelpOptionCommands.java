@@ -17,52 +17,69 @@ package org.springframework.shell.samples.e2e;
 
 import java.util.function.Supplier;
 
-import jakarta.validation.constraints.Min;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-/**
- * Commands used for e2e test.
- *
- * @author Janne Valkealahti
- */
 @ShellComponent
-public class ValidatedValueCommands extends BaseE2ECommands {
+public class HelpOptionCommands extends BaseE2ECommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "validated-value", group = GROUP)
-	public String testValidatedValueAnnotation(
-		@ShellOption @Min(value = 1) Integer arg1,
-		@ShellOption @Min(value = 1) Integer arg2
+	@Autowired
+	Supplier<CommandRegistration.Builder> builder;
+
+	@ShellMethod(key = LEGACY_ANNO + "help-option-default", group = GROUP)
+	public String testHelpOptionDefault(
+		@ShellOption(defaultValue = "hi") String arg1
 	) {
 		return "Hello " + arg1;
 	}
 
 	@Bean
-	public CommandRegistration testValidatedValueRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testHelpOptionDefaultRegistration() {
 		return builder.get()
-			.command(REG, "validated-value")
+			.command(REG, "help-option-default")
 			.group(GROUP)
 			.withOption()
 				.longNames("arg1")
-				.type(Integer.class)
-				.required()
-				.and()
-			.withOption()
-				.longNames("arg2")
-				.type(Integer.class)
-				.required()
+				.defaultValue("hi")
 				.and()
 			.withTarget()
 				.function(ctx -> {
-					Integer arg1 = ctx.getOptionValue("arg1");
+					String arg1 = ctx.getOptionValue("arg1");
 					return "Hello " + arg1;
 				})
 				.and()
 			.build();
 	}
 
+	// @ShellMethod(key = LEGACY_ANNO + "help-option-exists", group = GROUP)
+	// public String testHelpOptionExists(
+	// 	@ShellOption(defaultValue = "hi") String help
+	// ) {
+	// 	return "Hello " + help;
+	// }
+
+	@Bean
+	public CommandRegistration testHelpOptionExistsRegistration() {
+		return builder.get()
+			.command(REG, "help-option-exists")
+			.group(GROUP)
+			.withOption()
+				.longNames("help")
+				.defaultValue("hi")
+				.and()
+			.withHelpOptions()
+				.longNames("myhelp")
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("help");
+					return "Hello " + arg1;
+				})
+				.and()
+			.build();
+	}
 }

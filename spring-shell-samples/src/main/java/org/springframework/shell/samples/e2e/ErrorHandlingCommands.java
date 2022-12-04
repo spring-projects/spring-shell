@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.samples.e2e;
 
+import java.util.function.Supplier;
+
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
@@ -31,8 +33,8 @@ import org.springframework.shell.standard.ShellComponent;
 public class ErrorHandlingCommands extends BaseE2ECommands {
 
 	@Bean
-	public CommandRegistration testErrorHandlingRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration testErrorHandlingRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "error-handling")
 			.group(GROUP)
 			.withOption()

@@ -13,28 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.e2e;
+package org.springframework.shell.boot;
 
-import java.util.function.Supplier;
-
-import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
 
-@ShellComponent
-public class HiddenCommands extends BaseE2ECommands {
+/**
+ * Callback interface that can be used to customize a {@link CommandRegistration.Builder}.
+ *
+ * @author Janne Valkealahti
+ */
+@FunctionalInterface
+public interface CommandRegistrationCustomizer {
 
-	@Bean
-	public CommandRegistration testHidden1Registration(Supplier<CommandRegistration.Builder> builder) {
-		return builder.get()
-			.command(REG, "hidden-1")
-			.group(GROUP)
-			.hidden()
-			.withTarget()
-				.function(ctx -> {
-					return "Hello from hidden command";
-				})
-				.and()
-			.build();
-	}
+	/**
+	 * Callback to customize a {@link CommandRegistration.Builder} instance.
+	 *
+	 * @param commandRegistrationBuilder the command registration builder to customize
+	 */
+	void customize(CommandRegistration.Builder commandRegistrationBuilder);
 }

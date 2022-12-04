@@ -15,12 +15,12 @@
  */
 package org.springframework.shell.command;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Validator;
-
 import org.jline.terminal.Terminal;
 
 import org.springframework.core.MethodParameter;
@@ -33,10 +33,12 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.CommandNotCurrentlyAvailable;
 import org.springframework.shell.command.CommandParser.CommandParserException;
 import org.springframework.shell.command.CommandParser.CommandParserResults;
+import org.springframework.shell.command.CommandRegistration.HelpOptionInfo;
 import org.springframework.shell.command.CommandRegistration.TargetInfo;
 import org.springframework.shell.command.CommandRegistration.TargetInfo.TargetType;
 import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.command.invocation.ShellMethodArgumentResolverComposite;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Interface to evaluate a result from a command with an arguments.
@@ -61,7 +63,7 @@ public interface CommandExecution {
 	 * @return default command execution
 	 */
 	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers) {
-		return new DefaultCommandExecution(resolvers, null, null, null);
+		return new DefaultCommandExecution(resolvers, null, null, null, null);
 	}
 
 	/**
@@ -75,7 +77,21 @@ public interface CommandExecution {
 	 */
 	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
 			Terminal terminal, ConversionService conversionService) {
-		return new DefaultCommandExecution(resolvers, validator, terminal, conversionService);
+		return new DefaultCommandExecution(resolvers, validator, terminal, conversionService, null);
+	}
+
+	/**
+	 * Gets an instance of a default {@link CommandExecution}.
+	 *
+	 * @param resolvers the handler method argument resolvers
+	 * @param validator the validator
+	 * @param terminal the terminal
+	 * @param conversionService the conversion services
+	 * @return default command execution
+	 */
+	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
+			Terminal terminal, ConversionService conversionService, CommandCatalog commandCatalog) {
+		return new DefaultCommandExecution(resolvers, validator, terminal, conversionService, commandCatalog);
 	}
 
 	/**
@@ -87,13 +103,15 @@ public interface CommandExecution {
 		private Validator validator;
 		private Terminal terminal;
 		private ConversionService conversionService;
+		private CommandCatalog commandCatalog;
 
 		public DefaultCommandExecution(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-				Terminal terminal, ConversionService conversionService) {
+				Terminal terminal, ConversionService conversionService, CommandCatalog commandCatalog) {
 			this.resolvers = resolvers;
 			this.validator = validator;
 			this.terminal = terminal;
 			this.conversionService = conversionService;
+			this.commandCatalog = commandCatalog;
 		}
 
 		public Object evaluate(CommandRegistration registration, String[] args) {
@@ -107,15 +125,59 @@ public interface CommandExecution {
 			CommandParser parser = CommandParser.of(conversionService);
 			CommandParserResults results = parser.parse(options, args);
 
+			// check help options to short circuit
+			boolean handleHelpOption = false;
+			HelpOptionInfo helpOption = registration.getHelpOption();
+			if (helpOption.isEnabled() && helpOption.getCommand() != null && (!ObjectUtils.isEmpty(helpOption.getLongNames()) || !ObjectUtils.isEmpty(helpOption.getShortNames()))) {
+				handleHelpOption = results.results().stream()
+					.filter(cpr -> {
+						boolean present = false;
+						if (helpOption.getLongNames() != null) {
+							present = Arrays.asList(cpr.option().getLongNames()).stream()
+								.filter(ln -> ObjectUtils.containsElement(helpOption.getLongNames(), ln))
+								.findFirst()
+								.isPresent();
+						}
+						if (present) {
+							return true;
+						}
+						if (helpOption.getShortNames() != null) {
+							present = Arrays.asList(cpr.option().getShortNames()).stream()
+								.filter(sn -> ObjectUtils.containsElement(helpOption.getShortNames(), sn))
+								.findFirst()
+								.isPresent();
+						}
+						return present;
+					})
+					.findFirst()
+					.isPresent();
+			}
+
+			// if needed switch registration to help command if we're short circuiting
+			CommandRegistration usedRegistration;
+			if (handleHelpOption) {
+				String command = registration.getCommand();
+				CommandParser helpParser = CommandParser.of(conversionService);
+				CommandRegistration helpCommandRegistration = commandCatalog.getRegistrations()
+						.get(registration.getHelpOption().getCommand());
+				List<CommandOption> helpOptions = helpCommandRegistration.getOptions();
+				CommandParserResults helpResults = helpParser.parse(helpOptions, new String[] { "--command", command });
+				results = helpResults;
+				usedRegistration = helpCommandRegistration;
+			}
+			else {
+				usedRegistration = registration;
+			}
+
 			if (!results.errors().isEmpty()) {
 				throw new CommandParserExceptionsException("Command parser resulted errors", results.errors());
 			}
 
-			CommandContext ctx = CommandContext.of(args, results, terminal, registration);
+			CommandContext ctx = CommandContext.of(args, results, terminal, usedRegistration);
 
 			Object res = null;
 
-			TargetInfo targetInfo = registration.getTarget();
+			TargetInfo targetInfo = usedRegistration.getTarget();
 
 			// pick the target to execute
 			if (targetInfo.getTargetType() == TargetType.FUNCTION) {

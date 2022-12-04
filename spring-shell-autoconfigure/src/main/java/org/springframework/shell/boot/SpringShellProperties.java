@@ -32,6 +32,7 @@ public class SpringShellProperties {
 	private Noninteractive noninteractive = new Noninteractive();
 	private Theme theme = new Theme();
 	private Command command = new Command();
+	private Help help = new Help();
 
 	public void setConfig(Config config) {
 		this.config = config;
@@ -87,6 +88,14 @@ public class SpringShellProperties {
 
 	public void setCommand(Command command) {
 		this.command = command;
+	}
+
+	public void setHelp(Help help) {
+		this.help = help;
+	}
+
+	public Help getHelp() {
+		return help;
 	}
 
 	public static class Config {
@@ -493,6 +502,61 @@ public class SpringShellProperties {
 
 		public void setShowGitCommitTime(boolean showGitCommitTime) {
 			this.showGitCommitTime = showGitCommitTime;
+		}
+	}
+
+	public static class Help {
+
+		/**
+		 * Command to call when presense of help option is detected.
+		 */
+		private String command = "help";
+
+		/**
+		 * Long style help option, without a prefix "--".
+		 */
+		private String[] longNames = new String[] { "help" };
+
+		/**
+		 * Short style help option, without a prefix "-".
+		 */
+		private Character[] shortNames = new Character[] { 'h' };
+
+		/**
+		 * Whether to enable help options for commands.
+		 */
+		private boolean enabled = true;
+
+		public String getCommand() {
+			return command;
+		}
+
+		public void setCommand(String command) {
+			this.command = command;
+		}
+
+		public String[] getLongNames() {
+			return longNames;
+		}
+
+		public void setLongNames(String[] longNames) {
+			this.longNames = longNames;
+		}
+
+		public Character[] getShortNames() {
+			return shortNames;
+		}
+
+		public void setShortNames(Character[] shortNames) {
+			this.shortNames = shortNames;
+		}
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
 		}
 	}
 }

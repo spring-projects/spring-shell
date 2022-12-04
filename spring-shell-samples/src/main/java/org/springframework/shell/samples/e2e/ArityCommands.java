@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.samples.e2e;
 
+import java.util.function.Supplier;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
@@ -38,8 +40,8 @@ public class ArityCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testBooleanArity1DefaultTrueRegistration() {
-		return CommandRegistration.builder()
+	public CommandRegistration testBooleanArity1DefaultTrueRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
 			.command(REG, "boolean-arity1-default-true")
 			.group(GROUP)
 			.withOption()
