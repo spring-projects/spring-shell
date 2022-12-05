@@ -1,11 +1,11 @@
 == Getting Started
-To see what Spring Shell has to offer, we can write a trivial shell application that
-has a simple command to add two numbers.
+To see what Spring Shell has to offer, we can write a trivial _hello world_
+shell application that has a simple argument.
 
 IMPORTANT: _Spring Shell_ is based on _Spring Boot_ {spring-boot-version} and
 _Spring Framework_ {spring-version} and thus requires _JDK 17_.
 
-=== Writing a Simple Shell Application
+=== Creating a Project
 
 For the purpose of this tutorial, we create a simple Spring Boot application by
 using https://start.spring.io where you can choose _Spring Shell_ dependency.
@@ -99,39 +99,43 @@ better with shell apps.
 === Your First Command
 
 Now we can add our first command. To do so, create a new class (named whatever you want) and
-annotate it with `@ShellComponent` (a variation of `@Component` that is used to restrict
-the set of classes that are scanned for candidate commands).
+annotate it with `@ShellComponent` which is a variation of `@Component` that is used to restrict
+the set of classes that are scanned for candidate commands.
 
-Then we can create an `add` method that takes two ints (`a` and `b`) and returns their sum. We need to annotate it
-with `@ShellMethod` and provide a description of the command in the annotation (the only piece of
-information that is required):
+Then we can create a `helloWorld` method that takes `String` as an argument and
+returns it with "Hello world". Add `@ShellMethod` and optionally change command name
+using `key` parameter. You can use `@ShellOption` to define argument default value
+if it's not given when running a command.
 
 ====
 [source, java]
 ----
 package com.example.demo;
 
-import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
 public class MyCommands {
 
-    @ShellMethod("Add two integers together.")
-    public int add(int a, int b) {
-        return a + b;
-    }
+	@ShellMethod(key = "hello-world")
+	public String helloWorld(
+		@ShellOption(defaultValue = "spring") String arg
+	) {
+		return "Hello world " + arg;
+	}
 }
 ----
 ====
 
-New _add_ command becomes visible to _help_:
+New _hello-world_ command becomes visible to _help_:
 
 ====
 [source, text]
 ----
 My Commands
-       add: Add two integers together.
+       hello-world:
 ----
 ====
 
@@ -140,8 +144,11 @@ And you can run it:
 ====
 [source, text]
 ----
-shell:>add --a 1 --b 2
-3
+shell:>hello-world
+Hello world spring
+
+shell:>hello-world --arg boot
+Hello world boot
 ----
 ====
 
