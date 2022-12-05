@@ -91,7 +91,17 @@ class CommandInfoModel {
 			return o.getLabel();
 		}
 		else {
-			return o.getType() == null ? "String" : ClassUtils.getShortName(o.getType().getRawClass());
+			if (o.getType() != null) {
+				if (ClassUtils.isAssignable(o.getType().getRawClass(), Void.class)) {
+					return "";
+				}
+				else {
+					return ClassUtils.getShortName(o.getType().getRawClass());
+				}
+			}
+			else {
+				return "String";
+			}
 		}
 	}
 

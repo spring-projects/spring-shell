@@ -122,4 +122,37 @@ public class CommandInfoModelTests {
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getAliases()).containsExactly("alias1");
 	}
+
+	@Test
+	void voidTypeUsesEmptyStringAsName() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("main1")
+			.withOption()
+				.longNames("arg1")
+				.type(void.class)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+		CommandInfoModel cim1 = CommandInfoModel.of("main1", r1);
+		assertThat(cim1.getParameters()).hasSize(1);
+		assertThat(cim1.getParameters().get(0).getArguments()).containsExactly("--arg1");
+		assertThat(cim1.getParameters().get(0).getType()).isEmpty();
+
+		CommandRegistration r2 = CommandRegistration.builder()
+			.command("main1")
+			.withOption()
+				.longNames("arg1")
+				.type(Void.class)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+		CommandInfoModel cim2 = CommandInfoModel.of("main1", r2);
+		assertThat(cim2.getParameters()).hasSize(1);
+		assertThat(cim2.getParameters().get(0).getArguments()).containsExactly("--arg1");
+		assertThat(cim2.getParameters().get(0).getType()).isEmpty();
+	}
 }

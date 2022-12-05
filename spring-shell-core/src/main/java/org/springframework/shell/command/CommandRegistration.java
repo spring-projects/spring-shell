@@ -1141,7 +1141,8 @@ public interface CommandRegistration {
 			if (helpOptionsSpec != null) {
 				String[] longNames = helpOptionsSpec.longNames != null ? helpOptionsSpec.longNames : null;
 				Character[] shortNames = helpOptionsSpec.shortNames != null ? helpOptionsSpec.shortNames : null;
-				options.add(CommandOption.of(longNames, shortNames, "help for " + command));
+				options.add(CommandOption.of(longNames, shortNames, "help for " + command,
+						ResolvableType.forType(void.class)));
 			}
 			return options;
 		}

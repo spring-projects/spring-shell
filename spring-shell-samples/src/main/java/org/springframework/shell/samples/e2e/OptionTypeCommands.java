@@ -230,4 +230,26 @@ public class OptionTypeCommands extends BaseE2ECommands {
 				.and()
 			.build();
 	}
+
+	//
+	// Void
+	//
+
+	@Bean
+	public CommandRegistration optionTypeVoidRegistration(Supplier<CommandRegistration.Builder> builder) {
+		return builder.get()
+			.command(REG, "option-type-void")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(void.class)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					return "Hello ";
+				})
+				.and()
+			.build();
+	}
+
 }
