@@ -13,6 +13,9 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet9]
 ----
 ====
 
+NOTE: Logic for search is passed as is into algorithms documented
+in <<appendix-tech-intro-searchalgorithm>>.
+
 The following image shows typical output from a path search component:
 
 image::images/component-path-search-1.svg[text input]
