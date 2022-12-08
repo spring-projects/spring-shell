@@ -20,3 +20,5 @@ include::using-shell-commands-helpoptions.adoc[]
 include::using-shell-commands-interactionmode.adoc[]
 
 include::using-shell-commands-builtin.adoc[]
+
+include::using-shell-commands-writing.adoc[]
