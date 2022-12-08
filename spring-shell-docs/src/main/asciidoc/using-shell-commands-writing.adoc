@@ -6,7 +6,7 @@ use JDK's `System.out` which then goes directly into JDK's own streams.
 Other recommended way is to use JLine's `Terminal` and get _writer_
 instance from there.
 
-If using target enpoints, i.e. _consumer_ which is not expected
+If using target endpoints, i.e. _consumer_ which is not expected
 to return anything given `CommandContext` contains reference to
 `Terminal` and writer can be accessed from there.
 
