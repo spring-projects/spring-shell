@@ -112,7 +112,7 @@
   description: Something needs to get done
 - name: type/technical-debt
   color: D4C5F9
-  description: Techical Dept
+  description: Technical Dept
 - name: type/question
   color: D4C5F9
   description: Is a question
