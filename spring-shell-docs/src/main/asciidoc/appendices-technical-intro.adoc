@@ -1,0 +1,19 @@
+[appendix]
+[#appendix-tech-intro]
+== Technical Introduction
+This appendix contains information for developers and others who would like to know more about how Spring Shell
+works internally and what its design decisions are.
+
+include::appendices-technical-intro-registration.adoc[]
+
+include::appendices-technical-intro-parser.adoc[]
+
+include::appendices-technical-intro-execution.adoc[]
+
+include::appendices-technical-intro-commandcontext.adoc[]
+
+include::appendices-technical-intro-commandcatalog.adoc[]
+
+include::appendices-technical-intro-theming.adoc[]
+
+include::appendices-technical-intro-searchalgorithm.adoc[]
