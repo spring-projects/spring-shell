@@ -25,7 +25,7 @@ import org.springframework.lang.Nullable;
 public interface CommandHandlingResult {
 
 	/**
-	 * Gets a message for this {@code HandlingResult}.
+	 * Gets a message for this {@code CommandHandlingResult}.
 	 *
 	 * @return a message
 	 */
@@ -33,7 +33,7 @@ public interface CommandHandlingResult {
 	String message();
 
 	/**
-	 * Gets an exit code for this {@code HandlingResult}. Exit code only has meaning
+	 * Gets an exit code for this {@code CommandHandlingResult}. Exit code only has meaning
 	 * if shell is in non-interactive mode.
 	 *
 	 * @return an exit code
@@ -41,44 +41,44 @@ public interface CommandHandlingResult {
 	Integer exitCode();
 
 	/**
-	 * Indicate whether this {@code HandlingResult} has a result.
+	 * Indicate whether this {@code CommandHandlingResult} has a result.
 	 *
 	 * @return true if result exist
 	 */
 	public boolean isPresent();
 
 	/**
-	 * Indicate whether this {@code HandlingResult} does not have a result.
+	 * Indicate whether this {@code CommandHandlingResult} does not have a result.
 	 *
 	 * @return true if result doesn't exist
 	 */
 	public boolean isEmpty();
 
 	/**
-	 * Gets an empty instance of {@code HandlingResult}.
+	 * Gets an empty instance of {@code CommandHandlingResult}.
 	 *
-	 * @return empty instance of {@code HandlingResult}
+	 * @return empty instance of {@code CommandHandlingResult}
 	 */
 	public static CommandHandlingResult empty() {
 		return of(null);
 	}
 
 	/**
-	 * Gets an instance of {@code HandlingResult}.
+	 * Gets an instance of {@code CommandHandlingResult}.
 	 *
 	 * @param message the message
-	 * @return instance of {@code HandlingResult}
+	 * @return instance of {@code CommandHandlingResult}
 	 */
 	public static CommandHandlingResult of(@Nullable String message) {
 		return of(message, null);
 	}
 
 	/**
-	 * Gets an instance of {@code HandlingResult}.
+	 * Gets an instance of {@code CommandHandlingResult}.
 	 *
 	 * @param message the message
 	 * @param exitCode the exit code
-	 * @return instance of {@code HandlingResult}
+	 * @return instance of {@code CommandHandlingResult}
 	 */
 	public static CommandHandlingResult of(@Nullable String message, Integer exitCode) {
 		return new DefaultHandlingResult(message, exitCode);

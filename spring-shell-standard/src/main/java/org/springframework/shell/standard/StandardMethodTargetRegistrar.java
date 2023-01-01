@@ -26,9 +26,11 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
@@ -43,6 +45,7 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.Builder;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.OptionSpec;
+import org.springframework.shell.command.annotation.MethodCommandExceptionResolver;
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.standard.ShellOption.NoValueProvider;
 import org.springframework.util.Assert;
@@ -211,6 +214,12 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 				}
 
 				builder.withTarget().method(bean, method);
+
+				ObjectProvider<Terminal> terminal = this.applicationContext.getBeanProvider(Terminal.class);
+				// TODO: feels a bit fishy to return null terminal but for now it's mostly to pass tests as it should not fail
+				MethodCommandExceptionResolver resolver = new MethodCommandExceptionResolver(bean, terminal.getIfAvailable(() -> null));
+				builder.withErrorHandling().resolver(resolver);
+
 				CommandRegistration registration = builder.build();
 				registry.register(registration);
 			}, method -> method.getAnnotation(ShellMethod.class) != null);

@@ -252,7 +252,12 @@ public class Shell {
 			return ute.getCause();
 		}
 		catch (CommandExecutionException e1) {
-			return e1.getCause();
+			if (e1.getCause() instanceof Exception e11) {
+				e = e11;
+			}
+			else {
+				return e1.getCause();
+			}
 		}
 		catch (Exception e2) {
 			e = e2;
@@ -265,9 +270,13 @@ public class Shell {
 				CommandHandlingResult processException = processException(commandExceptionResolvers, e);
 				processExceptionNonInt = processException;
 				if (processException != null) {
-					handlingResultNonInt = e;
-					this.terminal.writer().append(processException.message());
-					this.terminal.writer().flush();
+					if (processException.isPresent()) {
+						handlingResultNonInt = e;
+						if (StringUtils.hasText(processException.message())) {
+							this.terminal.writer().append(processException.message());
+							this.terminal.writer().flush();
+						}
+					}
 					return null;
 				}
 			} catch (Exception e1) {
@@ -298,12 +307,7 @@ public class Shell {
 			}
 		}
 		if (r != null) {
-			if (r.isEmpty()) {
-				return null;
-			}
-			else {
-				return r;
-			}
+			return r;
 		}
 		throw e;
 	}

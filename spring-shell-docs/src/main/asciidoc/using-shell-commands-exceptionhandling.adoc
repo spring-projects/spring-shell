@@ -2,77 +2,18 @@
 === Exception Handling
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
+Exceptions happen from a user code wether it is intentional or not. This section describes
+how `spring-shell` handles exceptions and gives instructions and best practices how to
+work with it.
+
 Many command line applications when applicable return an _exit code_ which running environment
 can use to differentiate if command has been executed successfully or not. In a `spring-shell`
 this mostly relates when a command is run on a non-interactive mode meaning one command
-is always executed once with an instance of a `spring-shell`.
+is always executed once with an instance of a `spring-shell`. Take a note that _exit code_
+always relates to non-interactive shell.
 
-==== Exception Resolving
+include::using-shell-commands-exceptionhandling-resolving.adoc[]
 
-Unhandled exceptions will bubble up into shell's `ResultHandlerService` and then eventually
-handled by some instance of `ResultHandler`. Chain of `ExceptionResolver` implementations
-can be used to resolve exceptions and gives you flexibility to return message to get written
-into console together with exit code which are wrapped within `CommandHandlingResult`.
+include::using-shell-commands-exceptionhandling-mappings.adoc[]
 
-====
-[source, java, indent=0]
-----
-include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-resolver-class]
-----
-====
-
-`CommandExceptionResolver` implementations can be defined globally as beans or defined
-per `CommandRegistration` if it's applicable only for a particular command itself.
-
-====
-[source, java, indent=0]
-----
-include::{snippets}/ErrorHandlingSnippets.java[tag=example1]
-----
-====
-
-Use you own exception types which can also be an instance of boot's `ExitCodeGenerator` if
-you want to define exit code there.
-
-====
-[source, java, indent=0]
-----
-include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-class]
-----
-====
-
-NOTE: With annotation based configuration exception resolving can only be customised globally
-
-==== Exit Code Mappings
-
-Default behaviour of an exit codes is as:
-
-- Errors from a command option parsing will result code of `2`
-- Any generic error will result result code of `1`
-- Obviously in any other case result code is `0`
-
-Every `CommandRegistration` can define its own mappings between _Exception_ and _exit code_.
-Essentially we're bound to functionality in `Spring Boot` regarding _exit code_ and simply
-integrate into that.
-
-Assuming there is an exception show below which would be thrown from a command:
-
-====
-[source, java, indent=0]
-----
-include::{snippets}/ExitCodeSnippets.java[tag=my-exception-class]
-----
-====
-
-It is possible to define a mapping function between `Throwable` and exit code. You can also
-just configure a _class_ to _exit code_ which is just a syntactic sugar within configurations.
-
-====
-[source, java, indent=0]
-----
-include::{snippets}/ExitCodeSnippets.java[tag=example1]
-----
-====
-
-NOTE: Exit codes cannot be customized with annotation based configuration
-
+include::using-shell-commands-exceptionhandling-annotation.adoc[]
