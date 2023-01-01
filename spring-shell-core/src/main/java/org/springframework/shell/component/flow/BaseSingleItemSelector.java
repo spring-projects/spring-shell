@@ -118,7 +118,7 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	@Override
 	public SingleItemSelectorSpec preHandler(Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler) {
 		this.preHandlers.add(handler);
-		return null;
+		return this;
 	}
 
 	@Override
