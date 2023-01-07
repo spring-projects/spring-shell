@@ -365,6 +365,65 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results().get(0).value()).isEqualTo(1);
 	}
 
+	@Test
+	public void testNotDefinedLongOptionWithoutOptions() {
+		// gh-602
+		List<CommandOption> options = Arrays.asList();
+		String[] args = new String[]{"--arg1", "foo"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(0);
+		assertThat(results.errors()).hasSize(1);
+		assertThat(results.positional()).hasSize(1);
+	}
+
+	@Test
+	public void testNotDefinedLongOptionWithOptionalOption() {
+		// gh-602
+		CommandOption option1 = longOption("arg1");
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"--arg1", "bar", "--arg2", "foo"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.errors()).hasSize(1);
+		assertThat(results.positional()).hasSize(1);
+	}
+
+	@Test
+	public void testNotDefinedLongOptionWithRequiredOption() {
+		// gh-602
+		CommandOption option1 = longOption("arg1", true);
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"--arg2", "foo"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(0);
+		assertThat(results.errors()).hasSize(2);
+		assertThat(results.positional()).hasSize(1);
+	}
+
+	@Test
+	public void testPositionDoesNotAffectRequiredErrorWithOtherErrors() {
+		// gh-601
+		CommandOption o1 = CommandOption.of(
+				new String[] { "arg1" },
+				null,
+				null,
+				null,
+				true,
+				null,
+				0,
+				1,
+				1,
+				null,
+				null);
+
+		List<CommandOption> options = Arrays.asList(o1);
+		String[] args = new String[]{"--arg2"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(0);
+		assertThat(results.errors()).hasSize(2);
+		assertThat(results.positional()).hasSize(0);
+	}
+
 	private static CommandOption longOption(String name) {
 		return longOption(name, null);
 	}
