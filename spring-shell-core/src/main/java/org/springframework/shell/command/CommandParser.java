@@ -227,7 +227,15 @@ public interface CommandParser {
 					requiredOptions.remove(pr.option);
 				}
 				else {
-					positional.addAll(pr.args);
+					for (String arg : pr.args) {
+						if (arg.startsWith("-")) {
+							errors.add(UnrecognisedOptionException.of(String.format("Unrecognised option '%s'", arg),
+									arg));
+						}
+						else {
+							positional.add(arg);
+						}
+					}
 				}
 				if (pr.error != null) {
 					errors.add(pr.error);
@@ -258,7 +266,9 @@ public interface CommandParser {
 							}
 						}
 					}
-					if (!oargs.isEmpty()) {
+					// don't do anything if first arg looks like an option as if we are here
+					// then we'd might remove wrong required option
+					if (!oargs.isEmpty() && !oargs.get(0).startsWith("-")) {
 						results.add(new DefaultCommandParserResult(o, oargs.stream().collect(Collectors.joining(" "))));
 						requiredOptions.remove(o);
 					}
@@ -513,6 +523,24 @@ public interface CommandParser {
 		}
 
 		public CommandOption getOption() {
+			return option;
+		}
+	}
+
+	public static class UnrecognisedOptionException extends CommandParserException {
+
+		private String option;
+
+		public UnrecognisedOptionException(String message, String option) {
+			super(message);
+			this.option = option;
+		}
+
+		public static UnrecognisedOptionException of(String message, String option) {
+			return new UnrecognisedOptionException(message, option);
+		}
+
+		public String getOption() {
 			return option;
 		}
 	}
