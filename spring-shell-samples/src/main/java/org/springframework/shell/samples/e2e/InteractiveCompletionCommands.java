@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.springframework.shell.samples.e2e;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
@@ -41,7 +40,7 @@ public class InteractiveCompletionCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	CommandRegistration testInteractiveCompletion1Registration(Supplier<CommandRegistration.Builder> builder) {
+	CommandRegistration testInteractiveCompletion1Registration(CommandRegistration.BuilderSupplier builder) {
 		Test1ValuesProvider test1ValuesProvider = new Test1ValuesProvider();
 		Test2ValuesProvider test2ValuesProvider = new Test2ValuesProvider();
 		return builder.get()

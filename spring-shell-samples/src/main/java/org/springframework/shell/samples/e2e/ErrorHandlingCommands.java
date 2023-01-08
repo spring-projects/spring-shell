@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.springframework.shell.samples.e2e;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.function.Supplier;
 
 import org.jline.terminal.Terminal;
 
@@ -87,7 +86,7 @@ public class ErrorHandlingCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	CommandRegistration testErrorHandlingRegistration(Supplier<CommandRegistration.Builder> builder) {
+	CommandRegistration testErrorHandlingRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "error-handling")
 			.group(GROUP)

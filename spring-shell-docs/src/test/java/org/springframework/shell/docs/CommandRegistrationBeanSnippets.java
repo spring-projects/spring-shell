@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package org.springframework.shell.docs;
-
-import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.boot.CommandRegistrationCustomizer;
@@ -37,7 +35,7 @@ public class CommandRegistrationBeanSnippets {
 	class Dump2 {
 		// tag::fromsupplier[]
 		@Bean
-		CommandRegistration commandRegistration(Supplier<CommandRegistration.Builder> builder) {
+		CommandRegistration commandRegistration(CommandRegistration.BuilderSupplier builder) {
 			return builder.get()
 				.command("mycommand")
 				.build();

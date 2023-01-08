@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package org.springframework.shell.samples.e2e;
-
-import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
@@ -39,7 +37,7 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testDefaultValueRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "default-value")
 			.group(GROUP)
@@ -64,7 +62,7 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueBoolean1Registration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testDefaultValueBoolean1Registration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "default-value-boolean1")
 			.group(GROUP)
@@ -90,7 +88,7 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueBoolean2Registration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testDefaultValueBoolean2Registration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "default-value-boolean2")
 			.group(GROUP)
@@ -116,7 +114,7 @@ public class DefaultValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testDefaultValueBoolean3Registration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testDefaultValueBoolean3Registration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "default-value-boolean3")
 			.group(GROUP)

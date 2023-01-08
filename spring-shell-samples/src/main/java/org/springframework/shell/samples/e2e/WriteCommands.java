@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package org.springframework.shell.samples.e2e;
-
-import java.util.function.Supplier;
 
 import org.jline.terminal.Terminal;
 
@@ -32,7 +30,7 @@ public class WriteCommands extends BaseE2ECommands {
 	Terminal terminal;
 
 	@Bean
-	public CommandRegistration writeTerminalWriterRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration writeTerminalWriterRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "write-terminalwriter")
 			.group(GROUP)
@@ -52,7 +50,7 @@ public class WriteCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration writeSystemOutRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration writeSystemOutRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "write-terminalwriter")
 			.group(GROUP)

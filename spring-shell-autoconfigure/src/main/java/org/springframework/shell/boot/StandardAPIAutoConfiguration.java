@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.shell.boot;
-
-import java.util.function.Supplier;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.ApplicationContext;
@@ -55,7 +53,7 @@ public class StandardAPIAutoConfiguration {
 
 	@Bean
 	public MethodTargetRegistrar standardMethodTargetResolver(ApplicationContext applicationContext,
-			Supplier<CommandRegistration.Builder> builder) {
+			CommandRegistration.BuilderSupplier builder) {
 		return new StandardMethodTargetRegistrar(applicationContext, builder);
 	}
 }

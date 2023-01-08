@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.samples.e2e;
 
-import java.util.function.Supplier;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
@@ -39,7 +37,7 @@ public class OptionalValueCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testOptionalValueRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testOptionalValueRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "optional-value")
 			.group(GROUP)

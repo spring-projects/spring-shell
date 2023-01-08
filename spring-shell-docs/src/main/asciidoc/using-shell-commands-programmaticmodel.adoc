@@ -12,7 +12,7 @@ include::{snippets}/CommandRegistrationBeanSnippets.java[tag=plain]
 ====
 
 If all your commands have something in common, an instance of
-a _Supplier<CommandRegistration.Builder>_ is created which can
+a _CommandRegistration.BuilderSupplier_ is created which can
 be autowired. Default implementation of this supplier returns
 a new builder so you don't need to worry about its internal state.
 

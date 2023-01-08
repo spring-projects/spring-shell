@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.samples.e2e;
 
-import java.util.function.Supplier;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
@@ -33,7 +31,7 @@ public class UnrecognisedOptionCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testUnrecognisedOptionNoOtherRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testUnrecognisedOptionNoOtherRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "unrecognised-option-noother")
 			.group(GROUP)
@@ -53,7 +51,7 @@ public class UnrecognisedOptionCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration testUnrecognisedOptionWithRequiredRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testUnrecognisedOptionWithRequiredRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "unrecognised-option-withrequired")
 			.group(GROUP)

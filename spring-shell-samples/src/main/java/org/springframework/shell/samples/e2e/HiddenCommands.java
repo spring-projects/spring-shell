@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.samples.e2e;
 
-import java.util.function.Supplier;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
@@ -25,7 +23,7 @@ import org.springframework.shell.standard.ShellComponent;
 public class HiddenCommands extends BaseE2ECommands {
 
 	@Bean
-	public CommandRegistration testHidden1Registration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testHidden1Registration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "hidden-1")
 			.group(GROUP)

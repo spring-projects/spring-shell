@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.springframework.shell.samples.e2e;
 
 import java.io.PrintWriter;
-import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
@@ -33,7 +32,7 @@ import org.springframework.shell.standard.ShellOption;
 public class OptionTypeCommands extends BaseE2ECommands {
 
 	@Bean
-	public CommandRegistration testOptionTypeRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration testOptionTypeRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "option-type")
 			.group(GROUP)
@@ -77,7 +76,7 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeStringRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration optionTypeStringRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "option-type-string")
 			.group(GROUP)
@@ -113,7 +112,7 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeBooleanRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration optionTypeBooleanRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "option-type-boolean")
 			.group(GROUP)
@@ -173,7 +172,7 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeIntegerRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration optionTypeIntegerRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "option-type-integer")
 			.group(GROUP)
@@ -213,7 +212,7 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeEnumRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration optionTypeEnumRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "option-type-enum")
 			.group(GROUP)
@@ -236,7 +235,7 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	//
 
 	@Bean
-	public CommandRegistration optionTypeVoidRegistration(Supplier<CommandRegistration.Builder> builder) {
+	public CommandRegistration optionTypeVoidRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
 			.command(REG, "option-type-void")
 			.group(GROUP)

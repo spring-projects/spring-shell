@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,6 +135,14 @@ public interface CommandRegistration {
 	 */
 	public static Builder builder() {
 		return new DefaultBuilder();
+	}
+
+	/**
+	 * Interface used to supply instance of a {@link Builder}. Meant to be a single
+	 * point access to centrally configured builder in an application context.
+	 */
+	@FunctionalInterface
+	public interface BuilderSupplier extends Supplier<Builder> {
 	}
 
 	/**

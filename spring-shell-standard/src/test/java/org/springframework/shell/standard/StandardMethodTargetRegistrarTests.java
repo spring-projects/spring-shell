@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.springframework.shell.standard;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +46,7 @@ public class StandardMethodTargetRegistrarTests {
 	private AnnotationConfigApplicationContext applicationContext;
 	private CommandCatalog catalog;
 	private DefaultShellContext shellContext;
-	private Supplier<CommandRegistration.Builder> builder = () -> CommandRegistration.builder();
+	private CommandRegistration.BuilderSupplier builder = () -> CommandRegistration.builder();
 
 	@BeforeEach
 	public void setup() {

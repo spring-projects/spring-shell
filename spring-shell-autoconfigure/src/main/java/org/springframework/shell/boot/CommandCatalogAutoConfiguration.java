@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.springframework.shell.boot;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -29,6 +28,7 @@ import org.springframework.shell.boot.SpringShellProperties.Help;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
 import org.springframework.shell.command.CommandResolver;
 
 @AutoConfiguration
@@ -76,7 +76,7 @@ public class CommandCatalogAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public Supplier<CommandRegistration.Builder> commandRegistrationBuilderSupplier(
+	public BuilderSupplier commandRegistrationBuilderSupplier(
 			ObjectProvider<CommandRegistrationCustomizer> customizerProvider) {
 		return () -> {
 			CommandRegistration.Builder builder = CommandRegistration.builder();
