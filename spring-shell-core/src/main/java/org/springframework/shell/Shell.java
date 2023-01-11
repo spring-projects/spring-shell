@@ -190,7 +190,7 @@ public class Shell {
 	 * result
 	 * </p>
 	 */
-	private Object evaluate(Input input) {
+	protected Object evaluate(Input input) {
 		if (noInput(input)) {
 			return NO_INPUT;
 		}
