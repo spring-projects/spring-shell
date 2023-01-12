@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.command.CommandParser.CommandParserException;
 import org.springframework.shell.command.CommandParser.MissingOptionException;
+import org.springframework.shell.command.CommandParser.NotEnoughArgumentsOptionException;
+import org.springframework.shell.command.CommandParser.TooManyArgumentsOptionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,7 +46,7 @@ class CommandParserExceptionResolverTests {
 				.and()
 			.build();
 
-		CommandHandlingResult resolve = resolver.resolve(of(registration.getOptions().get(0)));
+		CommandHandlingResult resolve = resolver.resolve(missingOption(registration.getOptions().get(0)));
 		assertThat(resolve).isNotNull();
 		assertThat(resolve.message()).contains("--arg1", "Desc arg1");
 	}
@@ -64,7 +66,7 @@ class CommandParserExceptionResolverTests {
 				.and()
 			.build();
 
-		CommandHandlingResult resolve = resolver.resolve(of(registration.getOptions().get(0)));
+		CommandHandlingResult resolve = resolver.resolve(missingOption(registration.getOptions().get(0)));
 		assertThat(resolve).isNotNull();
 		assertThat(resolve.message()).contains("--arg1", "Desc arg1");
 		assertThat(resolve.message()).doesNotContain("-x", "Desc x");
@@ -84,14 +86,66 @@ class CommandParserExceptionResolverTests {
 				.and()
 			.build();
 
-		CommandHandlingResult resolve = resolver.resolve(of(registration.getOptions().get(0)));
+		CommandHandlingResult resolve = resolver.resolve(missingOption(registration.getOptions().get(0)));
 		assertThat(resolve).isNotNull();
 		assertThat(resolve.message()).contains("-x", "Desc x");
 	}
 
-	static CommandParserExceptionsException of(CommandOption option) {
-		MissingOptionException moe = new MissingOptionException("msg", option);
-		List<CommandParserException> parserExceptions = Arrays.asList(moe);
+	@Test
+	void resolvesTooManyLongOption() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("required-value")
+			.withOption()
+				.longNames("arg1")
+				.description("Desc arg1")
+				.arity(2, 3)
+				.required()
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+
+		CommandHandlingResult resolve = resolver.resolve(tooManyArguments(registration.getOptions().get(0)));
+		assertThat(resolve).isNotNull();
+		assertThat(resolve.message()).contains("--arg1 requires at most", "Desc arg1");
+	}
+
+	@Test
+	void resolvesNotEnoughLongOption() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("required-value")
+			.withOption()
+				.longNames("arg1")
+				.description("Desc arg1")
+				.arity(2, 3)
+				.required()
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+
+		CommandHandlingResult resolve = resolver.resolve(notEnoughArguments(registration.getOptions().get(0)));
+		assertThat(resolve).isNotNull();
+		assertThat(resolve.message()).contains("--arg1 requires at least", "Desc arg1");
+	}
+
+	static CommandParserExceptionsException missingOption(CommandOption option) {
+		MissingOptionException e = new MissingOptionException("msg", option);
+		List<CommandParserException> parserExceptions = Arrays.asList(e);
+		return new CommandParserExceptionsException("msg", parserExceptions);
+	}
+
+	static CommandParserExceptionsException tooManyArguments(CommandOption option) {
+		TooManyArgumentsOptionException e = new TooManyArgumentsOptionException("msg", option);
+		List<CommandParserException> parserExceptions = Arrays.asList(e);
+		return new CommandParserExceptionsException("msg", parserExceptions);
+	}
+
+	static CommandParserExceptionsException notEnoughArguments(CommandOption option) {
+		NotEnoughArgumentsOptionException e = new NotEnoughArgumentsOptionException("msg", option);
+		List<CommandParserException> parserExceptions = Arrays.asList(e);
 		return new CommandParserExceptionsException("msg", parserExceptions);
 	}
 }

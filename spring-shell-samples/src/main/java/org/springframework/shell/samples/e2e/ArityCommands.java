@@ -15,6 +15,10 @@
  */
 package org.springframework.shell.samples.e2e;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
@@ -30,17 +34,17 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class ArityCommands extends BaseE2ECommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "boolean-arity1-default-true", group = GROUP)
-	public String testBooleanArity1DefaultTrue(
+	@ShellMethod(key = LEGACY_ANNO + "arity-boolean-default-true", group = GROUP)
+	public String testArityBooleanDefaultTrueLegacyAnnotation(
 		@ShellOption(value = "--overwrite", arity = 1, defaultValue = "true") Boolean overwrite
 	) {
 		return "Hello " + overwrite;
 	}
 
 	@Bean
-	public CommandRegistration testBooleanArity1DefaultTrueRegistration(CommandRegistration.BuilderSupplier builder) {
+	public CommandRegistration testArityBooleanDefaultTrueRegistration(CommandRegistration.BuilderSupplier builder) {
 		return builder.get()
-			.command(REG, "boolean-arity1-default-true")
+			.command(REG, "arity-boolean-default-true")
 			.group(GROUP)
 			.withOption()
 				.longNames("overwrite")
@@ -55,5 +59,85 @@ public class ArityCommands extends BaseE2ECommands {
 				})
 				.and()
 			.build();
+	}
+
+	@ShellMethod(key = LEGACY_ANNO + "arity-string-array", group = GROUP)
+	public String testArityStringArrayLegacyAnnotation(
+		@ShellOption(value = "--arg1", arity = 3) String[] arg1
+	) {
+		return "Hello " + Arrays.asList(arg1);
+	}
+
+	@Bean
+	public CommandRegistration testArityStringArrayRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "arity-string-array")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(String[].class)
+				.arity(0, 3)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + Arrays.asList(arg1);
+				})
+				.and()
+			.build();
+	}
+
+	@ShellMethod(key = LEGACY_ANNO + "arity-float-array", group = GROUP)
+	public String testArityFloatArrayLegacyAnnotation(
+		@ShellOption(value = "--arg1", arity = 3) float[] arg1
+	) {
+		return "Hello " + floatsToString(arg1);
+	}
+
+	@Bean
+	public CommandRegistration testArityFloatArrayRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "arity-float-array")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(float[].class)
+				.arity(0, 3)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					float[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + floatsToString(arg1);
+				})
+				.and()
+			.build();
+	}
+
+	@Bean
+	public CommandRegistration testArityErrorsRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "arity-errors")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(String[].class)
+				.required()
+				.arity(1, 2)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + Arrays.asList(arg1);
+				})
+				.and()
+			.build();
+	}
+
+	private static String floatsToString(float[] arg1) {
+		return IntStream.range(0, arg1.length)
+			.mapToDouble(i -> arg1[i])
+			.boxed()
+			.map(d -> d.toString())
+			.collect(Collectors.joining(","));
 	}
 }

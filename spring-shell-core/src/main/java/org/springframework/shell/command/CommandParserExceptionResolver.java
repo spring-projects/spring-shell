@@ -21,6 +21,8 @@ import org.jline.utils.AttributedStyle;
 
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.command.CommandParser.MissingOptionException;
+import org.springframework.shell.command.CommandParser.NotEnoughArgumentsOptionException;
+import org.springframework.shell.command.CommandParser.TooManyArgumentsOptionException;
 import org.springframework.util.StringUtils;
 
 /**
@@ -42,6 +44,18 @@ public class CommandParserExceptionResolver implements CommandExceptionResolver 
 					}
 					else if (option.getShortNames().length > 0) {
 						handleShort(builder, option);
+					}
+				}
+				else if (e instanceof NotEnoughArgumentsOptionException neaoe) {
+					CommandOption option = neaoe.getOption();
+					if (option.getLongNames().length > 0) {
+						handleLongNotEnough(builder, option);
+					}
+				}
+				else if (e instanceof TooManyArgumentsOptionException tmaoe) {
+					CommandOption option = tmaoe.getOption();
+					if (option.getLongNames().length > 0) {
+						handleLongTooMany(builder, option);
 					}
 				}
 				else {
@@ -71,6 +85,32 @@ public class CommandParserExceptionResolver implements CommandExceptionResolver 
 		StringBuilder buf = new StringBuilder();
 		buf.append("Missing mandatory option -");
 		buf.append(option.getShortNames()[0]);
+		if (StringUtils.hasText(option.getDescription())) {
+			buf.append(", ");
+			buf.append(option.getDescription());
+		}
+		buf.append(".");
+		builder.append(new AttributedString(buf.toString(), AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)));
+	}
+
+	private static void handleLongNotEnough(AttributedStringBuilder builder, CommandOption option) {
+		StringBuilder buf = new StringBuilder();
+		buf.append("Not enough arguments --");
+		buf.append(option.getLongNames()[0]);
+		buf.append(" requires at least " + option.getArityMin());
+		if (StringUtils.hasText(option.getDescription())) {
+			buf.append(", ");
+			buf.append(option.getDescription());
+		}
+		buf.append(".");
+		builder.append(new AttributedString(buf.toString(), AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)));
+	}
+
+	private static void handleLongTooMany(AttributedStringBuilder builder, CommandOption option) {
+		StringBuilder buf = new StringBuilder();
+		buf.append("Too many arguments --");
+		buf.append(option.getLongNames()[0]);
+		buf.append(" requires at most " + option.getArityMax());
 		if (StringUtils.hasText(option.getDescription())) {
 			buf.append(", ");
 			buf.append(option.getDescription());

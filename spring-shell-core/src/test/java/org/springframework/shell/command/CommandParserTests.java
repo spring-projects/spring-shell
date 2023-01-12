@@ -26,6 +26,8 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandParser.CommandParserResults;
+import org.springframework.shell.command.CommandParser.NotEnoughArgumentsOptionException;
+import org.springframework.shell.command.CommandParser.TooManyArgumentsOptionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -293,6 +295,40 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results()).hasSize(1);
 		assertThat(results.results().get(0).option()).isSameAs(option1);
 		assertThat(results.results().get(0).value()).isEqualTo(new int[] { 1, 2 });
+	}
+
+	@Test
+	public void testArityErrors() {
+		CommandOption option1 = CommandOption.of(
+				new String[] { "arg1" },
+				null,
+				null,
+				ResolvableType.forType(int[].class),
+				true,
+				null,
+				null,
+				2,
+				3,
+				null,
+				null);
+
+		List<CommandOption> options = Arrays.asList(option1);
+
+		String[] args1 = new String[]{"--arg1", "1", "2", "3", "4"};
+		CommandParserResults results1 = parser.parse(options, args1);
+		assertThat(results1.errors()).hasSize(1);
+		assertThat(results1.errors().get(0)).isInstanceOf(TooManyArgumentsOptionException.class);
+		assertThat(results1.results()).hasSize(1);
+		assertThat(results1.results().get(0).option()).isSameAs(option1);
+		assertThat(results1.results().get(0).value()).isNull();
+
+		String[] args2 = new String[]{"--arg1", "1"};
+		CommandParserResults results2 = parser.parse(options, args2);
+		assertThat(results2.errors()).hasSize(1);
+		assertThat(results2.errors().get(0)).isInstanceOf(NotEnoughArgumentsOptionException.class);
+		assertThat(results2.results()).hasSize(1);
+		assertThat(results2.results().get(0).option()).isSameAs(option1);
+		assertThat(results2.results().get(0).value()).isNull();
 	}
 
 	@Test
