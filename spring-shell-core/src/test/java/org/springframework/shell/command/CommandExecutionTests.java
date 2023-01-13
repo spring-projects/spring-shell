@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -195,7 +195,47 @@ public class CommandExecutionTests extends AbstractCommandTests {
 			.build();
 		execution.evaluate(r1, new String[]{"myarg1value1", "myarg1value2"});
 		assertThat(pojo1.method4Count).isEqualTo(1);
-		assertThat(pojo1.method4Arg1).isEqualTo("myarg1value1 myarg1value2");
+		assertThat(pojo1.method4Arg1).isEqualTo("myarg1value1,myarg1value2");
+	}
+
+	@Test
+	public void testMethodMultiPositionalArgsAllToArray1() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.description("help")
+			.withOption()
+				.longNames("arg1")
+				.description("some arg1")
+				.position(0)
+				.arity(OptionArity.ONE_OR_MORE)
+				.and()
+			.withTarget()
+				.method(pojo1, "method9")
+				.and()
+			.build();
+		execution.evaluate(r1, new String[]{"myarg1value1", "myarg1value2"});
+		assertThat(pojo1.method9Count).isEqualTo(1);
+		assertThat(pojo1.method9Arg1).isEqualTo(new String[] { "myarg1value1", "myarg1value2" });
+	}
+
+	@Test
+	public void testMethodMultiPositionalArgsAllToArray2() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.description("help")
+			.withOption()
+				.longNames("arg1")
+				.description("some arg1")
+				.position(0)
+				.arity(OptionArity.ONE_OR_MORE)
+				.and()
+			.withTarget()
+				.method(pojo1, "method8")
+				.and()
+			.build();
+		execution.evaluate(r1, new String[]{"1", "2"});
+		assertThat(pojo1.method8Count).isEqualTo(1);
+		assertThat(pojo1.method8Arg1).isEqualTo(new float[] { 1, 2 });
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.springframework.shell.docs;
+
+import java.util.Arrays;
 
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
@@ -143,6 +145,61 @@ public class OptionSnippets {
 				.and()
 			.build();
 		// end::option-registration-arityints[]
+
+		// tag::option-registration-aritystrings-sample[]
+		CommandRegistration.builder()
+			.command("arity-errors")
+			.withOption()
+				.longNames("arg1")
+				.type(String[].class)
+				.required()
+				.arity(1, 2)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + Arrays.asList(arg1);
+				})
+				.and()
+			.build();
+		// end::option-registration-aritystrings-sample[]
+
+		// tag::option-registration-aritystrings-position[]
+		CommandRegistration.builder()
+			.command("arity-strings-2")
+			.withOption()
+				.longNames("arg1")
+				.required()
+				.type(String[].class)
+				.arity(0, 2)
+				.position(0)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + Arrays.asList(arg1);
+				})
+				.and()
+			.build();
+		// end::option-registration-aritystrings-position[]
+
+		// tag::option-registration-aritystrings-noposition[]
+		CommandRegistration.builder()
+			.command("arity-strings-1")
+			.withOption()
+				.longNames("arg1")
+				.required()
+				.type(String[].class)
+				.arity(0, 2)
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + Arrays.asList(arg1);
+				})
+				.and()
+			.build();
+		// end::option-registration-aritystrings-noposition[]
 
 		// tag::option-registration-optional[]
 		CommandRegistration.builder()
