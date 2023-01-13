@@ -332,6 +332,9 @@ public interface CommandParser {
 							return option.stream().flatMap(o -> {
 								List<String> subArgs = lr.subList(1, lr.size());
 								ConvertArgumentsHolder holder = convertArguments(o, subArgs);
+								if (holder.error != null) {
+									return Stream.of(ParserResult.of(o, subArgs, null, holder.error));
+								}
 								Object value = holder.value;
 								if (conversionService != null && o.getType() != null && value != null) {
 									if (conversionService.canConvert(value.getClass(), o.getType().getRawClass())) {
@@ -433,6 +436,22 @@ public interface CommandParser {
 					}
 				}
 
+				if (arityMax > 1 && arityMin > -1 && arityMax >= arityMin && (arguments.size() < arityMin || arguments.size() > arityMax)) {
+					String ln = option.getLongNames() != null
+							? Stream.of(option.getLongNames()).collect(Collectors.joining(","))
+							: "";
+					String sn = option.getShortNames() != null ? Stream.of(option.getShortNames())
+							.map(n -> Character.toString(n)).collect(Collectors.joining(",")) : "";
+					if (arguments.size() < arityMin) {
+						String msg = String.format("Not enough arguments, longnames='%s', shortnames='%s'", ln, sn);
+						return new ConvertArgumentsHolder(value, unmapped, new NotEnoughArgumentsOptionException(msg, option));
+					}
+					if (arguments.size() > arityMax) {
+						String msg = String.format("Too many arguments, longnames='%s', shortnames='%s'", ln, sn);
+						return new ConvertArgumentsHolder(value, unmapped, new TooManyArgumentsOptionException(msg, option));
+					}
+				}
+
 				if (type != null && type.isAssignableFrom(boolean.class)) {
 					if (arguments.size() == 0) {
 						value = true;
@@ -469,12 +488,18 @@ public interface CommandParser {
 			private class ConvertArgumentsHolder {
 				Object value;
 				final List<String> unmapped = new ArrayList<>();
+				CommandParserException error;
 
 				ConvertArgumentsHolder(Object value, List<String> unmapped) {
+					this(value, unmapped, null);
+				}
+
+				ConvertArgumentsHolder(Object value, List<String> unmapped, CommandParserException error) {
 					this.value = value;
 					if (unmapped != null) {
 						this.unmapped.addAll(unmapped);
 					}
+					this.error = error;
 				}
 			}
 		}
@@ -509,7 +534,35 @@ public interface CommandParser {
 		}
 	}
 
-	static class MissingOptionException extends CommandParserException {
+	public static class OptionException extends CommandParserException {
+
+		private CommandOption option;
+
+		public OptionException(String message, CommandOption option) {
+			super(message);
+			this.option = option;
+		}
+
+		public CommandOption getOption() {
+			return option;
+		}
+	}
+
+	public static class TooManyArgumentsOptionException extends OptionException {
+
+		public TooManyArgumentsOptionException(String message, CommandOption option) {
+			super(message, option);
+		}
+	}
+
+	public static class NotEnoughArgumentsOptionException extends OptionException {
+
+		public NotEnoughArgumentsOptionException(String message, CommandOption option) {
+			super(message, option);
+		}
+	}
+
+	public static class MissingOptionException extends CommandParserException {
 
 		private CommandOption option;
 
