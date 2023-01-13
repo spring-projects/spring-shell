@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,8 @@ public abstract class AbstractCommandTests {
 		public int method7Arg3;
 		public int method8Count;
 		public float[] method8Arg1;
+		public int method9Count;
+		public String[] method9Arg1;
 
 		public void method1(CommandContext ctx) {
 			method1Ctx = ctx;
@@ -106,6 +108,11 @@ public abstract class AbstractCommandTests {
 		public void method8(float[] arg1) {
 			method8Arg1 = arg1;
 			method8Count++;
+		}
+
+		public void method9(String[] arg1) {
+			method9Arg1 = arg1;
+			method9Count++;
 		}
 	}
 }

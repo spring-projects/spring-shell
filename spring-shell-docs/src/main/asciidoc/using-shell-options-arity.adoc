@@ -4,7 +4,7 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Sometimes, you want to have more fine control of how many parameters with an option
 are processed when parsing operations happen. Arity is defined as min and max
-values, where min must be a positive integer and max has to be more or equal to min.
+values, where min must be zero or a positive integer and max has to be more or equal to min.
 
 ====
 [source, java, indent=0]
@@ -14,7 +14,7 @@ include::{snippets}/OptionSnippets.java[tag=option-registration-arityints]
 ====
 
 Arity can also be defined as an `OptionArity` enum, which are shortcuts
-within the following table:
+shown in below table <<using-shell-options-arity-optionarity-table>>.
 
 ====
 [source, java, indent=0]
@@ -23,6 +23,7 @@ include::{snippets}/OptionSnippets.java[tag=option-registration-arityenum]
 ----
 ====
 
+[[using-shell-options-arity-optionarity-table]]
 .OptionArity
 |===
 |Value |min/max
@@ -49,5 +50,37 @@ The annotation model supports defining only the max value of an arity.
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-with-annotation-arity]
+----
+====
+
+One of a use cases to manually define arity is to impose restrictions how
+many parameters option accepts.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-aritystrings-sample]
+----
+====
+
+In above example we have option _arg1_ and it's defined as type _String[]_. Arity
+defines that it needs at least 1 parameter and not more that 2. As seen in below
+spesific exceptions _TooManyArgumentsOptionException_ and
+_NotEnoughArgumentsOptionException_ are thrown to indicate arity mismatch.
+
+====
+[source, bash]
+----
+shell:>e2e reg arity-errors --arg1
+Not enough arguments --arg1 requires at least 1.
+
+shell:>e2e reg arity-errors --arg1 one
+Hello [one]
+
+shell:>e2e reg arity-errors --arg1 one two
+Hello [one, two]
+
+shell:>e2e reg arity-errors --arg1 one two three
+Too many arguments --arg1 requires at most 2.
 ----
 ====

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -198,7 +198,8 @@ public class CommandParserTests extends AbstractCommandTests {
 		CommandParserResults results = parser.parse(options, args);
 		assertThat(results.results()).hasSize(1);
 		assertThat(results.results().get(0).option()).isSameAs(option1);
-		assertThat(results.results().get(0).value()).isEqualTo("value foo");
+		// no type so we get raw list
+		assertThat(results.results().get(0).value()).isEqualTo(Arrays.asList("value", "foo"));
 		assertThat(results.positional()).containsExactly("value", "foo");
 	}
 
@@ -210,7 +211,7 @@ public class CommandParserTests extends AbstractCommandTests {
 		CommandParserResults results = parser.parse(options, args);
 		assertThat(results.results()).hasSize(1);
 		assertThat(results.results().get(0).option()).isSameAs(option1);
-		assertThat(results.results().get(0).value()).isEqualTo("value foo");
+		assertThat(results.results().get(0).value()).isEqualTo("value,foo");
 		assertThat(results.positional()).containsExactly("value", "foo");
 	}
 
@@ -332,9 +333,34 @@ public class CommandParserTests extends AbstractCommandTests {
 	}
 
 	@Test
+	public void testMapToIntArray() {
+		CommandOption option1 = CommandOption.of(
+				new String[] { "arg1" },
+				null,
+				null,
+				ResolvableType.forType(int[].class),
+				false,
+				null,
+				0,
+				1,
+				2,
+				null,
+				null);
+
+
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"1", "2"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.errors()).hasSize(0);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(new int[] { 1, 2 });
+	}
+
+	@Test
 	public void testMapPositionalArgs1() {
-		CommandOption option1 = longOption("arg1", 0, 1, 1);
-		CommandOption option2 = longOption("arg2", 1, 1, 2);
+		CommandOption option1 = longOption("arg1", ResolvableType.forType(String.class), false, 0, 1, 1);
+		CommandOption option2 = longOption("arg2", ResolvableType.forType(String.class), false, 1, 1, 2);
 		List<CommandOption> options = Arrays.asList(option1, option2);
 		String[] args = new String[]{"--arg1", "1", "2"};
 		CommandParserResults results = parser.parse(options, args);
@@ -346,9 +372,25 @@ public class CommandParserTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMapPositionalArgs2() {
+	public void testMapPositionalArgs11() {
 		CommandOption option1 = longOption("arg1", 0, 1, 1);
 		CommandOption option2 = longOption("arg2", 1, 1, 2);
+		List<CommandOption> options = Arrays.asList(option1, option2);
+		String[] args = new String[]{"--arg1", "1", "2"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(2);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(1).option()).isSameAs(option2);
+		assertThat(results.results().get(0).value()).isEqualTo("1");
+		// no type so we get raw list
+		assertThat(results.results().get(1).value()).isEqualTo(Arrays.asList("2"));
+	}
+
+	@Test
+	public void testMapPositionalArgs2() {
+		CommandOption option1 = longOption("arg1", ResolvableType.forType(String.class), false, 0, 1, 1);
+		CommandOption option2 = longOption("arg2", ResolvableType.forType(String.class), false, 1, 1, 2);
+
 		List<CommandOption> options = Arrays.asList(option1, option2);
 		String[] args = new String[]{"1", "2"};
 		CommandParserResults results = parser.parse(options, args);

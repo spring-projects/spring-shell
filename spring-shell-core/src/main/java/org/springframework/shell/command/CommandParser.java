@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -269,7 +269,10 @@ public interface CommandParser {
 					// don't do anything if first arg looks like an option as if we are here
 					// then we'd might remove wrong required option
 					if (!oargs.isEmpty() && !oargs.get(0).startsWith("-")) {
-						results.add(new DefaultCommandParserResult(o, oargs.stream().collect(Collectors.joining(" "))));
+						// as we now have a candicate option, try to see if there is a
+						// conversion we can do and the use it.
+						Object value = convertOptionType(o, oargs);
+						results.add(new DefaultCommandParserResult(o, value));
 						requiredOptions.remove(o);
 					}
 				});
@@ -283,6 +286,15 @@ public interface CommandParser {
 			});
 
 			return new DefaultCommandParserResults(results, positional, errors);
+		}
+
+		private Object convertOptionType(CommandOption option, Object value) {
+			if (conversionService != null && option.getType() != null && value != null) {
+				if (conversionService.canConvert(value.getClass(), option.getType().getRawClass())) {
+					value = conversionService.convert(value, option.getType().getRawClass());
+				}
+			}
+			return value;
 		}
 
 		private static class ParserResult {
@@ -335,12 +347,7 @@ public interface CommandParser {
 								if (holder.error != null) {
 									return Stream.of(ParserResult.of(o, subArgs, null, holder.error));
 								}
-								Object value = holder.value;
-								if (conversionService != null && o.getType() != null && value != null) {
-									if (conversionService.canConvert(value.getClass(), o.getType().getRawClass())) {
-										value = conversionService.convert(value, o.getType().getRawClass());
-									}
-								}
+								Object value = convertOptionType(o, holder.value);
 								Stream<ParserResult> unmapped = holder.unmapped.stream()
 									.map(um -> ParserResult.of(null, Arrays.asList(um), null, null));
 								Stream<ParserResult> res = Stream.of(ParserResult.of(o, subArgs, value, null));

@@ -75,8 +75,10 @@ public class ArityCommands extends BaseE2ECommands {
 			.group(GROUP)
 			.withOption()
 				.longNames("arg1")
+				.required()
 				.type(String[].class)
 				.arity(0, 3)
+				.position(0)
 				.and()
 			.withTarget()
 				.function(ctx -> {
