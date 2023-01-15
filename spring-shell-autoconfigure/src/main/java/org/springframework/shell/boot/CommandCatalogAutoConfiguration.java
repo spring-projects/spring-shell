@@ -20,7 +20,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.MethodTargetRegistrar;
@@ -29,6 +31,8 @@ import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
+import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.command.support.OptionNameModifierSupport;
 import org.springframework.shell.command.CommandResolver;
 
 @AutoConfiguration
@@ -70,6 +74,40 @@ public class CommandCatalogAutoConfiguration {
 					.longNames(help.getLongNames())
 					.shortNames(help.getShortNames())
 					.command(help.getCommand());
+			}
+		};
+	}
+
+	@Bean
+	@ConditionalOnBean(OptionNameModifier.class)
+	public CommandRegistrationCustomizer customOptionNameModifierCommandRegistrationCustomizer(OptionNameModifier modifier) {
+		return builder -> {
+			builder.defaultOptionNameModifier(modifier);
+		};
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(OptionNameModifier.class)
+	@ConditionalOnProperty(prefix = "spring.shell.option.naming", name = "case-type")
+	public CommandRegistrationCustomizer defaultOptionNameModifierCommandRegistrationCustomizer(SpringShellProperties properties) {
+		return builder -> {
+			switch (properties.getOption().getNaming().getCaseType()) {
+				case NOOP:
+					break;
+				case CAMEL:
+					builder.defaultOptionNameModifier(OptionNameModifierSupport.CAMELCASE);
+					break;
+				case SNAKE:
+					builder.defaultOptionNameModifier(OptionNameModifierSupport.SNAKECASE);
+					break;
+				case KEBAB:
+					builder.defaultOptionNameModifier(OptionNameModifierSupport.KEBABCASE);
+					break;
+				case PASCAL:
+					builder.defaultOptionNameModifier(OptionNameModifierSupport.PASCALCASE);
+					break;
+				default:
+					break;
 			}
 		};
 	}

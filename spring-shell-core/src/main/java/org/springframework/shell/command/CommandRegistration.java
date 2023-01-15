@@ -146,6 +146,14 @@ public interface CommandRegistration {
 	}
 
 	/**
+	 * Interface used to modify option long name. Usual use case is i.e. making
+	 * conversion from a {@code camelCase} to {@code snake-case}.
+	 */
+	@FunctionalInterface
+	public interface OptionNameModifier extends Function<String, String> {
+	}
+
+	/**
 	 * Spec defining an option.
 	 */
 	public interface OptionSpec {
@@ -246,6 +254,14 @@ public interface CommandRegistration {
 		 * @return option spec for chaining
 		 */
 		OptionSpec completion(CompletionResolver completion);
+
+		/**
+		 * Define an option name modifier.
+		 *
+		 * @param modifier the option name modifier function
+		 * @return option spec for chaining
+		 */
+		OptionSpec nameModifier(Function<String, String> modifier);
 
 		/**
 		 * Return a builder for chaining.
@@ -674,6 +690,16 @@ public interface CommandRegistration {
 		Builder hidden(boolean hidden);
 
 		/**
+		 * Provides a global option name modifier. Will be used with all options to
+		 * modify long names. Usual use case is to enforce naming convention i.e. to
+		 * have {@code snake-case} for all names.
+		 *
+		 * @param modifier to modifier to change option name
+		 * @return builder for chaining
+		 */
+		Builder defaultOptionNameModifier(Function<String, String> modifier);
+
+		/**
 		 * Define an option what this command should user for. Can be used multiple
 		 * times.
 		 *
@@ -738,6 +764,7 @@ public interface CommandRegistration {
 		private Integer arityMax;
 		private String label;
 		private CompletionResolver completion;
+		private Function<String, String> optionNameModifier;
 
 		DefaultOptionSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -843,6 +870,12 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public OptionSpec nameModifier(Function<String, String> modifier) {
+			this.optionNameModifier = modifier;
+			return this;
+		}
+
+		@Override
 		public Builder and() {
 			return builder;
 		}
@@ -889,6 +922,17 @@ public interface CommandRegistration {
 
 		public CompletionResolver getCompletion() {
 			return completion;
+		}
+
+		@Nullable
+		public Function<String, String> getOptionNameModifier() {
+			if (optionNameModifier != null) {
+				return optionNameModifier;
+			}
+			if (builder.defaultOptionNameModifier != null) {
+				return builder.defaultOptionNameModifier;
+			}
+			return null;
 		}
 	}
 
@@ -1142,9 +1186,16 @@ public interface CommandRegistration {
 		@Override
 		public List<CommandOption> getOptions() {
 			List<CommandOption> options = optionSpecs.stream()
-				.map(o -> CommandOption.of(o.getLongNames(), o.getShortNames(), o.getDescription(), o.getType(),
-						o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
-						o.getLabel(), o.getCompletion()))
+				.map(o -> {
+					String[] longNames = o.getLongNames();
+					Function<String, String> modifier = o.getOptionNameModifier();
+					if (modifier != null) {
+						longNames = Arrays.stream(longNames).map(modifier).toArray(String[]::new);
+					}
+					return CommandOption.of(longNames, o.getShortNames(), o.getDescription(), o.getType(),
+							o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
+							o.getLabel(), o.getCompletion());
+					})
 				.collect(Collectors.toList());
 			if (helpOptionsSpec != null) {
 				String[] longNames = helpOptionsSpec.longNames != null ? helpOptionsSpec.longNames : null;
@@ -1235,6 +1286,7 @@ public interface CommandRegistration {
 		private DefaultExitCodeSpec exitCodeSpec;
 		private DefaultErrorHandlingSpec errorHandlingSpec;
 		private DefaultHelpOptionsSpec helpOptionsSpec;
+		private Function<String, String> defaultOptionNameModifier;
 
 		@Override
 		public Builder command(String... commands) {
@@ -1280,6 +1332,12 @@ public interface CommandRegistration {
 		@Override
 		public Builder availability(Supplier<Availability> availability) {
 			this.availability = availability;
+			return this;
+		}
+
+		@Override
+		public Builder defaultOptionNameModifier(Function<String,String> modifier) {
+			this.defaultOptionNameModifier = modifier;
 			return this;
 		}
 

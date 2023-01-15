@@ -1,3 +1,4 @@
+[[using-shell-commands-programmaticmodel]]
 ==== Programmatic Model
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 

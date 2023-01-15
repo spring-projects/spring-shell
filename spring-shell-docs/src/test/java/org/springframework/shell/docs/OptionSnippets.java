@@ -17,8 +17,11 @@ package org.springframework.shell.docs;
 
 import java.util.Arrays;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
+import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 public class OptionSnippets {
@@ -239,6 +242,35 @@ public class OptionSnippets {
 				.and()
 			.build();
 		// end::option-registration-label[]
+
+		// tag::option-registration-naming-case-req[]
+		CommandRegistration.builder()
+			.withOption()
+				.longNames("arg1")
+				.nameModifier(name -> "x" + name)
+				.and()
+			.build();
+		// end::option-registration-naming-case-req[]
+	}
+
+	class Dump8 {
+		// tag::option-registration-naming-case-bean[]
+		@Bean
+		OptionNameModifier sampleOptionNameModifier() {
+			return name -> "x" + name;
+		}
+		// end::option-registration-naming-case-bean[]
+
+		// tag::option-registration-naming-case-sample1[]
+		@ShellMethod(key = "option-naming-sample")
+		public void optionNamingSample(
+			@ShellOption("from_snake") String snake,
+			@ShellOption("fromCamel") String camel,
+			@ShellOption("from-kebab") String kebab,
+			@ShellOption("FromPascal") String pascal
+		) {}
+		// end::option-registration-naming-case-sample1[]
+
 	}
 
 }

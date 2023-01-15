@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -542,5 +542,45 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getLongNames()).containsExactly("help");
 		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('h');
+	}
+
+	@Test
+	void testOptionNameModifierInOption() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.nameModifier(name -> "x" + name)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0)).satisfies(option -> {
+			assertThat(option).isNotNull();
+			assertThat(option.getLongNames()).isEqualTo(new String[] { "xarg1" });
+		});
+	}
+
+	@Test
+	void testOptionNameModifierFromDefault() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.defaultOptionNameModifier(name -> "x" + name)
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0)).satisfies(option -> {
+			assertThat(option).isNotNull();
+			assertThat(option.getLongNames()).isEqualTo(new String[] { "xarg1" });
+		});
 	}
 }

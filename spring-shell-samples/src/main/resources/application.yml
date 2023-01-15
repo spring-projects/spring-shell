@@ -2,6 +2,14 @@ spring:
   main:
     banner-mode: off
   shell:
+    ## pick global default option naming
+    # option:
+    #   naming:
+    #     case-type: noop
+    #     case-type: camel
+    #     case-type: snake
+    #     case-type: kebab
+    #     case-type: pascal
     config:
       env: SPRING_SHELL_SAMPLES_USER_HOME
       location: "{userconfig}/spring-shell-samples"

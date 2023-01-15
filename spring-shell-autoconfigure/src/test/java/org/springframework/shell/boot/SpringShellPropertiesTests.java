@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.shell.boot.SpringShellProperties.OptionNamingCase;
 import org.springframework.shell.boot.SpringShellProperties.HelpCommand.GroupingMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,6 +68,7 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getHelp().getCommand()).isEqualTo("help");
 					assertThat(properties.getHelp().getLongNames()).containsExactly("help");
 					assertThat(properties.getHelp().getShortNames()).containsExactly('h');
+					assertThat(properties.getOption().getNaming().getCaseType()).isEqualTo(OptionNamingCase.NOOP);
 				});
 	}
 
@@ -107,6 +109,7 @@ public class SpringShellPropertiesTests {
 				.withPropertyValues("spring.shell.help.command=fake")
 				.withPropertyValues("spring.shell.help.long-names=fake")
 				.withPropertyValues("spring.shell.help.short-names=f")
+				.withPropertyValues("spring.shell.option.naming.case-type=camel")
 				.withUserConfiguration(Config1.class)
 				.run((context) -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
@@ -144,6 +147,7 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getHelp().getCommand()).isEqualTo("fake");
 					assertThat(properties.getHelp().getLongNames()).containsExactly("fake");
 					assertThat(properties.getHelp().getShortNames()).containsExactly('f');
+					assertThat(properties.getOption().getNaming().getCaseType()).isEqualTo(OptionNamingCase.CAMEL);
 				});
 	}
 

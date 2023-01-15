@@ -33,6 +33,7 @@ public class SpringShellProperties {
 	private Theme theme = new Theme();
 	private Command command = new Command();
 	private Help help = new Help();
+	private Option option = new Option();
 
 	public void setConfig(Config config) {
 		this.config = config;
@@ -96,6 +97,14 @@ public class SpringShellProperties {
 
 	public Help getHelp() {
 		return help;
+	}
+
+	public Option getOption() {
+		return option;
+	}
+
+	public void setOption(Option option) {
+		this.option = option;
 	}
 
 	public static class Config {
@@ -559,4 +568,38 @@ public class SpringShellProperties {
 			this.enabled = enabled;
 		}
 	}
+
+	public static class Option {
+
+		private OptionNaming naming = new OptionNaming();
+
+		public OptionNaming getNaming() {
+			return naming;
+		}
+
+		public void setNaming(OptionNaming naming) {
+			this.naming = naming;
+		}
+	}
+
+	public static class OptionNaming {
+		private OptionNamingCase caseType = OptionNamingCase.NOOP;
+
+		public OptionNamingCase getCaseType() {
+			return caseType;
+		}
+
+		public void setCaseType(OptionNamingCase caseType) {
+			this.caseType = caseType;
+		}
+	}
+
+	public static enum OptionNamingCase {
+		NOOP,
+		CAMEL,
+		SNAKE,
+		KEBAB,
+		PASCAL
+	}
+
 }

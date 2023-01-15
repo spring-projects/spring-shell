@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
+import org.springframework.shell.command.CommandRegistration.Builder;
+import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
+import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,6 +69,82 @@ public class CommandCatalogAutoConfigurationTests {
 					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
 					assertThat(commandCatalog.getRegistrations().get("customcommand")).isNotNull();
 				});
+	}
+
+	@Test
+	void builderSupplierIsCreated() {
+		this.contextRunner
+				.run(context -> {
+					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+					assertThat(builderSupplier).isNotNull();
+				});
+	}
+
+	@Test
+	void defaultOptionNameModifierIsNull() {
+		this.contextRunner
+				.run(context -> {
+					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+					Builder builder = builderSupplier.get();
+					assertThat(builder).extracting("defaultOptionNameModifier").isNull();
+				});
+	}
+
+	@Test
+	void defaultOptionNameModifierIsSet() {
+		this.contextRunner
+				.withUserConfiguration(CustomOptionNameModifierConfiguration.class)
+				.run(context -> {
+					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+					Builder builder = builderSupplier.get();
+					assertThat(builder).extracting("defaultOptionNameModifier").isNotNull();
+				});
+	}
+
+	@Test
+	void defaultOptionNameModifierIsSetFromProperties() {
+		this.contextRunner
+				.withPropertyValues("spring.shell.option.naming.case-type=kebab")
+				.run(context -> {
+					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+					Builder builder = builderSupplier.get();
+					assertThat(builder).extracting("defaultOptionNameModifier").isNotNull();
+				});
+	}
+
+	@Test
+	void defaultOptionNameModifierNoopNotSetFromProperties() {
+		this.contextRunner
+				.withPropertyValues("spring.shell.option.naming.case-type=noop")
+				.run(context -> {
+					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+					Builder builder = builderSupplier.get();
+					assertThat(builder).extracting("defaultOptionNameModifier").isNull();
+					// there is customizer but it doesn't do anything
+					assertThat(context).hasBean("defaultOptionNameModifierCommandRegistrationCustomizer");
+				});
+	}
+
+	@Test
+	void noCustomizerIfPropertyIsNotSet() {
+		this.contextRunner
+				.run(context -> {
+					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+					Builder builder = builderSupplier.get();
+					assertThat(builder).extracting("defaultOptionNameModifier").isNull();
+					// no customizer added without property
+					assertThat(context).doesNotHaveBean("defaultOptionNameModifierCommandRegistrationCustomizer");
+				});
+	}
+
+	// defaultOptionNameModifierCommandRegistrationCustomizer
+	@Configuration
+	static class CustomOptionNameModifierConfiguration {
+
+		@Bean
+		OptionNameModifier customOptionNameModifier() {
+			return name -> name;
+		}
 	}
 
 	@Configuration

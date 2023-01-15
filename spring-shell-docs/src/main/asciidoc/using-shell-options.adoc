@@ -22,3 +22,5 @@ include::using-shell-options-validation.adoc[]
 include::using-shell-options-label.adoc[]
 
 include::using-shell-options-types.adoc[]
+
+include::using-shell-options-naming.adoc[]
