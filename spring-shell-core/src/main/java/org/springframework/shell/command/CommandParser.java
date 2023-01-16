@@ -261,7 +261,7 @@ public interface CommandParser {
 							}
 							if (pop != null && pop.option == null) {
 								if (!pop.args.isEmpty()) {
-									oargs.add(pop.args.stream().collect(Collectors.joining(" ")));
+									oargs.addAll(pop.args);
 								}
 							}
 						}
@@ -370,11 +370,7 @@ public interface CommandParser {
 					.filter(co -> co.getDefaultValue() != null)
 					.forEach(co -> {
 						Object value = co.getDefaultValue();
-						if (conversionService != null && co.getType() != null) {
-							if (conversionService.canConvert(co.getDefaultValue().getClass(), co.getType().getRawClass())) {
-								value = conversionService.convert(co.getDefaultValue(), co.getType().getRawClass());
-							}
-						}
+						value = convertOptionType(co, value);
 						results.add(ParserResult.of(co, Collections.emptyList(), value, null));
 					});
 				return ParserResults.of(results);
@@ -478,7 +474,7 @@ public interface CommandParser {
 						else {
 							if (arityMax > 0) {
 								int limit = Math.min(arguments.size(), arityMax);
-								value = arguments.stream().limit(limit).collect(Collectors.joining(" "));
+								value = arguments.stream().limit(limit).collect(Collectors.toList());
 								unmapped.addAll(arguments.subList(limit, arguments.size()));
 							}
 							else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ public class HelpTests {
 				.and()
 			.build();
 		commandCatalog.register(registration);
-		String help = this.help.help("first-command").toString();
+		String help = this.help.help(new String[] { "first-command" }).toString();
 		help = removeNewLines(help);
 		assertThat(help).isEqualTo(sample());
 	}
@@ -146,7 +146,7 @@ public class HelpTests {
 	@Test
 	public void testUnknownCommand() throws Exception {
 		assertThatThrownBy(() -> {
-			this.help.help("some unknown command");
+			this.help.help(new String[] { "some", "unknown", "command" });
 		}).isInstanceOf(IllegalArgumentException.class);
 	}
 
