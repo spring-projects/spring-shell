@@ -94,9 +94,9 @@ public class CommandParserTests extends AbstractCommandTests {
 		CommandParserResults results = parser.parse(options, args);
 		assertThat(results.results()).hasSize(2);
 		assertThat(results.results().get(0).option()).isSameAs(option1);
-		assertThat(results.results().get(0).value()).isEqualTo("foo1 foo2");
+		assertThat(results.results().get(0).value()).isEqualTo(Arrays.asList("foo1", "foo2"));
 		assertThat(results.results().get(1).option()).isSameAs(option2);
-		assertThat(results.results().get(1).value()).isEqualTo("bar1 bar2");
+		assertThat(results.results().get(1).value()).isEqualTo(Arrays.asList("bar1", "bar2"));
 		assertThat(results.positional()).isEmpty();
 	}
 
@@ -213,6 +213,18 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results().get(0).option()).isSameAs(option1);
 		assertThat(results.results().get(0).value()).isEqualTo("value,foo");
 		assertThat(results.positional()).containsExactly("value", "foo");
+	}
+
+	@Test
+	public void testMappedFromArgToString() {
+		CommandOption option1 = longOption("arg1", ResolvableType.forType(String.class), false, 0, 1, 2);
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"--arg1", "value", "foo"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo("value,foo");
+		assertThat(results.positional()).isEmpty();
 	}
 
 	@Test
@@ -381,7 +393,7 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results()).hasSize(2);
 		assertThat(results.results().get(0).option()).isSameAs(option1);
 		assertThat(results.results().get(1).option()).isSameAs(option2);
-		assertThat(results.results().get(0).value()).isEqualTo("1");
+		assertThat(results.results().get(0).value()).isEqualTo(Arrays.asList("1"));
 		// no type so we get raw list
 		assertThat(results.results().get(1).value()).isEqualTo(Arrays.asList("2"));
 	}
