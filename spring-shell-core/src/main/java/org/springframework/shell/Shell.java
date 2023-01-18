@@ -265,7 +265,7 @@ public class Shell {
 		finally {
 			Signals.unregister("INT", sh);
 		}
-		if (e != null) {
+		if (e != null && !(e instanceof ExitRequest)) {
 			try {
 				CommandHandlingResult processException = processException(commandExceptionResolvers, e);
 				processExceptionNonInt = processException;
