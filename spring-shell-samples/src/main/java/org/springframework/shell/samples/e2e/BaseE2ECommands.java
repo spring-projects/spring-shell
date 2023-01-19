@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package org.springframework.shell.samples.e2e;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.springframework.util.StringUtils;
+
 /**
  * Base class for all e2e commands.
  *
@@ -25,4 +30,26 @@ abstract class BaseE2ECommands {
 	static final String GROUP = "E2E Commands";
 	static final String REG = "e2e reg";
 	static final String LEGACY_ANNO = "e2e anno ";
+
+	static String stringOfStrings(String[] values) {
+		return String.format("[%s]", StringUtils.arrayToCommaDelimitedString(values));
+	}
+
+	static String stringOfInts(int[] values) {
+		String joined = IntStream.range(0, values.length)
+			.mapToLong(i -> values[i])
+			.boxed()
+			.map(d -> d.toString())
+			.collect(Collectors.joining(","));
+		return String.format("[%s]", joined);
+	}
+
+	static String stringOfFloats(float[] values) {
+		String joined = IntStream.range(0, values.length)
+			.mapToDouble(i -> values[i])
+			.boxed()
+			.map(d -> d.toString())
+			.collect(Collectors.joining(","));
+		return String.format("[%s]", joined);
+	}
 }
