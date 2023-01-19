@@ -18,10 +18,12 @@ package org.springframework.shell.command;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -465,6 +467,13 @@ public interface CommandParser {
 				}
 				else if (type != null && type.isArray()) {
 					value = arguments.stream().collect(Collectors.toList()).toArray();
+				}
+				// if it looks like type is a collection just get as list
+				// as conversion will happen later. we just need to know
+				// if user has Set, List, Collection, etc without worrying
+				// about generics.
+				else if (type != null && type.asCollection() != ResolvableType.NONE) {
+					value = arguments.stream().collect(Collectors.toList());
 				}
 				else {
 					if (!arguments.isEmpty()) {
