@@ -16,6 +16,9 @@
 package org.springframework.shell.samples.e2e;
 
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
@@ -284,6 +287,96 @@ public class OptionTypeCommands extends BaseE2ECommands {
 				.function(ctx -> {
 					int[] arg1 = ctx.getOptionValue("arg1");
 					return "Hello " + stringOfInts(arg1);
+				})
+				.and()
+			.build();
+	}
+
+	//
+	// List<String>
+	//
+
+	@ShellMethod(key = LEGACY_ANNO + "option-type-string-list", group = GROUP)
+	public String optionTypeStringListAnnotation(
+		@ShellOption(help = "Desc arg1") List<String> arg1
+	) {
+		return "Hello " + arg1;
+	}
+
+	@Bean
+	public CommandRegistration optionTypeStringListRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "option-type-string-list")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(List.class)
+				.required()
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					List<String> arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
+			.build();
+	}
+
+	//
+	// Set<String>
+	//
+
+	@ShellMethod(key = LEGACY_ANNO + "option-type-string-set", group = GROUP)
+	public String optionTypeStringSetAnnotation(
+		@ShellOption(help = "Desc arg1") Set<String> arg1
+	) {
+		return "Hello " + arg1;
+	}
+
+	@Bean
+	public CommandRegistration optionTypeStringSetRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "option-type-string-set")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(Set.class)
+				.required()
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					Set<String> arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
+			.build();
+	}
+
+	//
+	// Collection<String>
+	//
+
+	@ShellMethod(key = LEGACY_ANNO + "option-type-string-collection", group = GROUP)
+	public String optionTypeStringCollectionAnnotation(
+		@ShellOption(help = "Desc arg1") Collection<String> arg1
+	) {
+		return "Hello " + arg1;
+	}
+
+	@Bean
+	public CommandRegistration optionTypeStringCollectionRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "option-type-string-collection")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(Collection.class)
+				.required()
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					Collection<String> arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
 				})
 				.and()
 			.build();

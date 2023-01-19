@@ -311,6 +311,39 @@ public class CommandParserTests extends AbstractCommandTests {
 	}
 
 	@Test
+	public void testLongOptionsWithStringArray() {
+		CommandOption option1 = longOption("arg1", ResolvableType.forType(String[].class));
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"--arg1", "1", "2"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(new String[] { "1", "2" });
+	}
+
+	@Test
+	public void testLongOptionsWithPlainList() {
+		CommandOption option1 = longOption("arg1", ResolvableType.forType(List.class));
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"--arg1", "1", "2"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(Arrays.asList("1", "2"));
+	}
+
+	@Test
+	public void testLongOptionsWithTypedList() {
+		CommandOption option1 = longOption("arg1", ResolvableType.forClassWithGenerics(List.class, String.class));
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"--arg1", "1", "2"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(Arrays.asList("1", "2"));
+	}
+
+	@Test
 	public void testArityErrors() {
 		CommandOption option1 = CommandOption.of(
 				new String[] { "arg1" },
