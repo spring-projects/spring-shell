@@ -304,8 +304,8 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeStringListRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
+	public CommandRegistration optionTypeStringListRegistration() {
+		return CommandRegistration.builder()
 			.command(REG, "option-type-string-list")
 			.group(GROUP)
 			.withOption()
@@ -334,8 +334,8 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeStringSetRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
+	public CommandRegistration optionTypeStringSetRegistration() {
+		return CommandRegistration.builder()
 			.command(REG, "option-type-string-set")
 			.group(GROUP)
 			.withOption()
@@ -364,8 +364,8 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	@Bean
-	public CommandRegistration optionTypeStringCollectionRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
+	public CommandRegistration optionTypeStringCollectionRegistration() {
+		return CommandRegistration.builder()
 			.command(REG, "option-type-string-collection")
 			.group(GROUP)
 			.withOption()
