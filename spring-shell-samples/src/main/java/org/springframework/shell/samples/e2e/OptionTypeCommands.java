@@ -231,6 +231,65 @@ public class OptionTypeCommands extends BaseE2ECommands {
 	}
 
 	//
+	// String[]
+	//
+
+	@ShellMethod(key = LEGACY_ANNO + "option-type-string-array", group = GROUP)
+	public String optionTypeStringArrayAnnotation(
+		@ShellOption(help = "Desc arg1") String[] arg1
+	) {
+		return "Hello " + stringOfStrings(arg1);
+	}
+
+	@Bean
+	public CommandRegistration optionTypeStringArrayRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "option-type-string-array")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(String[].class)
+				.required()
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + stringOfStrings(arg1);
+				})
+				.and()
+			.build();
+	}
+	//
+	// int[]
+	//
+
+	@ShellMethod(key = LEGACY_ANNO + "option-type-int-array", group = GROUP)
+	public String optionTypeIntArrayAnnotation(
+		@ShellOption(help = "Desc arg1") int[] arg1
+	) {
+		return "Hello " + stringOfInts(arg1);
+	}
+
+	@Bean
+	public CommandRegistration optionTypeIntArrayRegistration(CommandRegistration.BuilderSupplier builder) {
+		return builder.get()
+			.command(REG, "option-type-int-array")
+			.group(GROUP)
+			.withOption()
+				.longNames("arg1")
+				.type(int[].class)
+				.required()
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					int[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + stringOfInts(arg1);
+				})
+				.and()
+			.build();
+	}
+
+	//
 	// Void
 	//
 

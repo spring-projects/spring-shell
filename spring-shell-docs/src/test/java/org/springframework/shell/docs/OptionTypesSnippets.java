@@ -154,4 +154,29 @@ class OptionTypesSnippets {
 		}
 	}
 
+	class Dump5 {
+		// tag::option-type-string-array-anno[]
+		String example(@ShellOption(value = "arg1") String[] arg1) {
+			return "Hello " + arg1;
+		}
+		// end::option-type-string-array-anno[]
+		void dump() {
+		// tag::option-type-string-array-reg[]
+		CommandRegistration.builder()
+			.command("example")
+			.withOption()
+				.longNames("arg1")
+				.type(String[].class)
+				.required()
+				.and()
+			.withTarget()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
+			.build();
+		// end::option-type-string-array-reg[]
+		}
+	}
 }

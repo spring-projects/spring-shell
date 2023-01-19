@@ -117,3 +117,21 @@ include::{snippets}/OptionTypesSnippets.java[tag=option-type-enum-anno]
 include::{snippets}/OptionTypesSnippets.java[tag=option-type-enum-reg]
 ----
 ====
+
+==== Array
+
+Arrays can be used as is with strings and primitive types.
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-string-array-anno]
+----
+====
+
+====
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-string-array-reg]
+----
+====
