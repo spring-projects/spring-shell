@@ -23,21 +23,22 @@ jobs:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
-        jfrog rt mvnc \
-          --server-id-deploy=repo.spring.io \
-          --repo-deploy-releases=libs-staging-local \
-          --repo-deploy-snapshots=libs-staging-local
+        jf rt gradlec \
+          --use-wrapper \
+          --uses-plugin \
+          --deploy-ivy-desc=false \
+          --server-id-resolve repo.spring.io \
+          --server-id-deploy repo.spring.io \
+          --repo-resolve release \
+          --repo-deploy libs-staging-local
         echo JFROG_CLI_BUILD_NAME=spring-shell-main-release >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
-    - name: Configure GA Version
+    - name: Configure Release Version
       run: |
-        jfrog rt mvn build-helper:parse-version versions:set \
-          -DprocessAllModules=true \
-          -DgenerateBackupPoms=false \
-          -Dartifactory.publish.artifacts=false \
-          -DnewVersion='${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}' \
-          -B
-        echo PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) >> $GITHUB_ENV
+        snapshotVersion=$( awk -F '=' '$1 == "version" { print $2 }' gradle.properties )
+        plainVersion=${snapshotVersion%-SNAPSHOT}
+        sed -i "s/version=$snapshotVersion/version=$plainVersion/" gradle.properties
+        echo PROJECT_VERSION=$plainVersion >> $GITHUB_ENV
     - name: Tag Release
       env:
         PROJECT_VERSION: ${{ env.PROJECT_VERSION }}
@@ -51,10 +52,8 @@ jobs:
       env:
         DISABLE_SAMPLES: true
       run: |
-        jfrog rt build-clean
-        jfrog rt mvn clean install \
-          -DskipTests -U -B
-        jfrog rt build-publish
+        jf rt gradle build distZip artifactoryPublish
+        jf rt build-publish
     - name: Push Release
       env:
         PROJECT_VERSION: ${{ env.PROJECT_VERSION }}
@@ -81,15 +80,11 @@ jobs:
         JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
-        jfrog rt mvnc \
-          --server-id-deploy=repo.spring.io \
-          --repo-deploy-releases=libs-staging-local \
-          --repo-deploy-snapshots=libs-staging-local
         echo JFROG_CLI_BUILD_NAME=spring-shell-main-release >> $GITHUB_ENV
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Promote Build
       run: |
-        jfrog rt build-promote libs-release-local
+        jf rt build-promote libs-release-local
 
   ghrelease:
     runs-on: ubuntu-latest
@@ -165,7 +160,7 @@ jobs:
         echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
     - name: Download Release Files
       run: |
-        jfrog rt download \
+        jf rt download \
           --spec .github/release-files-spec.json \
           --spec-vars "buildname=$JFROG_CLI_BUILD_NAME;buildnumber=$JFROG_CLI_BUILD_NUMBER"
     - uses: jvalkeal/nexus-sync@v0
