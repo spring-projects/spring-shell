@@ -45,3 +45,11 @@ you want to define exit code there.
 include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-class]
 ----
 ====
+
+Some build in `CommandExceptionResolver` beans are registered to handle common
+exceptions thrown from command parsing. These are registered with _order_
+presedence defined in `CommandExceptionResolver.DEFAULT_PRECEDENCE`.
+As these beans are used in a given order, `@Order` annotation or `Ordered`
+interface from can be used just like in any other spring app. This
+is generally useful if you need to control your own beans to get used
+either before or after a defaults.

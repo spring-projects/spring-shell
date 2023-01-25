@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,10 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.shell.TerminalSizeAware;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandParserExceptionResolver;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;
@@ -33,7 +35,7 @@ import org.springframework.shell.jline.InteractiveShellRunner;
  * @author Eric Bottard
  * @author Janne Valkealahti
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class ResultHandlerConfig {
 
 	@Bean
@@ -58,6 +60,7 @@ public class ResultHandlerConfig {
 	}
 
 	@Bean
+	@Order(CommandExceptionResolver.DEFAULT_PRECEDENCE)
 	public CommandParserExceptionResolver commandParserExceptionResolver() {
 		return new CommandParserExceptionResolver();
 	}
