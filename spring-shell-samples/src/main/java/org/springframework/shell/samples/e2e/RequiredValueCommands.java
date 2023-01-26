@@ -20,38 +20,46 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
 
 /**
  * Commands used for e2e test.
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class RequiredValueCommands extends BaseE2ECommands {
+public class RequiredValueCommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "required-value", group = GROUP)
-	public String testRequiredValueAnnotation(
-		@ShellOption(help = "Desc arg1") String arg1
-	) {
-		return "Hello " + arg1;
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
+
+		@ShellMethod(key = LEGACY_ANNO + "required-value", group = GROUP)
+		public String testRequiredValueAnnotation(
+			@ShellOption(help = "Desc arg1") String arg1
+		) {
+			return "Hello " + arg1;
+		}
 	}
 
-	@Bean
-	public CommandRegistration testRequiredValueRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "required-value")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.description("Desc arg1")
-				.required()
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
+	@Component
+	public static class Registration extends BaseE2ECommands {
+
+		@Bean
+		public CommandRegistration testRequiredValueRegistration() {
+			return getBuilder()
+				.command(REG, "required-value")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.description("Desc arg1")
+					.required()
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 	}
 }

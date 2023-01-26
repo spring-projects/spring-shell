@@ -20,6 +20,7 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
 
 /**
  * Commands used for e2e test.
@@ -27,109 +28,117 @@ import org.springframework.shell.standard.ShellOption;
  * @author Janne Valkealahti
  */
 @ShellComponent
-public class DefaultValueCommands extends BaseE2ECommands {
+public class DefaultValueCommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "default-value", group = GROUP)
-	public String testDefaultValue(
-		@ShellOption(defaultValue = "hi") String arg1
-	) {
-		return "Hello " + arg1;
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
+
+		@ShellMethod(key = LEGACY_ANNO + "default-value", group = GROUP)
+		public String testDefaultValue(
+			@ShellOption(defaultValue = "hi") String arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean1", group = GROUP)
+		public String testDefaultValueBoolean1(
+			@ShellOption(defaultValue = "false") boolean arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean2", group = GROUP)
+		public String testDefaultValueBoolean2(
+			@ShellOption(defaultValue = "true") boolean arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean3", group = GROUP)
+		public String testDefaultValueBoolean3(
+			@ShellOption boolean arg1
+		) {
+			return "Hello " + arg1;
+		}
 	}
 
-	@Bean
-	public CommandRegistration testDefaultValueRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "default-value")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.defaultValue("hi")
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
-	}
+	@Component
+	public static class Registration extends BaseE2ECommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "default-value-boolean1", group = GROUP)
-	public String testDefaultValueBoolean1(
-		@ShellOption(defaultValue = "false") boolean arg1
-	) {
-		return "Hello " + arg1;
-	}
+		@Bean
+		public CommandRegistration testDefaultValueRegistration() {
+			return getBuilder()
+				.command(REG, "default-value")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.defaultValue("hi")
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 
-	@Bean
-	public CommandRegistration testDefaultValueBoolean1Registration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "default-value-boolean1")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.defaultValue("false")
-				.type(boolean.class)
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					boolean arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
-	}
+		@Bean
+		public CommandRegistration testDefaultValueBoolean1Registration() {
+			return getBuilder()
+				.command(REG, "default-value-boolean1")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.defaultValue("false")
+					.type(boolean.class)
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						boolean arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 
-	@ShellMethod(key = LEGACY_ANNO + "default-value-boolean2", group = GROUP)
-	public String testDefaultValueBoolean2(
-		@ShellOption(defaultValue = "true") boolean arg1
-	) {
-		return "Hello " + arg1;
-	}
+		@Bean
+		public CommandRegistration testDefaultValueBoolean2Registration() {
+			return getBuilder()
+				.command(REG, "default-value-boolean2")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.defaultValue("true")
+					.type(boolean.class)
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						boolean arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 
-	@Bean
-	public CommandRegistration testDefaultValueBoolean2Registration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "default-value-boolean2")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.defaultValue("true")
-				.type(boolean.class)
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					boolean arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
-	}
-
-	@ShellMethod(key = LEGACY_ANNO + "default-value-boolean3", group = GROUP)
-	public String testDefaultValueBoolean3(
-		@ShellOption boolean arg1
-	) {
-		return "Hello " + arg1;
-	}
-
-	@Bean
-	public CommandRegistration testDefaultValueBoolean3Registration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "default-value-boolean3")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.required(false)
-				.type(boolean.class)
-				.defaultValue("false")
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					boolean arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
+		@Bean
+		public CommandRegistration testDefaultValueBoolean3Registration() {
+			return getBuilder()
+				.command(REG, "default-value-boolean3")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.required(false)
+					.type(boolean.class)
+					.defaultValue("false")
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						boolean arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 	}
 }

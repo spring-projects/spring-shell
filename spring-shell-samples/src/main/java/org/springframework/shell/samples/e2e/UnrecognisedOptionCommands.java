@@ -20,52 +20,60 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
 
-@ShellComponent
-public class UnrecognisedOptionCommands extends BaseE2ECommands {
+public class UnrecognisedOptionCommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-noother", group = GROUP)
-	public String testUnrecognisedOptionNoOtherAnnotation(
-	) {
-		return "Hi";
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
+
+		@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-noother", group = GROUP)
+		public String testUnrecognisedOptionNoOtherAnnotation(
+		) {
+			return "Hi";
+		}
+
+		@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-withrequired", group = GROUP)
+		public String testUnrecognisedOptionWithRequiredAnnotation(
+			@ShellOption(help = "Desc arg1") String arg1
+		) {
+			return "Hello " + arg1;
+		}
 	}
 
-	@Bean
-	public CommandRegistration testUnrecognisedOptionNoOtherRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "unrecognised-option-noother")
-			.group(GROUP)
-			.withTarget()
-				.function(ctx -> {
-					return "Hi";
-				})
-				.and()
-			.build();
-	}
+	@Component
+	public static class Registration extends BaseE2ECommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-withrequired", group = GROUP)
-	public String testUnrecognisedOptionWithRequiredAnnotation(
-		@ShellOption(help = "Desc arg1") String arg1
-	) {
-		return "Hello " + arg1;
-	}
+		@Bean
+		public CommandRegistration testUnrecognisedOptionNoOtherRegistration() {
+			return getBuilder()
+				.command(REG, "unrecognised-option-noother")
+				.group(GROUP)
+				.withTarget()
+					.function(ctx -> {
+						return "Hi";
+					})
+					.and()
+				.build();
+		}
 
-	@Bean
-	public CommandRegistration testUnrecognisedOptionWithRequiredRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "unrecognised-option-withrequired")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.description("Desc arg1")
-				.required()
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
+		@Bean
+		public CommandRegistration testUnrecognisedOptionWithRequiredRegistration() {
+			return getBuilder()
+				.command(REG, "unrecognised-option-withrequired")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.description("Desc arg1")
+					.required()
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 	}
 }

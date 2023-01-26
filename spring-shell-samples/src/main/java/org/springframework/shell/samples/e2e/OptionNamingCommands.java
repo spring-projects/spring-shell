@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class OptionNamingCommands {
 
 	@ShellComponent
-	public static class OptionNamingCommandsLegacyAnnotation extends BaseE2ECommands {
+	public static class LegacyAnnotation extends BaseE2ECommands {
 
 		@ShellMethod(key = LEGACY_ANNO + "option-naming-1", group = GROUP)
 		public void testOptionNaming1Annotation(
@@ -39,11 +39,11 @@ public class OptionNamingCommands {
 	}
 
 	@Component
-	public static class OptionNamingCommandsRegistration extends BaseE2ECommands {
+	public static class Registration extends BaseE2ECommands {
 
 		@Bean
-		public CommandRegistration testOptionNaming1Registration(CommandRegistration.BuilderSupplier builder) {
-			return builder.get()
+		public CommandRegistration testOptionNaming1Registration() {
+			return getBuilder()
 				.command(REG, "option-naming-1")
 				.group(GROUP)
 				.withOption()

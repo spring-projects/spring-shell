@@ -22,48 +22,56 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.stereotype.Component;
 
-@ShellComponent
-public class WriteCommands extends BaseE2ECommands {
+public class WriteCommands {
 
-	@Autowired
-	Terminal terminal;
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
 
-	@Bean
-	public CommandRegistration writeTerminalWriterRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "write-terminalwriter")
-			.group(GROUP)
-			.withTarget()
-				.consumer(ctx -> {
-					ctx.getTerminal().writer().println("hi");
-					ctx.getTerminal().writer().flush();
-				})
-				.and()
-			.build();
+		@Autowired
+		Terminal terminal;
+
+		@ShellMethod(key = LEGACY_ANNO + "write-terminalwriter", group = GROUP)
+		public void writeTerminalWriterAnnotation() {
+			terminal.writer().println("hi");
+			terminal.writer().flush();
+		}
+
+		@ShellMethod(key = LEGACY_ANNO + "write-systemout", group = GROUP)
+		public void writeSystemOutAnnotation() {
+			System.out.println("hi");
+		}
 	}
 
-	@ShellMethod(key = LEGACY_ANNO + "write-terminalwriter", group = GROUP)
-	public void writeTerminalWriterAnnotation() {
-		terminal.writer().println("hi");
-		terminal.writer().flush();
-	}
+	@Component
+	public static class Registration extends BaseE2ECommands {
 
-	@Bean
-	public CommandRegistration writeSystemOutRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "write-terminalwriter")
-			.group(GROUP)
-			.withTarget()
-				.consumer(ctx -> {
-					System.out.println("hi");
-				})
-				.and()
-			.build();
-	}
+		@Bean
+		public CommandRegistration writeTerminalWriterRegistration() {
+			return getBuilder()
+				.command(REG, "write-terminalwriter")
+				.group(GROUP)
+				.withTarget()
+					.consumer(ctx -> {
+						ctx.getTerminal().writer().println("hi");
+						ctx.getTerminal().writer().flush();
+					})
+					.and()
+				.build();
+		}
 
-	@ShellMethod(key = LEGACY_ANNO + "write-systemout", group = GROUP)
-	public void writeSystemOutAnnotation() {
-		System.out.println("hi");
+		@Bean
+		public CommandRegistration writeSystemOutRegistration() {
+			return getBuilder()
+				.command(REG, "write-terminalwriter")
+				.group(GROUP)
+				.withTarget()
+					.consumer(ctx -> {
+						System.out.println("hi");
+					})
+					.and()
+				.build();
+		}
 	}
 }

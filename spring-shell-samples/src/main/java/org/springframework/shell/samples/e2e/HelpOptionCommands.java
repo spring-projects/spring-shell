@@ -15,69 +15,67 @@
  */
 package org.springframework.shell.samples.e2e;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
 
 @ShellComponent
 public class HelpOptionCommands extends BaseE2ECommands {
 
-	@Autowired
-	CommandRegistration.BuilderSupplier builder;
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "help-option-default", group = GROUP)
-	public String testHelpOptionDefault(
-		@ShellOption(defaultValue = "hi") String arg1
-	) {
-		return "Hello " + arg1;
+		@ShellMethod(key = LEGACY_ANNO + "help-option-default", group = GROUP)
+		public String testHelpOptionDefault(
+			@ShellOption(defaultValue = "hi") String arg1
+		) {
+			return "Hello " + arg1;
+		}
 	}
 
-	@Bean
-	public CommandRegistration testHelpOptionDefaultRegistration() {
-		return builder.get()
-			.command(REG, "help-option-default")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.defaultValue("hi")
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
-	}
+	@Component
+	public static class Registration extends BaseE2ECommands {
 
-	// @ShellMethod(key = LEGACY_ANNO + "help-option-exists", group = GROUP)
-	// public String testHelpOptionExists(
-	// 	@ShellOption(defaultValue = "hi") String help
-	// ) {
-	// 	return "Hello " + help;
-	// }
+		@Bean
+		public CommandRegistration testHelpOptionDefaultRegistration() {
+			return getBuilder()
+				.command(REG, "help-option-default")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.defaultValue("hi")
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 
-	@Bean
-	public CommandRegistration testHelpOptionExistsRegistration() {
-		return builder.get()
-			.command(REG, "help-option-exists")
-			.group(GROUP)
-			.withOption()
-				.longNames("help")
-				.defaultValue("hi")
-				.and()
-			.withHelpOptions()
-				.longNames("myhelp")
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("help");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
+		@Bean
+		public CommandRegistration testHelpOptionExistsRegistration() {
+			return getBuilder()
+				.command(REG, "help-option-exists")
+				.group(GROUP)
+				.withOption()
+					.longNames("help")
+					.defaultValue("hi")
+					.and()
+				.withHelpOptions()
+					.longNames("myhelp")
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("help");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 	}
 }

@@ -22,45 +22,52 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
 
 /**
  * Commands used for e2e test.
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class ValidatedValueCommands extends BaseE2ECommands {
+public class ValidatedValueCommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "validated-value", group = GROUP)
-	public String testValidatedValueAnnotation(
-		@ShellOption @Min(value = 1) Integer arg1,
-		@ShellOption @Min(value = 1) Integer arg2
-	) {
-		return "Hello " + arg1;
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
+
+		@ShellMethod(key = LEGACY_ANNO + "validated-value", group = GROUP)
+		public String testValidatedValueAnnotation(
+			@ShellOption @Min(value = 1) Integer arg1,
+			@ShellOption @Min(value = 1) Integer arg2
+		) {
+			return "Hello " + arg1;
+		}
 	}
 
-	@Bean
-	public CommandRegistration testValidatedValueRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "validated-value")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.type(Integer.class)
-				.required()
-				.and()
-			.withOption()
-				.longNames("arg2")
-				.type(Integer.class)
-				.required()
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					Integer arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
-	}
+	@Component
+	public static class Registration extends BaseE2ECommands {
 
+		@Bean
+		public CommandRegistration testValidatedValueRegistration() {
+			return getBuilder()
+				.command(REG, "validated-value")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.type(Integer.class)
+					.required()
+					.and()
+				.withOption()
+					.longNames("arg2")
+					.type(Integer.class)
+					.required()
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						Integer arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
+	}
 }

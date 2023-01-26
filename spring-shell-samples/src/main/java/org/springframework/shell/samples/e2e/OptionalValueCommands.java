@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,36 +20,44 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
 
 /**
  * Commands used for e2e test.
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class OptionalValueCommands extends BaseE2ECommands {
+public class OptionalValueCommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "optional-value", group = GROUP)
-	public String testOptionalValue(
-		@ShellOption(defaultValue = ShellOption.NULL) String arg1
-	) {
-		return "Hello " + arg1;
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
+
+		@ShellMethod(key = LEGACY_ANNO + "optional-value", group = GROUP)
+		public String testOptionalValue(
+			@ShellOption(defaultValue = ShellOption.NULL) String arg1
+		) {
+			return "Hello " + arg1;
+		}
 	}
 
-	@Bean
-	public CommandRegistration testOptionalValueRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "optional-value")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
+	@Component
+	public static class Registration extends BaseE2ECommands {
+
+		@Bean
+		public CommandRegistration testOptionalValueRegistration() {
+			return getBuilder()
+				.command(REG, "optional-value")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 	}
 }
