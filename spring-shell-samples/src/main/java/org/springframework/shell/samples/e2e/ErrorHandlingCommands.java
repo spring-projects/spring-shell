@@ -29,100 +29,108 @@ import org.springframework.shell.command.annotation.ExceptionResolver;
 import org.springframework.shell.command.annotation.ExitCode;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.stereotype.Component;
 
 /**
  * Commands used for e2e test.
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class ErrorHandlingCommands extends BaseE2ECommands {
+public class ErrorHandlingCommands {
 
-	@ShellMethod(key = LEGACY_ANNO + "error-handling", group = GROUP)
-	String testErrorHandling(String arg1) throws IOException {
-		if ("throw1".equals(arg1)) {
-			throw new CustomException1();
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
+
+		@ShellMethod(key = LEGACY_ANNO + "error-handling", group = GROUP)
+		String testErrorHandling(String arg1) throws IOException {
+			if ("throw1".equals(arg1)) {
+				throw new CustomException1();
+			}
+			if ("throw2".equals(arg1)) {
+				throw new CustomException2(11);
+			}
+			if ("throw3".equals(arg1)) {
+				throw new RuntimeException();
+			}
+			if ("throw4".equals(arg1)) {
+				throw new IllegalArgumentException();
+			}
+			if ("throw5".equals(arg1)) {
+				throw new CustomException3();
+			}
+			if ("throw6".equals(arg1)) {
+				throw new CustomException4();
+			}
+			return "Hello " + arg1;
 		}
-		if ("throw2".equals(arg1)) {
-			throw new CustomException2(11);
+
+		@ExceptionResolver({ CustomException1.class })
+		CommandHandlingResult errorHandler1(CustomException1 e) {
+			return CommandHandlingResult.of("Hi, handled custom exception\n", 42);
 		}
-		if ("throw3".equals(arg1)) {
-			throw new RuntimeException();
+
+		@ExceptionResolver
+		CommandHandlingResult errorHandler2(IllegalArgumentException e) {
+			return CommandHandlingResult.of("Hi, handled illegal exception\n", 42);
 		}
-		if ("throw4".equals(arg1)) {
-			throw new IllegalArgumentException();
+
+		@ExceptionResolver({ CustomException3.class })
+		@ExitCode(3)
+		String errorHandler3(CustomException3 e) {
+			return "Hi, handled custom exception 3\n";
 		}
-		if ("throw5".equals(arg1)) {
-			throw new CustomException3();
+
+		@ExceptionResolver({ CustomException4.class })
+		@ExitCode(code = 4)
+		void errorHandler3(CustomException4 e, Terminal terminal) {
+			PrintWriter writer = terminal.writer();
+			writer.println(String.format("Hi, handled custom exception %s", e));
+			writer.flush();
 		}
-		if ("throw6".equals(arg1)) {
-			throw new CustomException4();
-		}
-		return "Hello " + arg1;
 	}
 
-	@ExceptionResolver({ CustomException1.class })
-	CommandHandlingResult errorHandler1(CustomException1 e) {
-		return CommandHandlingResult.of("Hi, handled custom exception\n", 42);
-	}
+	@Component
+	public static class Registration extends BaseE2ECommands {
 
-	@ExceptionResolver
-	CommandHandlingResult errorHandler2(IllegalArgumentException e) {
-		return CommandHandlingResult.of("Hi, handled illegal exception\n", 42);
-	}
+		@Bean
+		CommandRegistration testErrorHandlingRegistration() {
+			return getBuilder()
+				.command(REG, "error-handling")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.required()
+					.and()
+				.withErrorHandling()
+					.resolver(new CustomExceptionResolver())
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						if ("throw1".equals(arg1)) {
+							throw new CustomException1();
+						}
+						if ("throw2".equals(arg1)) {
+							throw new CustomException2(11);
+						}
+						if ("throw3".equals(arg1)) {
+							throw new RuntimeException();
+						}
+						if ("throw4".equals(arg1)) {
+							throw new IllegalArgumentException();
+						}
+						if ("throw5".equals(arg1)) {
+							throw new CustomException3();
+						}
+						if ("throw6".equals(arg1)) {
+							throw new CustomException4();
+						}
 
-	@ExceptionResolver({ CustomException3.class })
-	@ExitCode(3)
-	String errorHandler3(CustomException3 e) {
-		return "Hi, handled custom exception 3\n";
-	}
-
-	@ExceptionResolver({ CustomException4.class })
-	@ExitCode(code = 4)
-	void errorHandler3(CustomException4 e, Terminal terminal) {
-		PrintWriter writer = terminal.writer();
-		writer.println(String.format("Hi, handled custom exception %s", e));
-		writer.flush();
-	}
-
-	@Bean
-	CommandRegistration testErrorHandlingRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "error-handling")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.required()
-				.and()
-			.withErrorHandling()
-				.resolver(new CustomExceptionResolver())
-				.and()
-			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					if ("throw1".equals(arg1)) {
-						throw new CustomException1();
-					}
-					if ("throw2".equals(arg1)) {
-						throw new CustomException2(11);
-					}
-					if ("throw3".equals(arg1)) {
-						throw new RuntimeException();
-					}
-					if ("throw4".equals(arg1)) {
-						throw new IllegalArgumentException();
-					}
-					if ("throw5".equals(arg1)) {
-						throw new CustomException3();
-					}
-					if ("throw6".equals(arg1)) {
-						throw new CustomException4();
-					}
-
-					return "Hello " + arg1;
-				})
-				.and()
-			.build();
+						return "Hello " + arg1;
+					})
+					.and()
+				.build();
+		}
 	}
 
 	private static class CustomException1 extends RuntimeException {

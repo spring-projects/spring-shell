@@ -17,45 +17,47 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
+import org.springframework.stereotype.Component;
 
 /**
  * Commands used for e2e test.
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class ExitCodeCommands extends BaseE2ECommands {
+public class ExitCodeCommands {
 
-	@Bean
-	public CommandRegistration testExitCodeRegistration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "exit-code")
-			.group(GROUP)
-			.withOption()
-				.longNames("arg1")
-				.required()
-				.and()
-			.withTarget()
-				.consumer(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					throw new MyException(arg1);
-				})
-				.and()
-			.withExitCode()
-				.map(MyException.class, 3)
-				.map(t -> {
-					String msg = t.getMessage();
-					if (msg != null && msg.contains("ok")) {
+	@Component
+	public static class Registration extends BaseE2ECommands {
+		@Bean
+		public CommandRegistration testExitCodeRegistration() {
+			return getBuilder()
+				.command(REG, "exit-code")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.required()
+					.and()
+				.withTarget()
+					.consumer(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						throw new MyException(arg1);
+					})
+					.and()
+				.withExitCode()
+					.map(MyException.class, 3)
+					.map(t -> {
+						String msg = t.getMessage();
+						if (msg != null && msg.contains("ok")) {
+							return 0;
+						}
+						else if (msg != null && msg.contains("fun")) {
+							return 4;
+						}
 						return 0;
-					}
-					else if (msg != null && msg.contains("fun")) {
-						return 4;
-					}
-					return 0;
-				})
-				.and()
-			.build();
+					})
+					.and()
+				.build();
+		}
 	}
 
 	static class MyException extends RuntimeException {

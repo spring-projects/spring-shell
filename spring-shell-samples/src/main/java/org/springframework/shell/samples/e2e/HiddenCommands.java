@@ -17,22 +17,25 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
+import org.springframework.stereotype.Component;
 
-@ShellComponent
-public class HiddenCommands extends BaseE2ECommands {
+public class HiddenCommands {
 
-	@Bean
-	public CommandRegistration testHidden1Registration(CommandRegistration.BuilderSupplier builder) {
-		return builder.get()
-			.command(REG, "hidden-1")
-			.group(GROUP)
-			.hidden()
-			.withTarget()
-				.function(ctx -> {
-					return "Hello from hidden command";
-				})
-				.and()
-			.build();
+	@Component
+	public static class Registration extends BaseE2ECommands {
+
+		@Bean
+		public CommandRegistration testHidden1Registration() {
+			return getBuilder()
+				.command(REG, "hidden-1")
+				.group(GROUP)
+				.hidden()
+				.withTarget()
+					.function(ctx -> {
+						return "Hello from hidden command";
+					})
+					.and()
+				.build();
+		}
 	}
 }

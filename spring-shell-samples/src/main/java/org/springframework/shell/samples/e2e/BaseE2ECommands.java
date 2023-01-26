@@ -18,6 +18,8 @@ package org.springframework.shell.samples.e2e;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,6 +32,13 @@ abstract class BaseE2ECommands {
 	static final String GROUP = "E2E Commands";
 	static final String REG = "e2e reg";
 	static final String LEGACY_ANNO = "e2e anno ";
+
+	@Autowired
+	private CommandRegistration.BuilderSupplier builder;
+
+	CommandRegistration.Builder getBuilder() {
+		return builder.get();
+	}
 
 	static String stringOfStrings(String[] values) {
 		return String.format("[%s]", StringUtils.arrayToCommaDelimitedString(values));
