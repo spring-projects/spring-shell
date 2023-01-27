@@ -361,6 +361,23 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
+	public void testArityViaEnumSetNone() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.arity(OptionArity.NONE)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+			assertThat(registration.getOptions()).hasSize(1);
+			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(-1);
+			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(-1);
+	}
+
+	@Test
 	public void testAliases() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")

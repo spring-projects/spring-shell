@@ -271,12 +271,41 @@ public interface CommandRegistration {
 		Builder and();
 	}
 
+	/**
+	 * Enumeration of option arity values.
+	 */
 	public enum OptionArity {
+
+		/**
+		 * Used to indicate that arity is not set. Exists as a workaround for a case
+		 * where it's not possible to use null values.
+		 */
+		NONE,
+
+		/**
+		 * Define min(0), max(0).
+		 */
 		ZERO,
+
+		/**
+		 * Define min(0), max(1).
+		 */
 		ZERO_OR_ONE,
+
+		/**
+		 * Define min(1), max(1).
+		 */
 		EXACTLY_ONE,
+
+		/**
+		 * Define min(0), max(MAXINTEGER).
+		 */
 		ZERO_OR_MORE,
-		ONE_OR_MORE
+
+		/**
+		 * Define min(1), max(MAXINTEGER).
+		 */
+		ONE_OR_MORE;
 	}
 
 	/**
@@ -829,6 +858,10 @@ public interface CommandRegistration {
 		@Override
 		public OptionSpec arity(OptionArity arity) {
 			switch (arity) {
+				case NONE:
+					this.arityMin = null;
+					this.arityMax = null;
+					break;
 				case ZERO:
 					this.arityMin = 0;
 					this.arityMax = 0;
@@ -850,8 +883,8 @@ public interface CommandRegistration {
 					this.arityMax = Integer.MAX_VALUE;
 					break;
 				default:
-					this.arityMin = 0;
-					this.arityMax = 0;
+					this.arityMin = null;
+					this.arityMax = null;
 					break;
 			}
 			return this;
