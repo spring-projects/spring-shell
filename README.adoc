@@ -1,6 +1,6 @@
 = Spring Shell
 
-Active development branch is `main` targeting work for `3.0.x` and `2.1.x` is for maintaining current latest release.
+Active development branch is `main` targeting work for `3.1.x`. `3.0.x` and `2.1.x` are for maintaining current active releases.
 
 == Building
 
