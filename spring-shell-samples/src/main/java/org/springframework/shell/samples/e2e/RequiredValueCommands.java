@@ -17,6 +17,8 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -37,6 +39,17 @@ public class RequiredValueCommands {
 			@ShellOption(help = "Desc arg1") String arg1
 		) {
 			return "Hello " + arg1;
+		}
+	}
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "required-value")
+		public String testRequiredValueAnnotation(
+				@Option(longNames = "arg1", required = true, description = "Desc arg1")
+				String arg1
+		) {
+				return "Hello " + arg1;
 		}
 	}
 

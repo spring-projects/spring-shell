@@ -32,6 +32,8 @@ abstract class BaseE2ECommands {
 	static final String GROUP = "E2E Commands";
 	static final String REG = "e2e reg";
 	static final String LEGACY_ANNO = "e2e anno ";
+	// TODO: anno should become anno-legacy and annox to anno
+	static final String ANNO = "e2e annox ";
 
 	@Autowired
 	private CommandRegistration.BuilderSupplier builder;

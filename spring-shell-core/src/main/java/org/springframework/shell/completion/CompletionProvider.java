@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,17 @@
  */
 package org.springframework.shell.completion;
 
+import java.util.List;
+import java.util.function.Function;
+
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
+
 /**
- * Interface resolving completion proposals. This is same as
- * {@link CompletionProvider} but mean to be autowired globally.
+ * Interface resolving completion proposals.
  *
  * @author Janne Valkealahti
- * @see CompletionProvider
  */
 @FunctionalInterface
-public interface CompletionResolver extends CompletionProvider {
+public interface CompletionProvider extends Function<CompletionContext, List<CompletionProposal>> {
 }

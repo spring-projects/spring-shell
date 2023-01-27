@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.context.annotation.Import;
+import org.springframework.shell.command.annotation.support.EnableCommandRegistrar;
+
 /**
- * Annotation for handling exceptions in specific command classes and/or its methods.
+ * Enable support for {@link Command @Command} annotated classes.
+ * {@code @Command} classes can be registered directly on this annotation.
  *
  * @author Janne Valkealahti
  */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
 @Documented
-public @interface ExceptionResolver {
+@Import(EnableCommandRegistrar.class)
+public @interface EnableCommand {
 
 	/**
-	 * Exceptions handled by the annotated method. If empty, will default to any
-	 * exceptions listed in the method argument list.
+	 * Defines candicate classes for shell commands.
 	 *
-	 * @return Exceptions handled by annotated method
+	 * @return candidate classes for shell commands
 	 */
-	Class<? extends Throwable>[] value() default {};
+	Class<?>[] value() default {};
 }

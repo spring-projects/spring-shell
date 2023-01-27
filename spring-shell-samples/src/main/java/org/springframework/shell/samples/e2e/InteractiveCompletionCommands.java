@@ -23,6 +23,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.command.annotation.OptionValues;
+import org.springframework.shell.completion.CompletionProvider;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -42,7 +46,6 @@ public class InteractiveCompletionCommands {
 			return "Hello " + arg1;
 		}
 
-
 		@Bean
 		Test1ValuesProvider test1ValuesProvider() {
 			return new Test1ValuesProvider();
@@ -51,6 +54,34 @@ public class InteractiveCompletionCommands {
 		@Bean
 		Test2ValuesProvider test2ValuesProvider() {
 			return new Test2ValuesProvider();
+		}
+	}
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "interactive-completion-1")
+		public String testRequiredValueAnnotation(
+				@Option(longNames = "arg1", required = true) @OptionValues(ref = "test1CompletionProvider") String arg1,
+				@Option(longNames = "arg2", required = true) @OptionValues(ref = "test2CompletionProvider")	String arg2
+		) {
+				return "Hello " + arg1;
+		}
+
+		@Bean
+		CompletionProvider test1CompletionProvider() {
+			return ctx -> {
+				Test1ValuesProvider test1ValuesProvider = new Test1ValuesProvider();
+				return test1ValuesProvider.complete(ctx);
+			};
+		}
+
+		@Bean
+		CompletionProvider test2CompletionProvider() {
+			return ctx -> {
+				Test1ValuesProvider test1ValuesProvider = new Test1ValuesProvider();
+				return test1ValuesProvider.complete(ctx);
+			};
 		}
 	}
 

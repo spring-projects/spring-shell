@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ package org.springframework.shell.samples;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.Banner.Mode;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.command.annotation.CommandScan;
 import org.springframework.shell.jline.PromptProvider;
 
 /**
@@ -33,6 +34,7 @@ import org.springframework.shell.jline.PromptProvider;
  * @author Janne Valkealahti
  */
 @SpringBootApplication
+@CommandScan
 public class SpringShellSample {
 
 	public static void main(String[] args) throws Exception {

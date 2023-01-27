@@ -18,20 +18,25 @@ package org.springframework.shell.samples.e2e;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import org.springframework.shell.command.annotation.EnableCommand;
 import org.springframework.shell.samples.AbstractSampleTests;
+import org.springframework.shell.samples.e2e.RequiredValueCommands.Annotation;
 import org.springframework.shell.samples.e2e.RequiredValueCommands.LegacyAnnotation;
 import org.springframework.shell.samples.e2e.RequiredValueCommands.Registration;
 import org.springframework.shell.test.ShellTestClient.BaseShellSession;
 import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(classes = {LegacyAnnotation.class, Registration.class})
+@EnableCommand(Annotation.class)
 class RequiredValueCommandsTests extends AbstractSampleTests {
 
 	@ParameterizedTest
 	@CsvSource({
 		"e2e anno required-value,false",
+		"e2e annox required-value,false",
 		"e2e reg required-value,false",
 		"e2e anno required-value,true",
+		"e2e annox required-value,true",
 		"e2e reg required-value,true"
 	})
 	void shouldRequireOption(String command, boolean interactive) {
