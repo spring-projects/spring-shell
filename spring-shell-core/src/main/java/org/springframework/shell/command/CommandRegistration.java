@@ -812,6 +812,7 @@ public interface CommandRegistration {
 		private String description;
 		private Supplier<Availability> availability;
 		private List<DefaultOptionSpec> optionSpecs;
+		private List<CommandOption> options;
 		private DefaultTargetSpec targetSpec;
 		private List<DefaultAliasSpec> aliasSpecs;
 		private DefaultExitCodeSpec exitCodeSpec;
@@ -857,11 +858,15 @@ public interface CommandRegistration {
 
 		@Override
 		public List<CommandOption> getOptions() {
-			return optionSpecs.stream()
+			if (options != null) {
+				return options;
+			}
+			options = optionSpecs.stream()
 				.map(o -> CommandOption.of(o.getLongNames(), o.getShortNames(), o.getDescription(), o.getType(),
 						o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
 						o.getLabel(), o.getCompletion()))
 				.collect(Collectors.toList());
+			return options;
 		}
 
 		@Override
