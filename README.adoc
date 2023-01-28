@@ -1,8 +1,97 @@
 = Spring Shell
 
-Active development branch is `main` targeting work for `3.1.x`. `3.0.x` and `2.1.x` are for maintaining current active releases.
+Spring Shell helps you to create Spring-powered, production-grade applications targeting
+_CLI_ space. It takes an opinionated view of the Spring platform so that new and existing
+users can quickly get to the bits they need.
 
-== Building
+You can use Spring Shell to create stand-alone Java applications that can be started using
+java -jar or more sophisticated GraalVM native ways to create platform dependant apps.
+
+Our primary goals are:
+
+* Provide a radically faster and widely accessible getting started experience for shell development.
+* Be opinionated, but get out of the way quickly as requirements start to diverge from the defaults.
+
+== Installation and Getting Started
+
+Here is a quick teaser of a complete Spring Shell application in Java:
+
+[source,java,indent=0]
+----
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+
+@SpringBootApplication
+@ShellComponent
+public class DemoApplication {
+
+	@ShellMethod
+	public String hi() {
+		return "hi";
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
+	}
+}
+----
+
+Running it as _jar_ interactive:
+
+[source,bash]
+----
+$ java -jar demo.jar
+
+shell:>help
+AVAILABLE COMMANDS
+
+Built-In Commands
+       help: Display help about available commands
+       stacktrace: Display the full stacktrace of the last error.
+       clear: Clear the shell screen.
+       quit, exit: Exit the shell.
+       history: Display or save the history of previously run commands
+       version: Show version info
+       script: Read and execute commands from a file.
+
+Demo Application
+       hi:
+
+shell:>hi
+hi
+----
+
+Running it as _jar_ non-interactive:
+
+[source,bash]
+----
+$ java -jar demo.jar hi
+
+hi
+----
+
+== Getting Help
+Are you having trouble with Spring Shell? We want to help!
+
+* Join our GitHub Discussion section and post your question there.
+
+== Reporting Issues
+Spring Shell uses GitHub's integrated issue tracking system to record bugs and feature requests.
+If you want to raise an issue, please follow the recommendations below:
+
+* Before you log a bug, please search the {github}/issues[issue tracker] to see if someone has already reported the problem.
+* If the issue doesn't already exist, {github}/issues/new[create a new issue].
+* Please provide as much information as possible with the issue report.
+We like to know the Spring Boot and Shell version, operating system, and JVM version you're using.
+* If you need to paste code or include a stack trace, use Markdown.
++++```+++ escapes before and after your text.
+* If possible, try to create a test case or project that replicates the problem and attach it to the issue.
+
+== Building from Source
+
+Active development branch is `main` targeting work for `3.1.x`. `3.0.x` and `2.1.x` are for maintaining current active releases.
 
 Building and running tests:
 
@@ -15,3 +104,9 @@ Publishing to local maven cache:
 ```
 ./gradlew publishToMavenLocal
 ```
+
+== Example
+https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/[Sample] is a current demonstration how to use `spring-shell`.
+
+== License
+Spring Shell is Open Source software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
