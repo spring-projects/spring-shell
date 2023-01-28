@@ -1161,6 +1161,7 @@ public interface CommandRegistration {
 		private boolean hidden;
 		private String description;
 		private Supplier<Availability> availability;
+		private List<CommandOption> options;
 		private List<DefaultOptionSpec> optionSpecs;
 		private DefaultTargetSpec targetSpec;
 		private List<DefaultAliasSpec> aliasSpecs;
@@ -1218,7 +1219,10 @@ public interface CommandRegistration {
 
 		@Override
 		public List<CommandOption> getOptions() {
-			List<CommandOption> options = optionSpecs.stream()
+			if (options != null) {
+				return options;
+			}
+			options = optionSpecs.stream()
 				.map(o -> {
 					String[] longNames = o.getLongNames();
 					Function<String, String> modifier = o.getOptionNameModifier();

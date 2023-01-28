@@ -16,6 +16,7 @@
 package org.springframework.shell.command;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -599,5 +600,22 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			assertThat(option).isNotNull();
 			assertThat(option.getLongNames()).isEqualTo(new String[] { "xarg1" });
 		});
+	}
+
+	@Test
+	void optionShouldBeSameInstance() {
+		CommandRegistration registration = CommandRegistration.builder()
+			.defaultOptionNameModifier(name -> "x" + name)
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+		List<CommandOption> options1 = registration.getOptions();
+		List<CommandOption> options2 = registration.getOptions();
+		assertThat(options1).isEqualTo(options2);
 	}
 }
