@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -213,7 +214,15 @@ public interface CommandParser {
 				.filter(o -> o.isRequired())
 				.collect(Collectors.toList());
 
-			Lexer lexer = new Lexer(args);
+			Set<String> splitValidValues = options.stream()
+				.flatMap(o -> {
+					Stream<String> longs = Stream.of(o.getLongNames()).map(l -> "--" + l);
+					Stream<String> shorts = Stream.of(o.getShortNames()).map(s -> "-"+ Character.toString(s));
+					return Stream.concat(longs, shorts);
+				})
+				.collect(Collectors.toSet());
+
+			Lexer lexer = new Lexer(args, splitValidValues);
 			List<List<String>> lexerResults = lexer.visit();
 			Parser parser = new Parser();
 			ParserResults parserResults = parser.visit(lexerResults, options);
@@ -228,7 +237,7 @@ public interface CommandParser {
 				}
 				else {
 					for (String arg : pr.args) {
-						if (arg.startsWith("-")) {
+						if (arg.startsWith("--")) {
 							errors.add(UnrecognisedOptionException.of(String.format("Unrecognised option '%s'", arg),
 									arg));
 						}
@@ -520,11 +529,13 @@ public interface CommandParser {
 		 */
 		private static class Lexer {
 			private final String[] args;
-			Lexer(String[] args) {
+			private final Set<String> splitValidValues;
+			Lexer(String[] args, Set<String> splitValues) {
 				this.args = args;
+				this.splitValidValues = splitValues;
 			}
 			List<List<String>> visit() {
-				return Utils.split(args, t -> t.startsWith("-"));
+				return Utils.split(args, t -> splitValidValues.contains(t));
 			}
 		}
 	}
