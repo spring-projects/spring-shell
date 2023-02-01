@@ -26,8 +26,10 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandParser.CommandParserResults;
+import org.springframework.shell.command.CommandParser.MissingOptionException;
 import org.springframework.shell.command.CommandParser.NotEnoughArgumentsOptionException;
 import org.springframework.shell.command.CommandParser.TooManyArgumentsOptionException;
+import org.springframework.shell.command.CommandParser.UnrecognisedOptionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -496,6 +498,11 @@ public class CommandParserTests extends AbstractCommandTests {
 		CommandParserResults results = parser.parse(options, args);
 		assertThat(results.results()).hasSize(0);
 		assertThat(results.errors()).hasSize(1);
+		assertThat(results.errors()).satisfiesExactly(
+			e -> {
+				assertThat(e).isInstanceOf(UnrecognisedOptionException.class);
+			}
+		);
 		assertThat(results.positional()).hasSize(1);
 	}
 
@@ -508,6 +515,11 @@ public class CommandParserTests extends AbstractCommandTests {
 		CommandParserResults results = parser.parse(options, args);
 		assertThat(results.results()).hasSize(1);
 		assertThat(results.errors()).hasSize(1);
+		assertThat(results.errors()).satisfiesExactly(
+			e -> {
+				assertThat(e).isInstanceOf(UnrecognisedOptionException.class);
+			}
+		);
 		assertThat(results.positional()).hasSize(1);
 	}
 
@@ -520,7 +532,27 @@ public class CommandParserTests extends AbstractCommandTests {
 		CommandParserResults results = parser.parse(options, args);
 		assertThat(results.results()).hasSize(0);
 		assertThat(results.errors()).hasSize(2);
+		assertThat(results.errors()).satisfiesExactly(
+			e -> {
+				assertThat(e).isInstanceOf(UnrecognisedOptionException.class);
+			},
+			e -> {
+				assertThat(e).isInstanceOf(MissingOptionException.class);
+			}
+		);
 		assertThat(results.positional()).hasSize(1);
+	}
+
+	@Test
+	public void testDashOptionValueDoNotError() {
+		// gh-651
+		CommandOption option1 = longOption("arg1");
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"--arg1", "-1"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.errors()).hasSize(0);
+		assertThat(results.positional()).hasSize(0);
 	}
 
 	@Test
