@@ -167,7 +167,8 @@ public class ErrorHandlingCommands {
 				return CommandHandlingResult.of("Hi, handled custom exception 3\n", 3);
 			}
 			if (e instanceof CustomException4) {
-				return CommandHandlingResult.of("Hi, handled custom exception\n", 42);
+				String msg = String.format("Hi, handled custom exception %s\n", e);
+				return CommandHandlingResult.of(msg, 42);
 			}
 			if (e instanceof IllegalArgumentException) {
 				return CommandHandlingResult.of("Hi, handled illegal exception\n", 42);

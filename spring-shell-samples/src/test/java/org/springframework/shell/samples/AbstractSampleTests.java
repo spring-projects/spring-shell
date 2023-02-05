@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  */
 package org.springframework.shell.samples;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.assertj.core.api.Condition;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -29,9 +32,10 @@ import org.springframework.shell.test.autoconfigure.ShellTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-@ShellTest
+@ShellTest(terminalWidth = 120)
 @Import(ResolvedCommands.ResolvedCommandsConfiguration.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class AbstractSampleTests {
@@ -42,6 +46,17 @@ public class AbstractSampleTests {
 	protected void assertScreenContainsText(BaseShellSession<?> session, String text) {
 		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
 			ShellAssertions.assertThat(session.screen()).containsText(text);
+		});
+	}
+
+	protected void assertScreenNotContainsText(BaseShellSession<?> session, String textFound, String textNotFound) {
+		Condition<String> notCondition = new Condition<>(line -> line.contains(textNotFound),
+				String.format("Text '%s' not found", textNotFound));
+
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
+			ShellAssertions.assertThat(session.screen()).containsText(textFound);
+			List<String> lines = session.screen().lines();
+			assertThat(lines).areNot(notCondition);
 		});
 	}
 

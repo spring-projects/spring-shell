@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,32 @@ package org.springframework.shell.samples.e2e;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import org.springframework.shell.samples.AbstractSampleTests;
-import org.springframework.shell.samples.e2e.RequiredValueCommands.LegacyAnnotation;
-import org.springframework.shell.samples.e2e.RequiredValueCommands.Registration;
+import org.springframework.shell.samples.e2e.HelpOptionCommands.LegacyAnnotation;
+import org.springframework.shell.samples.e2e.HelpOptionCommands.Registration;
 import org.springframework.shell.test.ShellTestClient.BaseShellSession;
 import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(classes = { LegacyAnnotation.class, Registration.class })
-class RequiredValueCommandsTests extends AbstractSampleTests {
+class HelpOptionCommandsTests extends AbstractSampleTests {
 
 	@ParameterizedTest
-	@E2ESource(command = "required-value")
-	void shouldRequireOption(String command, boolean interactive) {
+	@E2ESource(command = "help-option-default -h")
+	void testHelpOptionDefault(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
-		assertScreenContainsText(session, "Missing mandatory option");
+		assertScreenContainsText(session, "NAME");
+	}
+
+	@ParameterizedTest
+	@E2ESource(command = "help-option-exists --help hi", anno = false)
+	void testHelpOptionExists1(String command, boolean interactive) {
+		BaseShellSession<?> session = createSession(command, interactive);
+		assertScreenContainsText(session, "Hello hi");
+	}
+
+	@ParameterizedTest
+	@E2ESource(command = "help-option-exists --myhelp", anno = false)
+	void testHelpOptionExists2(String command, boolean interactive) {
+		BaseShellSession<?> session = createSession(command, interactive);
+		assertScreenContainsText(session, "NAME");
 	}
 }
