@@ -16,3 +16,5 @@ NOTE: Testing support is currently under development and will be
       unstable for various parts.
 
 include::using-shell-testing-basics.adoc[]
+
+include::using-shell-testing-settings.adoc[]

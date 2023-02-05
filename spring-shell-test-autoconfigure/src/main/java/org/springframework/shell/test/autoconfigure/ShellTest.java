@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.OverrideAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.filter.TypeExcludeFilters;
+import org.springframework.boot.test.autoconfigure.properties.PropertyMapping;
+import org.springframework.boot.test.autoconfigure.properties.SkipPropertyMapping;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.core.env.Environment;
@@ -60,6 +62,22 @@ public @interface ShellTest {
 	 * @return the properties to add
 	 */
 	String[] properties() default {};
+
+	/**
+	 * Set emulated terminal width.
+	 *
+	 * @return emulated terminal width
+	 */
+	@PropertyMapping(value = "spring.shell.test.terminal-width", skip = SkipPropertyMapping.ON_DEFAULT_VALUE)
+	int terminalWidth() default 80;
+
+	/**
+	 * Set emulated terminal height.
+	 *
+	 * @return emulated terminal height
+	 */
+	@PropertyMapping(value = "spring.shell.test.terminal-height", skip = SkipPropertyMapping.ON_DEFAULT_VALUE)
+	int terminalHeight() default 24;
 
 	/**
 	 * Determines if default filtering should be used with
