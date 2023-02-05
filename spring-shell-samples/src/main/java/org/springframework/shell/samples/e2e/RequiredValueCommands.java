@@ -41,6 +41,7 @@ public class RequiredValueCommands {
 			return "Hello " + arg1;
 		}
 	}
+
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {
 

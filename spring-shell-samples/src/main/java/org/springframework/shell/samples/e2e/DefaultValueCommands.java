@@ -17,6 +17,8 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -59,6 +61,42 @@ public class DefaultValueCommands {
 			@ShellOption boolean arg1
 		) {
 			return "Hello " + arg1;
+		}
+	}
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "default-value")
+		public String testDefaultValueAnnotation(
+				@Option(longNames = "arg1", defaultValue = "hi")
+				String arg1
+		) {
+				return "Hello " + arg1;
+		}
+
+		@Command(command = "default-value-boolean1")
+		public String testDefaultValueBoolean1Annotation(
+				@Option(longNames = "arg1", defaultValue = "false")
+				boolean arg1
+		) {
+				return "Hello " + arg1;
+		}
+
+		@Command(command = "default-value-boolean2")
+		public String testDefaultValueBoolean2Annotation(
+				@Option(longNames = "arg1", defaultValue = "true")
+				boolean arg1
+		) {
+				return "Hello " + arg1;
+		}
+
+		@Command(command = "default-value-boolean3")
+		public String testDefaultValueBoolean3Annotation(
+				@Option(longNames = "arg1")
+				boolean arg1
+		) {
+				return "Hello " + arg1;
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 
 import org.springframework.shell.command.annotation.EnableCommand;
 import org.springframework.shell.samples.AbstractSampleTests;
-import org.springframework.shell.samples.e2e.RequiredValueCommands.Annotation;
-import org.springframework.shell.samples.e2e.RequiredValueCommands.LegacyAnnotation;
-import org.springframework.shell.samples.e2e.RequiredValueCommands.Registration;
+import org.springframework.shell.samples.e2e.HiddenCommands.Annotation;
+import org.springframework.shell.samples.e2e.HiddenCommands.Registration;
 import org.springframework.shell.test.ShellTestClient.BaseShellSession;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = { LegacyAnnotation.class, Registration.class })
+@ContextConfiguration(classes = { Registration.class })
 @EnableCommand(Annotation.class)
-class RequiredValueCommandsTests extends AbstractSampleTests {
+class HiddenCommandsTests extends AbstractSampleTests {
 
 	@ParameterizedTest
-	@E2ESource(command = "required-value")
-	void shouldRequireOption(String command, boolean interactive) {
+	@E2ESource(command = "hidden-1", anno = false)
+	void hiddenCommandExecutes(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
-		assertScreenContainsText(session, "Missing mandatory option");
+		assertScreenContainsText(session, "Hello from hidden command");
+	}
+
+	@ParameterizedTest
+	@E2ESource(command = "help", anno = false)
+	void hiddenNotVisibleInHelp(String command, boolean interactive) {
+		BaseShellSession<?> session = createSession("help", interactive);
+		assertScreenNotContainsText(session, "help", "hidden-1");
 	}
 }

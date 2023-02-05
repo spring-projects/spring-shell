@@ -20,6 +20,8 @@ import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -56,6 +58,34 @@ public class ArityCommands {
 			return "Hello " + stringOfFloats(arg1);
 		}
 
+	}
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "arity-boolean-default-true")
+		public String testArityBooleanDefaultTrueAnnotation(
+				@Option(longNames = "overwrite", defaultValue = "true", arity = OptionArity.ZERO_OR_ONE)
+				Boolean overwrite
+		) {
+				return "Hello " + overwrite;
+		}
+
+		@Command(command = "arity-string-array")
+		public String testArityStringArrayAnnotation(
+				@Option(longNames = "arg1", defaultValue = "true", arity = OptionArity.ZERO_OR_MORE)
+				String[] arg1
+		) {
+				return "Hello " + Arrays.asList(arg1);
+		}
+
+		@Command(command = "arity-float-array")
+		public String testArityFloatArrayAnnotation(
+				@Option(longNames = "arg1", defaultValue = "true", arity = OptionArity.ZERO_OR_MORE)
+				float[] arg1
+		) {
+				return "Hello " + stringOfFloats(arg1);
+		}
 	}
 
 	@Component

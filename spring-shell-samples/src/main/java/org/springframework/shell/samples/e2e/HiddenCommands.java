@@ -17,9 +17,20 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.stereotype.Component;
 
 public class HiddenCommands {
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "hidden-1", hidden = true)
+		public String testHidden1Annotation(
+		) {
+				return "Hello from hidden command";
+		}
+	}
 
 	@Component
 	public static class Registration extends BaseE2ECommands {

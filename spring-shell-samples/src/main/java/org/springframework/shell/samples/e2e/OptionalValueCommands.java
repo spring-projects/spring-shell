@@ -17,6 +17,8 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -37,6 +39,18 @@ public class OptionalValueCommands {
 			@ShellOption(defaultValue = ShellOption.NULL) String arg1
 		) {
 			return "Hello " + arg1;
+		}
+	}
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "optional-value")
+		public String testOptionalValueAnnotation(
+				@Option(longNames = "arg1")
+				String arg1
+		) {
+				return "Hello " + arg1;
 		}
 	}
 
