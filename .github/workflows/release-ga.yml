@@ -65,7 +65,7 @@ jobs:
       env:
         PROJECT_VERSION: ${{ env.PROJECT_VERSION }}
       run: |
-        echo "::set-output name=project-version::$PROJECT_VERSION"
+        echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
   promote:
     runs-on: ubuntu-latest
