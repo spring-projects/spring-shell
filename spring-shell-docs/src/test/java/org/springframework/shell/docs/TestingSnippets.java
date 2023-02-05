@@ -81,4 +81,23 @@ class TestingSnippets {
 		}
 	}
 	// end::testing-shelltest-noninteractive[]
+
+	class Dump1 {
+
+		// tag::testing-shelltest-dimensions-props[]
+		@ShellTest(properties = {
+			"spring.shell.test.terminal-width=120",
+			"spring.shell.test.terminal-height=40"
+		})
+		class ShellSettingsSample {}
+		// end::testing-shelltest-dimensions-props[]
+	}
+	class Dump2 {
+
+		// tag::testing-shelltest-dimensions-field[]
+		@ShellTest(terminalWidth = 120, terminalHeight = 40)
+		class ShellSettingsSample {}
+		// end::testing-shelltest-dimensions-field[]
+	}
+
 }
