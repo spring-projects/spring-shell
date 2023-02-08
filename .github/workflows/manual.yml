@@ -24,7 +24,7 @@ jobs:
             musl: true
     name: Build ${{ matrix.nickname }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ matrix.graal }}
