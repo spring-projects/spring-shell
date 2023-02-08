@@ -19,11 +19,11 @@ jobs:
       with:
         distribution: adopt
         java-version: 17
-    - uses: jfrog/setup-jfrog-cli@v2
+    - uses: jfrog/setup-jfrog-cli@v3
       with:
         version: 2.21.5
       env:
-        JF_ARTIFACTORY_SPRING: ${{ secrets.jfArtifactorySpring }}
+        JF_ENV_SPRING: ${{ secrets.jfArtifactorySpring }}
     - name: Configure JFrog Cli
       run: |
         jfrog rt mvnc \

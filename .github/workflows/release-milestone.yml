@@ -20,11 +20,11 @@ jobs:
     - uses: jvalkeal/setup-maven@v1
       with:
         maven-version: 3.8.4
-    - uses: jfrog/setup-jfrog-cli@v2
+    - uses: jfrog/setup-jfrog-cli@v3
       with:
         version: 2.21.5
       env:
-        JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+        JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
         jf rt gradlec \
@@ -78,11 +78,11 @@ jobs:
     environment: promote
     steps:
     - uses: actions/checkout@v3
-    - uses: jfrog/setup-jfrog-cli@v2
+    - uses: jfrog/setup-jfrog-cli@v3
       with:
         version: 2.21.5
       env:
-        JF_ARTIFACTORY_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+        JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
         echo JFROG_CLI_BUILD_NAME=spring-shell-main-milestone >> $GITHUB_ENV
