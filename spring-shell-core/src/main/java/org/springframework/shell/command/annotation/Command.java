@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.aot.hint.annotation.Reflective;
 import org.springframework.shell.context.InteractionMode;
 
 /**
@@ -31,6 +32,7 @@ import org.springframework.shell.context.InteractionMode;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Documented
+@Reflective
 public @interface Command {
 
 	/**
