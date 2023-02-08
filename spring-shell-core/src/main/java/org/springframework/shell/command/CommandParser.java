@@ -15,21 +15,19 @@
  */
 package org.springframework.shell.command;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Map;
 
-import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.shell.Utils;
-import org.springframework.util.StringUtils;
+import org.springframework.shell.command.parser.Ast;
+import org.springframework.shell.command.parser.Ast.DefaultAst;
+import org.springframework.shell.command.parser.CommandModel;
+import org.springframework.shell.command.parser.Lexer.DefaultLexer;
+import org.springframework.shell.command.parser.Parser.DefaultParser;
+import org.springframework.shell.command.parser.Parser.ParseResult;
+import org.springframework.shell.command.parser.ParserConfig;
 
 /**
  * Interface parsing arguments for a {@link CommandRegistration}. A command is
@@ -78,6 +76,13 @@ public interface CommandParser {
 	interface CommandParserResults {
 
 		/**
+		 * Gets the registration.
+		 *
+		 * @return the registration
+		 */
+		CommandRegistration registration();
+
+		/**
 		 * Gets the results.
 		 *
 		 * @return the results
@@ -101,13 +106,15 @@ public interface CommandParser {
 		/**
 		 * Gets an instance of a default {@link CommandParserResults}.
 		 *
+		 * @param registration the registration
 		 * @param results the results
 		 * @param positional the list of positional arguments
 		 * @param errors the parsing errors
 		 * @return a new instance of results
 		 */
-		static CommandParserResults of(List<CommandParserResult> results, List<String> positional, List<CommandParserException> errors) {
-			return new DefaultCommandParserResults(results, positional, errors);
+		static CommandParserResults of(CommandRegistration registration, List<CommandParserResult> results,
+				List<String> positional, List<CommandParserException> errors) {
+			return new DefaultCommandParserResults(registration, results, positional, errors);
 		}
 	}
 
@@ -117,29 +124,22 @@ public interface CommandParser {
 	 * May throw various runtime exceptions depending how parser is configure.
 	 * For example if required option is missing an exception is thrown.
 	 *
-	 * @param options the command options
 	 * @param args the arguments
 	 * @return parsed results
 	 */
-	CommandParserResults parse(List<CommandOption> options, String[] args);
-
-	/**
-	 * Gets an instance of a default command parser.
-	 *
-	 * @return instance of a default command parser
-	 */
-	static CommandParser of() {
-		return of(null);
-	}
+	CommandParserResults parse(String[] args);
 
 	/**
 	 * Gets an instance of a default command parser.
 	 *
 	 * @param conversionService the conversion service
+	 * @param registrations the command registrations
+	 * @param config the parser config
 	 * @return instance of a default command parser
 	 */
-	static CommandParser of(ConversionService conversionService) {
-		return new DefaultCommandParser(conversionService);
+	static CommandParser of(ConversionService conversionService, Map<String, CommandRegistration> registrations,
+			ParserConfig config) {
+		return new AstCommandParser(registrations, config, conversionService);
 	}
 
 	/**
@@ -147,14 +147,22 @@ public interface CommandParser {
 	 */
 	static class DefaultCommandParserResults implements CommandParserResults {
 
+		private CommandRegistration registration;
 		private List<CommandParserResult> results;
 		private List<String> positional;
 		private List<CommandParserException> errors;
 
-		DefaultCommandParserResults(List<CommandParserResult> results, List<String> positional, List<CommandParserException> errors) {
+		DefaultCommandParserResults(CommandRegistration registration, List<CommandParserResult> results,
+				List<String> positional, List<CommandParserException> errors) {
+			this.registration = registration;
 			this.results = results;
 			this.positional = positional;
 			this.errors = errors;
+		}
+
+		@Override
+		public CommandRegistration registration() {
+			return registration;
 		}
 
 		@Override
@@ -200,343 +208,45 @@ public interface CommandParser {
 	/**
 	 * Default implementation of a {@link CommandParser}.
 	 */
-	static class DefaultCommandParser implements CommandParser {
+	static class AstCommandParser implements CommandParser {
 
+		private final Map<String, CommandRegistration> registrations;
+		private final ParserConfig configuration;
 		private final ConversionService conversionService;
 
-		DefaultCommandParser(ConversionService conversionService) {
+		public AstCommandParser(Map<String, CommandRegistration> registrations, ParserConfig configuration,
+				ConversionService conversionService) {
+			this.registrations = registrations;
+			this.configuration = configuration;
 			this.conversionService = conversionService;
 		}
 
 		@Override
-		public CommandParserResults parse(List<CommandOption> options, String[] args) {
-			List<CommandOption> requiredOptions = options.stream()
-				.filter(o -> o.isRequired())
-				.collect(Collectors.toList());
-
-			Set<String> splitValidValues = options.stream()
-				.flatMap(o -> {
-					Stream<String> longs = Stream.of(o.getLongNames()).map(l -> "--" + l);
-					Stream<String> shorts = Stream.of(o.getShortNames()).map(s -> "-"+ Character.toString(s));
-					return Stream.concat(longs, shorts);
-				})
-				.collect(Collectors.toSet());
-
-			Lexer lexer = new Lexer(args, splitValidValues);
-			List<List<String>> lexerResults = lexer.visit();
-			Parser parser = new Parser();
-			ParserResults parserResults = parser.visit(lexerResults, options);
+		public CommandParserResults parse(String[] args) {
+			CommandModel commandModel = new CommandModel(registrations, configuration);
+			org.springframework.shell.command.parser.Lexer lexer = new DefaultLexer(commandModel, configuration);
+			Ast ast = new DefaultAst();
+			org.springframework.shell.command.parser.Parser parser = new DefaultParser(commandModel, lexer, ast,
+					configuration, conversionService);
+			ParseResult result = parser.parse(Arrays.asList(args));
 
 			List<CommandParserResult> results = new ArrayList<>();
 			List<String> positional = new ArrayList<>();
 			List<CommandParserException> errors = new ArrayList<>();
-			parserResults.results.stream().forEach(pr -> {
-				if (pr.option != null) {
-					results.add(new DefaultCommandParserResult(pr.option, pr.value));
-					requiredOptions.remove(pr.option);
-				}
-				else {
-					for (String arg : pr.args) {
-						if (arg.startsWith("--")) {
-							errors.add(UnrecognisedOptionException.of(String.format("Unrecognised option '%s'", arg),
-									arg));
-						}
-						else {
-							positional.add(arg);
-						}
-					}
-				}
-				if (pr.error != null) {
-					errors.add(pr.error);
-				}
+
+			result.optionResults().forEach(or -> {
+				results.add(CommandParserResult.of(or.option(), or.value()));
 			});
 
-			Deque<ParserResult> queue = new ArrayDeque<>(parserResults.results);
-			options.stream()
-				.filter(o -> o.getPosition() > -1)
-				.sorted(Comparator.comparingInt(o -> o.getPosition()))
-				.forEach(o -> {
-					int arityMin = o.getArityMin();
-					int arityMax = o.getArityMax();
-					List<String> oargs = new ArrayList<>();
-					if (arityMin > -1) {
-						for (int i = 0; i < arityMax; i++) {
-							ParserResult pop = null;
-							if (!queue.isEmpty()) {
-								pop = queue.pop();
-							}
-							else {
-								break;
-							}
-							if (pop != null && pop.option == null) {
-								if (!pop.args.isEmpty()) {
-									oargs.addAll(pop.args);
-								}
-							}
-						}
-					}
-					// don't do anything if first arg looks like an option as if we are here
-					// then we'd might remove wrong required option
-					if (!oargs.isEmpty() && !oargs.get(0).startsWith("-")) {
-						// as we now have a candicate option, try to see if there is a
-						// conversion we can do and the use it.
-						Object value = convertOptionType(o, oargs);
-						results.add(new DefaultCommandParserResult(o, value));
-						requiredOptions.remove(o);
-					}
-				});
-
-			requiredOptions.stream().forEach(o -> {
-				String ln = o.getLongNames() != null ? Stream.of(o.getLongNames()).collect(Collectors.joining(",")) : "";
-				String sn = o.getShortNames() != null ? Stream.of(o.getShortNames()).map(n -> Character.toString(n))
-						.collect(Collectors.joining(",")) : "";
-				errors.add(MissingOptionException
-						.of(String.format("Missing option, longnames='%s', shortnames='%s'", ln, sn), o));
+			result.messageResults().forEach(mr -> {
+				errors.add(new CommandParserException(mr.getMessage()));
 			});
 
-			return new DefaultCommandParserResults(results, positional, errors);
-		}
+			result.argumentResults().forEach(ar -> {
+				positional.add(ar.value());
+			});
 
-		private Object convertOptionType(CommandOption option, Object value) {
-			if (conversionService != null && option.getType() != null && value != null) {
-				if (conversionService.canConvert(value.getClass(), option.getType().getRawClass())) {
-					value = conversionService.convert(value, option.getType().getRawClass());
-				}
-			}
-			return value;
-		}
-
-		private static class ParserResult {
-			private CommandOption option;
-			private List<String> args;
-			private Object value;
-			private CommandParserException error;
-
-			private ParserResult(CommandOption option, List<String> args, Object value, CommandParserException error) {
-				this.option = option;
-				this.args = args;
-				this.value = value;
-				this.error = error;
-			}
-
-			static ParserResult of(CommandOption option, List<String> args, Object value,
-					CommandParserException error) {
-				return new ParserResult(option, args, value, error);
-			}
-		}
-
-		private static class ParserResults {
-			private List<ParserResult> results;
-
-			private ParserResults(List<ParserResult> results) {
-				this.results = results;
-			}
-
-			static ParserResults of(List<ParserResult> results) {
-				return new ParserResults(results);
-			}
- 		}
-
-		/**
-		 * Parser works on a results from a lexer. It looks for given options
-		 * and builds parsing results.
-		 */
-		private class Parser {
-			ParserResults visit(List<List<String>> lexerResults, List<CommandOption> options) {
-				List<ParserResult> results = lexerResults.stream()
-					.flatMap(lr -> {
-						List<CommandOption> option = matchOptions(options, lr.get(0));
-						if (option.isEmpty()) {
-							return lr.stream().map(a -> ParserResult.of(null, Arrays.asList(a), null, null));
-						}
-						else {
-							return option.stream().flatMap(o -> {
-								List<String> subArgs = lr.subList(1, lr.size());
-								ConvertArgumentsHolder holder = convertArguments(o, subArgs);
-								if (holder.error != null) {
-									return Stream.of(ParserResult.of(o, subArgs, null, holder.error));
-								}
-								Object value = convertOptionType(o, holder.value);
-								Stream<ParserResult> unmapped = holder.unmapped.stream()
-									.map(um -> ParserResult.of(null, Arrays.asList(um), null, null));
-								Stream<ParserResult> res = Stream.of(ParserResult.of(o, subArgs, value, null));
-								return Stream.concat(res, unmapped);
-							});
-						}
-					})
-					.collect(Collectors.toList());
-
-				// Check options which didn't get matched and add parser result
-				// for those having default value.
-				List<CommandOption> defaultValueOptionsToCheck = new ArrayList<>(options);
-				results.stream()
-					.forEach(pr -> {
-						if (pr.option != null) {
-							defaultValueOptionsToCheck.remove(pr.option);
-						}
-					});
-				defaultValueOptionsToCheck.stream()
-					.filter(co -> co.getDefaultValue() != null)
-					.forEach(co -> {
-						Object value = co.getDefaultValue();
-						value = convertOptionType(co, value);
-						results.add(ParserResult.of(co, Collections.emptyList(), value, null));
-					});
-				return ParserResults.of(results);
-			}
-
-			private List<CommandOption> matchOptions(List<CommandOption> options, String arg) {
-				List<CommandOption> matched = new ArrayList<>();
-				String trimmed = StringUtils.trimLeadingCharacter(arg, '-');
-				int count = arg.length() - trimmed.length();
-				if (count == 1) {
-					if (trimmed.length() == 1) {
-						Character trimmedChar = trimmed.charAt(0);
-						options.stream()
-							.filter(o -> {
-								for (Character sn : o.getShortNames()) {
-									if (trimmedChar.equals(sn)) {
-										return true;
-									}
-								}
-								return false;
-							})
-						.findFirst()
-						.ifPresent(o -> matched.add(o));
-					}
-					else if (trimmed.length() > 1) {
-						trimmed.chars().mapToObj(i -> (char)i)
-							.forEach(c -> {
-								options.stream().forEach(o -> {
-									for (Character sn : o.getShortNames()) {
-										if (c.equals(sn)) {
-											matched.add(o);
-										}
-									}
-								});
-							});
-					}
-				}
-				else if (count == 2) {
-					options.stream()
-						.filter(o -> {
-							for (String ln : o.getLongNames()) {
-								if (trimmed.equals(ln)) {
-									return true;
-								}
-							}
-							return false;
-						})
-						.findFirst()
-						.ifPresent(o -> matched.add(o));
-				}
-				return matched;
-			}
-
-			private ConvertArgumentsHolder convertArguments(CommandOption option, List<String> arguments) {
-				Object value = null;
-				List<String> unmapped = new ArrayList<>();
-
-				ResolvableType type = option.getType();
-				int arityMin = option.getArityMin();
-				int arityMax = option.getArityMax();
-
-				if (arityMin < 0 && type != null) {
-					if (type.isAssignableFrom(boolean.class)) {
-						arityMin = 1;
-						arityMax = 1;
-					}
-				}
-
-				if (arityMax > 1 && arityMin > -1 && arityMax >= arityMin && (arguments.size() < arityMin || arguments.size() > arityMax)) {
-					String ln = option.getLongNames() != null
-							? Stream.of(option.getLongNames()).collect(Collectors.joining(","))
-							: "";
-					String sn = option.getShortNames() != null ? Stream.of(option.getShortNames())
-							.map(n -> Character.toString(n)).collect(Collectors.joining(",")) : "";
-					if (arguments.size() < arityMin) {
-						String msg = String.format("Not enough arguments, longnames='%s', shortnames='%s'", ln, sn);
-						return new ConvertArgumentsHolder(value, unmapped, new NotEnoughArgumentsOptionException(msg, option));
-					}
-					if (arguments.size() > arityMax) {
-						String msg = String.format("Too many arguments, longnames='%s', shortnames='%s'", ln, sn);
-						return new ConvertArgumentsHolder(value, unmapped, new TooManyArgumentsOptionException(msg, option));
-					}
-				}
-
-				if (type != null && type.isAssignableFrom(boolean.class)) {
-					if (arguments.size() == 0) {
-						value = true;
-					}
-					else {
-						value = Boolean.parseBoolean(arguments.get(0));
-					}
-				}
-				else if (type != null && type.isArray()) {
-					value = arguments.stream().collect(Collectors.toList()).toArray();
-				}
-				// if it looks like type is a collection just get as list
-				// as conversion will happen later. we just need to know
-				// if user has Set, List, Collection, etc without worrying
-				// about generics.
-				else if (type != null && type.asCollection() != ResolvableType.NONE) {
-					value = arguments.stream().collect(Collectors.toList());
-				}
-				else {
-					if (!arguments.isEmpty()) {
-						if (arguments.size() == 1) {
-							value = arguments.get(0);
-						}
-						else {
-							if (arityMax > 0) {
-								int limit = Math.min(arguments.size(), arityMax);
-								value = arguments.stream().limit(limit).collect(Collectors.toList());
-								unmapped.addAll(arguments.subList(limit, arguments.size()));
-							}
-							else {
-								value = arguments.get(0);
-								unmapped.addAll(arguments.subList(1, arguments.size()));
-							}
-						}
-					}
-				}
-
-				return new ConvertArgumentsHolder(value, unmapped);
-			}
-
-			private class ConvertArgumentsHolder {
-				Object value;
-				final List<String> unmapped = new ArrayList<>();
-				CommandParserException error;
-
-				ConvertArgumentsHolder(Object value, List<String> unmapped) {
-					this(value, unmapped, null);
-				}
-
-				ConvertArgumentsHolder(Object value, List<String> unmapped, CommandParserException error) {
-					this.value = value;
-					if (unmapped != null) {
-						this.unmapped.addAll(unmapped);
-					}
-					this.error = error;
-				}
-			}
-		}
-
-		/**
-		 * Lexers only responsibility is to splice arguments array into
-		 * chunks which belongs together what comes for option structure.
-		 */
-		private static class Lexer {
-			private final String[] args;
-			private final Set<String> splitValidValues;
-			Lexer(String[] args, Set<String> splitValues) {
-				this.args = args;
-				this.splitValidValues = splitValues;
-			}
-			List<List<String>> visit() {
-				return Utils.split(args, t -> splitValidValues.contains(t));
-			}
+			return new DefaultCommandParserResults(result.commandRegistration(), results, positional, errors);
 		}
 	}
 
@@ -552,70 +262,6 @@ public interface CommandParser {
 
 		public static CommandParserException of(String message) {
 			return new CommandParserException(message);
-		}
-	}
-
-	public static class OptionException extends CommandParserException {
-
-		private CommandOption option;
-
-		public OptionException(String message, CommandOption option) {
-			super(message);
-			this.option = option;
-		}
-
-		public CommandOption getOption() {
-			return option;
-		}
-	}
-
-	public static class TooManyArgumentsOptionException extends OptionException {
-
-		public TooManyArgumentsOptionException(String message, CommandOption option) {
-			super(message, option);
-		}
-	}
-
-	public static class NotEnoughArgumentsOptionException extends OptionException {
-
-		public NotEnoughArgumentsOptionException(String message, CommandOption option) {
-			super(message, option);
-		}
-	}
-
-	public static class MissingOptionException extends CommandParserException {
-
-		private CommandOption option;
-
-		public MissingOptionException(String message, CommandOption option) {
-			super(message);
-			this.option = option;
-		}
-
-		public static MissingOptionException of(String message, CommandOption option) {
-			return new MissingOptionException(message, option);
-		}
-
-		public CommandOption getOption() {
-			return option;
-		}
-	}
-
-	public static class UnrecognisedOptionException extends CommandParserException {
-
-		private String option;
-
-		public UnrecognisedOptionException(String message, String option) {
-			super(message);
-			this.option = option;
-		}
-
-		public static UnrecognisedOptionException of(String message, String option) {
-			return new UnrecognisedOptionException(message, option);
-		}
-
-		public String getOption() {
-			return option;
 		}
 	}
 }

@@ -229,8 +229,6 @@ public class Shell {
 			this.exitCodeMappings.reset(mappingFunctions);
 		}
 
-		List<String> wordsForArgs = wordsForArguments(command, words);
-
 		Thread commandThread = Thread.currentThread();
 		Object sh = Signals.register("INT", () -> commandThread.interrupt());
 
@@ -243,7 +241,7 @@ public class Shell {
 		Object evaluate = null;
 		Exception e = null;
 		try {
-			evaluate = execution.evaluate(commandRegistration.get(), wordsForArgs.toArray(new String[0]));
+			evaluate = execution.evaluate(words.toArray(new String[0]));
 		}
 		catch (UndeclaredThrowableException ute) {
 			if (ute.getCause() instanceof InterruptedException || ute.getCause() instanceof ClosedByInterruptException) {
@@ -325,21 +323,6 @@ public class Shell {
 		return input.words().isEmpty()
 				|| (input.words().size() == 1 && input.words().get(0).trim().isEmpty())
 				|| (input.words().iterator().next().matches("\\s*//.*"));
-	}
-
-	/**
-	 * Returns the list of words to be considered for argument resolving. Drops the first N
-	 * words used for the command, as well as an optional empty word at the end of the list
-	 * (which may be present if user added spaces before submitting the buffer)
-	 */
-	private List<String> wordsForArguments(String command, List<String> words) {
-		int wordsUsedForCommandKey = command.split(" ").length;
-		List<String> args = words.subList(wordsUsedForCommandKey, words.size());
-		int last = args.size() - 1;
-		if (last >= 0 && "".equals(args.get(last))) {
-			args.remove(last);
-		}
-		return args;
 	}
 
 	/**

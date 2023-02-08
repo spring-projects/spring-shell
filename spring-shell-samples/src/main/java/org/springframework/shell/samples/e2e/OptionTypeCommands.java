@@ -21,6 +21,8 @@ import java.util.Set;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -105,6 +107,102 @@ public class OptionTypeCommands {
 		) {
 			return "Hello " + arg1;
 		}
+	}
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "option-type-string")
+		public String optionTypeStringAnnotation(
+			@Option(longNames = "arg1")
+			String arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@Command(command = "option-type-boolean")
+		public String optionTypeBooleanAnnotation(
+			@ShellOption()
+			@Option(longNames = "arg1")
+			boolean arg1,
+			@ShellOption(defaultValue = "true")
+			@Option(longNames = "arg2", defaultValue = "true")
+			boolean arg2,
+			@ShellOption(defaultValue = "false")
+			@Option(longNames = "arg3", defaultValue = "false")
+			boolean arg3,
+			@ShellOption()
+			@Option(longNames = "arg4")
+			Boolean arg4,
+			@ShellOption(defaultValue = "true")
+			@Option(longNames = "arg5", defaultValue = "true")
+			Boolean arg5,
+			@ShellOption(defaultValue = "false")
+			@Option(longNames = "arg6", defaultValue = "false")
+			Boolean arg6
+		) {
+			return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s", arg1, arg2, arg3, arg4, arg5,
+					arg6);
+		}
+
+		@Command(command = "option-type-integer")
+		public String optionTypeIntegerAnnotation(
+			@Option(longNames = "arg1")
+			int arg1,
+			@Option(longNames = "arg2")
+			Integer arg2
+		) {
+			return String.format("Hello '%s' '%s'", arg1, arg2);
+		}
+
+		@Command(command = "option-type-enum")
+		public String optionTypeEnumAnnotation(
+			@Option(longNames = "arg1")
+			OptionTypeEnum arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@Command(command = "option-type-string-array")
+		public String optionTypeStringArrayAnnotation(
+			@Option(longNames = "arg1")
+			String[] arg1
+		) {
+			return "Hello " + stringOfStrings(arg1);
+		}
+
+		@Command(command = "option-type-int-array")
+		public String optionTypeIntArrayAnnotation(
+			@Option(longNames = "arg1")
+			int[] arg1
+		) {
+			return "Hello " + stringOfInts(arg1);
+		}
+
+		@Command(command = "option-type-string-list")
+		public String optionTypeStringListAnnotation(
+			@Option(longNames = "arg1")
+			List<String> arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@Command(command = "option-type-string-set")
+		public String optionTypeStringSetAnnotation(
+			@Option(longNames = "arg1")
+			Set<String> arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@Command(command = "option-type-string-collection")
+		public String optionTypeStringCollectionAnnotation(
+			@Option(longNames = "arg1")
+			Collection<String> arg1
+		) {
+			return "Hello " + arg1;
+		}
+
 	}
 
 	@Component

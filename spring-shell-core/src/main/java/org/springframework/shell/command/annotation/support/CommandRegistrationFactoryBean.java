@@ -232,9 +232,6 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 					else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
 						optionSpec.arity(OptionArity.ZERO);
 					}
-					else {
-						optionSpec.arity(OptionArity.EXACTLY_ONE);
-					}
 				}
 
 				if (StringUtils.hasText(so.defaultValue())) {

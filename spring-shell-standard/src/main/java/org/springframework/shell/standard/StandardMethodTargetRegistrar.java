@@ -162,9 +162,6 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 								else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
 									optionSpec.arity(OptionArity.ZERO);
 								}
-								else {
-									optionSpec.arity(OptionArity.EXACTLY_ONE);
-								}
 							}
 							if (!ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)
 									&& !ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NULL)) {

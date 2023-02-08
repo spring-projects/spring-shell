@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import org.springframework.shell.command.CommandRegistration.TargetInfo;
 import org.springframework.shell.command.CommandRegistration.TargetInfo.TargetType;
 import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.command.invocation.ShellMethodArgumentResolverComposite;
+import org.springframework.shell.command.parser.ParserConfig;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -50,11 +51,10 @@ public interface CommandExecution {
 	/**
 	 * Evaluate a command with a given arguments.
 	 *
-	 * @param registration the command registration
 	 * @param args         the command args
 	 * @return evaluated execution
 	 */
-	Object evaluate(CommandRegistration registration, String[] args);
+	Object evaluate(String[] args);
 
 	/**
 	 * Gets an instance of a default {@link CommandExecution}.
@@ -114,16 +114,16 @@ public interface CommandExecution {
 			this.commandCatalog = commandCatalog;
 		}
 
-		public Object evaluate(CommandRegistration registration, String[] args) {
+		public Object evaluate(String[] args) {
+			CommandParser parser = CommandParser.of(conversionService, commandCatalog.getRegistrations(), new ParserConfig());
+			CommandParserResults results = parser.parse(args);
+			CommandRegistration registration = results.registration();
+
 			// fast fail with availability before doing anything else
 			Availability availability = registration.getAvailability();
 			if (availability != null && !availability.isAvailable()) {
 				return new CommandNotCurrentlyAvailable(registration.getCommand(), availability);
 			}
-
-			List<CommandOption> options = registration.getOptions();
-			CommandParser parser = CommandParser.of(conversionService);
-			CommandParserResults results = parser.parse(options, args);
 
 			// check help options to short circuit
 			boolean handleHelpOption = false;
@@ -157,11 +157,11 @@ public interface CommandExecution {
 			CommandRegistration usedRegistration;
 			if (handleHelpOption) {
 				String command = registration.getCommand();
-				CommandParser helpParser = CommandParser.of(conversionService);
+				CommandParser helpParser = CommandParser.of(conversionService, commandCatalog.getRegistrations(),
+						new ParserConfig());
 				CommandRegistration helpCommandRegistration = commandCatalog.getRegistrations()
 						.get(registration.getHelpOption().getCommand());
-				List<CommandOption> helpOptions = helpCommandRegistration.getOptions();
-				CommandParserResults helpResults = helpParser.parse(helpOptions, new String[] { "--command", command });
+				CommandParserResults helpResults = helpParser.parse(new String[] { "help", "--command", command });
 				results = helpResults;
 				usedRegistration = helpCommandRegistration;
 			}
