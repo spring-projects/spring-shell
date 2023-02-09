@@ -18,6 +18,8 @@ package org.springframework.shell.command.annotation.support;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
 import org.springframework.messaging.handler.invocation.InvocableHandlerMethod;
+import org.springframework.shell.Availability;
+import org.springframework.shell.AvailabilityProvider;
 import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandHandlingResult;
@@ -42,6 +46,7 @@ import org.springframework.shell.command.CommandRegistration.Builder;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.OptionSpec;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.CommandAvailability;
 import org.springframework.shell.command.annotation.ExceptionResolverMethodResolver;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.command.annotation.OptionValues;
@@ -158,6 +163,29 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 		// interaction mode
 		InteractionMode deduceInteractionMode = CommandAnnotationUtils.deduceInteractionMode(classAnn, methodAnn);
 		builder.interactionMode(deduceInteractionMode);
+
+		// availability
+		MergedAnnotation<CommandAvailability> caAnn = MergedAnnotations.from(method, SearchStrategy.TYPE_HIERARCHY)
+				.get(CommandAvailability.class);
+		if (caAnn.isPresent()) {
+			String[] refs = caAnn.getStringArray("name");
+			List<AvailabilityProvider> avails = Stream.of(refs)
+				.map(r -> {
+					return this.applicationContext.getBean(r, AvailabilityProvider.class);
+				})
+				.collect(Collectors.toList());
+			if (!avails.isEmpty()) {
+				builder.availability(() -> {
+					for (AvailabilityProvider avail : avails) {
+						Availability a = avail.get();
+						if (!a.isAvailable()) {
+							return a;
+						}
+					}
+					return Availability.available();
+				});
+			}
+		}
 
 		// alias
 		String[] deduceAlias = CommandAnnotationUtils.deduceAlias(classAnn, methodAnn);

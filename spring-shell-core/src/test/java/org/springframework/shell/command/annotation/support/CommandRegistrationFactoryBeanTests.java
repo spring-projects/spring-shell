@@ -18,8 +18,12 @@ package org.springframework.shell.command.annotation.support;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.shell.Availability;
+import org.springframework.shell.AvailabilityProvider;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.CommandAvailability;
 import org.springframework.shell.command.annotation.Option;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,6 +113,34 @@ class CommandRegistrationFactoryBeanTests {
 
 		@Command
 		void command2(@Option(required = false) String arg) {
+		}
+	}
+
+	@Test
+	void setsAvailabilitySupplier() {
+		configCommon(AvailabilityIndicator.class, new AvailabilityIndicator(), "command1", new Class[] { })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getAvailability()).isNotNull();
+					assertThat(registration.getAvailability().getReason()).isEqualTo("fakereason");
+		});
+	}
+
+	@Command
+	private static class AvailabilityIndicator {
+
+		@Command
+		@CommandAvailability(name = "testAvailability")
+		void command1() {
+		}
+
+		@Bean
+		public AvailabilityProvider testAvailability() {
+			return () -> Availability.unavailable("fakereason");
 		}
 	}
 
