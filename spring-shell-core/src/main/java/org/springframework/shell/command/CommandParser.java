@@ -478,9 +478,16 @@ public interface CommandParser {
 				// if it looks like type is a collection just get as list
 				// as conversion will happen later. we just need to know
 				// if user has Set, List, Collection, etc without worrying
-				// about generics.
+				// about generics. handle explicit size 1 so that we're
+				// able to handle string to xxx converter as that what
+				// user expects.
 				else if (type != null && type.asCollection() != ResolvableType.NONE) {
-					value = arguments.stream().collect(Collectors.toList());
+					if (arguments.size() == 1) {
+						value = arguments.get(0);
+					}
+					else {
+						value = arguments.stream().collect(Collectors.toList());
+					}
 				}
 				else {
 					if (!arguments.isEmpty()) {
