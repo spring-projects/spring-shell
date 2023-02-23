@@ -1,4 +1,4 @@
-=== Annotation Model
+==== Annotation Model
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 When you use the standard API, methods on beans are turned into executable commands, provided that:
