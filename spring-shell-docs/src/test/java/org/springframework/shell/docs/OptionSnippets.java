@@ -21,17 +21,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 public class OptionSnippets {
 
-	class Dump1 {
+	class Dump1Legacy {
 		// tag::option-with-annotation[]
 		public String example(@ShellOption(value = { "--argx" }) String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-with-annotation[]
+	}
+
+	class Dump1 {
+		// tag::option-with-option-annotation[]
+		public String example(@Option(longNames = "argx") String arg1) {
+			return "Hello " + arg1;
+		}
+		// end::option-with-option-annotation[]
 	}
 
 	class Dump7 {
