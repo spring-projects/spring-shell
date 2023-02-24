@@ -7,6 +7,15 @@ in a class and annotate the class and the methods with specific annotations.
 In the programmatic model, you use a more low level approach, defining command
 registrations (either as beans or by dynamically registering with a command catalog).
 
+Starting from _3.1.x_ a better support for defining commands using
+<<commands-registration-annotation, annotations>> were added. Firstly because eventually standard
+package providing <<commands-registration-legacyannotation, legacy annotations>> will get deprecated
+and removed. Secondly so that we're able to provide same set of features than using underlying
+`CommandRegistration`. Creating new a annotation model allows us to rethink and modernise that
+part without breaking existing applications.
+
+include::using-shell-commands-registration-annotation.adoc[]
+
 include::using-shell-commands-registration-legacyannotation.adoc[]
 
 include::using-shell-commands-registration-programmatic.adoc[]
