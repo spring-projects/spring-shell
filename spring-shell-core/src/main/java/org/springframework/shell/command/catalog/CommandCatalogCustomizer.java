@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.command;
+package org.springframework.shell.command.catalog;
 
 /**
  * Interface to customize a {@link CommandCatalog}.

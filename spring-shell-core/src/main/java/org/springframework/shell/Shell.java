@@ -37,7 +37,7 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandAlias;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.execution.CommandExecution;
 import org.springframework.shell.command.execution.CommandExecution.CommandExecutionException;
@@ -173,7 +173,7 @@ public class Shell {
 					throw (Exception) result;
 				}
 				if (handlingResultNonInt instanceof CommandExecution.CommandParserExceptionsException) {
-					throw (CommandExecution.CommandParserExceptionsException) handlingResultNonInt;
+					throw handlingResultNonInt;
 				}
 				else if (processExceptionNonInt != null && processExceptionNonInt.exitCode() != null
 						&& exitCodeExceptionProvider != null) {
@@ -232,7 +232,7 @@ public class Shell {
 		}
 
 		Thread commandThread = Thread.currentThread();
-		Object sh = Signals.register("INT", commandThread::interrupt);
+		Object interruptionSignalHandler = Signals.register("INT", commandThread::interrupt);
 
 		CommandExecution execution = CommandExecution.of(
 				argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal,
@@ -240,6 +240,10 @@ public class Shell {
 
 		List<CommandExceptionResolver> commandExceptionResolvers = commandRegistration.get().getExceptionResolvers();
 
+		return evaluateAndCatch(words, interruptionSignalHandler, execution, commandExceptionResolvers);
+	}
+
+	private Object evaluateAndCatch(List<String> words, Object interruptionSignalHandler, CommandExecution execution, List<CommandExceptionResolver> commandExceptionResolvers) {
 		Object evaluate = null;
 		Exception e = null;
 		try {
@@ -251,20 +255,21 @@ public class Shell {
 			}
 			return ute.getCause();
 		}
-		catch (CommandExecutionException e1) {
-			if (e1.getCause() instanceof Exception e11) {
-				e = e11;
+		catch (CommandExecutionException commandExecutionException) {
+			if (commandExecutionException.getCause() instanceof Exception causeException) {
+				e = causeException;
 			}
 			else {
-				return e1.getCause();
+				return commandExecutionException.getCause();
 			}
 		}
-		catch (Exception e2) {
-			e = e2;
+		catch (Exception exception) {
+			e = exception;
 		}
 		finally {
-			Signals.unregister("INT", sh);
+			Signals.unregister("INT", interruptionSignalHandler);
 		}
+
 		if (e != null && !(e instanceof ExitRequest)) {
 			try {
 				CommandHandlingResult processException = processException(commandExceptionResolvers, e);
@@ -286,6 +291,7 @@ public class Shell {
 		if (e != null) {
 			evaluate = e;
 		}
+
 		return evaluate;
 	}
 
@@ -449,7 +455,7 @@ public class Shell {
 	private String findLongestCommand(String prefix, boolean filterHidden) {
 		Map<String, CommandRegistration> registrations = commandRegistry.getRegistrations();
 		if (filterHidden) {
-			registrations = Utils.removeHiddenCommands(registrations);
+			Utils.removeHiddenCommands(registrations);
 		}
 		String result = registrations.keySet().stream()
 				.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))

@@ -25,7 +25,7 @@ import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.ResultHandler;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;

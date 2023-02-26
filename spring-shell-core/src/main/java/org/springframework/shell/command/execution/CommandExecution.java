@@ -15,18 +15,15 @@
  */
 package org.springframework.shell.command.execution;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.validation.Validator;
 import org.jline.terminal.Terminal;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
-import org.springframework.shell.command.*;
 import org.springframework.shell.command.CommandParser.CommandParserException;
+import org.springframework.shell.command.catalog.CommandCatalog;
 
 
 /**

@@ -8,6 +8,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.shell.Availability;
 import org.springframework.shell.CommandNotCurrentlyAvailable;
 import org.springframework.shell.command.*;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.command.invocation.ShellMethodArgumentResolverComposite;
 import org.springframework.shell.command.parser.ParserConfig;
@@ -50,16 +51,15 @@ public class DefaultCommandExecution implements CommandExecution {
         }
 
         // check help options to short circuit
-        boolean handleHelpOption = false;
+        boolean helpOptionIsRequested = false;
         CommandRegistration.HelpOptionInfo helpOption = commandRegistration.getHelpOption();
-        if (helpIsRequested(helpOption)) {
-            handleHelpOption = commandParserResults.results().stream()
-                    .anyMatch(commandParserResult -> longOrShortHelpOptionExist(helpOption, commandParserResult));
+        if (helpOptionIsEnabled(helpOption)) {
+            helpOptionIsRequested = helpOptionIsRequested(helpOption, commandParserResults);
         }
 
         // if needed switch registration to help command if we're short circuiting
         CommandRegistration usedRegistration;
-        if (handleHelpOption) {
+        if (helpOptionIsRequested) {
             String command = commandRegistration.getCommand();
             CommandParser helpParser = CommandParser.of(conversionService, commandCatalog.getRegistrations(),
                     new ParserConfig());
@@ -134,25 +134,27 @@ public class DefaultCommandExecution implements CommandExecution {
         return res;
     }
 
-    //TODO re-think the name
-    private boolean longOrShortHelpOptionExist(CommandRegistration.HelpOptionInfo helpOption, CommandParser.CommandParserResult commandParserResult) {
-        boolean present = false;
-        if (helpOption.getLongNames() != null) {
-            present = Arrays.stream(commandParserResult.option().getLongNames())
-                    .anyMatch(longName -> ObjectUtils.containsElement(helpOption.getLongNames(), longName));
-        }
-        if (present) {
-            return true;
-        }
+    private boolean helpOptionIsRequested(CommandRegistration.HelpOptionInfo helpOption, CommandParser.CommandParserResults commandParserResults) {
+        return commandParserResults.results().stream()
+                .anyMatch(commandParserResult -> {
+                    boolean present = false;
+                    if (helpOption.getLongNames() != null) {
+                        present = Arrays.stream(commandParserResult.option().getLongNames())
+                                .anyMatch(longName -> ObjectUtils.containsElement(helpOption.getLongNames(), longName));
+                    }
+                    if (present) {
+                        return true;
+                    }
 
-        if (helpOption.getShortNames() != null) {
-            present = Arrays.stream(commandParserResult.option().getShortNames())
-                    .anyMatch(shortName -> ObjectUtils.containsElement(helpOption.getShortNames(), shortName));
-        }
-        return present;
+                    if (helpOption.getShortNames() != null) {
+                        present = Arrays.stream(commandParserResult.option().getShortNames())
+                                .anyMatch(shortName -> ObjectUtils.containsElement(helpOption.getShortNames(), shortName));
+                    }
+                    return present;
+                });
     }
 
-    private boolean helpIsRequested(CommandRegistration.HelpOptionInfo helpOption) {
+    private boolean helpOptionIsEnabled(CommandRegistration.HelpOptionInfo helpOption) {
         return helpOption.isEnabled() && helpOption.getCommand() != null && (!ObjectUtils.isEmpty(helpOption.getLongNames()) || !ObjectUtils.isEmpty(helpOption.getShortNames()));
     }
 }

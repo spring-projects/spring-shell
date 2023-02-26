@@ -27,8 +27,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.boot.SpringShellProperties.Help;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandCatalogCustomizer;
+import org.springframework.shell.command.catalog.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
 import org.springframework.shell.command.CommandRegistration.OptionNameModifier;

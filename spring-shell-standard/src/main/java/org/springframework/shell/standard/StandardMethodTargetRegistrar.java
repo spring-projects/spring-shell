@@ -40,7 +40,7 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.Utils;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.Builder;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
