@@ -27,7 +27,7 @@ import org.jline.terminal.impl.DumbTerminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
+import org.springframework.shell.command.execution.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.command.CommandParser;
 import org.springframework.shell.command.CommandParser.CommandParserException;
 import org.springframework.shell.command.CommandRegistration;

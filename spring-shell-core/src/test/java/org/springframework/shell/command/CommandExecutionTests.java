@@ -29,7 +29,8 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.shell.Availability;
 import org.springframework.shell.CommandNotCurrentlyAvailable;
-import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
+import org.springframework.shell.command.execution.CommandExecution;
+import org.springframework.shell.command.execution.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 
 import static org.assertj.core.api.Assertions.assertThat;

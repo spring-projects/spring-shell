@@ -24,7 +24,7 @@ import org.springframework.messaging.handler.annotation.support.HeadersMethodArg
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.shell.command.ArgumentHeaderMethodArgumentResolver;
 import org.springframework.shell.command.CommandContextMethodArgumentResolver;
-import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.command.execution.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.completion.RegistrationOptionsCompletionResolver;
 import org.springframework.shell.config.ShellConversionServiceSupplier;

@@ -39,9 +39,9 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandAlias;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandExceptionResolver;
-import org.springframework.shell.command.CommandExecution;
-import org.springframework.shell.command.CommandExecution.CommandExecutionException;
-import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.command.execution.CommandExecution;
+import org.springframework.shell.command.execution.CommandExecution.CommandExecutionException;
+import org.springframework.shell.command.execution.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
 import org.springframework.shell.command.CommandHandlingResult;
 import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
@@ -58,6 +58,8 @@ import org.springframework.util.StringUtils;
  * @author Eric Bottard
  * @author Janne Valkealahti
  */
+
+// Shit goes down here
 public class Shell {
 
 	private final static Logger log = LoggerFactory.getLogger(Shell.class);
@@ -196,7 +198,7 @@ public class Shell {
 		}
 
 		List<String> words = input.words();
-		String line = words.stream().collect(Collectors.joining(" ")).trim();
+		String line = String.join(" ", words).trim();
 		String command = findLongestCommand(line, false);
 
 		if (command == null) {
@@ -230,7 +232,7 @@ public class Shell {
 		}
 
 		Thread commandThread = Thread.currentThread();
-		Object sh = Signals.register("INT", () -> commandThread.interrupt());
+		Object sh = Signals.register("INT", commandThread::interrupt);
 
 		CommandExecution execution = CommandExecution.of(
 				argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal,
