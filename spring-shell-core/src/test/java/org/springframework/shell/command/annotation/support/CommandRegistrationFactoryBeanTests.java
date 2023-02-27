@@ -144,6 +144,71 @@ class CommandRegistrationFactoryBeanTests {
 		}
 	}
 
+
+	@Test
+	void setsOptionValuesWithBoolean() {
+		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command1", new Class[] { boolean.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
+		});
+		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command2", new Class[] { Boolean.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
+		});
+		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command3", new Class[] { Boolean.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
+		});
+		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command4", new Class[] { Boolean.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
+		});
+	}
+
+	@Command
+	private static class OptionValuesWithBoolean {
+
+		@Command
+		void command1(@Option(defaultValue = "false") boolean arg) {
+		}
+
+		@Command
+		void command2(@Option(defaultValue = "false") Boolean arg) {
+		}
+
+		@Command
+		void command3(@Option Boolean arg) {
+		}
+
+		@Command
+		void command4(Boolean arg) {
+		}
+	}
+
 	private <T> ApplicationContextRunner configCommon(Class<T> type, T bean) {
 		return configCommon(type, bean, "command", new Class[0]);
 	}

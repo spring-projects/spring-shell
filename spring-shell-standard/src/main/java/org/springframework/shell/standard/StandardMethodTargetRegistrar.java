@@ -157,10 +157,10 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 							}
 							else {
 								if (ClassUtils.isAssignable(boolean.class, parameterType)) {
-									optionSpec.arity(OptionArity.ZERO);
+									optionSpec.arity(OptionArity.ZERO_OR_ONE);
 								}
 								else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
-									optionSpec.arity(OptionArity.ZERO);
+									optionSpec.arity(OptionArity.ZERO_OR_ONE);
 								}
 							}
 							if (!ObjectUtils.nullSafeEquals(so.defaultValue(), ShellOption.NONE)
@@ -198,10 +198,10 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 								.required()
 								.position(mp.getParameterIndex());
 							if (ClassUtils.isAssignable(boolean.class, parameterType)) {
-								optionSpec.arity(OptionArity.ZERO);
+								optionSpec.arity(OptionArity.ZERO_OR_ONE);
 							}
 							else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
-								optionSpec.arity(OptionArity.ZERO);
+								optionSpec.arity(OptionArity.ZERO_OR_ONE);
 							}
 							else {
 								optionSpec.arity(OptionArity.EXACTLY_ONE);

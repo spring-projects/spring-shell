@@ -255,10 +255,10 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 				}
 				else {
 					if (ClassUtils.isAssignable(boolean.class, parameterType)) {
-						optionSpec.arity(OptionArity.ZERO);
+						optionSpec.arity(OptionArity.ZERO_OR_ONE);
 					}
 					else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
-						optionSpec.arity(OptionArity.ZERO);
+						optionSpec.arity(OptionArity.ZERO_OR_ONE);
 					}
 				}
 
@@ -298,10 +298,10 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 				optionSpec.required();
 				optionSpec.position(mp.getParameterIndex());
 				if (ClassUtils.isAssignable(boolean.class, parameterType)) {
-					optionSpec.arity(OptionArity.ZERO);
+					optionSpec.arity(OptionArity.ZERO_OR_ONE);
 				}
 				else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
-					optionSpec.arity(OptionArity.ZERO);
+					optionSpec.arity(OptionArity.ZERO_OR_ONE);
 				}
 				else {
 					optionSpec.arity(OptionArity.EXACTLY_ONE);
