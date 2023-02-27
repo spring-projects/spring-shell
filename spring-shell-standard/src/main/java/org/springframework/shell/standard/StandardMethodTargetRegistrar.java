@@ -152,10 +152,10 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 							}
 							else {
 								if (ClassUtils.isAssignable(boolean.class, parameterType)) {
-									optionSpec.arity(OptionArity.ZERO);
+									optionSpec.arity(OptionArity.ZERO_OR_ONE);
 								}
 								else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
-									optionSpec.arity(OptionArity.ZERO);
+									optionSpec.arity(OptionArity.ZERO_OR_ONE);
 								}
 								else {
 									optionSpec.arity(OptionArity.EXACTLY_ONE);
@@ -196,10 +196,10 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar, App
 								.required()
 								.position(mp.getParameterIndex());
 							if (ClassUtils.isAssignable(boolean.class, parameterType)) {
-								optionSpec.arity(OptionArity.ZERO);
+								optionSpec.arity(OptionArity.ZERO_OR_ONE);
 							}
 							else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
-								optionSpec.arity(OptionArity.ZERO);
+								optionSpec.arity(OptionArity.ZERO_OR_ONE);
 							}
 							else {
 								optionSpec.arity(OptionArity.EXACTLY_ONE);

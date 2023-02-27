@@ -416,16 +416,29 @@ public class StandardMethodTargetRegistrarTests {
 		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getDefaultValue()).isEqualTo("false");
 		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).isRequired()).isFalse();
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getArityMax()).isEqualTo(1);
 
 		assertThat(catalog.getRegistrations().get("foo2")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo2").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getDefaultValue()).isEqualTo("true");
 		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).isRequired()).isFalse();
+		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getArityMax()).isEqualTo(1);
 
 		assertThat(catalog.getRegistrations().get("foo3")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo3").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).isRequired()).isFalse();
 		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getDefaultValue()).isEqualTo("false");
+		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getArityMax()).isEqualTo(1);
+
+		assertThat(catalog.getRegistrations().get("foo4")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo4").getOptions()).hasSize(1);
+		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).isRequired()).isTrue();
+		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getDefaultValue()).isNull();
+		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getArityMax()).isEqualTo(1);
 	}
 
 	@ShellComponent
@@ -441,6 +454,10 @@ public class StandardMethodTargetRegistrarTests {
 
 		@ShellMethod(value = "foo3")
 		public void foo3(@ShellOption boolean arg1) {
+		}
+
+		@ShellMethod(value = "foo4")
+		public void foo4(boolean arg1) {
 		}
 	}
 
