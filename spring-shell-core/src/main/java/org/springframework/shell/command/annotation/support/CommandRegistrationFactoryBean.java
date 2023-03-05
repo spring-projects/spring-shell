@@ -17,6 +17,7 @@ package org.springframework.shell.command.annotation.support;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,6 +39,8 @@ import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
 import org.springframework.messaging.handler.invocation.InvocableHandlerMethod;
 import org.springframework.shell.Availability;
 import org.springframework.shell.AvailabilityProvider;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandHandlingResult;
@@ -52,6 +55,7 @@ import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.command.annotation.OptionValues;
 import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.completion.CompletionProvider;
+import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
@@ -277,12 +281,25 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 				}
 
 				OptionValues ovAnn = mp.getParameterAnnotation(OptionValues.class);
-				if (ovAnn != null && StringUtils.hasText(ovAnn.ref())) {
-					CompletionProvider cr = this.applicationContext.getBean(ovAnn.ref(), CompletionProvider.class);
-					if (cr != null) {
-						optionSpec.completion(ctx -> cr.apply(ctx));
+				if (ovAnn != null) {
+					String[] providerBeanNames = ovAnn.provider();
+					if (providerBeanNames.length > 0) {
+						final List<CompletionProvider> resolvers = Arrays.stream(providerBeanNames)
+							.map(beanName -> this.applicationContext.getBean(beanName, CompletionProvider.class))
+							.collect(Collectors.toList());
+						optionSpec.completion(ctx -> {
+							return resolvers.stream()
+								.flatMap(resolver -> resolver.apply(ctx).stream())
+								.collect(Collectors.toList());
+						});
 					}
 				}
+				// if (ovAnn != null && StringUtils.hasText(ovAnn.ref())) {
+				// 	CompletionProvider cr = this.applicationContext.getBean(ovAnn.ref(), CompletionProvider.class);
+				// 	if (cr != null) {
+				// 		optionSpec.completion(ctx -> cr.apply(ctx));
+				// 	}
+				// }
 
 			}
 		}

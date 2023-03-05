@@ -62,8 +62,8 @@ public class InteractiveCompletionCommands {
 
 		@Command(command = "interactive-completion-1")
 		public String testRequiredValueAnnotation(
-				@Option(longNames = "arg1", required = true) @OptionValues(ref = "test1CompletionProvider") String arg1,
-				@Option(longNames = "arg2", required = true) @OptionValues(ref = "test2CompletionProvider")	String arg2
+				@Option(longNames = "arg1", required = true) @OptionValues(provider = "test1CompletionProvider") String arg1,
+				@Option(longNames = "arg2", required = true) @OptionValues(provider = "test2CompletionProvider") String arg2
 		) {
 				return "Hello " + arg1;
 		}
@@ -79,8 +79,8 @@ public class InteractiveCompletionCommands {
 		@Bean
 		CompletionProvider test2CompletionProvider() {
 			return ctx -> {
-				Test1ValuesProvider test1ValuesProvider = new Test1ValuesProvider();
-				return test1ValuesProvider.complete(ctx);
+				Test2ValuesProvider test2ValuesProvider = new Test2ValuesProvider();
+				return test2ValuesProvider.complete(ctx);
 			};
 		}
 	}

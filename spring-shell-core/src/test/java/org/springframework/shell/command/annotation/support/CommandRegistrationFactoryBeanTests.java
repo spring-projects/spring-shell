@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.command.annotation.support;
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -25,6 +27,8 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.CommandAvailability;
 import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.command.annotation.OptionValues;
+import org.springframework.shell.completion.CompletionProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -207,6 +211,35 @@ class CommandRegistrationFactoryBeanTests {
 		@Command
 		void command4(Boolean arg) {
 		}
+	}
+
+	@Test
+	void setsOptionWithCompletion() {
+		configCommon(OptionWithCompletion.class, new OptionWithCompletion(), "command1", new Class[] { String.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getCompletion()).isNotNull();
+		});
+	}
+
+	@Command
+	private static class OptionWithCompletion {
+
+		@Command
+		void command1(@Option(longNames = "arg") @OptionValues(provider = "completionProvider") String arg) {
+		}
+
+		@Bean
+		CompletionProvider completionProvider() {
+			return ctx -> {
+				return Collections.emptyList();
+			};
+		}
+
 	}
 
 	private <T> ApplicationContextRunner configCommon(Class<T> type, T bean) {

@@ -33,8 +33,9 @@ import java.lang.annotation.Target;
 public @interface OptionValues {
 
 	/**
-	 * Reference to a bean name
-	 * @return a bean name
+	 * Names of beans for {@link CompletionProvider}.
+	 *
+	 * @return names of CompletionProvider beans
 	 */
-	String ref() default "";
+	String[] provider() default {};
 }
