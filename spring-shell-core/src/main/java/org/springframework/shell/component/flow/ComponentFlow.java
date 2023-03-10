@@ -454,7 +454,7 @@ public interface ComponentFlow {
 						}
 						selector.setResourceLoader(resourceLoader);
 						selector.setTemplateExecutor(templateExecutor);
-						selector.setMaskCharater(input.getMaskCharacter());
+						selector.setMaskCharacter(input.getMaskCharacter());
 						if (StringUtils.hasText(input.getTemplateLocation())) {
 							selector.setTemplateLocation(input.getTemplateLocation());
 						}

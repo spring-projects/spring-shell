@@ -66,7 +66,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	 *
 	 * @param maskCharacter a mask character
 	 */
-	public void setMaskCharater(Character maskCharacter) {
+	public void setMaskCharacter(Character maskCharacter) {
 		this.maskCharacter = maskCharacter;
 	}
 
