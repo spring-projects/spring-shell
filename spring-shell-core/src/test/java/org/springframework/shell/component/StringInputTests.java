@@ -122,7 +122,7 @@ public class StringInputTests extends AbstractShellTests {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
 		component1.setPrintResults(true);
-		component1.setMaskCharater('*');
+		component1.setMaskCharacter('*');
 		component1.setResourceLoader(new DefaultResourceLoader());
 		component1.setTemplateExecutor(getTemplateExecutor());
 
