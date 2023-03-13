@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.shell.completion.CompletionProvider;
+
 /**
  * Annotation marking a method parameter which completion proposals should be
  * used.
