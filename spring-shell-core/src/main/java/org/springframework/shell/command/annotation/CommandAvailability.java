@@ -34,9 +34,9 @@ import org.springframework.shell.Availability;
 public @interface CommandAvailability {
 
 	/**
-	 * Names of supplier beans for {@link Availability}.
+	 * Names of provider beans for {@link Availability}.
 	 *
 	 * @return names of supplier beans
 	 */
-	String[] name() default {};
+	String[] provider() default {};
 }

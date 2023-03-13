@@ -71,7 +71,7 @@ public class AvailabilityCommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "availability-1")
-		@CommandAvailability(name = "testAvailability1AnnotationAvailability")
+		@CommandAvailability(provider = "testAvailability1AnnotationAvailability")
 		public String testAvailability1Annotation(
 		) {
 			return "Hello";

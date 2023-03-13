@@ -39,8 +39,6 @@ import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
 import org.springframework.messaging.handler.invocation.InvocableHandlerMethod;
 import org.springframework.shell.Availability;
 import org.springframework.shell.AvailabilityProvider;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandHandlingResult;
@@ -55,7 +53,6 @@ import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.command.annotation.OptionValues;
 import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.completion.CompletionProvider;
-import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
@@ -172,7 +169,7 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 		MergedAnnotation<CommandAvailability> caAnn = MergedAnnotations.from(method, SearchStrategy.TYPE_HIERARCHY)
 				.get(CommandAvailability.class);
 		if (caAnn.isPresent()) {
-			String[] refs = caAnn.getStringArray("name");
+			String[] refs = caAnn.getStringArray("provider");
 			List<AvailabilityProvider> avails = Stream.of(refs)
 				.map(r -> {
 					return this.applicationContext.getBean(r, AvailabilityProvider.class);

@@ -138,7 +138,7 @@ class CommandRegistrationFactoryBeanTests {
 	private static class AvailabilityIndicator {
 
 		@Command
-		@CommandAvailability(name = "testAvailability")
+		@CommandAvailability(provider = "testAvailability")
 		void command1() {
 		}
 
