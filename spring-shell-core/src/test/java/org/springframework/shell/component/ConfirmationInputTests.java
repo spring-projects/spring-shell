@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -180,5 +180,31 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		assertThat(run1Context).isNotNull();
 		assertThat(run1Context.getResultValue()).isNotNull();
 		assertThat(run1Context.getResultValue()).isTrue();
+	}
+
+	@Test
+	public void testResultUserInputInvalidInput() throws InterruptedException, IOException {
+		ComponentContext<?> empty = ComponentContext.empty();
+		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1");
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+
+		service.execute(() -> {
+			ConfirmationInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+			latch1.countDown();
+		});
+
+		TestBuffer testBuffer = new TestBuffer().append("x").cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+
+		assertThat(consoleOut()).contains("input is invalid");
+
+		ConfirmationInputContext run1Context = result1.get();
+
+		assertThat(run1Context).isNotNull();
+		assertThat(run1Context.getResultValue()).isNull();
 	}
 }
