@@ -13,16 +13,4 @@ Essentially, a few things needs to happen before you have a working Spring Shell
 You can get a full working Spring Shell application without defining any user-level commands
 as some basic built-in commands (such as `help` and `history`) are provided.
 
-[NOTE]
-====
-Throughout this documentation, we make references to configuring something by using
-annotations (mostly relates to use of `@ShellMethod` and `@ShellOption`) and to the
-programmatic way (which uses `CommandRegistration`).
-
-The programmatic model is how things are actually registered, even if you use annotations.
-The `@ShellMethod` and `@ShellOption` annotations are a legacy feature
-that we do not yet want to remove. `CommandRegistration` is the new development
-model where new features are added. We are most likely going to replace existing
-annotations with something better, to support new features in a
-`CommandRegistration` model.
-====
+include::using-shell-basics-reading.adoc[]

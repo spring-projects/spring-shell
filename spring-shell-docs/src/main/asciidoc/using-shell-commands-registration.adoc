@@ -16,6 +16,6 @@ part without breaking existing applications.
 
 include::using-shell-commands-registration-annotation.adoc[]
 
-include::using-shell-commands-registration-legacyannotation.adoc[]
-
 include::using-shell-commands-registration-programmatic.adoc[]
+
+include::using-shell-commands-registration-legacyannotation.adoc[]
