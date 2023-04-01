@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,10 @@ import javax.validation.Validator;
 import org.jline.terminal.Terminal;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.messaging.support.MessageBuilder;
@@ -191,7 +193,13 @@ public interface CommandExecution {
 
 		@Override
 		public Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
-			return conversionService.convert(paramValues.get(parameter.getParameterName()), parameter.getParameterType());
+			Object source = paramValues.get(parameter.getParameterName());
+			if (source == null) {
+				return null;
+			}
+			TypeDescriptor sourceType = new TypeDescriptor(ResolvableType.forClass(source.getClass()), null, null);
+			TypeDescriptor targetType = new TypeDescriptor(parameter);
+			return conversionService.convert(source, sourceType, targetType);
 		}
 
 	}

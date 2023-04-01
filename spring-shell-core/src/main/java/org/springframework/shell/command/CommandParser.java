@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.shell.Utils;
 import org.springframework.util.StringUtils;
 
@@ -280,7 +281,11 @@ public interface CommandParser {
 					if (!oargs.isEmpty() && !oargs.get(0).startsWith("-")) {
 						// as we now have a candicate option, try to see if there is a
 						// conversion we can do and the use it.
-						Object value = convertOptionType(o, oargs);
+						Object convertSource = oargs;
+						if (oargs.size() == 1) {
+							convertSource = oargs.get(0);
+						}
+						Object value = convertOptionType(o, convertSource);
 						results.add(new DefaultCommandParserResult(o, value));
 						requiredOptions.remove(o);
 					}
@@ -299,8 +304,11 @@ public interface CommandParser {
 
 		private Object convertOptionType(CommandOption option, Object value) {
 			if (conversionService != null && option.getType() != null && value != null) {
-				if (conversionService.canConvert(value.getClass(), option.getType().getRawClass())) {
-					value = conversionService.convert(value, option.getType().getRawClass());
+				Object source = value;
+				TypeDescriptor sourceType = new TypeDescriptor(ResolvableType.forClass(source.getClass()), null, null);
+				TypeDescriptor targetType = new TypeDescriptor(option.getType(), null, null);
+				if (conversionService.canConvert(sourceType, targetType)) {
+					value = conversionService.convert(source, sourceType, targetType);
 				}
 			}
 			return value;
@@ -472,8 +480,14 @@ public interface CommandParser {
 						value = Boolean.parseBoolean(arguments.get(0));
 					}
 				}
+				// see for collection section below
 				else if (type != null && type.isArray()) {
-					value = arguments.stream().collect(Collectors.toList()).toArray();
+					if (arguments.size() == 1) {
+						value = arguments.get(0);
+					}
+					else {
+						value = arguments.stream().collect(Collectors.toList());
+					}
 				}
 				// if it looks like type is a collection just get as list
 				// as conversion will happen later. we just need to know

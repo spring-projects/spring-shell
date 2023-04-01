@@ -419,7 +419,7 @@ public class CommandParserTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMapPositionalArgs11() {
+	public void testMapPositionalArgsNoTypeDefined() {
 		CommandOption option1 = longOption("arg1", 0, 1, 1);
 		CommandOption option2 = longOption("arg2", 1, 1, 2);
 		List<CommandOption> options = Arrays.asList(option1, option2);
@@ -430,7 +430,30 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results().get(1).option()).isSameAs(option2);
 		assertThat(results.results().get(0).value()).isEqualTo(Arrays.asList("1"));
 		// no type so we get raw list
-		assertThat(results.results().get(1).value()).isEqualTo(Arrays.asList("2"));
+		assertThat(results.results().get(1).value()).isEqualTo("2");
+	}
+
+	@Test
+	public void testMapPositionalArgsWhenTypeList() {
+		CommandOption option1 = CommandOption.of(
+				new String[] { "arg1" },
+				null,
+				null,
+				ResolvableType.forType(List.class),
+				true,
+				null,
+				0,
+				1,
+				1,
+				null,
+				null);
+
+		List<CommandOption> options = Arrays.asList(option1);
+		String[] args = new String[]{"1"};
+		CommandParserResults results = parser.parse(options, args);
+		assertThat(results.results()).hasSize(1);
+		assertThat(results.results().get(0).option()).isSameAs(option1);
+		assertThat(results.results().get(0).value()).isEqualTo(Arrays.asList("1"));
 	}
 
 	@Test

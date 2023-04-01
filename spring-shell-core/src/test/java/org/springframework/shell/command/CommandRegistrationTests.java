@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -211,6 +211,26 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 		assertThat(registration.getOptions().get(0).getShortNames()).containsExactly('v');
 		assertThat(registration.getOptions().get(0).getType()).isEqualTo(ResolvableType.forType(boolean.class));
 		assertThat(registration.getOptions().get(0).getLabel()).isEqualTo("mylabel");
+	}
+
+	@Test
+	public void testOptionWithResolvableType() {
+		ResolvableType rtype = ResolvableType.forClassWithGenerics(List.class, String.class);
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg")
+				.type(rtype)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+		assertThat(registration.getCommand()).isEqualTo("command1");
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0).getType()).satisfies(type -> {
+			assertThat(type).isEqualTo(rtype);
+		});
 	}
 
 	@Test
