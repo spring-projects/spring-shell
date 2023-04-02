@@ -175,12 +175,26 @@ public interface CommandRegistration {
 		OptionSpec shortNames(Character... names);
 
 		/**
-		 * Define a type for an option.
+		 * Define a type for an option. This method is a shortcut for
+		 * {@link #type(ResolvableType)} which is a preferred way to
+		 * define type with generics. Will override one from
+		 * {@link #type(ResolvableType)}.
 		 *
 		 * @param type the type
 		 * @return option spec for chaining
+		 * @see #type(ResolvableType)
 		 */
 		OptionSpec type(Type type);
+
+		/**
+		 * Define a {@link ResolvableType} for an option. This method is
+		 * a preferred way to define type with generics. Will override one
+		 * from {@link #type(Type)}.
+		 *
+		 * @param type the resolvable type
+		 * @return option spec for chaining
+		 */
+		OptionSpec type(ResolvableType type);
 
 		/**
 		 * Define a {@code description} for an option.
@@ -814,6 +828,12 @@ public interface CommandRegistration {
 		@Override
 		public OptionSpec type(Type type) {
 			this.type = ResolvableType.forType(type);
+			return this;
+		}
+
+		@Override
+		public OptionSpec type(ResolvableType type) {
+			this.type = type;
 			return this;
 		}
 

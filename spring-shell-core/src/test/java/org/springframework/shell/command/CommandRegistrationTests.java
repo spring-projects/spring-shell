@@ -214,6 +214,26 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
+	public void testOptionWithResolvableType() {
+		ResolvableType rtype = ResolvableType.forClassWithGenerics(List.class, String.class);
+		CommandRegistration registration = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg")
+				.type(rtype)
+				.and()
+			.withTarget()
+				.consumer(ctx -> {})
+				.and()
+			.build();
+		assertThat(registration.getCommand()).isEqualTo("command1");
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0).getType()).satisfies(type -> {
+			assertThat(type).isEqualTo(rtype);
+		});
+	}
+
+	@Test
 	public void testOptionWithRequired() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")

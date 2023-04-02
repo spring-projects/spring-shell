@@ -17,6 +17,7 @@
 package org.springframework.shell.standard;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -500,5 +501,32 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "foo1", prefix = "-")
 		public void foo1(@ShellOption("x") boolean arg1) {
 		}
+	}
+
+	@Test
+	void OptionWithCustomType() {
+		applicationContext = new AnnotationConfigApplicationContext(OptionWithCustomType.class);
+		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
+		registrar.register(catalog);
+
+		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
+		assertThat(catalog.getRegistrations().get("foo1")).satisfies(reg -> {
+			assertThat(reg.getOptions().get(0)).satisfies(option -> {
+				assertThat(option.getType().getGeneric(0).getType()).isEqualTo(Pojo.class);
+			});
+		});
+
+	}
+
+	@ShellComponent
+	public static class OptionWithCustomType {
+
+		@ShellMethod(value = "foo1", prefix = "-")
+		public void foo1(@ShellOption Set<Pojo> arg1) {
+		}
+	}
+
+	public static class Pojo {
+
 	}
 }
