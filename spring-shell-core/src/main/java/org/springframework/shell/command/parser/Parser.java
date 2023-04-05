@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
@@ -204,7 +205,8 @@ public interface Parser {
 						optionResults.add(OptionResult.of(o, null));
 					}
 					else {
-						Object value = convertOptionType(o, asdf);
+						Object toConvertValue = asdf.size() == 1 ? asdf.get(0) : asdf;
+						Object value = convertOptionType(o, toConvertValue);
 						optionResults.add(OptionResult.of(o, value));
 					}
 
@@ -362,8 +364,11 @@ public interface Parser {
 				return true;
 			}
 			if (conversionService != null && option.getType() != null && value != null) {
-				if (conversionService.canConvert(value.getClass(), option.getType().getRawClass())) {
-					value = conversionService.convert(value, option.getType().getRawClass());
+				Object source = value;
+				TypeDescriptor sourceType = new TypeDescriptor(ResolvableType.forClass(source.getClass()), null, null);
+				TypeDescriptor targetType = new TypeDescriptor(option.getType(), null, null);
+				if (conversionService.canConvert(sourceType, targetType)) {
+					value = conversionService.convert(source, sourceType, targetType);
 				}
 			}
 			return value;

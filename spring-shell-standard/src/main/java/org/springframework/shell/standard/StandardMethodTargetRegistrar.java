@@ -16,6 +16,7 @@
 package org.springframework.shell.standard;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -146,8 +147,9 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 						if (!longNames.isEmpty() || !shortNames.isEmpty()) {
 							log.debug("Registering longNames='{}' shortNames='{}'", longNames, shortNames);
 							Class<?> parameterType = mp.getParameterType();
+							Type genericParameterType = mp.getGenericParameterType();
 							OptionSpec optionSpec = builder.withOption()
-								.type(parameterType)
+								.type(genericParameterType)
 								.longNames(longNames.toArray(new String[0]))
 								.shortNames(shortNames.toArray(new Character[0]))
 								.position(mp.getParameterIndex())

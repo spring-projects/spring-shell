@@ -16,11 +16,12 @@
 package org.springframework.shell.samples.e2e;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
@@ -52,6 +53,13 @@ public class OptionConversionCommands {
 		@ShellMethod(key = LEGACY_ANNO + "option-conversion-customset", group = GROUP)
 		public String optionConversionCustomSetAnnotation(
 			@ShellOption Set<MyPojo> arg1
+		) {
+			return "Hello " + arg1;
+		}
+
+		@ShellMethod(key = LEGACY_ANNO + "option-conversion-customlist", group = GROUP)
+		public String optionConversionCustomListAnnotation(
+			@ShellOption List<MyPojo> arg1
 		) {
 			return "Hello " + arg1;
 		}
@@ -141,12 +149,13 @@ public class OptionConversionCommands {
 
 		@Bean
 		public CommandRegistration optionConversionCustomSetRegistration() {
-			return getBuilder()
+			ResolvableType rtype = ResolvableType.forClassWithGenerics(Set.class, MyPojo.class);
+			return CommandRegistration.builder()
 				.command(REG, "option-conversion-customset")
 				.group(GROUP)
 				.withOption()
 					.longNames("arg1")
-					.type(Set.class)
+					.type(rtype)
 					.and()
 				.withTarget()
 					.function(ctx -> {
@@ -183,11 +192,6 @@ public class OptionConversionCommands {
 		public Converter<String, MyPojo> stringToMyPojoConverter() {
 			return new StringToMyPojoConverter();
 		}
-
-		@Bean
-		public Converter<String, Set<MyPojo>> stringToMyPojoSetConverter() {
-			return new StringToMyPojoSetConverter();
-		}
 	}
 
 	public static class MyPojo {
@@ -216,16 +220,6 @@ public class OptionConversionCommands {
 		@Override
 		public MyPojo convert(String from) {
 			return new MyPojo(from);
-		}
-	}
-
-	static class StringToMyPojoSetConverter implements Converter<String, Set<MyPojo>> {
-
-		@Override
-		public Set<MyPojo> convert(String from) {
-			Set<MyPojo> set = new HashSet<>();
-			set.add(new MyPojo(from));
-			return set;
 		}
 	}
 }
