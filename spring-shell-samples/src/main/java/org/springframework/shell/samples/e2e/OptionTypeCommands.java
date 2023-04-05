@@ -216,6 +216,7 @@ public class OptionTypeCommands {
 				.withOption()
 					.longNames("arg1")
 					.type(String.class)
+					.position(0)
 					.required()
 					.and()
 				.withTarget()

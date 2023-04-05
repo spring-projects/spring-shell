@@ -37,6 +37,13 @@ class OptionTypeCommandsTests extends AbstractSampleTests {
 	}
 
 	@ParameterizedTest
+	@E2ESource(command = "option-type-string hi")
+	void optionTypeStringPositional(String command, boolean interactive) {
+		BaseShellSession<?> session = createSession(command, interactive);
+		assertScreenContainsText(session, "Hello hi");
+	}
+
+	@ParameterizedTest
 	@E2ESource(command = "option-type-boolean", reg = false)
 	void optionTypeBooleanWithAnno(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);

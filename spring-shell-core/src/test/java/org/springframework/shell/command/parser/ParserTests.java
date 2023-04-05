@@ -136,14 +136,17 @@ class ParserTests extends AbstractParsingTests {
 		@Test
 		void shouldHaveErrorResult2() {
 			register(ROOT4);
-			// ParseResult result = parse("root4", "--arg1", "value1", "--arg2", "value2");
 			ParseResult result = parse("root4", "--arg1", "--arg2");
 			assertThat(result).isNotNull();
-			assertThat(result.messageResults()).satisfiesExactly(message -> {
-				ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
-			});
-			// "101E:(pos 0): Unrecognised option '--arg2'"
-			// assertThat(result.messageResults().get(0).getMessage()).contains("xxx");
+
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
+				message -> {
+					ParserAssertions.assertThat(message.parserMessage()).hasCode(2000).hasType(ParserMessage.Type.ERROR);
+				},
+				message -> {
+					ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
+				}
+			);
 		}
 
 		@Test
@@ -339,4 +342,37 @@ class ParserTests extends AbstractParsingTests {
 			);
 		}
 	}
+
+	@Nested
+	class Positional {
+
+		@Test
+		void shouldGetPositionalArgWhenOneAsString() {
+			register(ROOT7_POSITIONAL_ONE_ARG_STRING);
+			ParseResult result = parse("root7", "a");
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("a");
+					assertThat(r.position()).isEqualTo(0);
+				}
+			);
+		}
+
+		@Test
+		void shouldGetPositionalArgWhenTwoAsString() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING);
+			ParseResult result = parse("root7", "a", "b");
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("a");
+					assertThat(r.position()).isEqualTo(0);
+				},
+				r -> {
+					assertThat(r.value()).isEqualTo("b");
+					assertThat(r.position()).isEqualTo(1);
+				}
+			);
+		}
+	}
+
 }

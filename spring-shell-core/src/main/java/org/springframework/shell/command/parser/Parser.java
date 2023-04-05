@@ -17,6 +17,7 @@ package org.springframework.shell.command.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -162,7 +163,6 @@ public interface Parser {
 			List<MessageResult> messageResults = new ArrayList<>();
 			if (registration != null) {
 				messageResults.addAll(commonMessageResults);
-				messageResults.addAll(validateOptionNotMissing(registration));
 				messageResults.addAll(validateOptionIsValid(registration));
 
 
@@ -182,7 +182,6 @@ public interface Parser {
 				List<CommandOption> optionsForArguments = registration.getOptions().stream()
 					.filter(o -> !resolvedOptions1.contains(o))
 					.filter(o -> o.getPosition() > -1)
-					.filter(o -> o.getArityMin() > -1)
 					.sorted(Comparator.comparingInt(o -> o.getPosition()))
 					.collect(Collectors.toList());
 
@@ -193,7 +192,11 @@ public interface Parser {
 
 				int i = 0;
 				for (CommandOption o : optionsForArguments) {
-					int j = i + o.getArityMax();
+					int aMax = o.getArityMax();
+					if (aMax < 0) {
+						aMax = optionsForArguments.size() == 1 ? Integer.MAX_VALUE : 1;
+					}
+					int j = i + aMax;
 					j = Math.min(argumentValues.size(), j);
 
 					List<String> asdf = argumentValues.subList(i, j);
@@ -211,6 +214,8 @@ public interface Parser {
 					i = j;
 				}
 
+				// can only validate after optionResults has been populated
+				messageResults.addAll(validateOptionNotMissing(registration));
 			}
 
 			return new ParseResult(registration, optionResults, argumentResults, messageResults, directiveResults);
@@ -369,11 +374,24 @@ public interface Parser {
 				.filter(o -> o.isRequired())
 				.collect(Collectors.toCollection(() -> new HashSet<>()));
 
-			optionResults.stream().map(or -> or.option()).forEach(o -> {
-				requiredOptions.remove(o);
-			});
+			List<String> argumentResultValues = argumentResults.stream().map(ar -> ar.value).collect(Collectors.toList());
+			optionResults.stream()
+				.filter(or -> or.value() != null)
+				.map(or -> or.option())
+				.forEach(o -> {
+					requiredOptions.remove(o);
+				});
+			Set<CommandOption> requiredOptions2 = requiredOptions.stream()
+				.filter(o -> {
+					if (argumentResultValues.isEmpty()) {
+						return true;
+					}
+					List<String> longNames = Arrays.asList(o.getLongNames());
+					return !Collections.disjoint(argumentResultValues, longNames);
+				})
+				.collect(Collectors.toSet());
 
-			return requiredOptions.stream()
+			return requiredOptions2.stream()
 				.map(o -> {
 					String ln = o.getLongNames() != null
 							? Stream.of(o.getLongNames()).collect(Collectors.joining(","))

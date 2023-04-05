@@ -181,6 +181,35 @@ abstract class AbstractParsingTests {
 			.and()
 		.build();
 
+	static final CommandRegistration ROOT7_POSITIONAL_ONE_ARG_STRING = CommandRegistration.builder()
+		.command("root7")
+		.withOption()
+			.longNames("arg1")
+			.type(String.class)
+			.position(0)
+			.and()
+		.withTarget()
+			.consumer(ctx -> {})
+			.and()
+		.build();
+
+	static final CommandRegistration ROOT7_POSITIONAL_TWO_ARG_STRING = CommandRegistration.builder()
+		.command("root7")
+		.withOption()
+			.longNames("arg1")
+			.type(String.class)
+			.position(0)
+			.and()
+		.withOption()
+			.longNames("arg2")
+			.type(String.class)
+			.position(1)
+			.and()
+		.withTarget()
+			.consumer(ctx -> {})
+			.and()
+		.build();
+
 	Map<String, CommandRegistration> registrations = new HashMap<>();
 
 	@BeforeEach
