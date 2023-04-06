@@ -27,6 +27,7 @@ import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
+import org.springframework.shell.context.ShellContext;
 
 @Configuration(proxyBeanMethods = false)
 public class CommandCatalogAutoConfiguration {
@@ -35,9 +36,10 @@ public class CommandCatalogAutoConfiguration {
 	@ConditionalOnMissingBean(CommandCatalog.class)
 	public CommandCatalog commandCatalog(ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
 			ObjectProvider<CommandResolver> commandResolvers,
-			ObjectProvider<CommandCatalogCustomizer> commandCatalogCustomizers) {
+			ObjectProvider<CommandCatalogCustomizer> commandCatalogCustomizers,
+			ShellContext shellContext) {
 		List<CommandResolver> resolvers = commandResolvers.orderedStream().collect(Collectors.toList());
-		CommandCatalog catalog = CommandCatalog.of(resolvers, null);
+		CommandCatalog catalog = CommandCatalog.of(resolvers, shellContext);
 		methodTargetRegistrars.orderedStream().forEach(resolver -> {
 			resolver.register(catalog);
 		});
