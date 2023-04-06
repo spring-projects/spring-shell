@@ -18,8 +18,8 @@ package org.springframework.shell.docs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandCatalogCustomizer;
+import org.springframework.shell.command.catalog.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalogCustomizer;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
 

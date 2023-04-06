@@ -19,7 +19,7 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
-import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
+import org.springframework.shell.command.execution.CommandExecution.CommandParserExceptionsException;
 
 /**
  * Handles {@link CommandParserExceptionsException}.

@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.command.execution.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.config.ShellConversionServiceSupplier;
 

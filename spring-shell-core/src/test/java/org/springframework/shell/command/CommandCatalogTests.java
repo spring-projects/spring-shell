@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.shell.command.catalog.CommandCatalog;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

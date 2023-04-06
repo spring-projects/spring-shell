@@ -24,7 +24,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
 import org.springframework.shell.command.CommandRegistration.Builder;

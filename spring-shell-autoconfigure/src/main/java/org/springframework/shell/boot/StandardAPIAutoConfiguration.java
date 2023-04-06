@@ -20,7 +20,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.MethodTargetRegistrar;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.EnumValueProvider;

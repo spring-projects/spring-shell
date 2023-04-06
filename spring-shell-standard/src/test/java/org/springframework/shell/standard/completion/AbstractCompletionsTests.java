@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;

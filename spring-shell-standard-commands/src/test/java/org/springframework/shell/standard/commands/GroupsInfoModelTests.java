@@ -18,7 +18,7 @@ package org.springframework.shell.standard.commands;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -31,7 +31,7 @@ import org.springframework.format.support.FormattingConversionService;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
 import org.springframework.shell.Shell;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 import org.springframework.shell.config.ShellConversionServiceSupplier;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.exit.ExitCodeMappings;

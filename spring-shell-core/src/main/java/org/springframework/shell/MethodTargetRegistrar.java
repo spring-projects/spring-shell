@@ -16,7 +16,7 @@
 
 package org.springframework.shell;
 
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.catalog.CommandCatalog;
 
 /**
  * Strategy interface for registering commands.

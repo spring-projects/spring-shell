@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
+import org.springframework.shell.command.execution.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.command.CommandParser.CommandParserException;
 
 import static org.assertj.core.api.Assertions.assertThat;
