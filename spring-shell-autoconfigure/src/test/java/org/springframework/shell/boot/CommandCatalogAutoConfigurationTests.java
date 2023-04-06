@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommandCatalogAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(CommandCatalogAutoConfiguration.class));
+			.withConfiguration(AutoConfigurations.of(CommandCatalogAutoConfiguration.class, ShellContextAutoConfiguration.class));
 
 	@Test
 	void defaultCommandCatalog() {

@@ -34,6 +34,7 @@ import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
 import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
 import org.springframework.shell.command.support.OptionNameModifierSupport;
 import org.springframework.shell.command.CommandResolver;
+import org.springframework.shell.context.ShellContext;
 
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
@@ -43,9 +44,10 @@ public class CommandCatalogAutoConfiguration {
 	@ConditionalOnMissingBean(CommandCatalog.class)
 	public CommandCatalog commandCatalog(ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
 			ObjectProvider<CommandResolver> commandResolvers,
-			ObjectProvider<CommandCatalogCustomizer> commandCatalogCustomizers) {
+			ObjectProvider<CommandCatalogCustomizer> commandCatalogCustomizers,
+			ShellContext shellContext) {
 		List<CommandResolver> resolvers = commandResolvers.orderedStream().collect(Collectors.toList());
-		CommandCatalog catalog = CommandCatalog.of(resolvers, null);
+		CommandCatalog catalog = CommandCatalog.of(resolvers, shellContext);
 		methodTargetRegistrars.orderedStream().forEach(resolver -> {
 			resolver.register(catalog);
 		});
