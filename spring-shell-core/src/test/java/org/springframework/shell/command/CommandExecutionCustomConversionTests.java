@@ -18,6 +18,7 @@ package org.springframework.shell.command;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -169,7 +170,7 @@ public class CommandExecutionCustomConversionTests {
 		assertThat(pojo1.method4Pojo2).isNotNull();
 		assertThat(pojo1.method4Pojo2.size()).isEqualTo(2);
 		assertThat(pojo1.method4Pojo2.iterator().next()).isInstanceOf(Pojo2.class);
-		assertThat(pojo1.method4Pojo2.stream().map(pojo -> pojo.arg).toList()).containsExactly("a", "b");
+		assertThat(pojo1.method4Pojo2.stream().map(pojo -> pojo.arg).collect(Collectors.toList())).containsExactly("a", "b");
 	}
 
 	@Test
@@ -193,7 +194,7 @@ public class CommandExecutionCustomConversionTests {
 		assertThat(pojo1.method4Pojo2).isNotNull();
 		assertThat(pojo1.method4Pojo2.size()).isEqualTo(2);
 		assertThat(pojo1.method4Pojo2.iterator().next()).isInstanceOf(Pojo2.class);
-		assertThat(pojo1.method4Pojo2.stream().map(pojo -> pojo.arg).toList()).containsExactly("a", "b");
+		assertThat(pojo1.method4Pojo2.stream().map(pojo -> pojo.arg).collect(Collectors.toList())).containsExactly("a", "b");
 	}
 
 	private CommandExecution build() {
