@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -29,7 +30,8 @@ public class OptionSnippets {
 
 	class Dump1Legacy {
 		// tag::option-with-annotation[]
-		public String example(@ShellOption(value = { "--argx" }) String arg1) {
+		@ShellMethod
+		public String example(@ShellOption(value = { "--arg" }) String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-with-annotation[]
@@ -37,7 +39,8 @@ public class OptionSnippets {
 
 	class Dump1 {
 		// tag::option-with-option-annotation[]
-		public String example(@Option(longNames = "argx") String arg1) {
+		@Command
+		public String example(@Option(longNames = "arg") String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-with-option-annotation[]
@@ -45,7 +48,8 @@ public class OptionSnippets {
 
 	class Dump7 {
 		// tag::option-with-annotation-without-prefix[]
-		public String example(@ShellOption(value = { "argx" }) String arg1) {
+		@ShellMethod
+		public String example(@ShellOption(value = { "arg" }) String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-with-annotation-without-prefix[]
@@ -53,6 +57,7 @@ public class OptionSnippets {
 
 	class Dump2 {
 		// tag::option-without-annotation[]
+		@ShellMethod
 		public String example(String arg1) {
 			return "Hello " + arg1;
 		}
@@ -99,10 +104,11 @@ public class OptionSnippets {
 		// end::option-with-annotation-default[]
 	}
 
+	@SuppressWarnings("unused")
 	public void dump1() {
 
 		// tag::option-registration-longarg[]
-		CommandRegistration.builder()
+		CommandRegistration registration = CommandRegistration.builder()
 			.withOption()
 				.longNames("arg1")
 				.and()
