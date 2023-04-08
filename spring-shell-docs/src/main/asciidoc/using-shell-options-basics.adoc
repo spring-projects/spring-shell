@@ -6,8 +6,8 @@ This section gives a generic idea how an option can be defined. Following
 sections, beyond basics, discuss more about how various option behaviour
 can be accomplished for a particular use case.
 
-include::using-shell-options-basics-annotation.adoc[]
+include::using-shell-options-basics-programmatic.adoc[]
 
-include::using-shell-options-basics-registration.adoc[]
+include::using-shell-options-basics-annotation.adoc[]
 
 include::using-shell-options-basics-legacyannotation.adoc[]

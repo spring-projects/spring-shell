@@ -1,5 +1,6 @@
 [[using-shell-options-basics-registration]]
-==== Registration
+[[using-shell-options-basics-programmatic]]
+==== Programmatic
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Programmatic way with `CommandRegistration` is to use `withOption` to define
