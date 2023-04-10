@@ -33,8 +33,8 @@ jobs:
           native-image-musl: ${{ matrix.musl }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          ./gradlew build nativeCompile -PspringShellSampleMusl=${{ matrix.musl }}
-      - uses: actions/upload-artifact@v2
+          ./gradlew build nativeCompile -PspringShellSampleMusl=${{ matrix.musl }} -x test
+      - uses: actions/upload-artifact@v3
         with:
           name: spring-shell-samples-${{ matrix.nickname }}
           retention-days: 1
