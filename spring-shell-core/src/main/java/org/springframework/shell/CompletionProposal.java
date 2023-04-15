@@ -49,6 +49,12 @@ public class CompletionProposal {
 	 */
 	private boolean dontQuote = false;
 
+	/**
+	 * Whether the proposal cant be completed further. By setting complete to false then it will not append an space
+	 * making it easier to continue tab completion
+	 */
+	private boolean complete = true;
+
 	public CompletionProposal(String value) {
 		this.value = this.displayText = value;
 	}
@@ -88,6 +94,16 @@ public class CompletionProposal {
 		this.category = category;
 		return this;
 	}
+
+	public CompletionProposal complete(boolean complete) {
+		this.complete = complete;
+		return this;
+	}
+
+	public boolean complete() {
+		return complete;
+	}
+
 
 	public CompletionProposal dontQuote(boolean dontQuote) {
 		this.dontQuote = dontQuote;
