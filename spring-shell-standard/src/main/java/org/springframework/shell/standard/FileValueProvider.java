@@ -41,19 +41,23 @@ public class FileValueProvider implements ValueProvider {
 
 	@Override
 	public List<CompletionProposal> complete(CompletionContext completionContext) {
-        String input = completionContext.currentWordUpToCursor();
-        int lastSlash = input.lastIndexOf(File.separatorChar);
-        Path dir = lastSlash > -1 ? Paths.get(input.substring(0, lastSlash+1)) : Paths.get("");
-        String prefix = input.substring(lastSlash + 1, input.length());
+		String input = completionContext.currentWordUpToCursor();
+		int lastSlash = input.lastIndexOf(File.separatorChar);
+		Path dir = lastSlash > -1 ? Paths.get(input.substring(0, lastSlash + 1)) : Paths.get("");
+		String prefix = input.substring(lastSlash + 1);
 
-        try {
-            return Files
-                    .find(dir, 1, (p, a) -> p.getFileName() != null && p.getFileName().toString().startsWith(prefix),
-                            FOLLOW_LINKS)
-                    .map(p -> new CompletionProposal(p.toString()))
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+		try {
+			return Files
+				.find(dir, 1, (p, a) -> p.getFileName() != null && p.getFileName().toString().startsWith(prefix),
+					FOLLOW_LINKS)
+				.map(p -> {
+					boolean directory = Files.isDirectory(p);
+					String value = p.toString() + (directory ? File.separatorChar : "");
+					return new CompletionProposal(value).complete(!directory);
+				})
+				.collect(Collectors.toList());
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 }

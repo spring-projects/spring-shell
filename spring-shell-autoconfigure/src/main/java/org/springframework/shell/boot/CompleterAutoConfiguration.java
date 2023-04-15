@@ -63,7 +63,7 @@ public class CompleterAutoConfiguration {
 					p.description(),
 					null,
 					null,
-					true)
+					p.complete())
 				)
 				.forEach(candidates::add);
 		}
