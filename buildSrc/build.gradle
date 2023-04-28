@@ -9,7 +9,8 @@ repositories {
 	gradlePluginPortal()
 	mavenCentral()
 	maven { url 'https://repo.spring.io/plugins-release/' }
-	maven { url "https://repo.spring.io/snapshot" }
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
 }
 
 ext {
