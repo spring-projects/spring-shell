@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.Availability;
 import org.springframework.shell.AvailabilityProvider;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.CommandAvailability;
 import org.springframework.shell.command.annotation.Option;
@@ -231,6 +232,78 @@ class CommandRegistrationFactoryBeanTests {
 
 		@Command
 		void command1(@Option(longNames = "arg") @OptionValues(provider = "completionProvider") String arg) {
+		}
+
+		@Bean
+		CompletionProvider completionProvider() {
+			return ctx -> {
+				return Collections.emptyList();
+			};
+		}
+
+	}
+
+	@Test
+	void setsOptionWithArity() {
+		configCommon(OptionWithArity.class, new OptionWithArity(), "command1", new Class[] { String.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(1);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
+		});
+		configCommon(OptionWithArity.class, new OptionWithArity(), "command2", new Class[] { String.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(1);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
+		});
+		configCommon(OptionWithArity.class, new OptionWithArity(), "command3", new Class[] { String.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(2);
+		});
+		configCommon(OptionWithArity.class, new OptionWithArity(), "command4", new Class[] { String.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(2);
+		});
+	}
+
+	@Command
+	private static class OptionWithArity {
+
+		@Command
+		void command1(@Option(longNames = "arg", arity = OptionArity.EXACTLY_ONE) String arg) {
+		}
+
+		@Command
+		void command2(@Option(longNames = "arg", arityMin = 1) String arg) {
+		}
+
+		@Command
+		void command3(@Option(longNames = "arg", arityMax = 2) String arg) {
+		}
+
+		@Command
+		void command4(@Option(longNames = "arg", arityMax = 2, arity = OptionArity.EXACTLY_ONE) String arg) {
 		}
 
 		@Bean

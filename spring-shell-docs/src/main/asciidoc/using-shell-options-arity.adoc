@@ -2,26 +2,29 @@
 === Arity
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-Sometimes, you want to have more fine control of how many parameters with an option
-are processed when parsing operations happen. Arity is defined as min and max
-values, where min must be zero or a positive integer and max has to be more or equal to min.
+Arity defines how many parameters option parsing takes.
 
-====
-[source, java, indent=0]
-----
-include::{snippets}/OptionSnippets.java[tag=option-registration-arityints]
-----
-====
+NOTE: There are limitations in a `legacy annotation` compared to `annotation`
+and `programmatic` use of arity settings. These are mentioned in notes in
+below samples.
 
-Arity can also be defined as an `OptionArity` enum, which are shortcuts
-shown in below table <<using-shell-options-arity-optionarity-table>>.
+[source,java,indent=0,role="primary"]
+.Programmatic
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zeroorone-programmatic]
+----
 
-====
-[source, java, indent=0]
+[source,java,indent=0,role="secondary"]
+.Annotation
 ----
-include::{snippets}/OptionSnippets.java[tag=option-registration-arityenum]
+include::{snippets}/OptionSnippets.java[tag=option-registration-zeroorone-annotation]
 ----
-====
+
+[source,java,indent=0,role="secondary"]
+.Legacy Annotation
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zeroorone-legacyannotation]
+----
 
 [[using-shell-options-arity-optionarity-table]]
 .OptionArity
@@ -44,26 +47,28 @@ include::{snippets}/OptionSnippets.java[tag=option-registration-arityenum]
 |1 / Integer MAX
 |===
 
-The annotation model supports defining only the max value of an arity.
 
-====
-[source, java, indent=0]
-----
-include::{snippets}/OptionSnippets.java[tag=option-with-annotation-arity]
-----
-====
+NOTE: `legacy annotation` doesn't support defining minimum arity.
 
-One of a use cases to manually define arity is to impose restrictions how
-many parameters option accepts.
-
-====
-[source, java, indent=0]
+[source,java,indent=0,role="primary"]
+.Programmatic
 ----
-include::{snippets}/OptionSnippets.java[tag=option-registration-aritystrings-sample]
+include::{snippets}/OptionSnippets.java[tag=option-registration-zerooronewithminmax-programmatic]
 ----
-====
 
-In above example we have option _arg1_ and it's defined as type _String[]_. Arity
+[source,java,indent=0,role="secondary"]
+.Annotation
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zerooronewithminmax-annotation]
+----
+
+[source,java,indent=0,role="secondary"]
+.Legacy Annotation
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zerooronewithminmax-legacyannotation]
+----
+
+In below example we have option _arg1_ and it's defined as type _String[]_. Arity
 defines that it needs at least 1 parameter and not more that 2. As seen in below
 spesific exceptions _TooManyArgumentsOptionException_ and
 _NotEnoughArgumentsOptionException_ are thrown to indicate arity mismatch.

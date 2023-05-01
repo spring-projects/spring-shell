@@ -155,14 +155,14 @@ public class OptionSnippets {
 			.build();
 		// end::option-registration-arityenum[]
 
-		// tag::option-registration-arityints[]
-		CommandRegistration.builder()
-			.withOption()
-				.longNames("arg1")
-				.arity(0, 1)
-				.and()
-			.build();
-		// end::option-registration-arityints[]
+		// // tag::option-registration-arityints[]
+		// CommandRegistration.builder()
+		// 	.withOption()
+		// 		.longNames("arg1")
+		// 		.arity(0, 1)
+		// 		.and()
+		// 	.build();
+		// // end::option-registration-arityints[]
 
 		// tag::option-registration-aritystrings-sample[]
 		CommandRegistration.builder()
@@ -288,4 +288,74 @@ public class OptionSnippets {
 
 	}
 
+	static class LegacyAnnotation {
+
+		// tag::option-registration-zeroorone-legacyannotation[]
+		@ShellMethod(key = "example")
+		String zeroOrOne(
+			@ShellOption(arity = 1) String arg)
+		{
+			return String.format("Hi '%s'", arg);
+		}
+		// end::option-registration-zeroorone-legacyannotation[]
+
+		// tag::option-registration-zerooronewithminmax-legacyannotation[]
+		@ShellMethod(key = "example")
+		String zeroOrOneWithMinMax(
+			@ShellOption(arity = 1) String arg)
+		{
+			return String.format("Hi '%s'", arg);
+		}
+		// end::option-registration-zerooronewithminmax-legacyannotation[]
+	}
+
+	static class Annotation {
+
+		// tag::option-registration-zeroorone-annotation[]
+		@Command(command = "example")
+		String zeroOrOne(
+			@Option(arity = OptionArity.ZERO_OR_ONE) String arg)
+		{
+			return String.format("Hi '%s'", arg);
+		}
+		// end::option-registration-zeroorone-annotation[]
+
+		// tag::option-registration-zerooronewithminmax-annotation[]
+		@Command(command = "example")
+		String zeroOrOneWithMinMax(
+			@Option(arityMin = 0, arityMax = 1) String arg)
+		{
+			return String.format("Hi '%s'", arg);
+		}
+		// end::option-registration-zerooronewithminmax-annotation[]
+
+	}
+
+	static class Registration {
+
+		// tag::option-registration-zeroorone-programmatic[]
+		CommandRegistration zeroOrOne() {
+			return CommandRegistration.builder()
+				.command("example")
+				.withOption()
+					.longNames("arg")
+					.arity(OptionArity.ZERO_OR_ONE)
+					.and()
+				.build();
+		}
+		// end::option-registration-zeroorone-programmatic[]
+
+		// tag::option-registration-zerooronewithminmax-programmatic[]
+		CommandRegistration zeroOrOneWithMinMax() {
+			return CommandRegistration.builder()
+				.command("example")
+				.withOption()
+					.longNames("arg")
+					.arity(0, 1)
+					.and()
+				.build();
+		}
+		// end::option-registration-zerooronewithminmax-programmatic[]
+
+	}
 }

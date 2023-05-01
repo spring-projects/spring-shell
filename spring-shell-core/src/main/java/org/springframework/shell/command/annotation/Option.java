@@ -74,6 +74,28 @@ public @interface Option {
 	 * Define option arity.
 	 *
 	 * @return option arity
+	 * @see #arityMin()
+	 * @see #arityMax()
 	 */
 	OptionArity arity() default OptionArity.NONE;
+
+	/**
+	 * Define option arity min. If Defined non-negative will be used instead of
+	 * {@link #arity()}. If {@code arityMax} is not set non-negative it is set to
+	 * same as this.
+	 *
+	 * @return option arity min
+	 * @see #arity()
+	 */
+	int arityMin() default -1;
+
+	/**
+	 * Define option arity max. If Defined non-negative will be used instead of
+	 * {@link #arity()}. If {@code arityMin} is not set non-negative it is set to
+	 * zero.
+	 *
+	 * @return option arity max
+	 * @see #arity()
+	 */
+	int arityMax() default -1;
 }

@@ -73,7 +73,7 @@ public class ArityCommands {
 
 		@Command(command = "arity-string-array")
 		public String testArityStringArrayAnnotation(
-				@Option(longNames = "arg1", defaultValue = "true", arity = OptionArity.ZERO_OR_MORE)
+				@Option(longNames = "arg1", defaultValue = "true", arityMax = 3)
 				String[] arg1
 		) {
 				return "Hello " + Arrays.asList(arg1);

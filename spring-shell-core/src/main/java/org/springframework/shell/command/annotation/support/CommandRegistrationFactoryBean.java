@@ -251,7 +251,22 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 				optionSpec.shortNames(shortNames.toArray(new Character[0]));
 				optionSpec.position(mp.getParameterIndex());
 				optionSpec.description(so.description());
-				if (so.arity() != OptionArity.NONE) {
+				int arityMin = so.arityMin();
+				int arityMax = so.arityMax();
+				if (arityMin > -1) {
+					if (arityMax < arityMin) {
+						arityMax = arityMin;
+					}
+				}
+				else if (arityMax > -1) {
+					if (arityMin < 0) {
+						arityMin = 0;
+					}
+				}
+				if (arityMin > -1 && arityMax > -1) {
+					optionSpec.arity(arityMin, arityMax);
+				}
+				else if (so.arity() != OptionArity.NONE) {
 					optionSpec.arity(so.arity());
 				}
 				else {
