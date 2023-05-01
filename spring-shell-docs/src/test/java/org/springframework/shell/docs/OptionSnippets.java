@@ -307,6 +307,28 @@ public class OptionSnippets {
 			return String.format("Hi '%s'", arg);
 		}
 		// end::option-registration-zerooronewithminmax-legacyannotation[]
+
+		// tag::option-optional-legacyannotation[]
+		void optionalOption(
+			@ShellOption(defaultValue = ShellOption.NULL) String arg
+		) {
+		}
+		// end::option-optional-legacyannotation[]
+
+		// tag::option-mandatory-legacyannotation[]
+		void mandatoryOption(
+			@ShellOption() String arg
+		) {
+		}
+		// end::option-mandatory-legacyannotation[]
+
+		// tag::option-default-legacyannotation[]
+		void defaultOption(
+			@ShellOption(defaultValue = "default") String arg
+		) {
+		}
+		// end::option-default-legacyannotation[]
+
 	}
 
 	static class Annotation {
@@ -328,6 +350,27 @@ public class OptionSnippets {
 			return String.format("Hi '%s'", arg);
 		}
 		// end::option-registration-zerooronewithminmax-annotation[]
+
+		// tag::option-optional-annotation[]
+		void optionalOption(
+			@Option(required = false) String arg
+		) {
+		}
+		// end::option-optional-annotation[]
+
+		// tag::option-mandatory-annotation[]
+		void mandatoryOption(
+			@Option(required = true) String arg
+		) {
+		}
+		// end::option-mandatory-annotation[]
+
+		// tag::option-default-annotation[]
+		void defaultOption(
+			@Option(defaultValue = "default") String arg
+		) {
+		}
+		// end::option-default-annotation[]
 
 	}
 
@@ -356,6 +399,42 @@ public class OptionSnippets {
 				.build();
 		}
 		// end::option-registration-zerooronewithminmax-programmatic[]
+
+		// tag::option-optional-programmatic[]
+		CommandRegistration optionalOption() {
+			return CommandRegistration.builder()
+				.command("optionalOption")
+				.withOption()
+					.longNames("arg")
+					.required(false)
+					.and()
+				.build();
+		}
+		// end::option-optional-programmatic[]
+
+		// tag::option-mandatory-programmatic[]
+		CommandRegistration mandatoryOption() {
+			return CommandRegistration.builder()
+				.command("optionalOption")
+				.withOption()
+					.longNames("arg")
+					.required()
+					.and()
+				.build();
+		}
+		// end::option-mandatory-programmatic[]
+
+		// tag::option-default-programmatic[]
+		CommandRegistration defaultOption() {
+			return CommandRegistration.builder()
+				.command("defaultOption")
+				.withOption()
+					.longNames("arg")
+					.defaultValue("default")
+					.and()
+				.build();
+		}
+		// end::option-default-programmatic[]
 
 	}
 }

@@ -7,18 +7,20 @@ Having a default value for an option is somewhat related to
 may want to know if the user defined an option and change behavior
 based on a default value:
 
-====
-[source, java, indent=0]
+[source,java,indent=0,role="primary"]
+.Programmatic
 ----
-include::{snippets}/OptionSnippets.java[tag=option-registration-default]
+include::{snippets}/OptionSnippets.java[tag=option-default-programmatic]
 ----
-====
 
-The annotation model also supports defining default values:
+[source,java,indent=0,role="secondary"]
+.Annotation
+----
+include::{snippets}/OptionSnippets.java[tag=option-default-annotation]
+----
 
-====
-[source, java, indent=0]
+[source,java,indent=0,role="secondary"]
+.Legacy Annotation
 ----
-include::{snippets}/OptionSnippets.java[tag=option-with-annotation-default]
+include::{snippets}/OptionSnippets.java[tag=option-default-legacyannotation]
 ----
-====
