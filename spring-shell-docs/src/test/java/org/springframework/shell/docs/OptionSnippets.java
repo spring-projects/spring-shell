@@ -372,6 +372,13 @@ public class OptionSnippets {
 		}
 		// end::option-default-annotation[]
 
+		// tag::option-label-annotation[]
+		void labelOption(
+			@Option(label = "MYLABEL") String arg
+		) {
+		}
+		// end::option-label-annotation[]
+
 	}
 
 	static class Registration {
@@ -436,5 +443,15 @@ public class OptionSnippets {
 		}
 		// end::option-default-programmatic[]
 
+		// tag::option-label-programmatic[]
+		CommandRegistration labelOption() {
+			return CommandRegistration.builder()
+				.withOption()
+					.longNames("arg")
+					.label("MYLABEL")
+					.and()
+				.build();
+		}
+		// end::option-label-programmatic[]
 	}
 }

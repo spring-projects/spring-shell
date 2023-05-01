@@ -71,6 +71,13 @@ public @interface Option {
 	String description() default "";
 
 	/**
+	 * Return a label of the option.
+	 *
+	 * @return label of the option
+	 */
+	String label() default "";
+
+	/**
 	 * Define option arity.
 	 *
 	 * @return option arity

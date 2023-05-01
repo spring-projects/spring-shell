@@ -305,14 +305,27 @@ class CommandRegistrationFactoryBeanTests {
 		@Command
 		void command4(@Option(longNames = "arg", arityMax = 2, arity = OptionArity.EXACTLY_ONE) String arg) {
 		}
+	}
 
-		@Bean
-		CompletionProvider completionProvider() {
-			return ctx -> {
-				return Collections.emptyList();
-			};
+	@Test
+	void setsOptionWithLabel() {
+		configCommon(OptionWithLabel.class, new OptionWithLabel(), "command1", new Class[] { String.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getLabel()).isEqualTo("label");
+		});
+	}
+
+	@Command
+	private static class OptionWithLabel {
+
+		@Command
+		void command1(@Option(longNames = "arg", label = "label") String arg) {
 		}
-
 	}
 
 	private <T> ApplicationContextRunner configCommon(Class<T> type, T bean) {
