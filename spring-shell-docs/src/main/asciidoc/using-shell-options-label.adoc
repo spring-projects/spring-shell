@@ -25,18 +25,15 @@ Defining label is then shown in `help`.
 ====
 [source, bash]
 ----
-my-shell:>help mycommand
+my-shell:>help labelOption
 NAME
-       mycommand -
+       labelOption -
 
 SYNOPSIS
-       mycommand --arg1 String --arg2 MYLABEL
+       labelOption --arg MYLABEL
 
 OPTIONS
-       --arg1 String
-       [Optional]
-
-       --arg2 MYLABEL
+       --arg MYLABEL
        [Optional]
 
 ----
