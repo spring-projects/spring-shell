@@ -30,7 +30,7 @@ result(model) ::= <<
 
 // component is running
 running(model) ::= <<
-<question_name(model)> <info(model)>
+<question_name(model)> <info(model)> <model.input>
 <message(model)>
 >>
 

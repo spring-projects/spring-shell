@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,6 +36,7 @@ import org.springframework.shell.component.ConfirmationInput.ConfirmationInputCo
 import org.springframework.shell.component.context.ComponentContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 public class ConfirmationInputTests extends AbstractShellTests {
 
@@ -148,6 +150,36 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("no").cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+		ConfirmationInputContext run1Context = result1.get();
+
+		assertThat(run1Context).isNotNull();
+		assertThat(run1Context.getResultValue()).isNotNull();
+		assertThat(run1Context.getResultValue()).isFalse();
+	}
+
+	@Test
+	public void testUserInputShown() throws InterruptedException, IOException {
+		ComponentContext<?> empty = ComponentContext.empty();
+		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1");
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+
+		service.execute(() -> {
+			ConfirmationInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+			latch1.countDown();
+		});
+
+		TestBuffer testBuffer = new TestBuffer().append("N");
+		write(testBuffer.getBytes());
+
+		await().atMost(Duration.ofSeconds(4))
+				.untilAsserted(() -> assertThat(consoleOut()).contains("N"));
+
+		testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
 		latch1.await(2, TimeUnit.SECONDS);
