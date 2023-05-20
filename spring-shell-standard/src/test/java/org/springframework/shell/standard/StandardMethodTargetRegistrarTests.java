@@ -437,8 +437,8 @@ public class StandardMethodTargetRegistrarTests {
 
 		assertThat(catalog.getRegistrations().get("foo4")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo4").getOptions()).hasSize(1);
-		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).isRequired()).isTrue();
-		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getDefaultValue()).isNull();
+		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).isRequired()).isFalse();
+		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getDefaultValue()).isEqualTo("false");
 		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getArityMin()).isEqualTo(0);
 		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getArityMax()).isEqualTo(1);
 	}

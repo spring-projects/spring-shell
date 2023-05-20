@@ -331,6 +331,8 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 				optionSpec.position(mp.getParameterIndex());
 				if (ClassUtils.isAssignable(boolean.class, parameterType)) {
 					optionSpec.arity(OptionArity.ZERO_OR_ONE);
+					optionSpec.required(false);
+					optionSpec.defaultValue("false");
 				}
 				else if (ClassUtils.isAssignable(Boolean.class, parameterType)) {
 					optionSpec.arity(OptionArity.ZERO_OR_ONE);

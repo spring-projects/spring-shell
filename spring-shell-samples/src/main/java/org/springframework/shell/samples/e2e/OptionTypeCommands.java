@@ -52,10 +52,11 @@ public class OptionTypeCommands {
 			@ShellOption(defaultValue = "false") boolean arg3,
 			@ShellOption() Boolean arg4,
 			@ShellOption(defaultValue = "true") Boolean arg5,
-			@ShellOption(defaultValue = "false") Boolean arg6
+			@ShellOption(defaultValue = "false") Boolean arg6,
+			boolean arg7
 		) {
-			return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s", arg1, arg2, arg3, arg4, arg5,
-					arg6);
+			return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s arg7=%s", arg1, arg2, arg3,
+					arg4, arg5, arg6, arg7);
 		}
 
 		@ShellMethod(key = LEGACY_ANNO + "option-type-integer", group = GROUP)
@@ -122,27 +123,16 @@ public class OptionTypeCommands {
 
 		@Command(command = "option-type-boolean")
 		public String optionTypeBooleanAnnotation(
-			@ShellOption()
-			@Option(longNames = "arg1")
-			boolean arg1,
-			@ShellOption(defaultValue = "true")
-			@Option(longNames = "arg2", defaultValue = "true")
-			boolean arg2,
-			@ShellOption(defaultValue = "false")
-			@Option(longNames = "arg3", defaultValue = "false")
-			boolean arg3,
-			@ShellOption()
-			@Option(longNames = "arg4")
-			Boolean arg4,
-			@ShellOption(defaultValue = "true")
-			@Option(longNames = "arg5", defaultValue = "true")
-			Boolean arg5,
-			@ShellOption(defaultValue = "false")
-			@Option(longNames = "arg6", defaultValue = "false")
-			Boolean arg6
+			@Option(longNames = "arg1") boolean arg1,
+			@Option(longNames = "arg2", defaultValue = "true") boolean arg2,
+			@Option(longNames = "arg3", defaultValue = "false") boolean arg3,
+			@Option(longNames = "arg4") Boolean arg4,
+			@Option(longNames = "arg5", defaultValue = "true") Boolean arg5,
+			@Option(longNames = "arg6", defaultValue = "false") Boolean arg6,
+			boolean arg7
 		) {
-			return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s", arg1, arg2, arg3, arg4, arg5,
-					arg6);
+			return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s arg7=%s", arg1, arg2, arg3,
+					arg4, arg5, arg6, arg7);
 		}
 
 		@Command(command = "option-type-integer")
@@ -261,6 +251,10 @@ public class OptionTypeCommands {
 					.type(Boolean.class)
 					.defaultValue("false")
 					.and()
+				.withOption()
+					.longNames("arg7")
+					.type(boolean.class)
+					.and()
 				.withTarget()
 					.function(ctx -> {
 						boolean arg1 = ctx.hasMappedOption("arg1") ? ctx.getOptionValue("arg1") : false;
@@ -269,8 +263,9 @@ public class OptionTypeCommands {
 						Boolean arg4 = ctx.getOptionValue("arg4");
 						Boolean arg5 = ctx.getOptionValue("arg5");
 						Boolean arg6 = ctx.getOptionValue("arg6");
-						return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s", arg1, arg2, arg3,
-								arg4, arg5, arg6);
+						boolean arg7 = ctx.hasMappedOption("arg7") ? ctx.getOptionValue("arg7") : false;
+						return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s arg7=%s", arg1,
+								arg2, arg3, arg4, arg5, arg6, arg7);
 					})
 					.and()
 				.build();

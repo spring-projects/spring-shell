@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.Availability;
 import org.springframework.shell.AvailabilityProvider;
+import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.annotation.Command;
@@ -192,6 +193,18 @@ class CommandRegistrationFactoryBeanTests {
 					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
 					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
 		});
+		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command5", new Class[] { boolean.class })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
+					assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(1);
+					assertThat(registration.getOptions().get(0).isRequired()).isFalse();
+					assertThat(registration.getOptions().get(0).getDefaultValue()).isEqualTo("false");
+		});
 	}
 
 	@Command
@@ -211,6 +224,10 @@ class CommandRegistrationFactoryBeanTests {
 
 		@Command
 		void command4(Boolean arg) {
+		}
+
+		@Command
+		void command5(boolean arg) {
 		}
 	}
 
