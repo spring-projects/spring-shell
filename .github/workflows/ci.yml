@@ -35,9 +35,32 @@ jobs:
           DISABLE_SAMPLES: ${{ matrix.disable-samples }}
         run: ./mvnw -B package
   publish:
+    runs-on: ubuntu-latest
     if: github.repository_owner == 'spring-projects'
     needs: [build]
-    name: Call Publish Snapshot
-    uses: spring-projects/spring-shell/.github/workflows/ci-publish.yml@2.1.x
-    secrets:
-      jfArtifactorySpring: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 17
+          cache: maven
+      - uses: jfrog/setup-jfrog-cli@v2
+        with:
+          version: 2.13.0
+        env:
+          JF_ARTIFACTORY_SPRING: ${{ secrets.jfArtifactorySpring }}
+      - name: Configure JFrog Cli
+        run: |
+          jfrog rt mvnc \
+            --server-id-deploy repo.spring.io \
+            --repo-deploy-releases release \
+            --repo-deploy-snapshots snapshot
+          echo JFROG_CLI_BUILD_NAME=spring-shell-21x >> $GITHUB_ENV
+          echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
+      - name: Build and Publish
+        env:
+          DISABLE_SAMPLES: true
+        run: |
+          jfrog rt mvn clean install -B -DskipTests
+          jfrog rt build-publish
