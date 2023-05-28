@@ -17,7 +17,6 @@
 		<spring-asciidoctor-backends.version>0.0.5</spring-asciidoctor-backends.version>
 		<asciidoctorj.version>2.5.1</asciidoctorj.version>
 		<jruby.version>9.2.17.0</jruby.version>
-		<spring-doc-resources.version>0.2.5</spring-doc-resources.version>
 	</properties>
 
 	<!-- This project artificially depends on all others so that the javadoc plugin can consolidate everything.-->
@@ -47,24 +46,6 @@
 		<plugins>
 			<!-- doc resources -->
 			<plugin>
-				<groupId>com.googlecode.maven-download-plugin</groupId>
-				<artifactId>download-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack-doc-resources</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>wget</goal>
-						</goals>
-						<configuration>
-							<url>https://repo.spring.io/release/io/spring/docresources/spring-doc-resources/${spring-doc-resources.version}/spring-doc-resources-${spring-doc-resources.version}.zip</url>
-							<unpack>true</unpack>
-							<outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
@@ -89,24 +70,6 @@
 			</plugin>
 
 			<!-- ASCIIDOC -->
-			<plugin>
-				<groupId>com.googlecode.maven-download-plugin</groupId>
-				<artifactId>download-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack-doc-resources</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>wget</goal>
-						</goals>
-						<configuration>
-							<url>https://repo.spring.io/release/io/spring/docresources/spring-doc-resources/${spring-doc-resources.version}/spring-doc-resources-${spring-doc-resources.version}.zip</url>
-							<unpack>true</unpack>
-							<outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
