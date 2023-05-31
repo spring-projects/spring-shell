@@ -138,6 +138,102 @@ class AstTests extends AbstractParsingTests {
 	}
 
 	@Test
+	void createsOptionNodesWithTwoOptionArg() {
+		register(ROOT3);
+		Token root3 = token("root3", TokenType.COMMAND, 0);
+		Token arg1 = token("--arg1", TokenType.OPTION, 1);
+		Token value1 = token("value1", TokenType.ARGUMENT, 2);
+		Token arg2 = token("--arg2", TokenType.OPTION, 3);
+		Token value2 = token("value2", TokenType.ARGUMENT, 4);
+		AstResult result = ast(root3, arg1, value1, arg2, value2);
+
+		assertThat(result).isNotNull();
+		assertThat(result.nonterminalNodes()).hasSize(1);
+		assertThat(result.nonterminalNodes().get(0)).isInstanceOf(CommandNode.class);
+		assertThat(result.nonterminalNodes().get(0)).satisfies(n -> {
+			CommandNode cn = (CommandNode)n;
+			assertThat(cn.getCommand()).isEqualTo("root3");
+			assertThat(cn.getChildren()).hasSize(2);
+			assertThat(cn.getChildren())
+				.filteredOn(on -> on instanceof OptionNode)
+				.extracting(on -> {
+					return ((OptionNode)on).getName();
+				})
+				.containsExactly("--arg1", "--arg2");
+			OptionNode on1 = (OptionNode) cn.getChildren().get(0);
+			assertThat(on1.getChildren()).hasSize(1);
+			OptionArgumentNode oan1 = (OptionArgumentNode) on1.getChildren().get(0);
+			assertThat(oan1.getValue()).isEqualTo("value1");
+			OptionNode on2 = (OptionNode) cn.getChildren().get(1);
+			assertThat(on2.getChildren()).hasSize(1);
+			OptionArgumentNode oan2 = (OptionArgumentNode) on2.getChildren().get(0);
+			assertThat(oan2.getValue()).isEqualTo("value2");
+		});
+	}
+
+	@Test
+	void createsOptionNodeWithShortOptionArg() {
+		register(ROOT3_SHORT_OPTION_A);
+		Token root3 = token("root3", TokenType.COMMAND, 0);
+		Token arg1 = token("-a", TokenType.OPTION, 1);
+		Token value1 = token("value1", TokenType.ARGUMENT, 2);
+		AstResult result = ast(root3, arg1, value1);
+
+		assertThat(result).isNotNull();
+		assertThat(result.nonterminalNodes()).hasSize(1);
+		assertThat(result.nonterminalNodes().get(0)).isInstanceOf(CommandNode.class);
+		assertThat(result.nonterminalNodes().get(0)).satisfies(n -> {
+			CommandNode cn = (CommandNode)n;
+			assertThat(cn.getCommand()).isEqualTo("root3");
+			assertThat(cn.getChildren()).hasSize(1);
+			assertThat(cn.getChildren())
+				.filteredOn(on -> on instanceof OptionNode)
+				.extracting(on -> {
+					return ((OptionNode)on).getName();
+				})
+				.containsExactly("-a");
+			OptionNode on = (OptionNode) cn.getChildren().get(0);
+			assertThat(on.getChildren()).hasSize(1);
+			OptionArgumentNode oan = (OptionArgumentNode) on.getChildren().get(0);
+			assertThat(oan.getValue()).isEqualTo("value1");
+		});
+	}
+
+	@Test
+	void createsOptionNodesWithTwoShortOptionArg() {
+		register(ROOT3_SHORT_OPTION_A_B);
+		Token root3 = token("root3", TokenType.COMMAND, 0);
+		Token arg1 = token("-a", TokenType.OPTION, 1);
+		Token value1 = token("value1", TokenType.ARGUMENT, 2);
+		Token arg2 = token("-b", TokenType.OPTION, 3);
+		Token value2 = token("value2", TokenType.ARGUMENT, 4);
+		AstResult result = ast(root3, arg1, value1, arg2, value2);
+
+		assertThat(result).isNotNull();
+		assertThat(result.nonterminalNodes()).hasSize(1);
+		assertThat(result.nonterminalNodes().get(0)).isInstanceOf(CommandNode.class);
+		assertThat(result.nonterminalNodes().get(0)).satisfies(n -> {
+			CommandNode cn = (CommandNode)n;
+			assertThat(cn.getCommand()).isEqualTo("root3");
+			assertThat(cn.getChildren()).hasSize(2);
+			assertThat(cn.getChildren())
+				.filteredOn(on -> on instanceof OptionNode)
+				.extracting(on -> {
+					return ((OptionNode)on).getName();
+				})
+				.containsExactly("-a", "-b");
+			OptionNode on1 = (OptionNode) cn.getChildren().get(0);
+			assertThat(on1.getChildren()).hasSize(1);
+			OptionArgumentNode oan1 = (OptionArgumentNode) on1.getChildren().get(0);
+			assertThat(oan1.getValue()).isEqualTo("value1");
+			OptionNode on2 = (OptionNode) cn.getChildren().get(1);
+			assertThat(on2.getChildren()).hasSize(1);
+			OptionArgumentNode oan2 = (OptionArgumentNode) on2.getChildren().get(0);
+			assertThat(oan2.getValue()).isEqualTo("value2");
+		});
+	}
+
+	@Test
 	void createOptionNodesWhenNoOptionArguments() {
 		register(ROOT3);
 		Token root3 = token("root3", TokenType.COMMAND, 0);

@@ -337,6 +337,70 @@ class LexerTests extends AbstractParsingTests {
 	}
 
 	@Test
+	void shortOptionWithValuesFromRoot() {
+		register(ROOT3_SHORT_OPTION_A);
+		List<Token> tokens = tokenize("root3", "-a", "value1");
+
+		assertThat(tokens).satisfiesExactly(
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.COMMAND)
+						.hasPosition(0)
+						.hasValue("root3");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.OPTION)
+						.hasPosition(1)
+						.hasValue("-a");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.ARGUMENT)
+						.hasPosition(2)
+						.hasValue("value1");
+				});
+	}
+
+	@Test
+	void shortOptionsWithValuesFromRoot() {
+		register(ROOT3_SHORT_OPTION_A_B);
+		List<Token> tokens = tokenize("root3", "-a", "value1", "-b", "value2");
+
+		assertThat(tokens).satisfiesExactly(
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.COMMAND)
+						.hasPosition(0)
+						.hasValue("root3");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.OPTION)
+						.hasPosition(1)
+						.hasValue("-a");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.ARGUMENT)
+						.hasPosition(2)
+						.hasValue("value1");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.OPTION)
+						.hasPosition(3)
+						.hasValue("-b");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.ARGUMENT)
+						.hasPosition(4)
+						.hasValue("value2");
+				});
+	}
+
+	@Test
 	void optionValueFromRoot() {
 		register(ROOT3);
 		List<Token> tokens = tokenize("root3", "--arg1", "value1");

@@ -251,6 +251,26 @@ class ParserTests extends AbstractParsingTests {
 			);
 			assertThat(result.messageResults()).isEmpty();
 		}
+
+		@Test
+		void shouldFindTwoLongOptionArgument() {
+			register(ROOT3_OPTION_ARG1_ARG2);
+			ParseResult result = parse("root3", "--arg1", "value1", "--arg2", "value2");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("value1");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+					assertThat(r.value()).isEqualTo("value2");
+				}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
 	}
 
 	@Nested
@@ -260,6 +280,58 @@ class ParserTests extends AbstractParsingTests {
 		void shouldFindShortOption() {
 			register(ROOT3_SHORT_OPTION_A);
 			ParseResult result = parse("root3", "-a");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+					assertThat(r.value()).isNull();
+				}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
+		void shouldFindShortOptionWithArg() {
+			register(ROOT3_SHORT_OPTION_A);
+			ParseResult result = parse("root3", "-a", "aaa");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+					assertThat(r.value()).isEqualTo("aaa");
+				}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
+		void shouldFindShortOptions() {
+			register(ROOT3_SHORT_OPTION_A_B);
+			ParseResult result = parse("root3", "-a", "aaa", "-b", "bbb");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+					assertThat(r.value()).isEqualTo("aaa");
+				},
+				r -> {
+					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'b' });
+					assertThat(r.value()).isEqualTo("bbb");
+				}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
+		void shouldFindShortOptionsRequired() {
+			register(ROOT3_SHORT_OPTION_A_B_REQUIRED);
+			ParseResult result = parse("root3", "-a", "aaa", "-b", "bbb");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();

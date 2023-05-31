@@ -196,6 +196,9 @@ public class CommandModel {
 					for (String longName : commandOption.getLongNames()) {
 						tokens.put("--" + longName, new Token(longName, TokenType.OPTION));
 					}
+					for (Character shortName : commandOption.getShortNames()) {
+						tokens.put("-" + shortName, new Token(shortName.toString(), TokenType.OPTION));
+					}
 				});
 			}
 			return tokens;
