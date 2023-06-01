@@ -2,8 +2,6 @@ name: e2e
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * 1,3,5'
 
 jobs:
   build:
