@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.aot.hint.annotation.Reflective;
+import org.springframework.shell.AvailabilityReflectiveProcessor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,6 +40,7 @@ import org.springframework.stereotype.Component;
 @Target(ElementType.TYPE)
 @Documented
 @Component
+@Reflective(AvailabilityReflectiveProcessor.class)
 public @interface ShellComponent {
 
 	/**
