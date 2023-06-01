@@ -1,0 +1,24 @@
+name: Schedule e2e
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1,3,5'
+
+permissions: read-all
+
+jobs:
+  dispatch_e2e:
+    name: Dispatch e2e
+    if: github.repository_owner == 'spring-projects'
+    strategy:
+      matrix:
+        branch: [ main, 3.0.x ]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+    - name: Dispatch
+      run: gh workflow run e2e.yml -r ${{ matrix.branch }}
