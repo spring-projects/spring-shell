@@ -21,4 +21,6 @@ jobs:
       with:
         fetch-depth: 1
     - name: Dispatch
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       run: gh workflow run e2e.yml -r ${{ matrix.branch }}
