@@ -47,6 +47,20 @@ describe('builtin commands', () => {
      await expect(cli.exitCode()).resolves.toBe(0);
    };
 
+  /**
+   * test for command help succeed
+   */
+  const helpReturnsInfoDesc = 'command help returns info';
+  const helpCommand = ['help'];
+  const helpReturnsInfo = async (cli: Cli) => {
+    cli.run();
+    await waitForExpect(async () => {
+      const screen = cli.screen();
+      expect(screen).toEqual(expect.arrayContaining([expect.stringContaining('AVAILABLE COMMANDS')]));
+    });
+    await expect(cli.exitCode()).resolves.toBe(0);
+  };
+
   beforeEach(async () => {
     waitForExpect.defaults.timeout = waitForExpectDefaultTimeout;
     waitForExpect.defaults.interval = waitForExpectDefaultInterval;
@@ -88,6 +102,18 @@ describe('builtin commands', () => {
       },
       testTimeout
     );
+
+    it(
+      helpReturnsInfoDesc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...helpCommand]
+        });
+        await helpReturnsInfo(cli);
+      },
+      testTimeout
+    );
   });
 
   /**
@@ -119,6 +145,18 @@ describe('builtin commands', () => {
           options: [...options, ...commandHelpCommand]
         });
         await commandHelpReturnsInfo(cli);
+      },
+      testTimeout
+    );
+
+    it(
+      helpReturnsInfoDesc,
+      async () => {
+        cli = new Cli({
+          command: command,
+          options: [...options, ...helpCommand]
+        });
+        await helpReturnsInfo(cli);
       },
       testTimeout
     );
