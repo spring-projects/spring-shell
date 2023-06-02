@@ -1,6 +1,9 @@
 - name: area/components
   color: F9D0C4
   description: Belongs ui components
+- name: area/components-view
+  color: F9D0C4
+  description: Belongs ui view components
 - name: area/dependencies
   color: F9D0C4
   description: Belongs project dependencies
