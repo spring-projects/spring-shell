@@ -5,7 +5,8 @@ on:
   schedule:
     - cron: '0 0 * * 1,3,5'
 
-permissions: read-all
+permissions:
+  actions: write
 
 jobs:
   dispatch_e2e:
