@@ -61,11 +61,16 @@ public class JnaRuntimeHints implements RuntimeHintsRegistrar {
 				"org.jline.terminal.impl.jna.win.Kernel32$FOCUS_EVENT_RECORD",
 				"org.jline.terminal.impl.jna.win.Kernel32$SMALL_RECT",
 				"org.jline.terminal.impl.jna.win.Kernel32$UnionChar");
+
+		registerForMostReflection(reflection, "org.jline.terminal.impl.jna.linux.CLibrary$termios",
+				"org.jline.terminal.impl.jna.linux.CLibrary$winsize");
+
 		registerJni(jni);
 	}
 
 	private void registerResources(ResourceHints resource) {
 		resource.registerPattern("com/sun/jna/win32-x86-64/jnidispatch.dll");
+		resource.registerPattern("com/sun/jna/linux-x86-64/libjnidispatch.so");
 	}
 
 	private void registerProxies(ProxyHints proxy, String... classNames) {
