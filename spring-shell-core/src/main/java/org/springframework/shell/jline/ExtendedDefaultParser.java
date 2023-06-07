@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,10 +126,12 @@ public class ExtendedDefaultParser implements Parser {
 		}
 
 		if (current.length() > 0 || (line != null && cursor == line.length())) {
-			words.add(current.toString());
+			if (current.length() > 0) {
+				words.add(current.toString());
+			}
 		}
 
-		if (line != null && cursor == line.length()) {
+		if (line != null && cursor == line.length() && words.size() > 0) {
 			wordIndex = words.size() - 1;
 			wordCursor = words.get(words.size() - 1).length();
 		}
