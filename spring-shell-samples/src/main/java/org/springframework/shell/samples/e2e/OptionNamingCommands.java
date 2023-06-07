@@ -17,6 +17,8 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -28,12 +30,28 @@ public class OptionNamingCommands {
 	public static class LegacyAnnotation extends BaseE2ECommands {
 
 		@ShellMethod(key = LEGACY_ANNO + "option-naming-1", group = GROUP)
-		public void testOptionNaming1Annotation(
+		public String testOptionNaming1Annotation(
 			@ShellOption("from_snake") String snake,
 			@ShellOption("fromCamel") String camel,
 			@ShellOption("from-kebab") String kebab,
 			@ShellOption("FromPascal") String pascal
 		) {
+			return String.format("snake='%s' camel='%s' kebab='%s' pascal='%s' ", snake, camel, kebab, pascal);
+		}
+
+	}
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "option-naming-1")
+		public String testOptionNaming1Annotation(
+			@Option(longNames = "from_snake") String snake,
+			@Option(longNames = "fromCamel") String camel,
+			@Option(longNames = "from-kebab") String kebab,
+			@Option(longNames = "FromPascal") String pascal
+		) {
+			return String.format("snake='%s' camel='%s' kebab='%s' pascal='%s' ", snake, camel, kebab, pascal);
 		}
 
 	}
@@ -65,10 +83,16 @@ public class OptionNamingCommands {
 				.withOption()
 					.longNames("arg1")
 					.nameModifier(name -> "x" + name)
-					.required()
+					// .required()
 					.and()
 				.withTarget()
-					.consumer(ctx -> {})
+					.function(ctx -> {
+						String snake = ctx.getOptionValue("from_snake");
+						String camel = ctx.getOptionValue("fromCamel");
+						String kebab = ctx.getOptionValue("from-kebab");
+						String pascal = ctx.getOptionValue("FromPascal");
+						return String.format("snake='%s' camel='%s' kebab='%s' pascal='%s' ", snake, camel, kebab, pascal);
+					})
 					.and()
 				.build();
 		}

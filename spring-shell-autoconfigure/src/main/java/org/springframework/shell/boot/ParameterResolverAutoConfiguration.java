@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.springframework.messaging.handler.invocation.HandlerMethodArgumentRes
 import org.springframework.shell.command.ArgumentHeaderMethodArgumentResolver;
 import org.springframework.shell.command.CommandContextMethodArgumentResolver;
 import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.command.annotation.support.OptionMethodArgumentResolver;
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.completion.RegistrationOptionsCompletionResolver;
 import org.springframework.shell.config.ShellConversionServiceSupplier;
@@ -46,6 +47,7 @@ public class ParameterResolverAutoConfiguration {
 		resolvers.add(new HeadersMethodArgumentResolver());
 		resolvers.add(new CommandContextMethodArgumentResolver());
 		resolvers.add(new ShellOptionMethodArgumentResolver(shellConversionServiceSupplier.get(), null));
+		resolvers.add(new OptionMethodArgumentResolver(shellConversionServiceSupplier.get(), null));
 		return new CommandExecutionHandlerMethodArgumentResolvers(resolvers);
 	}
 }
