@@ -126,12 +126,10 @@ public class ExtendedDefaultParser implements Parser {
 		}
 
 		if (current.length() > 0 || (line != null && cursor == line.length())) {
-			if (current.length() > 0) {
-				words.add(current.toString());
-			}
+			words.add(current.toString());
 		}
 
-		if (line != null && cursor == line.length() && words.size() > 0) {
+		if (line != null && cursor == line.length()) {
 			wordIndex = words.size() - 1;
 			wordCursor = words.get(words.size() - 1).length();
 		}

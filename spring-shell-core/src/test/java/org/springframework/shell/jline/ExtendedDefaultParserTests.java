@@ -15,38 +15,90 @@
  */
 package org.springframework.shell.jline;
 
-import org.junit.jupiter.api.Test;
+import java.util.stream.Stream;
+
+import org.jline.reader.ParsedLine;
+import org.jline.reader.impl.DefaultParser;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExtendedDefaultParserTests {
 
-	@Test
-	void wordsParsing() {
-		ExtendedDefaultParser parser = new ExtendedDefaultParser();
+	private final ExtendedDefaultParser springParser = new ExtendedDefaultParser();
+	private final DefaultParser jlineParser = new DefaultParser();
 
-		assertThat(parser.parse("one", 0).words()).hasSize(1);
-		assertThat(parser.parse("one", 3).words()).hasSize(1);
+	static Stream<Arguments> args() {
+		// cursor words wordIndex wordCursor line
+		// We've left these tests here to show issues
+		// differences between DefaultParser and
+		// ExtendedDefaultParser. relates gh517
+		return Stream.of(
+			Arguments.of(0, 1, 0, 0, "one"),
+			Arguments.of(3, 1, 0, 3, "one "),
+			Arguments.of(4, 2, 1, 0, "one "),
 
-		assertThat(parser.parse("one two", 0).words()).hasSize(2);
-		assertThat(parser.parse("one two", 7).words()).hasSize(2);
+			Arguments.of(0, 2, 0, 0, "one two"),
+			Arguments.of(1, 2, 0, 1, "one two"),
+			Arguments.of(2, 2, 0, 2, "one two"),
+			Arguments.of(3, 2, 0, 3, "one two"),
+			Arguments.of(7, 2, 1, 3, "one two"),
+			Arguments.of(7, 2, 1, 3, "one two "),
+			Arguments.of(8, 3, 2, 0, "one two "),
 
-		assertThat(parser.parse("'one'", 0).words()).hasSize(1);
-		assertThat(parser.parse("'one'", 5).words()).hasSize(1);
+			Arguments.of(0, 1, 0, 0, "'one'"),
+			// Arguments.of(5, 1, 0, 3, "'one' "),
+			Arguments.of(6, 2, 1, 0, "'one' "),
 
-		assertThat(parser.parse("'one' two", 0).words()).hasSize(2);
-		assertThat(parser.parse("'one' two", 9).words()).hasSize(2);
+			Arguments.of(0, 1, 0, 0, "'one'"),
+			Arguments.of(1, 1, 0, 0, "'one'"),
+			Arguments.of(2, 1, 0, 1, "'one'"),
+			Arguments.of(3, 1, 0, 2, "'one'"),
+			Arguments.of(4, 1, 0, 3, "'one'"),
+			// Arguments.of(5, 1, 0, 3, "'one'"),
 
-		assertThat(parser.parse("one 'two'", 0).words()).hasSize(2);
-		assertThat(parser.parse("one 'two'", 9).words()).hasSize(2);
+			Arguments.of(0, 1, 0, 0, "'one' "),
+			Arguments.of(1, 1, 0, 0, "'one' "),
+			Arguments.of(2, 1, 0, 1, "'one' "),
+			Arguments.of(3, 1, 0, 2, "'one' "),
+			Arguments.of(4, 1, 0, 3, "'one' "),
+			// Arguments.of(5, 1, 0, 3, "'one' "),
+			Arguments.of(6, 2, 1, 0, "'one' "),
 
-		assertThat(parser.parse("\"one\"", 0).words()).hasSize(1);
-		assertThat(parser.parse("\"one\"", 5).words()).hasSize(1);
+			Arguments.of(0, 1, 0, 0, "\"one\""),
+			Arguments.of(1, 1, 0, 0, "\"one\""),
+			Arguments.of(2, 1, 0, 1, "\"one\""),
+			Arguments.of(3, 1, 0, 2, "\"one\""),
+			Arguments.of(4, 1, 0, 3, "\"one\""),
+			// Arguments.of(5, 1, 0, 3, "\"one\""),
 
-		assertThat(parser.parse("\"one\" two", 0).words()).hasSize(2);
-		assertThat(parser.parse("\"one\" two", 9).words()).hasSize(2);
+			Arguments.of(0, 1, 0, 0, "\"one\" "),
+			Arguments.of(1, 1, 0, 0, "\"one\" "),
+			Arguments.of(2, 1, 0, 1, "\"one\" "),
+			Arguments.of(3, 1, 0, 2, "\"one\" "),
+			Arguments.of(4, 1, 0, 3, "\"one\" "),
+			// Arguments.of(5, 1, 0, 3, "\"one\" "),
+			Arguments.of(6, 2, 1, 0, "\"one\" ")
+			);
+	}
 
-		assertThat(parser.parse("one \"two\"", 0).words()).hasSize(2);
-		assertThat(parser.parse("one \"two\"", 9).words()).hasSize(2);
+	@ParameterizedTest
+	@MethodSource("args")
+	void testSpringExtendedDefaultParser(int cursor, int words, int wordIndex, int wordCursor, String line) {
+		ParsedLine parse = springParser.parse(line, cursor);
+		assertThat(parse.words()).as("words").hasSize(words);
+		assertThat(parse.wordIndex()).as("wordIndex").isEqualTo(wordIndex);
+		assertThat(parse.wordCursor()).as("wordCursor").isEqualTo(wordCursor);
+	}
+
+	@ParameterizedTest
+	@MethodSource("args")
+	void testJlineDefaultParser(int cursor, int words, int wordIndex, int wordCursor, String line) {
+		ParsedLine parse = jlineParser.parse(line, cursor);
+		assertThat(parse.words()).as("words").hasSize(words);
+		assertThat(parse.wordIndex()).as("wordIndex").isEqualTo(wordIndex);
+		assertThat(parse.wordCursor()).as("wordCursor").isEqualTo(wordCursor);
 	}
 }

@@ -195,7 +195,9 @@ public class Shell {
 			return NO_INPUT;
 		}
 
-		List<String> words = input.words();
+		// List<String> words = input.words();
+		// gh-763
+		List<String> words = input.words().stream().filter(w -> w.length() > 0).collect(Collectors.toList());
 		String line = words.stream().collect(Collectors.joining(" ")).trim();
 		String command = findLongestCommand(line, false);
 
