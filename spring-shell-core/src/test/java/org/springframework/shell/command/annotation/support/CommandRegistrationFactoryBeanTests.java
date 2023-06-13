@@ -23,7 +23,6 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.Availability;
 import org.springframework.shell.AvailabilityProvider;
-import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.annotation.Command;
