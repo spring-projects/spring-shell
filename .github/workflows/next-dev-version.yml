@@ -18,5 +18,5 @@ jobs:
     - name: Commit Next Dev Changes
       uses: jvalkeal/build-zoo-handler@v0.0.4
       with:
-        commit-changes-branch: main
+        commit-changes-branch: 3.1.x
         commit-changes-message: Next development version
