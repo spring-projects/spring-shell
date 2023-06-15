@@ -3,41 +3,48 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Sample interactive",
+            "name": "commands interactive",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples"
+            "projectName": "spring-shell-sample-commands"
         },
         {
             "type": "java",
-            "name": "Sample help",
+            "name": "commands help",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-commands",
             "args": "help"
         },
         {
             "type": "java",
-            "name": "Sample fail noarg",
+            "name": "commands fail noarg",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-commands",
             "args": "fail"
         },
         {
             "type": "java",
-            "name": "Sample fail arg",
+            "name": "commands fail arg",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-commands",
             "args": "fail --elementType TYPE"
+        },
+        {
+            "type": "java",
+            "name": "e2e interactive",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.SpringShellSample",
+            "projectName": "spring-shell-sample-e2e"
         },
         {
             "type": "java",
             "name": "e2e reg error-handling",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg error-handling"
         },
         {
@@ -45,7 +52,7 @@
             "name": "e2e reg error-handling arg1 throw1",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg error-handling --arg1 throw1"
         },
         {
@@ -53,7 +60,7 @@
             "name": "e2e reg error-handling arg1 throw2",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg error-handling --arg1 throw2"
         },
         {
@@ -61,7 +68,7 @@
             "name": "e2e reg error-handling arg1 throw3",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg error-handling --arg1 throw3"
         },
         {
@@ -69,7 +76,7 @@
             "name": "e2e exit-code noarg",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg exit-code"
         },
         {
@@ -77,7 +84,7 @@
             "name": "e2e exit-code arg hi",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg exit-code --arg1 hi"
         },
         {
@@ -85,7 +92,7 @@
             "name": "e2e exit-code arg fun",
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
-            "projectName": "spring-shell-samples",
+            "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg exit-code --arg1 fun"
         }
     ]

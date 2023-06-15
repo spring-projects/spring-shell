@@ -31,7 +31,7 @@ Generic workflow to run `spring-shell-e2e-tests` is:
 [source, bash]
 ----
 spring-shell
-$ ./gradlew build nativeCompile -PspringShellSampleE2E=true -x test
+$ ./gradlew :spring-shell-samples:spring-shell-sample-e2e:build :spring-shell-samples:spring-shell-sample-e2e:nativeCompile -PspringShellSampleE2E=true -x test
 
 spring-shell/e2e/spring-shell-e2e
 $ npm install

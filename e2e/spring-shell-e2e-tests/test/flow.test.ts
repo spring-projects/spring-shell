@@ -5,8 +5,8 @@ import {
   nativeDesc,
   jarDesc,
   jarCommand,
-  nativeCommand,
-  jarOptions,
+  commandsNativeCommand,
+  commandsJarOptions,
   waitForExpectDefaultTimeout,
   waitForExpectDefaultInterval,
   testTimeout
@@ -71,7 +71,7 @@ describe('flow commands', () => {
   describe(jarDesc, () => {
     beforeAll(() => {
       command = jarCommand;
-      options = jarOptions;
+      options = commandsJarOptions;
     });
 
     it(
@@ -92,7 +92,7 @@ describe('flow commands', () => {
    */
   describe(nativeDesc, () => {
     beforeAll(() => {
-      command = nativeCommand;
+      command = commandsNativeCommand;
       options = [];
     });
 

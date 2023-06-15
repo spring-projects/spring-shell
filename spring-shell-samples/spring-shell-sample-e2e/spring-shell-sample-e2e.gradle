@@ -4,7 +4,7 @@ plugins {
 	id 'org.graalvm.buildtools.native'
 }
 
-description = 'Spring Shell Samples'
+description = 'Spring Shell Sample E2E'
 
 dependencies {
 	management platform(project(":spring-shell-management"))

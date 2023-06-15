@@ -1,0 +1,34 @@
+spring:
+  main:
+    banner-mode: off
+  shell:
+    ## pick global default option naming
+    # option:
+    #   naming:
+    #     case-type: noop
+    #     case-type: camel
+    #     case-type: snake
+    #     case-type: kebab
+    #     case-type: pascal
+    config:
+      env: SPRING_SHELL_SAMPLES_USER_HOME
+      location: "{userconfig}/spring-shell-samples"
+    history:
+      name: spring-shell-samples-history.log
+    command:
+      help:
+        grouping-mode: group
+      completion:
+        root-command: spring-shell-samples
+## disable console logging
+logging:
+  pattern:
+    console:
+## log debug from a cli
+#  file:
+#    name: shell.log
+#  level:
+#    root: debug
+#    org:
+#      springframework:
+#        shell: debug

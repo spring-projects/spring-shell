@@ -45,7 +45,6 @@ include 'spring-shell-core-test-support'
 include 'spring-shell-management'
 include 'spring-shell-dependencies'
 include 'spring-shell-docs'
-include 'spring-shell-samples'
 include 'spring-shell-standard'
 include 'spring-shell-standard-commands'
 include 'spring-shell-table'
@@ -56,12 +55,22 @@ file("${rootDir}/spring-shell-starters").eachDirMatch(~/spring-shell-starter.*/)
 	include "spring-shell-starters:${it.name}"
 }
 
+file("${rootDir}/spring-shell-samples").eachDirMatch(~/spring-shell-sample.*/) {
+	include "spring-shell-samples:${it.name}"
+}
+
 rootProject.children.each { project ->
 	if (project.name == 'spring-shell-starters') {
 		project.children.each { subproject ->
-		subproject.buildFileName = "${subproject.name}.gradle"
+			subproject.buildFileName = "${subproject.name}.gradle"
 		}
-	} else {
+	}
+	else if (project.name == 'spring-shell-samples') {
+		project.children.each { subproject ->
+			subproject.buildFileName = "${subproject.name}.gradle"
+		}
+	}
+	else {
 		project.buildFileName = "${project.name}.gradle"
 	}
 }

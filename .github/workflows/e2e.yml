@@ -42,9 +42,12 @@ jobs:
           name: spring-shell-samples-${{ matrix.nickname }}
           retention-days: 1
           path: |
-            spring-shell-samples/build/libs/*.jar
-            spring-shell-samples/build/native/nativeCompile/spring-shell-samples
-            spring-shell-samples/build/native/nativeCompile/spring-shell-samples.exe
+            spring-shell-samples/spring-shell-sample-commands/build/libs/*.jar
+            spring-shell-samples/spring-shell-sample-commands/build/native/nativeCompile/spring-shell-sample-commands
+            spring-shell-samples/spring-shell-sample-commands/build/native/nativeCompile/spring-shell-sample-commands.exe
+            spring-shell-samples/spring-shell-sample-e2e/build/libs/*.jar
+            spring-shell-samples/spring-shell-sample-e2e/build/native/nativeCompile/spring-shell-sample-e2e
+            spring-shell-samples/spring-shell-sample-e2e/build/native/nativeCompile/spring-shell-sample-e2e.exe
       - name: Upload Build Logs
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3

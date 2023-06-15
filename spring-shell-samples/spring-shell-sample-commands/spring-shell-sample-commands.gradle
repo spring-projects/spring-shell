@@ -1,0 +1,39 @@
+plugins {
+	id 'org.springframework.shell.sample'
+	id 'org.springframework.boot'
+	id 'org.graalvm.buildtools.native'
+}
+
+description = 'Spring Shell Sample Commands'
+
+dependencies {
+	management platform(project(":spring-shell-management"))
+	implementation project(':spring-shell-starters:spring-shell-starter-jna')
+	testImplementation project(':spring-shell-starters:spring-shell-starter-test')
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.awaitility:awaitility'
+}
+
+springBoot {
+	buildInfo()
+}
+
+if (project.hasProperty('springShellSampleE2E') && springShellSampleE2E.toBoolean()) {
+	bootJar {
+	   	archiveName = "$baseName.$extension"
+	}
+}
+
+graalvmNative {
+	metadataRepository {
+		enabled = true
+	}
+	binaries {
+		main {
+			if (project.hasProperty('springShellSampleMusl') && springShellSampleMusl.toBoolean()) {
+				buildArgs.add('--static')
+				buildArgs.add('--libc=musl')
+			}
+		}
+	}
+}
