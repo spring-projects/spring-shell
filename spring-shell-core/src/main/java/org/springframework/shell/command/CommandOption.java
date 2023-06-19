@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,14 @@ public interface CommandOption {
 	 * @return long names of an option
 	 */
 	String[] getLongNames();
+
+	/**
+	 * Gets a modified long names of an option. Set within a command registration if
+	 * option name modifier were used to have an info about original names.
+	 *
+	 * @return modified long names of an option
+	 */
+	String[] getLongNamesModified();
 
 	/**
 	 * Gets a short names of an option.
@@ -111,7 +119,7 @@ public interface CommandOption {
 	 * @return default command option
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description) {
-		return of(longNames, shortNames, description, null, false, null, null, null, null, null, null);
+		return of(longNames, null, shortNames, description, null, false, null, null, null, null, null, null);
 	}
 
 	/**
@@ -125,13 +133,14 @@ public interface CommandOption {
 	 */
 	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
 			ResolvableType type) {
-		return of(longNames, shortNames, description, type, false, null, null, null, null, null, null);
+		return of(longNames, null, shortNames, description, type, false, null, null, null, null, null, null);
 	}
 
 	/**
 	 * Gets an instance of a default {@link CommandOption}.
 	 *
 	 * @param longNames the long names
+	 * @param longNamesModified the modified long names
 	 * @param shortNames the short names
 	 * @param description the description
 	 * @param type the type
@@ -144,10 +153,10 @@ public interface CommandOption {
 	 * @param completion the completion
 	 * @return default command option
 	 */
-	public static CommandOption of(String[] longNames, Character[] shortNames, String description,
+	public static CommandOption of(String[] longNames, String[] longNamesModified, Character[] shortNames, String description,
 			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin,
 			Integer arityMax, String label, CompletionResolver completion) {
-		return new DefaultCommandOption(longNames, shortNames, description, type, required, defaultValue, position,
+		return new DefaultCommandOption(longNames, longNamesModified, shortNames, description, type, required, defaultValue, position,
 				arityMin, arityMax, label, completion);
 	}
 
@@ -157,6 +166,7 @@ public interface CommandOption {
 	public static class DefaultCommandOption implements CommandOption {
 
 		private String[] longNames;
+		private String[] longNamesModified;
 		private Character[] shortNames;
 		private String description;
 		private ResolvableType type;
@@ -168,11 +178,12 @@ public interface CommandOption {
 		private String label;
 		private CompletionResolver completion;
 
-		public DefaultCommandOption(String[] longNames, Character[] shortNames, String description,
+		public DefaultCommandOption(String[] longNames, String[] longNamesModified, Character[] shortNames, String description,
 				ResolvableType type, boolean required, String defaultValue, Integer position,
 				Integer arityMin, Integer arityMax, String label,
 				CompletionResolver completion) {
 			this.longNames = longNames != null ? longNames : new String[0];
+			this.longNamesModified = longNamesModified != null ? longNamesModified : new String[0];
 			this.shortNames = shortNames != null ? shortNames : new Character[0];
 			this.description = description;
 			this.type = type;
@@ -188,6 +199,11 @@ public interface CommandOption {
 		@Override
 		public String[] getLongNames() {
 			return longNames;
+		}
+
+		@Override
+		public String[] getLongNamesModified() {
+			return longNamesModified;
 		}
 
 		@Override

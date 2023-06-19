@@ -198,6 +198,11 @@ public interface CommandExecution {
 								messageBuilder.setHeader(ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n, r.value());
 								paramValues.put(n, r.value());
 							}
+							// need to provide backmapping for orinal names which were modified
+							for (String n : r.option().getLongNamesModified()) {
+								messageBuilder.setHeader(ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n, r.value());
+								paramValues.put(n, r.value());
+							}
 						}
 						if (r.option().getShortNames() != null) {
 							for (Character n : r.option().getShortNames()) {
