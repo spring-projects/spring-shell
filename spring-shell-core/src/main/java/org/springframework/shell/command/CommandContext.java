@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,8 +148,9 @@ public interface CommandContext {
 			return results.results().stream()
 				.filter(r -> {
 					Stream<String> l = Arrays.asList(r.option().getLongNames()).stream();
+					Stream<String> lm = Arrays.asList(r.option().getLongNamesModified()).stream();
 					Stream<String> s = Arrays.asList(r.option().getShortNames()).stream().map(n -> Character.toString(n));
-					return Stream.concat(l, s)
+					return Stream.concat(Stream.concat(l, lm), s)
 						.filter(o -> ObjectUtils.nullSafeEquals(o, name))
 						.findFirst()
 						.isPresent();

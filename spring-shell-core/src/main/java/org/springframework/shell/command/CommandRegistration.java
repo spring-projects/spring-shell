@@ -1245,11 +1245,13 @@ public interface CommandRegistration {
 			options = optionSpecs.stream()
 				.map(o -> {
 					String[] longNames = o.getLongNames();
+					String[] longNamesModified = null;
 					Function<String, String> modifier = o.getOptionNameModifier();
 					if (modifier != null) {
+						longNamesModified = Arrays.copyOf(longNames, longNames.length);
 						longNames = Arrays.stream(longNames).map(modifier).toArray(String[]::new);
 					}
-					return CommandOption.of(longNames, o.getShortNames(), o.getDescription(), o.getType(),
+					return CommandOption.of(longNames, longNamesModified, o.getShortNames(), o.getDescription(), o.getType(),
 							o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
 							o.getLabel(), o.getCompletion());
 					})
