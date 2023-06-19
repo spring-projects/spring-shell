@@ -539,4 +539,21 @@ public class CommandExecutionTests extends AbstractCommandTests {
 		Object result = execution.evaluate(r1, new String[]{"--arg1", "myarg1value"});
 		assertThat(result).isInstanceOf(CommandNotCurrentlyAvailable.class);
 	}
+
+	@Test
+	public void testExecutionWithModifiedLongOption() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.withOption()
+				.longNames("arg1")
+				.nameModifier(orig -> "x" + orig)
+				.and()
+			.withTarget()
+				.function(function1)
+				.and()
+			.build();
+		Object result = execution.evaluate(r1, new String[] { "command1", "--xarg1", "myarg1value" });
+		assertThat(result).isEqualTo("himyarg1value");
+	}
+
 }
