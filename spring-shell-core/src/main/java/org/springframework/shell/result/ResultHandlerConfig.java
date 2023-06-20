@@ -70,4 +70,10 @@ public class ResultHandlerConfig {
 			ShellContext shellContext, ObjectProvider<InteractiveShellRunner> interactiveApplicationRunner) {
 		return new ThrowableResultHandler(terminal, commandCatalog, shellContext, interactiveApplicationRunner);
 	}
+
+	@Bean
+	public CommandNotFoundResultHandler commandNotFoundResultHandler(Terminal terminal,
+		ObjectProvider<CommandNotFoundMessageProvider> provider) {
+		return new CommandNotFoundResultHandler(terminal, provider);
+	}
 }

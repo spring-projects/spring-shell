@@ -18,6 +18,7 @@ package org.springframework.shell;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -201,13 +202,14 @@ public class Shell {
 		String line = words.stream().collect(Collectors.joining(" ")).trim();
 		String command = findLongestCommand(line, false);
 
+		Map<String, CommandRegistration> registrations = commandRegistry.getRegistrations();
 		if (command == null) {
-			return new CommandNotFound(words);
+			return new CommandNotFound(words, new HashMap<>(registrations), input.rawText());
 		}
 
 		log.debug("Evaluate input with line=[{}], command=[{}]", line, command);
 
-		Optional<CommandRegistration> commandRegistration = commandRegistry.getRegistrations().values().stream()
+		Optional<CommandRegistration> commandRegistration = registrations.values().stream()
 			.filter(r -> {
 				if (r.getCommand().equals(command)) {
 					return true;
@@ -222,7 +224,7 @@ public class Shell {
 			.findFirst();
 
 		if (commandRegistration.isEmpty()) {
-			return new CommandNotFound(words);
+			return new CommandNotFound(words, new HashMap<>(registrations), input.rawText());
 		}
 
 		if (this.exitCodeMappings != null) {
