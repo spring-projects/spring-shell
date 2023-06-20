@@ -1,6 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
- *
+ * Copyright 2017-2023
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +17,10 @@ package org.springframework.shell;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.shell.command.CommandRegistration;
 
 /**
  * A result to be handled by the {@link ResultHandler} when no command could be mapped to user input
@@ -26,9 +28,17 @@ import java.util.stream.Collectors;
 public class CommandNotFound extends RuntimeException {
 
 	private final List<String> words;
+	private final Map<String, CommandRegistration> registrations;
+	private final String text;
 
 	public CommandNotFound(List<String> words) {
+		this(words, null, null);
+	}
+
+	public CommandNotFound(List<String> words, Map<String, CommandRegistration> registrations, String text) {
 		this.words = words;
+		this.registrations = registrations;
+		this.text = text;
 	}
 
 	@Override
@@ -43,5 +53,23 @@ public class CommandNotFound extends RuntimeException {
 	 */
 	public List<String> getWords(){
 		return new ArrayList<>(words);
+	}
+
+	/**
+	 * Gets command registrations known when this error was created.
+	 *
+	 * @return known command registrations
+	 */
+	public Map<String, CommandRegistration> getRegistrations() {
+		return registrations;
+	}
+
+	/**
+	 * Gets a raw text input.
+	 *
+	 * @return raw text input
+	 */
+	public String getText() {
+		return text;
 	}
 }
