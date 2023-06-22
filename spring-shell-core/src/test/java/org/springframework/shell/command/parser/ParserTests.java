@@ -445,6 +445,195 @@ class ParserTests extends AbstractParsingTests {
 				}
 			);
 		}
-	}
 
+		@Test
+		void noArgsGetsOnlyDefault() {
+			register(ROOT7_POSITIONAL_ONE_ARG_STRING_DEFAULT);
+			ParseResult result = parse("root7");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).isEmpty();
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("arg1default");
+				}
+			);
+		}
+
+		@Test
+		void positionOverridesDefault() {
+			register(ROOT7_POSITIONAL_ONE_ARG_STRING_DEFAULT);
+			ParseResult result = parse("root7", "a");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("a");
+					assertThat(r.position()).isEqualTo(0);
+				}
+			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("a");
+				}
+			);
+		}
+
+		@Test
+		void noArgsGetsOnlyDefaults() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
+			ParseResult result = parse("root7");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).isEmpty();
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("arg1default");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+					assertThat(r.value()).isEqualTo("arg2default");
+				}
+			);
+		}
+
+		@Test
+		void positionOverridesDefaultKeepsDefault() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
+			ParseResult result = parse("root7", "a");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("a");
+					assertThat(r.position()).isEqualTo(0);
+				}
+			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("a");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+					assertThat(r.value()).isEqualTo("arg2default");
+				}
+			);
+		}
+
+		@Test
+		void positionOverridesDefaultsKeepsDefault() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
+			ParseResult result = parse("root7", "a", "b");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("a");
+					assertThat(r.position()).isEqualTo(0);
+				},
+				r -> {
+					assertThat(r.value()).isEqualTo("b");
+					assertThat(r.position()).isEqualTo(1);
+				}
+			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("a");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+					assertThat(r.value()).isEqualTo("b");
+				}
+			);
+		}
+
+		@Test
+		void positionOverridesDefaultsKeepsDefaultWhenOption() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
+			ParseResult result = parse("root7", "--arg1", "a", "b");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("b");
+					assertThat(r.position()).isEqualTo(0);
+				}
+			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("a");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+					assertThat(r.value()).isEqualTo("b");
+				}
+			);
+		}
+
+		@Test
+		void positionWithLastHavingNoDefault() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT_ONE_NODEFAULT);
+			ParseResult result;
+
+			result = parse("root7", "--arg1", "a", "--arg2", "b", "c");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("c");
+					assertThat(r.position()).isEqualTo(0);
+				}
+			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("a");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+					assertThat(r.value()).isEqualTo("b");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg3" });
+					assertThat(r.value()).isEqualTo("c");
+				}
+			);
+		}
+
+		@Test
+		void tooManyArgsInMiddleShouldCreateError() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT_ONE_NODEFAULT);
+			ParseResult result;
+
+			result = parse("root7", "--arg1", "a", "b", "--arg2", "c", "d");
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
+				message -> {
+					ParserAssertions.assertThat(message.parserMessage()).hasCode(2004).hasType(ParserMessage.Type.ERROR);
+				}
+			);
+			assertThat(result.argumentResults()).satisfiesExactly(
+				r -> {
+					assertThat(r.value()).isEqualTo("b");
+					assertThat(r.position()).isEqualTo(0);
+				},
+				r -> {
+					assertThat(r.value()).isEqualTo("d");
+					assertThat(r.position()).isEqualTo(0);
+				}
+			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+					assertThat(r.value()).isEqualTo("a");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+					assertThat(r.value()).isEqualTo("c");
+				},
+				r -> {
+					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg3" });
+					assertThat(r.value()).isEqualTo("b");
+				}
+			);
+		}
+	}
 }

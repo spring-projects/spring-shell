@@ -149,6 +149,8 @@ public interface Parser {
 		private List<OptionNode> invalidOptionNodes = new ArrayList<>();
 		private List<ArgumentResult> argumentResults = new ArrayList<>();
 		private int commandArgumentPos = 0;
+		private int optionPos = -1;
+		private long expectedOptionCount;
 
 		DefaultNodeVisitor(CommandModel commandModel, ConversionService conversionService, ParserConfig config) {
 			this.commandModel = commandModel;
@@ -166,31 +168,27 @@ public interface Parser {
 				messageResults.addAll(commonMessageResults);
 				messageResults.addAll(validateOptionIsValid(registration));
 
-
-				// add options with default values
-				Set<CommandOption> resolvedOptions1 = optionResults.stream()
+				// we should already have options defined with arguments.
+				// go through positional arguments and fill using those and
+				// then fill from option default values.
+				Set<CommandOption> resolvedOptions = optionResults.stream()
 					.map(or -> or.option())
 					.collect(Collectors.toSet());
-				registration.getOptions().stream()
-					.filter(o -> o.getDefaultValue() != null)
-					.filter(o -> !resolvedOptions1.contains(o))
-					.forEach(o -> {
-						resolvedOptions1.add(o);
-						Object value = convertOptionType(o, o.getDefaultValue());
-						optionResults.add(OptionResult.of(o, value));
-					});
 
+				// get sorted list by position as we later match by order
 				List<CommandOption> optionsForArguments = registration.getOptions().stream()
-					.filter(o -> !resolvedOptions1.contains(o))
+					.filter(o -> !resolvedOptions.contains(o))
 					.filter(o -> o.getPosition() > -1)
 					.sorted(Comparator.comparingInt(o -> o.getPosition()))
 					.collect(Collectors.toList());
 
+				// leftover arguments to match into needed options
 				List<String> argumentValues = argumentResults.stream()
 					.sorted(Comparator.comparingInt(ar -> ar.position()))
 					.map(ar -> ar.value())
 					.collect(Collectors.toList());
 
+				// try to find matching arguments
 				int i = 0;
 				for (CommandOption o : optionsForArguments) {
 					int aMax = o.getArityMax();
@@ -202,11 +200,17 @@ public interface Parser {
 
 					List<String> asdf = argumentValues.subList(i, j);
 					if (asdf.isEmpty()) {
-						optionResults.add(OptionResult.of(o, null));
+						// don't arguments so only add if we know
+						// it's going to get added later via default value
+						if (o.getDefaultValue() == null) {
+							resolvedOptions.add(o);
+							optionResults.add(OptionResult.of(o, null));
+						}
 					}
 					else {
 						Object toConvertValue = asdf.size() == 1 ? asdf.get(0) : asdf;
 						Object value = convertOptionType(o, toConvertValue);
+						resolvedOptions.add(o);
 						optionResults.add(OptionResult.of(o, value));
 					}
 
@@ -215,6 +219,16 @@ public interface Parser {
 					}
 					i = j;
 				}
+
+				// possibly fill in from default values
+				registration.getOptions().stream()
+					.filter(o -> o.getDefaultValue() != null)
+					.filter(o -> !resolvedOptions.contains(o))
+					.forEach(o -> {
+						resolvedOptions.add(o);
+						Object value = convertOptionType(o, o.getDefaultValue());
+						optionResults.add(OptionResult.of(o, value));
+					});
 
 				// can only validate after optionResults has been populated
 				messageResults.addAll(validateOptionNotMissing(registration));
@@ -234,6 +248,7 @@ public interface Parser {
 
 		@Override
 		protected void onEnterRootCommandNode(CommandNode node) {
+			expectedOptionCount = optionCountInCommand(node);
 			resolvedCommmand.add(node.getCommand());
 		}
 
@@ -243,6 +258,7 @@ public interface Parser {
 
 		@Override
 		protected void onEnterCommandNode(CommandNode node) {
+			expectedOptionCount = optionCountInCommand(node);
 			resolvedCommmand.add(node.getCommand());
 		}
 
@@ -254,6 +270,7 @@ public interface Parser {
 
 		@Override
 		protected void onEnterOptionNode(OptionNode node) {
+			optionPos++;
 			commandArgumentPos = 0;
 			currentOptions.clear();
 			currentOptionArgument.clear();
@@ -307,16 +324,40 @@ public interface Parser {
 					int max = currentOption.getArityMax() > 0 ? currentOption.getArityMax() : Integer.MAX_VALUE;
 					max = Math.min(max, currentOptionArgument.size());
 					List<String> toUse = currentOptionArgument.subList(0, max);
+					List<String> toUnused = currentOptionArgument.subList(max, currentOptionArgument.size());
+					toUnused.forEach(a -> {
+						argumentResults.add(ArgumentResult.of(a, commandArgumentPos++));
+					});
 
-					if (currentOption.getArityMin() > -1 && currentOptionArgument.size() < currentOption.getArityMin()) {
-						String arg = currentOption.getLongNames()[0];
-						commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
-								currentOptionArgument.size()));
+					// if we're not in a last option
+					// "--arg1 a b --arg2 c" vs "--arg1 a --arg2 b c"
+					// we know to impose restriction to argument count,
+					// last option is different as we can't really fail
+					// because number of argument to eat dependes on arity
+					// and rest would go back to positional args.
+					if (optionPos + 1 < expectedOptionCount) {
+						if (currentOption.getArityMin() > -1 && currentOptionArgument.size() < currentOption.getArityMin()) {
+							String arg = currentOption.getLongNames()[0];
+							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
+									currentOptionArgument.size()));
+						}
+						else if (currentOption.getArityMax() > -1 && currentOptionArgument.size() > currentOption.getArityMax()) {
+							String arg = currentOption.getLongNames()[0];
+							commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
+									currentOption.getArityMax()));
+						}
 					}
-					else if (currentOption.getArityMax() > -1 && currentOptionArgument.size() > currentOption.getArityMax()) {
-						String arg = currentOption.getLongNames()[0];
-						commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
-								currentOption.getArityMax()));
+					else {
+						if (currentOption.getArityMin() > -1 && toUse.size() < currentOption.getArityMin()) {
+							String arg = currentOption.getLongNames()[0];
+							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
+									toUse.size()));
+						}
+						else if (currentOption.getArityMax() > -1 && toUse.size() > currentOption.getArityMax()) {
+							String arg = currentOption.getLongNames()[0];
+							commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
+									currentOption.getArityMax()));
+						}
 					}
 
 					Object value = null;
@@ -414,6 +455,13 @@ public interface Parser {
 					return MessageResult.of(ParserMessage.UNRECOGNISED_OPTION, 0, on.getName());
 				})
 				.collect(Collectors.toList());
+		}
+
+		private static long optionCountInCommand(CommandNode node) {
+			if (node == null) {
+				return 0;
+			}
+			return node.getChildren().stream().filter(n -> n instanceof OptionNode).count();
 		}
 	}
 }

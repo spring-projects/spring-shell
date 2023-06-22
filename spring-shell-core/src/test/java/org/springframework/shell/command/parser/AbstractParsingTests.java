@@ -23,6 +23,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.parser.Ast.AstResult;
 import org.springframework.shell.command.parser.Lexer.LexerResult;
 import org.springframework.shell.command.parser.Parser.ParseResult;
@@ -245,6 +246,67 @@ abstract class AbstractParsingTests {
 			.longNames("arg2")
 			.type(String.class)
 			.position(1)
+			.and()
+		.withTarget()
+			.consumer(ctx -> {})
+			.and()
+		.build();
+
+	static final CommandRegistration ROOT7_POSITIONAL_ONE_ARG_STRING_DEFAULT = CommandRegistration.builder()
+		.command("root7")
+		.withOption()
+			.longNames("arg1")
+			.defaultValue("arg1default")
+			.type(String.class)
+			.position(0)
+			.and()
+		.withTarget()
+			.consumer(ctx -> {})
+			.and()
+		.build();
+
+	static final CommandRegistration ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT = CommandRegistration.builder()
+		.command("root7")
+		.withOption()
+			.longNames("arg1")
+			.defaultValue("arg1default")
+			.type(String.class)
+			.arity(OptionArity.EXACTLY_ONE)
+			.position(0)
+			.and()
+		.withOption()
+			.longNames("arg2")
+			.defaultValue("arg2default")
+			.type(String.class)
+			.arity(OptionArity.EXACTLY_ONE)
+			.position(1)
+			.and()
+		.withTarget()
+			.consumer(ctx -> {})
+			.and()
+		.build();
+
+	static final CommandRegistration ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT_ONE_NODEFAULT = CommandRegistration.builder()
+		.command("root7")
+		.withOption()
+			.longNames("arg1")
+			.defaultValue("arg1default")
+			.type(String.class)
+			.arity(OptionArity.EXACTLY_ONE)
+			.position(0)
+			.and()
+		.withOption()
+			.longNames("arg2")
+			.defaultValue("arg2default")
+			.type(String.class)
+			.arity(OptionArity.EXACTLY_ONE)
+			.position(1)
+			.and()
+		.withOption()
+			.longNames("arg3")
+			.type(String.class)
+			.arity(OptionArity.EXACTLY_ONE)
+			.position(2)
 			.and()
 		.withTarget()
 			.consumer(ctx -> {})
