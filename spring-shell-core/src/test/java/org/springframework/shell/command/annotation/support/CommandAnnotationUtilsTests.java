@@ -133,13 +133,13 @@ class CommandAnnotationUtilsTests {
 	void testAlias() {
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasDefault, aliasDefault)).isEmpty();
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasDefault, aliasValues1))
-				.isEqualTo(new String[] { "one", "two" });
+				.isEqualTo(new String[][] { { "one" }, { "two" } });
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasValues1, aliasValues2))
-				.isEqualTo(new String[] { "one", "two", "three", "four" });
+				.isEqualTo(new String[][] { { "one", "two", "three" }, { "one", "two", "four" } });
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasDefault, aliasValues3))
-				.isEqualTo(new String[] { "five", "six", "seven" });
+				.isEqualTo(new String[][] { { "five" }, { "six" }, { "seven" } });
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasDefault, aliasValues4))
-				.isEqualTo(new String[] { "eight", "nine" });
+				.isEqualTo(new String[][] { { "eight" }, { "nine" } });
 	}
 
 	private static MergedAnnotation<Command> groupValue1 = MergedAnnotations.from(GroupValues1.class)

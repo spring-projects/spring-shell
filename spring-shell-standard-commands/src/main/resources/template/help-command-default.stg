@@ -70,7 +70,7 @@ availability(availability) ::= <<
 aliases(aliases) ::= <<
 <if(aliases)>
 <("ALSO KNOWN AS"); format="style-highlight">
-       <(aliases); separator=", ">
+       <aliases: { a | <a>}; separator=", ">
 <endif>
 >>
 
