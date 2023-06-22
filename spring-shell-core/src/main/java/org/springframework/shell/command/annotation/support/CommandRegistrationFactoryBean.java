@@ -189,9 +189,9 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 		}
 
 		// alias
-		String[] deduceAlias = CommandAnnotationUtils.deduceAlias(classAnn, methodAnn);
-		if (deduceAlias.length > 0) {
-			builder.withAlias().command(deduceAlias);
+		String[][] deduceAlias = CommandAnnotationUtils.deduceAlias(classAnn, methodAnn);
+		for (String[] a : deduceAlias) {
+			builder.withAlias().command(a);
 		}
 
 		// target

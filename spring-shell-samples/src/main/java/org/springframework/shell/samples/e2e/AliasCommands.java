@@ -18,15 +18,36 @@ package org.springframework.shell.samples.e2e;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
 import org.springframework.stereotype.Component;
 
 public class AliasCommands {
+
+	@ShellComponent
+	public static class LegacyAnnotation extends BaseE2ECommands {
+
+		@ShellMethod(key = { LEGACY_ANNO + "alias-1", LEGACY_ANNO + "aliasfor-1" }, group = GROUP)
+		public String testAlias1LegacyAnnotation() {
+			return "Hello from alias command";
+		}
+
+		@ShellMethod(key = { LEGACY_ANNO + "alias-2", LEGACY_ANNO + "alias1for-2", LEGACY_ANNO + "alias2for-2" }, group = GROUP)
+		public String testAlias2LegacyAnnotation() {
+			return "Hello from alias command";
+		}
+	}
 
 	@Command(command = BaseE2ECommands.ANNO, alias = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class AliasCommandsAnnotation extends BaseE2ECommands {
 
 		@Command(command = "alias-1", alias = "aliasfor-1")
 		public String testAlias1Annotation() {
+			return "Hello from alias command";
+		}
+
+		@Command(command = "alias-2", alias = { "alias1for-2", "alias2for-2" })
+		public String testAlias2Annotation() {
 			return "Hello from alias command";
 		}
 	}
@@ -41,6 +62,25 @@ public class AliasCommands {
 				.group(GROUP)
 				.withAlias()
 					.command(REG, "aliasfor-1")
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						return "Hello from alias command";
+					})
+					.and()
+				.build();
+		}
+
+		@Bean
+		public CommandRegistration testAlias2Registration(CommandRegistration.BuilderSupplier builder) {
+			return builder.get()
+				.command(REG, "alias-2")
+				.group(GROUP)
+				.withAlias()
+					.command(REG, "alias1for-2")
+					.and()
+				.withAlias()
+					.command(REG, "alias2for-2")
 					.and()
 				.withTarget()
 					.function(ctx -> {

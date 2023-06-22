@@ -63,7 +63,7 @@ class CommandRegistrationFactoryBeanTests {
 
 	@Test
 	void commandCommonThings() {
-		configCommon(OnBothClassAndMethod.class, new OnBothClassAndMethod())
+		configCommon(OnBothClassAndMethod.class, new OnBothClassAndMethod(), "command1", new Class[] { })
 				.run((context) -> {
 					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
 							CommandRegistrationFactoryBean.class);
@@ -75,13 +75,30 @@ class CommandRegistrationFactoryBeanTests {
 					assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("three four");
 					assertThat(registration.getGroup()).isEqualTo("group2");
 				});
+		configCommon(OnBothClassAndMethod.class, new OnBothClassAndMethod(), "command2", new Class[] { })
+				.run((context) -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+							CommandRegistrationFactoryBean.class);
+					assertThat(fb).isNotNull();
+					CommandRegistration registration = fb.getObject();
+					assertThat(registration).isNotNull();
+					assertThat(registration.getCommand()).isEqualTo("one three");
+					assertThat(registration.getAliases()).hasSize(2);
+					assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("three four");
+					assertThat(registration.getAliases().get(1).getCommand()).isEqualTo("three five");
+					assertThat(registration.getGroup()).isEqualTo("group2");
+				});
 	}
 
 	@Command(command = "one", alias = "three", group = "group1")
 	private static class OnBothClassAndMethod {
 
 		@Command(command = "two", alias = "four", group = "group2")
-		void command(){
+		void command1(){
+		}
+
+		@Command(command = "three", alias = { "four", "five" }, group = "group2")
+		void command2(){
 		}
 	}
 
