@@ -6,3 +6,5 @@ This section describes how you can customize the shell.
 include::using-shell-customization-styling.adoc[]
 
 include::using-shell-customization-logging.adoc[]
+
+include::using-shell-customization-commandnotfound.adoc[]
