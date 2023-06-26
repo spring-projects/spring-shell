@@ -95,7 +95,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: spring-shell-samples-${{ matrix.nickname }}
-          path: spring-shell-samples/build
+          path: spring-shell-samples
       - name: fix artifacts
         if: runner.os != 'Windows'
         shell: bash
