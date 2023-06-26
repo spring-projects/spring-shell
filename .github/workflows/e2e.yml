@@ -38,6 +38,7 @@ jobs:
           node-version: '16'
       - run: |
           ./gradlew clean build nativeCompile -PspringShellSampleMusl=${{ matrix.musl }} -PspringShellSampleE2E=true
+        timeout-minutes: 30
       - uses: actions/upload-artifact@v3
         with:
           name: spring-shell-samples-${{ matrix.nickname }}
