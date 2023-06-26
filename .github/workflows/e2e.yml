@@ -100,7 +100,8 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          chmod +x spring-shell-samples/build/native/nativeCompile/spring-shell-samples
+          chmod +x spring-shell-samples/spring-shell-sample-commands/build/native/nativeCompile/spring-shell-sample-commands
+          chmod +x spring-shell-samples/spring-shell-sample-e2e/build/native/nativeCompile/spring-shell-sample-e2e
       - name: run e2e tests
         working-directory: e2e/spring-shell-e2e-tests
         run: |
