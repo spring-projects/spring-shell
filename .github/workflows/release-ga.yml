@@ -1,4 +1,5 @@
 name: Release GA
+run-name: ${{ format('{0} ({1})', github.workflow, github.ref_name) }}
 
 on:
   workflow_dispatch:
