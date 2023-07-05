@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,13 @@ import org.jline.reader.Parser;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.Shell;
+import org.springframework.shell.boot.condition.OnNotPrimaryCommandCondition;
+import org.springframework.shell.boot.condition.OnPrimaryCommandCondition;
 import org.springframework.shell.context.ShellContext;
 import org.springframework.shell.jline.InteractiveShellRunner;
 import org.springframework.shell.jline.NonInteractiveShellRunner;
@@ -32,38 +37,48 @@ import org.springframework.shell.jline.ScriptShellRunner;
 @AutoConfiguration
 public class ShellRunnerAutoConfiguration {
 
-	private Shell shell;
-	private PromptProvider promptProvider;
-	private LineReader lineReader;
-	private Parser parser;
-	private ShellContext shellContext;
+	@Configuration(proxyBeanMethods = false)
+	@EnableConfigurationProperties(SpringShellProperties.class)
+	@Conditional(OnPrimaryCommandCondition.class)
+	public static class PrimaryCommandConfiguration {
 
-	public ShellRunnerAutoConfiguration(Shell shell, PromptProvider promptProvider, LineReader lineReader,
-			Parser parser, ShellContext shellContext) {
-		this.shell = shell;
-		this.promptProvider = promptProvider;
-		this.lineReader = lineReader;
-		this.parser = parser;
-		this.shellContext = shellContext;
+		@Bean
+		@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
+		public NonInteractiveShellRunner nonInteractiveApplicationRunner(Shell shell, ShellContext shellContext,
+				ObjectProvider<NonInteractiveShellRunnerCustomizer> customizer, SpringShellProperties properties) {
+			NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(shell, shellContext,
+					properties.getNoninteractive().getPrimaryCommand());
+			customizer.orderedStream().forEach((c) -> c.customize(shellRunner));
+			return shellRunner;
+		}
+
 	}
 
-	@Bean
-	@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public InteractiveShellRunner interactiveApplicationRunner() {
-		return new InteractiveShellRunner(lineReader, promptProvider, shell, shellContext);
-	}
+	@Configuration(proxyBeanMethods = false)
+	@Conditional(OnNotPrimaryCommandCondition.class)
+	public static class NonePrimaryCommandConfiguration {
 
-	@Bean
-	@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public NonInteractiveShellRunner nonInteractiveApplicationRunner(ObjectProvider<NonInteractiveShellRunnerCustomizer> customizer) {
-		NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(shell, shellContext);
-		customizer.orderedStream().forEach((c) -> c.customize(shellRunner));
-		return shellRunner;
-	}
+		@Bean
+		@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true", matchIfMissing = true)
+		public InteractiveShellRunner interactiveApplicationRunner(LineReader lineReader, PromptProvider promptProvider,
+				Shell shell, ShellContext shellContext) {
+			return new InteractiveShellRunner(lineReader, promptProvider, shell, shellContext);
+		}
 
-	@Bean
-	@ConditionalOnProperty(prefix = "spring.shell.script", value = "enabled", havingValue = "true", matchIfMissing = true)
-	public ScriptShellRunner scriptApplicationRunner() {
-		return new ScriptShellRunner(parser, shell);
+		@Bean
+		@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
+		public NonInteractiveShellRunner nonInteractiveApplicationRunner(Shell shell, ShellContext shellContext,
+				ObjectProvider<NonInteractiveShellRunnerCustomizer> customizer) {
+			NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(shell, shellContext);
+			customizer.orderedStream().forEach((c) -> c.customize(shellRunner));
+			return shellRunner;
+		}
+
+		@Bean
+		@ConditionalOnProperty(prefix = "spring.shell.script", value = "enabled", havingValue = "true", matchIfMissing = true)
+		public ScriptShellRunner scriptApplicationRunner(Parser parser, Shell shell) {
+			return new ScriptShellRunner(parser, shell);
+		}
+
 	}
 }
