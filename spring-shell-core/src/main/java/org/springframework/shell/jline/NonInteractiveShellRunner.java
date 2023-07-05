@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,12 +60,19 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private Parser lineParser;
 
+	private String primaryCommand;
+
     private static final String SINGLE_QUOTE = "\'";
     private static final String DOUBLE_QUOTE = "\"";
 
 	private Function<ApplicationArguments, List<String>> commandsFromInputArgs = args -> {
 		if (args.getSourceArgs().length == 0) {
-			return Collections.emptyList();
+			if (StringUtils.hasText(primaryCommand)) {
+				Collections.singletonList(primaryCommand);
+			}
+			else {
+				return Collections.emptyList();
+			}
 		}
 		// re-quote if needed having whitespace
 		String raw = Arrays.stream(args.getSourceArgs())
@@ -76,7 +83,12 @@ public class NonInteractiveShellRunner implements ShellRunner {
 				return a;
 			})
 			.collect(Collectors.joining(" "));
-		return Collections.singletonList(raw);
+		if (StringUtils.hasText(primaryCommand)) {
+			return Collections.singletonList(primaryCommand + " " + raw);
+		}
+		else {
+			return Collections.singletonList(raw);
+		}
 	};
 
 	private static boolean isQuoted(String str) {
@@ -88,8 +100,13 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	}
 
 	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext) {
+		this(shell, shellContext, null);
+	}
+
+	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext, String primaryCommand) {
 		this.shell = shell;
 		this.shellContext = shellContext;
+		this.primaryCommand = primaryCommand;
 		this.lineParser = new DefaultParser();
 	}
 

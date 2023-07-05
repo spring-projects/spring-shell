@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.springframework.shell.jline.InteractiveShellRunner;
 import org.springframework.shell.jline.NonInteractiveShellRunner;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.shell.jline.ScriptShellRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -72,6 +73,16 @@ class ShellRunnerAutoConfigurationTests {
 		}
 
 		@Test
+		void primaryCommandNotSet() {
+			contextRunner.run(context -> {
+				assertThat(context).hasSingleBean(NonInteractiveShellRunner.class);
+				NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
+				String command = (String) ReflectionTestUtils.getField(runner, "primaryCommand");
+				assertThat(command).isNull();
+			});
+		}
+
+		@Test
 		void disabledWhenPropertySet() {
 			contextRunner.withPropertyValues("spring.shell.noninteractive.enabled:false")
 					.run(context -> assertThat(context).doesNotHaveBean(NonInteractiveShellRunner.class));
@@ -100,5 +111,23 @@ class ShellRunnerAutoConfigurationTests {
 			contextRunner.withPropertyValues("spring.shell.script.enabled:false")
 					.run(context -> assertThat(context).doesNotHaveBean(ScriptShellRunner.class));
 		}
+	}
+
+	@Nested
+	class PrimaryCommand {
+
+		@Test
+		void primaryCommandDisablesOtherRunners() {
+			contextRunner.withPropertyValues("spring.shell.noninteractive.primary-command:fake")
+					.run(context -> {
+						assertThat(context).doesNotHaveBean(InteractiveShellRunner.class);
+						assertThat(context).doesNotHaveBean(ScriptShellRunner.class);
+						assertThat(context).hasSingleBean(NonInteractiveShellRunner.class);
+						NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
+						String command = (String) ReflectionTestUtils.getField(runner, "primaryCommand");
+						assertThat(command).isEqualTo("fake");
+					});
+		}
+
 	}
 }
