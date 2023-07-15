@@ -1,0 +1,14 @@
+[[using-shell-tui-intro]]
+=== Introduction
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Lets start with a simple app which prints "hello world" in a view.
+====
+[source, java, indent=0]
+----
+include::{snippets}/TerminalUiSnippets.java[tag=snippet1]
+----
+====
+
+There is not much to see here other than `TerminalUI` is a class handling
+all logic aroung views and uses `View` as it's root view.

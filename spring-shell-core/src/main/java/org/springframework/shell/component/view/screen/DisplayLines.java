@@ -13,21 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.catalog;
+package org.springframework.shell.component.view.screen;
 
-import org.springframework.boot.Banner.Mode;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.shell.command.annotation.CommandScan;
+import java.util.List;
 
-@SpringBootApplication
-@CommandScan
-public class SpringShellApplication {
+import org.jline.utils.AttributedString;
+import org.jline.utils.Display;
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication application = new SpringApplication(SpringShellApplication.class);
-		application.setBannerMode(Mode.OFF);
-		application.run(args);
-	}
+/**
+ * Interface for an implementation which is able to return list of
+ * {@link AttributedString} usually used together with {@link Display}.
+ *
+ * @author Janne Valkealahti
+ */
+public interface DisplayLines {
 
+	/**
+	 * Gets a list of screen lines.
+	 *
+	 * @return list of screen lines
+	 */
+	List<AttributedString> getScreenLines();
 }

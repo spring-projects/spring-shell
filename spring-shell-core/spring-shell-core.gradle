@@ -10,6 +10,7 @@ dependencies {
 	api('org.springframework:spring-core')
 	api('org.springframework.boot:spring-boot-starter-validation')
 	api('org.springframework:spring-messaging')
+	api('io.projectreactor:reactor-core')
 	api('org.jline:jline')
 	api('org.antlr:ST4')
 	api('commons-io:commons-io')
@@ -17,4 +18,5 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.awaitility:awaitility'
 	testImplementation 'com.google.jimfs:jimfs'
+	testImplementation 'io.projectreactor:reactor-test'
 }

@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.catalog;
+package org.springframework.shell.samples.catalog.scenario;
 
-import org.springframework.boot.Banner.Mode;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.shell.command.annotation.CommandScan;
+import org.springframework.shell.component.view.event.EventLoop;
 
-@SpringBootApplication
-@CommandScan
-public class SpringShellApplication {
+/**
+ * Base implementation of a {@link Scenario} helping to avoid some bloatware.
+ *
+ * @author Janne Valkealahti
+ */
+public abstract class AbstractScenario implements Scenario {
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication application = new SpringApplication(SpringShellApplication.class);
-		application.setBannerMode(Mode.OFF);
-		application.run(args);
+	private EventLoop eventloop;
+
+	@Override
+	public Scenario configure(EventLoop eventloop) {
+		this.eventloop = eventloop;
+		return this;
+	}
+
+	protected EventLoop getEventloop() {
+		return eventloop;
 	}
 
 }

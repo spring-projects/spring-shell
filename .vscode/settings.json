@@ -13,5 +13,6 @@
         "checkstyle.header.file": "https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow-build/main/spring-cloud-dataflow-build-tools/src/main/resources/checkstyle-header.txt"
     },
     "java.checkstyle.version": "8.29",
-    "java.configuration.maven.notCoveredPluginExecutionSeverity": "ignore"
+    "java.configuration.maven.notCoveredPluginExecutionSeverity": "ignore",
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
 }

@@ -10,6 +10,8 @@ include::using-shell-building.adoc[]
 
 include::using-shell-components.adoc[]
 
+include::using-shell-tui.adoc[]
+
 include::using-shell-customization.adoc[]
 
 include::using-shell-execution.adoc[]

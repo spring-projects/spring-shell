@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.catalog;
+package org.springframework.shell.component.view.control;
 
-import org.springframework.boot.Banner.Mode;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.shell.command.annotation.CommandScan;
+/**
+ * Base interface for view event args.
+ *
+ * @author Janne Valkealahti
+ */
+public interface ViewEventArgs {
 
-@SpringBootApplication
-@CommandScan
-public class SpringShellApplication {
-
-	public static void main(String[] args) throws Exception {
-		SpringApplication application = new SpringApplication(SpringShellApplication.class);
-		application.setBannerMode(Mode.OFF);
-		application.run(args);
-	}
-
+	public static final ViewEventArgs EMPTY = new ViewEventArgs() {
+	};
 }

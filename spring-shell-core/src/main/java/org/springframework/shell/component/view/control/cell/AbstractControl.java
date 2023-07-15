@@ -13,31 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.catalog;
+package org.springframework.shell.component.view.control.cell;
 
-import java.util.List;
-
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.samples.catalog.scenario.Scenario;
-import org.springframework.shell.standard.AbstractShellComponent;
+import org.springframework.shell.component.view.control.Control;
+import org.springframework.shell.component.view.geom.Rectangle;
 
 /**
- * Main command access point to view showcase catalog.
+ * Base implementation of a {@link Control}.
  *
  * @author Janne Valkealahti
  */
-@Command
-public class CatalogCommand extends AbstractShellComponent {
+public abstract class AbstractControl implements Control {
 
-	private final List<Scenario> scenarios;
+	private int x = 0;
+	private int y = 0;
+	private int width = 0;
+	private int height = 0;
 
-	public CatalogCommand(List<Scenario> scenarios) {
-		this.scenarios = scenarios;
+	@Override
+	public void setRect(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 
-	@Command(command = "catalog")
-	public void catalog() {
-		Catalog catalog = new Catalog(getTerminal(), scenarios);
-		catalog.run();
+	@Override
+	public Rectangle getRect() {
+		return new Rectangle(x, y, width, height);
 	}
+
 }

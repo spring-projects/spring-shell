@@ -1,0 +1,5 @@
+[#appendix-tui-control]
+=== Control
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+_Control_ draws something into a screen with a given bounds.

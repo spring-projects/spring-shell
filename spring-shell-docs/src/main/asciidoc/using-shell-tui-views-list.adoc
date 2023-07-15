@@ -1,0 +1,5 @@
+[[using-shell-tui-views-list]]
+==== ListView
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+_ListView_ is a base implementation providing functionality to draw list of items.

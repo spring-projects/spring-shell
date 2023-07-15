@@ -94,6 +94,13 @@
             "mainClass": "org.springframework.shell.samples.SpringShellSample",
             "projectName": "spring-shell-sample-e2e",
             "args": "e2e reg exit-code --arg1 fun"
+        },
+        {
+            "type": "java",
+            "name": "catalog",
+            "request": "launch",
+            "mainClass": "org.springframework.shell.samples.catalog.SpringShellApplication",
+            "projectName": "spring-shell-sample-catalog"
         }
     ]
 }

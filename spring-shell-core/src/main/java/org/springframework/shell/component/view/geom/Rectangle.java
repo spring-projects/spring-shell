@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.samples.catalog;
+package org.springframework.shell.component.view.geom;
 
-import org.springframework.boot.Banner.Mode;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.shell.command.annotation.CommandScan;
+/**
+ * Record representing coordinates {@code x}, {@code y} and its {@code width}
+ * and {@code height}.
+ */
+public record Rectangle(int x, int y, int width, int height) {
 
-@SpringBootApplication
-@CommandScan
-public class SpringShellApplication {
-
-	public static void main(String[] args) throws Exception {
-		SpringApplication application = new SpringApplication(SpringShellApplication.class);
-		application.setBannerMode(Mode.OFF);
-		application.run(args);
+	public boolean contains(int X, int Y) {
+		int w = this.width;
+		int h = this.height;
+		if ((w | h) < 0) {
+			return false;
+		}
+		int x = this.x;
+		int y = this.y;
+		if (X < x || Y < y) {
+			return false;
+		}
+		w += x;
+		h += y;
+		return ((w < x || w > X) && (h < y || h > Y));
 	}
-
 }

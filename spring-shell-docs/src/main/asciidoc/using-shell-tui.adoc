@@ -1,0 +1,16 @@
+[[using-shell-tui]]
+== Terminal UI
+
+NOTE: Feature is experimental and subject to breaking changes until foundation
+      and related concepts around framework are getting more stable.
+
+_Terminal UI Framework_ is a toolkit to build rich console apps. This section is
+for those using existing features as is. If you're planning to go deeper possibly
+creating your own components <<appendix-tech-intro-tui>> provides more detailed
+documentation.
+
+TIP: Catalog sample is a good place to study a real application <<appendix-tui-catalog>>.
+
+include::using-shell-tui-intro.adoc[]
+
+include::using-shell-tui-views.adoc[]

@@ -1,0 +1,6 @@
+[[using-shell-tui-views-box]]
+==== BoxView
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+_BoxView_ is a base implementation providing functionality to draw into a
+bounded _Rectancle_.

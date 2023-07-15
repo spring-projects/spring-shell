@@ -1,0 +1,6 @@
+[#appendix-tui-screen]
+=== Screen
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+_Screen_ is an abstraction providing higher level concept to draw something
+into a terminal.
