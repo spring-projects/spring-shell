@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.shell.component.view.screen.DefaultScreen;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -86,6 +87,182 @@ class GridViewTests extends AbstractViewTests {
 
 			verify(sbox1).setRect(0, 0, 80, 12);
 			verify(sbox2).setRect(0, 12, 80, 12);
+		}
+
+		@Test
+		void positionsWith3x3() {
+			BoxView box1 = new BoxView();
+			BoxView box2 = new BoxView();
+			BoxView box3 = new BoxView();
+			BoxView box4 = new BoxView();
+			BoxView box5 = new BoxView();
+			BoxView box6 = new BoxView();
+			BoxView box7 = new BoxView();
+			BoxView box8 = new BoxView();
+			BoxView box9 = new BoxView();
+			BoxView sbox1 = spy(box1);
+			BoxView sbox2 = spy(box2);
+			BoxView sbox3 = spy(box3);
+			BoxView sbox4 = spy(box4);
+			BoxView sbox5 = spy(box5);
+			BoxView sbox6 = spy(box6);
+			BoxView sbox7 = spy(box7);
+			BoxView sbox8 = spy(box8);
+			BoxView sbox9 = spy(box9);
+			GridView grid = new GridView();
+
+			grid.setShowBorders(false);
+			grid.setRowSize(0, 0, 0);
+			grid.setColumnSize(0, 0, 0);
+			grid.setShowBorder(false);
+
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 0);
+			grid.addItem(sbox2, 0, 1, 1, 1, 0, 0);
+			grid.addItem(sbox3, 0, 2, 1, 1, 0, 0);
+
+			grid.addItem(sbox4, 1, 0, 1, 1, 0, 0);
+			grid.addItem(sbox5, 1, 1, 1, 1, 0, 0);
+			grid.addItem(sbox6, 1, 2, 1, 1, 0, 0);
+
+			grid.addItem(sbox7, 2, 0, 1, 1, 0, 0);
+			grid.addItem(sbox8, 2, 1, 1, 1, 0, 0);
+			grid.addItem(sbox9, 2, 2, 1, 1, 0, 0);
+
+			grid.setRect(0, 0, 80, 24);
+			grid.draw(screen24x80);
+
+			verify(sbox1).setRect(0, 0, 26, 8);
+			verify(sbox2).setRect(26, 0, 27, 8);
+			verify(sbox3).setRect(53, 0, 27, 8);
+			verify(sbox4).setRect(0, 8, 26, 8);
+			verify(sbox5).setRect(26, 8, 27, 8);
+			verify(sbox6).setRect(53, 8, 27, 8);
+			verify(sbox7).setRect(0, 16, 26, 8);
+			verify(sbox8).setRect(26, 16, 27, 8);
+			verify(sbox9).setRect(53, 16, 27, 8);
+		}
+
+		@Test
+		void minimumWidthWith3x3_1() {
+			BoxView box1 = new BoxView();
+			BoxView box2 = new BoxView();
+			BoxView box3 = new BoxView();
+			BoxView box4 = new BoxView();
+			BoxView box5 = new BoxView();
+			BoxView sbox1 = spy(box1);
+			BoxView sbox2 = spy(box2);
+			BoxView sbox3 = spy(box3);
+			BoxView sbox4 = spy(box4);
+			BoxView sbox5 = spy(box5);
+			GridView grid = new GridView();
+
+			grid.setShowBorders(false);
+			grid.setRowSize(0);
+			grid.setColumnSize(30, 10, -1, -1, -2);
+			grid.setShowBorder(false);
+
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 0);
+			grid.addItem(sbox2, 0, 1, 1, 1, 0, 0);
+			grid.addItem(sbox3, 0, 2, 1, 1, 0, 0);
+			grid.addItem(sbox4, 0, 3, 1, 1, 0, 0);
+			grid.addItem(sbox5, 0, 4, 1, 1, 0, 0);
+
+			grid.setRect(0, 0, 100, 100);
+			grid.draw(screen24x80);
+
+			verify(sbox1).setRect(0, 0, 30, 100);
+			verify(sbox2).setRect(30, 0, 10, 100);
+			verify(sbox3).setRect(40, 0, 15, 100);
+			verify(sbox4).setRect(55, 0, 15, 100);
+			verify(sbox5).setRect(70, 0, 30, 100);
+		}
+
+		@Test
+		void minimumWidthWith3x3_2() {
+			BoxView box1 = new BoxView();
+			BoxView box2 = new BoxView();
+			BoxView box3 = new BoxView();
+			BoxView box4 = new BoxView();
+			BoxView box5 = new BoxView();
+			BoxView box6 = new BoxView();
+			BoxView box7 = new BoxView();
+			BoxView sbox1 = spy(box1);
+			BoxView sbox2 = spy(box2);
+			BoxView sbox3 = spy(box3);
+			BoxView sbox4 = spy(box4);
+			BoxView sbox5 = spy(box5);
+			BoxView sbox6 = spy(box6);
+			BoxView sbox7 = spy(box7);
+			GridView grid = new GridView();
+
+			grid.setShowBorders(false);
+			grid.setRowSize(0);
+			grid.setColumnSize(30, 10, -1, -1, -2);
+			grid.setShowBorder(false);
+
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 0);
+			grid.addItem(sbox2, 0, 1, 1, 1, 0, 0);
+			grid.addItem(sbox3, 0, 2, 1, 1, 0, 0);
+			grid.addItem(sbox4, 0, 3, 1, 1, 0, 0);
+			grid.addItem(sbox5, 0, 4, 1, 1, 0, 0);
+			grid.addItem(sbox6, 0, 5, 1, 1, 0, 0);
+			grid.addItem(sbox7, 0, 6, 1, 1, 0, 0);
+
+			grid.setRect(0, 0, 100, 100);
+			grid.draw(screen24x80);
+
+			verify(sbox1).setRect(0, 0, 30, 100);
+			verify(sbox2).setRect(30, 0, 10, 100);
+			verify(sbox3).setRect(40, 0, 10, 100);
+			verify(sbox4).setRect(50, 0, 10, 100);
+			verify(sbox5).setRect(60, 0, 20, 100);
+			verify(sbox6).setRect(80, 0, 10, 100);
+			verify(sbox7).setRect(90, 0, 10, 100);
+		}
+
+		@Test
+		void minimumWidthWith3x3_3() {
+			BoxView box1 = new BoxView();
+			BoxView box2 = new BoxView();
+			BoxView box3 = new BoxView();
+			BoxView box4 = new BoxView();
+			BoxView box5 = new BoxView();
+			BoxView box6 = new BoxView();
+			BoxView box7 = new BoxView();
+			BoxView sbox1 = spy(box1);
+			BoxView sbox2 = spy(box2);
+			BoxView sbox3 = spy(box3);
+			BoxView sbox4 = spy(box4);
+			BoxView sbox5 = spy(box5);
+			BoxView sbox6 = spy(box6);
+			BoxView sbox7 = spy(box7);
+			GridView grid = new GridView();
+
+			grid.setShowBorders(false);
+			grid.setRowSize(0);
+			grid.setColumnSize(30, 10, -1, -1, -2);
+			grid.setShowBorder(false);
+
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 0);
+			grid.addItem(sbox2, 0, 1, 1, 1, 0, 0);
+			grid.addItem(sbox3, 0, 2, 1, 1, 0, 0);
+			grid.addItem(sbox4, 0, 3, 1, 1, 0, 0);
+			grid.addItem(sbox5, 0, 4, 1, 1, 0, 0);
+			grid.addItem(sbox6, 0, 5, 1, 1, 0, 0);
+			grid.addItem(sbox7, 0, 6, 1, 1, 0, 0);
+
+			grid.setRect(0, 0, 100, 100);
+			grid.setMinSize(15, 20);
+			grid.draw(screen24x80);
+
+			verify(sbox1).setRect(0, 0, 30, 100);
+			verify(sbox2).setRect(30, 0, 15, 100);
+			verify(sbox3).setRect(45, 0, 15, 100);
+			verify(sbox4).setRect(60, 0, 15, 100);
+			verify(sbox5).setRect(75, 0, 18, 100);
+			verify(sbox6).setRect(93, 0, 7, 100);
+			// last one outside should not get called
+			verify(sbox7, never()).setRect(0, 0, 0, 0);
 		}
 
 	}
