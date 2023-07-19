@@ -39,7 +39,7 @@ import java.text.MessageFormat;
 public enum ParserMessage {
 
 	ILLEGAL_CONTENT_BEFORE_COMMANDS(Type.ERROR, 1000, "Illegal content before commands ''{0}''"),
-	MANDATORY_OPTION_MISSING(Type.ERROR, 2000, "Missing mandatory option, longnames=''{0}'', shortnames=''{1}''"),
+	MANDATORY_OPTION_MISSING(Type.ERROR, 2000, "Missing mandatory option ''{0}''{1}"),
 	UNRECOGNISED_OPTION(Type.ERROR, 2001, "Unrecognised option ''{0}''"),
 	ILLEGAL_OPTION_VALUE(Type.ERROR, 2002, "Illegal option value ''{0}'', reason ''{1}''"),
 	NOT_ENOUGH_OPTION_ARGUMENTS(Type.ERROR, 2003, "Not enough arguments for option ''{0}'', requires at least ''{1}''"),
@@ -64,18 +64,40 @@ public enum ParserMessage {
 		return type;
 	}
 
-	public String formatMessage(int position, Object... inserts) {
+	/**
+	 * Format message without code and position parts.
+	 *
+	 * @param inserts the inserts
+	 * @return formatted message
+	 */
+	public String formatMessage(Object... inserts) {
+		return formatMessage(false, -1, inserts);
+	}
+
+	/**
+	 * Format message.
+	 *
+	 * <p>For example code and position 2000E:(pos 0):
+	 *
+	 * @param useCode Add code part
+	 * @param position position info, not printed if negative
+	 * @param inserts the inserts
+	 * @return formatted message
+	 */
+	public String formatMessage(boolean useCode, int position, Object... inserts) {
 		StringBuilder msg = new StringBuilder();
-		msg.append(code);
-		switch (type) {
-			case WARNING:
-				msg.append("W");
-				break;
-			case ERROR:
-				msg.append("E");
-				break;
+		if (useCode) {
+			msg.append(code);
+			switch (type) {
+				case WARNING:
+					msg.append("W");
+					break;
+				case ERROR:
+					msg.append("E");
+					break;
+			}
+			msg.append(":");
 		}
-		msg.append(":");
 		if (position != -1) {
 			msg.append("(pos ").append(position).append("): ");
 		}
