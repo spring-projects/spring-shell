@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
@@ -37,6 +36,7 @@ import org.springframework.shell.command.parser.Lexer.LexerResult;
 import org.springframework.shell.command.parser.Parser.ParseResult.ArgumentResult;
 import org.springframework.shell.command.parser.Parser.ParseResult.OptionResult;
 import org.springframework.shell.command.parser.ParserConfig.Feature;
+import org.springframework.util.StringUtils;
 
 /**
  * Interface to parse command line arguments.
@@ -439,12 +439,19 @@ public interface Parser {
 
 			return requiredOptions2.stream()
 				.map(o -> {
-					String ln = o.getLongNames() != null
-							? Stream.of(o.getLongNames()).collect(Collectors.joining(","))
-							: "";
-					String sn = o.getShortNames() != null ? Stream.of(o.getShortNames()).map(n -> Character.toString(n))
-							.collect(Collectors.joining(",")) : "";
-					return MessageResult.of(ParserMessage.MANDATORY_OPTION_MISSING, 0, ln, sn);
+					String ins0 = "";
+					if (o.getLongNames().length > 0) {
+						ins0 = "--" + o.getLongNames()[0];
+					}
+					else if (o.getShortNames().length > 0) {
+						ins0 = "-" + o.getShortNames()[0];
+					}
+
+					String ins1 = "";
+					if (StringUtils.hasText(o.getDescription())) {
+						ins1 = ", " + o.getDescription();
+					}
+					return MessageResult.of(ParserMessage.MANDATORY_OPTION_MISSING, 0, ins0, ins1);
 				})
 				.collect(Collectors.toList());
 		}

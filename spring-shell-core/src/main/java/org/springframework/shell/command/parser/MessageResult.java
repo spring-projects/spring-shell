@@ -40,6 +40,6 @@ public record MessageResult(ParserMessage parserMessage, int position, Object[] 
 	 * @return a formatted message
 	 */
 	public String getMessage() {
-		return parserMessage.formatMessage(position, inserts);
+		return parserMessage.formatMessage(inserts);
 	}
 }
