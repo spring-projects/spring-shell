@@ -40,6 +40,9 @@ class RootPlugin implements Plugin<Project> {
 		PluginManager pluginManager = project.getPluginManager();
 		pluginManager.apply(MavenPublishPlugin.class);
 		pluginManager.apply(PublishLocalPlugin.class);
+		// docsarchive needs to be created before artifactory
+		// conventions are used
+		project.getConfigurations().create("docsarchive");
 		new ArtifactoryConventions().apply(project);
 		Javadoc apiTask = createApiTask(project);
 		Zip zipTask = createZipTask(project);
@@ -67,7 +70,6 @@ class RootPlugin implements Plugin<Project> {
 
 		// since gradle 8.3 archives configuration started to fail
 		// so using custom configuration name
-		project.getConfigurations().create("docsarchive");
 		project.getArtifacts().add("docsarchive", zipTask);
 		return zipTask;
 	}
