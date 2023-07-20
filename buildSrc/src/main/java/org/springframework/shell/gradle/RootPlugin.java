@@ -65,7 +65,10 @@ class RootPlugin implements Plugin<Project> {
 			});
 		});
 
-		project.getArtifacts().add("archives", zipTask);
+		// since gradle 8.3 archives configuration started to fail
+		// so using custom configuration name
+		project.getConfigurations().create("docsarchive");
+		project.getArtifacts().add("docsarchive", zipTask);
 		return zipTask;
 	}
 
