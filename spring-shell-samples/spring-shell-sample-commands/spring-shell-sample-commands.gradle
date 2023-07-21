@@ -20,7 +20,7 @@ springBoot {
 
 if (project.hasProperty('springShellSampleE2E') && springShellSampleE2E.toBoolean()) {
 	bootJar {
-	   	archiveName = "$baseName.$extension"
+		archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
 	}
 }
 
