@@ -123,6 +123,48 @@ public class GridView extends BoxView {
 		return this;
 	}
 
+	/**
+	 * Adds a {@link View} and its position to the grid. The top-left corner of the
+	 * {@link View} will be located in the top-left corner of the grid cell at
+	 * the given row and column and will span "rowSpan" rows and "colSpan" columns.
+	 * For example, for a primitive to occupy rows 2, 3, and 4 and columns 5 and 6:
+	 *
+	 * <p>
+	 * grid.addItem(view, 2, 5, 3, 2, 0, 0)
+	 *
+	 * If {@code rowSpan} or colSpan is 0, the {@link View} will not be drawn.
+	 *
+	 * <p>
+	 * You can add the same {@link View} multiple times with different grid
+	 * positions. The {@code minGridWidth} and {@code minGridHeight} values will
+	 * then determine which of those positions will be used. These minimum values
+	 * refer to the overall size of the grid. If multiple items for the same
+	 * primitive apply, the one that has at least one highest minimum value will
+	 * be used, or the {@link View} added last if those values are the same. Example:
+	 *
+	 * <p>
+	 * AddItem(view, 0, 0, 0, 0, 0, 0). // Hide in small grids.
+	 * AddItem(view, 0, 0, 1, 2, 100, 0). // One-column layout for medium grids.
+	 * AddItem(view, 1, 1, 3, 2, 300, 0) // Multi-column layout for large grids.
+	 *
+	 * <p>
+	 * To use the same grid layout for all sizes, simply set {@code minGridWidth}
+	 * and {@code minGridHeight} to 0.
+	 *
+	 * <p>
+	 * If the item's focus is set to true, it will receive focus when the grid
+	 * receives focus. If there are multiple items with a true focus flag, the
+	 * last visible one that was added will receive focus.
+	 *
+	 * @param view the view to add
+	 * @param row the row
+	 * @param column the column
+	 * @param rowSpan the row span
+	 * @param colSpan the column span
+	 * @param minGridHeight the mininum height
+	 * @param minGridWidth the minimun width
+	 * @return a grid view for chaining
+	 */
 	public GridView addItem(View view, int row, int column, int rowSpan, int colSpan, int minGridHeight,
 			int minGridWidth) {
 		GridItem gridItem = new GridItem(view, row, column, colSpan, rowSpan, minGridHeight,

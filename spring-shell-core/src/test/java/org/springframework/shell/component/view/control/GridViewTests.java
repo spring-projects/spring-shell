@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.shell.component.view.screen.DefaultScreen;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -263,6 +264,61 @@ class GridViewTests extends AbstractViewTests {
 			verify(sbox6).setRect(93, 0, 7, 100);
 			// last one outside should not get called
 			verify(sbox7, never()).setRect(0, 0, 0, 0);
+		}
+
+	}
+
+	@Nested
+	class DynamicLayoutMinWidthHeight {
+
+		@Test
+		void widthHides_1_base() {
+			BoxView sbox1 = spy(new BoxView());
+			BoxView sbox2 = spy(new BoxView());
+			BoxView sbox3 = spy(new BoxView());
+
+			GridView grid = new GridView();
+			grid.setRowSize(0);
+			grid.setColumnSize(0, 0, 0);
+
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 0);
+			grid.addItem(sbox2, 0, 1, 1, 1, 0, 0);
+			grid.addItem(sbox3, 0, 2, 1, 1, 0, 0);
+
+			grid.setRect(0, 0, 80, 24);
+			grid.draw(screen24x80);
+
+			verify(sbox1).setRect(0, 0, 26, 24);
+			verify(sbox2).setRect(26, 0, 27, 24);
+			verify(sbox3).setRect(53, 0, 27, 24);
+		}
+
+		@Test
+		void widthHides_1_shouldHide() {
+			BoxView sbox1 = spy(new BoxView());
+			BoxView sbox2 = spy(new BoxView());
+			BoxView sbox3 = spy(new BoxView());
+
+			GridView grid = new GridView();
+			grid.setRowSize(0);
+			grid.setColumnSize(0, 0, 0);
+
+			// this should get used
+			grid.addItem(sbox1, 0, 0, 0, 1, 0, 0);
+			grid.addItem(sbox2, 0, 0, 1, 3, 0, 0);
+			grid.addItem(sbox3, 0, 2, 0, 1, 0, 0);
+
+			// this should not get used
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 100);
+			grid.addItem(sbox2, 0, 1, 1, 1, 0, 100);
+			grid.addItem(sbox3, 0, 2, 1, 1, 0, 100);
+
+			grid.setRect(0, 0, 80, 24);
+			grid.draw(screen24x80);
+
+			verify(sbox1, never()).setRect(anyInt(), anyInt(), anyInt(), anyInt());
+			verify(sbox2).setRect(0, 0, 80, 24);
+			verify(sbox3, never()).setRect(anyInt(), anyInt(), anyInt(), anyInt());
 		}
 
 	}
