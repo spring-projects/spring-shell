@@ -47,6 +47,7 @@ import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.component.view.screen.ScreenItem;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 import org.springframework.util.ObjectUtils;
@@ -196,6 +197,7 @@ public class Catalog {
 		List<String> items = List.copyOf(categoryMap.keySet());
 		categories.setItems(items);
 		categories.setTitle("Categories");
+		categories.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
 		categories.setShowBorder(true);
 		return categories;
 	}
@@ -215,6 +217,7 @@ public class Catalog {
 		ListView<ScenarioData> scenarios = new ListView<>();
 		scenarios.setEventLoop(eventLoop);
 		scenarios.setTitle("Scenarios");
+		scenarios.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
 		scenarios.setShowBorder(true);
 		scenarios.setCellFactory(list -> new ScenarioListCell());
 		return scenarios;

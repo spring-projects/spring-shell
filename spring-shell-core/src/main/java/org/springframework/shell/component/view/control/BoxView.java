@@ -48,6 +48,8 @@ public class BoxView extends AbstractView {
 	private Integer backgroundColor = -1;
 	private int titleColor = -1;
 	private int titleStyle = -1;
+	private int focusedTitleColor = -1;
+	private int focusedTitleStyle = -1;
 	private HorizontalAlign titleAlign;
 
 	@Override
@@ -150,6 +152,26 @@ public class BoxView extends AbstractView {
 	}
 
 	/**
+	 * Sets a focused title color. Takes precedence set from
+	 * {@link #setTitleColor(int)}.
+	 *
+	 * @param focusedTitleColor the title color
+	 */
+	public void setFocusedTitleColor(int focusedTitleColor) {
+		this.focusedTitleColor = focusedTitleColor;
+	}
+
+	/**
+	 * Sets a focused title style. Takes precedence set from
+	 * {@link #setTitleStyle(int)}.
+	 *
+	 * @param focusedTitleStyle the title style
+	 */
+	public void setFocusedTitleStyle(int focusedTitleStyle) {
+		this.focusedTitleStyle = focusedTitleStyle;
+	}
+
+	/**
 	 * Sets a title align.
 	 *
 	 * @param titleAlign the title align
@@ -180,12 +202,22 @@ public class BoxView extends AbstractView {
 			screen.writerBuilder().layer(getLayer()).build().border(rect.x(), rect.y(), rect.width(), rect.height());
 			if (StringUtils.hasText(title)) {
 				Rectangle r = new Rectangle(rect.x() + 1, rect.y(), rect.width() - 2, 1);
-				if (titleColor > -1) {
-					screen.writerBuilder().layer(getLayer()).color(titleColor).style(titleStyle).build().text(title, r, titleAlign, VerticalAlign.TOP);
+
+				int color = -1;
+				int style = -1;
+				if (hasFocus()) {
+					color = focusedTitleColor;
+					style = focusedTitleStyle;
 				}
-				else {
-					screen.writerBuilder().layer(getLayer()).build().text(title, r, titleAlign, VerticalAlign.TOP);
+				if (color < 0) {
+					color = titleColor;
 				}
+				if (style < 0) {
+					style = titleStyle;
+				}
+
+				screen.writerBuilder().layer(getLayer()).color(color).style(style).build().text(title, r, titleAlign,
+						VerticalAlign.TOP);
 			}
 		}
 		if (getDrawFunction() != null) {
