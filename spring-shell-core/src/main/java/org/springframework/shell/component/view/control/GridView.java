@@ -174,6 +174,13 @@ public class GridView extends BoxView {
 	}
 
 	/**
+	 * Remove all items.
+	 */
+	public void clearItems() {
+		this.gridItems.clear();
+	}
+
+	/**
 	 * Defines if borders is shown.
 	 *
 	 * @param showBorders the flag showing borders

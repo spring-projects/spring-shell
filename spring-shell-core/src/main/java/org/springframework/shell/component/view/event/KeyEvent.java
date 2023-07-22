@@ -112,6 +112,19 @@ public record KeyEvent(int key) {
 		public static final int Tab = 0x100007;
 		public static final int Backtab = 0x100008;
 
+		public static final int f1 = 0x100009;
+		public static final int f2 = 0x10000a;
+		public static final int f3 = 0x10000b;
+		public static final int f4 = 0x10000c;
+		public static final int f5 = 0x10000d;
+		public static final int f6 = 0x10000e;
+		public static final int f7 = 0x10000f;
+		public static final int f8 = 0x100010;
+		public static final int f9 = 0x100011;
+		public static final int f10 = 0x100012;
+		public static final int f11 = 0x100013;
+		public static final int f12 = 0x100014;
+
 		public static final int Char = 0x1000000;
 		public static final int Mouse = 0x1000001;
 		public static final int Unicode = 0x1000002;

@@ -512,5 +512,55 @@ class GridViewTests extends AbstractViewTests {
 
 	}
 
+	@Nested
+	class NestedGrids {
+
+		@Test
+		void simpleNestedGrid() {
+			BoxView box = spy(new BoxView());
+
+			GridView grid2 = spy(new GridView());
+			grid2.setColumnSize(0);
+			grid2.setRowSize(0);
+			grid2.addItem(box, 0, 0, 1, 1, 0, 0);
+
+			GridView grid1 = spy(new GridView());
+			grid1.setColumnSize(0);
+			grid1.setRowSize(0);
+			grid1.addItem(grid2, 0, 0, 1, 1, 0, 0);
+
+			grid1.setRect(0, 0, 80, 24);
+			grid1.draw(screen24x80);
+
+			verify(grid1).setRect(0, 0, 80, 24);
+			verify(grid2).setRect(0, 0, 80, 24);
+			verify(box).setRect(0, 0, 80, 24);
+		}
+
+		@Test
+		void simpleNestedGridWithBorders() {
+			BoxView box = spy(new BoxView());
+			box.setShowBorder(true);
+
+			GridView grid2 = spy(new GridView());
+			grid2.setColumnSize(0);
+			grid2.setRowSize(0);
+			grid2.setShowBorder(true);
+			grid2.addItem(box, 0, 0, 1, 1, 0, 0);
+
+			GridView grid1 = spy(new GridView());
+			grid1.setColumnSize(0);
+			grid1.setRowSize(0);
+			grid1.setShowBorder(true);
+			grid1.addItem(grid2, 0, 0, 1, 1, 0, 0);
+
+			grid1.setRect(0, 0, 80, 24);
+			grid1.draw(screen24x80);
+
+			verify(grid1).setRect(0, 0, 80, 24);
+			verify(grid2).setRect(1, 1, 78, 22);
+			verify(box).setRect(2, 2, 76, 20);
+		}
+	}
 
 }

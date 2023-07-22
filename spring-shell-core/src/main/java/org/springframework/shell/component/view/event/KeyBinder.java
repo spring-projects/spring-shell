@@ -61,6 +61,17 @@ public class KeyBinder {
 		keyMap.bind(KeyEvent.Key.CursorUp, key(terminal, Capability.key_up));
 		keyMap.bind(KeyEvent.Key.CursorDown, key(terminal, Capability.key_down));
 
+		keyMap.bind(KeyEvent.Key.f1, key(terminal, Capability.key_f1));
+		keyMap.bind(KeyEvent.Key.f2, key(terminal, Capability.key_f2));
+		keyMap.bind(KeyEvent.Key.f3, key(terminal, Capability.key_f3));
+		keyMap.bind(KeyEvent.Key.f4, key(terminal, Capability.key_f4));
+		keyMap.bind(KeyEvent.Key.f5, key(terminal, Capability.key_f5));
+		keyMap.bind(KeyEvent.Key.f6, key(terminal, Capability.key_f6));
+		keyMap.bind(KeyEvent.Key.f7, key(terminal, Capability.key_f7));
+		keyMap.bind(KeyEvent.Key.f8, key(terminal, Capability.key_f8));
+		keyMap.bind(KeyEvent.Key.f9, key(terminal, Capability.key_f9));
+		keyMap.bind(KeyEvent.Key.f10, key(terminal, Capability.key_f10));
+
 		keyMap.bind(KeyEvent.Key.CursorLeft | KeyEvent.KeyMask.AltMask, alt(key(terminal, Capability.key_left)));
 		keyMap.bind(KeyEvent.Key.CursorRight | KeyEvent.KeyMask.AltMask, alt(key(terminal, Capability.key_right)));
 		keyMap.bind(KeyEvent.Key.CursorUp | KeyEvent.KeyMask.AltMask, alt(key(terminal, Capability.key_up)));

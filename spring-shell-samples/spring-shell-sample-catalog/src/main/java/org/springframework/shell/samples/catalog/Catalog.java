@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.jline.terminal.Terminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -42,6 +44,7 @@ import org.springframework.shell.component.view.control.StatusBarView.StatusItem
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.cell.ListCell;
 import org.springframework.shell.component.view.event.EventLoop;
+import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
@@ -66,6 +69,7 @@ public class Catalog {
 		= new ParameterizedTypeReference<ListViewOpenSelectedItemEvent<ScenarioData>>() {};
 	private final static ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF
 		= new ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>>() {};
+	private final static Logger log = LoggerFactory.getLogger(Catalog.class);
 
 	// mapping from category name to scenarios(can belong to multiple categories)
 	private final Map<String, List<ScenarioData>> categoryMap = new TreeMap<>();
@@ -139,17 +143,24 @@ public class Catalog {
 	}
 
 	private AppView buildScenarioBrowser(EventLoop eventLoop, TerminalUI component) {
-		// we use main app view to represent scenario browser
-		AppView app = new AppView();
-		app.setEventLoop(eventLoop);
-
 		// category selector on left, scenario selector on right
 		GridView grid = new GridView();
-		grid.setRowSize(1, 0, 1);
+		grid.setEventLoop(eventLoop);
+		grid.setRowSize(0);
 		grid.setColumnSize(30, 0);
 
 		categories = buildCategorySelector(eventLoop);
 		ListView<ScenarioData> scenarios = buildScenarioSelector(eventLoop);
+
+		grid.addItem(categories, 0, 0, 1, 1, 0, 0);
+		grid.addItem(scenarios, 0, 1, 1, 1, 0, 0);
+
+		MenuBarView menuBar = buildMenuBar(eventLoop);
+		StatusBarView statusBar = buildStatusBar(eventLoop);
+
+		// we use main app view to represent scenario browser
+		AppView app = new AppView(grid, menuBar, statusBar);
+		app.setEventLoop(eventLoop);
 
 		// handle event when scenario is chosen
 		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_SCENARIO_TYPEREF, scenarios)
@@ -180,14 +191,21 @@ public class Catalog {
 				}
 			));
 
-		// We place statusbar below categories and scenarios
-		MenuBarView menuBar = buildMenuBar(eventLoop);
-		StatusBarView statusBar = buildStatusBar(eventLoop);
-		grid.addItem(menuBar, 0, 0, 1, 2, 0, 0);
-		grid.addItem(categories, 1, 0, 1, 1, 0, 0);
-		grid.addItem(scenarios, 1, 1, 1, 1, 0, 0);
-		grid.addItem(statusBar, 2, 0, 1, 2, 0, 0);
-		app.setMain(grid);
+		// we could potentially do keybinding somewhere else
+		// but at least this shows how to do it in low level.
+		// essentially we now just handle F10 to toggle
+		// menubar visibility
+		// TODO: when we get support for hotkeys we should do
+		//       binding there
+		eventLoop.onDestroy(eventLoop.keyEvents()
+			.subscribe(event -> {
+					log.debug("Raw keyevent {}", event);
+					if (event.isKey(KeyEvent.Key.f10)) {
+						app.toggleStatusBarVisibility();
+					}
+				}
+			));
+
 		return app;
 	}
 
