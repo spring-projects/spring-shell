@@ -321,6 +321,54 @@ class GridViewTests extends AbstractViewTests {
 			verify(sbox3, never()).setRect(anyInt(), anyInt(), anyInt(), anyInt());
 		}
 
+		@Test
+		void widthHides_2_base() {
+			BoxView sbox1 = spy(new BoxView());
+			BoxView sbox2 = spy(new BoxView());
+			BoxView sbox3 = spy(new BoxView());
+
+			GridView grid = new GridView();
+			grid.setRowSize(0, 0, 0);
+			grid.setColumnSize(0);
+
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 0);
+			grid.addItem(sbox2, 1, 0, 1, 1, 0, 0);
+			grid.addItem(sbox3, 2, 0, 1, 1, 0, 0);
+
+			grid.setRect(0, 0, 80, 24);
+			grid.draw(screen24x80);
+
+			verify(sbox1).setRect(0, 0, 80, 8);
+			verify(sbox2).setRect(0, 8, 80, 8);
+			verify(sbox3).setRect(0, 16, 80, 8);
+		}
+
+		@Test
+		void widthHides_2_shouldHide() {
+			BoxView sbox1 = spy(new BoxView());
+			BoxView sbox2 = spy(new BoxView());
+			BoxView sbox3 = spy(new BoxView());
+
+			GridView grid = new GridView();
+			grid.setRowSize(0, 0, 0);
+			grid.setColumnSize(0);
+
+			grid.addItem(sbox1, 0, 0, 0, 1, 0, 0);
+			grid.addItem(sbox2, 0, 0, 3, 1, 0, 0);
+			grid.addItem(sbox3, 2, 0, 0, 1, 0, 0);
+
+			grid.addItem(sbox1, 0, 0, 1, 1, 100, 0);
+			grid.addItem(sbox2, 1, 0, 1, 1, 100, 0);
+			grid.addItem(sbox3, 2, 0, 1, 1, 100, 0);
+
+			grid.setRect(0, 0, 80, 24);
+			grid.draw(screen24x80);
+
+			verify(sbox1, never()).setRect(anyInt(), anyInt(), anyInt(), anyInt());
+			verify(sbox2).setRect(0, 0, 80, 24);
+			verify(sbox3, never()).setRect(anyInt(), anyInt(), anyInt(), anyInt());
+		}
+
 	}
 
 	@Nested
