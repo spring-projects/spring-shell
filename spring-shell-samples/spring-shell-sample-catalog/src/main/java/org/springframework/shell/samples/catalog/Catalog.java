@@ -127,6 +127,7 @@ public class Catalog {
 					if (currentScenarioView != null) {
 						currentScenarioView = null;
 						ui.setRoot(app, true);
+						ui.setFocus(categories);
 					}
 					else {
 						requestQuit();
