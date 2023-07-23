@@ -103,7 +103,7 @@ public class ListView<T> extends BoxView {
 
 		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelUp, () -> up());
 		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelDown, () -> down());
-		registerMouseBinding(MouseEvent.Type.Released | MouseEvent.Button.Button1, () -> {});
+		registerMouseBinding(MouseEvent.Type.Released | MouseEvent.Button.Button1, event -> click(event));
 	}
 
 	private void up() {
@@ -119,6 +119,13 @@ public class ListView<T> extends BoxView {
 	private void enter() {
 		log.info("XXX enter");
 		dispatch(ShellMessageBuilder.ofView(this, ListViewOpenSelectedItemEvent.of(this, selectedItem())));
+	}
+
+	private void click(MouseEvent event) {
+		int index = event.y() - getInnerRect().y();
+		if (index > -1 && index < items.size()) {
+			setSelected(index);
+		}
 	}
 
 	public void setSelected(int selected) {

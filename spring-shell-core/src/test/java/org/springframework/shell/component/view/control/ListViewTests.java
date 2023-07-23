@@ -94,6 +94,22 @@ class ListViewTests extends AbstractViewTests {
 		assertThat(selected(view)).isEqualTo(0);
 	}
 
+	@Test
+	void mouseClickMoveSelection() {
+		ListView<String> view = new ListView<>();
+		configure(view);
+		view.setRect(0, 0, 80, 24);
+		view.setItems(Arrays.asList("item1", "item2"));
+		assertThat(selected(view)).isEqualTo(-1);
+
+		MouseEvent event00 = mouseClick(0, 0);
+		MouseEvent event01 = mouseClick(0, 1);
+		view.getMouseHandler().handle(MouseHandler.argsOf(event00));
+		assertThat(selected(view)).isEqualTo(0);
+		view.getMouseHandler().handle(MouseHandler.argsOf(event01));
+		assertThat(selected(view)).isEqualTo(1);
+	}
+
 	static int selected(ListView<?> view) {
 		return (int) ReflectionTestUtils.getField(view, "selected");
 	}
