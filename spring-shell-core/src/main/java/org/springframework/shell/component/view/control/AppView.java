@@ -107,6 +107,11 @@ public class AppView extends BoxView {
 			}
 			return KeyHandler.resultOf(event, consumed, null);
 		};
+
+		// if menu has focus, take from there
+		if (menu != null && menu.hasFocus()) {
+			return menu.getKeyHandler();
+		}
 		KeyHandler otherHandler = main != null ? main.getKeyHandler() : super.getKeyHandler();
 		return otherHandler.thenIfNotConsumed(handler);
 	}

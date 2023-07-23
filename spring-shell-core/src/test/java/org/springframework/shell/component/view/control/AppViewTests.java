@@ -18,6 +18,9 @@ package org.springframework.shell.component.view.control;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResult;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.never;
@@ -61,6 +64,50 @@ class AppViewTests extends AbstractViewTests {
 			assertThat(forScreen(screen24x80)).hasBorder(0, 1, 80, 22);
 		}
 
+	}
+
+	@Nested
+	class Events {
+
+		@Test
+		void shouldOfferKeysToMenuIfHavingFocus() {
+			BoxView smenu = spy(new BoxView());
+			BoxView smain = spy(new BoxView());
+			BoxView sstatus = spy(new BoxView());
+			AppView sview = new AppView(smain, smenu, sstatus);
+
+			smenu.focus(smenu, true);
+
+			KeyHandlerResult result = handleKey(sview, Key.CursorRight);
+			assertThat(result).isNotNull().satisfies(r -> {
+				assertThat(r.event()).isNotNull();
+				assertThat(r.consumed()).isFalse();
+				assertThat(r.focus()).isNull();
+				assertThat(r.capture()).isNull();
+			});
+
+			verify(smain, never()).getKeyHandler();
+			verify(smenu).getKeyHandler();
+		}
+
+		@Test
+		void shouldOfferKeysToMainIfMenuHaveNoFocus() {
+			BoxView smenu = spy(new BoxView());
+			BoxView smain = spy(new BoxView());
+			BoxView sstatus = spy(new BoxView());
+			AppView sview = new AppView(smain, smenu, sstatus);
+
+			KeyHandlerResult result = handleKey(sview, Key.CursorRight);
+			assertThat(result).isNotNull().satisfies(r -> {
+				assertThat(r.event()).isNotNull();
+				assertThat(r.consumed()).isTrue();
+				assertThat(r.focus()).isNull();
+				assertThat(r.capture()).isNull();
+			});
+
+			verify(smain).getKeyHandler();
+			verify(smenu, never()).getKeyHandler();
+		}
 	}
 
 	@Nested
