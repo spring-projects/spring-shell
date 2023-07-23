@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.shell.component.view.control.cell.ListCell;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.MouseEvent;
@@ -36,8 +33,6 @@ import org.springframework.shell.component.view.screen.ScreenItem;
  * @author Janne Valkealahti
  */
 public class ListView<T> extends BoxView {
-
-	private final static Logger log = LoggerFactory.getLogger(ListView.class);
 
 	private final List<T> items = new ArrayList<>();
 	private int selected = -1;
@@ -117,7 +112,6 @@ public class ListView<T> extends BoxView {
 	}
 
 	private void enter() {
-		log.info("XXX enter");
 		dispatch(ShellMessageBuilder.ofView(this, ListViewOpenSelectedItemEvent.of(this, selectedItem())));
 	}
 
