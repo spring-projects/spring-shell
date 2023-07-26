@@ -174,7 +174,9 @@ jobs:
         create: true
         upload: true
         close: true
+        close-timeout: 5400
         release: true
+        release-timeout: 5400
         generate-checksums: true
         pgp-sign: true
         pgp-sign-passphrase: ${{ secrets.GPG_PASSPHRASE }}
