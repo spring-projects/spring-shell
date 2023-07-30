@@ -17,8 +17,10 @@ package org.springframework.shell.component.view.control;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,9 @@ public class MenuBarView extends BoxView {
 	private final List<MenuBarItem> items = new ArrayList<>();
 	private MenuView currentMenuView;
 	private int activeItemIndex = -1;
+
+	// Need to keep menuviews alive not to lose their states
+	private final Map<MenuBarItem, MenuView> menuViews = new HashMap<>();
 
 	/**
 	 * Construct menubar view with menubar items.
@@ -202,14 +207,11 @@ public class MenuBarView extends BoxView {
 		}
 		else {
 			MenuBarItem item = items.get(activeItemIndex);
-			currentMenuView = buildMenuView(item);
+			currentMenuView = menuViews.computeIfAbsent(item, i -> buildMenuView(i));
 		}
 	}
 
 	private void closeCurrentMenuView() {
-		if (currentMenuView != null) {
-			currentMenuView.destroy();
-		}
 		currentMenuView = null;
 	}
 

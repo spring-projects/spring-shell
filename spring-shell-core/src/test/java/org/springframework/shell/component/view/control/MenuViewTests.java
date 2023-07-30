@@ -221,26 +221,39 @@ class MenuViewTests extends AbstractViewTests {
 
 		@Test
 		void showsCheckedInRadio() {
-			sub5.setChecked(true);
 			view = new MenuView(new MenuItem[] { sub5, sub6 });
 			view.setShowBorder(true);
 			configure(view);
 			view.setRect(0, 0, 10, 10);
+
+			view.toggle(sub5);
 			view.draw(screen10x10);
 			assertThat(forScreen(screen10x10)).hasHorizontalText("[x] sub5", 0, 1, 9);
 			assertThat(forScreen(screen10x10)).hasHorizontalText("[ ] sub6", 0, 2, 9);
+
+			view.toggle(sub6);
+			view.draw(screen10x10);
+			assertThat(forScreen(screen10x10)).hasHorizontalText("[ ] sub5", 0, 1, 9);
+			assertThat(forScreen(screen10x10)).hasHorizontalText("[x] sub6", 0, 2, 9);
 		}
 
 		@Test
 		void showsCheckedInNonRadio() {
-			sub4.setChecked(true);
 			view = new MenuView(new MenuItem[] { sub3, sub4 });
 			view.setShowBorder(true);
 			configure(view);
 			view.setRect(0, 0, 10, 10);
+
+			view.toggle(sub4);
 			view.draw(screen10x10);
 			assertThat(forScreen(screen10x10)).hasHorizontalText("[ ] sub3", 0, 1, 9);
 			assertThat(forScreen(screen10x10)).hasHorizontalText("[x] sub4", 0, 2, 9);
+
+			view.toggle(sub3);
+			view.toggle(sub4);
+			view.draw(screen10x10);
+			assertThat(forScreen(screen10x10)).hasHorizontalText("[x] sub3", 0, 1, 9);
+			assertThat(forScreen(screen10x10)).hasHorizontalText("[ ] sub4", 0, 2, 9);
 		}
 
 		@Test

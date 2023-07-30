@@ -18,7 +18,9 @@ package org.springframework.shell.component.view.control;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,12 @@ public class MenuView extends BoxView {
 	private final Logger log = LoggerFactory.getLogger(MenuView.class);
 	private final List<MenuItem> items = new ArrayList<>();
 	private int activeItemIndex = -1;
+
+	// we support only one radio group
+	private MenuItem radioActive;
+
+	// keep checked states outside of items itself
+	private Set<MenuItem> checkedActive = new HashSet<>();
 
 	/**
 	 * Construct menu view with no initial menu items.
@@ -137,11 +145,23 @@ public class MenuView extends BoxView {
 			}
 		}
 		for (MenuItem item : items) {
-			String prefix = hasCheck
-					? (item.getCheckStyle() != MenuItemCheckStyle.NOCHECK
-						? (item.isChecked() ? "[x] " : "[ ] ")
-						: "    ")
-					: "";
+			String prefix = hasCheck ? "    " : "";
+			if (item.checkStyle == MenuItemCheckStyle.RADIO) {
+				if (radioActive == item) {
+					prefix = "[x] ";
+				}
+				else {
+					prefix = "[ ] ";
+				}
+			}
+			else if (item.checkStyle == MenuItemCheckStyle.CHECKED) {
+				if (checkedActive.contains(item)) {
+					prefix = "[x] ";
+				}
+				else {
+					prefix = "[ ] ";
+				}
+			}
 			String text = prefix + item.getTitle();
 			if (activeItemIndex == i) {
 				writer2.text(text, rect.x(), y);
@@ -166,19 +186,70 @@ public class MenuView extends BoxView {
 		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelUp, () -> move(-1));
 	}
 
+	/**
+	 * Request to handle current selected item to get opened.
+	 */
 	private void keySelect() {
-		MenuItem item = items.get(activeItemIndex);
-		dispatch(ShellMessageBuilder.ofView(this, MenuViewOpenSelectedItemEvent.of(this, item)));
-		if (item.getAction() != null) {
-			dispatchRunnable(item.getAction());
+		select();
+	}
+
+	/**
+	 * Request to handle mouse event.
+	 */
+	private void mouseSelect(MouseEvent event) {
+		log.trace("select({})", event);
+		setSelected(indexAtPosition(event.x(), event.y()));
+		select();
+	}
+
+	/**
+	 * Toggle {@link MenuItem} checked state.
+	 *
+	 * @param item the menu item to toggle
+	 */
+	public void toggle(MenuItem item) {
+		if (item.checkStyle == MenuItemCheckStyle.RADIO) {
+			radioActive = item;
+		}
+		else if (item.checkStyle == MenuItemCheckStyle.CHECKED) {
+			if (checkedActive.contains(item)) {
+				checkedActive.remove(item);
+			}
+			else {
+				checkedActive.add(item);
+			}
 		}
 	}
 
+	/**
+	 * From current selected item index, if applicable, dispatch
+	 * {@link MenuViewSelectedItemChangedEvent}.
+	 */
+	private void select() {
+		if (activeItemIndex > -1 && activeItemIndex < items.size()) {
+			MenuItem item = items.get(activeItemIndex);
+			if (item == null) {
+				return;
+			}
+			toggle(item);
+			dispatch(ShellMessageBuilder.ofView(this, MenuViewOpenSelectedItemEvent.of(this, item)));
+			if (item.getAction() != null) {
+				dispatchRunnable(item.getAction());
+			}
+		}
+	}
+
+	/**
+	 * Request to move selection up or down.
+	 */
 	private void move(int count) {
 		log.trace("move({})", count);
 		setSelected(activeItemIndex + count);
 	}
 
+	/**
+	 *
+	 */
 	private void setSelected(int index) {
 		if (index >= items.size()) {
 			activeItemIndex = 0;
@@ -195,14 +266,14 @@ public class MenuView extends BoxView {
 		}
 	}
 
-	private void mouseSelect(MouseEvent event) {
-		log.trace("select({})", event);
-		int x = event.x();
-		int y = event.y();
-		setSelected(indexAtPosition(x, y));
-		keySelect();
-	}
-
+	/**
+	 * Gets an index of a item at given position. Returns negative index if position
+	 * doesn't map to existing item.
+	 *
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return an index or negative if not found
+	 */
 	private int indexAtPosition(int x, int y) {
 		Rectangle rect = getRect();
 		if (!rect.contains(x, y)) {
@@ -249,7 +320,6 @@ public class MenuView extends BoxView {
 		private final String title;
 		private final MenuItemCheckStyle checkStyle;
 		private final List<MenuItem> items;
-		private boolean checked;
 		private Runnable action;
 
 		/**
@@ -351,24 +421,6 @@ public class MenuView extends BoxView {
 		@Nullable
 		public MenuItemCheckStyle getCheckStyle() {
 			return checkStyle;
-		}
-
-		/**
-		 * Sets a checked state.
-		 *
-		 * @param checked checked state
-		 */
-		public void setChecked(boolean checked) {
-			this.checked = checked;
-		}
-
-		/**
-		 * Gets a checked state.
-		 *
-		 * @return checked state
-		 */
-		public boolean isChecked() {
-			return checked;
 		}
 
 		/**
