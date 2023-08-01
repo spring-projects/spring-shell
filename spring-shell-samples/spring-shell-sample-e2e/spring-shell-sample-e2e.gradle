@@ -15,7 +15,9 @@ dependencies {
 }
 
 springBoot {
-	buildInfo()
+    buildInfo {
+        excludes = ['time']
+    }
 }
 
 if (project.hasProperty('springShellSampleE2E') && springShellSampleE2E.toBoolean()) {
