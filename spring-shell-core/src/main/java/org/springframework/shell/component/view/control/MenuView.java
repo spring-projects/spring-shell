@@ -94,6 +94,14 @@ public class MenuView extends BoxView {
 			if (!items.isEmpty()) {
 				activeItemIndex = 0;
 			}
+			items.forEach(i -> {
+				if (i.initialCheckState && i.getCheckStyle() == MenuItemCheckStyle.CHECKED) {
+					checkedActive.add(i);
+				}
+				else if (i.initialCheckState && i.getCheckStyle() == MenuItemCheckStyle.RADIO) {
+					radioActive = i;
+				}
+			});
 		}
 	}
 
@@ -321,6 +329,7 @@ public class MenuView extends BoxView {
 		private final MenuItemCheckStyle checkStyle;
 		private final List<MenuItem> items;
 		private Runnable action;
+		private boolean initialCheckState = false;
 
 		/**
 		 * Construct menu item with a title.
@@ -342,19 +351,33 @@ public class MenuView extends BoxView {
 		}
 
 		/**
-		 * Construct menu item with a title and a check style.
+		 * Construct menu item with a title, a check style and a runnable.
 		 *
 		 * @param title the title
 		 * @param checkStyle the check style
 		 * @param action the action to run when item is chosen
 		 */
 		public MenuItem(String title, MenuItemCheckStyle checkStyle, Runnable action) {
+			this(title, checkStyle, action, false);
+		}
+
+		/**
+		 * Construct menu item with a title, a check style, a runnable and initial
+		 * checked state.
+		 *
+		 * @param title the title
+		 * @param checkStyle the check style
+		 * @param action the action to run when item is chosen
+		 * @param initialCheckState initial checked state
+		 */
+		public MenuItem(String title, MenuItemCheckStyle checkStyle, Runnable action, boolean initialCheckState) {
 			Assert.state(StringUtils.hasText(title), "title must have text");
 			Assert.notNull(checkStyle, "check style cannot be null");
 			this.title = title;
 			this.checkStyle = checkStyle;
 			this.action = action;
 			this.items = null;
+			this.initialCheckState = initialCheckState;
 		}
 
 		protected MenuItem(String title, MenuItem[] items) {
@@ -395,12 +418,25 @@ public class MenuView extends BoxView {
 			return new MenuItem(title, checkStyle, action);
 		}
 
+		public static MenuItem of(String title, MenuItemCheckStyle checkStyle, Runnable action, boolean initialCheckState) {
+			return new MenuItem(title, checkStyle, action, initialCheckState);
+		}
+
 		public Runnable getAction() {
 			return action;
 		}
 
 		public void setAction(Runnable action) {
 			this.action = action;
+		}
+
+		/**
+		 * Gets initial check state.
+		 *
+		 * @return initial check state
+		 */
+		public boolean isInitialCheckState() {
+			return initialCheckState;
 		}
 
 		/**

@@ -17,6 +17,7 @@ package org.springframework.shell.component.view.control;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -38,10 +39,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MenuViewTests extends AbstractViewTests {
 
 	private static final String SELECTED_FIELD = "activeItemIndex";
+	private static final String RADIO_ACTIVE_FIELD = "radioActive";
+	private static final String CHECKED_ACTIVE_FIELD = "checkedActive";
 
 	@Nested
 	class Construction {
 
+		@SuppressWarnings("unchecked")
 		@Test
 		void constructView() {
 			MenuView view;
@@ -69,6 +73,42 @@ class MenuViewTests extends AbstractViewTests {
 				new MenuItem("sub2", MenuItemCheckStyle.RADIO)
 			});
 			assertThat(view.getItems()).hasSize(2);
+
+			view = new MenuView(new MenuItem[] {
+				new MenuItem("sub1", MenuItemCheckStyle.RADIO, null, true),
+				new MenuItem("sub2", MenuItemCheckStyle.RADIO, null, false)
+			});
+			assertThat(view.getItems()).hasSize(2);
+			MenuItem radioActive = (MenuItem) ReflectionTestUtils.getField(view, RADIO_ACTIVE_FIELD);
+			assertThat(radioActive).isNotNull();
+			assertThat(radioActive.getTitle()).isEqualTo("sub1");
+
+			view = new MenuView(new MenuItem[] {
+				new MenuItem("sub1", MenuItemCheckStyle.CHECKED, null, true),
+				new MenuItem("sub2", MenuItemCheckStyle.CHECKED, null, true)
+			});
+			assertThat(view.getItems()).hasSize(2);
+			Set<MenuItem> checkedActive = (Set<MenuItem>) ReflectionTestUtils.getField(view, CHECKED_ACTIVE_FIELD);
+			assertThat(checkedActive).isNotNull();
+			assertThat(checkedActive).hasSize(2);
+		}
+
+		@Test
+		void constructItem() {
+			MenuItem item;
+			Runnable runnable = () -> {};
+
+			item = new MenuItem("title", MenuItemCheckStyle.RADIO, runnable, true);
+			assertThat(item.getTitle()).isEqualTo("title");
+			assertThat(item.getCheckStyle()).isEqualTo(MenuItemCheckStyle.RADIO);
+			assertThat(item.getAction()).isSameAs(runnable);
+			assertThat(item.isInitialCheckState()).isTrue();
+
+			item = MenuItem.of("title", MenuItemCheckStyle.RADIO, runnable, true);
+			assertThat(item.getTitle()).isEqualTo("title");
+			assertThat(item.getCheckStyle()).isEqualTo(MenuItemCheckStyle.RADIO);
+			assertThat(item.getAction()).isSameAs(runnable);
+			assertThat(item.isInitialCheckState()).isTrue();
 		}
 
 		@Test
