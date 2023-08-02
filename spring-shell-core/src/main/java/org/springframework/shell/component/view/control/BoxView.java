@@ -58,25 +58,6 @@ public class BoxView extends AbstractView {
 		super.setRect(x, y, width, height);
 	}
 
-	// @Override
-	// public MouseHandler getMouseHandler() {
-	// 	log.trace("getMouseHandler() {}", this);
-	// 	return args -> {
-	// 		// box view only handles "mouse click on button 1"
-	// 		View view = null;
-	// 		MouseEvent event = args.event();
-	// 		if (event.getModifiers().isEmpty() && event.getType() == MouseEvent.Type.Released
-	// 				&& event.getButton() == MouseEvent.Button.Button1) {
-	// 			int x = event.getX();
-	// 			int y = event.getY();
-	// 			if (getRect().contains(x, y)) {
-	// 				view = this;
-	// 			}
-	// 		}
-	// 		return MouseHandler.resultOf(args.event(), view != null, view, this);
-	// 	};
-	// }
-
 	/**
 	 * Sets a paddings for this view.
 	 *
