@@ -1,5 +1,6 @@
 [[built-in-commands-stacktrace]]
 = Stacktrace
+:page-section-summary-toc: 1
 
 When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
 so as not to overflow the user with too much information.

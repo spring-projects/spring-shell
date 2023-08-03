@@ -1,5 +1,6 @@
 [[using-shell-options-basics-annotation]]
 = Annotation
+:page-section-summary-toc: 1
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 

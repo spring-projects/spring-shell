@@ -1,5 +1,6 @@
 [[spring-shell-reference-documentation]]
 = Spring Shell Reference Documentation
+:page-section-summary-toc: 1
 Eric Bottard; Janne Valkealahti; Jay Bryant; Corneil du Plessis
 :doctype: book
 :hide-uri-scheme:

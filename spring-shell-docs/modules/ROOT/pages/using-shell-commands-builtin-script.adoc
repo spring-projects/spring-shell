@@ -1,5 +1,6 @@
 [[built-in-commands-script]]
 = Script
+:page-section-summary-toc: 1
 
 The `script` command accepts a local file as an argument and replays commands found there, one at a time.
 

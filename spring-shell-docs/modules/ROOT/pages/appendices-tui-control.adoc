@@ -1,5 +1,6 @@
 [#appendix-tui-control]
 = Control
+:page-section-summary-toc: 1
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 

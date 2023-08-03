@@ -1,6 +1,7 @@
 [[using-shell-options-basics-registration]]
 [[using-shell-options-basics-programmatic]]
 = Programmatic
+:page-section-summary-toc: 1
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 

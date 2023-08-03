@@ -1,5 +1,6 @@
 [[what-is-spring-shell?]]
 = What is Spring Shell?
+:page-section-summary-toc: 1
 
 Not all applications need a fancy web user interface.
 Sometimes, interacting with an application through an interactive terminal is

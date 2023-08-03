@@ -1,5 +1,6 @@
 [[using-shell-basics-reading]]
 = Reading Docs
+:page-section-summary-toc: 1
 
 Throughout this documentation, we make references to configuring something by using
 annotations or programmatic examples.
