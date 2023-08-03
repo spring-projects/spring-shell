@@ -1,0 +1,42 @@
+antora:
+  extensions:
+  - '@springio/antora-extensions/partial-build-extension'
+  - require: '@springio/antora-extensions/latest-version-extension'
+  - require: '@springio/antora-extensions/inject-collector-cache-config-extension'
+  - '@antora/collector-extension'
+  - '@antora/atlas-extension'
+  - require: '@springio/antora-extensions/root-component-extension'
+    root_component_name: 'shell'
+site:
+  title: Spring Shell
+  url: https://docs.spring.io/spring-shell/reference
+  robots: allow
+git:
+  ensure_git_suffix: false
+content:
+  sources:
+  - url: https://github.com/spring-projects/spring-shell
+    # Refname matching:
+    # https://docs.antora.org/antora/latest/playbook/content-refname-matching/
+    branches: [ main,'({3..9}).+({0..9}).x', '!(3.{0..1}.x)' ]
+    tags: [ 'v({3..9}).+({0..9}).+({0..9})?(-{RC,M}+({0..9}))', '!(v3.{0..1}.+({0..9})?(-{RC,M}+({0..9})))' ]
+    start_path: spring-shell-docs
+asciidoc:
+  attributes:
+    page-stackoverflow-url: https://stackoverflow.com/tags/spring-shell
+    page-pagination: ''
+    hide-uri-scheme: '@'
+    tabs-sync-option: '@'
+  extensions:
+  - '@asciidoctor/tabs'
+  - '@springio/asciidoctor-extensions'
+urls:
+  latest_version_segment_strategy: redirect:to
+  latest_version_segment: ''
+  redirect_facility: httpd
+ui:
+  bundle:
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.3.3/ui-bundle.zip
+runtime:
+  log:
+    failure_level: warn
