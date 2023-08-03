@@ -16,8 +16,5 @@ and removed. Secondly so that we're able to provide same set of features than us
 `CommandRegistration`. Creating new a annotation model allows us to rethink and modernise that
 part without breaking existing applications.
 
-include::using-shell-commands-registration-programmatic.adoc[]
 
-include::using-shell-commands-registration-annotation.adoc[]
 
-include::using-shell-commands-registration-legacyannotation.adoc[]

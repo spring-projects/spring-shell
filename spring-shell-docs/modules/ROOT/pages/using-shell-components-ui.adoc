@@ -22,16 +22,9 @@ Built-in components generally follow this logic:
 NOTE: <<using-shell-components-flow>> gives better interface for defining the flow of
 components that are better suited for defining interactive command flows.
 
-include::using-shell-components-ui-render.adoc[]
 
-include::using-shell-components-ui-stringinput.adoc[]
 
-include::using-shell-components-ui-pathinput.adoc[]
 
-include::using-shell-components-ui-pathsearch.adoc[]
 
-include::using-shell-components-ui-confirmation.adoc[]
 
-include::using-shell-components-ui-singleselect.adoc[]
 
-include::using-shell-components-ui-multiselect.adoc[]

@@ -18,22 +18,12 @@ arguments or with programmatically using `CommandRegistration`.
 NOTE: In below sections `@ShellOption` refer to a _legacy annotation model_
 and `@Option` refer to an _annotation model_.
 
-include::using-shell-options-basics.adoc[]
 
-include::using-shell-options-short.adoc[]
 
-include::using-shell-options-arity.adoc[]
 
-include::using-shell-options-positional.adoc[]
 
-include::using-shell-options-optional.adoc[]
 
-include::using-shell-options-default.adoc[]
 
-include::using-shell-options-validation.adoc[]
 
-include::using-shell-options-label.adoc[]
 
-include::using-shell-options-types.adoc[]
 
-include::using-shell-options-naming.adoc[]

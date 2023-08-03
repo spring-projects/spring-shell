@@ -7,6 +7,4 @@ Framework provides a build-in views which are documented below.
 
 TIP: To learn more about views, see <<appendix-tui-view>>.
 
-include::using-shell-tui-views-box.adoc[]
 
-include::using-shell-tui-views-list.adoc[]

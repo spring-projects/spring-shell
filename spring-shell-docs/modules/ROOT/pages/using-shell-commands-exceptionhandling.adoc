@@ -13,8 +13,5 @@ this mostly relates when a command is run on a non-interactive mode meaning one 
 is always executed once with an instance of a `spring-shell`. Take a note that _exit code_
 always relates to non-interactive shell.
 
-include::using-shell-commands-exceptionhandling-resolving.adoc[]
 
-include::using-shell-commands-exceptionhandling-mappings.adoc[]
 
-include::using-shell-commands-exceptionhandling-annotation.adoc[]

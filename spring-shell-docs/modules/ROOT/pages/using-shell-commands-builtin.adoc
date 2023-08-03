@@ -1,18 +1,10 @@
 [[built-in-commands]]
 = Built-In Commands
 
-include::using-shell-commands-builtin-help.adoc[]
 
-include::using-shell-commands-builtin-clear.adoc[]
 
-include::using-shell-commands-builtin-exit.adoc[]
 
-include::using-shell-commands-builtin-stacktrace.adoc[]
 
-include::using-shell-commands-builtin-script.adoc[]
 
-include::using-shell-commands-builtin-history.adoc[]
 
-include::using-shell-commands-builtin-completion.adoc[]
 
-include::using-shell-commands-builtin-version.adoc[]

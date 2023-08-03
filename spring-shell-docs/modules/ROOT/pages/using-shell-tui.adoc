@@ -11,6 +11,4 @@ documentation.
 
 TIP: Catalog sample is a good place to study a real application <<appendix-tui-catalog>>.
 
-include::using-shell-tui-intro.adoc[]
 
-include::using-shell-tui-views.adoc[]

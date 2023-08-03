@@ -16,10 +16,6 @@ others, provided that you do not charge any fee for such copies and further
 provided that each copy contains this Copyright Notice, whether distributed in
 print or electronically._
 
-include::introduction.adoc[]
 
-include::getting-started.adoc[]
 
-include::using-shell.adoc[]
 
-include::appendices.adoc[]

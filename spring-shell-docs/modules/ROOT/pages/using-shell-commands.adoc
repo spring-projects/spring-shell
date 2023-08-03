@@ -7,20 +7,11 @@ In this section, we go through an actual command registration and leave command 
 and execution for later in a documentation. You can find more detailed info in
 <<appendix-tech-intro-registration>>.
 
-include::using-shell-commands-registration.adoc[]
 
-include::using-shell-commands-organize.adoc[]
 
-include::using-shell-commands-availability.adoc[]
 
-include::using-shell-commands-exceptionhandling.adoc[]
 
-include::using-shell-commands-hidden.adoc[]
 
-include::using-shell-commands-helpoptions.adoc[]
 
-include::using-shell-commands-interactionmode.adoc[]
 
-include::using-shell-commands-builtin.adoc[]
 
-include::using-shell-commands-writing.adoc[]

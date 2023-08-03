@@ -14,4 +14,3 @@ Essentially, a few things needs to happen before you have a working Spring Shell
 You can get a full working Spring Shell application without defining any user-level commands
 as some basic built-in commands (such as `help` and `history`) are provided.
 
-include::using-shell-basics-reading.adoc[]

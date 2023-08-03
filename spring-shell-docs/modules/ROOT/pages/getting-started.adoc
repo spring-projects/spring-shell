@@ -82,7 +82,6 @@ Once compiled it can be run either in interactive mode:
 ====
 [source, text, subs=attributes+]
 ----
-include::code/getting-started-run-interactive.out[]
 ----
 ====
 
@@ -91,7 +90,6 @@ Or in non-interactive mode:
 ====
 [source, text, subs=attributes+]
 ----
-include::code/getting-started-run-noninteractive.out[]
 ----
 ====
 

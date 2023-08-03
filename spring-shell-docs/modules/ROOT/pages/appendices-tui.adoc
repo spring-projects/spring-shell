@@ -8,16 +8,9 @@ This is a technical introduction to _UI Framework_.
 
 _UI Framework_ is a toolkit to build rich console apps.
 
-include::appendices-tui-control.adoc[]
 
-include::appendices-tui-view.adoc[]
 
-include::appendices-tui-eventloop.adoc[]
 
-include::appendices-tui-screen.adoc[]
 
-include::appendices-tui-keyhandling.adoc[]
 
-include::appendices-tui-mousehandling.adoc[]
 
-include::appendices-tui-catalog.adoc[]
