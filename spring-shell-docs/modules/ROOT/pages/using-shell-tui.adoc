@@ -6,9 +6,9 @@ NOTE: Feature is experimental and subject to breaking changes until foundation
 
 _Terminal UI Framework_ is a toolkit to build rich console apps. This section is
 for those using existing features as is. If you're planning to go deeper possibly
-creating your own components <<appendix-tech-intro-tui>> provides more detailed
+creating your own components xref:appendices-tui.adoc[Terminal UI] provides more detailed
 documentation.
 
-TIP: Catalog sample is a good place to study a real application <<appendix-tui-catalog>>.
+TIP: Catalog sample is a good place to study a real application xref:appendices-tui-catalog.adoc[Catalog App].
 
 

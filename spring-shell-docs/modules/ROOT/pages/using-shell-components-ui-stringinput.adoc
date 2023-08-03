@@ -40,5 +40,5 @@ The context object is `StringInputContext`. The following table lists its contex
 |`true` if a mask character is set. Otherwise, false.
 
 |`model`
-|The parent context variables (see <<textcomponentcontext-template-variables>>).
+|The parent context variables (see xref:using-shell-components-ui-render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
 |===

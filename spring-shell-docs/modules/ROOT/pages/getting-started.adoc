@@ -93,7 +93,7 @@ Or in non-interactive mode:
 ----
 ====
 
-TIP: Check out <<using-shell-customization-logging>> making logging to work
+TIP: Check out xref:using-shell-customization-logging.adoc[Logging] making logging to work
 better with shell apps.
 
 [[using-spring-shell-your-first-command]]

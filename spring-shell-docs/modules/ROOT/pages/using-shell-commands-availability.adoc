@@ -57,7 +57,7 @@ Details of the error have been omitted. You can use the stacktrace command to pr
 ----
 ====
 
-Information about currently unavailable commands is also used in the integrated help. See <<built-in-commands-help>>.
+Information about currently unavailable commands is also used in the integrated help. See xref:using-shell-commands-builtin-help.adoc[Help].
 
 [TIP]
 ====

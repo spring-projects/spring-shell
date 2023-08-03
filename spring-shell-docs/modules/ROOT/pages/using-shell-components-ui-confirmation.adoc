@@ -28,5 +28,5 @@ The context object is `ConfirmationInputContext`. The following table describes 
 |The default value -- either `true` or `false`.
 
 |`model`
-|The parent context variables (see <<textcomponentcontext-template-variables>>).
+|The parent context variables (see xref:using-shell-components-ui-render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
 |===

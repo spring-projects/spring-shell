@@ -15,7 +15,7 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet9]
 ====
 
 NOTE: Logic for search is passed as is into algorithms documented
-in <<appendix-tech-intro-searchalgorithm>>.
+in xref:appendices-techical-intro-searchalgorithm.adoc[Search Algorithms].
 
 The following image shows typical output from a path search component:
 
@@ -32,5 +32,5 @@ The context object is `PathSearchContext`. The following table describes its con
 |The items available for rendering search results.
 
 |`model`
-|The parent context variables (see <<textcomponentcontext-template-variables>>).
+|The parent context variables (see xref:using-shell-components-ui-render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
 |===

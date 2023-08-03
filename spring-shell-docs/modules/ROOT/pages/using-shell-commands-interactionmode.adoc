@@ -4,7 +4,7 @@
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Command registration can define `InteractionMode` which is used to hide commands
-depending which mode shell is executing. More about that in <<using-shell-execution-interactionmode>>.
+depending which mode shell is executing. More about that in xref:using-shell-execution.adoc#using-shell-execution-interactionmode[Interaction Mode].
 
 You can define it with `CommandRegisration`.
 

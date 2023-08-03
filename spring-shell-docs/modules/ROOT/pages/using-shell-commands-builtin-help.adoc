@@ -7,7 +7,7 @@ accessing a web browser or any other rich UI application (such as a PDF viewer) 
 be possible. This is why it is important that the shell commands are correctly self-documented, and this is where the `help`
 command comes in.
 
-Typing `help` + `ENTER` lists all the commands known to the shell (including <<dynamic-command-availability,unavailable>> commands)
+Typing `help` + `ENTER` lists all the commands known to the shell (including xref:using-shell-commands-availability.adoc[unavailable] commands)
 and a short description of what they do, similar to the following:
 
 ====
@@ -96,10 +96,10 @@ as a model.
 |`true` if showing groups is enabled. Otherwise, false.
 
 |`groups`
-|The commands variables (see <<groupcommandinfomodel-variables>>).
+|The commands variables (see xref:using-shell-commands-builtin-help.adoc#groupcommandinfomodel-variables[GroupCommandInfoModel Variables]).
 
 |`commands`
-|The commands variables (see <<commandinfomodel-variables>>).
+|The commands variables (see xref:using-shell-commands-builtin-help.adoc#commandinfomodel-variables[CommandInfoModel Variables]).
 
 |`hasUnavailableCommands`
 |`true` if there is unavailable commands. Otherwise, false.
@@ -114,7 +114,7 @@ as a model.
 |The name of a group, if set. Otherwise, empty.
 
 |`commands`
-|The commands, if set. Otherwise, empty. Type is a multi value, see <<commandinfomodel-variables>>.
+|The commands, if set. Otherwise, empty. Type is a multi value, see xref:using-shell-commands-builtin-help.adoc#commandinfomodel-variables[CommandInfoModel Variables].
 |===
 
 [[commandinfomodel-variables]]
@@ -135,10 +135,10 @@ as a model.
 |The description of a command, if set. Otherwise, null.
 
 |`parameters`
-|The parameters variables, if set. Otherwise empty. Type is a multi value, see <<commandparameterinfomodel-variables>>.
+|The parameters variables, if set. Otherwise empty. Type is a multi value, see xref:using-shell-commands-builtin-help.adoc#commandparameterinfomodel-variables[CommandParameterInfoModel Variables].
 
 |`availability`
-|The availability variables (see <<commandavailabilityinfomodel-variables>>).
+|The availability variables (see xref:using-shell-commands-builtin-help.adoc#commandavailabilityinfomodel-variables[CommandAvailabilityInfoModel Variables]).
 |===
 
 [[commandparameterinfomodel-variables]]

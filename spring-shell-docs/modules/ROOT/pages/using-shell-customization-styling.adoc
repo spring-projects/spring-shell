@@ -13,7 +13,7 @@ Spring Shell supports these via it's theming framework which contains two parts,
 firstly _styling_ can be used to change text type and secondly _figures_ how
 some characters are shown. These two are then combined together as a _theme_.
 
-More about _theming_ internals, see <<appendix-tech-intro-theming>>.
+More about _theming_ internals, see xref:appendices-techical-intro-theming.adoc[Theming].
 
 NOTE: Default theme is named `default` but can be change using property
 `spring.shell.theme.name`. Other built-in theme named `dump` uses

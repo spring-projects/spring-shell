@@ -14,7 +14,7 @@ simple command-line tool without requiring customization.
 
 Currently, interactive mode is entered if any command line options are passed when starting
 or running a shell from a command line. This works especially well when a shell application
-is compiled with <<native>>.
+is compiled with xref:using-shell-building.adoc#native[Native Support].
 
 Some commands may not have any useful meanings when they run in interactive mode
 or (conversely) in non-interactive mode. For example, a built-in `exit` command would

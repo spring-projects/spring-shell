@@ -31,5 +31,5 @@ The context object is `MultiItemSelectorContext`. The following table describes 
 |The visible items, where rows contain maps of name, selected, on-row, and enabled items.
 
 |`model`
-|The parent context variables (see <<selectorcomponentcontext-template-variables>>).
+|The parent context variables (see xref:using-shell-components-ui-render.adoc#selectorcomponentcontext-template-variables[SelectorComponentContext Template Variables]).
 |===
