@@ -1,5 +1,7 @@
 plugins {
 	id 'org.springframework.shell.docs'
+	id 'org.antora' version '1.0.0'
+	id 'io.spring.antora.generate-antora-yml' version '0.0.1'
 }
 
 description = 'Spring Shell Documentation'
@@ -12,6 +14,32 @@ dependencies {
 	testImplementation 'org.awaitility:awaitility'
 }
 
-asciidoctorj {
-	version = '2.5.4'
+antora {
+	version = '3.2.0-alpha.2'
+	options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
+	dependencies = [
+			'@antora/atlas-extension': '1.0.0-alpha.1',
+			'@antora/collector-extension': '1.0.0-alpha.3',
+			'@asciidoctor/tabs': '1.0.0-beta.3',
+			'@springio/antora-extensions': '1.4.2',
+			'@springio/asciidoctor-extensions': '1.0.0-alpha.8',
+	]
+}
+
+tasks.named("generateAntoraYml") {
+	asciidocAttributes = project.provider( {
+		def dependencies = resolvedVersions(project.configurations.testRuntimeClasspath)
+		return ['project-version' : project.version,
+			'spring-boot-version' : dependencies['spring-boot-starter-version'],
+			'spring-version': dependencies['spring-core-version']
+		]
+	} )
+}
+
+
+
+def resolvedVersions(Configuration configuration) {
+	return configuration.resolvedConfiguration
+			.resolvedArtifacts
+			.collectEntries { [(it.name + '-version'): it.moduleVersion.id.version] }
 }
