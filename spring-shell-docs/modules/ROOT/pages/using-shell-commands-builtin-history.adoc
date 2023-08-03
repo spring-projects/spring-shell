@@ -1,5 +1,5 @@
 [[built-in-commands-history]]
-==== History
+= History
 
 The `history` command shows the history of commands that has been executed.
 

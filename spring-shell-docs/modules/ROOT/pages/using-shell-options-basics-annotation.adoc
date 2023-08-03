@@ -1,5 +1,6 @@
 [[using-shell-options-basics-annotation]]
-==== Annotation
+= Annotation
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 `Option` annotation can be used to define an option name if you

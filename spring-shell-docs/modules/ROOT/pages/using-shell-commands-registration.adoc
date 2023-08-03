@@ -1,5 +1,6 @@
 [[registration]]
-=== Registration
+= Registration
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 There are two different ways to define a command: through an annotation model and

@@ -1,10 +1,10 @@
 [[using-shell-building]]
-== Building
+= Building
 
 This section covers how to build a Spring Shell application.
 
 [[native]]
-=== Native Support
+== Native Support
 
 Support for compiling _Spring Shell_ application into a _GraalVM_ binary
 mostly comes from _Spring Framework_ and _Spring Boot_ where feature is

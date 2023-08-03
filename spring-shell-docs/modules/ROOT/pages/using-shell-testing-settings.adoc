@@ -1,5 +1,6 @@
 [[using-shell-testing-settings]]
-=== Settings
+= Settings
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Built in emulation uses terminal width 80 and height 24 on default.

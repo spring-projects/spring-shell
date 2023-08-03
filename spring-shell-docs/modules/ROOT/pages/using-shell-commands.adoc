@@ -1,5 +1,6 @@
 [[commands]]
-== Commands
+= Commands
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 In this section, we go through an actual command registration and leave command options

@@ -1,5 +1,6 @@
 [[dynamic-command-exitcode-resolving]]
-==== Exception Resolving
+= Exception Resolving
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Unhandled exceptions will bubble up into shell's `ResultHandlerService` and then eventually

@@ -1,5 +1,6 @@
 [#appendix-tui-view]
-=== View
+= View
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 _View_ extends _Control_ providing integration into event loop.

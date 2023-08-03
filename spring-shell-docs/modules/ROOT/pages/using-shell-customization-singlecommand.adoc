@@ -1,5 +1,6 @@
 [[using-shell-customization-singlecommand]]
-=== Single Command
+= Single Command
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 If your shell application is made for exactly a single purpose having only one

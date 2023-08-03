@@ -1,11 +1,12 @@
 [[using-shell-options-types]]
-=== Types
+= Types
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 This section talks about how particular data type is used as an option value.
 
 [[string]]
-==== String
+== String
 
 `String` is a most simplest type as there's no conversion involved as what's
 coming in from a user is always a string.
@@ -28,7 +29,7 @@ include::{snippets}/OptionTypesSnippets.java[tag=option-type-string-reg]
 ====
 
 [[boolean]]
-==== Boolean
+== Boolean
 
 Using boolean types is a bit more involved as there are `boolean` and
 `Boolean` where latter can be _null_. Boolean types are usually used as
@@ -77,7 +78,7 @@ arg1=false arg2=true arg3=false arg4=false arg5=true arg6=false
 ====
 
 [[number]]
-==== Number
+== Number
 
 Numbers are converted as is.
 
@@ -96,7 +97,7 @@ include::{snippets}/OptionTypesSnippets.java[tag=option-type-integer-reg]
 ====
 
 [[enum]]
-==== Enum
+== Enum
 
 Conversion to enums is possible if given value is exactly matching enum itself.
 Currently you can convert assuming case insensitivity.
@@ -123,7 +124,7 @@ include::{snippets}/OptionTypesSnippets.java[tag=option-type-enum-reg]
 ====
 
 [[array]]
-==== Array
+== Array
 
 Arrays can be used as is with strings and primitive types.
 

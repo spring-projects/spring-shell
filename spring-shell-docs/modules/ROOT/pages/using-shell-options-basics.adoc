@@ -1,5 +1,6 @@
 [[using-shell-options-basics]]
-=== Basics
+= Basics
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 This section gives a generic idea how an option can be defined. Following

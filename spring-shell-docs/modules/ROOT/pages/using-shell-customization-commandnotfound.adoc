@@ -1,5 +1,6 @@
 [[using-shell-customization-commandnotfound]]
-=== Command Not Found
+= Command Not Found
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 On default a missing command is handled via `CommandNotFoundResultHandler`

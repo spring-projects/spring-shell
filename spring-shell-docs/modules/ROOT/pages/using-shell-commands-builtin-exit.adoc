@@ -1,5 +1,5 @@
 [[built-in-commands-exit]]
-==== Exit
+= Exit
 
 The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
 closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all

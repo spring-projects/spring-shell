@@ -1,5 +1,6 @@
 [[dynamic-command-exitcode-mappings]]
-==== Exit Code Mappings
+= Exit Code Mappings
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Default behaviour of an exit codes is as:

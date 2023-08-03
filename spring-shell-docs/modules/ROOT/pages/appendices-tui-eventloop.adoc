@@ -1,5 +1,6 @@
 [#appendix-tui-eventloop]
-=== EventLoop
+= EventLoop
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 _EventLoop_ is a central system handling eventing in a framework.

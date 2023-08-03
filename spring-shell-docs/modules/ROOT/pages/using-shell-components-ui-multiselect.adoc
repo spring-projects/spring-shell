@@ -1,5 +1,6 @@
 [[using-shell-components-ui-multiselect]]
-==== Multi Select
+= Multi Select
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 The multi select component asks a user to select multiple items from a list.

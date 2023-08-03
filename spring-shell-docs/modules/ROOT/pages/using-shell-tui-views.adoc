@@ -1,5 +1,6 @@
 [[using-shell-tui-views]]
-=== Views
+= Views
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Framework provides a build-in views which are documented below.

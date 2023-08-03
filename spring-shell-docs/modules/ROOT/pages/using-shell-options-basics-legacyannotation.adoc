@@ -1,5 +1,6 @@
 [[using-shell-options-basics-legacyannotation]]
-==== Legacy Annotation
+= Legacy Annotation
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Having a target method with argument is automatically registered with a matching

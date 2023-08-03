@@ -1,5 +1,6 @@
 [[using-shell-components-ui-render]]
-==== Component Render
+= Component Render
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 You can implement component rendering in either of two ways: fully

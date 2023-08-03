@@ -1,5 +1,5 @@
 [[built-in-commands-help]]
-==== Help
+= Help
 
 Running a shell application often implies that the user is in a graphically limited
 environment. Also, while we are nearly always connected in the era of mobile phones,

@@ -1,5 +1,6 @@
 [[dynamic-command-exitcode]]
-=== Exception Handling
+= Exception Handling
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Exceptions happen from a user code wether it is intentional or not. This section describes

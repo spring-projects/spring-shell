@@ -1,5 +1,5 @@
 [[built-in-commands-version]]
-==== Version
+= Version
 
 The `version` command shows existing build and git info by integrating into
 Boot's `BuildProperties` and `GitProperties` if those exist in the shell application.

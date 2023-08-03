@@ -1,5 +1,6 @@
 [#appendix-tech-intro-theming]
-=== Theming
+= Theming
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Styling in a theming is provided by a use of a _AttributedString_ from `JLine`.

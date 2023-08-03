@@ -1,5 +1,6 @@
 [[writing]]
-=== Writing
+= Writing
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 When something needs to get written into your console you can always

@@ -1,5 +1,6 @@
 [[using-shell-components-ui-pathinput]]
-==== Path Input
+= Path Input
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 The path input component asks a user for a `Path` and gives additional information about a path itself.

@@ -1,5 +1,5 @@
 [[using-shell-customization-logging]]
-=== Logging
+= Logging
 
 On default a _Spring Boot_ application will log messages into a console which
 at minimum is annoying and may also mix output from a shell commands.

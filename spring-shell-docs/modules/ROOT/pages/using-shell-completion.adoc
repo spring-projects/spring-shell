@@ -1,5 +1,6 @@
 [[completion]]
-== Completion
+= Completion
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Spring Shell can provide completion proposals for both interactive shell
@@ -10,7 +11,7 @@ When shell is purely run as a command-line tool a completion can only
 be accomplished with integration into OS level shell's like _bash_.
 
 [[interactive]]
-=== Interactive
+== Interactive
 
 Hints for completions are calculated with _function_ or _interface_ style
 methods which takes `CompletionContext` and returns a list of
@@ -61,7 +62,7 @@ include::{snippets}/CompletionSnippets.java[tag=anno-method]
 ====
 
 [[command-line]]
-=== Command-Line
+== Command-Line
 
 Command-line completion currently only support _bash_ and is documented
 in a built-in `completion` command <<built-in-commands-completion>>.

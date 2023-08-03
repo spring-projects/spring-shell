@@ -1,5 +1,6 @@
 [#appendix-tech-intro-registration]
-=== Command Registration
+= Command Registration
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Defining a command registration is a first step to introducing the structure of a command and its options
@@ -7,7 +8,7 @@ and parameters. This is loosely decoupled from what happens later, such as parsi
 actual target code. Essentially, it is the definition of a command API that is shown to a user.
 
 [[commands]]
-==== Commands
+== Commands
 A command in a `spring-shell` structure is defined as an array of commands. This yields a
 structure similar to the following example:
 
@@ -25,7 +26,7 @@ NOTE: We do not currently support mapping commands to an explicit parent if sub-
 For example, `command1 sub1` and `command1 sub1 subsub1` cannot both be registered.
 
 [[interaction-mode]]
-==== Interaction Mode
+== Interaction Mode
 Spring Shell has been designed to work on two modes: interactive (which essentially
 is a `REPL` where you have an active shell instance throughout a series of commands) and
 non-interactive (where commands are executed one by one from a command line).
@@ -39,7 +40,7 @@ Also, being on an active `REPL` session may provide more information about what 
 doing within an active session.
 
 [[options]]
-==== Options
+== Options
 Options can be defined as long and short, where the prefixing is `--` and `-`, respectively.
 The following examples show long and short options:
 
@@ -58,12 +59,12 @@ include::{snippets}/CommandRegistrationSnippets.java[tag=snippet2]
 ====
 
 [[target]]
-==== Target
+== Target
 The target defines the execution target of a command. It can be a method in a POJO,
 a `Consumer`, or a `Function`.
 
 [[method]]
-===== Method
+=== Method
 Using a `Method` in an existing POJO is one way to define a target.
 Consider the following class:
 
@@ -84,7 +85,7 @@ include::{snippets}/CommandTargetSnippets.java[tag=snippet12]
 ====
 
 [[function]]
-===== Function
+=== Function
 Using a `Function` as a target gives a lot of flexibility to handle what
 happens in a command execution, because you can handle many things manually by using
 a `CommandContext` given to a `Function`. The return type from a `Function` is
@@ -98,7 +99,7 @@ include::{snippets}/CommandTargetSnippets.java[tag=snippet2]
 ====
 
 [[consumer]]
-===== Consumer
+=== Consumer
 Using a `Consumer` is basically the same as using a `Function`, with the difference being
 that there is no return type. If you need to print something into a shell,
 you can get a reference to a `Terminal` from a context and print something

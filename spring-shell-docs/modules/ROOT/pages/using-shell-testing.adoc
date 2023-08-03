@@ -1,5 +1,6 @@
 [[using-shell-testing]]
-== Testing
+= Testing
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Testing cli application is difficult due to various reasons:

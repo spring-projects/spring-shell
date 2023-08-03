@@ -1,5 +1,6 @@
 [[command-context]]
-=== Command Context
+= Command Context
+
 The `CommandContext` interface gives access to a currently running
 context. You can use it to get access to options:
 

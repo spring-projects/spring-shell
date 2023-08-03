@@ -1,4 +1,5 @@
 [[built-in-commands-clear]]
-==== Clear
+= Clear
+
 The `clear` command does what you would expect and clears the screen, resetting the prompt
 in the top left corner.

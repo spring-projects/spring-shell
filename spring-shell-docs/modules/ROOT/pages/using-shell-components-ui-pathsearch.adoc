@@ -1,5 +1,6 @@
 [[using-shell-components-ui-pathsearch]]
-==== Path Search
+= Path Search
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 The path search component asks base directory for scan and optional search expression.

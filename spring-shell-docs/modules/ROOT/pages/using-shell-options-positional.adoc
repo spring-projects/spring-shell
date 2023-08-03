@@ -1,5 +1,6 @@
 [[using-shell-options-positional]]
-=== Positional
+= Positional
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Positional information is mostly related to a command target method:

@@ -1,5 +1,5 @@
 [[using-shell-basics-reading]]
-=== Reading Docs
+= Reading Docs
 
 Throughout this documentation, we make references to configuring something by using
 annotations or programmatic examples.

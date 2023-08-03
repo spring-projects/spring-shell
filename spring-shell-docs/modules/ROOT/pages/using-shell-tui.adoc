@@ -1,5 +1,5 @@
 [[using-shell-tui]]
-== Terminal UI
+= Terminal UI
 
 NOTE: Feature is experimental and subject to breaking changes until foundation
       and related concepts around framework are getting more stable.

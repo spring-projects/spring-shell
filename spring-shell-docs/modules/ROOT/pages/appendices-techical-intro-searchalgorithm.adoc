@@ -1,5 +1,6 @@
 [#appendix-tech-intro-searchalgorithm]
-=== Search Algorithms
+= Search Algorithms
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 `SearchMatch` is an interface to match _text_ with a _pattern_. Match
@@ -9,7 +10,7 @@ contains info about match positions and overall score of a match.
 https://github.com/junegunn/fzf[fzf].
 
 [[implementations]]
-==== Implementations
+== Implementations
 
 *FuzzyMatchV2Search*
 
@@ -22,7 +23,7 @@ Port of _fzf ExactMatchNaive_ algorithm. Simple exact match works more accuratel
 if you know what to search.
 
 [[searchmatch]]
-==== SearchMatch
+== SearchMatch
 
 Algorithms and default syntax are hidden inside package protected classes
 as we don't want to fully open these until we know API's are good to go
@@ -58,7 +59,7 @@ below table.
 |===
 
 [[examples]]
-==== Examples
+== Examples
 
 ====
 [source, java, indent=0]

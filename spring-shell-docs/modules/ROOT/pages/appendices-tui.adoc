@@ -1,6 +1,7 @@
 [appendix]
 [#appendix-tech-intro-tui]
-== Terminal UI
+= Terminal UI
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 This is a technical introduction to _UI Framework_.

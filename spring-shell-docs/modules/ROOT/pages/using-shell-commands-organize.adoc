@@ -1,5 +1,5 @@
 [[organizing-commands]]
-=== Organizing Commands
+= Organizing Commands
 
 When your shell starts to provide a lot of functionality, you may end up
 with a lot of commands, which could be confusing for your users. By typing `help`,

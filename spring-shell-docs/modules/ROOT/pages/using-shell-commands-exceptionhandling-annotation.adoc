@@ -1,5 +1,6 @@
 [[dynamic-command-exitcode-annotation]]
-==== @ExceptionResolver
+= @ExceptionResolver
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 `@ShellComponent` classes can have `@ExceptionResolver` methods to handle exceptions from component
@@ -53,7 +54,7 @@ include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-void]
 ====
 
 [[method-arguments]]
-===== Method Arguments
+== Method Arguments
 `@ExceptionResolver` methods support the following arguments:
 
 [Attributes]
@@ -69,7 +70,7 @@ include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-void]
 |===
 
 [[return-values]]
-===== Return Values
+== Return Values
 `@ExceptionResolver` methods support the following return values:
 
 [Attributes]

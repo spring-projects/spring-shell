@@ -1,11 +1,12 @@
 [[using-shell-execution]]
-== Execution
+= Execution
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 This section describes how to set up a Spring Shell to work in interactive mode.
 
 [[using-shell-execution-interactionmode]]
-=== Interaction Mode
+== Interaction Mode
 
 Version 2.1.x introduced built-in support to distinguish between interactive
 and non-interactive modes. This makes it easier to use the shell as a
@@ -23,7 +24,7 @@ The `@ShellMethod` annotation has a field called `interactionMode` that you can 
 shell about when a particular command is available.
 
 [[using-shell-execution-shellrunner]]
-=== Shell Runners
+== Shell Runners
 
 `ShellApplicationRunner` is a main interface where Boot's `ApplicationArguments` are passed
 and its default implementation makes a choice which `ShellRunner` is used. There can be

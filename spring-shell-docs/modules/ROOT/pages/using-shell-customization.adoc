@@ -1,5 +1,5 @@
 [[using-shell-customization]]
-== Customization
+= Customization
 
 This section describes how you can customize the shell.
 

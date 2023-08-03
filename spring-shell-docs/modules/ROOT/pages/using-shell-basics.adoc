@@ -1,5 +1,6 @@
 [[using-shell-basics]]
-== Basics
+= Basics
+
 This section covers the basics of Spring Shell. Before going on to define actual commands and options,
 we need to go through some of the fundamental concepts of Spring Shell.
 

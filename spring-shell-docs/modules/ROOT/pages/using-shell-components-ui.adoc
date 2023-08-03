@@ -1,5 +1,6 @@
 [[using-shell-components-ui]]
-=== Flow Components
+= Flow Components
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Starting from version 2.1.x, a new component model provides an

@@ -1,5 +1,5 @@
 [[built-in-commands]]
-=== Built-In Commands
+= Built-In Commands
 
 include::using-shell-commands-builtin-help.adoc[]
 

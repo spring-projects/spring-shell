@@ -1,5 +1,6 @@
 [[commands-helpoptions]]
-=== Help Options
+= Help Options
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 _Spring Shell_ has a build-in `help` command but not all favour getting command help

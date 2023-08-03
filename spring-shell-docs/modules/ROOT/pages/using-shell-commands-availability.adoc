@@ -1,5 +1,5 @@
 [[dynamic-command-availability]]
-=== Dynamic Command Availability
+= Dynamic Command Availability
 
 Registered commands do not always make sense, due to the internal state of the application.
 For example, there may be a `download` command, but it only works once the user has used `connect` on a remote

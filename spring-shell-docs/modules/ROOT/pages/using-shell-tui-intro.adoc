@@ -1,5 +1,6 @@
 [[using-shell-tui-intro]]
-=== Introduction
+= Introduction
+
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Lets start with a simple app which prints "hello world" in a view.

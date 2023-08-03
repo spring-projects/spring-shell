@@ -1,5 +1,5 @@
 [[built-in-commands-completion]]
-==== Completion
+= Completion
 
 The `completion` command set lets you create script files that can be used
 with am OS shell implementations to provide completion. This is very useful when
