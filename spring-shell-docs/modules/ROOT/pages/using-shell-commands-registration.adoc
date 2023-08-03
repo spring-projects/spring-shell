@@ -1,3 +1,4 @@
+[[registration]]
 === Registration
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 

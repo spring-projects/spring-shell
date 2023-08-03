@@ -1,3 +1,4 @@
+[[spring-shell-reference-documentation]]
 = Spring Shell Reference Documentation
 Eric Bottard; Janne Valkealahti; Jay Bryant; Corneil du Plessis
 :doctype: book

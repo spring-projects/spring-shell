@@ -1,3 +1,4 @@
+[[completion]]
 == Completion
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
@@ -8,6 +9,7 @@ easier to provide more programmatic ways to provide completion hints.
 When shell is purely run as a command-line tool a completion can only
 be accomplished with integration into OS level shell's like _bash_.
 
+[[interactive]]
 === Interactive
 
 Hints for completions are calculated with _function_ or _interface_ style
@@ -58,6 +60,7 @@ include::{snippets}/CompletionSnippets.java[tag=anno-method]
 ----
 ====
 
+[[command-line]]
 === Command-Line
 
 Command-line completion currently only support _bash_ and is documented

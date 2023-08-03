@@ -52,6 +52,7 @@ include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-void]
 ----
 ====
 
+[[method-arguments]]
 ===== Method Arguments
 `@ExceptionResolver` methods support the following arguments:
 
@@ -67,6 +68,7 @@ include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-void]
 
 |===
 
+[[return-values]]
 ===== Return Values
 `@ExceptionResolver` methods support the following return values:
 

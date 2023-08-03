@@ -8,6 +8,7 @@ contains info about match positions and overall score of a match.
 
 https://github.com/junegunn/fzf[fzf].
 
+[[implementations]]
 ==== Implementations
 
 *FuzzyMatchV2Search*
@@ -20,6 +21,7 @@ quickly finding paths.
 Port of _fzf ExactMatchNaive_ algorithm. Simple exact match works more accurately
 if you know what to search.
 
+[[searchmatch]]
 ==== SearchMatch
 
 Algorithms and default syntax are hidden inside package protected classes
@@ -55,6 +57,7 @@ below table.
 |Items that include `stuff`
 |===
 
+[[examples]]
 ==== Examples
 
 ====

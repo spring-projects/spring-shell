@@ -1,3 +1,4 @@
+[[what-is-spring-shell?]]
 == What is Spring Shell?
 Not all applications need a fancy web user interface.
 Sometimes, interacting with an application through an interactive terminal is

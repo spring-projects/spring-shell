@@ -6,6 +6,7 @@ Defining a command registration is a first step to introducing the structure of 
 and parameters. This is loosely decoupled from what happens later, such as parsing command-line input and running
 actual target code. Essentially, it is the definition of a command API that is shown to a user.
 
+[[commands]]
 ==== Commands
 A command in a `spring-shell` structure is defined as an array of commands. This yields a
 structure similar to the following example:
@@ -23,6 +24,7 @@ command2 sub2 subsub2
 NOTE: We do not currently support mapping commands to an explicit parent if sub-commands are defined.
 For example, `command1 sub1` and `command1 sub1 subsub1` cannot both be registered.
 
+[[interaction-mode]]
 ==== Interaction Mode
 Spring Shell has been designed to work on two modes: interactive (which essentially
 is a `REPL` where you have an active shell instance throughout a series of commands) and
@@ -36,6 +38,7 @@ dictates the available information.
 Also, being on an active `REPL` session may provide more information about what the user has been
 doing within an active session.
 
+[[options]]
 ==== Options
 Options can be defined as long and short, where the prefixing is `--` and `-`, respectively.
 The following examples show long and short options:
@@ -54,10 +57,12 @@ include::{snippets}/CommandRegistrationSnippets.java[tag=snippet2]
 ----
 ====
 
+[[target]]
 ==== Target
 The target defines the execution target of a command. It can be a method in a POJO,
 a `Consumer`, or a `Function`.
 
+[[method]]
 ===== Method
 Using a `Method` in an existing POJO is one way to define a target.
 Consider the following class:
@@ -78,6 +83,7 @@ include::{snippets}/CommandTargetSnippets.java[tag=snippet12]
 ----
 ====
 
+[[function]]
 ===== Function
 Using a `Function` as a target gives a lot of flexibility to handle what
 happens in a command execution, because you can handle many things manually by using
@@ -91,6 +97,7 @@ include::{snippets}/CommandTargetSnippets.java[tag=snippet2]
 ----
 ====
 
+[[consumer]]
 ===== Consumer
 Using a `Consumer` is basically the same as using a `Function`, with the difference being
 that there is no return type. If you need to print something into a shell,
