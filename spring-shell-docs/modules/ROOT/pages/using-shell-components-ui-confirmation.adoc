@@ -14,7 +14,7 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet5]
 
 The following image shows the typical output from a confirmation component:
 
-image::images/component-confirmation-1.svg[text input]
+image::component-confirmation-1.svg[text input]
 
 The context object is `ConfirmationInputContext`. The following table describes its context variables:
 

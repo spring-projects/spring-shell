@@ -14,7 +14,7 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet7]
 
 The following image shows a typical multi-select component:
 
-image::images/component-multi-select-1.svg[text input]
+image::component-multi-select-1.svg[text input]
 
 The context object is `MultiItemSelectorContext`. The following table describes its context variables:
 

@@ -13,7 +13,7 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet4]
 
 The following image shows typical output from a path input component:
 
-image::images/component-path-input-1.svg[text input]
+image::component-path-input-1.svg[text input]
 
 The context object is `PathInputContext`. The following table describes its context variables:
 

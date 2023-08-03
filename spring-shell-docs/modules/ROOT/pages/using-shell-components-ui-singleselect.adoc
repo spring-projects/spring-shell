@@ -14,7 +14,7 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet6]
 
 The following image shows typical output for a single select component:
 
-image::images/component-single-select-1.svg[text input]
+image::component-single-select-1.svg[text input]
 
 The context object is `SingleItemSelectorContext`. The following table describes its context variables:
 

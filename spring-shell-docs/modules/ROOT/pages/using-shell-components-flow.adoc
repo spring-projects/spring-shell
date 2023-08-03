@@ -17,7 +17,7 @@ include::{snippets}/FlowComponentSnippets.java[tag=snippet1]
 ----
 ====
 
-image::images/component-flow-showcase-1.svg[text input]
+image::component-flow-showcase-1.svg[text input]
 
 Normal execution order of a components is same as defined with a builder. It's
 possible to conditionally choose where to jump in a flow by using a `next`
@@ -31,7 +31,7 @@ include::{snippets}/FlowComponentSnippets.java[tag=snippet2]
 ----
 ====
 
-image::images/component-flow-conditional-1.svg[text input]
+image::component-flow-conditional-1.svg[text input]
 
 TIP: The result from running a flow returns `ComponentFlowResult`, which you can
 use to do further actions.

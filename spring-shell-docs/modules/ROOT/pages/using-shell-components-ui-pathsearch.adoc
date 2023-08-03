@@ -18,7 +18,7 @@ in <<appendix-tech-intro-searchalgorithm>>.
 
 The following image shows typical output from a path search component:
 
-image::images/component-path-search-1.svg[text input]
+image::component-path-search-1.svg[text input]
 
 The context object is `PathSearchContext`. The following table describes its context variables:
 

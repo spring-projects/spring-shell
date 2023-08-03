@@ -14,7 +14,7 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet3]
 
 The following image shows typical output from a string input component:
 
-image::images/component-text-input-1.svg[text input]
+image::component-text-input-1.svg[text input]
 
 The context object is `StringInputContext`. The following table lists its context variables:
 
