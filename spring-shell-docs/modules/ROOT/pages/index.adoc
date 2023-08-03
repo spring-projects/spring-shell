@@ -1,14 +1,14 @@
-[[spring-shell-reference-documentation]]
-= Spring Shell Reference Documentation
-:page-section-summary-toc: 1
+= Spring Shell
 Eric Bottard; Janne Valkealahti; Jay Bryant; Corneil du Plessis
-:doctype: book
-:hide-uri-scheme:
-:icons: font
-:experimental: // For kbd: macro
-:spring-shell-starter: spring-shell-starter
+:page-section-summary-toc: 1
 
-*{project-version}*
+**{project-version}**
+
+Not all applications need a fancy web user interface. Sometimes, interacting with an application through an interactive terminal is the most appropriate way to get things done.
+
+Spring Shell lets you create such a runnable application, where the user enters textual commands that are run until the program terminates. The Spring Shell project provides the infrastructure to create such a REPL (Read, Eval, Print Loop) application, letting you concentrate on implementing commands by using the familiar Spring programming model.
+
+Spring Shell includes advanced features (such as parsing, tab completion, colorization of output, fancy ASCII-art table display, input conversion, and validation), freeing you to focus on core command logic.
 
 (C) 2017 - 2023 VMware, Inc.
 
@@ -16,7 +16,3 @@ _Copies of this document may be made for your own use and for distribution to
 others, provided that you do not charge any fee for such copies and further
 provided that each copy contains this Copyright Notice, whether distributed in
 print or electronically._
-
-
-
-
