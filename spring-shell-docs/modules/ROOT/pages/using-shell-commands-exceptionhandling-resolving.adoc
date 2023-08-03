@@ -9,30 +9,24 @@ can be used to resolve exceptions and gives you flexibility to return message to
 into console together with exit code which are wrapped within `CommandHandlingResult`.
 `CommandHandlingResult` may contain a _message_ and/or _exit code_.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-resolver-class]
 ----
-====
 
 `CommandExceptionResolver` implementations can be defined globally as bean.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-resolver-class-as-bean]
 ----
-====
 
 or defined per `CommandRegistration` if it's applicable only for a particular command itself.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ErrorHandlingSnippets.java[tag=example1]
 ----
-====
 
 NOTE: Resolvers defined with a command are handled before global resolvers.
 
@@ -40,12 +34,10 @@ NOTE: Resolvers defined with a command are handled before global resolvers.
 Use you own exception types which can also be an instance of boot's `ExitCodeGenerator` if
 you want to define exit code there.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-class]
 ----
-====
 
 Some build in `CommandExceptionResolver` beans are registered to handle common
 exceptions thrown from command parsing. These are registered with _order_

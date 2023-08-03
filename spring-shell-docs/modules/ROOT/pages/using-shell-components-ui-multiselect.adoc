@@ -6,12 +6,10 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 The multi select component asks a user to select multiple items from a list.
 The following listing shows an example:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/UiComponentSnippets.java[tag=snippet7]
 ----
-====
 
 The following image shows a typical multi-select component:
 

@@ -12,7 +12,6 @@ actual target code. Essentially, it is the definition of a command API that is s
 A command in a `spring-shell` structure is defined as an array of commands. This yields a
 structure similar to the following example:
 
-====
 [source, bash]
 ----
 command1 sub1
@@ -20,7 +19,6 @@ command2 sub1 subsub1
 command2 sub2 subsub1
 command2 sub2 subsub2
 ----
-====
 
 NOTE: We do not currently support mapping commands to an explicit parent if sub-commands are defined.
 For example, `command1 sub1` and `command1 sub1 subsub1` cannot both be registered.
@@ -44,19 +42,15 @@ doing within an active session.
 Options can be defined as long and short, where the prefixing is `--` and `-`, respectively.
 The following examples show long and short options:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationSnippets.java[tag=snippet1]
 ----
-====
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationSnippets.java[tag=snippet2]
 ----
-====
 
 [[target]]
 == Target
@@ -68,21 +62,17 @@ a `Consumer`, or a `Function`.
 Using a `Method` in an existing POJO is one way to define a target.
 Consider the following class:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandTargetSnippets.java[tag=snippet11]
 ----
-====
 
 Given the existing class shown in the preceding listing, you can then register its method:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandTargetSnippets.java[tag=snippet12]
 ----
-====
 
 [[function]]
 === Function
@@ -91,12 +81,10 @@ happens in a command execution, because you can handle many things manually by u
 a `CommandContext` given to a `Function`. The return type from a `Function` is
 then what gets printed into the shell as a result. Consider the following example:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandTargetSnippets.java[tag=snippet2]
 ----
-====
 
 [[consumer]]
 === Consumer
@@ -105,9 +93,7 @@ that there is no return type. If you need to print something into a shell,
 you can get a reference to a `Terminal` from a context and print something
 through it. Consider the following example:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandTargetSnippets.java[tag=snippet3]
 ----
-====

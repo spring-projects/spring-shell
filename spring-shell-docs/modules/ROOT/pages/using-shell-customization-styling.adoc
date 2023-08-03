@@ -21,49 +21,39 @@ no styling for colors and tries to not use any special figures.
 
 Modify existing style by overriding settings.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ThemingSnippets.java[tag=custom-style-class]
 ----
-====
 
 Modify existing figures by overriding settings.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ThemingSnippets.java[tag=custom-figure-class]
 ----
-====
 
 To create a new theme, create a `ThemeSettings` and provide your own _style_
 and _figure_ implementations.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ThemingSnippets.java[tag=custom-theme-class]
 ----
-====
 
 Register a new bean `Theme` where you can return your custom `ThemeSettings`
 and a _theme_ name.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ThemingSnippets.java[tag=custom-theme-config]
 ----
-====
 
 You can use `ThemeResolver` to resolve _styles_ if you want to create
 JLine-styled strings programmatically and _figures_ if you want to
 theme characters for being more pretty.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/ThemingSnippets.java[tag=using-theme-resolver]
 ----
-====

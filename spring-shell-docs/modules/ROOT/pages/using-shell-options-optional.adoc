@@ -8,40 +8,52 @@ a command target.
 
 Making option optional.
 
+[tabs]
+======
+Programmatic::
++
 [source,java,indent=0,role="primary"]
-.Programmatic
 ----
 include::{snippets}/OptionSnippets.java[tag=option-optional-programmatic]
 ----
 
+Annotation::
++
 [source,java,indent=0,role="secondary"]
-.Annotation
 ----
 include::{snippets}/OptionSnippets.java[tag=option-optional-annotation]
 ----
 
+Legacy Annotation::
++
 [source,java,indent=0,role="secondary"]
-.Legacy Annotation
 ----
 include::{snippets}/OptionSnippets.java[tag=option-optional-legacyannotation]
 ----
+======
 
 Making option mandatory.
 
+[tabs]
+======
+Programmatic::
++
 [source,java,indent=0,role="primary"]
-.Programmatic
 ----
 include::{snippets}/OptionSnippets.java[tag=option-mandatory-programmatic]
 ----
 
+Annotation::
++
 [source,java,indent=0,role="secondary"]
-.Annotation
 ----
 include::{snippets}/OptionSnippets.java[tag=option-mandatory-annotation]
 ----
 
+Legacy Annotation::
++
 [source,java,indent=0,role="secondary"]
-.Legacy Annotation
 ----
 include::{snippets}/OptionSnippets.java[tag=option-mandatory-legacyannotation]
 ----
+======

@@ -27,7 +27,6 @@ package (unless overridden at the method or class level, as explained earlier).
 
 The following listing shows an example:
 
-====
 [source,java]
 ----
 public class UserCommands {
@@ -51,4 +50,3 @@ public class SomeCommands {
 	public void last() {}
 }
 ----
-====

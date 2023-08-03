@@ -16,21 +16,17 @@ fields in a default template.
 The template defaults to `classpath:template/version-default.st`, and you can define
 your own, as the following example shows:
 
-====
 [source]
 ----
 <buildVersion>
 ----
-====
 
 This setting would output something like the following:
 
-====
 [source]
 ----
 X.X.X
 ----
-====
 
 You can add the following attributes to the default template rendering: `buildVersion`, `buildGroup`,
 `buildGroup`, `buildName`, `buildTime`, `gitShortCommitId`, `gitCommitId`,

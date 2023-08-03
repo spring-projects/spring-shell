@@ -19,7 +19,6 @@ NOTE: _Spring Shell_ version on `start.spring.io` is usually latest release.
 
 With _maven_ you're expected to have something like:
 
-====
 [source, xml, subs=attributes+]
 ----
 <properties>
@@ -49,11 +48,9 @@ With _maven_ you're expected to have something like:
     </dependencies>
 </dependencyManagement>
 ----
-====
 
 With _gradle_ you're expected to have something like:
 
-====
 [source, groovy, subs=attributes+]
 ----
 dependencies {
@@ -68,7 +65,6 @@ dependencyManagement {
     }
 }
 ----
-====
 
 CAUTION: Given that Spring Shell starts the REPL (Read-Eval-Print-Loop) because this
 dependency is present, you need to either skip tests when you build (`-DskipTests`)
@@ -79,19 +75,15 @@ the eval loop or crashes with a NPE.
 
 Once compiled it can be run either in interactive mode:
 
-====
 [source, text, subs=attributes+]
 ----
 ----
-====
 
 Or in non-interactive mode:
 
-====
 [source, text, subs=attributes+]
 ----
 ----
-====
 
 TIP: Check out xref:using-shell-customization-logging.adoc[Logging] making logging to work
 better with shell apps.
@@ -108,7 +100,6 @@ returns it with "Hello world". Add `@ShellMethod` and optionally change command 
 using `key` parameter. You can use `@ShellOption` to define argument default value
 if it's not given when running a command.
 
-====
 [source, java]
 ----
 package com.example.demo;
@@ -128,21 +119,17 @@ public class MyCommands {
 	}
 }
 ----
-====
 
 New _hello-world_ command becomes visible to _help_:
 
-====
 [source, text]
 ----
 My Commands
        hello-world:
 ----
-====
 
 And you can run it:
 
-====
 [source, text]
 ----
 shell:>hello-world
@@ -151,6 +138,5 @@ Hello world spring
 shell:>hello-world --arg boot
 Hello world boot
 ----
-====
 
 The rest of this document delves deeper into the whole Spring Shell programming model.

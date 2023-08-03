@@ -8,12 +8,10 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 Programmatic way with `CommandRegistration` is to use `withOption` to define
 an option.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-registration-longarg]
 ----
-====
 
 `CommandRegistration` can be defined as a bean or manually registered
 with a `CommandCatalog`.

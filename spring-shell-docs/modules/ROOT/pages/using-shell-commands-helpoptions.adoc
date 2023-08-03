@@ -15,16 +15,13 @@ what other command-line options is typed.
 
 Below example shows its default settings.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationHelpOptionsSnippets.java[tag=defaults]
 ----
-====
 
 It is possible to change default behaviour via configuration options.
 
-====
 [source, yaml]
 ----
 spring:
@@ -35,7 +32,6 @@ spring:
       short-names: h
       command: help
 ----
-====
 
 NOTE: Commands defined programmationally or via annotations will automatically add
 help options. With annotation model you can only turn things off globally, programmatic

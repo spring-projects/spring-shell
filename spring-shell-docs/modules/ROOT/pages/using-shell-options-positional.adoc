@@ -5,12 +5,10 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Positional information is mostly related to a command target method:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-registration-positional]
 ----
-====
 
 NOTE: Be careful with positional parameters as it may soon
 become confusing which options those are mapped to.
@@ -27,36 +25,29 @@ ambiguous arguments.
 
 Let's look what happens when we don't define a position.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-registration-aritystrings-noposition]
 ----
-====
 
 Option _arg1_ is required and there is no info what to do with argument
 `one` resulting error for missing option.
 
-====
 [source, bash]
 ----
 shell:>arity-strings-1 one
 Missing mandatory option --arg1.
 ----
-====
 
 Now let's define a position `0`.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-registration-aritystrings-position]
 ----
-====
 
 Arguments are processed until we get up to 2 arguments.
 
-====
 [source, bash]
 ----
 shell:>arity-strings-2 one
@@ -68,4 +59,3 @@ Hello [one, two]
 shell:>arity-strings-2 one two three
 Hello [one, two]
 ----
-====

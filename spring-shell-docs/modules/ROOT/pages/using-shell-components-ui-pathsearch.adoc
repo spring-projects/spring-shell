@@ -7,12 +7,10 @@ The path search component asks base directory for scan and optional search expre
 Results are shown in a single select list where user can pick a path.
 `PathSearchConfig` can be used to customise component behaviour.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/UiComponentSnippets.java[tag=snippet9]
 ----
-====
 
 NOTE: Logic for search is passed as is into algorithms documented
 in xref:appendices-techical-intro-searchalgorithm.adoc[Search Algorithms].

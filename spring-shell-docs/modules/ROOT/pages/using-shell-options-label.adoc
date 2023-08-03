@@ -10,20 +10,24 @@ you may want to give better descriptive word for an option.
 
 NOTE: Label is not supported with `legacy annotation`.
 
+[tabs]
+======
+Programmatic::
++
 [source,java,indent=0,role="primary"]
-.Programmatic
 ----
 include::{snippets}/OptionSnippets.java[tag=option-label-programmatic]
 ----
 
+Annotation::
++
 [source,java,indent=0,role="secondary"]
-.Annotation
 ----
 include::{snippets}/OptionSnippets.java[tag=option-label-annotation]
 ----
+======
 
 Defining label is then shown in `help`.
-====
 [source, bash]
 ----
 my-shell:>help labelOption
@@ -38,4 +42,3 @@ OPTIONS
        [Optional]
 
 ----
-====

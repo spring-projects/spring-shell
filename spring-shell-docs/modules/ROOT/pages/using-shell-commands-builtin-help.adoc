@@ -10,7 +10,6 @@ command comes in.
 Typing `help` + `ENTER` lists all the commands known to the shell (including xref:using-shell-commands-availability.adoc[unavailable] commands)
 and a short description of what they do, similar to the following:
 
-====
 [source, bash]
 ----
 my-shell:>help
@@ -27,14 +26,12 @@ Built-In Commands
        version: Show version info
        script: Read and execute commands from a file.
 ----
-====
 
 Typing `help <command>` shows more detailed information about a command, including the available parameters, their
 type, whether they are mandatory or not, and other details.
 
 The following listing shows the `help` command applied to itself:
 
-====
 [source, bash]
 ----
 my-shell:>help help
@@ -49,7 +46,6 @@ OPTIONS
        The command to obtain help for.
        [Optional]
 ----
-====
 
 Help is templated and can be customized if needed. Settings are under `spring.shell.command.help` where you can use
 `enabled` to disable command, `grouping-mode` taking `group` or `flat` if you want to hide groups by flattening
@@ -58,7 +54,6 @@ output of a command list.
 
 If `spring.shell.command.help.grouping-mode=flat` is set, then help would show:
 
-====
 [source, bash]
 ----
 my-shell:>help help
@@ -74,7 +69,6 @@ completion bash: Generate bash completion script
 version: Show version info
 script: Read and execute commands from a file.
 ----
-====
 
 Output from `help` and `help <commmand>` are both templated with a default implementation
 which can be changed.

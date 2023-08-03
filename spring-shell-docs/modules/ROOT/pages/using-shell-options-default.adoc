@@ -8,20 +8,26 @@ xref:using-shell-options-optional.adoc[Optional Value], as there are cases where
 may want to know if the user defined an option and change behavior
 based on a default value:
 
+[tabs]
+======
+Programmatic::
++
 [source,java,indent=0,role="primary"]
-.Programmatic
 ----
 include::{snippets}/OptionSnippets.java[tag=option-default-programmatic]
 ----
 
+Annotation::
++
 [source,java,indent=0,role="secondary"]
-.Annotation
 ----
 include::{snippets}/OptionSnippets.java[tag=option-default-annotation]
 ----
 
+Legacy Annotation::
++
 [source,java,indent=0,role="secondary"]
-.Legacy Annotation
 ----
 include::{snippets}/OptionSnippets.java[tag=option-default-legacyannotation]
 ----
+======

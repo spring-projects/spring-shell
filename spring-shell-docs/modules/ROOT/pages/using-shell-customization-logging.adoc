@@ -7,29 +7,24 @@ Fortunately there is a simple way to instruct logging changes via boot propertie
 
 Completely silence console logging by defining its pattern as an empty value.
 
-====
 [source, yaml]
 ----
 logging:
   pattern:
     console:
 ----
-====
 
 If you need log from a shell then write those into a file.
 
-====
 [source, yaml]
 ----
 logging:
   file:
     name: shell.log
 ----
-====
 
 If you need different log levels.
 
-====
 [source, yaml]
 ----
 logging:
@@ -38,18 +33,15 @@ logging:
       springframework:
         shell: debug
 ----
-====
 
 Passing contiguration properties as command line options is not supported but
 you can use any other ways supported by boot, for example.
 
-====
 [source, bash]
 ----
 $ java -Dlogging.level.root=debug -jar demo.jar
 $ LOGGING_LEVEL_ROOT=debug java -jar demo.jar
 ----
-====
 
 NOTE: In a GraalVM image settings are locked during compilation which means
       you can't change log levels at runtime.

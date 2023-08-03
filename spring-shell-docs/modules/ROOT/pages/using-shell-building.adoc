@@ -23,7 +23,6 @@ _GraalVM_ installed and `JAVA_HOME` pointing to that.
 
 For _gradle_ add graalvm's native plugin and configure metadata repository.
 
-====
 [source, groovy, subs=attributes+]
 ----
 plugins {
@@ -36,7 +35,6 @@ graalvmNative {
 	}
 }
 ----
-====
 
 When gradle build is run with `./gradlew nativeCompile` you should get binary
 under `build/native/nativeCompile` directory.
@@ -44,7 +42,6 @@ under `build/native/nativeCompile` directory.
 For `maven` use `spring-boot-starter-parent` as parent and you'll get `native`
 profile which can be used to do a compilation. You need to configure metadata repository
 
-====
 [source, xml, subs=attributes+]
 ----
 <build>
@@ -63,7 +60,6 @@ profile which can be used to do a compilation. You need to configure metadata re
     </pluginManagement>
 </build>
 ----
-====
 
 NOTE: If you rely on `spring-boot-starter-parent` it manages `native-maven-plugin`
 version which is kept up to date.

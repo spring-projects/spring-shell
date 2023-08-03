@@ -6,12 +6,10 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 The confirmation component asks a user for a simple confirmation. It is essentially a
 yes-or-no question.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/UiComponentSnippets.java[tag=snippet5]
 ----
-====
 
 The following image shows the typical output from a confirmation component:
 

@@ -17,12 +17,10 @@ you can use it in addition to the filtering mechanism to declare beans (for exam
 You can customize the name of the created bean by using the `value` attribute of the annotation.
 ====
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/AnnotationRegistrationSnippets.java[tag=snippet1]
 ----
-====
 
 The only required attribute of the `@ShellMethod` annotation is its `value` attribute, which should have
 a short, one-sentence, description of what the command does. This lets your users
@@ -37,12 +35,10 @@ dashed, gnu-style, names (for example, `sayHello()` becomes `say-hello`).
 
 You can, however, explicitly set the command key, by using the `key` attribute of the annotation:
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/AnnotationRegistrationSnippets.java[tag=snippet2]
 ----
-====
 
 NOTE: The `key` attribute accepts multiple values.
 If you set multiple keys for a single method, the command is registered with those different aliases.

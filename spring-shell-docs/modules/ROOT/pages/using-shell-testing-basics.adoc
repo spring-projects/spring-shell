@@ -9,18 +9,14 @@ Test support is provided by two modules: `spring-shell-test` contains core items
 
 To test _interactive_ commands.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/TestingSnippets.java[tag=testing-shelltest-interactive]
 ----
-====
 
 To test _non-interactive_ commands.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/TestingSnippets.java[tag=testing-shelltest-noninteractive]
 ----
-====

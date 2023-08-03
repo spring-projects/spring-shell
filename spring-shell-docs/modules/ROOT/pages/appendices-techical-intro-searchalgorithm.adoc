@@ -30,12 +30,10 @@ as we don't want to fully open these until we know API's are good to go
 for longer support. You need to construct `SearchMatch` via its
 build-in builder.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/SearchAlgorithmsSnippets.java[tag=builder]
 ----
-====
 
 It's possible to configure _case sensitivity_, on what _direction_ search
 happens or if text should be _normilized_ before search happens. Normalization
@@ -61,9 +59,7 @@ below table.
 [[examples]]
 == Examples
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/SearchAlgorithmsSnippets.java[tag=simple]
 ----
-====

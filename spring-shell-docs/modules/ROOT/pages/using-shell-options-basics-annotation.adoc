@@ -7,9 +7,7 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 `Option` annotation can be used to define an option name if you
 don't want it to be same as argument name.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-with-option-annotation]
 ----
-====

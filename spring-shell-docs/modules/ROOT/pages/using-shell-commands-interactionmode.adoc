@@ -9,18 +9,14 @@ depending which mode shell is executing. More about that in xref:using-shell-exe
 
 You can define it with `CommandRegisration`.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationInteractionModeSnippets.java[tag=snippet1]
 ----
-====
 
 Or with `@ShellMethod`.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationInteractionModeSnippets.java[tag=snippet2]
 ----
-====

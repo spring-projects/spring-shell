@@ -18,11 +18,9 @@ from:
 Below is an example how to define command as _hidden_. It shows available builder methods
 to define _hidden_ state.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationHiddenSnippets.java[tag=snippet1]
 ----
-====
 
 NOTE: Defining hidden commands is not supported with annotation based configuration

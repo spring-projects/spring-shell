@@ -16,22 +16,18 @@ on default.
 
 You can define one with an option in `CommandRegistration`.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-registration-naming-case-req]
 ----
-====
 
 Add one _singleton bean_ as type `OptionNameModifier` and that becomes
 a global default.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-registration-naming-case-bean]
 ----
-====
 
 It's also possible to just add configuration property with
 `spring.shell.option.naming.case-type` which auto-configures
@@ -46,7 +42,6 @@ default via configuration properies only work if using
 pre-configured `Builder` instance. See more
 <<using-shell-commands-programmaticmodel>>.
 
-====
 [source, yaml]
 ----
 spring:
@@ -59,21 +54,17 @@ spring:
          # case-type: kebab
          # case-type: pascal
 ----
-====
 
 For example options defined in an annotated method like this.
 
-====
 [source, java, indent=0]
 ----
 include::{snippets}/OptionSnippets.java[tag=option-registration-naming-case-sample1]
 ----
-====
 
 On default `help` for that command shows names coming
 directly from `@ShellOption`.
 
-====
 [source, bash]
 ----
 OPTIONS
@@ -89,12 +80,10 @@ OPTIONS
        --FromPascal String
        [Mandatory]
 ----
-====
 
 Define `spring.shell.option.naming.case-type=kebab` and default
 modifier is added and option names then look like.
 
-====
 [source, bash]
 ----
 OPTIONS
@@ -111,4 +100,3 @@ OPTIONS
        [Mandatory]
 
 ----
-====
