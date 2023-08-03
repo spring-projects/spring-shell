@@ -12,6 +12,6 @@ which you can change by setting `spring.shell.history.name`.
 
 By default, a log file is generated to a current working directory, which you can dictate
 by setting `spring.shell.config.location`. This property can contain
-a placeholder (`{userconfig}`), which resolves to a common shared config directory.
+a placeholder (`+{userconfig}+`), which resolves to a common shared config directory.
 
 TIP: Run the Spring Shell application to see how the sample application works as it uses these options.
