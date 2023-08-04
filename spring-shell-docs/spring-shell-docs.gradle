@@ -14,6 +14,10 @@ dependencies {
 	testImplementation 'org.awaitility:awaitility'
 }
 
+node {
+	version = '16.15.0'
+}
+
 antora {
 	version = '3.2.0-alpha.2'
 	options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
