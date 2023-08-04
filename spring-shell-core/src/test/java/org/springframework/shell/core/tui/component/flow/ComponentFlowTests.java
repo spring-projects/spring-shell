@@ -54,6 +54,10 @@ class ComponentFlowTests extends AbstractShellTests {
 			.withStringInput("field2")
 			.name("Field2")
 			.and()
+			.withStringInput("field3")
+			.name("Field3")
+			.required()
+			.and()
 			.withNumberInput("number1")
 			.name("Number1")
 			.and()
@@ -90,6 +94,9 @@ class ComponentFlowTests extends AbstractShellTests {
 		// field2
 		testBuffer = new TestBuffer().append("Field2Value").cr();
 		write(testBuffer.getBytes());
+		// field3
+		testBuffer = new TestBuffer().cr().append("Field3Value").cr();
+		write(testBuffer.getBytes());
 		// number1
 		testBuffer = new TestBuffer().append("35").cr();
 		write(testBuffer.getBytes());
@@ -114,6 +121,7 @@ class ComponentFlowTests extends AbstractShellTests {
 			assertThat(inputWizardResult).isNotNull();
 			String field1 = inputWizardResult.getContext().get("field1");
 			String field2 = inputWizardResult.getContext().get("field2");
+			String field3 = inputWizardResult.getContext().get("field3");
 			Integer number1 = inputWizardResult.getContext().get("number1");
 			Double number2 = inputWizardResult.getContext().get("number2");
 			Integer number3 = inputWizardResult.getContext().get("number3");
@@ -121,6 +129,7 @@ class ComponentFlowTests extends AbstractShellTests {
 			String single1 = inputWizardResult.getContext().get("single1");
 			List<String> multi1 = inputWizardResult.getContext().get("multi1");
 			assertThat(field1).isEqualTo("defaultField1Value");
+			assertThat(field3).isEqualTo("Field3Value");
 			assertThat(field2).isEqualTo("Field2Value");
 			assertThat(number1).isEqualTo(35);
 			assertThat(number2).isEqualTo(20.5);
@@ -130,7 +139,6 @@ class ComponentFlowTests extends AbstractShellTests {
 			assertThat(multi1).containsExactlyInAnyOrder("value2");
 			assertThat(consoleOut()).contains("Field1 defaultField1Value");
 		});
-
 	}
 
 	@Test
