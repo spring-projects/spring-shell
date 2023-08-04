@@ -27,13 +27,14 @@ import reactor.core.Disposables;
 
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
+import org.springframework.shell.component.view.control.cell.AbstractControl;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyBindingConsumer;
 import org.springframework.shell.component.view.event.KeyBindingConsumerArgs;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyHandler;
-import org.springframework.shell.component.view.event.MouseBindingConsumerArgs;
 import org.springframework.shell.component.view.event.MouseBindingConsumer;
+import org.springframework.shell.component.view.event.MouseBindingConsumerArgs;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.geom.Rectangle;
@@ -46,14 +47,10 @@ import org.springframework.shell.component.view.screen.Screen;
  *
  * @author Janne Valkealahti
  */
-public abstract class AbstractView implements View {
+public abstract class AbstractView extends AbstractControl implements View {
 
 	private final static Logger log = LoggerFactory.getLogger(AbstractView.class);
 	private final Disposable.Composite disposables = Disposables.composite();
-	private int x = 0;
-	private int y = 0;
-	private int width = 0;
-	private int height = 0;
 	private BiFunction<Screen, Rectangle, Rectangle> drawFunction;
 	private boolean hasFocus;
 	private int layer;
@@ -97,19 +94,6 @@ public abstract class AbstractView implements View {
 	 * usefull. Typically key and mousebindings are registered from this method.
 	 */
 	protected void initInternal() {
-	}
-
-	@Override
-	public void setRect(int x, int y, int width, int height) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-
-	@Override
-	public Rectangle getRect() {
-		return new Rectangle(x, y, width, height);
 	}
 
 	@Override

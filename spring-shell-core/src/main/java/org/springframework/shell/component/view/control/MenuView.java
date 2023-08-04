@@ -33,6 +33,7 @@ import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.style.StyleSettings;
 import org.springframework.shell.component.view.screen.ScreenItem;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -143,7 +144,8 @@ public class MenuView extends BoxView {
 		Rectangle rect = getInnerRect();
 		int y = rect.y();
 		Writer writer = screen.writerBuilder().layer(getLayer()).build();
-		Writer writer2 = screen.writerBuilder().layer(getLayer()).style(ScreenItem.STYLE_BOLD).build();
+		int themeStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
+		Writer writer2 = screen.writerBuilder().layer(getLayer()).style(themeStyle).build();
 		int i = 0;
 		boolean hasCheck = false;
 		for (MenuItem item : items) {

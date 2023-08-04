@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,10 +53,11 @@ public class ThemeSettingsTests {
 			StyleSettings.TAG_ITEM_SELECTED,
 			StyleSettings.TAG_ITEM_UNSELECTED,
 			StyleSettings.TAG_ITEM_SELECTOR,
-			StyleSettings.TAG_HIGHLIGHT })
+			StyleSettings.TAG_HIGHLIGHT,
+			StyleSettings.TAG_BACKGROUND })
 	public void testTags(String tag) {
 		ThemeSettings themeSettings = ThemeSettings.defaults();
-		String resolveTag = themeSettings.styles().resolveTag(StyleSettings.TAG_TITLE);
+		String resolveTag = themeSettings.styles().resolveTag(tag);
 		assertThat(resolveTag).isNotNull();
 	}
 }

@@ -26,6 +26,7 @@ import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.ScreenItem;
+import org.springframework.shell.style.StyleSettings;
 
 /**
  * {@link ListView} shows {@code list items} vertically.
@@ -51,12 +52,13 @@ public class ListView<T> extends BoxView {
 		Rectangle rect = getInnerRect();
 		int y = rect.y();
 
+		int selectedStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
 		int i = 0;
 		for (ListCell<T> c : cells) {
 			c.setRect(rect.x(), y++, rect.width(), 1);
 			if (i == selected) {
 				c.updateSelected(true);
-				c.setStyle(ScreenItem.STYLE_BOLD);
+				c.setStyle(selectedStyle);
 			}
 			else {
 				c.updateSelected(false);

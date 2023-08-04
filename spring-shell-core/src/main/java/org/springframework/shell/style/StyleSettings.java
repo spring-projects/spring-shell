@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,6 +91,11 @@ public abstract class StyleSettings {
 	 */
 	public final static String TAG_HIGHLIGHT = "style-highlight";
 
+	/**
+	 * Styling for something which has a background.
+	 */
+	public final static String TAG_BACKGROUND = "style-background";
+
 	public String title() {
 		return "bold";
 	}
@@ -143,6 +148,10 @@ public abstract class StyleSettings {
 		return "bold";
 	}
 
+	public String background() {
+		return "default";
+	}
+
 	/**
 	 * Resolve a theme setting from a given tag.
 	 *
@@ -177,6 +186,8 @@ public abstract class StyleSettings {
 				return itemSelector();
 			case TAG_HIGHLIGHT:
 				return highlight();
+			case TAG_BACKGROUND:
+				return background();
 		}
 		throw new IllegalArgumentException(String.format("Unknown tag '%s'", tag));
 	}
@@ -213,7 +224,8 @@ public abstract class StyleSettings {
 				TAG_ITEM_SELECTED,
 				TAG_ITEM_UNSELECTED,
 				TAG_ITEM_SELECTOR,
-				TAG_HIGHLIGHT
+				TAG_HIGHLIGHT,
+				TAG_BACKGROUND
 		};
 	}
 

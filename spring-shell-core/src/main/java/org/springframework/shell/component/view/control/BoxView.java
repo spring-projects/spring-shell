@@ -18,11 +18,11 @@ package org.springframework.shell.component.view.control;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.lang.Nullable;
 import org.springframework.shell.component.view.geom.HorizontalAlign;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.geom.VerticalAlign;
 import org.springframework.shell.component.view.screen.Screen;
+import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,7 +45,8 @@ public class BoxView extends AbstractView {
 	private int paddingBottom;
 	private int paddingLeft;
 	private int paddingRight;
-	private Integer backgroundColor = -1;
+	private boolean transparent = true;
+	private int backgroundColor = -1;
 	private int titleColor = -1;
 	private int titleStyle = -1;
 	private int focusedTitleColor = -1;
@@ -110,7 +111,7 @@ public class BoxView extends AbstractView {
 	 *
 	 * @param backgroundColor the background color
 	 */
-	public void setBackgroundColor(@Nullable Integer backgroundColor) {
+	public void setBackgroundColor(int backgroundColor) {
 		this.backgroundColor = backgroundColor;
 	}
 
@@ -162,6 +163,24 @@ public class BoxView extends AbstractView {
 	}
 
 	/**
+	 * Sets if box should be transparent, {@code true} by default.
+	 *
+	 * @param transparent a transparency flag
+	 */
+	public void setTransparent(boolean transparent) {
+		this.transparent = transparent;
+	}
+
+	/**
+	 * Is box transparent.
+	 *
+	 * @return box transparency
+	 */
+	protected boolean isTransparent() {
+		return transparent;
+	}
+
+	/**
 	 * Possibly draws a box around this view and title in a box top boundary. Also
 	 * calls a {@code draw function} if defined.
 	 *
@@ -173,12 +192,14 @@ public class BoxView extends AbstractView {
 		if (rect.width() <= 0 || rect.height() <= 0) {
 			return;
 		}
-		if (backgroundColor == null) {
-			screen.writerBuilder().layer(getLayer()).build().background(rect, -1);
+		int bgColor;
+		if (isTransparent()) {
+			bgColor = backgroundColor > -1 ? backgroundColor : -1;
 		}
-		else if (backgroundColor > -1) {
-			screen.writerBuilder().layer(getLayer()).build().background(rect, backgroundColor);
+		else {
+			bgColor = resolveThemeBackground(StyleSettings.TAG_BACKGROUND, backgroundColor, -1);
 		}
+		screen.writerBuilder().layer(getLayer()).build().background(rect, bgColor);
 		if (showBorder && rect.width() >= 2 && rect.height() >= 2) {
 			screen.writerBuilder().layer(getLayer()).build().border(rect.x(), rect.y(), rect.width(), rect.height());
 			if (StringUtils.hasText(title)) {

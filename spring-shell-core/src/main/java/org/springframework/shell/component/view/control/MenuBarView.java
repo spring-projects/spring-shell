@@ -35,6 +35,7 @@ import org.springframework.shell.component.view.geom.Dimension;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.component.view.screen.ScreenItem;
 
 /**
@@ -201,6 +202,18 @@ public class MenuBarView extends BoxView {
 		checkMenuView();
 	}
 
+	@Override
+	public void setThemeName(String themeName) {
+		super.setThemeName(themeName);
+		menuViews.values().forEach(view -> view.setThemeName(themeName));
+	}
+
+	@Override
+	public void setThemeResolver(ThemeResolver themeResolver) {
+		super.setThemeResolver(themeResolver);
+		menuViews.values().forEach(view -> view.setThemeResolver(themeResolver));
+	}
+
 	private void checkMenuView() {
 		if (activeItemIndex < 0) {
 			closeCurrentMenuView();
@@ -218,8 +231,10 @@ public class MenuBarView extends BoxView {
 	private MenuView buildMenuView(MenuBarItem item) {
 		MenuView menuView = new MenuView(item.getItems());
 		menuView.setEventLoop(getEventLoop());
+		menuView.setThemeResolver(getThemeResolver());
+		menuView.setThemeName(getThemeName());
 		menuView.setShowBorder(true);
-		menuView.setBackgroundColor(null);
+		menuView.setTransparent(false);
 		menuView.setLayer(1);
 		Rectangle rect = getInnerRect();
 		int x = positionAtIndex(activeItemIndex);

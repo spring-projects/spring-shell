@@ -15,8 +15,15 @@
  */
 package org.springframework.shell.component.view.control.cell;
 
+import java.util.Optional;
+
+import org.jline.utils.AttributedStyle;
+
+import org.springframework.lang.Nullable;
 import org.springframework.shell.component.view.control.Control;
 import org.springframework.shell.component.view.geom.Rectangle;
+import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 
 /**
  * Base implementation of a {@link Control}.
@@ -29,6 +36,8 @@ public abstract class AbstractControl implements Control {
 	private int y = 0;
 	private int width = 0;
 	private int height = 0;
+	private ThemeResolver themeResolver;
+	private String themeName;
 
 	@Override
 	public void setRect(int x, int y, int width, int height) {
@@ -41,6 +50,100 @@ public abstract class AbstractControl implements Control {
 	@Override
 	public Rectangle getRect() {
 		return new Rectangle(x, y, width, height);
+	}
+
+	/**
+	 * Sets a {@link ThemeResolver}.
+	 *
+	 * @param themeResolver the theme resolver
+	 */
+	public void setThemeResolver(@Nullable ThemeResolver themeResolver) {
+		this.themeResolver = themeResolver;
+	}
+
+	/**
+	 * Gets a {@link ThemeResolver}.
+	 *
+	 * @return a theme resolver
+	 */
+	@Nullable
+	protected ThemeResolver getThemeResolver() {
+		return themeResolver;
+	}
+
+	/**
+	 * Sets a theme name to use.
+	 *
+	 * @param themeName the theme name
+	 */
+	public void setThemeName(@Nullable String themeName) {
+		this.themeName = themeName;
+	}
+
+	/**
+	 * Gets a theme name.
+	 *
+	 * @return a theme name
+	 */
+	@Nullable
+	protected String getThemeName() {
+		return themeName;
+	}
+
+	private Optional<ResolvedValues> getThemeResolvedValues(String tag) {
+		ThemeResolver themeResolver = getThemeResolver();
+		if (themeResolver != null) {
+			String styleTag = themeResolver.resolveStyleTag(tag, getThemeName());
+			AttributedStyle attributedStyle = themeResolver.resolveStyle(styleTag);
+			return Optional.of(themeResolver.resolveValues(attributedStyle));
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Resolve style using existing {@link ThemeResolver} and {@code theme name}.
+	 * Use {@code defaultStyle} if resolving cannot happen.
+	 *
+	 * @param tag the style tag to use
+	 * @param defaultStyle the default style to use
+	 * @return resolved style
+	 */
+	protected int resolveThemeStyle(String tag, int defaultStyle) {
+		return getThemeResolvedValues(tag).map(ResolvedValues::style).orElse(defaultStyle);
+	}
+
+	/**
+	 * Resolve foreground color using existing {@link ThemeResolver} and {@code theme name}.
+	 * {@code defaultColor} is used if it's value is not negative. {@code fallbackColor} is
+	 * used if theme resolver cannot be used.
+	 *
+	 * @param tag the style tag to use
+	 * @param defaultColor the default foreground color to use
+	 * @param fallbackColor the fallback foreground color to use
+	 * @return resolved foreground color
+	 */
+	protected int resolveThemeForeground(String tag, int defaultColor, int fallbackColor) {
+		if (defaultColor > -1) {
+			return defaultColor;
+		}
+		return getThemeResolvedValues(tag).map(ResolvedValues::foreground).orElse(fallbackColor);
+	}
+
+	/**
+	 * Resolve background color using existing {@link ThemeResolver} and {@code theme name}.
+	 * {@code defaultColor} is used if it's value is not negative. {@code fallbackColor} is
+	 * used if theme resolver cannot be used.
+	 *
+	 * @param tag the style tag to use
+	 * @param defaultColor the default background color to use
+	 * @param fallbackColor the fallback background color to use
+	 * @return resolved background color
+	 */
+	protected int resolveThemeBackground(String tag, int defaultColor, int fallbackColor) {
+		if (defaultColor > -1) {
+			return defaultColor;
+		}
+		return getThemeResolvedValues(tag).map(ResolvedValues::background).orElse(fallbackColor);
 	}
 
 }

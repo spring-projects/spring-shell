@@ -15,8 +15,10 @@
  */
 package org.springframework.shell.component.view.control;
 
+import org.springframework.lang.Nullable;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
+import org.springframework.shell.style.ThemeResolver;
 
 /**
  * Base interface for all controls. {@link Control} is able to define a
@@ -51,4 +53,19 @@ public interface Control {
 	 * @param height a height of a bounded box
 	 */
 	void setRect(int x, int y, int width, int height);
+
+	/**
+	 * Sets a {@link ThemeResolver}.
+	 *
+	 * @param themeResolver the theme resolver
+	 */
+	void setThemeResolver(@Nullable ThemeResolver themeResolver);
+
+	/**
+	 * Sets a theme name to use.
+	 *
+	 * @param themeName the theme name
+	 */
+	void setThemeName(@Nullable String themeName);
+
 }

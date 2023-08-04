@@ -20,6 +20,7 @@ import java.util.List;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.standard.AbstractShellComponent;
+import org.springframework.shell.style.ThemeResolver;
 
 /**
  * Main command access point to view showcase catalog.
@@ -30,14 +31,16 @@ import org.springframework.shell.standard.AbstractShellComponent;
 public class CatalogCommand extends AbstractShellComponent {
 
 	private final List<Scenario> scenarios;
+	private final ThemeResolver themeResolver;
 
-	public CatalogCommand(List<Scenario> scenarios) {
+	public CatalogCommand(List<Scenario> scenarios, ThemeResolver themeResolver) {
 		this.scenarios = scenarios;
+		this.themeResolver = themeResolver;
 	}
 
 	@Command(command = "catalog")
 	public void catalog() {
-		Catalog catalog = new Catalog(getTerminal(), scenarios);
+		Catalog catalog = new Catalog(getTerminal(), scenarios, themeResolver);
 		catalog.run();
 	}
 }

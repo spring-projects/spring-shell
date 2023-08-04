@@ -31,6 +31,7 @@ public class SimpleBoxViewScenario extends AbstractScenario {
 	@Override
 	public View build() {
 		BoxView box = new BoxView();
+		configure(box);
 		box.setTitle("Title");
 		box.setShowBorder(true);
 		box.setBackgroundColor(Color.KHAKI4);

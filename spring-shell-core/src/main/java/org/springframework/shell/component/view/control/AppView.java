@@ -22,6 +22,7 @@ import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
+import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.Assert;
 
 /**
@@ -47,6 +48,22 @@ public class AppView extends BoxView {
 		this.menu = menuBar;
 		this.status = statusBar;
 		initLayout();
+	}
+
+	@Override
+	public void setThemeName(String themeName) {
+		super.setThemeName(themeName);
+		main.setThemeName(themeName);
+		menu.setThemeName(themeName);
+		status.setThemeName(themeName);
+	}
+
+	@Override
+	public void setThemeResolver(ThemeResolver themeResolver) {
+		super.setThemeResolver(themeResolver);
+		main.setThemeResolver(themeResolver);
+		menu.setThemeResolver(themeResolver);
+		status.setThemeResolver(themeResolver);
 	}
 
 	private void initLayout() {

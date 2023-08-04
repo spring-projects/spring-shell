@@ -53,6 +53,7 @@ import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.component.view.screen.ScreenItem;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
+import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -77,10 +78,15 @@ public class Catalog {
 	private View currentScenarioView = null;
 	private TerminalUI ui;
 	private ListView<String> categories;
+	private ListView<ScenarioData> scenarios;
+	private AppView app;
 	private EventLoop eventLoop;
+	private ThemeResolver themeResolver;
+	private String activeThemeName = "default";
 
-	public Catalog(Terminal terminal, List<Scenario> scenarios) {
+	public Catalog(Terminal terminal, List<Scenario> scenarios, ThemeResolver themeResolver) {
 		this.terminal = terminal;
+		this.themeResolver = themeResolver;
 		mapScenarios(scenarios);
 	}
 
@@ -117,7 +123,9 @@ public class Catalog {
 	public void run() {
 		ui = new TerminalUI(terminal);
 		eventLoop = ui.getEventLoop();
-		AppView app = buildScenarioBrowser(eventLoop, ui);
+		app = buildScenarioBrowser(eventLoop, ui);
+		app.setThemeResolver(themeResolver);
+		app.setThemeName(activeThemeName);
 
 		// handle logic to switch between main scenario browser
 		// and currently active scenario
@@ -146,12 +154,14 @@ public class Catalog {
 	private AppView buildScenarioBrowser(EventLoop eventLoop, TerminalUI component) {
 		// category selector on left, scenario selector on right
 		GridView grid = new GridView();
+		grid.setThemeResolver(themeResolver);
+		grid.setThemeName(activeThemeName);
 		grid.setEventLoop(eventLoop);
 		grid.setRowSize(0);
 		grid.setColumnSize(30, 0);
 
 		categories = buildCategorySelector(eventLoop);
-		ListView<ScenarioData> scenarios = buildScenarioSelector(eventLoop);
+		scenarios = buildScenarioSelector(eventLoop);
 
 		grid.addItem(categories, 0, 0, 1, 1, 0, 0);
 		grid.addItem(scenarios, 0, 1, 1, 1, 0, 0);
@@ -161,12 +171,16 @@ public class Catalog {
 
 		// we use main app view to represent scenario browser
 		AppView app = new AppView(grid, menuBar, statusBar);
+		app.setThemeResolver(themeResolver);
+		app.setThemeName(activeThemeName);
 		app.setEventLoop(eventLoop);
 
 		// handle event when scenario is chosen
 		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_SCENARIO_TYPEREF, scenarios)
 			.subscribe(event -> {
-				View view = event.args().item().scenario().configure(eventLoop).build();
+				View view = event.args().item().scenario()
+					.configure(eventLoop, themeResolver, activeThemeName)
+					.build();
 				component.setRoot(view, true);
 				currentScenarioView = view;
 			}));
@@ -212,6 +226,8 @@ public class Catalog {
 
 	private ListView<String> buildCategorySelector(EventLoop eventLoop) {
 		ListView<String> categories = new ListView<>();
+		categories.setThemeResolver(themeResolver);
+		categories.setThemeName(activeThemeName);
 		categories.setEventLoop(eventLoop);
 		List<String> items = List.copyOf(categoryMap.keySet());
 		categories.setItems(items);
@@ -234,6 +250,8 @@ public class Catalog {
 
 	private ListView<ScenarioData> buildScenarioSelector(EventLoop eventLoop) {
 		ListView<ScenarioData> scenarios = new ListView<>();
+		scenarios.setThemeResolver(themeResolver);
+		scenarios.setThemeName(activeThemeName);
 		scenarios.setEventLoop(eventLoop);
 		scenarios.setTitle("Scenarios");
 		scenarios.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
@@ -242,19 +260,36 @@ public class Catalog {
 		return scenarios;
 	}
 
+	private void setStyle(String name) {
+		log.debug("Setting active theme name {}", name);
+		activeThemeName = name;
+		scenarios.setThemeName(activeThemeName);
+		categories.setThemeName(activeThemeName);
+		app.setThemeName(activeThemeName);
+	}
+
+	private Runnable styleAction(String style) {
+		return () -> setStyle(style);
+	}
+
 	private MenuBarView buildMenuBar(EventLoop eventLoop) {
 		Runnable quitAction = () -> requestQuit();
+		MenuItem[] themeItems = themeResolver.themeNames().stream()
+			.map(tn -> {
+				return MenuItem.of(tn, MenuItemCheckStyle.RADIO, styleAction(tn), "default".equals(tn));
+			})
+			.toArray(MenuItem[]::new);
 		MenuBarView menuBar = MenuBarView.of(
 			MenuBarItem.of("File",
 				MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction)),
 			MenuBarItem.of("Theme",
-				MenuItem.of("Dump", MenuItemCheckStyle.RADIO),
-				MenuItem.of("Funky", MenuItemCheckStyle.RADIO)
-			),
+				themeItems),
 			MenuBarItem.of("Help",
 				MenuItem.of("About"))
 		);
 
+		menuBar.setThemeResolver(themeResolver);
+		menuBar.setThemeName(activeThemeName);
 		menuBar.setEventLoop(eventLoop);
 		return menuBar;
 	}
@@ -262,6 +297,8 @@ public class Catalog {
 	private StatusBarView buildStatusBar(EventLoop eventLoop) {
 		Runnable quitAction = () -> requestQuit();
 		StatusBarView statusBar = new StatusBarView();
+		statusBar.setThemeResolver(themeResolver);
+		statusBar.setThemeName(activeThemeName);
 		statusBar.setEventLoop(eventLoop);
 		StatusItem item1 = new StatusBarView.StatusItem("CTRL-Q Quit", quitAction);
 		StatusItem item2 = new StatusBarView.StatusItem("F10 Status Bar");

@@ -29,31 +29,37 @@ public class SimpleGridViewScenario extends AbstractScenario {
 	@Override
 	public View build() {
 		BoxView menu = new BoxView();
+		configure(menu);
 		menu.setBackgroundColor(Color.KHAKI4);
 		menu.setTitle("Menu");
 		menu.setShowBorder(true);
 
 		BoxView main = new BoxView();
+		configure(main);
 		main.setBackgroundColor(Color.KHAKI4);
 		main.setTitle("Main");
 		main.setShowBorder(true);
 
 		BoxView sideBar = new BoxView();
+		configure(sideBar);
 		sideBar.setBackgroundColor(Color.KHAKI4);
 		sideBar.setTitle("Sidebar");
 		sideBar.setShowBorder(true);
 
 		BoxView header = new BoxView();
+		configure(header);
 		header.setBackgroundColor(Color.KHAKI4);
 		header.setTitle("Header");
 		header.setShowBorder(true);
 
 		BoxView footer = new BoxView();
+		configure(footer);
 		footer.setBackgroundColor(Color.KHAKI4);
 		footer.setTitle("Footer");
 		footer.setShowBorder(true);
 
 		GridView grid = new GridView();
+		configure(grid);
 		grid.setBackgroundColor(Color.KHAKI3);
 		grid.setTitle("Grid");
 		grid.setShowBorder(true);

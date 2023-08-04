@@ -15,7 +15,9 @@
  */
 package org.springframework.shell.samples.catalog.scenario;
 
+import org.springframework.shell.component.view.control.AbstractView;
 import org.springframework.shell.component.view.event.EventLoop;
+import org.springframework.shell.style.ThemeResolver;
 
 /**
  * Base implementation of a {@link Scenario} helping to avoid some bloatware.
@@ -25,10 +27,14 @@ import org.springframework.shell.component.view.event.EventLoop;
 public abstract class AbstractScenario implements Scenario {
 
 	private EventLoop eventloop;
+	private ThemeResolver themeResolver;
+	private String themeName;
 
 	@Override
-	public Scenario configure(EventLoop eventloop) {
+	public Scenario configure(EventLoop eventloop, ThemeResolver themeResolver, String themeName) {
 		this.eventloop = eventloop;
+		this.themeResolver = themeResolver;
+		this.themeName = themeName;
 		return this;
 	}
 
@@ -36,4 +42,17 @@ public abstract class AbstractScenario implements Scenario {
 		return eventloop;
 	}
 
+	protected ThemeResolver getThemeResolver() {
+		return themeResolver;
+	}
+
+	protected String getThemeName() {
+		return themeName;
+	}
+
+	protected void configure(AbstractView view) {
+		view.setEventLoop(getEventloop());
+		view.setThemeResolver(getThemeResolver());
+		view.setThemeName(getThemeName());
+	}
 }

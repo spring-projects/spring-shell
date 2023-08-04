@@ -257,10 +257,15 @@ public class DefaultScreen implements Screen, DisplayLines {
 			// if (items[y] == null) {
 			// 	items[y] = new DefaultScreenItem[columns];
 			// }
-			if (items[y][x] == null) {
-				items[y][x] = new DefaultScreenItem();
+			if (y < rows && x < columns) {
+				if (items[y][x] == null) {
+					items[y][x] = new DefaultScreenItem();
+				}
+				return items[y][x];
 			}
-			return items[y][x];
+			else {
+				return null;
+			}
 		}
 	}
 
@@ -343,7 +348,9 @@ public class DefaultScreen implements Screen, DisplayLines {
 			for (int i = rect.y(); i < rect.y() + rect.height(); i++) {
 				for (int j = rect.x(); j < rect.x() + rect.width(); j++) {
 					DefaultScreenItem item = layer.getScreenItem(j, i);
-					item.background = color;
+					if (item != null) {
+						item.background = color;
+					}
 				}
 			}
 		}
