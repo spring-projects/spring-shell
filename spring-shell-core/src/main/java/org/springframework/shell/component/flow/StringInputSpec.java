@@ -73,6 +73,13 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 	StringInputSpec maskCharacter(Character maskCharacter);
 
 	/**
+	 * Sets input to mandatory
+	 *
+	 * @return a builder
+	 */
+	StringInputSpec mandatory();
+
+	/**
 	 * Sets a renderer function.
 	 *
 	 * @param renderer the renderer

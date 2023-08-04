@@ -44,21 +44,28 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	private final String defaultValue;
 	private StringInputContext currentContext;
 	private Character maskCharacter;
+	private boolean mandatory;
 
 	public StringInput(Terminal terminal) {
-		this(terminal, null, null, null);
+		this(terminal, null, null, null, false);
 	}
 
 	public StringInput(Terminal terminal, String name, String defaultValue) {
-		this(terminal, name, defaultValue, null);
+		this(terminal, name, defaultValue, null, false);
 	}
 
 	public StringInput(Terminal terminal, String name, String defaultValue,
 			Function<StringInputContext, List<AttributedString>> renderer) {
+		this(terminal, name, defaultValue, renderer, false);
+	}
+
+	public StringInput(Terminal terminal, String name, String defaultValue,
+			Function<StringInputContext, List<AttributedString>> renderer, boolean mandatory) {
 		super(terminal, name, null);
 		setRenderer(renderer != null ? renderer : new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/string-input-default.stg");
 		this.defaultValue = defaultValue;
+		this.mandatory = mandatory;
 	}
 
 	/**
@@ -70,12 +77,21 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		this.maskCharacter = maskCharacter;
 	}
 
+	/**
+	 * Sets a mandatory flag to check that the result is not empty
+	 *
+	 * @param mandatory if input is required
+	 */
+	public void setMandatory(boolean mandatory) {
+		this.mandatory = mandatory;
+	}
+
 	@Override
 	public StringInputContext getThisContext(ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
-		currentContext = StringInputContext.of(defaultValue, maskCharacter);
+		currentContext = StringInputContext.of(defaultValue, maskCharacter, mandatory);
 		currentContext.setName(getName());
 		if (context != null) {
 			context.stream().forEach(e -> {
@@ -119,6 +135,9 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 				}
 				else if (context.getDefaultValue() != null) {
 					context.setResultValue(context.getDefaultValue());
+				} else if (mandatory) {
+					context.setMessage("This field is mandatory", TextComponentContext.MessageLevel.ERROR);
+					break;
 				}
 				return true;
 			default:
@@ -179,12 +198,26 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		Character getMaskCharacter();
 
 		/**
+		 * Sets flag for mandatory input.
+		 *
+		 * @param mandatory true if input is mandatory
+		 */
+		void setMandatory(boolean mandatory);
+
+		/**
+		 * Returns flag if input is required.
+		 *
+		 * @return true if input is required, false otherwise
+		 */
+		boolean isMandatory();
+
+		/**
 		 * Gets an empty {@link StringInputContext}.
 		 *
 		 * @return empty path input context
 		 */
 		public static StringInputContext empty() {
-			return of(null, null);
+			return of(null, null, false);
 		}
 
 		/**
@@ -193,7 +226,16 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		 * @return path input context
 		 */
 		public static StringInputContext of(String defaultValue, Character maskCharacter) {
-			return new DefaultStringInputContext(defaultValue, maskCharacter);
+			return of(defaultValue, maskCharacter, false);
+		}
+
+		/**
+		 * Gets an {@link StringInputContext}.
+		 *
+		 * @return path input context
+		 */
+		public static StringInputContext of(String defaultValue, Character maskCharacter, boolean mandatory) {
+			return new DefaultStringInputContext(defaultValue, maskCharacter, mandatory);
 		}
 	}
 
@@ -202,10 +244,12 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 		private String defaultValue;
 		private Character maskCharacter;
+		private boolean mandatory;
 
-		public DefaultStringInputContext(String defaultValue, Character maskCharacter) {
+		public DefaultStringInputContext(String defaultValue, Character maskCharacter, boolean mandatory) {
 			this.defaultValue = defaultValue;
 			this.maskCharacter = maskCharacter;
+			this.mandatory = mandatory;
 		}
 
 		@Override
@@ -221,6 +265,11 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		@Override
 		public void setMaskCharacter(Character maskCharacter) {
 			this.maskCharacter = maskCharacter;
+		}
+
+		@Override
+		public void setMandatory(boolean mandatory) {
+			this.mandatory = mandatory;
 		}
 
 		@Override
@@ -244,6 +293,11 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		}
 
 		@Override
+		public boolean isMandatory() {
+			return mandatory;
+		}
+
+		@Override
 		public Map<String, Object> toTemplateModel() {
 			Map<String, Object> attributes = super.toTemplateModel();
 			attributes.put("defaultValue", getDefaultValue() != null ? getDefaultValue() : null);
@@ -251,6 +305,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 			attributes.put("maskedResultValue", getMaskedResultValue());
 			attributes.put("maskCharacter", getMaskCharacter());
 			attributes.put("hasMaskCharacter", hasMaskCharacter());
+			attributes.put("mandatory", isMandatory());
 			Map<String, Object> model = new HashMap<>();
 			model.put("model", attributes);
 			return model;
