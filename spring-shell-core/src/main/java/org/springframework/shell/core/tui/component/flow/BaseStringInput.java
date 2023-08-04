@@ -45,6 +45,8 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 
 	private @Nullable Character maskCharacter;
 
+	private boolean mandatory = false;
+
 	private @Nullable Function<StringInputContext, List<AttributedString>> renderer;
 
 	private List<Consumer<StringInputContext>> preHandlers = new ArrayList<>();
@@ -88,6 +90,12 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 	@Override
 	public StringInputSpec maskCharacter(Character maskCharacter) {
 		this.maskCharacter = maskCharacter;
+		return this;
+	}
+
+	@Override
+	public StringInputSpec mandatory() {
+		this.mandatory = true;
 		return this;
 	}
 
@@ -156,6 +164,10 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 
 	public @Nullable Character getMaskCharacter() {
 		return maskCharacter;
+	}
+
+	public boolean isMandatory() {
+		return mandatory;
 	}
 
 	public @Nullable Function<StringInputContext, List<AttributedString>> getRenderer() {

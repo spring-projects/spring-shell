@@ -54,6 +54,10 @@ class ComponentFlowTests extends AbstractShellTests {
 			.withStringInput("field2")
 			.name("Field2")
 			.and()
+			.withStringInput("field3")
+			.name("Field3")
+			.mandatory()
+			.and()
 			.withPathInput("path1")
 			.name("Path1")
 			.and()
@@ -78,6 +82,9 @@ class ComponentFlowTests extends AbstractShellTests {
 		// field2
 		testBuffer = new TestBuffer().append("Field2Value").cr();
 		write(testBuffer.getBytes());
+		// field3
+		testBuffer = new TestBuffer().cr().append("Field3Value").cr();
+		write(testBuffer.getBytes());
 		// path1
 		testBuffer = new TestBuffer().append("fakedir").cr();
 		write(testBuffer.getBytes());
@@ -93,17 +100,18 @@ class ComponentFlowTests extends AbstractShellTests {
 			assertThat(inputWizardResult).isNotNull();
 			String field1 = inputWizardResult.getContext().get("field1");
 			String field2 = inputWizardResult.getContext().get("field2");
+			String field3 = inputWizardResult.getContext().get("field3");
 			Path path1 = inputWizardResult.getContext().get("path1");
 			String single1 = inputWizardResult.getContext().get("single1");
 			List<String> multi1 = inputWizardResult.getContext().get("multi1");
 			assertThat(field1).isEqualTo("defaultField1Value");
+			assertThat(field3).isEqualTo("Field3Value");
 			assertThat(field2).isEqualTo("Field2Value");
 			assertThat(path1.toString()).contains("fakedir");
 			assertThat(single1).isEqualTo("value1");
 			assertThat(multi1).containsExactlyInAnyOrder("value2");
 			assertThat(consoleOut()).contains("Field1 defaultField1Value");
 		});
-
 	}
 
 	@Test
