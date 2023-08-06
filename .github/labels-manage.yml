@@ -13,6 +13,9 @@
 - name: area/documentation
   color: F9D0C4
   description: Belongs to documentation
+- name: area/scenarios
+  color: F9D0C4
+  description: Belongs to catalog sample
 - name: area/security
   color: F9D0C4
   description: Belongs to security
