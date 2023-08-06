@@ -15,37 +15,138 @@
  */
 package org.springframework.shell.component.view.control;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.shell.component.view.event.KeyEvent;
+import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class InputViewTests extends AbstractViewTests {
 
-	@Test
-	void shouldShowInput() {
-		InputView view = new InputView();
-		view.setShowBorder(true);
-		view.setRect(0, 0, 80, 24);
+	private static final String CURSOR_INDEX_FIELD = "cursorIndex";
 
-		dispatchEvent(view, KeyEvent.of('1'));
-		view.draw(screen24x80);
+	@Nested
+	class Input {
 
-		assertThat(forScreen(screen24x80)).hasHorizontalText("1", 1, 1, 1);
-		assertThat(forScreen(screen24x80)).hasCursorInPosition(2, 1);
+		InputView view;
+
+		@BeforeEach
+		void setup() {
+			view = new InputView();
+			configure(view);
+		}
+
+		@Test
+		void shouldShowPlainText() {
+			view.setShowBorder(true);
+			view.setRect(0, 0, 80, 24);
+
+			dispatchEvent(view, KeyEvent.of('1'));
+			view.draw(screen24x80);
+
+			assertThat(forScreen(screen24x80)).hasHorizontalText("1", 1, 1, 1);
+			assertThat(forScreen(screen24x80)).hasCursorInPosition(2, 1);
+		}
+
+		@Test
+		void shouldShowUnicode() {
+			view.setShowBorder(true);
+			view.setRect(0, 0, 80, 24);
+
+			dispatchEvent(view, KeyEvent.of('★'));
+			view.draw(screen24x80);
+
+			assertThat(forScreen(screen24x80)).hasHorizontalText("★", 1, 1, 1);
+			assertThat(forScreen(screen24x80)).hasCursorInPosition(2, 1);
+		}
+
+		@Test
+		void shouldShowUnicodeEmoji() {
+			view.setShowBorder(true);
+			view.setRect(0, 0, 80, 24);
+
+			dispatchEvent(view, KeyEvent.of("😂"));
+			view.draw(screen24x80);
+
+			assertThat(forScreen(screen24x80)).hasHorizontalText("😂", 1, 1, 2);
+			assertThat(forScreen(screen24x80)).hasCursorInPosition(3, 1);
+		}
+
 	}
 
-	@Test
-	void shouldShowUnicode() {
-		InputView view = new InputView();
-		view.setShowBorder(true);
-		view.setRect(0, 0, 80, 24);
+	@Nested
+	class CursorPositions {
 
-		dispatchEvent(view, KeyEvent.of('★'));
-		view.draw(screen24x80);
+		InputView view;
 
-		assertThat(forScreen(screen24x80)).hasHorizontalText("★", 1, 1, 1);
-		assertThat(forScreen(screen24x80)).hasCursorInPosition(2, 1);
+		@BeforeEach
+		void setup() {
+			view = new InputView();
+			configure(view);
+		}
+
+		int cursorIndex() {
+			return (Integer) ReflectionTestUtils.getField(view, CURSOR_INDEX_FIELD);
+		}
+
+		@Test
+		void initialCursorPosition() {
+			assertThat(cursorIndex()).isEqualTo(0);
+		}
+
+		@Test
+		void shouldNotMoveOutOfBoundsIfMovingRight() {
+			handleKey(view, Key.CursorRight);
+			assertThat(cursorIndex()).isEqualTo(0);
+		}
+
+		@Test
+		void shouldNotMoveOutOfBoundsIfMovingLeft() {
+			handleKey(view, Key.CursorLeft);
+			assertThat(cursorIndex()).isEqualTo(0);
+		}
+
+		@Test
+		void shouldMoveWithInputKeysNarrow() {
+			handleKey(view, Key.a);
+			assertThat(cursorIndex()).isEqualTo(1);
+		}
+
+		@Test
+		void shouldMoveWithInputKeysWide() {
+			handleKey(view, "😂");
+			assertThat(cursorIndex()).isEqualTo(1);
+		}
+
 	}
+
+	@Nested
+	class MoveAndDeletions {
+
+		InputView view;
+
+		@BeforeEach
+		void setup() {
+			view = new InputView();
+			configure(view);
+		}
+
+		int cursorIndex() {
+			return (Integer) ReflectionTestUtils.getField(view, CURSOR_INDEX_FIELD);
+		}
+
+		@Test
+		void addEmojiAndBackspace() {
+			handleKey(view, "😂");
+			assertThat(cursorIndex()).isEqualTo(1);
+			handleKey(view, Key.Backspace);
+			assertThat(cursorIndex()).isEqualTo(0);
+		}
+
+	}
+
 }

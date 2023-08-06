@@ -40,8 +40,8 @@ import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyBinder;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyHandler;
-import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResult;
+import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
 import org.springframework.shell.component.view.geom.Rectangle;
@@ -333,7 +333,7 @@ public class TerminalUI {
 		else if (operation == KeyEvent.Key.Unicode) {
 			String lastBinding = bindingReader.getLastBinding();
 			if (StringUtils.hasLength(lastBinding)) {
-				dispatchKeyEvent(KeyEvent.of(lastBinding.charAt(0)));
+				dispatchKeyEvent(KeyEvent.of(lastBinding));
 			}
 		}
 		else if (operation == KeyEvent.Key.Mouse) {

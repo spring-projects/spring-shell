@@ -23,12 +23,15 @@ package org.springframework.shell.component.view.event;
  *
  *
  */
-public record KeyEvent(int key) {
+public record KeyEvent(int key, String data) {
 
 	public static KeyEvent of(int key) {
-		return new KeyEvent(key);
+		return new KeyEvent(key, null);
 	}
 
+	public static KeyEvent of(String raw) {
+		return new KeyEvent(Key.Unicode, raw);
+	}
 
 	public boolean hasCtrl() {
 		return ((key >> 30) & 1) == 1;

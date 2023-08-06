@@ -15,6 +15,9 @@
  */
 package org.springframework.shell.component.view.control;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyHandler;
@@ -29,8 +32,8 @@ import org.springframework.shell.component.view.screen.Screen;
  */
 public class InputView extends BoxView {
 
-	private final StringBuilder text = new StringBuilder();
-	private int cursorPosition = 0;
+	private final ArrayList<String> text = new ArrayList<>();
+	private int cursorIndex = 0;
 
 	@Override
 	protected void initInternal() {
@@ -50,6 +53,9 @@ public class InputView extends BoxView {
 				int plainKey = event.getPlainKey();
 				add(new String(new char[]{(char)plainKey}));
 			}
+			else if (event.isKey(KeyEvent.Key.Unicode)) {
+				add(event.data());
+			}
 			return KeyHandler.resultOf(event, consumed, null);
 		};
 		return handler.thenIfNotConsumed(super.getKeyHandler());
@@ -58,46 +64,51 @@ public class InputView extends BoxView {
 	@Override
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getInnerRect();
-		String s = text.toString();
+		String s = getInputText();
 		screen.writerBuilder().build().text(s, rect.x(), rect.y());
 		screen.setShowCursor(hasFocus());
-		screen.setCursorPosition(new Position(rect.x() + cursorPosition, rect.y()));
+		int sum = text.stream().limit(cursorIndex).mapToInt(text -> text.length()).sum();
+		screen.setCursorPosition(new Position(rect.x() + sum, rect.y()));
 		super.drawInternal(screen);
 	}
 
+	/**
+	 * Get a current known input text.
+	 *
+	 * @return current input text
+	 */
 	public String getInputText() {
-		return text.toString();
+		return text.stream().collect(Collectors.joining());
 	}
 
-	// private void enter(KeyEvent event) {
-	// 	// getShellMessageListener().onMessage(ShellMessageBuilder.ofViewFocus("enter", this));
-	// }
-
-	// private void leave(KeyEvent event) {
-	// 	// getShellMessageListener().onMessage(ShellMessageBuilder.ofViewFocus("leave", this));
-	// }
-
 	private void add(String data) {
-		text.append(data);
-		right();
+		text.add(data);
+		moveCursor(1);
 	}
 
 	private void backspace() {
-		if (cursorPosition > 0) {
-			text.deleteCharAt(cursorPosition - 1);
+		if (cursorIndex > 0) {
+			text.remove(cursorIndex - 1);
 		}
 		left();
 	}
 
 	private void delete() {
-		text.deleteCharAt(cursorPosition);
+		text.remove(cursorIndex);
+	}
+
+	private void moveCursor(int index) {
+		int toIndex = cursorIndex + index;
+		if (toIndex > -1 && toIndex <= text.size()) {
+			cursorIndex = toIndex;
+		}
 	}
 
 	private void left() {
-		cursorPosition--;
+		moveCursor(-1);
 	}
 
 	private void right() {
-		cursorPosition++;
+		moveCursor(1);
 	}
 }

@@ -88,6 +88,10 @@ public class AbstractViewTests {
 		return handleKeyEvent(view, KeyEvent.of(key));
 	}
 
+	protected KeyHandlerResult handleKey(View view, String key) {
+		return handleKeyEvent(view, KeyEvent.of(key));
+	}
+
 	protected KeyHandlerResult handleKeyEvent(View view, KeyEvent key) {
 		return view.getKeyHandler().handle(KeyHandler.argsOf(key));
 	}
