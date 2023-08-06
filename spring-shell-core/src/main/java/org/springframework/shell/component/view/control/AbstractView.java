@@ -27,7 +27,6 @@ import reactor.core.Disposables;
 
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
-import org.springframework.shell.component.view.control.cell.AbstractControl;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyBindingConsumer;
 import org.springframework.shell.component.view.event.KeyBindingConsumerArgs;

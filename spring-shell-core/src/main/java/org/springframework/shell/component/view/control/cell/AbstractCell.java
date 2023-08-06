@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.component.view.control.cell;
 
+import org.springframework.shell.component.view.control.AbstractControl;
 import org.springframework.shell.component.view.control.Cell;
 
 public abstract class AbstractCell<T> extends AbstractControl implements Cell<T> {

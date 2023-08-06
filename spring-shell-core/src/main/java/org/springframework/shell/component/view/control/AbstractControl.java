@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.component.view.control.cell;
+package org.springframework.shell.component.view.control;
 
 import java.util.Optional;
 
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.lang.Nullable;
-import org.springframework.shell.component.view.control.Control;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeResolver.ResolvedValues;
