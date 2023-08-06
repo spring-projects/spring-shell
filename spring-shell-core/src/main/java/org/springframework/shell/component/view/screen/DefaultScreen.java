@@ -235,28 +235,12 @@ public class DefaultScreen implements Screen, DisplayLines {
 
 	private void reset() {
 		layers.clear();
-		// DefaultScreenItem[][] layer0 = layerItems.computeIfAbsent(0, l -> {
-		// 	return new DefaultScreenItem[rows][columns];
-		// });
-		// this.items = new DefaultScreenItem[rows][columns];
-		for (int i = 0; i < rows; i++) {
-			// this.items[i] = new DefaultScreenItem[columns];
-			// layer0[i] = new DefaultScreenItem[columns];
-
-			for (int j = 0; j < columns; j++) {
-				// this.items[i][j] = new DefaultScreenItem();
-				// layer0[i][j] = new DefaultScreenItem();
-			}
-		}
 	}
 
 	private class Layer {
 		DefaultScreenItem[][] items = new DefaultScreenItem[rows][columns];
 
 		DefaultScreenItem getScreenItem(int x, int y) {
-			// if (items[y] == null) {
-			// 	items[y] = new DefaultScreenItem[columns];
-			// }
 			if (y < rows && x < columns) {
 				if (items[y][x] == null) {
 					items[y][x] = new DefaultScreenItem();
@@ -278,17 +262,12 @@ public class DefaultScreen implements Screen, DisplayLines {
 		return layer;
 	}
 
-	// @Override
 	public ScreenItem[][] getScreenItems() {
 		DefaultScreenItem[][] projection = new DefaultScreenItem[rows][columns];
 		layers.entrySet().stream().forEach(entry -> {
 			Layer layer = entry.getValue();
 			DefaultScreenItem[][] layerItems = layer.items;
 			for (int i = 0; i < rows; i++) {
-				// if (projection[i] == null) {
-				// 	projection[i] = new DefaultScreenItem[columns];
-				// }
-
 				for (int j = 0; j < columns; j++) {
 					if (layerItems[i][j] != null) {
 						projection[i][j] = layerItems[i][j];
