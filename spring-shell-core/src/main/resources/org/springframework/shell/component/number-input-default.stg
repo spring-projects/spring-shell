@@ -14,12 +14,11 @@ info(model) ::= <%
 <if(model.input)>
   <model.input>
 <else>
-  <if(model.required)>
-    <("[Required]"); format="style-value">
-  <endif>
   <("[Number Type: "); format="style-value"><model.defaultClass; format="style-value"><("]"); format="style-value">
   <if(model.defaultValue)>
     <("[Default "); format="style-value"><model.defaultValue; format="style-value"><("]"); format="style-value">
+  <elseif(model.required)>
+    <("[Required]"); format="style-value">
   <endif>
 <endif>
 %>

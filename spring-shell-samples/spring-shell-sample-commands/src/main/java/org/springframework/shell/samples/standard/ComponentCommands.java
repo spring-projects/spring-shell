@@ -62,8 +62,8 @@ public class ComponentCommands extends AbstractShellComponent {
 	}
 
 	@ShellMethod(key = "component number", value = "Number input", group = "Components")
-	public String numberInput(Number defaultValue) {
-		NumberInput component = new NumberInput(getTerminal(), "Enter value", defaultValue);
+	public String numberInput() {
+		NumberInput component = new NumberInput(getTerminal(), "Enter value");
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
 		NumberInputContext context = component.run(NumberInputContext.empty());
