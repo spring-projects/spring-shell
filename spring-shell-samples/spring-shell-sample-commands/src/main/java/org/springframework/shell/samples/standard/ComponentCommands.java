@@ -24,11 +24,12 @@ import java.util.stream.Collectors;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
-
 import org.springframework.shell.component.ConfirmationInput;
 import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
 import org.springframework.shell.component.MultiItemSelector;
 import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
+import org.springframework.shell.component.NumberInput;
+import org.springframework.shell.component.NumberInput.NumberInputContext;
 import org.springframework.shell.component.PathInput;
 import org.springframework.shell.component.PathSearch;
 import org.springframework.shell.component.PathInput.PathInputContext;
@@ -57,6 +58,34 @@ public class ComponentCommands extends AbstractShellComponent {
 			component.setMaskCharacter('*');
 		}
 		StringInputContext context = component.run(StringInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+
+	@ShellMethod(key = "component number", value = "Number input", group = "Components")
+	public String numberInput(Number defaultValue) {
+		NumberInput component = new NumberInput(getTerminal(), "Enter value", defaultValue);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		NumberInputContext context = component.run(NumberInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+
+	@ShellMethod(key = "component number double", value = "Number double input", group = "Components")
+	public String numberInputDouble() {
+		NumberInput component = new NumberInput(getTerminal(), "Enter value", 99.9, Double.class);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		NumberInputContext context = component.run(NumberInputContext.empty());
+		return "Got value " + context.getResultValue();
+	}
+
+	@ShellMethod(key = "component number required", value = "Number input", group = "Components")
+	public String numberInputRequired() {
+		NumberInput component = new NumberInput(getTerminal(), "Enter value");
+		component.setRequired(true);
+		component.setResourceLoader(getResourceLoader());
+		component.setTemplateExecutor(getTemplateExecutor());
+		NumberInputContext context = component.run(NumberInputContext.empty());
 		return "Got value " + context.getResultValue();
 	}
 
