@@ -468,7 +468,7 @@ public interface ComponentFlow {
 
 		private Stream<OrderedInputOperation> stringInputsStream() {
 			return stringInputs.stream().map(input -> {
-				StringInput selector = new StringInput(terminal, input.getName(), input.getDefaultValue(), null, input.isMandatory());
+				StringInput selector = new StringInput(terminal, input.getName(), input.getDefaultValue(), null, input.isRequired());
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
 					if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
 							&& StringUtils.hasText(input.getResultValue())) {
@@ -492,7 +492,7 @@ public interface ComponentFlow {
 						if (input.getResultMode() == ResultMode.VERIFY && StringUtils.hasText(input.getResultValue())) {
 							selector.addPreRunHandler(c -> {
 								c.setDefaultValue(input.getResultValue());
-								c.setMandatory(input.isMandatory());
+								c.setRequired(input.isRequired());
 							});
 						}
 						selector.addPostRunHandler(c -> {

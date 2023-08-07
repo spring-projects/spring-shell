@@ -56,7 +56,7 @@ class ComponentFlowTests extends AbstractShellTests {
 			.and()
 			.withStringInput("field3")
 			.name("Field3")
-			.mandatory()
+			.required()
 			.and()
 			.withPathInput("path1")
 			.name("Path1")

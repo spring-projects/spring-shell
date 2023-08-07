@@ -168,7 +168,7 @@ class StringInputTests extends AbstractShellTests {
 		StringInput component1 = new StringInput(getTerminal());
 		component1.setResourceLoader(new DefaultResourceLoader());
 		component1.setTemplateExecutor(getTemplateExecutor());
-		component1.setMandatory(true);
+		component1.setRequired(true);
 
 		service.execute(() -> {
 			StringInputContext run1Context = component1.run(empty);
