@@ -48,6 +48,7 @@
 ** xref:components/ui/index.adoc[]
 *** xref:components/ui/render.adoc[]
 *** xref:components/ui/stringinput.adoc[]
+*** xref:components/ui/numberinput.adoc[]
 *** xref:components/ui/pathinput.adoc[]
 *** xref:components/ui/pathsearch.adoc[]
 *** xref:components/ui/confirmation.adoc[]

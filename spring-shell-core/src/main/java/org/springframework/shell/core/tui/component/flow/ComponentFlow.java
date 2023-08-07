@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +41,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.core.tui.component.ConfirmationInput;
 import org.springframework.shell.core.tui.component.MultiItemSelector;
 import org.springframework.shell.core.tui.component.MultiItemSelector.MultiItemSelectorContext;
+import org.springframework.shell.core.tui.component.NumberInput;
+import org.springframework.shell.core.tui.component.NumberInput.NumberInputContext;
 import org.springframework.shell.core.tui.component.PathInput;
 import org.springframework.shell.core.tui.component.PathInput.PathInputContext;
 import org.springframework.shell.core.tui.component.SingleItemSelector;
@@ -102,6 +105,13 @@ public interface ComponentFlow {
 		 * @return builder for string input
 		 */
 		StringInputSpec withStringInput(String id);
+
+		/**
+		 * Gets a builder for number input.
+		 * @param id the identifier
+		 * @return builder for number input
+		 */
+		NumberInputSpec withNumberInput(String id);
 
 		/**
 		 * Gets a builder for path input.
@@ -176,6 +186,8 @@ public interface ComponentFlow {
 
 		private final List<BaseStringInput> stringInputs = new ArrayList<>();
 
+		private final List<BaseNumberInput> numberInputs = new ArrayList<>();
+
 		private final List<BasePathInput> pathInputs = new ArrayList<>();
 
 		private final List<BaseConfirmationInput> confirmationInputs = new ArrayList<>();
@@ -199,13 +211,18 @@ public interface ComponentFlow {
 
 		@Override
 		public ComponentFlow build() {
-			return new DefaultComponentFlow(terminal, resourceLoader, templateExecutor, stringInputs, pathInputs,
-					confirmationInputs, singleItemSelectors, multiItemSelectors);
+			return new DefaultComponentFlow(terminal, resourceLoader, templateExecutor, stringInputs, numberInputs,
+					pathInputs, confirmationInputs, singleItemSelectors, multiItemSelectors);
 		}
 
 		@Override
 		public StringInputSpec withStringInput(String id) {
 			return new DefaultStringInputSpec(this, id);
+		}
+
+		@Override
+		public NumberInputSpec withNumberInput(String id) {
+			return new DefaultNumberInputSpec(this, id);
 		}
 
 		@Override
@@ -254,6 +271,7 @@ public interface ComponentFlow {
 		@Override
 		public Builder reset() {
 			stringInputs.clear();
+			numberInputs.clear();
 			pathInputs.clear();
 			confirmationInputs.clear();
 			singleItemSelectors.clear();
@@ -267,6 +285,12 @@ public interface ComponentFlow {
 			checkUniqueId(input.getId());
 			input.setOrder(order.getAndIncrement());
 			stringInputs.add(input);
+		}
+
+		void addNumberInput(BaseNumberInput input) {
+			checkUniqueId(input.getId());
+			input.setOrder(order.getAndIncrement());
+			numberInputs.add(input);
 		}
 
 		void addPathInput(BasePathInput input) {
@@ -350,6 +374,8 @@ public interface ComponentFlow {
 
 		private final List<BaseStringInput> stringInputs;
 
+		private final List<BaseNumberInput> numberInputs;
+
 		private final List<BasePathInput> pathInputs;
 
 		private final List<BaseConfirmationInput> confirmationInputs;
@@ -364,13 +390,15 @@ public interface ComponentFlow {
 
 		DefaultComponentFlow(@Nullable Terminal terminal, @Nullable ResourceLoader resourceLoader,
 				@Nullable TemplateExecutor templateExecutor, List<BaseStringInput> stringInputs,
-				List<BasePathInput> pathInputs, List<BaseConfirmationInput> confirmationInputs,
-				List<BaseSingleItemSelector> singleInputs, List<BaseMultiItemSelector> multiInputs) {
+				List<BaseNumberInput> numberInputs, List<BasePathInput> pathInputs,
+				List<BaseConfirmationInput> confirmationInputs, List<BaseSingleItemSelector> singleInputs,
+				List<BaseMultiItemSelector> multiInputs) {
 			Assert.state(terminal != null, "'terminal' must not be null");
 			this.terminal = terminal;
 			this.resourceLoader = resourceLoader;
 			this.templateExecutor = templateExecutor;
 			this.stringInputs = stringInputs;
+			this.numberInputs = numberInputs;
 			this.pathInputs = pathInputs;
 			this.confirmationInputs = confirmationInputs;
 			this.singleInputs = singleInputs;
@@ -427,8 +455,8 @@ public interface ComponentFlow {
 
 		private DefaultComponentFlowResult runGetResults() {
 			List<OrderedInputOperation> oios = Stream
-				.of(stringInputsStream(), pathInputsStream(), confirmationInputsStream(), singleItemSelectorsStream(),
-						multiItemSelectorsStream())
+				.of(stringInputsStream(), numberInputsStream(), pathInputsStream(), confirmationInputsStream(),
+						singleItemSelectorsStream(), multiItemSelectorsStream())
 				.flatMap(oio -> oio)
 				.sorted(OrderComparator.INSTANCE)
 				.collect(Collectors.toList());
@@ -510,6 +538,58 @@ public interface ComponentFlow {
 					return selector.run(context);
 				};
 				Function<StringInputContext, String> f1 = input.getNext();
+				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
+						? Optional.ofNullable(f1.apply(selector.getThisContext(context))) : null;
+				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
+			});
+		}
+
+		private Stream<OrderedInputOperation> numberInputsStream() {
+			return numberInputs.stream().map(input -> {
+				NumberInput selector = new NumberInput(terminal, input.getName(), input.getDefaultValue(),
+						input.getNumberClass(), input.isRequired());
+				UnaryOperator<ComponentContext<?>> operation = context -> {
+					if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
+							&& input.getResultValue() != null) {
+						context.put(input.getId(), input.getResultValue());
+						return context;
+					}
+					if (resourceLoader != null) {
+						selector.setResourceLoader(resourceLoader);
+					}
+					if (templateExecutor != null) {
+						selector.setTemplateExecutor(templateExecutor);
+					}
+					selector.setNumberClass(input.getNumberClass());
+					if (StringUtils.hasText(input.getTemplateLocation())) {
+						selector.setTemplateLocation(input.getTemplateLocation());
+					}
+					if (input.getRenderer() != null) {
+						selector.setRenderer(input.getRenderer());
+					}
+					if (input.isStoreResult()) {
+						if (input.getResultMode() == ResultMode.VERIFY && input.getResultValue() != null) {
+							selector.addPreRunHandler(c -> {
+								c.setDefaultValue(input.getResultValue());
+								c.setRequired(input.isRequired());
+							});
+						}
+						selector.addPostRunHandler(c -> {
+							Number result = c.getResultValue();
+							if (result != null) {
+								c.put(input.getId(), c.getResultValue());
+							}
+						});
+					}
+					for (Consumer<NumberInputContext> handler : input.getPreHandlers()) {
+						selector.addPreRunHandler(handler);
+					}
+					for (Consumer<NumberInputContext> handler : input.getPostHandlers()) {
+						selector.addPostRunHandler(handler);
+					}
+					return selector.run(context);
+				};
+				Function<NumberInputContext, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
 						? Optional.ofNullable(f1.apply(selector.getThisContext(context))) : null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
