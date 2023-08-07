@@ -54,6 +54,18 @@ class ComponentFlowTests extends AbstractShellTests {
 			.withStringInput("field2")
 			.name("Field2")
 			.and()
+			.withNumberInput("number1")
+			.name("Number1")
+			.and()
+			.withNumberInput("number2")
+			.name("Number2")
+			.defaultValue(20.5)
+			.numberClass(Double.class)
+			.and()
+			.withNumberInput("number3")
+			.name("Number3")
+			.required()
+			.and()
 			.withPathInput("path1")
 			.name("Path1")
 			.and()
@@ -78,6 +90,15 @@ class ComponentFlowTests extends AbstractShellTests {
 		// field2
 		testBuffer = new TestBuffer().append("Field2Value").cr();
 		write(testBuffer.getBytes());
+		// number1
+		testBuffer = new TestBuffer().append("35").cr();
+		write(testBuffer.getBytes());
+		// number2
+		testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+		// number3
+		testBuffer = new TestBuffer().cr().append("5").cr();
+		write(testBuffer.getBytes());
 		// path1
 		testBuffer = new TestBuffer().append("fakedir").cr();
 		write(testBuffer.getBytes());
@@ -93,11 +114,17 @@ class ComponentFlowTests extends AbstractShellTests {
 			assertThat(inputWizardResult).isNotNull();
 			String field1 = inputWizardResult.getContext().get("field1");
 			String field2 = inputWizardResult.getContext().get("field2");
+			Integer number1 = inputWizardResult.getContext().get("number1");
+			Double number2 = inputWizardResult.getContext().get("number2");
+			Integer number3 = inputWizardResult.getContext().get("number3");
 			Path path1 = inputWizardResult.getContext().get("path1");
 			String single1 = inputWizardResult.getContext().get("single1");
 			List<String> multi1 = inputWizardResult.getContext().get("multi1");
 			assertThat(field1).isEqualTo("defaultField1Value");
 			assertThat(field2).isEqualTo("Field2Value");
+			assertThat(number1).isEqualTo(35);
+			assertThat(number2).isEqualTo(20.5);
+			assertThat(number3).isEqualTo(5);
 			assertThat(path1.toString()).contains("fakedir");
 			assertThat(single1).isEqualTo("value1");
 			assertThat(multi1).containsExactlyInAnyOrder("value2");
@@ -132,6 +159,10 @@ class ComponentFlowTests extends AbstractShellTests {
 			.resultValue(false)
 			.resultMode(ResultMode.ACCEPT)
 			.and()
+			.withNumberInput("id6")
+			.resultValue(50)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
@@ -148,12 +179,14 @@ class ComponentFlowTests extends AbstractShellTests {
 			String id3 = inputWizardResult.getContext().get("id3");
 			List<String> id4 = inputWizardResult.getContext().get("id4");
 			Boolean id5 = inputWizardResult.getContext().get("id5");
+			Integer id6 = inputWizardResult.getContext().get("id6");
 
 			assertThat(id1).isEqualTo("value1");
 			assertThat(id2.toString()).contains("value2");
 			assertThat(id3).isEqualTo("value3");
 			assertThat(id4).containsExactlyInAnyOrder("value4");
 			assertThat(id5).isFalse();
+			assertThat(id6).isEqualTo(50);
 		});
 	}
 
