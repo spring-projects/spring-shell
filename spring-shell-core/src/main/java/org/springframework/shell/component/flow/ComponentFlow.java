@@ -31,11 +31,11 @@ import java.util.stream.Stream;
 import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.ConfirmationInput;
+import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
 import org.springframework.shell.component.MultiItemSelector;
 import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
 import org.springframework.shell.component.PathInput;
@@ -43,7 +43,6 @@ import org.springframework.shell.component.PathInput.PathInputContext;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
 import org.springframework.shell.component.StringInput;
-import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.support.SelectorItem;
@@ -445,7 +444,7 @@ public interface ComponentFlow {
 
 		private Stream<OrderedInputOperation> stringInputsStream() {
 			return stringInputs.stream().map(input -> {
-				StringInput selector = new StringInput(terminal, input.getName(), input.getDefaultValue(), null, input.isMandatory());
+				StringInput selector = new StringInput(terminal, input.getName(), input.getDefaultValue(), null, input.isRequired());
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
 						if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
 								&& StringUtils.hasText(input.getResultValue())) {
@@ -465,7 +464,7 @@ public interface ComponentFlow {
 							if (input.getResultMode() == ResultMode.VERIFY && StringUtils.hasText(input.getResultValue())) {
 								selector.addPreRunHandler(c -> {
 									c.setDefaultValue(input.getResultValue());
-									c.setMandatory(input.isMandatory());
+									c.setRequired(input.isRequired());
 								});
 							}
 							selector.addPostRunHandler(c -> {

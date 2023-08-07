@@ -41,7 +41,7 @@ The context object is `StringInputContext`. The following table lists its contex
 |`hasMaskCharacter`
 |`true` if a mask character is set. Otherwise, false.
 
-|`mandatory`
+|`required`
 |`true` if the input is required. Otherwise, false.
 
 |`model`

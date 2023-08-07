@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.jline.utils.AttributedString;
-
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.flow.ComponentFlow.Builder;
@@ -73,11 +72,11 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 	StringInputSpec maskCharacter(Character maskCharacter);
 
 	/**
-	 * Sets input to mandatory
+	 * Sets input to required
 	 *
 	 * @return a builder
 	 */
-	StringInputSpec mandatory();
+	StringInputSpec required();
 
 	/**
 	 * Sets a renderer function.

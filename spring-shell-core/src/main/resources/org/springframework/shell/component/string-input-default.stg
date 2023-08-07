@@ -15,8 +15,8 @@ info(model) ::= <%
   <if(model.maskedInput)>
     <model.maskedInput>
   <else>
-    <if(model.mandatory)>
-      <("[Mandatory]"); format="style-value">
+    <if(model.required)>
+      <("[Required]"); format="style-value">
     <endif>
     <if(model.defaultValue)>
       <("[Default "); format="style-value"><model.defaultValue; format="style-value"><("]"); format="style-value">
@@ -26,8 +26,8 @@ info(model) ::= <%
   <if(model.input)>
     <model.input>
   <else>
-    <if(model.mandatory)>
-      <("[Mandatory]"); format="style-value">
+    <if(model.required)>
+      <("[Required]"); format="style-value">
     <endif>
     <if(model.defaultValue)>
       <("[Default "); format="style-value"><model.defaultValue; format="style-value"><("]"); format="style-value">

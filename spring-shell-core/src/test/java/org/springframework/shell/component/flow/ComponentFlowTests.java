@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.component.flow;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
@@ -56,7 +58,7 @@ class ComponentFlowTests extends AbstractShellTests {
 					.and()
 				.withStringInput("field3")
 					.name("Field3")
-					.mandatory()
+					.required()
 					.and()
 				.withPathInput("path1")
 					.name("Path1")
