@@ -29,6 +29,8 @@ import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.commands.AbstractCommand;
 import org.springframework.shell.core.tui.component.ConfirmationInput;
 import org.springframework.shell.core.tui.component.MultiItemSelector;
+import org.springframework.shell.core.tui.component.NumberInput;
+import org.springframework.shell.core.tui.component.NumberInput.NumberInputContext;
 import org.springframework.shell.core.tui.component.PathInput;
 import org.springframework.shell.core.tui.component.PathSearch;
 import org.springframework.shell.core.tui.component.SingleItemSelector;
@@ -264,4 +266,21 @@ public class UiComponentSnippets {
 
 	}
 
+	class Dump9 {
+		@Command
+		public class ComponentCommands extends AbstractCommand {
+
+			@Command(command = "component number", description = "Number input", group = "Components")
+			public String numberInput() {
+				// tag::snippet10[]
+				NumberInput component = new NumberInput(getTerminal(), "Enter value", 99.9, Double.class);
+				component.setResourceLoader(getResourceLoader());
+				component.setTemplateExecutor(getTemplateExecutor());
+
+				NumberInputContext context = component.run(NumberInputContext.empty());
+				return "Got value " + context.getResultValue();
+				// end::snippet10[]
+			}
+		}
+	}
 }
