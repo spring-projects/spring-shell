@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.support.AbstractTextComponent;
+import org.springframework.shell.component.support.AbstractTextComponent.TextComponentContext;
 import org.springframework.util.StringUtils;
 
 /**

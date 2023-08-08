@@ -49,22 +49,14 @@ import org.springframework.util.StringUtils;
 public class ComponentCommands extends AbstractShellComponent {
 
 	@ShellMethod(key = "component string", value = "String input", group = "Components")
-	public String stringInput(boolean mask) {
-		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
+	public String stringInput(boolean mask, boolean required) {
+		StringInput component = new StringInput(getTerminal(), "Enter value", null);
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
+		component.setRequired(required);
 		if (mask) {
 			component.setMaskCharacter('*');
 		}
-		StringInputContext context = component.run(StringInputContext.empty());
-		return "Got value " + context.getResultValue();
-	}
-
-	@ShellMethod(key = "component string required", value = "String input", group = "Components")
-	public String stringRequired() {
-		StringInput component = new StringInput(getTerminal(), "Enter value", null, null, true);
-		component.setResourceLoader(getResourceLoader());
-		component.setTemplateExecutor(getTemplateExecutor());
 		StringInputContext context = component.run(StringInputContext.empty());
 		return "Got value " + context.getResultValue();
 	}
