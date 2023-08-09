@@ -15,22 +15,20 @@ info(model) ::= <%
   <if(model.maskedInput)>
     <model.maskedInput>
   <else>
-    <if(model.required)>
-      <("[Required]"); format="style-value">
-    <endif>
     <if(model.defaultValue)>
       <("[Default "); format="style-value"><model.defaultValue; format="style-value"><("]"); format="style-value">
+    <elseif(model.required)>
+      <("[Required]"); format="style-value">
     <endif>
   <endif>
 <else>
   <if(model.input)>
     <model.input>
   <else>
-    <if(model.required)>
-      <("[Required]"); format="style-value">
-    <endif>
     <if(model.defaultValue)>
       <("[Default "); format="style-value"><model.defaultValue; format="style-value"><("]"); format="style-value">
+    <elseif(model.required)>
+      <("[Required]"); format="style-value">
     <endif>
   <endif>
 <endif>
