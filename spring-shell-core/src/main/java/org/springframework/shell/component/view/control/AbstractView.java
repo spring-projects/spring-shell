@@ -55,6 +55,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	private int layer;
 	private EventLoop eventLoop;
 	private Map<Integer, KeyBindingValue> keyBindings = new HashMap<>();
+	private Map<Integer, KeyBindingValue> hotKeyBindings = new HashMap<>();
 	private Map<Integer, MouseBindingValue> mouseBindings = new HashMap<>();
 
 	public AbstractView() {
@@ -180,6 +181,25 @@ public abstract class AbstractView extends AbstractControl implements View {
 		return handler;
 	}
 
+	@Override
+	public KeyHandler getHotKeyHandler() {
+		log.trace("getHotKeyHandler() {}", this);
+		KeyHandler handler = args -> {
+			KeyEvent event = args.event();
+			boolean consumed = false;
+			Integer key = event.key();
+			if (key != null) {
+				KeyBindingValue keyBindingValue = getHotKeyBindings().get(key);
+				if (keyBindingValue != null) {
+					consumed = dispatchRunCommand(event, keyBindingValue);
+				}
+
+			}
+			return KeyHandler.resultOf(event, consumed, null);
+		};
+		return handler;
+	}
+
 	/**
 	 * Sets a callback function which is invoked after a {@link View} has been
 	 * drawn.
@@ -236,6 +256,24 @@ public abstract class AbstractView extends AbstractControl implements View {
 		});
 	}
 
+	protected void registerHotKeyBinding(Integer keyType, String keyCommand) {
+		registerHotKeyBinding(keyType, keyCommand, null, null);
+	}
+
+	protected void registerHotKeyBinding(Integer keyType, KeyBindingConsumer keyConsumer) {
+		registerHotKeyBinding(keyType, null, keyConsumer, null);
+	}
+
+	protected void registerHotKeyBinding(Integer keyType, Runnable keyRunnable) {
+		registerHotKeyBinding(keyType, null, null, keyRunnable);
+	}
+
+	private void registerHotKeyBinding(Integer keyType, String keyCommand, KeyBindingConsumer keyConsumer, Runnable keyRunnable) {
+		hotKeyBindings.compute(keyType, (key, old) -> {
+			return KeyBindingValue.of(old, keyCommand, keyConsumer, keyRunnable);
+		});
+	}
+
 	record KeyBindingValue(String keyCommand, KeyBindingConsumer keyConsumer, Runnable keyRunnable) {
 		static KeyBindingValue of(KeyBindingValue old, String keyCommand, KeyBindingConsumer keyConsumer,
 				Runnable keyRunnable) {
@@ -255,6 +293,15 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 */
 	protected Map<Integer, KeyBindingValue> getKeyBindings() {
 		return keyBindings;
+	}
+
+	/**
+	 * Get hotkey bindings.
+	 *
+	 * @return hotkey bindings
+	 */
+	protected Map<Integer, KeyBindingValue> getHotKeyBindings() {
+		return hotKeyBindings;
 	}
 
 	record MouseBindingValue(String mouseCommand, MouseBindingConsumer mouseConsumer, Runnable mouseRunnable,

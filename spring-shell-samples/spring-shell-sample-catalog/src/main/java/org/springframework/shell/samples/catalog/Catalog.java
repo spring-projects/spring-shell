@@ -46,6 +46,7 @@ import org.springframework.shell.component.view.control.cell.ListCell;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.shell.component.view.event.KeyEvent.KeyMask;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
@@ -281,11 +282,13 @@ public class Catalog {
 			.toArray(MenuItem[]::new);
 		MenuBarView menuBar = MenuBarView.of(
 			MenuBarItem.of("File",
-				MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction)),
+					MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction))
+				.setHotKey(Key.f | KeyMask.AltMask),
 			MenuBarItem.of("Theme",
-				themeItems),
+					themeItems)
+				.setHotKey(Key.t | KeyMask.AltMask),
 			MenuBarItem.of("Help",
-				MenuItem.of("About"))
+					MenuItem.of("About"))
 		);
 
 		menuBar.setThemeResolver(themeResolver);

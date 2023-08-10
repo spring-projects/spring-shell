@@ -229,12 +229,24 @@ public class TerminalUI {
 
 	private void handleKeyEvent(KeyEvent event) {
 		log.trace("handleKeyEvent {}", event);
-		if (rootView != null && rootView.hasFocus()) {
-			KeyHandler handler = rootView.getKeyHandler();
+
+		if (rootView != null) {
+			// if hotkeys consume, we're done
+			KeyHandler handler = rootView.getHotKeyHandler();
 			if (handler != null) {
 				KeyHandlerResult result = handler.handle(KeyHandler.argsOf(event));
-				if (result.focus() != null) {
-					setFocus(result.focus());
+				if (result.consumed()) {
+					return;
+				}
+			}
+			// continue with one having focus
+			if (rootView.hasFocus()) {
+				handler = rootView.getKeyHandler();
+				if (handler != null) {
+					KeyHandlerResult result = handler.handle(KeyHandler.argsOf(event));
+					if (result.focus() != null) {
+						setFocus(result.focus());
+					}
 				}
 			}
 		}

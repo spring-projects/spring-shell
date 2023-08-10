@@ -45,6 +45,10 @@ public class KeyBinder {
 			keyMap.bind(KeyEvent.Key.Char, Character.toString(i));
 		}
 
+		for (char i = KeyEvent.Key.a; i <= KeyEvent.Key.z; i++) {
+			keyMap.bind(i | KeyEvent.KeyMask.AltMask, alt(i));
+		}
+
 		keyMap.bind(KeyEvent.Key.q | KeyEvent.KeyMask.CtrlMask, ctrl('q'));
 
 		keyMap.bind(KeyEvent.Key.Mouse, key(terminal, Capability.key_mouse));

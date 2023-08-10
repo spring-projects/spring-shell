@@ -134,6 +134,11 @@ public class AppView extends BoxView {
 	}
 
 	@Override
+	public KeyHandler getHotKeyHandler() {
+		return menu != null ? menu.getHotKeyHandler() : super.getHotKeyHandler();
+	}
+
+	@Override
 	public boolean hasFocus() {
 		if (grid != null) {
 			return grid.hasFocus();

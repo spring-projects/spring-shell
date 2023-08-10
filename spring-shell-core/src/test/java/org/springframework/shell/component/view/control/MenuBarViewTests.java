@@ -44,6 +44,18 @@ class MenuBarViewTests extends AbstractViewTests {
 			assertThat(view.getItems()).hasSize(1);
 		}
 
+		@Test
+		void hotkeys() {
+			MenuBarItem item;
+
+			item = MenuBarItem.of("title");
+			assertThat(item.getHotKey()).isNull();
+			item.setHotKey(Key.f);
+			assertThat(item.getHotKey()).isEqualTo(Key.f);
+
+			item = MenuBarItem.of("title").setHotKey(Key.f);
+			assertThat(item.getHotKey()).isEqualTo(Key.f);
+		}
 	}
 
 	@Nested

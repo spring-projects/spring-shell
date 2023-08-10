@@ -60,13 +60,23 @@ public interface View extends Control {
 	MouseHandler getMouseHandler();
 
 	/**
-	 * Gets a {@link View} mouse {@link KeyHandler}. Can be {@code null} which
+	 * Gets a {@link View} key {@link KeyHandler}. Can be {@code null} which
 	 * indicates view will not handle any key events.
 	 *
-	 * @return a view mouse handler
+	 * @return a view key handler
 	 * @see KeyHandler
 	 */
 	@Nullable
 	KeyHandler getKeyHandler();
+
+	/**
+	 * Gets a {@link View} hotkey {@link KeyHandler}. Can be {@code null} which
+	 * indicates view will not handle any key events.
+	 *
+	 * @return a view hotkey handler
+	 * @see KeyHandler
+	 */
+	@Nullable
+	KeyHandler getHotKeyHandler();
 
 }

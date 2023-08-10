@@ -35,8 +35,8 @@ import org.springframework.shell.component.view.geom.Dimension;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
-import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.component.view.screen.ScreenItem;
+import org.springframework.shell.style.ThemeResolver;
 
 /**
  * {@link MenuBarView} shows {@link MenuBarItem items} horizontally and is
@@ -187,6 +187,17 @@ public class MenuBarView extends BoxView {
 		return x;
 	}
 
+	private int itemIndex(MenuBarItem item) {
+		int index = 0;
+		for (MenuBarItem i : items) {
+			if (i == item) {
+				return index;
+			}
+			index++;
+		}
+		return -1;
+	}
+
 	private void select(MouseEvent event) {
 		int x = event.x();
 		int y = event.y();
@@ -256,6 +267,23 @@ public class MenuBarView extends BoxView {
 	public void setItems(List<MenuBarItem> items) {
 		this.items.clear();
 		this.items.addAll(items);
+		registerHotKeys();
+	}
+
+	private void selectItem(MenuBarItem item) {
+		int index = itemIndex(item);
+		if (index > -1) {
+			setSelected(index);
+			checkMenuView();
+		}
+	}
+
+	private void registerHotKeys() {
+		getItems().stream()
+			.filter(item -> item.getHotKey() != null)
+			.forEach(item -> {
+				registerHotKeyBinding(item.getHotKey(), () -> selectItem(item));
+			});
 	}
 
 	/**
@@ -265,6 +293,7 @@ public class MenuBarView extends BoxView {
 
 		private String title;
 		private List<MenuItem> items;
+		private Integer hotKey;
 
 		public MenuBarItem(String title) {
 			this(title, null);
@@ -285,6 +314,15 @@ public class MenuBarView extends BoxView {
 
 		public List<MenuItem> getItems() {
 			return items;
+		}
+
+		public Integer getHotKey() {
+			return hotKey;
+		}
+
+		public MenuBarItem setHotKey(Integer hotKey) {
+			this.hotKey = hotKey;
+			return this;
 		}
 	}
 
