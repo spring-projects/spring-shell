@@ -338,7 +338,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 		public void text(String text, Rectangle rect, HorizontalAlign hAlign, VerticalAlign vAlign) {
 			int x = rect.x();
 			if (hAlign == HorizontalAlign.CENTER) {
-				x = (x + rect.width()) / 2;
+				x = x + rect.width() / 2;
 				x = x - text.length() / 2;
 			}
 			else if (hAlign == HorizontalAlign.RIGHT) {
@@ -346,7 +346,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 			}
 			int y = rect.y();
 			if (vAlign == VerticalAlign.CENTER) {
-				y = (y + rect.height()) / 2;
+				y = y + rect.height() / 2;
 			}
 			else if (vAlign == VerticalAlign.BOTTOM) {
 				y = y + rect.height() - 1;

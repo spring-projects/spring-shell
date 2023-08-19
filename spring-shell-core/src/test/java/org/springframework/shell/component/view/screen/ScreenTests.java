@@ -76,14 +76,21 @@ class ScreenTests extends AbstractViewTests {
 	void printsTextAlign() {
 		Rectangle rect = new Rectangle(1, 1, 10, 10);
 		screen24x80.writerBuilder().build().text("text", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-		assertThat(forScreen(screen24x80)).hasHorizontalText("text", 3, 5, 4);
+		assertThat(forScreen(screen24x80)).hasHorizontalText("text", 4, 6, 4);
 	}
 
 	@Test
 	void printsTextAlignInOneRowRect() {
 		Rectangle rect = new Rectangle(1, 1, 10, 1);
 		screen24x80.writerBuilder().build().text("text", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-		assertThat(forScreen(screen24x80)).hasHorizontalText("text", 3, 1, 4);
+		assertThat(forScreen(screen24x80)).hasHorizontalText("text", 4, 1, 4);
+	}
+
+	@Test
+	void printsTextAlignInSmallRect() {
+		Rectangle rect = new Rectangle(10, 14, 10, 3);
+		screen24x80.writerBuilder().build().text("text", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+		assertThat(forScreen(screen24x80)).hasHorizontalText("text", 13, 15, 4);
 	}
 
 	@Test
