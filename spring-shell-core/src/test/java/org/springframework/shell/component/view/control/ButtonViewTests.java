@@ -141,7 +141,7 @@ class ButtonViewTests extends AbstractViewTests {
 			view.setRect(2, 2, 6, 3);
 			view.draw(screen10x10);
 			assertThat(forScreen(screen10x10)).hasBorder(2, 2, 6, 3);
-			assertThat(forScreen(screen10x10)).hasHorizontalText("text", 2, 2, 4);
+			assertThat(forScreen(screen10x10)).hasHorizontalText("text", 3, 3, 4);
 		}
 
 	}
