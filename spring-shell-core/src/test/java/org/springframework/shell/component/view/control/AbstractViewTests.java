@@ -29,6 +29,7 @@ import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
 import org.springframework.shell.component.view.screen.DefaultScreen;
 import org.springframework.shell.component.view.screen.Screen;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class AbstractViewTests {
 
@@ -126,4 +127,18 @@ public class AbstractViewTests {
 	protected MouseEvent mouseWheelDown(int x, int y) {
 		return MouseEvent.of(x, y, MouseEvent.Type.Wheel | MouseEvent.Button.WheelDown);
 	}
+
+	protected static String getStringField(Object object, String field) {
+		return getField(object, field, String.class);
+	}
+
+	protected static Runnable getRunnableField(Object object, String field) {
+		return getField(object, field, Runnable.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected static <T> T getField(Object object, String field, Class<T> type) {
+		return (T) ReflectionTestUtils.getField(object, field);
+	}
+
 }
