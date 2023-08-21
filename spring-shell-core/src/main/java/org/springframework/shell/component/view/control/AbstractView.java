@@ -54,6 +54,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	private boolean hasFocus;
 	private int layer;
 	private EventLoop eventLoop;
+	private ViewService viewService;
 	private Map<Integer, KeyBindingValue> keyBindings = new HashMap<>();
 	private Map<Integer, KeyBindingValue> hotKeyBindings = new HashMap<>();
 	private Map<Integer, MouseBindingValue> mouseBindings = new HashMap<>();
@@ -236,6 +237,24 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 */
 	protected EventLoop getEventLoop() {
 		return eventLoop;
+	}
+
+	/**
+	 * Set a {@link ViewService}
+	 *
+	 * @param viewService the view service
+	 */
+	public void setViewService(ViewService viewService) {
+		this.viewService = viewService;
+	}
+
+	/**
+	 * Get a {@link ViewService}
+	 *
+	 * @return view service
+	 */
+	protected ViewService getViewService() {
+		return viewService;
 	}
 
 	protected void registerKeyBinding(Integer keyType, String keyCommand) {
