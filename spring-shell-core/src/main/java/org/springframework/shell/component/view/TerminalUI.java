@@ -35,6 +35,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.shell.component.view.control.View;
+import org.springframework.shell.component.view.control.ViewService;
 import org.springframework.shell.component.view.event.DefaultEventLoop;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyBinder;
@@ -60,7 +61,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  */
-public class TerminalUI {
+public class TerminalUI implements ViewService {
 
 	private final static Logger log = LoggerFactory.getLogger(TerminalUI.class);
 	private final Terminal terminal;
@@ -70,6 +71,7 @@ public class TerminalUI {
 	private Display display;
 	private Size size;
 	private View rootView;
+	private View modalView;
 	private boolean fullScreen;
 	private final KeyBinder keyBinder;
 	private DefaultEventLoop eventLoop = new DefaultEventLoop();
@@ -85,6 +87,16 @@ public class TerminalUI {
 		this.terminal = terminal;
 		this.bindingReader = new BindingReader(terminal.reader());
 		this.keyBinder = new KeyBinder(terminal);
+	}
+
+	@Override
+	public View getModal() {
+		return modalView;
+	}
+
+	@Override
+	public void setModal(View view) {
+		this.modalView = view;
 	}
 
 	/**
@@ -137,11 +149,15 @@ public class TerminalUI {
 	}
 
 	private void render(int rows, int columns) {
-		if (rootView == null) {
-			return;
+		if (rootView != null) {
+			rootView.setRect(0, 0, columns, rows);
+			rootView.draw(virtualDisplay);
 		}
-		rootView.setRect(0, 0, columns, rows);
-		rootView.draw(virtualDisplay);
+		if (modalView != null) {
+			modalView.setLayer(1);
+			modalView.setRect(0, 0, columns, rows);
+			modalView.draw(virtualDisplay);
+		}
 	}
 
 	private void display() {
@@ -254,8 +270,9 @@ public class TerminalUI {
 
 	private void handleMouseEvent(MouseEvent event) {
 		log.trace("handleMouseEvent {}", event);
-		if (rootView != null) {
-			MouseHandler handler = rootView.getMouseHandler();
+		View view = modalView != null ? modalView : rootView;
+		if (view != null) {
+			MouseHandler handler = view.getMouseHandler();
 			if (handler != null) {
 				MouseHandlerResult result = handler.handle(MouseHandler.argsOf(event));
 				if (result.focus() != null) {

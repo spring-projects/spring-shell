@@ -180,7 +180,7 @@ public class Catalog {
 		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_SCENARIO_TYPEREF, scenarios)
 			.subscribe(event -> {
 				View view = event.args().item().scenario()
-					.configure(eventLoop, themeResolver, activeThemeName)
+					.configure(ui, eventLoop, themeResolver, activeThemeName)
 					.build();
 				component.setRoot(view, true);
 				currentScenarioView = view;
@@ -273,8 +273,12 @@ public class Catalog {
 		return () -> setStyle(style);
 	}
 
+	private void about() {
+	}
+
 	private MenuBarView buildMenuBar(EventLoop eventLoop) {
 		Runnable quitAction = () -> requestQuit();
+		Runnable aboutAction = () -> about();
 		MenuItem[] themeItems = themeResolver.themeNames().stream()
 			.map(tn -> {
 				return MenuItem.of(tn, MenuItemCheckStyle.RADIO, styleAction(tn), "default".equals(tn));
@@ -288,7 +292,7 @@ public class Catalog {
 					themeItems)
 				.setHotKey(Key.t | KeyMask.AltMask),
 			MenuBarItem.of("Help",
-					MenuItem.of("About"))
+					MenuItem.of("About", MenuItemCheckStyle.NOCHECK, aboutAction))
 		);
 
 		menuBar.setThemeResolver(themeResolver);

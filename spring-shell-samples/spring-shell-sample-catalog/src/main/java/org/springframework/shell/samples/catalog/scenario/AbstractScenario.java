@@ -16,6 +16,7 @@
 package org.springframework.shell.samples.catalog.scenario;
 
 import org.springframework.shell.component.view.control.AbstractView;
+import org.springframework.shell.component.view.control.ViewService;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.style.ThemeResolver;
 
@@ -26,16 +27,22 @@ import org.springframework.shell.style.ThemeResolver;
  */
 public abstract class AbstractScenario implements Scenario {
 
+	private ViewService viewService;
 	private EventLoop eventloop;
 	private ThemeResolver themeResolver;
 	private String themeName;
 
 	@Override
-	public Scenario configure(EventLoop eventloop, ThemeResolver themeResolver, String themeName) {
+	public Scenario configure(ViewService viewService, EventLoop eventloop, ThemeResolver themeResolver, String themeName) {
+		this.viewService = viewService;
 		this.eventloop = eventloop;
 		this.themeResolver = themeResolver;
 		this.themeName = themeName;
 		return this;
+	}
+
+	protected ViewService getViewService() {
+		return viewService;
 	}
 
 	protected EventLoop getEventloop() {

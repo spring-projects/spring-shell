@@ -16,6 +16,7 @@
 package org.springframework.shell.samples.catalog.scenario;
 
 import org.springframework.shell.component.view.control.View;
+import org.springframework.shell.component.view.control.ViewService;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.style.ThemeResolver;
 
@@ -48,6 +49,6 @@ public interface Scenario {
 	 * @param themeName theme name for scenario
 	 * @return scenario for chaining
 	 */
-	Scenario configure(EventLoop eventloop, ThemeResolver themeResolver, String themeName);
+	Scenario configure(ViewService viewService, EventLoop eventloop, ThemeResolver themeResolver, String themeName);
 
 }
