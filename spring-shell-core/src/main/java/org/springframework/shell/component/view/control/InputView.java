@@ -67,8 +67,8 @@ public class InputView extends BoxView {
 		String s = getInputText();
 		screen.writerBuilder().build().text(s, rect.x(), rect.y());
 		screen.setShowCursor(hasFocus());
-		int sum = text.stream().limit(cursorIndex).mapToInt(text -> text.length()).sum();
-		screen.setCursorPosition(new Position(rect.x() + sum, rect.y()));
+		int cPos = cursorPosition();
+		screen.setCursorPosition(new Position(rect.x() + cPos, rect.y()));
 		super.drawInternal(screen);
 	}
 
@@ -81,8 +81,12 @@ public class InputView extends BoxView {
 		return text.stream().collect(Collectors.joining());
 	}
 
+	private int cursorPosition() {
+		return text.stream().limit(cursorIndex).mapToInt(text -> text.length()).sum();
+	}
+
 	private void add(String data) {
-		text.add(data);
+		text.add(cursorIndex, data);
 		moveCursor(1);
 	}
 
@@ -94,7 +98,9 @@ public class InputView extends BoxView {
 	}
 
 	private void delete() {
-		text.remove(cursorIndex);
+		if (cursorIndex < text.size()) {
+			text.remove(cursorIndex);
+		}
 	}
 
 	private void moveCursor(int index) {

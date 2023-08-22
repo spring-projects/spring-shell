@@ -132,6 +132,10 @@ public class AbstractViewTests {
 		return getField(object, field, String.class);
 	}
 
+	protected static int getIntField(Object object, String field) {
+		return getField(object, field, int.class);
+	}
+
 	protected static Runnable getRunnableField(Object object, String field) {
 		return getField(object, field, Runnable.class);
 	}
@@ -139,6 +143,15 @@ public class AbstractViewTests {
 	@SuppressWarnings("unchecked")
 	protected static <T> T getField(Object object, String field, Class<T> type) {
 		return (T) ReflectionTestUtils.getField(object, field);
+	}
+
+	protected static int callIntMethod(Object object, String method) {
+		return callMethod(int.class, object, method);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected static <T> T callMethod(Class<T> type, Object object, String method, Object... args) {
+		return (T) ReflectionTestUtils.invokeMethod(object, method, args);
 	}
 
 }

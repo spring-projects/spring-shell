@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InputViewTests extends AbstractViewTests {
 
 	private static final String CURSOR_INDEX_FIELD = "cursorIndex";
+	private static final String CURSOR_POSITION_METHOD = "cursorPosition";
 
 	@Nested
 	class Input {
@@ -135,16 +136,49 @@ class InputViewTests extends AbstractViewTests {
 			configure(view);
 		}
 
-		int cursorIndex() {
-			return (Integer) ReflectionTestUtils.getField(view, CURSOR_INDEX_FIELD);
-		}
-
 		@Test
 		void addEmojiAndBackspace() {
 			handleKey(view, "😂");
-			assertThat(cursorIndex()).isEqualTo(1);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
 			handleKey(view, Key.Backspace);
-			assertThat(cursorIndex()).isEqualTo(0);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(0);
+		}
+
+		@Test
+		void deleteFromLastPosition() {
+			handleKey(view, Key.Delete);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(0);
+			handleKey(view, Key.a);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
+		}
+
+	}
+
+	@Nested
+	class MoveAndMods {
+
+		InputView view;
+
+		@BeforeEach
+		void setup() {
+			view = new InputView();
+			configure(view);
+		}
+
+		@Test
+		void shouldAddToCursorPosition() {
+			assertThat(callIntMethod(view, CURSOR_POSITION_METHOD)).isEqualTo(0);
+			handleKey(view, Key.a);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
+			assertThat(view.getInputText()).isEqualTo("a");
+			assertThat(callIntMethod(view, CURSOR_POSITION_METHOD)).isEqualTo(1);
+
+			handleKey(view, Key.CursorLeft);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(0);
+
+			handleKey(view, Key.b);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
+			assertThat(view.getInputText()).isEqualTo("ba");
 		}
 
 	}
