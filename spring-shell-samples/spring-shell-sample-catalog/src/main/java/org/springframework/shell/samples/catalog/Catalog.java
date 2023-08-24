@@ -31,6 +31,9 @@ import org.springframework.messaging.Message;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.AppView;
 import org.springframework.shell.component.view.control.AppView.AppViewEvent;
+import org.springframework.shell.component.view.control.BoxView;
+import org.springframework.shell.component.view.control.ButtonView;
+import org.springframework.shell.component.view.control.DialogView;
 import org.springframework.shell.component.view.control.GridView;
 import org.springframework.shell.component.view.control.ListView;
 import org.springframework.shell.component.view.control.ListView.ListViewOpenSelectedItemEvent;
@@ -47,7 +50,9 @@ import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyEvent.KeyMask;
+import org.springframework.shell.component.view.geom.HorizontalAlign;
 import org.springframework.shell.component.view.geom.Rectangle;
+import org.springframework.shell.component.view.geom.VerticalAlign;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
@@ -273,7 +278,30 @@ public class Catalog {
 		return () -> setStyle(style);
 	}
 
+	private DialogView buildAboutDialog() {
+		ButtonView button = new ButtonView("OK");
+		button.setThemeResolver(themeResolver);
+		button.setThemeName(activeThemeName);
+		button.setEventLoop(eventLoop);
+
+		BoxView content = new BoxView();
+		content.setDrawFunction((screen, rect) -> {
+			screen.writerBuilder().layer(1).build().text("Catalog Sample App", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			return rect;
+		});
+		DialogView dialog = new DialogView(content, button);
+		dialog.setThemeResolver(themeResolver);
+		dialog.setThemeName(activeThemeName);
+		dialog.setEventLoop(eventLoop);
+		dialog.setViewService(ui);
+
+		dialog.setTransparent(false);
+		return dialog;
+	}
+
 	private void about() {
+		DialogView dialog = buildAboutDialog();
+		ui.setModal(dialog);
 	}
 
 	private MenuBarView buildMenuBar(EventLoop eventLoop) {
