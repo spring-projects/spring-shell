@@ -62,7 +62,7 @@ class DialogViewTests extends AbstractViewTests {
 
 		@Test
 		void handlesMouseClick() {
-			MouseEvent click = mouseClick(3, 3);
+			MouseEvent click = mouseClick(1, 6);
 
 			Flux<ButtonViewSelectEvent> actions1 = eventLoop
 					.viewEvents(ButtonViewSelectEvent.class);

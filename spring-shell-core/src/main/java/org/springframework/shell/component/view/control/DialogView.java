@@ -34,7 +34,7 @@ import org.springframework.shell.component.view.screen.Screen.Writer;
  *
  * @author Janne Valkealahti
  */
-public class DialogView extends BoxView {
+public class DialogView extends WindowView {
 
 	private View content;
 	private List<ButtonView> buttons;
@@ -92,7 +92,6 @@ public class DialogView extends BoxView {
 		super.setRect(x, y, width, height);
 
 		Rectangle rect = getInnerRect();
-		rect = new Rectangle(rect.x() + rect.width() / 4, rect.y() + rect.height() / 4, rect.width() / 2, rect.height() / 2);
 		rect = new Rectangle(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2);
 		if (content != null) {
 			content.setRect(rect.x(), rect.y(), rect.width(), rect.height() - 3);
@@ -111,7 +110,6 @@ public class DialogView extends BoxView {
 	@Override
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getInnerRect();
-		rect = new Rectangle(rect.x() + rect.width() / 4, rect.y() + rect.height() / 4, rect.width() / 2, rect.height() / 2);
 		Writer writer = screen.writerBuilder().layer(getLayer()).build();
 		writer.border(rect.x(), rect.y(), rect.width(), rect.height());
 		if (content != null) {

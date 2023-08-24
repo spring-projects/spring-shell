@@ -295,7 +295,6 @@ public class Catalog {
 		dialog.setEventLoop(eventLoop);
 		dialog.setViewService(ui);
 
-		dialog.setTransparent(false);
 		return dialog;
 	}
 

@@ -51,7 +51,6 @@ public class DialogScenario extends AbstractScenario {
 		});
 		DialogView dialog = new DialogView(content, button);
 		configure(dialog);
-		dialog.setTransparent(false);
 		dialog.setViewService(getViewService());
 		return dialog;
 	}
