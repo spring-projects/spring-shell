@@ -72,6 +72,18 @@ public final class ShellMessageBuilder<T> {
 	}
 
 	/**
+	 * Create a {@code interrupt} message.
+	 *
+	 * @return a interrupt message
+	 */
+	public static Message<String> ofInterrupt() {
+		return new ShellMessageBuilder<>("int", null)
+			.setEventType(EventLoop.Type.SYSTEM)
+			.setPriority(0)
+			.build();
+	}
+
+	/**
 	 * Create a message of a {@link MouseEvent}.
 	 *
 	 * @param event the event type

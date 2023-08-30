@@ -17,7 +17,6 @@ package org.springframework.shell.component;
 
 import org.jline.terminal.Terminal;
 
-import org.springframework.messaging.Message;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.ViewDoneEvent;
@@ -66,11 +65,7 @@ public class ViewComponent {
 		if (eventLoop == null) {
 			return;
 		}
-		Message<String> msg = ShellMessageBuilder.withPayload("int")
-			.setEventType(EventLoop.Type.SYSTEM)
-			.setPriority(0)
-			.build();
-		eventLoop.dispatch(msg);
+		eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
 	}
 
 }

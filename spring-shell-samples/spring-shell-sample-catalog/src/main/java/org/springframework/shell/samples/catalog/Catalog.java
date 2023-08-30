@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.messaging.Message;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.AppView;
 import org.springframework.shell.component.view.control.AppView.AppViewEvent;
@@ -116,11 +115,7 @@ public class Catalog {
 	}
 
 	private void requestQuit() {
-		Message<String> msg = ShellMessageBuilder.withPayload("int")
-			.setEventType(EventLoop.Type.SYSTEM)
-			.setPriority(0)
-			.build();
-		eventLoop.dispatch(msg);
+		eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
 	}
 
 	/**
