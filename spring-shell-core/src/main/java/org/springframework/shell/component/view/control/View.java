@@ -16,6 +16,7 @@
 package org.springframework.shell.component.view.control;
 
 import org.springframework.lang.Nullable;
+import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyHandler;
 import org.springframework.shell.component.view.event.MouseHandler;
 
@@ -78,5 +79,12 @@ public interface View extends Control {
 	 */
 	@Nullable
 	KeyHandler getHotKeyHandler();
+
+	/**
+	 * Sets an {@link EventLoop}.
+	 *
+	 * @param eventLoop the event loop
+	 */
+	void setEventLoop(@Nullable EventLoop eventLoop);
 
 }

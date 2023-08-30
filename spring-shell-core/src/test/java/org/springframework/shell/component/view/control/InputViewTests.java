@@ -15,12 +15,17 @@
  */
 package org.springframework.shell.component.view.control;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResult;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,10 +35,10 @@ class InputViewTests extends AbstractViewTests {
 	private static final String CURSOR_INDEX_FIELD = "cursorIndex";
 	private static final String CURSOR_POSITION_METHOD = "cursorPosition";
 
+	InputView view;
+
 	@Nested
 	class Input {
-
-		InputView view;
 
 		@BeforeEach
 		void setup() {
@@ -82,8 +87,6 @@ class InputViewTests extends AbstractViewTests {
 	@Nested
 	class CursorPositions {
 
-		InputView view;
-
 		@BeforeEach
 		void setup() {
 			view = new InputView();
@@ -128,8 +131,6 @@ class InputViewTests extends AbstractViewTests {
 	@Nested
 	class MoveAndDeletions {
 
-		InputView view;
-
 		@BeforeEach
 		void setup() {
 			view = new InputView();
@@ -157,8 +158,6 @@ class InputViewTests extends AbstractViewTests {
 	@Nested
 	class MoveAndMods {
 
-		InputView view;
-
 		@BeforeEach
 		void setup() {
 			view = new InputView();
@@ -179,6 +178,35 @@ class InputViewTests extends AbstractViewTests {
 			handleKey(view, Key.b);
 			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
 			assertThat(view.getInputText()).isEqualTo("ba");
+		}
+
+	}
+
+	@Nested
+	class Events {
+
+		@BeforeEach
+		void setup() {
+			view = new InputView();
+			view.setRect(0, 0, 10, 1);
+			configure(view);
+		}
+
+		@Test
+		void handlesKeyEnter() {
+			Flux<ViewDoneEvent> actions = eventLoop
+					.viewEvents(ViewDoneEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions)
+				.expectNextCount(1)
+				.thenCancel()
+				.verifyLater();
+
+			KeyHandlerResult result = handleKey(view, KeyEvent.Key.Enter);
+
+			assertThat(result).isNotNull().satisfies(r -> {
+				assertThat(r.consumed()).isTrue();
+			});
+			verifier.verify(Duration.ofSeconds(1));
 		}
 
 	}

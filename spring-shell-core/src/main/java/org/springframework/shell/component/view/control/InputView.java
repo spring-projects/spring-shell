@@ -23,6 +23,7 @@ import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyHandler;
 import org.springframework.shell.component.view.geom.Position;
 import org.springframework.shell.component.view.geom.Rectangle;
+import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 
 /**
@@ -41,6 +42,7 @@ public class InputView extends BoxView {
 		registerKeyBinding(Key.CursorRight, event -> right());
 		registerKeyBinding(Key.Delete, () -> delete());
 		registerKeyBinding(Key.Backspace, () -> backspace());
+		registerKeyBinding(Key.Enter, () -> done());
 	}
 
 	@Override
@@ -117,4 +119,9 @@ public class InputView extends BoxView {
 	private void right() {
 		moveCursor(1);
 	}
+
+	private void done() {
+		dispatch(ShellMessageBuilder.ofView(this, ViewDoneEvent.of(this)));
+	}
+
 }
