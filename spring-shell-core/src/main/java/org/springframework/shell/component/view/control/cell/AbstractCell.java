@@ -16,15 +16,22 @@
 package org.springframework.shell.component.view.control.cell;
 
 import org.springframework.shell.component.view.control.AbstractControl;
-import org.springframework.shell.component.view.control.Cell;
 
+/**
+ * Base implementation of a {@link Cell}.
+ *
+ * @author Janne Valkealahti
+ */
 public abstract class AbstractCell<T> extends AbstractControl implements Cell<T> {
 
-	private boolean selected;
 	private T item;
 	private int style = -1;
 	private int foregroundColor = -1;
 	private int backgroundColor = -1;
+
+	public AbstractCell(T item) {
+		this.item = item;
+	}
 
 	@Override
 	public T getItem() {
@@ -34,16 +41,6 @@ public abstract class AbstractCell<T> extends AbstractControl implements Cell<T>
 	@Override
 	public void setItem(T item) {
 		this.item = item;
-	}
-
-	@Override
-	public boolean isSelected() {
-		return selected;
-	}
-
-	@Override
-	public void updateSelected(boolean selected) {
-		this.selected = selected;
 	}
 
 	@Override

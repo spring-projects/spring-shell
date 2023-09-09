@@ -16,9 +16,15 @@
 package org.springframework.shell.component.view.control;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.function.Function;
+import java.util.ListIterator;
+import java.util.Set;
+import java.util.function.BiFunction;
 
+import org.springframework.lang.Nullable;
 import org.springframework.shell.component.view.control.cell.ListCell;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.MouseEvent;
@@ -27,69 +33,63 @@ import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.ScreenItem;
 import org.springframework.shell.style.StyleSettings;
+import org.springframework.util.Assert;
 
 /**
- * {@link ListView} shows {@code list items} vertically.
+ * {@code ListView} is a {@link View} showing items in a vertical list.
  *
  * @author Janne Valkealahti
  */
 public class ListView<T> extends BoxView {
 
 	private final List<T> items = new ArrayList<>();
-	private int selected = -1;
-
 	private final List<ListCell<T>> cells = new ArrayList<>();
-	private Function<ListView<T>, ListCell<T>> factory = listView -> new ListCell<>();
+	private final ItemStyle itemStyle;
+	private int start = 0;
+	private int pos = 0;
+	private final Set<Integer> selected = new HashSet<>();
+	private BiFunction<ListView<T>, T, ListCell<T>> factory = (listView, item) -> ListCell.of(item,
+			listView.getItemStyle());
 
 	/**
-	 * Construct list view with no initial items.
+	 * Specifies how a item shows selection state.
 	 */
+	public enum ItemStyle {
+
+		/**
+		 * The item will be shown normally, with no check indicator. The default.
+		 */
+		NOCHECK,
+
+		/**
+		 * The item will indicate checked/un-checked state.
+		 */
+		CHECKED,
+
+		/**
+		 * The item is part of a radio group and will indicate selected state.
+		 */
+		RADIO
+	}
+
 	public ListView() {
+		this.itemStyle = ItemStyle.NOCHECK;
 	}
 
-	@Override
-	protected void drawInternal(Screen screen) {
-		Rectangle rect = getInnerRect();
-		int y = rect.y();
-
-		int selectedStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
-		int i = 0;
-		for (ListCell<T> c : cells) {
-			c.setRect(rect.x(), y++, rect.width(), 1);
-			if (i == selected) {
-				c.updateSelected(true);
-				c.setStyle(selectedStyle);
-			}
-			else {
-				c.updateSelected(false);
-				c.setBackgroundColor(-1);
-				c.setStyle(-1);
-			}
-			c.updateSelected(i == selected);
-			c.draw(screen);
-			i++;
-		}
-		super.drawInternal(screen);
+	public ListView(ItemStyle itemStyle) {
+		Assert.notNull(itemStyle, "item style must be set");
+		this.itemStyle = itemStyle;
+		setItems(null);
 	}
 
-	/**
-	 * Sets a cell factory.
-	 *
-	 * @param factory the cell factory
-	 */
-	public void setCellFactory(Function<ListView<T>, ListCell<T>> factory) {
-		this.factory = factory;
+	public ListView(T[] items, ItemStyle itemStyle) {
+		this(items != null ? Arrays.asList(items) : Collections.emptyList(), itemStyle);
 	}
 
-	public void setItems(List<T> items) {
-		this.items.clear();
-		this.items.addAll(items);
-		this.cells.clear();
-		for (T i : items) {
-			ListCell<T> c = factory.apply(this);
-			cells.add(c);
-			c.updateItem(i);
-		}
+	public ListView(@Nullable List<T> items, ItemStyle itemStyle) {
+		Assert.notNull(itemStyle, "item style must be set");
+		this.itemStyle =  itemStyle;
+		setItems(items);
 	}
 
 	@Override
@@ -97,60 +97,187 @@ public class ListView<T> extends BoxView {
 		registerKeyBinding(Key.CursorUp, () -> up());
 		registerKeyBinding(Key.CursorDown, () -> down());
 		registerKeyBinding(Key.Enter, () -> enter());
+		registerKeyBinding(Key.Space, () -> space());
 
 		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelUp, () -> up());
 		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelDown, () -> down());
 		registerMouseBinding(MouseEvent.Type.Released | MouseEvent.Button.Button1, event -> click(event));
 	}
 
-	private void up() {
-		updateIndex(-1);
-		dispatch(ShellMessageBuilder.ofView(this, ListViewSelectedItemChangedEvent.of(this, selectedItem())));
+	public ItemStyle getItemStyle() {
+		return itemStyle;
 	}
 
-	private void down() {
-		updateIndex(1);
-		dispatch(ShellMessageBuilder.ofView(this, ListViewSelectedItemChangedEvent.of(this, selectedItem())));
-	}
-
-	private void enter() {
-		dispatch(ShellMessageBuilder.ofView(this, ListViewOpenSelectedItemEvent.of(this, selectedItem())));
-	}
-
-	private void click(MouseEvent event) {
-		int index = event.y() - getInnerRect().y();
-		if (index > -1 && index < items.size()) {
-			setSelected(index);
+	private void updateCells() {
+		cells.clear();
+		for (T i : items) {
+			ListCell<T> c = factory.apply(this, i);
+			c.setItemStyle(getItemStyle());
+			cells.add(c);
 		}
 	}
 
-	public void setSelected(int selected) {
-		if (this.selected != selected) {
-			this.selected = selected;
+	public void setItems(@Nullable List<T> items) {
+		this.items.clear();
+		if (items != null) {
+			this.items.addAll(items);
+		}
+		if (this.items.isEmpty()) {
+			start = -1;
+			pos = -1;
+		}
+		else {
+			start = 0;
+			pos = 0;
+		}
+		updateCells();
+	}
+
+	private void updateSelectionStates() {
+		int active = start + pos;
+		if (itemStyle == ItemStyle.CHECKED) {
+			boolean removed = selected.remove(active);
+			if (!removed) {
+				selected.add(active);
+			}
+		}
+		else if (itemStyle == ItemStyle.RADIO) {
+			selected.clear();
+			selected.add(active);
+		}
+		ListIterator<ListCell<T>> iter = cells.listIterator();
+		while (iter.hasNext()) {
+			int index = iter.nextIndex();
+			ListCell<T> c = iter.next();
+			c.setSelected(selected.contains(index));
+		}
+	}
+
+	@Override
+	protected void drawInternal(Screen screen) {
+		if (start > -1 && pos > -1) {
+			Rectangle rect = getInnerRect();
+			int y = rect.y();
+			int selectedStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
+			int i = 0;
+
+			for (ListCell<T> c : cells) {
+				if (i < start) {
+					i++;
+					continue;
+				}
+				c.setRect(rect.x(), y++, rect.width(), 1);
+				if (i == start + pos) {
+					c.setStyle(selectedStyle);
+				}
+				else {
+					c.setBackgroundColor(-1);
+					c.setStyle(-1);
+				}
+				c.draw(screen);
+				i++;
+				if (i - start >= rect.height()) {
+					break;
+				}
+			}
+		}
+
+		super.drawInternal(screen);
+	}
+
+	public void setCellFactory(BiFunction<ListView<T>, T, ListCell<T>> factory) {
+		Assert.notNull(factory, "cell factory must be set");
+		this.factory = factory;
+	}
+
+	private void scrollIndex(boolean up) {
+		int size = items.size();
+		int maxItems = getInnerRect().height();
+		int active = start + pos;
+		if (up) {
+			if (start > 0 && pos == 0) {
+				start--;
+			}
+			else if (start + pos <= 0) {
+				start = size - Math.min(maxItems, size);
+				pos = Math.min(maxItems, size) - 1;
+			}
+			else {
+				pos--;
+			}
+		}
+		else {
+			if (start + pos + 1 < Math.min(maxItems, size)) {
+				pos++;
+			}
+			else if (start + pos + 1 >= size) {
+				start = 0;
+				pos = 0;
+			}
+			else {
+				start++;
+			}
+		}
+		if (active != start + pos) {
 			dispatch(ShellMessageBuilder.ofView(this, ListViewSelectedItemChangedEvent.of(this, selectedItem())));
+		}
+	}
+
+	private void scrollIndex(int step) {
+		if (start < 0 && pos < 0) {
+			return;
+		}
+		if (step < 0) {
+			for (int i = step; i < 0; i++) {
+				scrollIndex(true);
+			}
+		}
+		else if (step > 0) {
+			for (int i = step; i > 0; i--) {
+				scrollIndex(false);
+			}
 		}
 	}
 
 	private T selectedItem() {
 		T selectedItem = null;
-		if (selected >= 0 && selected < items.size()) {
-			selectedItem = items.get(selected);
+		int active = start + pos;
+		if (active >= 0 && active < items.size()) {
+			selectedItem = items.get(active);
 		}
 		return selectedItem;
 	}
 
-	private void updateIndex(int step) {
-		int size = items.size();
-		if (step > 0) {
-			if (selected + step < size) {
-				selected += step;
+	private void up() {
+		scrollIndex(-1);
+	}
+
+	private void down() {
+		scrollIndex(1);
+	}
+
+	private void enter() {
+		if (itemStyle == ItemStyle.NOCHECK) {
+			dispatch(ShellMessageBuilder.ofView(this, ListViewOpenSelectedItemEvent.of(this, selectedItem())));
+			return;
+		}
+	}
+
+	private void space() {
+		updateSelectionStates();
+	}
+
+	private void click(MouseEvent event) {
+		int index = event.y() - getInnerRect().y();
+		int active = start + index;
+		if (active >= 0 && active < items.size()) {
+			pos = index;
+			if (itemStyle == ItemStyle.NOCHECK) {
+				dispatch(ShellMessageBuilder.ofView(this, ListViewSelectedItemChangedEvent.of(this, selectedItem())));
+				return;
 			}
 		}
-		else if (step < 0) {
-			if (selected - step > 0) {
-				selected += step;
-			}
-		}
+		updateSelectionStates();
 	}
 
 	/**

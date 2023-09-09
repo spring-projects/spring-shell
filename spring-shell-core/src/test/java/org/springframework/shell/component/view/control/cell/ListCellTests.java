@@ -18,6 +18,7 @@ package org.springframework.shell.component.view.control.cell;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.shell.component.view.control.AbstractViewTests;
+import org.springframework.shell.component.view.control.ListView.ItemStyle;
 import org.springframework.shell.component.view.screen.Color;
 import org.springframework.shell.component.view.screen.ScreenItem;
 
@@ -26,40 +27,49 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ListCellTests extends AbstractViewTests {
 
 	@Test
-	void simpleTextWrites() {
-		ListCell<String> cell = new ListCell<>();
+	void simpleTextWritesNoCheck() {
+		ListCell<String> cell = ListCell.of("item", ItemStyle.NOCHECK);
 		cell.setRect(0, 0, 10, 1);
-		cell.updateItem("item");
 		cell.draw(screen10x10);
 		assertThat(forScreen(screen10x10)).hasHorizontalText("item", 0, 0, 4);
 	}
 
 	@Test
-	void hasBackgroundColor() {
-		ListCell<String> cell = new ListCell<>();
-		cell.setBackgroundColor(Color.BLUE);
+	void simpleTextWritesChecked() {
+		ListCell<String> cell = ListCell.of("item", ItemStyle.CHECKED);
 		cell.setRect(0, 0, 10, 1);
-		cell.updateItem("item");
 		cell.draw(screen10x10);
-		assertThat(forScreen(screen10x10)).hasHorizontalText("item", 0, 0, 4).hasBackgroundColor(0, 0, Color.BLUE);
+		assertThat(forScreen(screen10x10)).hasHorizontalText("[ ] item", 0, 0, 8);
+		cell.setSelected(true);
+		cell.draw(screen10x10);
+		assertThat(forScreen(screen10x10)).hasHorizontalText("[x] item", 0, 0, 8);
+	}
+
+	@Test
+	void hasBackgroundColor() {
+		ListCell<String> cell = ListCell.of("item", ItemStyle.RADIO);
+		cell.setRect(0, 0, 10, 1);
+		cell.draw(screen10x10);
+		assertThat(forScreen(screen10x10)).hasHorizontalText("[ ] item", 0, 0, 8);
+		cell.setSelected(true);
+		cell.draw(screen10x10);
+		assertThat(forScreen(screen10x10)).hasHorizontalText("[x] item", 0, 0, 8);
 	}
 
 	@Test
 	void hasForegroundColor() {
-		ListCell<String> cell = new ListCell<>();
+		ListCell<String> cell = ListCell.of("item", ItemStyle.NOCHECK);
 		cell.setForegroundColor(Color.BLUE);
 		cell.setRect(0, 0, 10, 1);
-		cell.updateItem("item");
 		cell.draw(screen10x10);
 		assertThat(forScreen(screen10x10)).hasHorizontalText("item", 0, 0, 4).hasForegroundColor(0, 0, Color.BLUE);
 	}
 
 	@Test
 	void hasStyle() {
-		ListCell<String> cell = new ListCell<>();
+		ListCell<String> cell = ListCell.of("item", ItemStyle.NOCHECK);
 		cell.setStyle(ScreenItem.STYLE_BOLD);
 		cell.setRect(0, 0, 10, 1);
-		cell.updateItem("item");
 		cell.draw(screen10x10);
 		assertThat(forScreen(screen10x10)).hasHorizontalText("item", 0, 0, 4).hasStyle(0, 0, ScreenItem.STYLE_BOLD);
 	}

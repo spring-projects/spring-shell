@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.component.view.control;
 
+import java.util.Set;
+
 import org.assertj.core.api.AssertProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +56,13 @@ public class AbstractViewTests {
 			eventLoop.destroy();
 		}
 		eventLoop = null;
+	}
+
+	protected void clearScreens() {
+		screen24x80.resize(24, 80);
+		screen7x10.resize(7, 10);
+		screen0x0.resize(0, 0);
+		screen10x10.resize(10, 10);
 	}
 
 	protected void configure(View view) {
@@ -136,6 +145,11 @@ public class AbstractViewTests {
 		return getField(object, field, int.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	protected static Set<Integer> getIntSetField(Object object, String field) {
+		return getField(object, field, Set.class);
+	}
+
 	protected static Runnable getRunnableField(Object object, String field) {
 		return getField(object, field, Runnable.class);
 	}
@@ -152,6 +166,14 @@ public class AbstractViewTests {
 	@SuppressWarnings("unchecked")
 	protected static <T> T callMethod(Class<T> type, Object object, String method, Object... args) {
 		return (T) ReflectionTestUtils.invokeMethod(object, method, args);
+	}
+
+	protected static void callVoidIntMethod(Object target, String method, int value) {
+		ReflectionTestUtils.invokeSetterMethod(target, method, value, int.class);
+	}
+
+	protected static void callVoidMethod(Object target, String method) {
+		ReflectionTestUtils.invokeSetterMethod(target, method, null, null);
 	}
 
 }

@@ -15,32 +15,45 @@
  */
 package org.springframework.shell.component.view.control.cell;
 
-import org.springframework.shell.component.view.control.Cell;
-import org.springframework.shell.component.view.control.ListView;
-import org.springframework.shell.component.view.geom.Rectangle;
-import org.springframework.shell.component.view.screen.Screen;
-import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.component.view.control.ListView.ItemStyle;
 
 /**
- * The {@link Cell} type used within {@link ListView} instances
+ * Extension of a {@link Cell} to make it aware of an item style and selection state.
  *
  * @author Janne Valkealahti
  */
-public class ListCell<T> extends AbstractCell<T> {
+public interface ListCell<T> extends Cell<T> {
 
-	protected String text;
+	/**
+	 * Set {@link ItemStyle}.
+	 *
+	 * @param itemStyle the item style
+	 */
+	void setItemStyle(ItemStyle itemStyle);
 
-	@Override
-	public void draw(Screen screen) {
-		Rectangle rect = getRect();
-		Writer writer = screen.writerBuilder().style(getStyle()).color(getForegroundColor()).build();
-		writer.text(text, rect.x(), rect.y());
-		writer.background(rect, getBackgroundColor());
+	/**
+	 * Set selection state.
+	 *
+	 * @param selected the selection state
+	 */
+	void setSelected(boolean selected);
+
+	/**
+	 * Helper method to build a {@code ListCell}.
+	 *
+	 * @param item the item
+	 * @param itemStyle the item style
+	 * @return a default list cell
+	 */
+	static <T> ListCell<T> of(T item, ItemStyle itemStyle) {
+		return new DefaultListCell<T>(item, itemStyle);
 	}
 
-	public void updateItem(T item) {
-		setItem(item);
-		this.text = item.toString();
-	}
+	static class DefaultListCell<T> extends AbstractListCell<T> {
 
+		DefaultListCell(T item, ItemStyle itemStyle) {
+			super(item, itemStyle);
+		}
+
+	}
 }

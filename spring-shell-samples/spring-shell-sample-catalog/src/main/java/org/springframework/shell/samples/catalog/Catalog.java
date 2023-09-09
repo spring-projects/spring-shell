@@ -44,7 +44,7 @@ import org.springframework.shell.component.view.control.MenuView.MenuItemCheckSt
 import org.springframework.shell.component.view.control.StatusBarView;
 import org.springframework.shell.component.view.control.StatusBarView.StatusItem;
 import org.springframework.shell.component.view.control.View;
-import org.springframework.shell.component.view.control.cell.ListCell;
+import org.springframework.shell.component.view.control.cell.AbstractListCell;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
@@ -148,7 +148,7 @@ public class Catalog {
 		// start main scenario browser
 		ui.setRoot(app, true);
 		ui.setFocus(categories);
-		categories.setSelected(0);
+		// categories.setSelected(0);
 		ui.run();
 	}
 
@@ -238,7 +238,11 @@ public class Catalog {
 		return categories;
 	}
 
-	private static class ScenarioListCell extends ListCell<ScenarioData> {
+	private static class ScenarioListCell extends AbstractListCell<ScenarioData> {
+
+		public ScenarioListCell(ScenarioData item) {
+			super(item);
+		}
 
 		@Override
 		public void draw(Screen screen) {
@@ -257,7 +261,7 @@ public class Catalog {
 		scenarios.setTitle("Scenarios");
 		scenarios.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
 		scenarios.setShowBorder(true);
-		scenarios.setCellFactory(list -> new ScenarioListCell());
+		scenarios.setCellFactory((list, item) -> new ScenarioListCell(item));
 		return scenarios;
 	}
 
