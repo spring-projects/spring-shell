@@ -51,6 +51,42 @@ public record KeyEvent(int key, String data) {
 
 	public static class Key {
 
+		public static final int Space = 32;
+		public static final int ExclamationMark = 33;
+		public static final int DoubleQuote = 34;
+		public static final int NumberSign = 35;
+		public static final int Dollar = 36;
+		public static final int Percent = 37;
+		public static final int Ampersand = 38;
+		public static final int SingleQuote = 39;
+		public static final int LeftParenthesis = 40;
+		public static final int RightParenthesis = 41;
+		public static final int Asterisk = 42;
+		public static final int Plus = 43;
+		public static final int Comma = 44;
+		public static final int Hyphen = 45;
+		public static final int Dot = 46;
+		public static final int Slash = 47;
+
+		public static final int Zero = 48;
+		public static final int One = 49;
+		public static final int Two = 50;
+		public static final int Three = 51;
+		public static final int Four = 52;
+		public static final int Five = 53;
+		public static final int Six = 54;
+		public static final int Seven = 55;
+		public static final int Eight = 56;
+		public static final int Nine = 57;
+
+		public static final int Colon = 58;
+		public static final int SemiColon = 59;
+		public static final int OpenBracket = 60;
+		public static final int Equals = 61;
+		public static final int CloseBracket = 62;
+		public static final int QuestionMark = 63;
+		public static final int EuroSign = 64;
+
 		public static final int A = 65;
 		public static final int B = 66;
 		public static final int C = 67;
@@ -104,6 +140,11 @@ public record KeyEvent(int key, String data) {
 		public static final int x = 120;
 		public static final int y = 121;
 		public static final int z = 122;
+
+		public static final int BraceLeft = 123;
+		public static final int Pipe = 124;
+		public static final int BraceRight = 125;
+		public static final int Tilde = 126;
 
 		public static final int CursorUp = 0x100000;
 		public static final int CursorDown = 0x100001;
