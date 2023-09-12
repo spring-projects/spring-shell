@@ -70,6 +70,7 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getHelp().getLongNames()).containsExactly("help");
 					assertThat(properties.getHelp().getShortNames()).containsExactly('h');
 					assertThat(properties.getOption().getNaming().getCaseType()).isEqualTo(OptionNamingCase.NOOP);
+					assertThat(properties.getContext().isClose()).isFalse();
 				});
 	}
 
@@ -112,6 +113,7 @@ public class SpringShellPropertiesTests {
 				.withPropertyValues("spring.shell.help.long-names=fake")
 				.withPropertyValues("spring.shell.help.short-names=f")
 				.withPropertyValues("spring.shell.option.naming.case-type=camel")
+				.withPropertyValues("spring.shell.context.close=true")
 				.withUserConfiguration(Config1.class)
 				.run((context) -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
@@ -151,6 +153,7 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getHelp().getLongNames()).containsExactly("fake");
 					assertThat(properties.getHelp().getShortNames()).containsExactly('f');
 					assertThat(properties.getOption().getNaming().getCaseType()).isEqualTo(OptionNamingCase.CAMEL);
+					assertThat(properties.getContext().isClose()).isTrue();
 				});
 	}
 
