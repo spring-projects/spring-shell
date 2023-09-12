@@ -34,6 +34,7 @@ public class SpringShellProperties {
 	private Command command = new Command();
 	private Help help = new Help();
 	private Option option = new Option();
+	private Context context = new Context();
 
 	public void setConfig(Config config) {
 		this.config = config;
@@ -105,6 +106,14 @@ public class SpringShellProperties {
 
 	public void setOption(Option option) {
 		this.option = option;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
 	}
 
 	public static class Config {
@@ -600,6 +609,19 @@ public class SpringShellProperties {
 
 		public void setCaseType(OptionNamingCase caseType) {
 			this.caseType = caseType;
+		}
+	}
+
+	public static class Context {
+
+		private boolean close = false;
+
+		public boolean isClose() {
+			return close;
+		}
+
+		public void setClose(boolean close) {
+			this.close = close;
 		}
 	}
 
