@@ -62,6 +62,7 @@
 ** xref:using-shell-customization-logging.adoc[]
 ** xref:using-shell-customization-commandnotfound.adoc[]
 ** xref:using-shell-customization-singlecommand.adoc[]
+** xref:using-shell-customization-contextclose.adoc[]
 * xref:using-shell-execution.adoc[]
 * xref:using-shell-testing.adoc[]
 ** xref:using-shell-testing-basics.adoc[]
