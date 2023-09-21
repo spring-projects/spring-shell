@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.component.view.control;
 
+import java.util.Set;
+
 import org.springframework.lang.Nullable;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyHandler;
@@ -87,4 +89,20 @@ public interface View extends Control {
 	 */
 	void setEventLoop(@Nullable EventLoop eventLoop);
 
+	/**
+	 * Get supported commands.
+	 *
+	 * @return supported commands
+	 * @see ViewCommand
+	 */
+	Set<String> getViewCommands();
+
+	/**
+	 * Run command.
+	 *
+	 * @param command the command to run
+	 * @return true if command was succesfully dispatched
+	 * @see ViewCommand
+	 */
+	boolean runViewCommand(String command);
 }

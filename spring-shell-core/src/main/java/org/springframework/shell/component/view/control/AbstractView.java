@@ -17,6 +17,7 @@ package org.springframework.shell.component.view.control;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
@@ -55,6 +56,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	private int layer;
 	private EventLoop eventLoop;
 	private ViewService viewService;
+	private final Map<String, Runnable> commands = new HashMap<>();
 	private Map<Integer, KeyBindingValue> keyBindings = new HashMap<>();
 	private Map<Integer, KeyBindingValue> hotKeyBindings = new HashMap<>();
 	private Map<Integer, MouseBindingValue> mouseBindings = new HashMap<>();
@@ -173,7 +175,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 			if (key != null) {
 				KeyBindingValue keyBindingValue = getKeyBindings().get(key);
 				if (keyBindingValue != null) {
-					consumed = dispatchRunCommand(event, keyBindingValue);
+					consumed = dispatchKeyRunCommand(event, keyBindingValue);
 				}
 
 			}
@@ -192,7 +194,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 			if (key != null) {
 				KeyBindingValue keyBindingValue = getHotKeyBindings().get(key);
 				if (keyBindingValue != null) {
-					consumed = dispatchRunCommand(event, keyBindingValue);
+					consumed = dispatchKeyRunCommand(event, keyBindingValue);
 				}
 
 			}
@@ -255,6 +257,15 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 */
 	protected ViewService getViewService() {
 		return viewService;
+	}
+
+	protected void registerViewCommand(String command, Runnable runnable) {
+		commands.put(command, runnable);
+	}
+
+	@Override
+	public Set<String> getViewCommands() {
+		return commands.keySet();
 	}
 
 	protected void registerKeyBinding(Integer keyType, String keyCommand) {
@@ -395,20 +406,43 @@ public abstract class AbstractView extends AbstractControl implements View {
 		return true;
 	}
 
-	protected boolean dispatchRunCommand(KeyEvent event, KeyBindingValue command) {
+	@Override
+	public boolean runViewCommand(String command) {
 		if (eventLoop == null) {
 			return false;
 		}
-		Runnable runnable = command.keyRunnable();
-		if (runnable != null) {
+		if (command != null) {
+			Runnable runnable = commands.get(command);
+			if (runnable != null) {
+				Message<Runnable> message = ShellMessageBuilder
+					.withPayload(runnable)
+					.setEventType(EventLoop.Type.TASK)
+					.build();
+				dispatch(message);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected boolean dispatchKeyRunCommand(KeyEvent event, KeyBindingValue keyBindingValue) {
+		if (eventLoop == null) {
+			return false;
+		}
+		String keyCommand = keyBindingValue.keyCommand();
+		if (runViewCommand(keyCommand)) {
+			return true;
+		}
+		Runnable keyRunnable = keyBindingValue.keyRunnable();
+		if (keyRunnable != null) {
 			Message<Runnable> message = ShellMessageBuilder
-				.withPayload(runnable)
+				.withPayload(keyRunnable)
 				.setEventType(EventLoop.Type.TASK)
 				.build();
 			dispatch(message);
 			return true;
 		}
-		KeyBindingConsumer keyConsumer = command.keyConsumer();
+		KeyBindingConsumer keyConsumer = keyBindingValue.keyConsumer();
 		if (keyConsumer != null) {
 			Message<KeyBindingConsumerArgs> message = ShellMessageBuilder
 				.withPayload(new KeyBindingConsumerArgs(keyConsumer, event))
@@ -420,20 +454,24 @@ public abstract class AbstractView extends AbstractControl implements View {
 		return false;
 	}
 
-	protected boolean dispatchMouseRunCommand(MouseEvent event, MouseBindingValue command) {
+	protected boolean dispatchMouseRunCommand(MouseEvent event, MouseBindingValue mouseBindingValue) {
 		if (eventLoop == null) {
 			return false;
 		}
-		Runnable runnable = command.mouseRunnable();
-		if (runnable != null) {
+		String mouseCommand = mouseBindingValue.mouseCommand();
+		if (runViewCommand(mouseCommand)) {
+			return true;
+		}
+		Runnable mouseRunnable = mouseBindingValue.mouseRunnable();
+		if (mouseRunnable != null) {
 			Message<Runnable> message = ShellMessageBuilder
-				.withPayload(runnable)
+				.withPayload(mouseRunnable)
 				.setEventType(EventLoop.Type.TASK)
 				.build();
 			dispatch(message);
 			return true;
 		}
-		MouseBindingConsumer mouseConsumer = command.mouseConsumer();
+		MouseBindingConsumer mouseConsumer = mouseBindingValue.mouseConsumer();
 		if (mouseConsumer != null) {
 			Message<MouseBindingConsumerArgs> message = ShellMessageBuilder
 				.withPayload(new MouseBindingConsumerArgs(mouseConsumer, event))

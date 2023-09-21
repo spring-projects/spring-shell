@@ -18,6 +18,7 @@ package org.springframework.shell.component.view.control;
 import java.time.Duration;
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
@@ -470,6 +471,48 @@ class ListViewTests extends AbstractViewTests {
 				writer.text(String.format("pre-%s-post", getItem()), rect.x(), rect.y());
 				writer.background(rect, getBackgroundColor());
 			}
+		}
+
+	}
+
+	@Nested
+	class ViewCommands {
+
+		@BeforeEach
+		void setup() {
+			view = new ListView<>();
+			configure(view);
+			view.setRect(0, 0, 80, 24);
+			view.setItems(Arrays.asList("item1", "item2"));
+		}
+
+		@Test
+		void supports() {
+			assertThat(view.getViewCommands()).contains(ViewCommand.LINE_DOWN, ViewCommand.LINE_UP);
+		}
+
+		@Test
+		void lineDown() {
+			StepVerifier verifier = StepVerifier.create(eventLoop.events())
+				.expectNextCount(1)
+				.thenCancel()
+				.verifyLater();
+			view.runViewCommand(ViewCommand.LINE_DOWN);
+			verifier.verify(Duration.ofSeconds(1));
+			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
+		}
+
+		@Test
+		void lineUp() {
+			StepVerifier verifier = StepVerifier.create(eventLoop.events())
+				.expectNextCount(1)
+				.thenCancel()
+				.verifyLater();
+			view.runViewCommand(ViewCommand.LINE_UP);
+			verifier.verify(Duration.ofSeconds(1));
+			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 		}
 
 	}

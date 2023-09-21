@@ -26,25 +26,17 @@ package org.springframework.shell.component.view.control;
 public final class ViewCommand {
 
 	/**
-	 * Move line up. Generic use in something where selection needs to be moved up.
+	 * Move line up.
+	 *
+	 * For example where selection needs to be moved up.
 	 */
 	public static String LINE_UP = "LineUp";
 
 	/**
-	 * Move line down. Generic use in something where selection needs to be moved
-	 * down.
+	 * Move line down.
+	 *
+	 * For example where selection needs to be moved down.
 	 */
 	public static String LINE_DOWN = "LineDown";
-
-	/**
-	 * Open selected item. In a some sort of view where something can be selected
-	 * and that active selected should be opened.
-	 */
-	public static String OPEN_SELECTED_ITEM = "OpenSelectedItem";
-
-	public static String SELECT = "Select";
-	public static String LEFT = "Left";
-	public static String RIGHT = "Right";
-	public static String SELECTION_CHANGED = "SelectionChanged";
 
 }

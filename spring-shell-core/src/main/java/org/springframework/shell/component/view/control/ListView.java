@@ -38,6 +38,12 @@ import org.springframework.util.Assert;
 /**
  * {@code ListView} is a {@link View} showing items in a vertical list.
  *
+ * <p>Supported view commands:
+ * <ul>
+ * <li>{@link ViewCommand#LINE_UP} - Move active line upwards.
+ * <li>{@link ViewCommand#LINE_DOWN} - Move active line downwards.
+ * </ul>
+ *
  * @author Janne Valkealahti
  */
 public class ListView<T> extends BoxView {
@@ -94,13 +100,16 @@ public class ListView<T> extends BoxView {
 
 	@Override
 	protected void initInternal() {
-		registerKeyBinding(Key.CursorUp, () -> up());
-		registerKeyBinding(Key.CursorDown, () -> down());
+		registerViewCommand(ViewCommand.LINE_UP, () -> up());
+		registerViewCommand(ViewCommand.LINE_DOWN, () -> down());
+
+		registerKeyBinding(Key.CursorUp, ViewCommand.LINE_UP);
+		registerKeyBinding(Key.CursorDown, ViewCommand.LINE_DOWN);
 		registerKeyBinding(Key.Enter, () -> enter());
 		registerKeyBinding(Key.Space, () -> space());
 
-		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelUp, () -> up());
-		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelDown, () -> down());
+		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelUp, ViewCommand.LINE_UP);
+		registerMouseBinding(MouseEvent.Type.Wheel | MouseEvent.Button.WheelDown, ViewCommand.LINE_DOWN);
 		registerMouseBinding(MouseEvent.Type.Released | MouseEvent.Button.Button1, event -> click(event));
 	}
 
