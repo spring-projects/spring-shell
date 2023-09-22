@@ -18,6 +18,7 @@ package org.springframework.shell.component.view;
 import java.io.IOError;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
@@ -148,36 +149,75 @@ public class TerminalUI implements ViewService {
 		}
 	}
 
-	private void render(int rows, int columns) {
+	private void render(Rectangle rect) {
 		if (rootView != null) {
-			rootView.setRect(0, 0, columns, rows);
+			rootView.setRect(rect.x(), rect.y(), rect.width(), rect.height());
 			rootView.draw(virtualDisplay);
 		}
 		if (modalView != null) {
 			modalView.setLayer(1);
-			modalView.setRect(0, 0, columns, rows);
+			modalView.setRect(rect.x(), rect.y(), rect.width(), rect.height());
 			modalView.draw(virtualDisplay);
 		}
 	}
 
+	private BiFunction<Terminal, View, Rectangle> fullScreenViewRect = (terminal, view) -> {
+		Size s = terminal.getSize();
+		return new Rectangle(0, 0, s.getColumns(), s.getRows());
+	};
+
+	private BiFunction<Terminal, View, Rectangle> nonfullScreenViewRect = (terminal, view) -> {
+		Size s = terminal.getSize();
+		Rectangle rect = view.getRect();
+		if (!rect.isEmpty()) {
+			return rect;
+		}
+		return new Rectangle(0, 0, s.getColumns(), 5);
+	};
+
+	/**
+	 * Sets a view rect function for full screen mode. Default behaviour uses {@link Rectangle}
+	 * area equal to terminal size.
+	 *
+	 * @param fullScreenViewRect the view rect function
+	 */
+	public void setFullScreenViewRect(BiFunction<Terminal, View, Rectangle> fullScreenViewRect) {
+		Assert.notNull(fullScreenViewRect, "view rect function must be set");
+		this.fullScreenViewRect = fullScreenViewRect;
+	}
+
+	/**
+	 * Sets a view rect function for full screen mode. Default behaviour uses {@link Rectangle}
+	 * from {@code rootView} if it's not empty, otherwise uses zero based area with
+	 * width matching terminal columns and height matching 5.
+	 *
+	 * @param nonfullScreenViewRect the view rect function
+	 */
+	public void setNonfullScreenViewRect(BiFunction<Terminal, View, Rectangle> nonfullScreenViewRect) {
+		Assert.notNull(nonfullScreenViewRect, "view rect function must be set");
+		this.nonfullScreenViewRect = nonfullScreenViewRect;
+	}
+
 	private void display() {
-		log.trace("display()");
+		log.trace("display() start");
 		size.copy(terminal.getSize());
 		if (fullScreen) {
 			display.clear();
-			display.resize(size.getRows(), size.getColumns());
 			display.reset();
-			rootView.setRect(0, 0, size.getColumns(), size.getRows());
+			display.resize(size.getRows(), size.getColumns());
+			Rectangle rect = fullScreenViewRect.apply(terminal, rootView);
+			rootView.setRect(rect.x(), rect.y(), rect.width(), rect.height());
 			virtualDisplay.resize(size.getRows(), size.getColumns());
 			virtualDisplay.setShowCursor(false);
-			render(size.getRows(), size.getColumns());
+			render(rect);
 		}
 		else {
+			Rectangle rect = nonfullScreenViewRect.apply(terminal, rootView);
+			display.reset();
 			display.resize(size.getRows(), size.getColumns());
-			Rectangle rect = rootView.getRect();
 			virtualDisplay.resize(rect.height(), rect.width());
 			virtualDisplay.setShowCursor(false);
-			render(rect.height(), rect.width());
+			render(rect);
 		}
 
 		List<AttributedString> newLines = virtualDisplay.getScreenLines();
@@ -192,6 +232,7 @@ public class TerminalUI implements ViewService {
 			terminal.puts(Capability.cursor_invisible);
 		}
 		display.update(newLines, targetCursorPos);
+		log.trace("display() end");
 	}
 
 	private void dispatchWinch() {

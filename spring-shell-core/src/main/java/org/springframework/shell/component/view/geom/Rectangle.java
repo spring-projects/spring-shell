@@ -36,4 +36,15 @@ public record Rectangle(int x, int y, int width, int height) {
 		h += y;
 		return ((w < x || w > X) && (h < y || h > Y));
 	}
+
+	/**
+	 * Determines whether the {@code Rectangle} is empty. When the {@code Rectangle}
+	 * is empty, it encloses no area.
+	 *
+	 * @return {@code true} if the {@code Rectangle} is empty; {@code false}
+	 *         otherwise.
+	 */
+	public boolean isEmpty() {
+		return width <= 0 || height <= 0;
+	}
 }

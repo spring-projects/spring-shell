@@ -17,11 +17,61 @@ package org.springframework.shell.samples.standard;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.component.ViewComponent;
+import org.springframework.shell.component.view.TerminalUI;
+import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.control.InputView;
+import org.springframework.shell.component.view.geom.HorizontalAlign;
+import org.springframework.shell.component.view.geom.VerticalAlign;
 import org.springframework.shell.standard.AbstractShellComponent;
 
 @Command
 public class ComponentUiCommands extends AbstractShellComponent {
+
+	@Command(command = "componentui tui1")
+	public void tui1() {
+		TerminalUI ui = new TerminalUI(getTerminal());
+		BoxView view = new BoxView();
+		view.setShowBorder(true);
+		view.setDrawFunction((screen, rect) -> {
+			screen.writerBuilder()
+				.build()
+				.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			return rect;
+		});
+		ui.setRoot(view, true);
+		ui.run();
+	}
+
+	@Command(command = "componentui tui2")
+	public void tui2() {
+		TerminalUI ui = new TerminalUI(getTerminal());
+		BoxView view = new BoxView();
+		view.setRect(0, 0, 40, 5);
+		view.setShowBorder(true);
+		view.setDrawFunction((screen, rect) -> {
+			screen.writerBuilder()
+				.build()
+				.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			return rect;
+		});
+		ui.setRoot(view, false);
+		ui.run();
+	}
+
+	@Command(command = "componentui tui3")
+	public void tui3() {
+		TerminalUI ui = new TerminalUI(getTerminal());
+		BoxView view = new BoxView();
+		view.setShowBorder(true);
+		view.setDrawFunction((screen, rect) -> {
+			screen.writerBuilder()
+				.build()
+				.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			return rect;
+		});
+		ui.setRoot(view, false);
+		ui.run();
+	}
 
 	@Command(command = "componentui string")
 	public String stringInput() {
