@@ -91,7 +91,7 @@ We like to know the Spring Boot and Shell version, operating system, and JVM ver
 
 == Building from Source
 
-Active development branch is `main` targeting work for `3.1.x`. `3.0.x` and `2.1.x` are for maintaining current active releases.
+Active development branch is `main` targeting work for `3.2.x`. `3.1.x`, `3.0.x` and `2.1.x` are for maintaining current active releases.
 
 Building and running tests:
 
@@ -106,7 +106,15 @@ Publishing to local maven cache:
 ```
 
 == Example
-https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/[Sample] is a current demonstration how to use `spring-shell`.
+https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/[Samples] contains various examples how to use `spring-shell`.
+
+```
+./gradlew :spring-shell-samples:spring-shell-sample-catalog:build -x test
+./gradlew :spring-shell-samples:spring-shell-sample-commands:build -x test
+./gradlew :spring-shell-samples:spring-shell-sample-e2e:build -x test
+```
+
+Native build can be enabled using property `-PspringShellSampleNative=true`. On linux a `musl` can be activated with `-PspringShellSampleMusl=true`. Note that musl needs to be properly configured in the environment.
 
 == License
 Spring Shell is Open Source software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
