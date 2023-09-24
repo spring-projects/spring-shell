@@ -11,8 +11,6 @@ pluginManagement {
 		}
 	}
 	plugins {
-		id 'org.springframework.boot' version "$springBootVersion"
-		id 'org.graalvm.buildtools.native' version "$nativeBuildToolsVersion"
 		id 'com.gradle.enterprise' version "$gradleEnterpriseVersion"
 		id 'io.spring.ge.conventions' version "$springGeConventionsVersion"
 	}
