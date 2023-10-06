@@ -87,7 +87,7 @@ Or in non-interactive mode:
 include::example$getting-started-run-noninteractive.out[]
 ----
 
-TIP: Check out xref:using-shell-customization-logging.adoc[Logging] making logging to work
+TIP: Check out xref:/customization/logging.adoc[Logging] making logging to work
 better with shell apps.
 
 [[using-spring-shell-your-first-command]]
