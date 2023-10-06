@@ -16,55 +16,48 @@
 package org.springframework.shell.docs;
 
 import org.jline.terminal.Terminal;
+import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
 import org.springframework.shell.component.view.TerminalUI;
-import org.springframework.shell.component.view.control.BoxView;
-import org.springframework.shell.component.view.geom.HorizontalAlign;
-import org.springframework.shell.component.view.geom.VerticalAlign;
+import org.springframework.shell.component.view.event.EventLoop;
 
-class TerminalUiSnippets {
+class EventLoopSnippets {
 
-	class Sample1 {
+	class Dump1 {
 
-		// tag::snippet1[]
 		@Autowired
 		Terminal terminal;
 
-		void sample() {
+		void events() {
+			// tag::plainevents[]
 			TerminalUI ui = new TerminalUI(terminal);
-			BoxView view = new BoxView();
-			view.setDrawFunction((screen, rect) -> {
-				screen.writerBuilder()
-					.build()
-					.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-				return rect;
-			});
-			ui.setRoot(view, true);
-			ui.run();
+			EventLoop eventLoop = ui.getEventLoop();
+			Flux<? extends Message<?>> events = eventLoop.events();
+			events.subscribe();
+			// end::plainevents[]
 		}
-		// end::snippet1[]
-	}
 
-	class Sample2 {
-
-		// tag::snippet2[]
-		@Autowired
-		Terminal terminal;
-
-		void sample() {
+		void keyEvents() {
+			// tag::keyevents[]
 			TerminalUI ui = new TerminalUI(terminal);
-			BoxView view = new BoxView();
-			view.setDrawFunction((screen, rect) -> {
-				screen.writerBuilder()
-					.build()
-					.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-				return rect;
-			});
-			ui.setRoot(view, false);
-			ui.run();
+			EventLoop eventLoop = ui.getEventLoop();
+			eventLoop.keyEvents()
+				.doOnNext(event -> {
+					// do something with key event
+				})
+				.subscribe();
+			// end::keyevents[]
 		}
-		// end::snippet2[]
+
+		void onDestroy() {
+			// tag::ondestroy[]
+			TerminalUI ui = new TerminalUI(terminal);
+			EventLoop eventLoop = ui.getEventLoop();
+			eventLoop.onDestroy(eventLoop.events().subscribe());
+			// end::ondestroy[]
+		}
 	}
 
 }

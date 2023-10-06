@@ -1,0 +1,11 @@
+[#appendix-tui-eventloop]
+= View Development
+:page-section-summary-toc: 1
+
+While a _view_ just need to implement `View` it's usually convenient to just
+use `BoxView` as a parent.
+
+== Register Bindings
+
+In an `AbstractView` use variants of _registerKeyBinding_, _registerHotKeyBinding_
+and _registerMouseBinding_.

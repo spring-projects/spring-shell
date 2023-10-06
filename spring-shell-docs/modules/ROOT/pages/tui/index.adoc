@@ -1,0 +1,14 @@
+[[tui]]
+= Terminal UI
+:page-section-summary-toc: 1
+
+NOTE: Feature is experimental and subject to breaking changes until foundation
+and related concepts around framework are getting more stable.
+
+_Terminal UI Framework_ is a toolkit to build rich console apps. This section is
+for those using existing features as is. If you're planning to go deeper possibly
+creating your own components xref:appendices/tui/index.adoc[Terminal UI Appendix]
+provides more detailed documentation.
+
+TIP: xref:appendices/tui/catalog.adoc[Catalog Sample App] is a good place to
+study a real application.

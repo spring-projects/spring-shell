@@ -1,0 +1,8 @@
+[[tui-views-dialog]]
+= DialogView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_DialogView_ is a base implementation providing functionality to draw a dialog.
+Inherits xref:tui/views/box.adoc[].

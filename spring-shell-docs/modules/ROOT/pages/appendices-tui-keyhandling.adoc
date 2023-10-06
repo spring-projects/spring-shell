@@ -1,7 +1,0 @@
-[#appendix-tui-keyhandling]
-= Key Handling
-:page-section-summary-toc: 1
-
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
-
-Handles incoming key events.

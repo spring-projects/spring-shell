@@ -1,0 +1,23 @@
+[[tui-events-eventloop]]
+= EventLoop
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+`EventLoop` is a central place where all eventing will be orchestrated for
+a lifecycle of a component. Orchestration is usually needed around timings
+of redraws and and component state updates.
+
+Everything in an event loop is represented as a Spring Message.
+
+[source, java, indent=0]
+----
+include::{snippets}/EventLoopSnippets.java[tag=plainevents]
+----
+
+Selecting key events use a build-in filtering method _keyEvents()_.
+
+[source, java, indent=0]
+----
+include::{snippets}/EventLoopSnippets.java[tag=keyevents]
+----

@@ -1,7 +1,0 @@
-[[using-shell-tui-views-list]]
-= ListView
-:page-section-summary-toc: 1
-
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
-
-_ListView_ is a base implementation providing functionality to draw list of items.

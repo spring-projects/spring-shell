@@ -1,0 +1,84 @@
+[[tui-views-list]]
+= ListView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_ListView_ is a base implementation providing functionality to draw a list of
+_items_. Inherits xref:tui/views/box.adoc[].
+
+_ListView<T>_ is typed as its _item_ and can take any object. Further _item_
+processing happens in a _CellFactory_. For conveniance there is a support
+for generic higher level list feature showing checked states as normal
+_check_ and _radio_ types. Essentially what you can have is a list of
+items which are shown as is, shown where any items can have a checked
+state or only one item can have a checked state.
+
+[source, java, indent=0]
+----
+include::{snippets}/ListViewSnippets.java[tag=snippet1]
+----
+
+Default _item style_ is nocheck but can be changed.
+
+Supports `NOCHECK``, `CHECK`` and `RADIO``
+
+[source, java, indent=0]
+----
+include::{snippets}/ListViewSnippets.java[tag=snippet2]
+----
+
+== Default Bindings
+
+Default _view commands_ are:
+
+[[tui-views-list-viewcommands]]
+.ViewCommands
+|===
+|Command |Description
+
+|LINE_UP
+|Selection moves up. Bound to _CursorUp_ and _WheelUp_.
+
+|LINE_DOWN
+|Selection moves down. Bound to _CursorDown_ and _WheelDown_.
+
+|===
+
+_Enter_ is choosing an active item. _Space_ is changing selection state.
+
+== Events
+
+Events are sent depending on a used list type.
+
+[[tui-views-list-events]]
+.ListView Events
+|===
+|Event |Description
+
+|ListViewOpenSelectedItemEvent
+|Active item is requested to get opened.
+
+|ListViewSelectedItemChangedEvent
+|Active item is changed.
+
+|===
+
+== Customisation
+
+How individual cells are shown depends on a _CellFactory_. Default implementation
+simply shows _item_ using its `toString()` method.
+
+It can be customised by modifying a used _CellFactory_.
+
+[source, java, indent=0]
+----
+include::{snippets}/ListViewSnippets.java[tag=listcell]
+----
+
+And set it as a factory:
+
+[source, java, indent=0]
+----
+include::{snippets}/ListViewSnippets.java[tag=uselistcell]
+----

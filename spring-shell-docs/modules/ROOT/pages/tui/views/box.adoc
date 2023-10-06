@@ -1,0 +1,14 @@
+[[tui-views-box]]
+= BoxView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_BoxView_ is a base implementation providing functionality to draw into a
+bounded _Rectancle_. Only direct use of it is its `drawFunction` which
+allows to do simple things without implementing a full custom `View`.
+
+[source, java, indent=0]
+----
+include::{snippets}/BoxViewSnippets.java[tag=sample]
+----

@@ -1,0 +1,7 @@
+[[tui-events-mouse]]
+= Mouse Handling
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+tbd

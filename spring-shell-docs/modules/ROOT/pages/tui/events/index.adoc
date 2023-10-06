@@ -1,0 +1,7 @@
+[[tui-events]]
+= Events
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../test/java/org/springframework/shell/docs]
+
+This section contains information about eventing.

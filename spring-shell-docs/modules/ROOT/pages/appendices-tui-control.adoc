@@ -1,7 +1,0 @@
-[#appendix-tui-control]
-= Control
-:page-section-summary-toc: 1
-
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
-
-_Control_ draws something into a screen with a given bounds.

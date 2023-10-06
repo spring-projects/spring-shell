@@ -1,0 +1,8 @@
+[[tui-views-button]]
+= ButtonView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_ButtonView_ is a base implementation providing functionality to draw a button.
+Inherits xref:tui/views/box.adoc[].

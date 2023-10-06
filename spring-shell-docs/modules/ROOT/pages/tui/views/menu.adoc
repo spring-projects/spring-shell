@@ -1,0 +1,8 @@
+[[tui-views-menu]]
+= MenuView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_MenuView_ is a base implementation providing functionality to draw a menu.
+Inherits xref:tui/views/box.adoc[].
