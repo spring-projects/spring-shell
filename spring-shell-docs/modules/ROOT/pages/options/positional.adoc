@@ -1,7 +1,7 @@
 [[using-shell-options-positional]]
 = Positional
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 Positional information is mostly related to a command target method:
 

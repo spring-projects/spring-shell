@@ -3,7 +3,7 @@
 = Programmatic
 :page-section-summary-toc: 1
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 Programmatic way with `CommandRegistration` is to use `withOption` to define
 an option.

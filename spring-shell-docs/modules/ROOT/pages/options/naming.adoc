@@ -1,7 +1,7 @@
 [[using-shell-options-naming]]
 = Naming
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 If there is a need to modify option long names that can be done
 using `OptionNameModifier` interface which is a simple

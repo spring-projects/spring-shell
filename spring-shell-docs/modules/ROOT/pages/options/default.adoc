@@ -1,10 +1,10 @@
 [[using-shell-options-default]]
 = Default Value
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 Having a default value for an option is somewhat related to
-xref:using-shell-options-optional.adoc[Optional Value], as there are cases where you
+xref:options/optional.adoc[Optional Value], as there are cases where you
 may want to know if the user defined an option and change behavior
 based on a default value:
 

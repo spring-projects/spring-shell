@@ -1,7 +1,7 @@
 [[using-shell-options-types]]
 = Types
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 This section talks about how particular data type is used as an option value.
 

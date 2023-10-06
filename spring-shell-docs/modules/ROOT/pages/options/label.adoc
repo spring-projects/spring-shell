@@ -1,7 +1,7 @@
 [[using-shell-options-label]]
 = Label
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 _Option Label_ has no functional behaviour within a shell itself other than
 what a default `help` command outputs. Within a command documentation

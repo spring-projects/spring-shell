@@ -2,7 +2,7 @@
 = Basics
 :page-section-summary-toc: 1
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 This section gives a generic idea how an option can be defined. Following
 sections, beyond basics, discuss more about how various option behaviour
