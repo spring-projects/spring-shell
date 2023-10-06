@@ -17,7 +17,7 @@ be autowired. Default implementation of this supplier returns
 a new builder so you don't need to worry about its internal state.
 
 IMPORTANT: Commands registered programmatically automatically
-add _help options_ mentioned in xref:using-shell-commands-helpoptions.adoc[Help Options].
+add _help options_ mentioned in xref:commands/helpoptions.adoc[Help Options].
 
 If bean of this supplier type is defined then auto-configuration
 will back off giving you an option to redefine default functionality.

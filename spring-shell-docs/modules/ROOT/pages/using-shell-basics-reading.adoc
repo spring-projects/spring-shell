@@ -5,8 +5,8 @@
 Throughout this documentation, we make references to configuring something by using
 annotations or programmatic examples.
 
-NOTE: There are two annotation models, xref:using-shell-commands-registration-annotation.adoc[annotations]
-referred to new annotation model, xref:using-shell-commands-registration-legacyannotation.adoc[legacy annotations]
+NOTE: There are two annotation models, xref:commands/registration/annotation.adoc[annotations]
+referred to new annotation model, xref:commands/registration/legacyannotation.adoc[legacy annotations]
 referred to old legacy annotation model.
 
 Old legacy annotation model mostly relates to use of `@ShellMethod` and `@ShellOption` and

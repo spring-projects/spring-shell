@@ -53,7 +53,7 @@ Command 'download' exists but is not currently available because you are not con
 Details of the error have been omitted. You can use the stacktrace command to print the full stacktrace.
 ----
 
-Information about currently unavailable commands is also used in the integrated help. See xref:using-shell-commands-builtin-help.adoc[Help].
+Information about currently unavailable commands is also used in the integrated help. See xref:commands/builtin/help.adoc[Help].
 
 [TIP]
 ====

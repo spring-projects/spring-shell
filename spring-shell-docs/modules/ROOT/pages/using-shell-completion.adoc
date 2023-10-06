@@ -57,4 +57,4 @@ include::{snippets}/CompletionSnippets.java[tag=anno-method]
 == Command-Line
 
 Command-line completion currently only support _bash_ and is documented
-in a built-in `completion` command xref:using-shell-commands-builtin-completion.adoc[Completion].
+in a built-in `completion` command xref:commands/builtin/completion.adoc[Completion].
