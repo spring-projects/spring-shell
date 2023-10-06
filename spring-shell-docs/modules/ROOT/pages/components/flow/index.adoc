@@ -3,7 +3,7 @@
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-When you use xref:using-shell-components-ui.adoc[Flow Components] to build something that involves
+When you use xref:components/ui/index.adoc[Flow Components] to build something that involves
 use of a multiple components, your implementation may become a bit cluttered.
 To ease these use cases, we added a
 `ComponentFlow` that can hook multiple component executions together

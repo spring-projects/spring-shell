@@ -19,7 +19,7 @@ Built-in components generally follow this logic:
 . Exit.
 . Render the final status of a component state.
 
-NOTE: xref:using-shell-components-flow.adoc[Flow] gives better interface for defining the flow of
+NOTE: xref:components/flow/index.adoc[Flow] gives better interface for defining the flow of
 components that are better suited for defining interactive command flows.
 
 

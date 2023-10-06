@@ -29,7 +29,7 @@ The context object is `SingleItemSelectorContext`. The following table describes
 |The visible items, where rows contains maps of name and selected items.
 
 |`model`
-|The parent context variables (see xref:using-shell-components-ui-render.adoc#selectorcomponentcontext-template-variables[SelectorComponentContext Template Variables]).
+|The parent context variables (see xref:/components/ui/render.adoc#selectorcomponentcontext-template-variables[SelectorComponentContext Template Variables]).
 |===
 
 You can pre-select an item by defining it to get exposed. This is

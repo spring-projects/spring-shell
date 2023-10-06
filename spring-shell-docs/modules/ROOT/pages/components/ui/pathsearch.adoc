@@ -30,5 +30,5 @@ The context object is `PathSearchContext`. The following table describes its con
 |The items available for rendering search results.
 
 |`model`
-|The parent context variables (see xref:using-shell-components-ui-render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
+|The parent context variables (see xref:/components/ui/render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
 |===

@@ -22,5 +22,5 @@ The context object is `PathInputContext`. The following table describes its cont
 |Key |Description
 
 |`model`
-|The parent context variables (see xref:using-shell-components-ui-render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
+|The parent context variables (see xref:components/ui/render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
 |===
