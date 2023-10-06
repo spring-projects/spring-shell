@@ -77,12 +77,14 @@ Once compiled it can be run either in interactive mode:
 
 [source, text, subs=attributes+]
 ----
+include::example$getting-started-run-interactive.out[]
 ----
 
 Or in non-interactive mode:
 
 [source, text, subs=attributes+]
 ----
+include::example$getting-started-run-noninteractive.out[]
 ----
 
 TIP: Check out xref:using-shell-customization-logging.adoc[Logging] making logging to work
