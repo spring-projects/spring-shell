@@ -33,8 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.lang.Nullable;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.ViewService;
 import org.springframework.shell.component.view.event.DefaultEventLoop;
@@ -48,10 +46,8 @@ import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
-import org.springframework.shell.component.view.message.ShellMessageHeaderAccessor;
 import org.springframework.shell.component.view.screen.DefaultScreen;
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -236,40 +232,24 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void dispatchWinch() {
-		Message<String> message = MessageBuilder.withPayload("WINCH")
-			.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.SIGNAL)
-			.build();
-		eventLoop.dispatch(message);
+		eventLoop.dispatch(ShellMessageBuilder.ofSignal("WINCH"));
 	}
 
 	private void registerEventHandling() {
-		// XXX: think this again
-		eventLoop.onDestroy(eventLoop.events()
-			.filter(m -> {
-				return ObjectUtils.nullSafeEquals(m.getHeaders().get(ShellMessageHeaderAccessor.EVENT_TYPE), EventLoop.Type.SIGNAL);
-			})
-			.doOnNext(m -> {
+		eventLoop.onDestroy(eventLoop.signalEvents()
+			.subscribe(event -> {
 				display();
-			})
-			.subscribe());
+			}));
 
-		// XXX: think this again
-		eventLoop.onDestroy(eventLoop.events()
-			.filter(m -> {
-				return ObjectUtils.nullSafeEquals(m.getHeaders().get(ShellMessageHeaderAccessor.EVENT_TYPE), EventLoop.Type.SYSTEM);
-			})
-			.doOnNext(m -> {
-				Object payload = m.getPayload();
-				if (payload instanceof String s) {
-					if ("redraw".equals(s)) {
-						display();
-					}
-					else if ("int".equals(s)) {
-						this.terminal.raise(Signal.INT);
-					}
+		eventLoop.onDestroy(eventLoop.systemEvents()
+			.subscribe(event -> {
+				if ("redraw".equals(event)) {
+					display();
 				}
-			})
-			.subscribe());
+				else if ("int".equals(event)) {
+					this.terminal.raise(Signal.INT);
+				}
+			}));
 
 		eventLoop.onDestroy(eventLoop.keyEvents()
 			.doOnNext(m -> {
@@ -417,11 +397,8 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void dispatchKeyEvent(KeyEvent event) {
-		Message<KeyEvent> message = MessageBuilder
-			.withPayload(event)
-			.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.KEY)
-			.build();
-		eventLoop.dispatch(message);
+		log.debug("Dispatch key event: {}", event);
+		eventLoop.dispatch(ShellMessageBuilder.ofKeyEvent(event));
 	}
 
 	private void dispatchMouse(MouseEvent event) {

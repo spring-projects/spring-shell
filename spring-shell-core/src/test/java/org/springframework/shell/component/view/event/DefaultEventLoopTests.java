@@ -17,6 +17,7 @@ package org.springframework.shell.component.view.event;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.EnumSet;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -188,6 +189,72 @@ class DefaultEventLoopTests {
 		public void run() {
 			count++;
 		}
+	}
+
+	@Test
+	void keyEvents() {
+		initDefault();
+
+		KeyEvent event = KeyEvent.of(KeyEvent.Key.a);
+		Message<KeyEvent> message = ShellMessageBuilder.ofKeyEvent(event);
+
+		StepVerifier verifier1 = StepVerifier.create(loop.keyEvents())
+			.expectNextCount(1)
+			.thenCancel()
+			.verifyLater();
+
+		loop.dispatch(message);
+		verifier1.verify(Duration.ofSeconds(1));
+	}
+
+	@Test
+	void mouseEvents() {
+		initDefault();
+
+		org.jline.terminal.MouseEvent jlineMouseEvent = new org.jline.terminal.MouseEvent(
+				org.jline.terminal.MouseEvent.Type.Released,
+				org.jline.terminal.MouseEvent.Button.Button1,
+				EnumSet.noneOf(org.jline.terminal.MouseEvent.Modifier.class), 0, 0);
+		MouseEvent event = MouseEvent.of(jlineMouseEvent);
+		Message<MouseEvent> message = ShellMessageBuilder.ofMouseEvent(event);
+
+		StepVerifier verifier1 = StepVerifier.create(loop.mouseEvents())
+			.expectNextCount(1)
+			.thenCancel()
+			.verifyLater();
+
+		loop.dispatch(message);
+		verifier1.verify(Duration.ofSeconds(1));
+	}
+
+	@Test
+	void systemEvents() {
+		initDefault();
+
+		Message<String> message = ShellMessageBuilder.ofRedraw();
+
+		StepVerifier verifier1 = StepVerifier.create(loop.systemEvents())
+			.expectNextCount(1)
+			.thenCancel()
+			.verifyLater();
+
+		loop.dispatch(message);
+		verifier1.verify(Duration.ofSeconds(1));
+	}
+
+	@Test
+	void signalEvents() {
+		initDefault();
+
+		Message<String> message = ShellMessageBuilder.ofSignal("WINCH");
+
+		StepVerifier verifier1 = StepVerifier.create(loop.signalEvents())
+			.expectNextCount(1)
+			.thenCancel()
+			.verifyLater();
+
+		loop.dispatch(message);
+		verifier1.verify(Duration.ofSeconds(1));
 	}
 
 }

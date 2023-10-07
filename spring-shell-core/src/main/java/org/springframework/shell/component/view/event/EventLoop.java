@@ -62,6 +62,22 @@ public interface EventLoop {
 	Flux<MouseEvent> mouseEvents();
 
 	/**
+	 * Specialisation of {@link #events()} which returns type safe
+	 * {code system} events.
+	 *
+	 * @return the system events from an event loop
+	 */
+	Flux<String> systemEvents();
+
+	/**
+	 * Specialisation of {@link #events()} which returns type safe
+	 * {code signal} events.
+	 *
+	 * @return the signal events from an event loop
+	 */
+	Flux<String> signalEvents();
+
+	/**
 	 * Specialisation of {@link #events()} which returns type safe {@link ViewEvent}s.
 	 *
 	 * @param <T> the type to expect

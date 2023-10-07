@@ -20,6 +20,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.event.EventLoop;
+import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.util.Assert;
 
@@ -80,6 +81,30 @@ public final class ShellMessageBuilder<T> {
 		return new ShellMessageBuilder<>("int", null)
 			.setEventType(EventLoop.Type.SYSTEM)
 			.setPriority(0)
+			.build();
+	}
+
+	/**
+	 * Create a {@code signal} message.
+	 *
+	 * @return a signal message
+	 */
+	public static Message<String> ofSignal(String signal) {
+		return new ShellMessageBuilder<>(signal, null)
+			.setEventType(EventLoop.Type.SIGNAL)
+			.setPriority(0)
+			.build();
+	}
+
+	/**
+	 * Create a message of a {@link KeyEvent}.
+	 *
+	 * @param event the event type
+	 * @return a message with {@link KeyEvent} as a payload
+	 */
+	public static Message<KeyEvent> ofKeyEvent(KeyEvent event) {
+		return new ShellMessageBuilder<>(event, null)
+			.setEventType(EventLoop.Type.KEY)
 			.build();
 	}
 

@@ -151,6 +151,22 @@ public class DefaultEventLoop implements EventLoop {
 	}
 
 	@Override
+	public Flux<String> systemEvents() {
+		return events()
+			.filter(m -> EventLoop.Type.SYSTEM.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+			.map(m -> m.getPayload())
+			.ofType(String.class);
+	}
+
+	@Override
+	public Flux<String> signalEvents() {
+		return events()
+			.filter(m -> EventLoop.Type.SIGNAL.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+			.map(m -> m.getPayload())
+			.ofType(String.class);
+	}
+
+	@Override
 	public <T extends ViewEvent> Flux<T> viewEvents(Class<T> clazz) {
 		return events(EventLoop.Type.VIEW, clazz);
 	}
