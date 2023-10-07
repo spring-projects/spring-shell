@@ -1,7 +1,7 @@
 [#appendix-tech-intro-searchalgorithm]
 = Search Algorithms
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 `SearchMatch` is an interface to match _text_ with a _pattern_. Match
 results are in a returned value `SearchMatchResult`. Match result

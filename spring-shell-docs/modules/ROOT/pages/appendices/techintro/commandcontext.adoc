@@ -2,6 +2,8 @@
 = Command Context
 :page-section-summary-toc: 1
 
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
 The `CommandContext` interface gives access to a currently running
 context. You can use it to get access to options:
 

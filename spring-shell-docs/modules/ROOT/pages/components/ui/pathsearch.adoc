@@ -1,7 +1,7 @@
 [[using-shell-components-ui-pathsearch]]
 = Path Search
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 The path search component asks base directory for scan and optional search expression.
 Results are shown in a single select list where user can pick a path.
@@ -13,7 +13,7 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet9]
 ----
 
 NOTE: Logic for search is passed as is into algorithms documented
-in xref:appendices-techical-intro-searchalgorithm.adoc[Search Algorithms].
+in xref:appendices/techintro/searchalgorithm.adoc[Search Algorithms].
 
 The following image shows typical output from a path search component:
 

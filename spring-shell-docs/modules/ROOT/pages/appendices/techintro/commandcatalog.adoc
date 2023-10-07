@@ -1,6 +1,8 @@
 [[command-catalog]]
 = Command Catalog
 
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
 The `CommandCatalog` interface defines how command registrations exist in
 a shell application. It is possible to dynamically register and de-register
 commands, which gives flexibility for use cases where possible commands
