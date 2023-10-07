@@ -1,0 +1,17 @@
+= TerminalUI
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+`TerminalUI` is a main implementation to drive ui execution logic.
+Running `TerminalUI` execution loop is a blocking operation.
+
+== Exiting App
+
+If you want to exit from an app using normal _CTRL-Q_ key combination listen
+events and request _interrupt_.
+
+[source, java, indent=0]
+----
+include::{snippets}/TerminalUiSnippets.java[tag=snippet3]
+----

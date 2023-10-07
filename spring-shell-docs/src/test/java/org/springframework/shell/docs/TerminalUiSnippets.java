@@ -20,8 +20,11 @@ import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.BoxView;
+import org.springframework.shell.component.view.event.EventLoop;
+import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.geom.HorizontalAlign;
 import org.springframework.shell.component.view.geom.VerticalAlign;
+import org.springframework.shell.component.view.message.ShellMessageBuilder;
 
 class TerminalUiSnippets {
 
@@ -65,6 +68,28 @@ class TerminalUiSnippets {
 			ui.run();
 		}
 		// end::snippet2[]
+	}
+
+	class Sample3 {
+
+		// tag::snippet3[]
+		@Autowired
+		Terminal terminal;
+
+		void sample() {
+			TerminalUI ui = new TerminalUI(terminal);
+			BoxView view = new BoxView();
+			ui.setRoot(view, true);
+			EventLoop eventLoop = ui.getEventLoop();
+			eventLoop.keyEvents()
+				.subscribe(event -> {
+					if (event.getPlainKey() == Key.q && event.hasCtrl()) {
+						eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
+					}
+				});
+			ui.run();
+		}
+		// end::snippet3[]
 	}
 
 }

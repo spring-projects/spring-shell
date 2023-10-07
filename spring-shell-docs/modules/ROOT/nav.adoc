@@ -54,6 +54,7 @@
 *** xref:components/ui/multiselect.adoc[]
 * xref:tui/index.adoc[]
 ** xref:tui/intro/index.adoc[]
+*** xref:tui/intro/terminalui.adoc[]
 ** xref:tui/views/index.adoc[]
 *** xref:tui/views/box.adoc[]
 *** xref:tui/views/button.adoc[]
