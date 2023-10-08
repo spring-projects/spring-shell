@@ -1,0 +1,31 @@
+= GridView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_GridView_ is a special type of view and its purpose is to layout other views
+using a grid layout algorithms. Inherits xref:tui/views/box.adoc[].
+
+[source, java, indent=0]
+----
+include::{snippets}/GridViewSnippets.java[tag=snippet1]
+----
+
+Will result layout of:
+
+[source, text, indent=0]
+----
+┌---┬---┐
+|   |   |
+|   |   |
+├---┼---┤
+|   |   |
+|   |   |
+└---┴---┘
+----
+
+== Default Bindings
+Does not have any default bindings.
+
+== Events
+Does not have any events.

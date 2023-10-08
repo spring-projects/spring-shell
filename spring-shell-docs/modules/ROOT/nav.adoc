@@ -59,6 +59,7 @@
 *** xref:tui/views/box.adoc[]
 *** xref:tui/views/button.adoc[]
 *** xref:tui/views/dialog.adoc[]
+*** xref:tui/views/grid.adoc[]
 *** xref:tui/views/list.adoc[]
 *** xref:tui/views/menu.adoc[]
 *** xref:tui/views/menubar.adoc[]
