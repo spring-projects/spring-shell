@@ -15,12 +15,15 @@
  */
 package org.springframework.shell.component.view.control;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.shell.component.view.control.MenuBarView.MenuBarItem;
 import org.springframework.shell.component.view.control.MenuView.MenuItem;
+import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResult;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
@@ -56,6 +59,46 @@ class MenuBarViewTests extends AbstractViewTests {
 			item = MenuBarItem.of("title").setHotKey(Key.f);
 			assertThat(item.getHotKey()).isEqualTo(Key.f);
 		}
+	}
+
+	@Nested
+	class Events {
+
+		MenuBarView view;
+
+		@BeforeEach
+		void setup() {
+			MenuItem menuItem = new MenuView.MenuItem("sub1");
+			MenuBarItem menuBarItem = new MenuBarView.MenuBarItem("menu1", new MenuView.MenuItem[] { menuItem });
+			menuBarItem.setHotKey(Key.q);
+			view = new MenuBarView(new MenuBarView.MenuBarItem[] { menuBarItem });
+			view.setRect(0, 0, 10, 10);
+			configure(view);
+		}
+
+		@Test
+		void mouseClickGetsFocus() {
+			MouseEvent click = mouseClick(0, 0);
+			MouseHandlerResult result = view.getMouseHandler().handle(MouseHandler.argsOf(click));
+			assertThat(result).isNotNull().satisfies(r -> {
+				assertThat(r.event()).isEqualTo(click);
+				assertThat(r.consumed()).isTrue();
+				assertThat(r.focus()).isEqualTo(view);
+				assertThat(r.capture()).isEqualTo(view);
+			});
+		}
+
+		@Test
+		void hotKeyGetsFocus() {
+			KeyHandlerResult result = handleHotKey(view, KeyEvent.Key.q);
+
+			assertThat(result).isNotNull().satisfies(r -> {
+				assertThat(r.event()).isNotNull();
+				assertThat(r.consumed()).isTrue();
+				assertThat(r.focus()).isEqualTo(view);
+			});
+		}
+
 	}
 
 	@Nested

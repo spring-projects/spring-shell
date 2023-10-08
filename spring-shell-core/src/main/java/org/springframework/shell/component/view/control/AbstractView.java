@@ -189,16 +189,18 @@ public abstract class AbstractView extends AbstractControl implements View {
 		log.trace("getHotKeyHandler() {}", this);
 		KeyHandler handler = args -> {
 			KeyEvent event = args.event();
+			View view = null;
 			boolean consumed = false;
 			Integer key = event.key();
 			if (key != null) {
 				KeyBindingValue keyBindingValue = getHotKeyBindings().get(key);
 				if (keyBindingValue != null) {
+					view = this;
 					consumed = dispatchKeyRunCommand(event, keyBindingValue);
 				}
 
 			}
-			return KeyHandler.resultOf(event, consumed, null);
+			return KeyHandler.resultOf(event, consumed, view);
 		};
 		return handler;
 	}

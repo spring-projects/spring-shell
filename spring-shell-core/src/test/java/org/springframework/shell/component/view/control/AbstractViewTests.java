@@ -106,6 +106,14 @@ public class AbstractViewTests {
 		return view.getKeyHandler().handle(KeyHandler.argsOf(key));
 	}
 
+	protected KeyHandlerResult handleHotKey(View view, Integer key) {
+		return handleHotKeyEvent(view, KeyEvent.of(key));
+	}
+
+	protected KeyHandlerResult handleHotKeyEvent(View view, KeyEvent key) {
+		return view.getHotKeyHandler().handle(KeyHandler.argsOf(key));
+	}
+
 	protected MouseEvent mouseClick(int x, int y) {
 		return MouseEvent.of(x, y, MouseEvent.Type.Released | MouseEvent.Button.Button1);
 	}

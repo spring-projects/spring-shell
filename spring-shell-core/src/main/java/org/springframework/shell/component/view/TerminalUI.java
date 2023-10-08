@@ -273,6 +273,9 @@ public class TerminalUI implements ViewService {
 			if (handler != null) {
 				KeyHandlerResult result = handler.handle(KeyHandler.argsOf(event));
 				if (result.consumed()) {
+					if (result.focus() != null) {
+						setFocus(result.focus());
+					}
 					return;
 				}
 			}
