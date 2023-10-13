@@ -24,7 +24,7 @@ import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 
-@ScenarioComponent(name = "Simple boxview", description = "BoxView with color and style", category = {
+@ScenarioComponent(name = "Simple boxview", description = "BoxView color and style", category = {
 		Scenario.CATEGORY_BOXVIEW })
 public class SimpleBoxViewScenario extends AbstractScenario {
 
