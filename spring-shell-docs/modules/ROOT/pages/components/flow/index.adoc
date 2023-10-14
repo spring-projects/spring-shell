@@ -1,7 +1,7 @@
 [[using-shell-components-flow]]
 = Flow
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 When you use xref:components/ui/index.adoc[Flow Components] to build something that involves
 use of a multiple components, your implementation may become a bit cluttered.
@@ -16,7 +16,10 @@ The following listings show examples of flows and their output in a shell:
 include::{snippets}/FlowComponentSnippets.java[tag=snippet1]
 ----
 
-image::component-flow-showcase-1.svg[text input]
+[asciinema,rows=15]
+----
+include::example$component-flow-showcase-1.cast[]
+----
 
 Normal execution order of a components is same as defined with a builder. It's
 possible to conditionally choose where to jump in a flow by using a `next`
@@ -28,7 +31,11 @@ or doesn't exist flow is essentially stopped right there.
 include::{snippets}/FlowComponentSnippets.java[tag=snippet2]
 ----
 
-image::component-flow-conditional-1.svg[text input]
+[asciinema,rows=11]
+----
+include::example$component-flow-conditional-1.cast[]
+----
+
 
 TIP: The result from running a flow returns `ComponentFlowResult`, which you can
 use to do further actions.

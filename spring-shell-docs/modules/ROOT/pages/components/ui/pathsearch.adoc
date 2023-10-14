@@ -15,9 +15,12 @@ include::{snippets}/UiComponentSnippets.java[tag=snippet9]
 NOTE: Logic for search is passed as is into algorithms documented
 in xref:appendices/techintro/searchalgorithm.adoc[Search Algorithms].
 
-The following image shows typical output from a path search component:
+The following screencast shows typical output from a path search component:
 
-image::component-path-search-1.svg[text input]
+[asciinema,rows=10]
+----
+include::example$component-path-search-1.cast[]
+----
 
 The context object is `PathSearchContext`. The following table describes its context variables:
 

@@ -1,7 +1,7 @@
 [[using-shell-components-ui-singleselect]]
 = Single Select
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 A single select component asks a user to choose one item from a list. It is similar to a simple
 dropbox implementation. The following listing shows an example:
@@ -11,9 +11,12 @@ dropbox implementation. The following listing shows an example:
 include::{snippets}/UiComponentSnippets.java[tag=snippet6]
 ----
 
-The following image shows typical output for a single select component:
+The following screencast shows typical output for a single select component:
 
-image::component-single-select-1.svg[text input]
+[asciinema,rows=8]
+----
+include::example$component-single-select-1.cast[]
+----
 
 The context object is `SingleItemSelectorContext`. The following table describes its context variables:
 

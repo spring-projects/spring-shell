@@ -1,7 +1,7 @@
 [[using-shell-components-ui-stringinput]]
 = String Input
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 The string input component asks a user for simple text input, optionally masking values
 if the content contains something sensitive. The following listing shows an example:
@@ -11,9 +11,12 @@ if the content contains something sensitive. The following listing shows an exam
 include::{snippets}/UiComponentSnippets.java[tag=snippet3]
 ----
 
-The following image shows typical output from a string input component:
+The following screencast shows typical output from a string input component:
 
-image::component-text-input-1.svg[text input]
+[asciinema,rows=6]
+----
+include::example$component-text-input-1.cast[]
+----
 
 The context object is `StringInputContext`. The following table lists its context variables:
 

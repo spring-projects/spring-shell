@@ -10,6 +10,7 @@ antora:
     - '@antora/atlas-extension'
     - require: '@springio/antora-extensions/root-component-extension'
       root_component_name: 'shell'
+    - require: '@springio/antora-extensions/asciinema-extension'
 site:
   title: Spring Shell
   url: https://docs.spring.io/spring-shell/reference/
@@ -38,4 +39,5 @@ runtime:
     format: pretty
 ui:
   bundle:
-    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.3.4/ui-bundle.zip
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/latest/ui-bundle.zip
+    snapshot: true
