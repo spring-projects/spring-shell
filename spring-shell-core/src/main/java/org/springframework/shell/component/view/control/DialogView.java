@@ -27,6 +27,7 @@ import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.style.StyleSettings;
 
 /**
  * {@code DialogView} is a {@link View} with border, number of buttons and area
@@ -57,6 +58,20 @@ public class DialogView extends WindowView {
 		// TODO: should find better way to hook into eventloop
 		super.setEventLoop(eventLoop);
 		hookButtonEvents();
+	}
+
+	@Override
+	protected String getBackgroundStyle() {
+		return StyleSettings.TAG_DIALOG_BACKGROUND;
+	}
+
+	@Override
+	public void setLayer(int index) {
+		if (content != null) {
+			content.setLayer(index);
+		}
+		buttons.forEach(b -> b.setLayer(index + 1));
+		super.setLayer(index);
 	}
 
 	private void hookButtonEvents() {
@@ -95,13 +110,11 @@ public class DialogView extends WindowView {
 		rect = new Rectangle(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2);
 		if (content != null) {
 			content.setRect(rect.x(), rect.y(), rect.width(), rect.height() - 3);
-			content.setLayer(getLayer());
 		}
 		int xx = rect.x();
 		ListIterator<ButtonView> iter = buttons.listIterator();
 		while (iter.hasNext()) {
 			ButtonView button = iter.next();
-			button.setLayer(getLayer());
 			button.setRect(xx, rect.y() + rect.height() - 3, 7, 3);
 			xx += 7;
 		}

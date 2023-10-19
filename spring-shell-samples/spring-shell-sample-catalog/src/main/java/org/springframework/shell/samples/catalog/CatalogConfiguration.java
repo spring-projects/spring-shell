@@ -59,6 +59,26 @@ class CatalogConfiguration {
 			return "bg:blue";
 		}
 
+		@Override
+		public String dialogBackground() {
+			return "bg:green";
+		}
+
+		@Override
+		public String buttonBackground() {
+			return "bg:red";
+		}
+
+		@Override
+		public String menubarBackground() {
+			return "bg:magenta";
+		}
+
+		@Override
+		public String statusbarBackground() {
+			return "bg:cyan";
+		}
+
 	}
 
 }

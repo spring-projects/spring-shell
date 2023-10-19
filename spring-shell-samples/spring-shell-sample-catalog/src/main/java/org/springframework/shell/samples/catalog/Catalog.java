@@ -245,11 +245,19 @@ public class Catalog {
 		}
 
 		@Override
-		public void draw(Screen screen) {
+		protected void drawBackground(Screen screen) {
+			int bgColor = resolveThemeBackground(getBackgroundStyle(), getBackgroundColor(), -1);
+			if (bgColor > -1) {
+				Rectangle rect = getRect();
+				screen.writerBuilder().build().background(rect, bgColor);
+			}
+		}
+
+		@Override
+		protected void drawContent(Screen screen) {
 			Rectangle rect = getRect();
 			Writer writer = screen.writerBuilder().style(getStyle()).build();
 			writer.text(String.format("%-20s %s", getItem().name(), getItem().description()), rect.x(), rect.y());
-			writer.background(rect, getBackgroundColor());
 		}
 	}
 

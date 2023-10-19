@@ -44,10 +44,14 @@ public class WindowView extends AbstractView {
 		this.backgroundColor = backgroundColor;
 	}
 
+	protected String getBackgroundStyle() {
+		return StyleSettings.TAG_BACKGROUND;
+	}
+
 	@Override
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getInnerRect();
-		int bgColor = resolveThemeBackground(StyleSettings.TAG_BACKGROUND, backgroundColor, -1);
+		int bgColor = resolveThemeBackground(getBackgroundStyle(), backgroundColor, -1);
 		screen.writerBuilder().layer(getLayer()).build().background(rect, bgColor);
 	}
 

@@ -29,6 +29,7 @@ import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.style.StyleSettings;
 
 /**
  * {@link StatusBarView} shows {@link StatusItem items} horizontally and is
@@ -51,6 +52,11 @@ public class StatusBarView extends BoxView {
 
 	public StatusBarView(List<StatusItem> items) {
 		setItems(items);
+	}
+
+	@Override
+	protected String getBackgroundStyle() {
+		return StyleSettings.TAG_STATUSBAR_BACKGROUND;
 	}
 
 	@Override

@@ -96,6 +96,26 @@ public abstract class StyleSettings {
 	 */
 	public final static String TAG_BACKGROUND = "style-background";
 
+	/**
+	 * Styling for dialog background.
+	 */
+	public final static String TAG_DIALOG_BACKGROUND = "style-dialog-background";
+
+	/**
+	 * Styling for button background.
+	 */
+	public final static String TAG_BUTTON_BACKGROUND = "style-button-background";
+
+	/**
+	 * Styling for menubar background.
+	 */
+	public final static String TAG_MENUBAR_BACKGROUND = "style-menubar-background";
+
+	/**
+	 * Styling for statusbar background.
+	 */
+	public final static String TAG_STATUSBAR_BACKGROUND = "style-statusbar-background";
+
 	public String title() {
 		return "bold";
 	}
@@ -152,6 +172,22 @@ public abstract class StyleSettings {
 		return "default";
 	}
 
+	public String dialogBackground() {
+		return "default";
+	}
+
+	public String buttonBackground() {
+		return "default";
+	}
+
+	public String menubarBackground() {
+		return "default";
+	}
+
+	public String statusbarBackground() {
+		return "default";
+	}
+
 	/**
 	 * Resolve a theme setting from a given tag.
 	 *
@@ -188,6 +224,14 @@ public abstract class StyleSettings {
 				return highlight();
 			case TAG_BACKGROUND:
 				return background();
+			case TAG_DIALOG_BACKGROUND:
+				return dialogBackground();
+			case TAG_BUTTON_BACKGROUND:
+				return buttonBackground();
+			case TAG_MENUBAR_BACKGROUND:
+				return menubarBackground();
+			case TAG_STATUSBAR_BACKGROUND:
+				return statusbarBackground();
 		}
 		throw new IllegalArgumentException(String.format("Unknown tag '%s'", tag));
 	}
@@ -225,7 +269,11 @@ public abstract class StyleSettings {
 				TAG_ITEM_UNSELECTED,
 				TAG_ITEM_SELECTOR,
 				TAG_HIGHLIGHT,
-				TAG_BACKGROUND
+				TAG_BACKGROUND,
+				TAG_DIALOG_BACKGROUND,
+				TAG_BUTTON_BACKGROUND,
+				TAG_MENUBAR_BACKGROUND,
+				TAG_STATUSBAR_BACKGROUND
 		};
 	}
 

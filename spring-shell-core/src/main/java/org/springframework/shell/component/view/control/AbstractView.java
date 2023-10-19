@@ -108,8 +108,15 @@ public abstract class AbstractView extends AbstractControl implements View {
 		return layer;
 	}
 
+	/**
+	 * Calls drawing logic in two stages. First a background is drawn and then an
+	 * actual content. This logic allows to separate how child implementation
+	 * can use drawing logic from its parent as usually background should get
+	 * overridden in child but actual content should get overridden in a parent.
+	 */
 	@Override
 	public final void draw(Screen screen) {
+		drawBackground(screen);
 		drawInternal(screen);
 	}
 
@@ -120,6 +127,14 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 * @param screen the screen
 	 */
 	protected abstract void drawInternal(Screen screen);
+
+	/**
+	 * Internal drawing method for background.
+	 *
+	 * @param screen the screen
+	 */
+	protected void drawBackground(Screen screen) {
+	}
 
 	@Override
 	public void focus(View view, boolean focus) {

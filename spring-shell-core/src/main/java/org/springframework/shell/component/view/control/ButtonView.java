@@ -26,6 +26,7 @@ import org.springframework.shell.component.view.geom.VerticalAlign;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.style.StyleSettings;
 
 /**
  * {@code ButtonView} is a {@link View} with border and text acting as a button.
@@ -64,6 +65,11 @@ public class ButtonView extends BoxView {
 	@Override
 	public MouseHandler getMouseHandler() {
 		return super.getMouseHandler();
+	}
+
+	@Override
+	protected String getBackgroundStyle() {
+		return StyleSettings.TAG_BUTTON_BACKGROUND;
 	}
 
 	@Override

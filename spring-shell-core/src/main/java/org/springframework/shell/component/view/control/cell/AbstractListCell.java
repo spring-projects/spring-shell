@@ -19,6 +19,7 @@ import org.springframework.shell.component.view.control.ListView.ItemStyle;
 import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.StringUtils;
 
 /**
@@ -51,8 +52,21 @@ public abstract class AbstractListCell<T> extends AbstractCell<T> implements Lis
 		return null;
 	}
 
+	protected String getBackgroundStyle() {
+		return StyleSettings.TAG_BACKGROUND;
+	}
+
 	@Override
-	public void draw(Screen screen) {
+	protected void drawBackground(Screen screen) {
+		Rectangle rect = getRect();
+		int bgColor = resolveThemeBackground(getBackgroundStyle(), getBackgroundColor(), -1);
+		if (bgColor > -1) {
+			screen.writerBuilder().build().background(rect, bgColor);
+		}
+	}
+
+	@Override
+	protected void drawContent(Screen screen) {
 		String indicator = getIndicator();
 		String text = null;
 		if (StringUtils.hasText(indicator)) {
@@ -64,7 +78,6 @@ public abstract class AbstractListCell<T> extends AbstractCell<T> implements Lis
 		Rectangle rect = getRect();
 		Writer writer = screen.writerBuilder().style(getStyle()).color(getForegroundColor()).build();
 		writer.text(text, rect.x(), rect.y());
-		writer.background(rect, getBackgroundColor());
 	}
 
 	@Override

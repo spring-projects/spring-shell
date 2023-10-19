@@ -16,6 +16,7 @@
 package org.springframework.shell.component.view.control.cell;
 
 import org.springframework.shell.component.view.control.AbstractControl;
+import org.springframework.shell.component.view.screen.Screen;
 
 /**
  * Base implementation of a {@link Cell}.
@@ -69,4 +70,17 @@ public abstract class AbstractCell<T> extends AbstractControl implements Cell<T>
 	public int getBackgroundColor() {
 		return backgroundColor;
 	}
+
+	@Override
+	public void draw(Screen screen) {
+		drawBackground(screen);
+		drawContent(screen);
+	}
+
+	protected void drawBackground(Screen screen) {
+	}
+
+	protected void drawContent(Screen screen) {
+	}
+
 }

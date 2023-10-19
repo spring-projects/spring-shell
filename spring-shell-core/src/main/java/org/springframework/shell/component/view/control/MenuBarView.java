@@ -36,6 +36,7 @@ import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.component.view.screen.ScreenItem;
+import org.springframework.shell.style.StyleSettings;
 import org.springframework.shell.style.ThemeResolver;
 
 /**
@@ -72,6 +73,11 @@ public class MenuBarView extends BoxView {
 	 */
 	public static MenuBarView of(MenuBarItem... items) {
 		return new MenuBarView(items);
+	}
+
+	@Override
+	protected String getBackgroundStyle() {
+		return StyleSettings.TAG_MENUBAR_BACKGROUND;
 	}
 
 	@Override
@@ -245,7 +251,6 @@ public class MenuBarView extends BoxView {
 		menuView.setThemeResolver(getThemeResolver());
 		menuView.setThemeName(getThemeName());
 		menuView.setShowBorder(true);
-		menuView.setTransparent(false);
 		menuView.setLayer(1);
 		Rectangle rect = getInnerRect();
 		int x = positionAtIndex(activeItemIndex);

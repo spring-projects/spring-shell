@@ -45,7 +45,6 @@ public class BoxView extends AbstractView {
 	private int paddingBottom;
 	private int paddingLeft;
 	private int paddingRight;
-	private boolean transparent = true;
 	private int backgroundColor = -1;
 	private int titleColor = -1;
 	private int titleStyle = -1;
@@ -162,22 +161,15 @@ public class BoxView extends AbstractView {
 		this.titleAlign = titleAlign;
 	}
 
-	/**
-	 * Sets if box should be transparent, {@code true} by default.
-	 *
-	 * @param transparent a transparency flag
-	 */
-	public void setTransparent(boolean transparent) {
-		this.transparent = transparent;
+	protected String getBackgroundStyle() {
+		return StyleSettings.TAG_BACKGROUND;
 	}
 
-	/**
-	 * Is box transparent.
-	 *
-	 * @return box transparency
-	 */
-	protected boolean isTransparent() {
-		return transparent;
+	@Override
+	protected void drawBackground(Screen screen) {
+		int bgColor = resolveThemeBackground(getBackgroundStyle(), backgroundColor, -1);
+		Rectangle rect = getRect();
+		screen.writerBuilder().layer(getLayer()).build().background(rect, bgColor);
 	}
 
 	/**
@@ -192,14 +184,6 @@ public class BoxView extends AbstractView {
 		if (rect.width() <= 0 || rect.height() <= 0) {
 			return;
 		}
-		int bgColor;
-		if (isTransparent()) {
-			bgColor = backgroundColor > -1 ? backgroundColor : -1;
-		}
-		else {
-			bgColor = resolveThemeBackground(StyleSettings.TAG_BACKGROUND, backgroundColor, -1);
-		}
-		screen.writerBuilder().layer(getLayer()).build().background(rect, bgColor);
 		if (showBorder && rect.width() >= 2 && rect.height() >= 2) {
 			screen.writerBuilder().layer(getLayer()).build().border(rect.x(), rect.y(), rect.width(), rect.height());
 			if (StringUtils.hasText(title)) {
