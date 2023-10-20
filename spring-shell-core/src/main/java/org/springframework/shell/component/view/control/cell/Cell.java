@@ -16,6 +16,7 @@
 package org.springframework.shell.component.view.control.cell;
 
 import org.springframework.shell.component.view.control.Control;
+import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.screen.Screen;
 
 /**
