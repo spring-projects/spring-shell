@@ -6,3 +6,54 @@ ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/she
 
 _MenuView_ is a base implementation providing functionality to draw a menu.
 Inherits xref:tui/views/box.adoc[].
+
+== Default Bindings
+Default _key bindigs_ are:
+
+.Key
+|===
+|Command |Description
+
+|CursorUp
+|Move selection up
+
+|CursorDown
+|Move selection down
+
+|Enter
+|Choose active item.
+
+|===
+
+Default _mouse bindigs_ are:
+
+.Mouse
+|===
+|Command |Description
+
+|Wheel \| WheelUp
+|Move selection up
+
+|Wheel \| WheelDown
+|Move selection down
+
+|Released \| Button1
+|Choose item
+
+|===
+
+== Events
+
+Events are sent depending on a used list type.
+
+.ListView Events
+|===
+|Event |Description
+
+|MenuViewOpenSelectedItemEvent
+|Active item is requested to get opened.
+
+|MenuViewSelectedItemChangedEvent
+|Active item is changed.
+
+|===

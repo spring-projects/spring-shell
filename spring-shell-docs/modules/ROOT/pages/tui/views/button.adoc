@@ -6,3 +6,52 @@ ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/she
 
 _ButtonView_ is a base implementation providing functionality to draw a button.
 Inherits xref:tui/views/box.adoc[].
+
+[source, text]
+----
+┌──────┐
+│ text │
+└──────┘
+----
+
+You can set a text for a button and action to do when button is selected.
+
+[source, java, indent=0]
+----
+include::{snippets}/ButtonViewSnippets.java[tag=sample]
+----
+
+== Default Bindings
+
+Default _key bindigs_ are:
+
+.Key
+|===
+|Command |Description
+
+|Enter
+|Selects a button
+
+|===
+
+Default _mouse bindigs_ are:
+
+.Mouse
+|===
+|Command |Description
+
+|Released \| Button1
+|Selects a button
+
+|===
+
+== Events
+[[tui-views-list-events]]
+.ListView Events
+|===
+|Event |Description
+
+|ButtonViewSelectEvent
+|Button is selected.
+
+|===

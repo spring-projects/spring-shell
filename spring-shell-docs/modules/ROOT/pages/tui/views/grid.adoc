@@ -13,15 +13,15 @@ include::{snippets}/GridViewSnippets.java[tag=snippet1]
 
 Will result layout of:
 
-[source, text, indent=0]
+[source, text]
 ----
-┌---┬---┐
-|   |   |
-|   |   |
-├---┼---┤
-|   |   |
-|   |   |
-└---┴---┘
+┌───┬───┐
+│   │   │
+│   │   │
+├───┼───┤
+│   │   │
+│   │   │
+└───┴───┘
 ----
 
 == Default Bindings

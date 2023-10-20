@@ -6,3 +6,29 @@ ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/she
 
 _DialogView_ is a base implementation providing functionality to draw a dialog.
 Inherits xref:tui/views/box.adoc[].
+
+[source, text]
+----
+┌──────────────────┐
+│                  │
+│  <Main content>  │
+│                  │
+├──────────────────┤
+│    <Buttons>     │
+└──────────────────┘
+----
+
+== Default Bindings
+Does not have any default bindings.
+
+== Events
+Events are sent depending on a used list type.
+
+.DialogView Events
+|===
+|Event |Description
+
+|DialogViewCloseEvent
+|Dialog requested to get closed.
+
+|===

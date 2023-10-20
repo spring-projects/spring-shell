@@ -6,3 +6,32 @@ ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/she
 
 _MenuBarView_ is a base implementation providing functionality to draw a menu bar.
 Inherits xref:tui/views/box.adoc[].
+
+== Default Bindings
+Default _key bindigs_ are:
+
+.Key
+|===
+|Command |Description
+
+|CursorLeft
+|Move selection left
+
+|CursorRight
+|Move selection right
+
+|===
+
+Default _mouse bindigs_ are:
+
+.Mouse
+|===
+|Command |Description
+
+|Released \| Button1
+|Choose item
+
+|===
+
+== Events
+Does not have any events.

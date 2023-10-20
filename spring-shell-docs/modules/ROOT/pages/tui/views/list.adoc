@@ -28,42 +28,6 @@ Supports `NOCHECK``, `CHECK`` and `RADIO``
 include::{snippets}/ListViewSnippets.java[tag=snippet2]
 ----
 
-== Default Bindings
-
-Default _view commands_ are:
-
-[[tui-views-list-viewcommands]]
-.ViewCommands
-|===
-|Command |Description
-
-|LINE_UP
-|Selection moves up. Bound to _CursorUp_ and _WheelUp_.
-
-|LINE_DOWN
-|Selection moves down. Bound to _CursorDown_ and _WheelDown_.
-
-|===
-
-_Enter_ is choosing an active item. _Space_ is changing selection state.
-
-== Events
-
-Events are sent depending on a used list type.
-
-[[tui-views-list-events]]
-.ListView Events
-|===
-|Event |Description
-
-|ListViewOpenSelectedItemEvent
-|Active item is requested to get opened.
-
-|ListViewSelectedItemChangedEvent
-|Active item is changed.
-
-|===
-
 == Customisation
 
 How individual cells are shown depends on a _CellFactory_. Default implementation
@@ -82,3 +46,73 @@ And set it as a factory:
 ----
 include::{snippets}/ListViewSnippets.java[tag=uselistcell]
 ----
+
+== Default Bindings
+Default _view commands_ are:
+
+[[tui-views-list-viewcommands]]
+.ViewCommands
+|===
+|Command |Description
+
+|LINE_UP
+|Selection moves up.
+
+|LINE_DOWN
+|Selection moves down.
+
+|===
+
+Default _key bindigs_ are:
+
+.Key
+|===
+|Command |Description
+
+|CursorUp
+|Bound ViewCommand LINE_UP
+
+|CursorDown
+|Bound ViewCommand LINE_DOWN
+
+|Enter
+|Choose active item.
+
+|Space
+|Change active item selection state.
+
+|===
+
+Default _mouse bindigs_ are:
+
+.Mouse
+|===
+|Command |Description
+
+|Wheel \| WheelUp
+|Bound ViewCommand LINE_UP
+
+|Wheel \| WheelDown
+|Bound ViewCommand LINE_DOWN
+
+|Released \| Button1
+|Choose item
+
+|===
+
+== Events
+
+Events are sent depending on a used list type.
+
+[[tui-views-list-events]]
+.ListView Events
+|===
+|Event |Description
+
+|ListViewOpenSelectedItemEvent
+|Active item is requested to get opened.
+
+|ListViewSelectedItemChangedEvent
+|Active item is changed.
+
+|===
