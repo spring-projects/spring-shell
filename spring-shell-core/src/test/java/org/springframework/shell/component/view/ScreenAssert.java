@@ -21,10 +21,10 @@ import java.util.List;
 import org.assertj.core.api.AbstractAssert;
 import org.jline.utils.AttributedString;
 
-import org.springframework.shell.component.view.geom.Position;
 import org.springframework.shell.component.view.screen.DisplayLines;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.ScreenItem;
+import org.springframework.shell.geom.Position;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

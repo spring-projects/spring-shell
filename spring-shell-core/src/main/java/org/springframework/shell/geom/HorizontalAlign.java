@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.component.view.geom;
+package org.springframework.shell.geom;
 
-public enum VerticalAlign {
-	TOP, CENTER, BOTTOM
+public enum HorizontalAlign {
+	LEFT, CENTER, RIGHT,
 }

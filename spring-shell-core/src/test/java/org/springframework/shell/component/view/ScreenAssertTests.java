@@ -18,12 +18,12 @@ package org.springframework.shell.component.view;
 import org.assertj.core.api.AssertProvider;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Color;
 import org.springframework.shell.component.view.screen.DefaultScreen;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.ScreenItem;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.geom.Rectangle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

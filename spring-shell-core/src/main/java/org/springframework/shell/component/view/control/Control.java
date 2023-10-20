@@ -16,8 +16,8 @@
 package org.springframework.shell.component.view.control;
 
 import org.springframework.lang.Nullable;
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
+import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.style.ThemeResolver;
 
 /**

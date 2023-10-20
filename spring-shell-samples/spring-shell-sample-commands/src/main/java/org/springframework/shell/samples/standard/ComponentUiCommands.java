@@ -20,8 +20,8 @@ import org.springframework.shell.component.ViewComponent;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.control.InputView;
-import org.springframework.shell.component.view.geom.HorizontalAlign;
-import org.springframework.shell.component.view.geom.VerticalAlign;
+import org.springframework.shell.geom.HorizontalAlign;
+import org.springframework.shell.geom.VerticalAlign;
 import org.springframework.shell.standard.AbstractShellComponent;
 
 @Command

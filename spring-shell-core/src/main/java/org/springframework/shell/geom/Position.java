@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.component.view.geom;
+package org.springframework.shell.geom;
 
 /**
- * Record representing dimensions {@code width} and {@code height}.
+ * Record representing position {@code x} and {@code y}.
  */
-public record Dimension(int width, int height) {
+public record Position(int x, int y) {
 }

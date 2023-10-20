@@ -37,9 +37,9 @@ import org.springframework.shell.component.view.event.MouseBindingConsumer;
 import org.springframework.shell.component.view.event.MouseBindingConsumerArgs;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
+import org.springframework.shell.geom.Rectangle;
 
 /**
  * Base implementation of a {@link View} and its parent interface

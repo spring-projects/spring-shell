@@ -26,10 +26,10 @@ import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.shell.component.view.geom.HorizontalAlign;
-import org.springframework.shell.component.view.geom.Position;
-import org.springframework.shell.component.view.geom.Rectangle;
-import org.springframework.shell.component.view.geom.VerticalAlign;
+import org.springframework.shell.geom.HorizontalAlign;
+import org.springframework.shell.geom.Position;
+import org.springframework.shell.geom.Rectangle;
+import org.springframework.shell.geom.VerticalAlign;
 import org.springframework.util.Assert;
 
 /**

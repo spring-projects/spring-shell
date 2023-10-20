@@ -28,10 +28,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.shell.component.view.control.cell.ListCell;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.MouseEvent;
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.ScreenItem;
+import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.Assert;
 

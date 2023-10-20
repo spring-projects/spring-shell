@@ -18,10 +18,10 @@ package org.springframework.shell.component.view.screen;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.shell.component.view.control.AbstractViewTests;
-import org.springframework.shell.component.view.geom.HorizontalAlign;
-import org.springframework.shell.component.view.geom.Rectangle;
-import org.springframework.shell.component.view.geom.VerticalAlign;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.geom.HorizontalAlign;
+import org.springframework.shell.geom.Rectangle;
+import org.springframework.shell.geom.VerticalAlign;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

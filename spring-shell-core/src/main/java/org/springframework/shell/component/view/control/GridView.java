@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.shell.component.view.event.KeyHandler;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
+import org.springframework.shell.geom.Rectangle;
 import org.springframework.util.Assert;
 
 /**

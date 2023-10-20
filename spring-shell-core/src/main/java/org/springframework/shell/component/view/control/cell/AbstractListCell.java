@@ -16,9 +16,9 @@
 package org.springframework.shell.component.view.control.cell;
 
 import org.springframework.shell.component.view.control.ListView.ItemStyle;
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.StringUtils;
 

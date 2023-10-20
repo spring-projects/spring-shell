@@ -44,9 +44,9 @@ import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResul
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.DefaultScreen;
+import org.springframework.shell.geom.Rectangle;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 

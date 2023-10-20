@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.lang.Nullable;
-import org.springframework.shell.component.view.geom.Rectangle;
+import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 

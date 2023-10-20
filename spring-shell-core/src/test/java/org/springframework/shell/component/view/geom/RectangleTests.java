@@ -17,6 +17,8 @@ package org.springframework.shell.component.view.geom;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.shell.geom.Rectangle;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RectangleTests {

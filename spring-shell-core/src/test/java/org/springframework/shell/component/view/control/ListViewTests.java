@@ -35,9 +35,9 @@ import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResul
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
-import org.springframework.shell.component.view.geom.Rectangle;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.geom.Rectangle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

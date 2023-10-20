@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.component.view.geom;
+package org.springframework.shell.geom;
 
 /**
  * Record representing coordinates {@code x}, {@code y} and its {@code width}

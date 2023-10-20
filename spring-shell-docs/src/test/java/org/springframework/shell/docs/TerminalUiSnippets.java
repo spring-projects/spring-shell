@@ -22,9 +22,9 @@ import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
-import org.springframework.shell.component.view.geom.HorizontalAlign;
-import org.springframework.shell.component.view.geom.VerticalAlign;
 import org.springframework.shell.component.view.message.ShellMessageBuilder;
+import org.springframework.shell.geom.HorizontalAlign;
+import org.springframework.shell.geom.VerticalAlign;
 
 class TerminalUiSnippets {
 

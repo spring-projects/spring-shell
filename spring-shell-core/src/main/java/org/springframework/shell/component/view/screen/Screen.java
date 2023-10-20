@@ -16,10 +16,10 @@
 package org.springframework.shell.component.view.screen;
 
 import org.springframework.lang.Nullable;
-import org.springframework.shell.component.view.geom.HorizontalAlign;
-import org.springframework.shell.component.view.geom.Position;
-import org.springframework.shell.component.view.geom.Rectangle;
-import org.springframework.shell.component.view.geom.VerticalAlign;
+import org.springframework.shell.geom.HorizontalAlign;
+import org.springframework.shell.geom.Position;
+import org.springframework.shell.geom.Rectangle;
+import org.springframework.shell.geom.VerticalAlign;
 
 /**
  * {@code Screen} is representing a virtual area which is sitting between a user
