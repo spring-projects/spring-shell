@@ -19,11 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.control.ButtonView.ButtonViewSelectEvent;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.geom.Rectangle;

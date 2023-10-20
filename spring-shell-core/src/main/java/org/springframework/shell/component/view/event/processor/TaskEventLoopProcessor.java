@@ -20,11 +20,11 @@ import reactor.core.publisher.Mono;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.shell.component.message.StaticShellMessageHeaderAccessor;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyBindingConsumerArgs;
 import org.springframework.shell.component.view.event.EventLoop.EventLoopProcessor;
 import org.springframework.shell.component.view.event.MouseBindingConsumerArgs;
-import org.springframework.shell.component.view.message.StaticShellMessageHeaderAccessor;
 
 public class TaskEventLoopProcessor implements EventLoopProcessor {
 

@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.lang.Nullable;
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.ViewService;
 import org.springframework.shell.component.view.event.DefaultEventLoop;
@@ -44,7 +45,6 @@ import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResul
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.DefaultScreen;
 import org.springframework.shell.geom.Rectangle;
 import org.springframework.util.Assert;

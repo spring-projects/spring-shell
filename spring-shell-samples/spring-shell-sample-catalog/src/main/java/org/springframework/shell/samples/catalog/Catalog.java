@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.AppView;
 import org.springframework.shell.component.view.control.AppView.AppViewEvent;
@@ -49,7 +50,6 @@ import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyEvent.KeyMask;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.geom.HorizontalAlign;

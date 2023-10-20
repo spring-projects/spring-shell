@@ -16,10 +16,10 @@
 package org.springframework.shell.component.view.control;
 
 import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.event.KeyHandler;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.geom.Dimension;

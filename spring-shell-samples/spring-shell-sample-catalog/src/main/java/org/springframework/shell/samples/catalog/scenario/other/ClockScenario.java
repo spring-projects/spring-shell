@@ -24,13 +24,13 @@ import reactor.core.publisher.Flux;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.shell.component.message.ShellMessageBuilder;
+import org.springframework.shell.component.message.ShellMessageHeaderAccessor;
+import org.springframework.shell.component.message.StaticShellMessageHeaderAccessor;
 import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
-import org.springframework.shell.component.view.message.ShellMessageHeaderAccessor;
-import org.springframework.shell.component.view.message.StaticShellMessageHeaderAccessor;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.geom.VerticalAlign;

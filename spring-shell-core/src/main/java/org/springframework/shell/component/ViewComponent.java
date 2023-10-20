@@ -17,11 +17,11 @@ package org.springframework.shell.component;
 
 import org.jline.terminal.Terminal;
 
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.ViewDoneEvent;
 import org.springframework.shell.component.view.event.EventLoop;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.util.Assert;
 
 /**

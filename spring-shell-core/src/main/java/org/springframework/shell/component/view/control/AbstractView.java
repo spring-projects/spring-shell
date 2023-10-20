@@ -28,6 +28,7 @@ import reactor.core.Disposables;
 
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyBindingConsumer;
 import org.springframework.shell.component.view.event.KeyBindingConsumerArgs;
@@ -37,7 +38,6 @@ import org.springframework.shell.component.view.event.MouseBindingConsumer;
 import org.springframework.shell.component.view.event.MouseBindingConsumerArgs;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.geom.Rectangle;
 

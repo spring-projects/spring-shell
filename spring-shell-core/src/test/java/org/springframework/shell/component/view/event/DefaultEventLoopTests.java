@@ -27,8 +27,8 @@ import reactor.test.StepVerifier;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.event.EventLoop.EventLoopProcessor;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

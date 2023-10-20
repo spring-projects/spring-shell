@@ -39,12 +39,12 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.ResolvableType;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.shell.component.message.ShellMessageHeaderAccessor;
+import org.springframework.shell.component.message.StaticShellMessageHeaderAccessor;
 import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.ViewEvent;
 import org.springframework.shell.component.view.event.processor.AnimationEventLoopProcessor;
 import org.springframework.shell.component.view.event.processor.TaskEventLoopProcessor;
-import org.springframework.shell.component.view.message.ShellMessageHeaderAccessor;
-import org.springframework.shell.component.view.message.StaticShellMessageHeaderAccessor;
 import org.springframework.util.Assert;
 
 /**

@@ -18,10 +18,10 @@ package org.springframework.shell.component.view.control;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyHandler;
-import org.springframework.shell.component.view.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.geom.Position;
 import org.springframework.shell.geom.Rectangle;
