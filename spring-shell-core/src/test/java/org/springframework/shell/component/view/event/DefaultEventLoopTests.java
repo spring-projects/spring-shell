@@ -21,6 +21,8 @@ import java.util.EnumSet;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -34,12 +36,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class DefaultEventLoopTests {
 
+	private final static Logger log = LoggerFactory.getLogger(DefaultEventLoopTests.class);
 	private DefaultEventLoop loop;
 
 	@AfterEach
 	void clean() {
 		if (loop != null) {
-			loop.destroy();
+			// TODO: gh898
+			try {
+				loop.destroy();
+			} catch (Exception e) {
+				log.error("Error calling loop destroy", e);
+			}
 		}
 		loop = null;
 	}
