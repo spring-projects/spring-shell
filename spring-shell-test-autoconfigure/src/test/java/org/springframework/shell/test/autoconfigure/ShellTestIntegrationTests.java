@@ -97,6 +97,9 @@ public class ShellTestIntegrationTests {
 		Condition<String> helpHelpCondition = new Condition<>(line -> line.contains("help - Display help about available commands"),
 				"Help help has expected output");
 
+		Condition<String> emptyCondition = new Condition<>(line -> line.trim().length() == 0,
+				"Have only whitespace");
+
 		NonInteractiveShellSession session = client.nonInterative("help").run();
 
 		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
@@ -106,6 +109,12 @@ public class ShellTestIntegrationTests {
 		});
 
 		session.write(session.writeSequence().clearScreen().build());
+		// TODO: gh899
+		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
+			List<String> lines = session.screen().lines();
+			assertThat(lines).are(emptyCondition);
+		});
+
 		NonInteractiveShellSession session2 = client.nonInterative("help", "help").run();
 		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
 			List<String> lines = session2.screen().lines();
