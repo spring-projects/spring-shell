@@ -263,6 +263,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 *
 	 * @param viewService the view service
 	 */
+	@Override
 	public void setViewService(ViewService viewService) {
 		this.viewService = viewService;
 	}

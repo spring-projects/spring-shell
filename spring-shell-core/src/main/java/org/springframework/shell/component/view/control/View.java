@@ -90,6 +90,13 @@ public interface View extends Control {
 	void setEventLoop(@Nullable EventLoop eventLoop);
 
 	/**
+	 * Sets a {@link ViewService}.
+	 *
+	 * @param viewService the view service
+	 */
+	void setViewService(ViewService viewService);
+
+	/**
 	 * Get supported commands.
 	 *
 	 * @return supported commands

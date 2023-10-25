@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +28,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
+import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.control.AppView;
 import org.springframework.shell.component.view.control.AppView.AppViewEvent;
 import org.springframework.shell.component.view.control.BoxView;
@@ -52,10 +52,10 @@ import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyEvent.KeyMask;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
+import org.springframework.shell.component.view.screen.ScreenItem;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.geom.VerticalAlign;
-import org.springframework.shell.component.view.screen.ScreenItem;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 import org.springframework.shell.style.ThemeResolver;
@@ -79,7 +79,6 @@ public class Catalog {
 
 	// mapping from category name to scenarios(can belong to multiple categories)
 	private final Map<String, List<ScenarioData>> categoryMap = new TreeMap<>();
-	private final Terminal terminal;
 	private View currentScenarioView = null;
 	private TerminalUI ui;
 	private ListView<String> categories;
@@ -88,9 +87,10 @@ public class Catalog {
 	private EventLoop eventLoop;
 	private ThemeResolver themeResolver;
 	private String activeThemeName = "default";
+	private TerminalUIBuilder terminalUIBuilder;
 
-	public Catalog(Terminal terminal, List<Scenario> scenarios, ThemeResolver themeResolver) {
-		this.terminal = terminal;
+	public Catalog(TerminalUIBuilder terminalUIBuilder, ThemeResolver themeResolver, List<Scenario> scenarios) {
+		this.terminalUIBuilder = terminalUIBuilder;
 		this.themeResolver = themeResolver;
 		mapScenarios(scenarios);
 	}
@@ -122,11 +122,9 @@ public class Catalog {
 	 * Main run loop. Builds the ui and exits when user requests exit.
 	 */
 	public void run() {
-		ui = new TerminalUI(terminal);
+		ui = terminalUIBuilder.build();
 		eventLoop = ui.getEventLoop();
 		app = buildScenarioBrowser(eventLoop, ui);
-		app.setThemeResolver(themeResolver);
-		app.setThemeName(activeThemeName);
 
 		// handle logic to switch between main scenario browser
 		// and currently active scenario
@@ -155,14 +153,12 @@ public class Catalog {
 	private AppView buildScenarioBrowser(EventLoop eventLoop, TerminalUI component) {
 		// category selector on left, scenario selector on right
 		GridView grid = new GridView();
-		grid.setThemeResolver(themeResolver);
-		grid.setThemeName(activeThemeName);
-		grid.setEventLoop(eventLoop);
+		component.configure(grid);
 		grid.setRowSize(0);
 		grid.setColumnSize(30, 0);
 
-		categories = buildCategorySelector(eventLoop);
-		scenarios = buildScenarioSelector(eventLoop);
+		categories = buildCategorySelector();
+		scenarios = buildScenarioSelector();
 
 		grid.addItem(categories, 0, 0, 1, 1, 0, 0);
 		grid.addItem(scenarios, 0, 1, 1, 1, 0, 0);
@@ -172,16 +168,16 @@ public class Catalog {
 
 		// we use main app view to represent scenario browser
 		AppView app = new AppView(grid, menuBar, statusBar);
-		app.setThemeResolver(themeResolver);
-		app.setThemeName(activeThemeName);
-		app.setEventLoop(eventLoop);
+		component.configure(app);
 
 		// handle event when scenario is chosen
 		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_SCENARIO_TYPEREF, scenarios)
 			.subscribe(event -> {
-				View view = event.args().item().scenario()
-					.configure(ui, eventLoop, themeResolver, activeThemeName)
-					.build();
+				View view = event.args().item().scenario().configure(ui).build();
+				ui.configure(view);
+				// View view = event.args().item().scenario()
+				// 	.configure(ui, eventLoop, themeResolver, activeThemeName)
+				// 	.build();
 				component.setRoot(view, true);
 				currentScenarioView = view;
 			}));
@@ -225,11 +221,10 @@ public class Catalog {
 		return app;
 	}
 
-	private ListView<String> buildCategorySelector(EventLoop eventLoop) {
+	private ListView<String> buildCategorySelector() {
 		ListView<String> categories = new ListView<>();
-		categories.setThemeResolver(themeResolver);
-		categories.setThemeName(activeThemeName);
-		categories.setEventLoop(eventLoop);
+		ui.configure(categories);
+
 		List<String> items = List.copyOf(categoryMap.keySet());
 		categories.setItems(items);
 		categories.setTitle("Categories");
@@ -261,11 +256,9 @@ public class Catalog {
 		}
 	}
 
-	private ListView<ScenarioData> buildScenarioSelector(EventLoop eventLoop) {
+	private ListView<ScenarioData> buildScenarioSelector() {
 		ListView<ScenarioData> scenarios = new ListView<>();
-		scenarios.setThemeResolver(themeResolver);
-		scenarios.setThemeName(activeThemeName);
-		scenarios.setEventLoop(eventLoop);
+		ui.configure(scenarios);
 		scenarios.setTitle("Scenarios");
 		scenarios.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
 		scenarios.setShowBorder(true);
@@ -287,9 +280,7 @@ public class Catalog {
 
 	private DialogView buildAboutDialog() {
 		ButtonView button = new ButtonView("OK");
-		button.setThemeResolver(themeResolver);
-		button.setThemeName(activeThemeName);
-		button.setEventLoop(eventLoop);
+		ui.configure(button);
 
 		BoxView content = new BoxView();
 		content.setDrawFunction((screen, rect) -> {
@@ -297,11 +288,7 @@ public class Catalog {
 			return rect;
 		});
 		DialogView dialog = new DialogView(content, button);
-		dialog.setThemeResolver(themeResolver);
-		dialog.setThemeName(activeThemeName);
-		dialog.setEventLoop(eventLoop);
-		dialog.setViewService(ui);
-
+		ui.configure(dialog);
 		return dialog;
 	}
 
@@ -329,18 +316,14 @@ public class Catalog {
 					MenuItem.of("About", MenuItemCheckStyle.NOCHECK, aboutAction))
 		);
 
-		menuBar.setThemeResolver(themeResolver);
-		menuBar.setThemeName(activeThemeName);
-		menuBar.setEventLoop(eventLoop);
+		ui.configure(menuBar);
 		return menuBar;
 	}
 
 	private StatusBarView buildStatusBar(EventLoop eventLoop) {
 		Runnable quitAction = () -> requestQuit();
 		StatusBarView statusBar = new StatusBarView();
-		statusBar.setThemeResolver(themeResolver);
-		statusBar.setThemeName(activeThemeName);
-		statusBar.setEventLoop(eventLoop);
+		ui.configure(statusBar);
 		StatusItem item1 = new StatusBarView.StatusItem("CTRL-Q Quit", quitAction);
 		StatusItem item2 = new StatusBarView.StatusItem("F10 Status Bar");
 		statusBar.setItems(Arrays.asList(item1, item2));

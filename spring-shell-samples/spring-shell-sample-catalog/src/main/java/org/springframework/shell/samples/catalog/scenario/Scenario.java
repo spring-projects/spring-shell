@@ -15,10 +15,8 @@
  */
 package org.springframework.shell.samples.catalog.scenario;
 
+import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.View;
-import org.springframework.shell.component.view.control.ViewService;
-import org.springframework.shell.component.view.event.EventLoop;
-import org.springframework.shell.style.ThemeResolver;
 
 /**
  * {@link Scenario} participates in a catalog showcase.
@@ -44,11 +42,9 @@ public interface Scenario {
 	/**
 	 * Configure scenario.
 	 *
-	 * @param eventloop eventloop for scenario
-	 * @param themeResolver theme resolver for scenario
-	 * @param themeName theme name for scenario
+	 * @param ui the terminal ui
 	 * @return scenario for chaining
 	 */
-	Scenario configure(ViewService viewService, EventLoop eventloop, ThemeResolver themeResolver, String themeName);
+	Scenario configure(TerminalUI ui);
 
 }

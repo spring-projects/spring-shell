@@ -14,3 +14,4 @@ org.springframework.shell.boot.StandardAPIAutoConfiguration
 org.springframework.shell.boot.ThemingAutoConfiguration
 org.springframework.shell.boot.StandardCommandsAutoConfiguration
 org.springframework.shell.boot.ComponentFlowAutoConfiguration
+org.springframework.shell.boot.TerminalUIAutoConfiguration

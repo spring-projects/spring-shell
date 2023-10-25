@@ -29,7 +29,7 @@ public class SimpleListViewScenario extends AbstractScenario {
 	@Override
 	public View build() {
 		ListView<String> view = new ListView<>();
-		view.setEventLoop(getEventloop());
+		configure(view);
 		view.setItems(Arrays.asList("item1", "item2"));
 		return view;
 	}

@@ -47,6 +47,7 @@ import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
 import org.springframework.shell.component.view.screen.DefaultScreen;
 import org.springframework.shell.geom.Rectangle;
+import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -73,6 +74,8 @@ public class TerminalUI implements ViewService {
 	private final KeyBinder keyBinder;
 	private DefaultEventLoop eventLoop = new DefaultEventLoop();
 	private View focus = null;
+	private ThemeResolver themeResolver;
+	private String themeName = "default";
 
 	/**
 	 * Constructs a handler with a given terminal.
@@ -133,6 +136,64 @@ public class TerminalUI implements ViewService {
 	 */
 	public void redraw() {
 		getEventLoop().dispatch(ShellMessageBuilder.ofRedraw());
+	}
+
+	/**
+	 * Sets a {@link ThemeResolver}.
+	 *
+	 * @param themeResolver the theme resolver
+	 */
+	public void setThemeResolver(ThemeResolver themeResolver) {
+		this.themeResolver = themeResolver;
+	}
+
+	/**
+	 * Sets a {@link ThemeResolver}.
+	 *
+	 * @return a theme resolver
+	 */
+	public ThemeResolver getThemeResolver() {
+		return themeResolver;
+	}
+
+	/**
+	 * Sets a {@code theme name}.
+	 *
+	 * @param themeName the theme name
+	 */
+	public void setThemeName(String themeName) {
+		this.themeName = themeName;
+	}
+
+	/**
+	 * Gets a {@code theme name}.
+	 *
+	 * @return a theme name
+	 */
+	public String getThemeName() {
+		return themeName;
+	}
+
+	/**
+	 * Gets a {@link ViewService}.
+	 *
+	 * @return a view service
+	 */
+	public ViewService getViewService() {
+		return this;
+	}
+
+	/**
+	 * Configure view for {@link EventLoop}, {@link ThemeResolver},
+	 * {@code theme name} and {@link ViewService}.
+	 *
+	 * @param view the view to configure
+	 */
+	public void configure(View view) {
+		view.setEventLoop(eventLoop);
+		view.setThemeResolver(themeResolver);
+		view.setThemeName(themeName);
+		view.setViewService(getViewService());
 	}
 
 	public void setFocus(@Nullable View view) {

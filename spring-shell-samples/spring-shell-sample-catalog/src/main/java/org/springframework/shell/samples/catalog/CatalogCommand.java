@@ -18,6 +18,7 @@ package org.springframework.shell.samples.catalog;
 import java.util.List;
 
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.style.ThemeResolver;
@@ -31,16 +32,18 @@ import org.springframework.shell.style.ThemeResolver;
 public class CatalogCommand extends AbstractShellComponent {
 
 	private final List<Scenario> scenarios;
+	private final TerminalUIBuilder terminalUIBuilder;
 	private final ThemeResolver themeResolver;
 
-	public CatalogCommand(List<Scenario> scenarios, ThemeResolver themeResolver) {
+	public CatalogCommand(List<Scenario> scenarios, TerminalUIBuilder terminalUIBuilder, ThemeResolver themeResolver) {
 		this.scenarios = scenarios;
+		this.terminalUIBuilder = terminalUIBuilder;
 		this.themeResolver = themeResolver;
 	}
 
 	@Command(command = "catalog")
 	public void catalog() {
-		Catalog catalog = new Catalog(getTerminal(), scenarios, themeResolver);
+		Catalog catalog = new Catalog(terminalUIBuilder, themeResolver, scenarios);
 		catalog.run();
 	}
 }

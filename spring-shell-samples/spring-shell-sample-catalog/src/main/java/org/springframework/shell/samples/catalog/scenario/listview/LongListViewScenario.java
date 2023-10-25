@@ -31,7 +31,7 @@ public class LongListViewScenario extends AbstractScenario {
 	@Override
 	public View build() {
 		ListView<String> view = new ListView<>();
-		view.setEventLoop(getEventloop());
+		configure(view);
 		List<String> items = IntStream.of(20).mapToObj(i -> "item" + i).collect(Collectors.toList());
 		view.setItems(items);
 		return view;

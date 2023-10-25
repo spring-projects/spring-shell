@@ -27,7 +27,7 @@ public class SimpleInputViewScenario extends AbstractScenario {
 	@Override
 	public View build() {
 		InputView view = new InputView();
-		view.setEventLoop(getEventloop());
+		configure(view);
 		view.setTitle("Input");
 		view.setShowBorder(true);
 		return view;
