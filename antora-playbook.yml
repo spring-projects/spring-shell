@@ -8,6 +8,7 @@ antora:
   - require: '@springio/antora-extensions/root-component-extension'
     root_component_name: 'shell'
   - require: '@springio/antora-extensions/asciinema-extension'
+  - '@springio/antora-extensions/static-page-extension'
 site:
   title: Spring Shell
   url: https://docs.spring.io/spring-shell/reference
