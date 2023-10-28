@@ -20,6 +20,7 @@ import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
+import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
@@ -28,14 +29,14 @@ import org.springframework.shell.geom.VerticalAlign;
 
 class TerminalUiSnippets {
 
-	class Sample1 {
+	class SampleIntro {
 
-		// tag::snippet1[]
+		// tag::introsample[]
 		@Autowired
-		Terminal terminal;
+		TerminalUIBuilder builder;
 
 		void sample() {
-			TerminalUI ui = new TerminalUI(terminal);
+			TerminalUI ui = builder.build();
 			BoxView view = new BoxView();
 			view.setDrawFunction((screen, rect) -> {
 				screen.writerBuilder()
@@ -46,33 +47,12 @@ class TerminalUiSnippets {
 			ui.setRoot(view, true);
 			ui.run();
 		}
-		// end::snippet1[]
-	}
-
-	class Sample2 {
-
-		// tag::snippet2[]
-		@Autowired
-		Terminal terminal;
-
-		void sample() {
-			TerminalUI ui = new TerminalUI(terminal);
-			BoxView view = new BoxView();
-			view.setDrawFunction((screen, rect) -> {
-				screen.writerBuilder()
-					.build()
-					.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-				return rect;
-			});
-			ui.setRoot(view, false);
-			ui.run();
-		}
-		// end::snippet2[]
+		// end::introsample[]
 	}
 
 	class Sample3 {
 
-		// tag::snippet3[]
+		// tag::exitingfromloop[]
 		@Autowired
 		Terminal terminal;
 
@@ -89,7 +69,44 @@ class TerminalUiSnippets {
 				});
 			ui.run();
 		}
-		// end::snippet3[]
+		// end::exitingfromloop[]
+	}
+
+	@SuppressWarnings("unused")
+	class SampleUiAutowire {
+
+		// tag::uibuilderautowire[]
+		@Autowired
+		TerminalUIBuilder builder;
+
+		void sample() {
+			TerminalUI ui = builder.build();
+			// do something with ui
+		}
+		// end::uibuilderautowire[]
+	}
+
+	class SampleConfigureView {
+
+		// tag::configureview[]
+		TerminalUI ui;
+
+		void sample() {
+			BoxView view = new BoxView();
+			ui.configure(view);
+		}
+		// end::configureview[]
+	}
+
+	class SampleUiLoop {
+
+		// tag::uirun[]
+		TerminalUI ui;
+
+		void sample() {
+			ui.run();
+		}
+		// end::uirun[]
 	}
 
 }

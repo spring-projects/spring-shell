@@ -4,4 +4,14 @@
 
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
-tbd
+Views have their own default bindings which can be changed.
+
+You can subscribe into all key events:
+
+[source, java, indent=0]
+----
+include::{snippets}/KeyHandlingSnippets.java[tag=sample]
+----
+
+`KeyEvent` is a record containing info about a binding coming out
+from a terminal.

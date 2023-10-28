@@ -4,7 +4,33 @@
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 `TerminalUI` is a main implementation to drive ui execution logic.
-Running `TerminalUI` execution loop is a blocking operation.
+
+== Create TerminalUI
+You can build `TerminalUI` manually but recommended way is to use `TerminalUIBuilder`
+build is autoconfigured for you and will set needed services.
+
+[source, java, indent=0]
+----
+include::{snippets}/TerminalUiSnippets.java[tag=uibuilderautowire]
+----
+
+== Configuring Views
+`TerminalUI` has a helper method _configure(View)_ which can be used to set
+needed integrations into _eventloop_ and other services.
+
+[source, java, indent=0]
+----
+include::{snippets}/TerminalUiSnippets.java[tag=configureview]
+----
+
+== Running UI Loop
+Running `TerminalUI` execution loop is a blocking operation. You're going to need
+a way to exit from a loop, for example <<Exiting App>>.
+
+[source, java, indent=0]
+----
+include::{snippets}/TerminalUiSnippets.java[tag=uirun]
+----
 
 == Exiting App
 
@@ -13,5 +39,5 @@ events and request _interrupt_.
 
 [source, java, indent=0]
 ----
-include::{snippets}/TerminalUiSnippets.java[tag=snippet3]
+include::{snippets}/TerminalUiSnippets.java[tag=exitingfromloop]
 ----

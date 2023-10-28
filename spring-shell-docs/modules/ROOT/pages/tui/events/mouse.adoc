@@ -4,4 +4,12 @@
 
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
-tbd
+You can subscribe into all mouse events:
+
+[source, java, indent=0]
+----
+include::{snippets}/MouseHandlingSnippets.java[tag=sample]
+----
+
+`MouseEvent` is a record wrapping _x_ and _Y_ coordinates and
+`org.jline.terminal.MouseEvent` from JLine library.
