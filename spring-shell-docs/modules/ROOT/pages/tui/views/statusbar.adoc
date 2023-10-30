@@ -1,0 +1,48 @@
+= StatusBarView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_StatusBarView_ is a base implementation providing functionality to draw a status bar.
+Inherits xref:tui/views/box.adoc[].
+
+[source, text]
+----
+┌─────────────────────────────┐
+│ Item1 | Item2 | Item3       │
+└─────────────────────────────┘
+----
+
+You can create a simple status bar with an item:
+
+[source, java, indent=0]
+----
+include::{snippets}/StatusBarViewSnippets.java[tag=simple]
+----
+
+Constructor can take array form which allows to lay out simple
+item definitions in a _dsl_ style.
+
+[source, java, indent=0]
+----
+include::{snippets}/StatusBarViewSnippets.java[tag=viaarray]
+----
+
+Items support runnable actions which generally as executed when
+item is selected. It can also get attached to a hot key.
+
+[source, java, indent=0]
+----
+include::{snippets}/StatusBarViewSnippets.java[tag=items]
+----
+
+
+== Events
+.StatusBarView Events
+|===
+|Event |Description
+
+|StatusBarViewOpenSelectedItemEvent
+|StatusItem is selected.
+
+|===

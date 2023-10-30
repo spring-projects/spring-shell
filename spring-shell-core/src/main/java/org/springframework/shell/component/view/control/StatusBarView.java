@@ -121,6 +121,7 @@ public class StatusBarView extends BoxView {
 	public void setItems(List<StatusItem> items) {
 		this.items.clear();
 		this.items.addAll(items);
+		registerHotKeys();
 	}
 
 	/**
@@ -132,6 +133,17 @@ public class StatusBarView extends BoxView {
 		return items;
 	}
 
+	private void registerHotKeys() {
+		getItems().stream()
+			.filter(item -> item.getHotKey() != null)
+			.forEach(item -> {
+				Runnable action = item.getAction();
+				if (action != null) {
+					registerHotKeyBinding(item.getHotKey(), action);
+				}
+			});
+	}
+
 	/**
 	 * {@link StatusItem} represents an item in a {@link StatusBarView}.
 	 */
@@ -139,14 +151,32 @@ public class StatusBarView extends BoxView {
 
 		private String title;
 		private Runnable action;
+		private Integer hotKey;
 
 		public StatusItem(String title) {
 			this(title, null);
 		}
 
 		public StatusItem(String title, Runnable action) {
+			this(title, action, null);
+		}
+
+		public StatusItem(String title, Runnable action, Integer hotKey) {
 			this.title = title;
 			this.action = action;
+			this.hotKey = hotKey;
+		}
+
+		public static StatusItem of(String title) {
+			return new StatusItem(title);
+		}
+
+		public static StatusItem of(String title, Runnable action) {
+			return new StatusItem(title, action);
+		}
+
+		public static StatusItem of(String title, Runnable action, Integer hotKey) {
+			return new StatusItem(title, action, hotKey);
 		}
 
 		public String getTitle() {
@@ -157,8 +187,18 @@ public class StatusBarView extends BoxView {
 			return action;
 		}
 
-		public void setAction(Runnable action) {
+		public StatusItem setAction(Runnable action) {
 			this.action = action;
+			return this;
+		}
+
+		public Integer getHotKey() {
+			return hotKey;
+		}
+
+		public StatusItem setHotKey(Integer hotKey) {
+			this.hotKey = hotKey;
+			return this;
 		}
 
 	}

@@ -135,7 +135,10 @@ public class AppView extends BoxView {
 
 	@Override
 	public KeyHandler getHotKeyHandler() {
-		return menu != null ? menu.getHotKeyHandler() : super.getHotKeyHandler();
+		KeyHandler mainHandler = main != null ? main.getHotKeyHandler() : super.getHotKeyHandler();
+		KeyHandler menuHandler = menu != null ? menu.getHotKeyHandler() : super.getHotKeyHandler();
+		KeyHandler statusHandler = status != null ? status.getHotKeyHandler() : super.getHotKeyHandler();
+		return mainHandler.thenIfNotConsumed(menuHandler).thenIfNotConsumed(statusHandler);
 	}
 
 	@Override

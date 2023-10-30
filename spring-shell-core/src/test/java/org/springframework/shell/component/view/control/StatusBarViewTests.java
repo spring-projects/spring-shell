@@ -26,6 +26,7 @@ import reactor.test.StepVerifier;
 
 import org.springframework.shell.component.view.control.StatusBarView.StatusBarViewOpenSelectedItemEvent;
 import org.springframework.shell.component.view.control.StatusBarView.StatusItem;
+import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -51,8 +52,23 @@ class StatusBarViewTests extends AbstractViewTests {
 
 			view = new StatusBarView(Arrays.asList(new StatusItem("item1")));
 			assertThat(view.getItems()).hasSize(1);
+
+			view = new StatusBarView(Arrays.asList(StatusItem.of("item1")));
+			assertThat(view.getItems()).hasSize(1);
 		}
 
+		@Test
+		void hotkeys() {
+			StatusItem item;
+
+			item = StatusItem.of("title");
+			assertThat(item.getHotKey()).isNull();
+			item.setHotKey(Key.f);
+			assertThat(item.getHotKey()).isEqualTo(Key.f);
+
+			item = StatusItem.of("title").setHotKey(Key.f);
+			assertThat(item.getHotKey()).isEqualTo(Key.f);
+		}
 	}
 
 	@Nested

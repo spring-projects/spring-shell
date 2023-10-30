@@ -1,0 +1,41 @@
+= AppView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_AppView_ is a base implementation providing functionality to draw opinionated _application view_.
+Inherits xref:tui/views/box.adoc[].
+
+Generic idea is to have menu and status views which typically are xref:tui/views/menubar.adoc[] and
+xref:tui/views/statusbar.adoc[] respectively. Main content view is then whatever user want to show
+in it.
+
+[source, text]
+----
+┌──────────────────────────┐
+│           Menu           │
+├──────────────────────────┤
+│                          │
+│           Main           │
+│                          │
+├──────────────────────────┤
+│          Status          │
+└──────────────────────────┘
+----
+
+== Key Handling
+If menu has a focus key handling is processed there, then main is consulted for handling.
+Lastly cursor left/right are processed to dispatch _AppViewEvent_.
+
+== HotKey Handling
+Hotkeys are processed in order of _main_, _menu_ and _status_.
+
+== Events
+.AppView Events
+|===
+|Event |Description
+
+|AppViewEvent
+|Direction for a next selection.
+
+|===

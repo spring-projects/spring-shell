@@ -16,7 +16,6 @@
 package org.springframework.shell.samples.catalog;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -203,21 +202,6 @@ public class Catalog {
 				}
 			));
 
-		// we could potentially do keybinding somewhere else
-		// but at least this shows how to do it in low level.
-		// essentially we now just handle F10 to toggle
-		// menubar visibility
-		// TODO: when we get support for hotkeys we should do
-		//       binding there
-		eventLoop.onDestroy(eventLoop.keyEvents()
-			.subscribe(event -> {
-					log.debug("Raw keyevent {}", event);
-					if (event.isKey(KeyEvent.Key.f10)) {
-						app.toggleStatusBarVisibility();
-					}
-				}
-			));
-
 		return app;
 	}
 
@@ -322,11 +306,12 @@ public class Catalog {
 
 	private StatusBarView buildStatusBar(EventLoop eventLoop) {
 		Runnable quitAction = () -> requestQuit();
-		StatusBarView statusBar = new StatusBarView();
+		Runnable visibilyAction = () -> app.toggleStatusBarVisibility();
+		StatusBarView statusBar = new StatusBarView(new StatusItem[] {
+			StatusItem.of("CTRL-Q Quit", quitAction),
+			StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10)
+		});
 		ui.configure(statusBar);
-		StatusItem item1 = new StatusBarView.StatusItem("CTRL-Q Quit", quitAction);
-		StatusItem item2 = new StatusBarView.StatusItem("F10 Status Bar");
-		statusBar.setItems(Arrays.asList(item1, item2));
 		return statusBar;
 	}
 
