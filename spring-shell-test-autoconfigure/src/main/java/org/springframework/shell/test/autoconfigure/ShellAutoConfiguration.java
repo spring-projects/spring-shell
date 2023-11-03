@@ -42,7 +42,8 @@ public class ShellAutoConfiguration {
 		return builder -> {
 			builder.streams(terminalStreams.input, terminalStreams.output)
 				.jansi(false)
-				.jna(false);
+				.jna(false)
+				.jni(false);
 		};
 	}
 

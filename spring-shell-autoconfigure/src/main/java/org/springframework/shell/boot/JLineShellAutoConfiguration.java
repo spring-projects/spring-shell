@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.jline.reader.Parser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.terminal.TerminalBuilder.SystemOutput;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
@@ -45,6 +46,7 @@ public class JLineShellAutoConfiguration {
 	public Terminal terminal(ObjectProvider<TerminalCustomizer> customizers) {
 		try {
 			TerminalBuilder builder = TerminalBuilder.builder();
+			builder.systemOutput(SystemOutput.SysOut);
 			customizers.orderedStream().forEach(customizer -> customizer.customize(builder));
 			return builder.build();
 		}
