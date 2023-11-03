@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.jline.reader.Parser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.terminal.TerminalBuilder.SystemOutput;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
@@ -43,7 +44,7 @@ public class JLineShellAutoConfiguration {
 	@Bean(destroyMethod = "close")
 	public Terminal terminal() {
 		try {
-			return TerminalBuilder.builder().build();
+			return TerminalBuilder.builder().systemOutput(SystemOutput.SysOut).build();
 		}
 		catch (IOException e) {
 			throw new BeanCreationException("Could not create Terminal: " + e.getMessage());

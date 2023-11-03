@@ -22,7 +22,7 @@
 	</scm>
 
 	<properties>
-		<jline.version>3.23.0</jline.version>
+		<jline.version>3.24.1</jline.version>
 		<antlr-st4.version>4.3.3</antlr-st4.version>
 		<jimfs.version>1.2</jimfs.version>
 	</properties>
