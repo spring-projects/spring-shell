@@ -16,6 +16,7 @@
 
 package org.springframework.shell.boot;
 
+import org.springframework.boot.LazyInitializationExcludeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.MethodTargetRegistrar;
@@ -52,5 +53,10 @@ public class StandardAPIAutoConfiguration {
 	@Bean
 	public MethodTargetRegistrar standardMethodTargetResolver() {
 		return new StandardMethodTargetRegistrar();
+	}
+
+	@Bean
+	public static LazyInitializationExcludeFilter valueProviderLazyInitializationExcludeFilter(){
+		return LazyInitializationExcludeFilter.forBeanTypes(ValueProvider.class);
 	}
 }
