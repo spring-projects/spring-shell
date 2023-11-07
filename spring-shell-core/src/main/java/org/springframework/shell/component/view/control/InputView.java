@@ -18,6 +18,9 @@ package org.springframework.shell.component.view.control;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
@@ -33,20 +36,28 @@ import org.springframework.shell.geom.Rectangle;
  */
 public class InputView extends BoxView {
 
+	private final Logger log = LoggerFactory.getLogger(InputView.class);
 	private final ArrayList<String> text = new ArrayList<>();
 	private int cursorIndex = 0;
 
 	@Override
 	protected void initInternal() {
-		registerKeyBinding(Key.CursorLeft, event -> left());
-		registerKeyBinding(Key.CursorRight, event -> right());
-		registerKeyBinding(Key.Delete, () -> delete());
-		registerKeyBinding(Key.Backspace, () -> backspace());
-		registerKeyBinding(Key.Enter, () -> done());
+		registerViewCommand(ViewCommand.ACCEPT, () -> done());
+		registerViewCommand(ViewCommand.LEFT, () -> left());
+		registerViewCommand(ViewCommand.RIGHT, () -> right());
+		registerViewCommand(ViewCommand.DELETE_CHAR_LEFT, () -> deleteCharLeft());
+		registerViewCommand(ViewCommand.DELETE_CHAR_RIGHT, () -> deleteCharRight());
+
+		registerKeyBinding(Key.Enter, ViewCommand.ACCEPT);
+		registerKeyBinding(Key.CursorLeft, ViewCommand.LEFT);
+		registerKeyBinding(Key.CursorRight, ViewCommand.RIGHT);
+		registerKeyBinding(Key.Backspace, ViewCommand.DELETE_CHAR_LEFT);
+		registerKeyBinding(Key.Delete, ViewCommand.DELETE_CHAR_RIGHT);
 	}
 
 	@Override
 	public KeyHandler getKeyHandler() {
+		log.trace("getKeyHandler()");
 		KeyHandler handler = args -> {
 			KeyEvent event = args.event();
 			boolean consumed = false;
@@ -68,9 +79,11 @@ public class InputView extends BoxView {
 		Rectangle rect = getInnerRect();
 		String s = getInputText();
 		screen.writerBuilder().build().text(s, rect.x(), rect.y());
-		screen.setShowCursor(hasFocus());
-		int cPos = cursorPosition();
-		screen.setCursorPosition(new Position(rect.x() + cPos, rect.y()));
+		if (hasFocus()) {
+			screen.setShowCursor(true);
+			int cPos = cursorPosition();
+			screen.setCursorPosition(new Position(rect.x() + cPos, rect.y()));
+		}
 		super.drawInternal(screen);
 	}
 
@@ -87,21 +100,34 @@ public class InputView extends BoxView {
 		return text.stream().limit(cursorIndex).mapToInt(text -> text.length()).sum();
 	}
 
-	private void add(String data) {
-		text.add(cursorIndex, data);
-		moveCursor(1);
+	private void dispatchTextChange(String oldText, String newText) {
+		dispatch(ShellMessageBuilder.ofView(this, InputViewTextChangeEvent.of(this, oldText, newText)));
 	}
 
-	private void backspace() {
+	private void add(String data) {
+		String oldText = text.stream().collect(Collectors.joining());
+		text.add(cursorIndex, data);
+		moveCursor(1);
+		String newText = text.stream().collect(Collectors.joining());
+		dispatchTextChange(oldText, newText);
+	}
+
+	private void deleteCharLeft() {
 		if (cursorIndex > 0) {
+			String oldText = text.stream().collect(Collectors.joining());
 			text.remove(cursorIndex - 1);
+			String newText = text.stream().collect(Collectors.joining());
+			dispatchTextChange(oldText, newText);
 		}
 		left();
 	}
 
-	private void delete() {
+	private void deleteCharRight() {
 		if (cursorIndex < text.size()) {
+			String oldText = text.stream().collect(Collectors.joining());
 			text.remove(cursorIndex);
+			String newText = text.stream().collect(Collectors.joining());
+			dispatchTextChange(oldText, newText);
 		}
 	}
 
@@ -122,6 +148,20 @@ public class InputView extends BoxView {
 
 	private void done() {
 		dispatch(ShellMessageBuilder.ofView(this, ViewDoneEvent.of(this)));
+	}
+
+	public record InputViewTextChangeEventArgs(String oldText, String newText) implements ViewEventArgs {
+
+		public static InputViewTextChangeEventArgs of(String oldText, String newText) {
+			return new InputViewTextChangeEventArgs(oldText, newText);
+		}
+	}
+
+	public record InputViewTextChangeEvent(View view, InputViewTextChangeEventArgs args) implements ViewEvent {
+
+		public static InputViewTextChangeEvent of(View view, String oldText, String newText) {
+			return new InputViewTextChangeEvent(view, InputViewTextChangeEventArgs.of(oldText, newText));
+		}
 	}
 
 }

@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.component.view.control;
+package org.springframework.shell.docs;
 
-import org.springframework.lang.Nullable;
+import org.springframework.shell.component.view.control.InputView;
 
-/**
- * Provides services for a {@link View} like handling modals.
- *
- * @author Janne Valkealahti
- */
-public interface ViewService {
+class InputViewSnippets {
 
-	View getModal();
+	class Dump1 {
 
-	void setModal(View view);
+		@SuppressWarnings("unused")
+		void dump1() {
+			// tag::sample[]
+			InputView input = new InputView();
+			String text = input.getInputText();
+			// end::sample[]
+		}
+	}
 
-	void setFocus(@Nullable View view);
 }

@@ -1,0 +1,66 @@
+= InputView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_InputView_ is a base implementation providing functionality to draw and modify
+text in a bounded _Rectancle_.
+
+[source, java, indent=0]
+----
+include::{snippets}/InputViewSnippets.java[tag=sample]
+----
+
+== Default Bindings
+Default _view commands_ are:
+
+.ViewCommands
+|===
+|Command |Description
+
+|LEFT
+|Cursor moves left
+
+|RIGHT
+|Cursor moves right
+
+|DELETE_CHAR_LEFT
+|Delete character left
+
+|DELETE_CHAR_RIGHT
+|Delete character right
+
+|===
+
+Default _key bindigs_ are:
+
+.Key
+|===
+|Command |Description
+
+|CursorLeft
+|Bound ViewCommand LEFT
+
+|CursorRight
+|Bound ViewCommand RIGHT
+
+|Backspace
+|Bound ViewCommand DELETE_CHAR_LEFT
+
+|Delete
+|Bound ViewCommand DELETE_CHAR_RIGHT
+
+|===
+
+== Events
+
+Events are sent depending on a used list type.
+
+.InputView Events
+|===
+|Event |Description
+
+|InputViewTextChangeEvent
+|Input text has changed
+
+|===

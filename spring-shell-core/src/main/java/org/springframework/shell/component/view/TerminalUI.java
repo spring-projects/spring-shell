@@ -196,6 +196,7 @@ public class TerminalUI implements ViewService {
 		view.setViewService(getViewService());
 	}
 
+	@Override
 	public void setFocus(@Nullable View view) {
 		if (focus != null) {
 			focus.focus(focus, false);

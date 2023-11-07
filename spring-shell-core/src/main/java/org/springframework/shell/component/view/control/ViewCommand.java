@@ -39,4 +39,36 @@ public final class ViewCommand {
 	 */
 	public static String LINE_DOWN = "LineDown";
 
+	/**
+	 * Move focus to the next view.
+	 *
+	 * For example using tab to navigate into next input field.
+	 */
+	public static String NEXT_VIEW = "NextView";
+
+	/**
+	 * Accepts a current state.
+	 */
+	public static String ACCEPT = "Accept";
+
+	/**
+	 * Deletes the character on the left.
+	 */
+	public static String DELETE_CHAR_LEFT = "DeleteCharLeft";
+
+	/**
+	 * Deletes the character on the right.
+	 */
+	public static String DELETE_CHAR_RIGHT = "DeleteCharRight";
+
+	/**
+	 * Moves the selection left by one.
+	 */
+	public static String LEFT = "Left";
+
+	/**
+	 * Moves the selection righ by one.
+	 */
+	public static String RIGHT = "Right";
+
 }

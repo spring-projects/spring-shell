@@ -38,6 +38,30 @@ class InputViewTests extends AbstractViewTests {
 	InputView view;
 
 	@Nested
+	class Visual {
+
+		@BeforeEach
+		void setup() {
+			view = new InputView();
+			configure(view);
+		}
+
+		@Test
+		void haveOneRow() {
+			view.setShowBorder(false);
+			view.setRect(0, 0, 80, 1);
+			view.focus(view, true);
+
+			dispatchEvent(view, KeyEvent.of('1'));
+			view.draw(screen24x80);
+
+			assertThat(forScreen(screen24x80)).hasHorizontalText("1", 0, 0, 1);
+			assertThat(forScreen(screen24x80)).hasCursorInPosition(1, 0);
+		}
+
+	}
+
+	@Nested
 	class Input {
 
 		@BeforeEach
@@ -50,6 +74,7 @@ class InputViewTests extends AbstractViewTests {
 		void shouldShowPlainText() {
 			view.setShowBorder(true);
 			view.setRect(0, 0, 80, 24);
+			view.focus(view, true);
 
 			dispatchEvent(view, KeyEvent.of('1'));
 			view.draw(screen24x80);
@@ -62,6 +87,7 @@ class InputViewTests extends AbstractViewTests {
 		void shouldShowUnicode() {
 			view.setShowBorder(true);
 			view.setRect(0, 0, 80, 24);
+			view.focus(view, true);
 
 			dispatchEvent(view, KeyEvent.of('★'));
 			view.draw(screen24x80);
@@ -74,6 +100,7 @@ class InputViewTests extends AbstractViewTests {
 		void shouldShowUnicodeEmoji() {
 			view.setShowBorder(true);
 			view.setRect(0, 0, 80, 24);
+			view.focus(view, true);
 
 			dispatchEvent(view, KeyEvent.of("😂"));
 			view.draw(screen24x80);

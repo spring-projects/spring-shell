@@ -119,7 +119,7 @@ public class AbstractViewTests {
 	}
 
 	protected MouseHandlerResult handleMouseClick(View view, int x, int y) {
-		MouseEvent click = mouseClick(0, 2);
+		MouseEvent click = mouseClick(x, y);
 		return handleMouseClick(view, click);
 	}
 

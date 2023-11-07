@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyHandler;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
@@ -214,16 +215,52 @@ public class GridView extends BoxView {
 		};
 	}
 
+	private void nextView() {
+		View toFocus = null;
+		boolean found = false;
+		for (GridItem i : gridItems) {
+			if (!i.visible) {
+				continue;
+			}
+			if (toFocus == null) {
+				toFocus = i.view;
+			}
+			if (found) {
+				toFocus = i.view;
+				break;
+			}
+			if (i.view.hasFocus()) {
+				found = true;
+			}
+		}
+		if (toFocus != null) {
+			getViewService().setFocus(toFocus);
+		}
+	}
+
+	@Override
+	protected void initInternal() {
+		registerViewCommand(ViewCommand.NEXT_VIEW, () -> nextView());
+
+		registerKeyBinding(Key.Tab, ViewCommand.NEXT_VIEW);
+	}
+
 	@Override
 	public KeyHandler getKeyHandler() {
 		log.trace("getKeyHandler()");
+		KeyHandler handler = null;
 		for (GridItem i : gridItems) {
 			if (i.view.hasFocus()) {
-				return i.view.getKeyHandler();
+				handler = i.view.getKeyHandler();
+				break;
 			}
+		}
+		if (handler != null) {
+			return handler.thenIfNotConsumed(super.getKeyHandler());
 		}
 		return super.getKeyHandler();
 	}
+
 
 	@Override
 	public boolean hasFocus() {

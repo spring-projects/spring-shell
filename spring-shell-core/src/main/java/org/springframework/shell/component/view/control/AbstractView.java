@@ -164,12 +164,17 @@ public abstract class AbstractView extends AbstractControl implements View {
 			int mouse = event.mouse();
 			View view = null;
 			boolean consumed = false;
+			// mouse binding may consume and focus
 			MouseBindingValue mouseBindingValue = getMouseBindings().get(mouse);
 			if (mouseBindingValue != null) {
 				if (mouseBindingValue.mousePredicate().test(event)) {
 					view = this;
 					consumed = dispatchMouseRunCommand(event, mouseBindingValue);
 				}
+			}
+			// click in bounds focuses
+			if (view == null && getRect().contains(event.x(), event.y())) {
+				view = this;
 			}
 			return MouseHandler.resultOf(args.event(), consumed, view, this);
 		};
