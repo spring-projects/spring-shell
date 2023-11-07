@@ -74,6 +74,10 @@ jobs:
           distribution: adopt
           java-version: 17
           cache: gradle
+      - name: Use Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
