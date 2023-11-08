@@ -1,5 +1,5 @@
 {"version": 2, "width": 85, "height": 8, "timestamp": 1645645867, "env": {"SHELL": "/bin/bash", "TERM": "xterm-256color"}}
-[2.193321, "o", "java -jar spring-shell-samples/target/spring-shell-samples-2.1.0-SNAPSHOT.jar"]
+[2.193321, "o", "java -jar spring-shell-sample-commands.jar"]
 [3.11524, "o", "\r\n"]
 [4.904714, "o", "\u001b[?1h\u001b=\u001b[?2004h\u001b[33mmy-shell:>\u001b[0m"]
 [5.372714, "o", "\u001b[31mc\u001b[0m"]
