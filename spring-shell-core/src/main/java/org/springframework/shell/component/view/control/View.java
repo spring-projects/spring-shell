@@ -30,6 +30,8 @@ import org.springframework.shell.component.view.event.MouseHandler;
  */
 public interface View extends Control {
 
+	void init();
+
 	/**
 	 * Sets a layer index this {@code View} operates on.
 	 *

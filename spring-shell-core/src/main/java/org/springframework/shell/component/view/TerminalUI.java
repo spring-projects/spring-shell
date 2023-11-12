@@ -190,6 +190,7 @@ public class TerminalUI implements ViewService {
 	 * @param view the view to configure
 	 */
 	public void configure(View view) {
+		view.init();
 		view.setEventLoop(eventLoop);
 		view.setThemeResolver(themeResolver);
 		view.setThemeName(themeName);

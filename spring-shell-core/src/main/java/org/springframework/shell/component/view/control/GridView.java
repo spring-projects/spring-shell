@@ -261,6 +261,28 @@ public class GridView extends BoxView {
 		return super.getKeyHandler();
 	}
 
+	@Override
+	public KeyHandler getHotKeyHandler() {
+		log.trace("getHotKeyHandler()");
+		KeyHandler handler = null;
+		for (GridItem i : gridItems) {
+			if (handler == null) {
+				handler = i.view.getHotKeyHandler();
+			}
+			else {
+				handler = handler.thenIfNotConsumed(i.view.getHotKeyHandler());
+			}
+			// handler = i.view.getHotKeyHandler();
+			// if (i.view.hasFocus()) {
+			// 	handler = i.view.getHotKeyHandler();
+			// 	break;
+			// }
+		}
+		if (handler != null) {
+			return handler.thenIfNotConsumed(super.getHotKeyHandler());
+		}
+		return super.getHotKeyHandler();
+	}
 
 	@Override
 	public boolean hasFocus() {

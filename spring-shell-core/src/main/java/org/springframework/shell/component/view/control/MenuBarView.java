@@ -247,9 +247,11 @@ public class MenuBarView extends BoxView {
 
 	private MenuView buildMenuView(MenuBarItem item) {
 		MenuView menuView = new MenuView(item.getItems());
+		menuView.init();
 		menuView.setEventLoop(getEventLoop());
 		menuView.setThemeResolver(getThemeResolver());
 		menuView.setThemeName(getThemeName());
+		menuView.setViewService(getViewService());
 		menuView.setShowBorder(true);
 		menuView.setLayer(1);
 		Rectangle rect = getInnerRect();

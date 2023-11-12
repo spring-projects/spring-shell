@@ -60,10 +60,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	private Map<Integer, KeyBindingValue> keyBindings = new HashMap<>();
 	private Map<Integer, KeyBindingValue> hotKeyBindings = new HashMap<>();
 	private Map<Integer, MouseBindingValue> mouseBindings = new HashMap<>();
-
-	public AbstractView() {
-		init();
-	}
+	private boolean init = false;
 
 	/**
 	 * Register {@link Disposable} to get disposed when view terminates.
@@ -88,8 +85,20 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 *
 	 * @see #initInternal()
 	 */
-	protected final void init() {
+	@Override
+	public final void init() {
+		if (init) {
+			return;
+		}
 		initInternal();
+		init = true;
+	}
+
+	private Integer shortcutKey;
+	private Runnable shortcutAction;
+	public void shortcut(Integer key, Runnable runnable) {
+		this.shortcutKey = key;
+		this.shortcutAction = runnable;
 	}
 
 	/**
@@ -97,6 +106,9 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 * usefull. Typically key and mousebindings are registered from this method.
 	 */
 	protected void initInternal() {
+		if (shortcutKey != null && shortcutAction != null) {
+			registerHotKeyBinding(shortcutKey, shortcutAction);
+		}
 	}
 
 	@Override

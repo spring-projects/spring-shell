@@ -207,11 +207,12 @@ public class Catalog {
 
 	private ListView<String> buildCategorySelector() {
 		ListView<String> categories = new ListView<>();
+		categories.shortcut(Key.a | KeyMask.CtrlMask, () -> {});
 		ui.configure(categories);
 
 		List<String> items = List.copyOf(categoryMap.keySet());
 		categories.setItems(items);
-		categories.setTitle("Categories");
+		categories.setTitle("Categories (CTRL+A)");
 		categories.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
 		categories.setShowBorder(true);
 		return categories;
@@ -242,8 +243,9 @@ public class Catalog {
 
 	private ListView<ScenarioData> buildScenarioSelector() {
 		ListView<ScenarioData> scenarios = new ListView<>();
+		scenarios.shortcut(Key.s | KeyMask.CtrlMask, () -> {});
 		ui.configure(scenarios);
-		scenarios.setTitle("Scenarios");
+		scenarios.setTitle("Scenarios (CTRL+S)");
 		scenarios.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
 		scenarios.setShowBorder(true);
 		scenarios.setCellFactory((list, item) -> new ScenarioListCell(item));

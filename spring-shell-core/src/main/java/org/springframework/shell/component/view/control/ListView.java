@@ -100,6 +100,7 @@ public class ListView<T> extends BoxView {
 
 	@Override
 	protected void initInternal() {
+		super.initInternal();
 		registerViewCommand(ViewCommand.LINE_UP, () -> up());
 		registerViewCommand(ViewCommand.LINE_DOWN, () -> down());
 

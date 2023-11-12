@@ -47,6 +47,7 @@ public class KeyBinder {
 
 		for (char i = KeyEvent.Key.a; i <= KeyEvent.Key.z; i++) {
 			keyMap.bind(i | KeyEvent.KeyMask.AltMask, alt(i));
+			keyMap.bind(i | KeyEvent.KeyMask.CtrlMask, ctrl(i));
 		}
 
 		keyMap.bind(KeyEvent.Key.q | KeyEvent.KeyMask.CtrlMask, ctrl('q'));

@@ -38,6 +38,7 @@ class TerminalUiSnippets {
 		void sample() {
 			TerminalUI ui = builder.build();
 			BoxView view = new BoxView();
+			ui.configure(view);
 			view.setDrawFunction((screen, rect) -> {
 				screen.writerBuilder()
 					.build()
@@ -59,6 +60,7 @@ class TerminalUiSnippets {
 		void sample() {
 			TerminalUI ui = new TerminalUI(terminal);
 			BoxView view = new BoxView();
+			ui.configure(view);
 			ui.setRoot(view, true);
 			EventLoop eventLoop = ui.getEventLoop();
 			eventLoop.keyEvents()

@@ -66,6 +66,7 @@ public class AbstractViewTests {
 	}
 
 	protected void configure(View view) {
+		view.init();
 		if (eventLoop != null) {
 			if (view instanceof AbstractView v) {
 				v.setEventLoop(eventLoop);
