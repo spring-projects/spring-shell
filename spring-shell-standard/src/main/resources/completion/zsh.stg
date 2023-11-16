@@ -1,0 +1,89 @@
+//
+// pre content template before commands
+// needs to escape some > characters
+//
+pre(name) ::= <<
+#compdef _<name> <name>
+>>
+
+//
+// commands section with command and description
+//
+cmd_and_desc(command) ::= <<
+"<command.mainCommand>:<command.description>"
+>>
+
+//
+// case for command to call function
+//
+cmd_func(name,command) ::= <<
+<command.mainCommand>)
+  _<name>_<command.commandParts:{p | <p>}; separator="_">
+  ;;
+>>
+
+//
+// recursive sub commands
+//
+sub_command(name,command,commands) ::= <<
+function _<name>_<command.commandParts:{p | <p>}; separator="_"> {
+  local -a commands
+
+  _arguments -C \
+    <command.flags:{f | "<f>" \\}; separator="\n">
+    "1: :->cmnds" \
+    "*::arg:->args"
+
+  case $state in
+  cmnds)
+    commands=(
+      <commands:{c | <cmd_and_desc(c)>}; separator="\n">
+    )
+    _describe "command" commands
+    ;;
+  esac
+
+  case "$words[1]" in
+  <commands:{c | <cmd_func(name,c)>}; separator="\n">
+  esac
+}
+
+<commands:{c | <sub_command(name,c,c.commands)>}; separator="\n\n">
+>>
+
+//
+// top level commands
+//
+top_commands(name,commands) ::= <<
+function _<name> {
+  local -a commands
+
+  _arguments -C \
+    "1: :->cmnds" \
+    "*::arg:->args"
+
+  case $state in
+  cmnds)
+    commands=(
+      <commands:{c | <cmd_and_desc(c)>}; separator="\n">
+    )
+    _describe "command" commands
+    ;;
+  esac
+
+  case "$words[1]" in
+  <commands:{c | <cmd_func(name,c)>}; separator="\n">
+  esac
+}
+
+<commands:{c | <sub_command(name,c,c.commands)>}; separator="\n\n">
+>>
+
+//
+// main template to call from render
+//
+main(name, model) ::= <<
+<pre(name)>
+
+<top_commands(name,model.commands)>
+>>

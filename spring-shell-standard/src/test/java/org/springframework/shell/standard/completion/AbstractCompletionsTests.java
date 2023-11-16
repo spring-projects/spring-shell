@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,73 +29,224 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractCompletionsTests {
 
+	private final TestCommands commands = new TestCommands();
+
+	private final CommandRegistration r1 = CommandRegistration.builder()
+		.command("test1")
+		.withTarget()
+			.method(commands, "test1")
+			.and()
+		.withOption()
+			.longNames("param1")
+			.and()
+		.build();
+
+	private final CommandRegistration r2 = CommandRegistration.builder()
+		.command("test2")
+		.withTarget()
+			.method(commands, "test2")
+			.and()
+		.build();
+
+	private final CommandRegistration r3 = CommandRegistration.builder()
+		.command("test3")
+		.withTarget()
+			.method(commands, "test3")
+			.and()
+		.build();
+
+	private final CommandRegistration r3_4 = CommandRegistration.builder()
+		.command("test3", "test4")
+		.withTarget()
+			.method(commands, "test4")
+			.and()
+		.withOption()
+			.longNames("param4")
+			.and()
+		.build();
+
+	private final CommandRegistration r3_5 = CommandRegistration.builder()
+		.command("test3", "test5")
+		.withTarget()
+			.method(commands, "test4")
+			.and()
+		.withOption()
+			.longNames("param4")
+			.and()
+		.build();
+
+	private final CommandRegistration r3_4_5 = CommandRegistration.builder()
+		.command("test3", "test4", "test5")
+		.withTarget()
+			.method(commands, "test4")
+			.and()
+		.withOption()
+			.longNames("param4")
+			.and()
+		.build();
+
+	private final CommandRegistration r3_4_6 = CommandRegistration.builder()
+		.command("test3", "test4", "test6")
+		.withTarget()
+			.method(commands, "test4")
+			.and()
+		.withOption()
+			.longNames("param4")
+			.and()
+		.build();
+
+	private final CommandRegistration r3_5_5 = CommandRegistration.builder()
+		.command("test3", "test5", "test5")
+		.withTarget()
+			.method(commands, "test4")
+			.and()
+		.withOption()
+			.longNames("param4")
+			.and()
+		.build();
+
+	private final CommandRegistration r3_5_6 = CommandRegistration.builder()
+		.command("test3", "test5", "test6")
+		.withTarget()
+			.method(commands, "test4")
+			.and()
+		.withOption()
+			.longNames("param4")
+			.and()
+		.build();
+
+	@Test
+	public void deepL3Commands() {
+		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
+		CommandCatalog commandCatalog = CommandCatalog.of();
+
+		commandCatalog.register(r3_4_5);
+		commandCatalog.register(r3_4_6);
+		commandCatalog.register(r3_5_5);
+		commandCatalog.register(r3_5_6);
+		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
+		CommandModel commandModel = completions.testCommandModel();
+
+		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
+			c3 -> {
+				assertThat(c3.getMainCommand()).isEqualTo("test3");
+				assertThat(c3.getOptions()).hasSize(0);
+				assertThat(c3.getSubCommands()).hasSize(2);
+				assertThat(c3.getCommands()).hasSize(2);
+				assertThat(c3.getCommands()).satisfiesExactlyInAnyOrder(
+					c34 -> {
+						assertThat(c34.getMainCommand()).isEqualTo("test4");
+						assertThat(c34.getCommands()).satisfiesExactlyInAnyOrder(
+							c345 -> {
+								assertThat(c345.getMainCommand()).isEqualTo("test5");
+							},
+							c346 -> {
+								assertThat(c346.getMainCommand()).isEqualTo("test6");
+							}
+						);
+					},
+					c35 -> {
+						assertThat(c35.getMainCommand()).isEqualTo("test5");
+						assertThat(c35.getCommands()).satisfiesExactlyInAnyOrder(
+							c355 -> {
+								assertThat(c355.getMainCommand()).isEqualTo("test5");
+							},
+							c356 -> {
+								assertThat(c356.getMainCommand()).isEqualTo("test6");
+							}
+						);
+					}
+				);
+			}
+		);
+	}
+
+	@Test
+	public void deepL2Commands() {
+		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
+		CommandCatalog commandCatalog = CommandCatalog.of();
+
+		commandCatalog.register(r3_4);
+		commandCatalog.register(r3_5);
+		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
+		CommandModel commandModel = completions.testCommandModel();
+
+		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
+			c3 -> {
+				assertThat(c3.getMainCommand()).isEqualTo("test3");
+				assertThat(c3.getOptions()).hasSize(0);
+				assertThat(c3.getSubCommands()).hasSize(2);
+				assertThat(c3.getCommands()).hasSize(2);
+				assertThat(c3.getCommands()).satisfiesExactlyInAnyOrder(
+					c34 -> {
+						assertThat(c34.getMainCommand()).isEqualTo("test4");
+						assertThat(c34.getOptions()).hasSize(1);
+						assertThat(c34.getOptions()).satisfiesExactly(
+							o -> {
+								assertThat(o.option()).isEqualTo("--param4");
+							}
+						);
+					},
+					c35 -> {
+						assertThat(c35.getMainCommand()).isEqualTo("test5");
+						assertThat(c35.getOptions()).hasSize(1);
+						assertThat(c35.getOptions()).satisfiesExactly(
+							o -> {
+								assertThat(o.option()).isEqualTo("--param4");
+							}
+						);
+					}
+				);
+			}
+		);
+	}
+
 	@Test
 	public void testBasicModelGeneration() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 		CommandCatalog commandCatalog = CommandCatalog.of();
 
-		TestCommands commands = new TestCommands();
-
-		CommandRegistration registration1 = CommandRegistration.builder()
-			.command("test1")
-			.withTarget()
-				.method(commands, "test1")
-				.and()
-			.withOption()
-				.longNames("param1")
-				.and()
-			.build();
-
-		CommandRegistration registration2 = CommandRegistration.builder()
-			.command("test2")
-			.withTarget()
-				.method(commands, "test2")
-				.and()
-			.build();
-
-		CommandRegistration registration3 = CommandRegistration.builder()
-			.command("test3")
-			.withTarget()
-				.method(commands, "test3")
-				.and()
-			.build();
-
-		CommandRegistration registration4 = CommandRegistration.builder()
-			.command("test3", "test4")
-			.withTarget()
-				.method(commands, "test4")
-				.and()
-			.withOption()
-				.longNames("param4")
-				.and()
-			.build();
-
-		commandCatalog.register(registration1);
-		commandCatalog.register(registration2);
-		commandCatalog.register(registration3);
-		commandCatalog.register(registration4);
+		commandCatalog.register(r1);
+		commandCatalog.register(r2);
+		commandCatalog.register(r3);
+		commandCatalog.register(r3_4);
 
 		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
 		CommandModel commandModel = completions.testCommandModel();
-		assertThat(commandModel.getCommands()).hasSize(3);
-		assertThat(commandModel.getCommands().stream().map(c -> c.getMainCommand())).containsExactlyInAnyOrder("test1", "test2",
-				"test3");
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test1")).findFirst().get()
-				.getOptions()).hasSize(1);
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test1")).findFirst().get()
-				.getOptions().get(0).option()).isEqualTo("--param1");
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test2")).findFirst().get()
-				.getOptions()).hasSize(0);
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test3")).findFirst().get()
-				.getOptions()).hasSize(0);
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test3")).findFirst().get()
-				.getCommands()).hasSize(1);
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test3")).findFirst().get()
-				.getCommands().get(0).getMainCommand()).isEqualTo("test4");
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test3")).findFirst().get()
-				.getCommands().get(0).getOptions()).hasSize(1);
-		assertThat(commandModel.getCommands().stream().filter(c -> c.getMainCommand().equals("test3")).findFirst().get()
-				.getCommands().get(0).getOptions().get(0).option()).isEqualTo("--param4");
+		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
+			c1 -> {
+				assertThat(c1.getMainCommand()).isEqualTo("test1");
+				assertThat(c1.getSubCommands()).hasSize(0);
+				assertThat(c1.getOptions()).hasSize(1);
+				assertThat(c1.getOptions()).satisfiesExactly(
+					o -> {
+						assertThat(o.option()).isEqualTo("--param1");
+					}
+				);
+			},
+			c2 -> {
+				assertThat(c2.getMainCommand()).isEqualTo("test2");
+				assertThat(c2.getSubCommands()).hasSize(0);
+				assertThat(c2.getOptions()).hasSize(0);
+			},
+			c3 -> {
+				assertThat(c3.getMainCommand()).isEqualTo("test3");
+				assertThat(c3.getOptions()).hasSize(0);
+				assertThat(c3.getSubCommands()).hasSize(1);
+				assertThat(c3.getCommands()).hasSize(1);
+				assertThat(c3.getCommands()).satisfiesExactly(
+					c34 -> {
+						assertThat(c34.getMainCommand()).isEqualTo("test4");
+						assertThat(c34.getOptions()).hasSize(1);
+						assertThat(c34.getOptions()).satisfiesExactly(
+							o -> {
+								assertThat(o.option()).isEqualTo("--param4");
+							}
+						);
+					}
+				);
+			}
+		);
 	}
 
 	@Test
