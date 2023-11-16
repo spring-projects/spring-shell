@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,8 +88,9 @@ public abstract class AbstractCompletions {
 					else {
 						commandKey = splitKeys[i];
 					}
+					String desc = i + 1 < splitKeys.length ? null : registration.getDescription();
 					DefaultCommandModelCommand command = commands.computeIfAbsent(commandKey,
-							(fullCommand) -> new DefaultCommandModelCommand(fullCommand, main));
+							(fullCommand) -> new DefaultCommandModelCommand(fullCommand, main, desc));
 
 					// TODO long vs short
 					List<CommandModelOption> options = registration.getOptions().stream()
@@ -147,8 +148,13 @@ public abstract class AbstractCompletions {
 	interface CommandModelCommand  {
 
 		/**
-		 * Gets sub-commands known to this command.
+		 * Gets a description of a command.
+		 * @return command description
+		 */
+		String getDescription();
 
+		/**
+		 * Gets sub-commands known to this command.
 		 * @return known sub-commands
 		 */
 		List<CommandModelCommand> getCommands();
@@ -240,12 +246,19 @@ public abstract class AbstractCompletions {
 
 		private String fullCommand;
 		private String mainCommand;
+		private String description;
 		private List<CommandModelCommand> commands = new ArrayList<>();
 		private List<CommandModelOption> options = new ArrayList<>();
 
-		DefaultCommandModelCommand(String fullCommand, String mainCommand) {
+		DefaultCommandModelCommand(String fullCommand, String mainCommand, String description) {
 			this.fullCommand = fullCommand;
 			this.mainCommand = mainCommand;
+			this.description = description;
+		}
+
+		@Override
+		public String getDescription() {
+			return description;
 		}
 
 		@Override
@@ -293,6 +306,9 @@ public abstract class AbstractCompletions {
 		}
 
 		void addCommand(DefaultCommandModelCommand command) {
+			if (commands.contains(command)) {
+				return;
+			}
 			commands.add(command);
 		}
 
