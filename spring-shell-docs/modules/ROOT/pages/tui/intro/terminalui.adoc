@@ -41,3 +41,16 @@ events and request _interrupt_.
 ----
 include::{snippets}/TerminalUiSnippets.java[tag=exitingfromloop]
 ----
+
+== Modal View
+
+`TerminalUI` supports having one active modal view. Modal view is placed
+on top of all other views and takes all input events.
+
+[source, java, indent=0]
+----
+include::{snippets}/TerminalUiSnippets.java[tag=uimodal]
+----
+
+NOTE: As views should not directly know anything about `TerminalUi` and
+interface `ViewService` exposes modal related functions.

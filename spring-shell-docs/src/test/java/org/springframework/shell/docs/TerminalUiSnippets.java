@@ -22,6 +22,7 @@ import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.control.BoxView;
+import org.springframework.shell.component.view.control.DialogView;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.geom.HorizontalAlign;
@@ -109,6 +110,21 @@ class TerminalUiSnippets {
 			ui.run();
 		}
 		// end::uirun[]
+	}
+
+	class SampleUiModal {
+
+		// tag::uimodal[]
+		TerminalUI ui;
+
+		void sample() {
+			DialogView dialog = new DialogView();
+			// set modal
+			ui.setModal(dialog);
+			// clear modal
+			ui.setModal(null);
+		}
+		// end::uimodal[]
 	}
 
 }
