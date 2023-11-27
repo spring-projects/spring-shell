@@ -313,6 +313,19 @@ abstract class AbstractParsingTests {
 			.and()
 		.build();
 
+	static final CommandRegistration ROOT8_ONE_ARG_ARITYEONE_STRING = CommandRegistration.builder()
+		.command("root8")
+		.withOption()
+			.longNames("arg1")
+			.type(String.class)
+			.arity(OptionArity.EXACTLY_ONE)
+			.position(0)
+			.and()
+		.withTarget()
+			.consumer(ctx -> {})
+			.and()
+		.build();
+
 	Map<String, CommandRegistration> registrations = new HashMap<>();
 
 	@BeforeEach

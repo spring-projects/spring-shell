@@ -58,6 +58,13 @@ public class ArityCommands {
 			return "Hello " + stringOfFloats(arg1);
 		}
 
+		@ShellMethod(key = LEGACY_ANNO + "string-arityeone-required", group = GROUP)
+		public String testStringArityeoneRequiredLegacyAnnotation(
+			@ShellOption(value = "--arg1", arity = 1) String arg1
+		) {
+			return "Hello " + arg1;
+		}
+
 	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
@@ -86,6 +93,15 @@ public class ArityCommands {
 		) {
 				return "Hello " + stringOfFloats(arg1);
 		}
+
+		@Command(command = "string-arityeone-required")
+		public String testStringArityeoneRequiredAnnotation(
+				@Option(longNames = {"arg1"}, arity = OptionArity.EXACTLY_ONE, required = true)
+				String arg1
+		) {
+				return "Hello " + arg1;
+		}
+
 	}
 
 	@Component
@@ -146,6 +162,26 @@ public class ArityCommands {
 					.function(ctx -> {
 						float[] arg1 = ctx.getOptionValue("arg1");
 						return "Hello " + stringOfFloats(arg1);
+					})
+					.and()
+				.build();
+		}
+
+		@Bean
+		public CommandRegistration testStringArityeoneRequiredRegistration() {
+			return getBuilder()
+				.command(REG, "string-arityeone-required")
+				.group(GROUP)
+				.withOption()
+					.longNames("arg1")
+					.type(String.class)
+					.required()
+					.arity(OptionArity.EXACTLY_ONE)
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						String arg1 = ctx.getOptionValue("arg1");
+						return "Hello " + arg1;
 					})
 					.and()
 				.build();

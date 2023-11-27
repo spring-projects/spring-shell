@@ -351,7 +351,7 @@ public interface Parser {
 						if (currentOption.getArityMin() > -1 && toUse.size() < currentOption.getArityMin()) {
 							String arg = currentOption.getLongNames()[0];
 							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
-									toUse.size()));
+									currentOption.getArityMin()));
 						}
 						else if (currentOption.getArityMax() > -1 && toUse.size() > currentOption.getArityMax()) {
 							String arg = currentOption.getLongNames()[0];

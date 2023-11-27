@@ -15,17 +15,26 @@
  */
 package org.springframework.shell.command.parser;
 
-public class ParserAssertions {
+import org.assertj.core.api.AbstractAssert;
 
-	public static TokenAssert assertThat(Token actual) {
-		return new TokenAssert(actual);
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class MessageResultAssert extends AbstractAssert<MessageResultAssert, MessageResult> {
+
+	public MessageResultAssert(MessageResult actual) {
+		super(actual, MessageResultAssert.class);
 	}
 
-	public static ParserMessageAssert assertThat(ParserMessage message) {
-		return new ParserMessageAssert(message);
+	public MessageResultAssert hasPosition(int position) {
+		isNotNull();
+		assertThat(actual.position()).isEqualTo(position);
+		return this;
 	}
 
-	public static MessageResultAssert assertThat(MessageResult result) {
-		return new MessageResultAssert(result);
+	public MessageResultAssert hasInserts(Object... inserts) {
+		isNotNull();
+		assertThat(actual.inserts()).containsExactly(inserts);
+		return this;
 	}
+
 }
