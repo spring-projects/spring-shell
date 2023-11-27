@@ -635,5 +635,18 @@ class ParserTests extends AbstractParsingTests {
 				}
 			);
 		}
+
+		@Test
+		void notEnoughOptionArgumentsShouldHaveCorrectCount() {
+			register(ROOT8_ONE_ARG_ARITYEONE_STRING);
+			ParseResult result = parse("root8", "--arg1");
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
+				message -> {
+					ParserAssertions.assertThat(message.parserMessage()).hasCode(2003).hasType(ParserMessage.Type.ERROR);
+					ParserAssertions.assertThat(message).hasPosition(0).hasInserts("arg1", 1);
+				}
+			);
+		}
+
 	}
 }
