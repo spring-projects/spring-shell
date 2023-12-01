@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.component.flow;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,10 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ComponentFlowTests extends AbstractShellTests {
 
@@ -51,6 +50,10 @@ public class ComponentFlowTests extends AbstractShellTests {
 					.and()
 				.withStringInput("field2")
 					.name("Field2")
+					.and()
+				.withStringInput("field3")
+					.name("Field3")
+					.required()
 					.and()
 				.withPathInput("path1")
 					.name("Path1")
@@ -80,6 +83,9 @@ public class ComponentFlowTests extends AbstractShellTests {
 		// field2
 		testBuffer = new TestBuffer().append("Field2Value").cr();
 		write(testBuffer.getBytes());
+		// field3
+		testBuffer = new TestBuffer().cr().append("Field3Value").cr();
+		write(testBuffer.getBytes());
 		// path1
 		testBuffer = new TestBuffer().append("fakedir").cr();
 		write(testBuffer.getBytes());
@@ -95,10 +101,12 @@ public class ComponentFlowTests extends AbstractShellTests {
 		assertThat(inputWizardResult).isNotNull();
 		String field1 = inputWizardResult.getContext().get("field1");
 		String field2 = inputWizardResult.getContext().get("field2");
+		String field3 = inputWizardResult.getContext().get("field3");
 		Path path1 = inputWizardResult.getContext().get("path1");
 		String single1 = inputWizardResult.getContext().get("single1");
 		List<String> multi1 = inputWizardResult.getContext().get("multi1");
 		assertThat(field1).isEqualTo("defaultField1Value");
+		assertThat(field3).isEqualTo("Field3Value");
 		assertThat(field2).isEqualTo("Field2Value");
 		assertThat(path1.toString()).contains("fakedir");
 		assertThat(single1).isEqualTo("value1");

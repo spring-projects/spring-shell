@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.component;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,12 +30,9 @@ import org.jline.terminal.impl.DumbTerminal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringInputTests extends AbstractShellTests {
 
@@ -161,6 +160,39 @@ public class StringInputTests extends AbstractShellTests {
 
 		latch1.await(2, TimeUnit.SECONDS);
 		StringInputContext run1Context = result1.get();
+
+		assertThat(run1Context).isNotNull();
+		assertThat(run1Context.getResultValue()).isEqualTo("test");
+	}
+
+	@Test
+	public void testResultMandatoryInput() throws InterruptedException {
+		ComponentContext<?> empty = ComponentContext.empty();
+		StringInput component1 = new StringInput(getTerminal());
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+		component1.setRequired(true);
+
+		service.execute(() -> {
+			StringInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+			latch1.countDown();
+		});
+
+		TestBuffer testBuffer = new TestBuffer().cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+
+		StringInputContext run1Context = result1.get();
+		assertThat(consoleOut()).contains("This field is mandatory");
+		assertThat(run1Context).isNull();
+
+		testBuffer.append("test").cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+		run1Context = result1.get();
 
 		assertThat(run1Context).isNotNull();
 		assertThat(run1Context.getResultValue()).isEqualTo("test");

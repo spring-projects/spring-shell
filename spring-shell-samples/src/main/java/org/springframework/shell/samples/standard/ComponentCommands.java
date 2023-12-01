@@ -39,16 +39,18 @@ import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.util.StringUtils;
 
 @ShellComponent
 public class ComponentCommands extends AbstractShellComponent {
 
 	@ShellMethod(key = "component string", value = "String input", group = "Components")
-	public String stringInput(boolean mask) {
-		StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
+	public String stringInput(boolean mask, boolean required, @ShellOption(defaultValue = ShellOption.NULL) String defaultValue) {
+		StringInput component = new StringInput(getTerminal(), "Enter value", defaultValue);
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
+		component.setRequired(required);
 		if (mask) {
 			component.setMaskCharacter('*');
 		}

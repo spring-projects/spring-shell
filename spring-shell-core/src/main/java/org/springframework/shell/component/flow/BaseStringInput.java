@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.jline.utils.AttributedString;
-
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.flow.ComponentFlow.BaseBuilder;
 import org.springframework.shell.component.flow.ComponentFlow.Builder;
@@ -38,6 +37,7 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 	private ResultMode resultMode;
 	private String defaultValue;
 	private Character maskCharacter;
+	private boolean required = false;
 	private Function<StringInputContext, List<AttributedString>> renderer;
 	private List<Consumer<StringInputContext>> preHandlers = new ArrayList<>();
 	private List<Consumer<StringInputContext>> postHandlers = new ArrayList<>();
@@ -76,6 +76,12 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 	@Override
 	public StringInputSpec maskCharacter(Character maskCharacter) {
 		this.maskCharacter = maskCharacter;
+		return this;
+	}
+
+	@Override
+	public StringInputSpec required() {
+		this.required = true;
 		return this;
 	}
 
@@ -144,6 +150,10 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 
 	public Character getMaskCharacter() {
 		return maskCharacter;
+	}
+
+	public boolean isRequired() {
+		return required;
 	}
 
 	public Function<StringInputContext, List<AttributedString>> getRenderer() {
