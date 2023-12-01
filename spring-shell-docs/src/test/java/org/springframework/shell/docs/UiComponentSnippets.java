@@ -24,16 +24,17 @@ import java.util.stream.Collectors;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
-
 import org.springframework.shell.component.ConfirmationInput;
-import org.springframework.shell.component.MultiItemSelector;
-import org.springframework.shell.component.PathInput;
-import org.springframework.shell.component.SingleItemSelector;
-import org.springframework.shell.component.StringInput;
 import org.springframework.shell.component.ConfirmationInput.ConfirmationInputContext;
+import org.springframework.shell.component.MultiItemSelector;
 import org.springframework.shell.component.MultiItemSelector.MultiItemSelectorContext;
+import org.springframework.shell.component.NumberInput;
+import org.springframework.shell.component.NumberInput.NumberInputContext;
+import org.springframework.shell.component.PathInput;
 import org.springframework.shell.component.PathInput.PathInputContext;
+import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
+import org.springframework.shell.component.StringInput;
 import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
@@ -209,6 +210,23 @@ public class UiComponentSnippets {
 				return "Got value " + result;
 			}
 		}
+	}
+
+	class Dump8 {
+		// tag::snippet9[]
+		@ShellComponent
+		public class ComponentCommands extends AbstractShellComponent {
+
+			@ShellMethod(key = "component number", value = "Number input", group = "Components")
+			public String numberInput() {
+				NumberInput component = new NumberInput(getTerminal(), "Enter value", 99.9, Double.class);
+				component.setResourceLoader(getResourceLoader());
+				component.setTemplateExecutor(getTemplateExecutor());
+				NumberInputContext context = component.run(NumberInputContext.empty());
+				return "Got value " + context.getResultValue();
+			}
+		}
+		// end::snippet9[]
 	}
 
 }

@@ -25,6 +25,8 @@ include::using-shell-components-ui-render.adoc[]
 
 include::using-shell-components-ui-stringinput.adoc[]
 
+include::using-shell-components-ui-numberinput.adoc[]
+
 include::using-shell-components-ui-pathinput.adoc[]
 
 include::using-shell-components-ui-confirmation.adoc[]

@@ -21,7 +21,7 @@ image::images/component-flow-showcase-1.svg[text input]
 
 Normal execution order of a components is same as defined with a builder. It's
 possible to conditionally choose where to jump in a flow by using a `next`
-function and returning target _component id_. If this returned id is aither _null_
+function and returning target _component id_. If this returned id is either _null_
 or doesn't exist flow is essentially stopped right there.
 
 ====
