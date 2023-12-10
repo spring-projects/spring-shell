@@ -15,3 +15,7 @@ include::{snippets}/KeyHandlingSnippets.java[tag=sample]
 
 `KeyEvent` is a record containing info about a binding coming out
 from a terminal.
+
+Some views allow you to register hot keys which are processed before
+normal key handling. More about this can be found from
+xref:appendices/tui/viewdev.adoc#register-bindings[Register Bindings].

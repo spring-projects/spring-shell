@@ -14,6 +14,15 @@ Inherits xref:tui/views/box.adoc[].
 └─────────────────────────────┘
 ----
 
+_MenuBarView_ is constructed with instances of _MenuBarItem_. _MenuBarItem_ itself
+takes instances of _MenuItem_. _MenuItem_ can define its style and action.
+_MenuBarItem_ can also define a hot key which is used to active particular menu.
+
+[source, java, indent=0]
+----
+include::{snippets}/MenuBarViewSnippets.java[tag=snippet1]
+----
+
 == Default Bindings
 Default _key bindigs_ are:
 
