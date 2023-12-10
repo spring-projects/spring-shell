@@ -101,6 +101,14 @@
             "request": "launch",
             "mainClass": "org.springframework.shell.samples.catalog.SpringShellApplication",
             "projectName": "spring-shell-sample-catalog"
+        },
+        {
+            "type": "java",
+            "name": "catalog ext",
+            "request": "launch",
+            "console": "externalTerminal",
+            "mainClass": "org.springframework.shell.samples.catalog.SpringShellApplication",
+            "projectName": "spring-shell-sample-catalog"
         }
     ]
 }
