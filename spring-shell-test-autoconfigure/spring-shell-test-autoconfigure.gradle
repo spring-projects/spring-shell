@@ -18,4 +18,5 @@ dependencies {
 	optional 'org.assertj:assertj-core'
 	optional 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation 'org.awaitility:awaitility'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
