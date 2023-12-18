@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,8 @@ public class FlowComponentSnippets {
 		private ComponentFlow.Builder componentFlowBuilder;
 
 		public void runFlow() {
-			Map<String, String> single1SelectItems = new HashMap<>();
-			single1SelectItems.put("key1", "value1");
-			single1SelectItems.put("key2", "value2");
+			List<SelectItem> single1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
+					SelectItem.of("key2", "value2"));
 			List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
 					SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
 			ComponentFlow flow = componentFlowBuilder.clone().reset()

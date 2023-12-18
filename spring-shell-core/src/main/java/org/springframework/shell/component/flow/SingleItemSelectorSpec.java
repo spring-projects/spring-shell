@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 	 * @param name the name
 	 * @param item the item
 	 * @return a builder
+	 * @see #selectItems(List)
 	 */
 	SingleItemSelectorSpec selectItem(String name, String item);
 
@@ -73,8 +74,17 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 	 *
 	 * @param selectItems the select items
 	 * @return a builder
+	 * @see #selectItems(List)
 	 */
 	SingleItemSelectorSpec selectItems(Map<String, String> selectItems);
+
+	/**
+	 * Adds a list of select items.
+	 *
+	 * @param selectItems the select items
+	 * @return a builder
+	 */
+	SingleItemSelectorSpec selectItems(List<SelectItem> selectItems);
 
 	/**
 	 * Automatically selects and exposes a given item.
