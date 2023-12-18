@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.shell.component.flow.ComponentFlow.Builder;
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -338,5 +340,35 @@ public class ComponentFlowTests extends AbstractShellTests {
 		assertThat(inputWizardResult).isNotNull();
 		String single1 = inputWizardResult.getContext().get("single1");
 		assertThat(single1).isEqualTo("value2");
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testBuilderSingleTypes() {
+		List<SelectItem> selectItems1 = Arrays.asList(SelectItem.of("key1", "value1"), SelectItem.of("key2", "value2"));
+		Map<String, String> selectItems2 = new HashMap<>();
+		selectItems2.put("key2", "value2");
+		selectItems2.put("key3", "value3");
+
+		Builder builder1 = ComponentFlow.builder()
+			.withSingleItemSelector("field1")
+				.selectItems(selectItems1)
+				.and();
+		Builder builder2 = ComponentFlow.builder()
+			.withSingleItemSelector("field2")
+				.selectItems(selectItems2)
+				.and();
+
+		List<BaseSingleItemSelector> field1 = (List<BaseSingleItemSelector>) ReflectionTestUtils.getField(builder1,
+				"singleItemSelectors");
+		List<BaseSingleItemSelector> field2 = (List<BaseSingleItemSelector>) ReflectionTestUtils.getField(builder2,
+				"singleItemSelectors");
+		assertThat(field1).hasSize(1);
+		assertThat(field2).hasSize(1);
+
+		List<SelectItem> selectItems11 = (List<SelectItem>) ReflectionTestUtils.getField(field1.get(0), "selectItems");
+		List<SelectItem> selectItems21 = (List<SelectItem>) ReflectionTestUtils.getField(field2.get(0), "selectItems");
+		assertThat(selectItems11).hasSize(2);
+		assertThat(selectItems21).hasSize(2);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@ package org.springframework.shell.component.flow;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.jline.utils.AttributedString;
 
@@ -40,7 +40,7 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	private String name;
 	private String resultValue;
 	private ResultMode resultMode;
-	private Map<String, String> selectItems = new HashMap<>();
+	private List<SelectItem> selectItems = new ArrayList<>();
 	private String defaultSelect;
 	private Comparator<SelectorItem<String>> comparator;
 	private Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
@@ -75,13 +75,22 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 
 	@Override
 	public SingleItemSelectorSpec selectItem(String name, String item) {
-		this.selectItems.put(name, item);
+		selectItems.add(SelectItem.of(name, item));
 		return this;
 	}
 
 	@Override
 	public SingleItemSelectorSpec selectItems(Map<String, String> selectItems) {
-		this.selectItems.putAll(selectItems);
+		List<SelectItem> items = selectItems.entrySet().stream()
+			.map(e -> SelectItem.of(e.getKey(), e.getValue()))
+			.collect(Collectors.toList());
+		selectItems(items);
+		return this;
+	}
+
+	@Override
+	public SingleItemSelectorSpec selectItems(List<SelectItem> selectItems) {
+		this.selectItems.addAll(selectItems);
 		return this;
 	}
 
@@ -163,7 +172,7 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 		return resultMode;
 	}
 
-	public Map<String, String> getSelectItems() {
+	public List<SelectItem> getSelectItems() {
 		return selectItems;
 	}
 
