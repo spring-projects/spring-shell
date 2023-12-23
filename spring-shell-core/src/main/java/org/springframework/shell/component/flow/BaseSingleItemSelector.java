@@ -17,6 +17,7 @@ package org.springframework.shell.component.flow;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -81,7 +82,11 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 
 	@Override
 	public SingleItemSelectorSpec selectItems(Map<String, String> selectItems) {
-		List<SelectItem> items = selectItems.entrySet().stream()
+		// TODO: we changed to keep items as SelectItem's, to try to keep old sorting
+		//       behaviour we go via HashMap gh-946. Later we should remove this step.
+		Map<String, String> selectItemsMap = new HashMap<>();
+		selectItemsMap.putAll(selectItems);
+		List<SelectItem> items = selectItemsMap.entrySet().stream()
 			.map(e -> SelectItem.of(e.getKey(), e.getValue()))
 			.collect(Collectors.toList());
 		selectItems(items);
