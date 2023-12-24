@@ -1080,7 +1080,7 @@ public interface CommandRegistration {
 		@Override
 		public ExitCodeSpec map(Class<? extends Throwable> e, int code) {
 			Function<Throwable, Integer> f = t -> {
-				if (ObjectUtils.nullSafeEquals(t.getClass(), e)) {
+				if (t != null && ObjectUtils.nullSafeEquals(t.getClass(), e)) {
 					return code;
 				}
 				return 0;

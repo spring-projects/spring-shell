@@ -59,7 +59,11 @@ public class ExitCodeAutoConfiguration {
 
 		@Override
 		public int getExitCode(Throwable exception) {
-			if (exception.getCause() instanceof CommandExecution.CommandParserExceptionsException) {
+			// for e vs. its cause, see gh-961
+			if (exception instanceof CommandExecution.CommandParserExceptionsException) {
+				return 2;
+			}
+			else if (exception.getCause() instanceof CommandExecution.CommandParserExceptionsException) {
 				return 2;
 			}
 			// only map parsing error so that other mappers can do their job
@@ -83,7 +87,11 @@ public class ExitCodeAutoConfiguration {
 		public int getExitCode(Throwable exception) {
 			int exitCode = 0;
 			for (Function<Throwable, Integer> function : functions) {
-				Integer code = function.apply(exception.getCause());
+				Throwable cause = exception.getCause();
+				if (cause == null) {
+					cause = exception;
+				}
+				Integer code = function.apply(cause);
 				if (code != null) {
 					if (code > 0 && code > exitCode || code < 0 && code < exitCode) {
 						exitCode = code;
