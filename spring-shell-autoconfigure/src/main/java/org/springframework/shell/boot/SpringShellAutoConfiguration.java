@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
 import org.springframework.shell.Shell;
@@ -48,7 +47,7 @@ public class SpringShellAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public ShellConversionServiceSupplier shellConversionServiceSupplier(ApplicationContext applicationContext) {
-		FormattingConversionService service = new FormattingConversionService();
+		ApplicationConversionService service = new ApplicationConversionService();
 		DefaultConversionService.addDefaultConverters(service);
 		DefaultConversionService.addCollectionConverters(service);
 		ApplicationConversionService.addBeans(service, applicationContext);
