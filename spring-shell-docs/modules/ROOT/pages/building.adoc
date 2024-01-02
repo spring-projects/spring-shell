@@ -64,7 +64,7 @@ profile which can be used to do a compilation. You need to configure metadata re
 NOTE: If you rely on `spring-boot-starter-parent` it manages `native-maven-plugin`
 version which is kept up to date.
 
-When maven build is run with `./mvnw package -Pnative` you should get binary
+When maven build is run with `./mvnw native:compile -Pnative` you should get binary
 under `target` directory.
 
 If everything went well this binary can be run as is instead of executing
