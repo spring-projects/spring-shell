@@ -14,7 +14,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-autoconfigure'
 	implementation 'org.springframework.boot:spring-boot-test-autoconfigure'
 	implementation 'org.springframework.boot:spring-boot-starter-test'
-	optional 'org.jline:jline'
 	optional 'org.assertj:assertj-core'
 	optional 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation 'org.awaitility:awaitility'

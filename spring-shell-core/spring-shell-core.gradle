@@ -11,7 +11,10 @@ dependencies {
 	api('org.springframework.boot:spring-boot-starter-validation')
 	api('org.springframework:spring-messaging')
 	api('io.projectreactor:reactor-core')
-	api('org.jline:jline')
+	api('org.jline:jline-console')
+	api('org.jline:jline-reader')
+	api('org.jline:jline-style')
+	api('org.jline:jline-terminal')
 	api('org.antlr:ST4')
 	api('commons-io:commons-io')
 	compileOnly 'com.google.code.findbugs:jsr305'
