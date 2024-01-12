@@ -294,7 +294,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 		finally {
 			terminal.setAttributes(attr);
 			terminal.puts(Capability.keypad_local);
-			terminal.puts(Capability.cursor_visible);
+			terminal.puts(Capability.cursor_normal);
 			display.update(Collections.emptyList(), 0);
 		}
 	}
