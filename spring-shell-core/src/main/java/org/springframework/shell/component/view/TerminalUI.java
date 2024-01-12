@@ -283,7 +283,7 @@ public class TerminalUI implements ViewService {
 
 		int targetCursorPos = 0;
 		if (virtualDisplay.isShowCursor()) {
-			terminal.puts(Capability.cursor_visible);
+			terminal.puts(Capability.cursor_normal);
 			targetCursorPos = size.cursorPos(virtualDisplay.getCursorPosition().y(), virtualDisplay.getCursorPosition().x());
 			log.debug("Display targetCursorPos {}", targetCursorPos);
 		}
@@ -402,7 +402,7 @@ public class TerminalUI implements ViewService {
 			eventLoop.destroy();
 			terminal.setAttributes(attr);
 			log.debug("Setting cursor visible");
-			terminal.puts(Capability.cursor_visible);
+			terminal.puts(Capability.cursor_normal);
 			if (fullScreen) {
 				display.update(Collections.emptyList(), 0);
 			}
