@@ -1,5 +1,0 @@
-[appendix]
-[#appendix-debugging]
-== Debugging
-
-Please find more info about debugging from https://github.com/spring-projects/spring-shell/wiki/Debugging[project wiki].

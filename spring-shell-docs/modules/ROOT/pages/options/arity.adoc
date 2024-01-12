@@ -1,0 +1,102 @@
+[[using-shell-options-arity]]
+= Arity
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Arity defines how many parameters option parsing takes.
+
+NOTE: There are limitations in a `legacy annotation` compared to `annotation`
+and `programmatic` use of arity settings. These are mentioned in notes in
+below samples.
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zeroorone-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zeroorone-annotation]
+----
+
+Legacy Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zeroorone-legacyannotation]
+----
+======
+
+[[using-shell-options-arity-optionarity-table]]
+.OptionArity
+|===
+|Value |min/max
+
+|ZERO
+|0 / 0
+
+|ZERO_OR_ONE
+|0 / 1
+
+|EXACTLY_ONE
+|1 / 1
+
+|ZERO_OR_MORE
+| 0 / Integer MAX
+
+|ONE_OR_MORE
+|1 / Integer MAX
+|===
+
+
+NOTE: `legacy annotation` doesn't support defining minimum arity.
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zerooronewithminmax-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zerooronewithminmax-annotation]
+----
+
+Legacy Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-zerooronewithminmax-legacyannotation]
+----
+======
+
+In below example we have option _arg1_ and it's defined as type _String[]_. Arity
+defines that it needs at least 1 parameter and not more that 2. As seen in below
+spesific exceptions _TooManyArgumentsOptionException_ and
+_NotEnoughArgumentsOptionException_ are thrown to indicate arity mismatch.
+
+[source, bash]
+----
+shell:>e2e reg arity-errors --arg1
+Not enough arguments --arg1 requires at least 1.
+
+shell:>e2e reg arity-errors --arg1 one
+Hello [one]
+
+shell:>e2e reg arity-errors --arg1 one two
+Hello [one, two]
+
+shell:>e2e reg arity-errors --arg1 one two three
+Too many arguments --arg1 requires at most 2.
+----

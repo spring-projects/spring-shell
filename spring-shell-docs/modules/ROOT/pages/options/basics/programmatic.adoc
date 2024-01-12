@@ -1,0 +1,19 @@
+[[using-shell-options-basics-registration]]
+[[using-shell-options-basics-programmatic]]
+= Programmatic
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+Programmatic way with `CommandRegistration` is to use `withOption` to define
+an option.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-longarg]
+----
+
+`CommandRegistration` can be defined as a bean or manually registered
+with a `CommandCatalog`.
+
+NOTE: Check below sections for other option types, i.e. short format.

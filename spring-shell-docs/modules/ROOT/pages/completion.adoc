@@ -1,0 +1,60 @@
+[[completion]]
+= Completion
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Spring Shell can provide completion proposals for both interactive shell
+and a command-line. There are differences however as when shell is in
+interactive mode we have an active instance of a shell meaning it's
+easier to provide more programmatic ways to provide completion hints.
+When shell is purely run as a command-line tool a completion can only
+be accomplished with integration into OS level shell's like _bash_.
+
+[[interactive]]
+== Interactive
+
+Hints for completions are calculated with _function_ or _interface_ style
+methods which takes `CompletionContext` and returns a list of
+`CompletionProposal` instances. `CompletionContext` gives you various
+information about a current context like command registration and option.
+
+NOTE: Generic resolvers can be registered as a beans if those are useful
+for all commands and scenarious. For example existing completion
+implementation `RegistrationOptionsCompletionResolver` handles completions
+for a option names.
+
+[source, java, indent=0]
+----
+include::{snippets}/CompletionSnippets.java[tag=resolver-1]
+----
+
+Option values with builder based command registration can be
+defined per option.
+
+[source, java, indent=0]
+----
+include::{snippets}/CompletionSnippets.java[tag=builder-1]
+----
+
+Option values with annotation based command registration are handled
+via `ValueProvider` interface which can be defined with `@ShellOption`
+annotation.
+
+[source, java, indent=0]
+----
+include::{snippets}/CompletionSnippets.java[tag=provider-1]
+----
+
+Actual `ValueProvider` with annotation based command needs to be
+registered as a _Bean_.
+
+[source, java, indent=0]
+----
+include::{snippets}/CompletionSnippets.java[tag=anno-method]
+----
+
+[[command-line]]
+== Command-Line
+
+Command-line completion currently only support _bash_ and is documented
+in a built-in `completion` command xref:commands/builtin/completion.adoc[Completion].

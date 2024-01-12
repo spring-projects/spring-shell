@@ -1,0 +1,45 @@
+[[using-shell-components-ui-singleselect]]
+= Single Select
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+A single select component asks a user to choose one item from a list. It is similar to a simple
+dropbox implementation. The following listing shows an example:
+
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet6]
+----
+
+The following screencast shows typical output for a single select component:
+
+[asciinema,rows=8]
+----
+include::example$component-single-select-1.cast[]
+----
+
+The context object is `SingleItemSelectorContext`. The following table describes its context variables:
+
+[[singleitemselectorcontext-template-variables]]
+.SingleItemSelectorContext Template Variables
+|===
+|Key |Description
+
+|`value`
+|The returned value when the component exists.
+
+|`rows`
+|The visible items, where rows contains maps of name and selected items.
+
+|`model`
+|The parent context variables (see xref:/components/ui/render.adoc#selectorcomponentcontext-template-variables[SelectorComponentContext Template Variables]).
+|===
+
+You can pre-select an item by defining it to get exposed. This is
+useful if you know the default and lets the user merely press `Enter` to make a choice.
+The following listing sets a default:
+
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet8]
+----

@@ -1,0 +1,9 @@
+[[built-in-commands-completion]]
+= Completion
+:page-section-summary-toc: 1
+
+The `completion` command set lets you create script files that can be used
+with am OS shell implementations to provide completion. This is very useful when
+working with non-interactive mode.
+
+Currently, the only implementation is for bash, which works with `bash` sub-command.

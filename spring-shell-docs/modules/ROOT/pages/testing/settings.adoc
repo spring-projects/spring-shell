@@ -1,0 +1,24 @@
+[[using-shell-testing-settings]]
+= Settings
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Built in emulation uses terminal width 80 and height 24 on default.
+Changing dimensions is useful if output would span into multiple
+lines and you don't want to handle those cases in a tests.
+
+These can be changed using properties `spring.shell.test.terminal-width`
+or `spring.shell.test.terminal-height`.
+
+[source, java, indent=0]
+----
+include::{snippets}/TestingSnippets.java[tag=testing-shelltest-dimensions-props]
+----
+
+`ShellTest` annotation have fields `terminalWidth` and `terminalHeight`
+which can also be used to change dimensions.
+
+[source, java, indent=0]
+----
+include::{snippets}/TestingSnippets.java[tag=testing-shelltest-dimensions-field]
+----

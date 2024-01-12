@@ -1,0 +1,29 @@
+[[using-shell-components-ui-pathinput]]
+= Path Input
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+The path input component asks a user for a `Path` and gives additional information about a path itself.
+
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet4]
+----
+
+The following screencast shows typical output from a path input component:
+
+[asciinema,rows=6]
+----
+include::example$component-path-input-1.cast[]
+----
+
+The context object is `PathInputContext`. The following table describes its context variables:
+
+[[pathinputcontext-template-variables]]
+.PathInputContext Template Variables
+|===
+|Key |Description
+
+|`model`
+|The parent context variables (see xref:components/ui/render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
+|===

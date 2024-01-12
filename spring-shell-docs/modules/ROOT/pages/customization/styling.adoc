@@ -1,0 +1,59 @@
+[[theming]]
+= Theming
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Current terminal implementations are rich in features and can usually show
+something else that just plain text. For example a text can be styled to be
+_bold_ or have different colors. It's also common for terminals to be able
+to show various characters from an unicode table like emoji's which are usually
+used to make shell output more pretty.
+
+Spring Shell supports these via it's theming framework which contains two parts,
+firstly _styling_ can be used to change text type and secondly _figures_ how
+some characters are shown. These two are then combined together as a _theme_.
+
+More about _theming_ internals, see xref:appendices/techintro/theming.adoc[Theming].
+
+NOTE: Default theme is named `default` but can be change using property
+`spring.shell.theme.name`. Other built-in theme named `dump` uses
+no styling for colors and tries to not use any special figures.
+
+Modify existing style by overriding settings.
+
+[source, java, indent=0]
+----
+include::{snippets}/ThemingSnippets.java[tag=custom-style-class]
+----
+
+Modify existing figures by overriding settings.
+
+[source, java, indent=0]
+----
+include::{snippets}/ThemingSnippets.java[tag=custom-figure-class]
+----
+
+To create a new theme, create a `ThemeSettings` and provide your own _style_
+and _figure_ implementations.
+
+[source, java, indent=0]
+----
+include::{snippets}/ThemingSnippets.java[tag=custom-theme-class]
+----
+
+Register a new bean `Theme` where you can return your custom `ThemeSettings`
+and a _theme_ name.
+
+[source, java, indent=0]
+----
+include::{snippets}/ThemingSnippets.java[tag=custom-theme-config]
+----
+
+You can use `ThemeResolver` to resolve _styles_ if you want to create
+JLine-styled strings programmatically and _figures_ if you want to
+theme characters for being more pretty.
+
+[source, java, indent=0]
+----
+include::{snippets}/ThemingSnippets.java[tag=using-theme-resolver]
+----

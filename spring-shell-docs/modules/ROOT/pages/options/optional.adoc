@@ -1,0 +1,59 @@
+[[using-shell-options-optional]]
+= Optional Value
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+An option is either required or not and, generally speaking, how it behaves depends on
+a command target.
+
+Making option optional.
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-optional-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-optional-annotation]
+----
+
+Legacy Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-optional-legacyannotation]
+----
+======
+
+Making option mandatory.
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-mandatory-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-mandatory-annotation]
+----
+
+Legacy Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-mandatory-legacyannotation]
+----
+======

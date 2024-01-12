@@ -1,0 +1,82 @@
+[[dynamic-command-exitcode-annotation]]
+= @ExceptionResolver
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+`@ShellComponent` classes can have `@ExceptionResolver` methods to handle exceptions from component
+methods. These are meant for annotated methods.
+
+The exception may match against a top-level exception being propagated (e.g. a direct IOException
+being thrown) or against a nested cause within a wrapper exception (e.g. an IOException wrapped
+inside an IllegalStateException). This can match at arbitrary cause levels.
+
+For matching exception types, preferably declare the target exception as a method argument, as
+the preceding example(s) shows. When multiple exception methods match, a root exception match is
+generally preferred to a cause exception match. More specifically, the ExceptionDepthComparator
+is used to sort exceptions based on their depth from the thrown exception type.
+
+Alternatively, the annotation declaration may narrow the exception types to match, as the
+following example shows:
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-type-in-annotation]
+----
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-type-in-method]
+----
+
+`@ExceptionResolver` can also return `String` which is used as an output to console. You can
+use `@ExitCode` annotation to define return code.
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-exitcode-annotation]
+----
+
+`@ExceptionResolver` with `void` return type is automatically handled as handled exception.
+You can then also define `@ExitCode` and use `Terminal` if you need to write something
+into console.
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-void]
+----
+
+[[method-arguments]]
+== Method Arguments
+`@ExceptionResolver` methods support the following arguments:
+
+[Attributes]
+|===
+|Method argument |Description
+
+|Exception type
+|For access to the raised exception. This is any type of `Exception` or `Throwable`.
+
+|Terminal
+|For access to underlying `JLine` terminal to i.e. get its terminal writer.
+
+|===
+
+[[return-values]]
+== Return Values
+`@ExceptionResolver` methods support the following return values:
+
+[Attributes]
+|===
+|Return value |Description
+
+|String
+|Plain text to return to a shell. Exit code 1 is used in this case.
+
+|CommandHandlingResult
+|Plain `CommandHandlingResult` having message and exit code.
+
+|void
+|A method with a void return type is considered to have fully handled the exception. Usually
+you would define `Terminal` as a method argument and write response using _terminal writer_
+from it. As exception is fully handled, Exit code 0 is used in this case.
+|===

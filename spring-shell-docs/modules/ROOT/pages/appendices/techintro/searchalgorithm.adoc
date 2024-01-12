@@ -1,0 +1,65 @@
+[#appendix-tech-intro-searchalgorithm]
+= Search Algorithms
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+`SearchMatch` is an interface to match _text_ with a _pattern_. Match
+results are in a returned value `SearchMatchResult`. Match result
+contains info about match positions and overall score of a match.
+
+https://github.com/junegunn/fzf[fzf].
+
+[[implementations]]
+== Implementations
+
+*FuzzyMatchV2Search*
+
+Port of _fzf FuzzyMatchV2Search_ algorithm. Does a fast fuzzy search and is good
+quickly finding paths.
+
+*ExactMatchNaive*
+
+Port of _fzf ExactMatchNaive_ algorithm. Simple exact match works more accurately
+if you know what to search.
+
+[[searchmatch]]
+== SearchMatch
+
+Algorithms and default syntax are hidden inside package protected classes
+as we don't want to fully open these until we know API's are good to go
+for longer support. You need to construct `SearchMatch` via its
+build-in builder.
+
+[source, java, indent=0]
+----
+include::{snippets}/SearchAlgorithmsSnippets.java[tag=builder]
+----
+
+It's possible to configure _case sensitivity_, on what _direction_ search
+happens or if text should be _normilized_ before search happens. Normalization
+is handy when different languages have sligh variation for same type
+of characters.
+
+Search algorithm is selected based on a search syntax shown in
+below table.
+
+.Search syntax
+|===
+|Token |Match type |Description
+
+|`hell`
+|fuzzy-match
+|Items that match `hello`
+
+|`'stuff`
+|exact-match
+|Items that include `stuff`
+|===
+
+[[examples]]
+== Examples
+
+[source, java, indent=0]
+----
+include::{snippets}/SearchAlgorithmsSnippets.java[tag=simple]
+----

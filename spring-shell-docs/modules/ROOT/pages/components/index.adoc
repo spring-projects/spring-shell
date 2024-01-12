@@ -1,0 +1,10 @@
+[[using-shell-components]]
+= Components
+:page-section-summary-toc: 1
+
+Components are a set of features which are either build-in or something
+you can re-use or extend for your own needs. Components in question are
+either built-in _commands_ or UI side components providing higher level
+features within commands itself.
+
+

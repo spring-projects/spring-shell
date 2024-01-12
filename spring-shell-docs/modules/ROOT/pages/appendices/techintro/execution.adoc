@@ -1,0 +1,8 @@
+[[command-execution]]
+= Command Execution
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+When command parsing has done its job and command registration has been resolved, command execution
+does the hard work of running the code.

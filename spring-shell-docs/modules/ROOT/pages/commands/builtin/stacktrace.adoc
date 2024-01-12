@@ -1,0 +1,10 @@
+[[built-in-commands-stacktrace]]
+= Stacktrace
+:page-section-summary-toc: 1
+
+When an exception occurs inside command code, it is caught by the shell and a simple, one-line message is displayed
+so as not to overflow the user with too much information.
+There are cases, though, when understanding what exactly happened is important (especially if the exception has a nested cause).
+
+To this end, Spring Shell remembers the last exception that occurred, and the user can later use the `stacktrace`
+command to print all the details on the console.

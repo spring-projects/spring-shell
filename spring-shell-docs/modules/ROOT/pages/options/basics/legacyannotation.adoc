@@ -1,0 +1,28 @@
+[[using-shell-options-basics-legacyannotation]]
+= Legacy Annotation
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+Having a target method with argument is automatically registered with a matching
+argument name.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-without-annotation]
+----
+
+`@ShellOption` annotation can be used to define an option name if you
+don't want it to be same as argument name.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation]
+----
+
+If option name is defined without prefix, either `-` or `--`, it is discovered
+from _ShellMethod#prefix_.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-with-annotation-without-prefix]
+----

@@ -1,0 +1,9 @@
+[[using-shell-customization]]
+= Customization
+:page-section-summary-toc: 1
+
+This section describes how you can customize the shell.
+
+
+
+

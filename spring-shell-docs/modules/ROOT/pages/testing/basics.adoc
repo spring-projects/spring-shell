@@ -1,0 +1,22 @@
+[[using-shell-testing-basics]]
+= Basics
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Spring Shell provides a number of utilities and annotations to help when testing your application.
+Test support is provided by two modules: `spring-shell-test` contains core items, and
+`spring-shell-test-autoconfigure` supports auto-configuration for tests.
+
+To test _interactive_ commands.
+
+[source, java, indent=0]
+----
+include::{snippets}/TestingSnippets.java[tag=testing-shelltest-interactive]
+----
+
+To test _non-interactive_ commands.
+
+[source, java, indent=0]
+----
+include::{snippets}/TestingSnippets.java[tag=testing-shelltest-noninteractive]
+----

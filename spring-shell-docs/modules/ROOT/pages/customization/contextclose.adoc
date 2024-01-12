@@ -1,0 +1,25 @@
+[[using-shell-customization-contextclose]]
+= Context Close
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Command execution logic happens via Spring Boot's `ApplicationRunner` beans.
+Normally Spring `ApplicationContext` closes automatically after these runner
+beans has been processed unless there is something what keeps it alive like
+use of `@EnableScheduling` or generally speaking there are threads which
+don't die automatically.
+
+It is possible to add configuration property `spring.shell.context.close`
+which registers `ApplicationListener` for `ApplicationReadyEvent` and requests
+context close after shell has completed its execution logic.
+
+[source, yaml]
+----
+spring:
+  shell:
+    context:
+      close: true
+----
+
+NOTE: This setting is not enabled by default.

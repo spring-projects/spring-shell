@@ -1,0 +1,52 @@
+[[organizing-commands]]
+= Organizing Commands
+
+When your shell starts to provide a lot of functionality, you may end up
+with a lot of commands, which could be confusing for your users. By typing `help`,
+they would see a daunting list of commands, organized in alphabetical order,
+which may not always be the best way to show the available commands.
+
+To alleviate this possible confusion, Spring Shell provides the ability to group commands together,
+with reasonable defaults. Related commands would then end up in the same group (for example, `User Management Commands`)
+and be displayed together in the help screen and other places.
+
+By default, commands are grouped according to the class they are implemented in,
+turning the camelCase class name into separate words (so `URLRelatedCommands` becomes `URL Related Commands`).
+This is a sensible default, as related commands are often already in the class anyway,
+because they need to use the same collaborating objects.
+
+If, however, this behavior does not suit you, you can override the group for a
+command in the following ways, in order of priority:
+
+. Specify a `group()` in the `@ShellMethod` annotation.
+. Place a `@ShellCommandGroup` on the class in which the command is defined. This applies
+the group for all commands defined in that class (unless overridden, as explained earlier).
+. Place a `@ShellCommandGroup` on the package (through `package-info.java`)
+in which the command is defined. This applies to all the commands defined in the
+package (unless overridden at the method or class level, as explained earlier).
+
+The following listing shows an example:
+
+[source,java]
+----
+public class UserCommands {
+    @ShellMethod(value = "This command ends up in the 'User Commands' group")
+    public void foo() {}
+
+    @ShellMethod(value = "This command ends up in the 'Other Commands' group",
+    	group = "Other Commands")
+    public void bar() {}
+}
+
+...
+
+@ShellCommandGroup("Other Commands")
+public class SomeCommands {
+	@ShellMethod(value = "This one is in 'Other Commands'")
+	public void wizz() {}
+
+	@ShellMethod(value = "And this one is 'Yet Another Group'",
+		group = "Yet Another Group")
+	public void last() {}
+}
+----

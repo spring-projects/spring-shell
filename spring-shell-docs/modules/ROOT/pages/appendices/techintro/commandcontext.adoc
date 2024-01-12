@@ -1,0 +1,21 @@
+[[command-context]]
+= Command Context
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+The `CommandContext` interface gives access to a currently running
+context. You can use it to get access to options:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandContextSnippets.java[tag=snippet1]
+----
+
+If you need to print something into a shell, you can get a `Terminal`
+and use its writer to print something:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandContextSnippets.java[tag=snippet2]
+----

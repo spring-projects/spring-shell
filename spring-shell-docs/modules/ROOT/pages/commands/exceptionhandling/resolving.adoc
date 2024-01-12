@@ -1,0 +1,48 @@
+[[dynamic-command-exitcode-resolving]]
+= Exception Resolving
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Unhandled exceptions will bubble up into shell's `ResultHandlerService` and then eventually
+handled by some instance of `ResultHandler`. Chain of `ExceptionResolver` implementations
+can be used to resolve exceptions and gives you flexibility to return message to get written
+into console together with exit code which are wrapped within `CommandHandlingResult`.
+`CommandHandlingResult` may contain a _message_ and/or _exit code_.
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-resolver-class]
+----
+
+`CommandExceptionResolver` implementations can be defined globally as bean.
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-resolver-class-as-bean]
+----
+
+or defined per `CommandRegistration` if it's applicable only for a particular command itself.
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=example1]
+----
+
+NOTE: Resolvers defined with a command are handled before global resolvers.
+
+
+Use you own exception types which can also be an instance of boot's `ExitCodeGenerator` if
+you want to define exit code there.
+
+[source, java, indent=0]
+----
+include::{snippets}/ErrorHandlingSnippets.java[tag=my-exception-class]
+----
+
+Some build in `CommandExceptionResolver` beans are registered to handle common
+exceptions thrown from command parsing. These are registered with _order_
+presedence defined in `CommandExceptionResolver.DEFAULT_PRECEDENCE`.
+As these beans are used in a given order, `@Order` annotation or `Ordered`
+interface from can be used just like in any other spring app. This
+is generally useful if you need to control your own beans to get used
+either before or after a defaults.

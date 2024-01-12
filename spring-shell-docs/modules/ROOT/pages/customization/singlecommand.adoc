@@ -1,0 +1,23 @@
+[[using-shell-customization-singlecommand]]
+= Single Command
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+If your shell application is made for exactly a single purpose having only one
+command it may be beneficial to configure it for this. Property
+`spring.shell.noninteractive.primary-command` if defined will disable all other
+runners than `NonInteractiveShellRunner` and configures it to use
+defined _Primary Command_.
+
+[source, yaml]
+----
+spring:
+  shell:
+    noninteractive:
+      primary-command: mycommand
+----
+
+For example if you have a command `mycommand` with option `arg`
+it had to be executed with `<shellapp> mycommand --arg hi`, but with above
+setting it can be executed with `<shellapp> --arg hi`.

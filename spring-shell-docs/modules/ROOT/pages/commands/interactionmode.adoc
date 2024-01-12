@@ -1,0 +1,22 @@
+[[commands-interactionmode]]
+= Interaction Mode
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Command registration can define `InteractionMode` which is used to hide commands
+depending which mode shell is executing. More about that in xref:execution.adoc#using-shell-execution-interactionmode[Interaction Mode].
+
+You can define it with `CommandRegisration`.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationInteractionModeSnippets.java[tag=snippet1]
+----
+
+Or with `@ShellMethod`.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationInteractionModeSnippets.java[tag=snippet2]
+----

@@ -1,0 +1,59 @@
+[[using-shell-options-short]]
+= Short Format
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Short style _POSIX_ option is usually just a synonym to long format. As
+shown below option `--arg` is equal to `-a`.
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/ShortOptionSnippets.java[tag=option-type-string-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/ShortOptionSnippets.java[tag=option-type-string-annotation]
+----
+
+Legacy Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/ShortOptionSnippets.java[tag=option-type-string-legacyannotation]
+----
+======
+
+Short option with combined format is powerful if type is defined as a flag
+which means type is a _boolean_. That way you can define a presence of a flags
+as `-abc`, `-abc true` or `-abc false`.
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/ShortOptionSnippets.java[tag=option-type-multiple-booleans-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/ShortOptionSnippets.java[tag=option-type-multiple-booleans-annotation]
+----
+
+Legacy Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/ShortOptionSnippets.java[tag=option-type-multiple-booleans-legacyannotation]
+----
+======

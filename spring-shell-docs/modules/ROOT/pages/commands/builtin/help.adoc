@@ -1,0 +1,172 @@
+[[built-in-commands-help]]
+= Help
+
+Running a shell application often implies that the user is in a graphically limited
+environment. Also, while we are nearly always connected in the era of mobile phones,
+accessing a web browser or any other rich UI application (such as a PDF viewer) may not always
+be possible. This is why it is important that the shell commands are correctly self-documented, and this is where the `help`
+command comes in.
+
+Typing `help` + `ENTER` lists all the commands known to the shell (including xref:commands/availability.adoc[unavailable] commands)
+and a short description of what they do, similar to the following:
+
+[source, bash]
+----
+my-shell:>help
+AVAILABLE COMMANDS
+
+Built-In Commands
+       exit: Exit the shell.
+       help: Display help about available commands
+       stacktrace: Display the full stacktrace of the last error.
+       clear: Clear the shell screen.
+       quit: Exit the shell.
+       history: Display or save the history of previously run commands
+       completion bash: Generate bash completion script
+       version: Show version info
+       script: Read and execute commands from a file.
+----
+
+Typing `help <command>` shows more detailed information about a command, including the available parameters, their
+type, whether they are mandatory or not, and other details.
+
+The following listing shows the `help` command applied to itself:
+
+[source, bash]
+----
+my-shell:>help help
+NAME
+       help - Display help about available commands
+
+SYNOPSIS
+       help --command String
+
+OPTIONS
+       --command or -C String
+       The command to obtain help for.
+       [Optional]
+----
+
+Help is templated and can be customized if needed. Settings are under `spring.shell.command.help` where you can use
+`enabled` to disable command, `grouping-mode` taking `group` or `flat` if you want to hide groups by flattening
+a structure, `command-template` to define your template for output of a command help, `commands-template` to define
+output of a command list.
+
+If `spring.shell.command.help.grouping-mode=flat` is set, then help would show:
+
+[source, bash]
+----
+my-shell:>help help
+AVAILABLE COMMANDS
+
+exit: Exit the shell.
+help: Display help about available commands
+stacktrace: Display the full stacktrace of the last error.
+clear: Clear the shell screen.
+quit: Exit the shell.
+history: Display or save the history of previously run commands
+completion bash: Generate bash completion script
+version: Show version info
+script: Read and execute commands from a file.
+----
+
+Output from `help` and `help <commmand>` are both templated with a default implementation
+which can be changed.
+
+Option `spring.shell.command.help.commands-template` defaults to
+`classpath:template/help-commands-default.stg` and is passed `GroupsInfoModel`
+as a model.
+
+Option `spring.shell.command.help.command-template` defaults to
+`classpath:template/help-command-default.stg` and is passed `CommandInfoModel`
+as a model.
+
+[[groupsinfomodel-variables]]
+.GroupsInfoModel Variables
+|===
+|Key |Description
+
+|`showGroups`
+|`true` if showing groups is enabled. Otherwise, false.
+
+|`groups`
+|The commands variables (see xref:commands/builtin/help.adoc#groupcommandinfomodel-variables[GroupCommandInfoModel Variables]).
+
+|`commands`
+|The commands variables (see xref:commands/builtin/help.adoc#commandinfomodel-variables[CommandInfoModel Variables]).
+
+|`hasUnavailableCommands`
+|`true` if there is unavailable commands. Otherwise, false.
+|===
+
+[[groupcommandinfomodel-variables]]
+.GroupCommandInfoModel Variables
+|===
+|Key |Description
+
+|`group`
+|The name of a group, if set. Otherwise, empty.
+
+|`commands`
+|The commands, if set. Otherwise, empty. Type is a multi value, see xref:commands/builtin/help.adoc#commandinfomodel-variables[CommandInfoModel Variables].
+|===
+
+[[commandinfomodel-variables]]
+.CommandInfoModel Variables
+|===
+|Key |Description
+
+|`name`
+|The name of a command, if set. Otherwise, null. Type is string and contains full command.
+
+|`names`
+|The names of a command, if set. Otherwise, null. Type is multi value essentially `name` splitted.
+
+|`aliases`
+|The possible aliases, if set. Type is multi value with strings.
+
+|`description`
+|The description of a command, if set. Otherwise, null.
+
+|`parameters`
+|The parameters variables, if set. Otherwise empty. Type is a multi value, see xref:commands/builtin/help.adoc#commandparameterinfomodel-variables[CommandParameterInfoModel Variables].
+
+|`availability`
+|The availability variables (see xref:commands/builtin/help.adoc#commandavailabilityinfomodel-variables[CommandAvailabilityInfoModel Variables]).
+|===
+
+[[commandparameterinfomodel-variables]]
+.CommandParameterInfoModel Variables
+|===
+|Key |Description
+
+|`type`
+|The type of a parameter if set. Otherwise, null.
+
+|`arguments`
+|The arguments, if set. Otherwise, null. Type is multi value with strings.
+
+|`required`
+|`true` if required. Otherwise, false.
+
+|`description`
+|The description of a parameter, if set. Otherwise, null.
+
+|`defaultValue`
+|The default value of a parameter, if set. Otherwise, null.
+
+|`hasDefaultValue`
+|`true` if defaultValue exists. Otherwise, false.
+|===
+
+[[commandavailabilityinfomodel-variables]]
+.CommandAvailabilityInfoModel Variables
+|===
+|Key |Description
+
+|`available`
+|`true` if available. Otherwise, false.
+
+|`reason`
+|The reason if not available if set. Otherwise, null.
+|===

@@ -1,0 +1,44 @@
+[[using-shell-options-label]]
+= Label
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+_Option Label_ has no functional behaviour within a shell itself other than
+what a default `help` command outputs. Within a command documentation
+a type of an option is documented but this is not always super useful. Thus
+you may want to give better descriptive word for an option.
+
+NOTE: Label is not supported with `legacy annotation`.
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-label-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-label-annotation]
+----
+======
+
+Defining label is then shown in `help`.
+[source, bash]
+----
+my-shell:>help labelOption
+NAME
+       labelOption -
+
+SYNOPSIS
+       labelOption --arg MYLABEL
+
+OPTIONS
+       --arg MYLABEL
+       [Optional]
+
+----

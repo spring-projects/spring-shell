@@ -1,0 +1,21 @@
+[[registration]]
+= Registration
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+There are two different ways to define a command: through an annotation model and
+through a programmatic model. In the annotation model, you define your methods
+in a class and annotate the class and the methods with specific annotations.
+In the programmatic model, you use a more low level approach, defining command
+registrations (either as beans or by dynamically registering with a command catalog).
+
+Starting from _3.1.x_ a better support for defining commands using
+xref:commands/registration/annotation.adoc[annotations] were added. Firstly because eventually standard
+package providing xref:commands/registration/legacyannotation.adoc[legacy annotations] will get deprecated
+and removed. Secondly so that we're able to provide same set of features than using underlying
+`CommandRegistration`. Creating new a annotation model allows us to rethink and modernise that
+part without breaking existing applications.
+
+
+

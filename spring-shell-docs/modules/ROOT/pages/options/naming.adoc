@@ -1,0 +1,102 @@
+[[using-shell-options-naming]]
+= Naming
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+If there is a need to modify option long names that can be done
+using `OptionNameModifier` interface which is a simple
+`Function<String, String>`. In this interface original option
+name goes in and modified name comes out.
+
+Modifier can be defined per `OptionSpec` in `CommandRegistration`,
+defaulting globally as bean or via configuration properties.
+Modifier defined manually in `OptionSpec` takes takes precedence
+over one defined globally. There is no global modifier defined
+on default.
+
+You can define one with an option in `CommandRegistration`.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-naming-case-req]
+----
+
+Add one _singleton bean_ as type `OptionNameModifier` and that becomes
+a global default.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-naming-case-bean]
+----
+
+It's also possible to just add configuration property with
+`spring.shell.option.naming.case-type` which auto-configures
+one based on a type defined.
+
+`noop` is to do nothing, `camel`, `snake`, `kebab`, `pascal`
+activates build-in modifiers for `camelCase`, `snake_case`,
+`kebab-case` or `PascalCase` respectively.
+
+NOTE: If creating `CommandRegistration` beans directly, global
+default via configuration properies only work if using
+pre-configured `Builder` instance. See more
+<<using-shell-commands-programmaticmodel>>.
+
+[source, yaml]
+----
+spring:
+  shell:
+     option:
+       naming:
+         case-type: noop
+         # case-type: camel
+         # case-type: snake
+         # case-type: kebab
+         # case-type: pascal
+----
+
+For example options defined in an annotated method like this.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionSnippets.java[tag=option-registration-naming-case-sample1]
+----
+
+On default `help` for that command shows names coming
+directly from `@ShellOption`.
+
+[source, bash]
+----
+OPTIONS
+       --from_snake String
+       [Mandatory]
+
+       --fromCamel String
+       [Mandatory]
+
+       --from-kebab String
+       [Mandatory]
+
+       --FromPascal String
+       [Mandatory]
+----
+
+Define `spring.shell.option.naming.case-type=kebab` and default
+modifier is added and option names then look like.
+
+[source, bash]
+----
+OPTIONS
+       --from-snake String
+       [Mandatory]
+
+       --from-camel String
+       [Mandatory]
+
+       --from-kebab String
+       [Mandatory]
+
+       --from-pascal String
+       [Mandatory]
+
+----

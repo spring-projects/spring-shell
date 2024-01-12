@@ -1,0 +1,31 @@
+[[dynamic-command-exitcode-mappings]]
+= Exit Code Mappings
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Default behaviour of an exit codes is as:
+
+- Errors from a command option parsing will result code of `2`
+- Any generic error will result result code of `1`
+- Obviously in any other case result code is `0`
+
+Every `CommandRegistration` can define its own mappings between _Exception_ and _exit code_.
+Essentially we're bound to functionality in `Spring Boot` regarding _exit code_ and simply
+integrate into that.
+
+Assuming there is an exception show below which would be thrown from a command:
+
+[source, java, indent=0]
+----
+include::{snippets}/ExitCodeSnippets.java[tag=my-exception-class]
+----
+
+It is possible to define a mapping function between `Throwable` and exit code. You can also
+just configure a _class_ to _exit code_ which is just a syntactic sugar within configurations.
+
+[source, java, indent=0]
+----
+include::{snippets}/ExitCodeSnippets.java[tag=example1]
+----
+
+NOTE: Exit codes cannot be customized with annotation based configuration

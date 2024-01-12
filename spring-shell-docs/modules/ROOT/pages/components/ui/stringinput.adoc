@@ -1,0 +1,45 @@
+[[using-shell-components-ui-stringinput]]
+= String Input
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+The string input component asks a user for simple text input, optionally masking values
+if the content contains something sensitive. The following listing shows an example:
+
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet3]
+----
+
+The following screencast shows typical output from a string input component:
+
+[asciinema,rows=6]
+----
+include::example$component-text-input-1.cast[]
+----
+
+The context object is `StringInputContext`. The following table lists its context variables:
+
+[[stringinputcontext-template-variables]]
+.StringInputContext Template Variables
+|===
+|Key |Description
+
+|`defaultValue`
+|The default value, if set. Otherwise, null.
+
+|`maskedInput`
+|The masked input value
+
+|`maskedResultValue`
+|The masked result value
+
+|`maskCharacter`
+|The mask character, if set. Otherwise, null.
+
+|`hasMaskCharacter`
+|`true` if a mask character is set. Otherwise, false.
+
+|`model`
+|The parent context variables (see xref:/components/ui/render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
+|===

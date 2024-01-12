@@ -1,0 +1,14 @@
+[appendix]
+[#appendix-tech-intro]
+= Techical Introduction
+:page-section-summary-toc: 1
+
+This appendix contains information for developers and others who would like to know more about how Spring Shell
+works internally and what its design decisions are.
+
+
+
+
+
+
+

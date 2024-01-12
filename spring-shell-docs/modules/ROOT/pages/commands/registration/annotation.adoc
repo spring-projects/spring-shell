@@ -1,0 +1,45 @@
+[[commands-registration-annotation]]
+= Annotation
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+`@Command` annotation when used on a method marks it as a candidate for command registration.
+In below example a command `example` is defined.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=command-anno-in-method]
+----
+
+`@Command` annotation can be placed on a class which either defines defaults or shared settings
+for `@Command` methods defined in a same class. In below example a command `parent example` is
+defined.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=command-anno-in-class]
+----
+
+Using a `@Command` will not automatically register command targets, instead it is required to use
+`@EnableCommand` and/or `@CommandScan` annotations. This model is familiar from other parts
+of Spring umbrella and provides better flexibility for a user being inclusive rather than exclusive
+for command targets.
+
+You can define target classes using `@EnableCommand`. It will get picked from all _Configuration_
+classes.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=enablecommand-with-class]
+----
+
+You can define target classes using `@CommandScan`. It will get picked from all _Configuration_
+classes.
+
+TIP: Define `@CommandScan` in Spring Boot `App` class on a top level and it will automatically
+scan all command targets from all packages and classes under `App`.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=commandscan-no-args]
+----

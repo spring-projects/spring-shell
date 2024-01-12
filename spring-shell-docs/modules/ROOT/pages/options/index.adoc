@@ -1,0 +1,29 @@
+[[using-shell-options]]
+= Options
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Command line arguments can be separated into options and positional parameters.
+Following sections describes features how options are defined and used. We first
+go through some basics about using options and then go into details about
+various ways how options and arguments works.
+
+Generally speaking an _option_ is something after a commands prefixed with
+either `-` or `--`. An _option_ can either have a value or not depending
+on its context.
+
+Options can be defined with a target method using annotations with a method
+arguments or with programmatically using `CommandRegistration`.
+
+NOTE: In below sections `@ShellOption` refer to a _legacy annotation model_
+and `@Option` refer to an _annotation model_.
+
+
+
+
+
+
+
+
+
+

@@ -1,3 +1,0 @@
-=== Command Execution
-When command parsing has done its job and command registration has been resolved, command execution
-does the hard work of running the code.

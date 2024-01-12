@@ -1,0 +1,71 @@
+[[using-shell-building]]
+= Building
+
+This section covers how to build a Spring Shell application.
+
+[[native]]
+== Native Support
+
+Support for compiling _Spring Shell_ application into a _GraalVM_ binary
+mostly comes from _Spring Framework_ and _Spring Boot_ where feature is
+called _AOT_. Ahead of Time means that application context is prepared
+during the compilation time to being ready for _GraalVM_ generation.
+
+Building atop of _AOT_ features from a framework _Spring Shell_ has its
+own _GraalVM_ configuration providing hints what should exist in
+a binary. Usually trouble comes from a 3rd party libraries which doesn't
+yet contain _GraalVM_ related configurations or those configurations
+are incomplete.
+
+IMPORTANT: It is requred to use _GraalVM Reachability Metadata Repository_ which
+provides some missing hints for 3rd party libraries. Also you need to have
+_GraalVM_ installed and `JAVA_HOME` pointing to that.
+
+For _gradle_ add graalvm's native plugin and configure metadata repository.
+
+[source, groovy, subs=attributes+]
+----
+plugins {
+	id 'org.graalvm.buildtools.native' version '0.9.16'
+}
+
+graalvmNative {
+	metadataRepository {
+        enabled = true
+	}
+}
+----
+
+When gradle build is run with `./gradlew nativeCompile` you should get binary
+under `build/native/nativeCompile` directory.
+
+For `maven` use `spring-boot-starter-parent` as parent and you'll get `native`
+profile which can be used to do a compilation. You need to configure metadata repository
+
+[source, xml, subs=attributes+]
+----
+<build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <metadataRepository>
+                        <enabled>true</enabled>
+                    </metadataRepository>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+</build>
+----
+
+NOTE: If you rely on `spring-boot-starter-parent` it manages `native-maven-plugin`
+version which is kept up to date.
+
+When maven build is run with `./mvnw native:compile -Pnative` you should get binary
+under `target` directory.
+
+If everything went well this binary can be run as is instead of executing
+boot application jar via jvm.

@@ -1,0 +1,43 @@
+[[command-catalog]]
+= Command Catalog
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+The `CommandCatalog` interface defines how command registrations exist in
+a shell application. It is possible to dynamically register and de-register
+commands, which gives flexibility for use cases where possible commands
+come and go, depending on a shell's state. Consider the following example:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandCatalogSnippets.java[tag=snippet1]
+----
+
+[[command-resolver]]
+== Command Resolver
+You can implement the `CommandResolver` interface and define a bean to dynamically
+resolve mappings from a command's name to its `CommandRegistration` instances. Consider
+the following example:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandCatalogSnippets.java[tag=snippet2]
+----
+
+IMPORTANT: A current limitation of a `CommandResolver` is that it is used every time commands are resolved.
+Thus, we advise not using it if a command resolution call takes a long time, as it would
+make the shell feel sluggish.
+
+[[command-catalog-customizer]]
+== Command Catalog Customizer
+You can use the `CommandCatalogCustomizer` interface to customize a `CommandCatalog`.
+Its main use is to modify a catalog. Also, within `spring-shell` auto-configuration, this
+interface is used to register existing `CommandRegistration` beans into a catalog.
+Consider the following example:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandCatalogSnippets.java[tag=snippet3]
+----
+
+You can create a `CommandCatalogCustomizer` as a bean, and Spring Shell handles the rest.

@@ -1,0 +1,24 @@
+[[validating-command-arguments]]
+= Validation
+
+Spring Shell integrates with the https://beanvalidation.org/[Bean Validation API] to support
+automatic and self-documenting constraints on command parameters.
+
+Annotations found on command parameters and annotations at the method level are
+honored and trigger validation prior to the command executing. Consider the following command:
+
+[source, java]
+----
+	@ShellMethod("Change password.")
+	public String changePassword(@Size(min = 8, max = 40) String password) {
+		return "Password successfully set to " + password;
+	}
+----
+
+From the preceding example, you get the following behavior for free:
+
+----
+shell:>change-password hello
+The following constraints were not met:
+	--password string : size must be between 8 and 40 (You passed 'hello')
+----

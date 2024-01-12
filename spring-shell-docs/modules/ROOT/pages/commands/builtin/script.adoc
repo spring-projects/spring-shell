@@ -1,0 +1,8 @@
+[[built-in-commands-script]]
+= Script
+:page-section-summary-toc: 1
+
+The `script` command accepts a local file as an argument and replays commands found there, one at a time.
+
+Reading from the file behaves exactly like inside the interactive shell, so lines starting with `//` are considered
+to be comments and are ignored, while lines ending with `\` trigger line continuation.

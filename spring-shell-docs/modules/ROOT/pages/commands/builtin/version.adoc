@@ -1,0 +1,33 @@
+[[built-in-commands-version]]
+= Version
+
+The `version` command shows existing build and git info by integrating into
+Boot's `BuildProperties` and `GitProperties` if those exist in the shell application.
+By default, only version information is shown, and you can enable other information through configuration
+options.
+
+The relevant settings are under `spring.shell.command.version`, where you can use `enabled` to
+disable a command and, optionally, define your own template with `template`. You can use the
+`show-build-artifact`, `show-build-group`, `show-build-name`, `show-build-time`,
+`show-build-version`, `show-git-branch`, `show-git-commit-id`,
+`show-git-short-commit-id` and `show-git-commit-time` commands to control
+fields in a default template.
+
+The template defaults to `classpath:template/version-default.st`, and you can define
+your own, as the following example shows:
+
+[source]
+----
+<buildVersion>
+----
+
+This setting would output something like the following:
+
+[source]
+----
+X.X.X
+----
+
+You can add the following attributes to the default template rendering: `buildVersion`, `buildGroup`,
+`buildGroup`, `buildName`, `buildTime`, `gitShortCommitId`, `gitCommitId`,
+`gitBranch`, and `gitCommitTime`.

@@ -1,0 +1,30 @@
+[[using-shell-components-ui]]
+= Flow Components
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+Starting from version 2.1.x, a new component model provides an
+easier way to create higher-level user interaction for the usual use cases,
+such as asking for input in various forms. These usually are just plain text
+input or choosing something from a list.
+
+Templates for built-in components are in the
+`org/springframework/shell/component` classpath.
+
+Built-in components generally follow this logic:
+
+. Enter a run loop for user input.
+. Generate component-related context.
+. Render the runtime status of a component state.
+. Exit.
+. Render the final status of a component state.
+
+NOTE: xref:components/flow/index.adoc[Flow] gives better interface for defining the flow of
+components that are better suited for defining interactive command flows.
+
+
+
+
+
+
+

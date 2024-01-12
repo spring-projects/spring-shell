@@ -1,0 +1,26 @@
+[[commands-hidden]]
+= Hidden Command
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+It is possible to _hide_ a command which is convenient in cases where it is not yet ready for
+prime time, is meant for debugging purposes or you have any other reason you dont want to
+advertise its presense.
+
+Hidden command can be executed if you know it and its options. It is effectively removed
+from:
+
+* Help listing
+* Help page for command return "unknown command"
+* Command completion in interactive mode
+* Bash completion
+
+Below is an example how to define command as _hidden_. It shows available builder methods
+to define _hidden_ state.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationHiddenSnippets.java[tag=snippet1]
+----
+
+NOTE: Defining hidden commands is not supported with annotation based configuration

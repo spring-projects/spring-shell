@@ -1,0 +1,6 @@
+[appendix]
+[#appendix-debugging]
+= Debugging
+:page-section-summary-toc: 1
+
+Please find more info about debugging from https://github.com/spring-projects/spring-shell/wiki/Debugging[project wiki].

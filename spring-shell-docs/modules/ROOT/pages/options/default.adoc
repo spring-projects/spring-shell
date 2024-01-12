@@ -1,0 +1,33 @@
+[[using-shell-options-default]]
+= Default Value
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Having a default value for an option is somewhat related to
+xref:options/optional.adoc[Optional Value], as there are cases where you
+may want to know if the user defined an option and change behavior
+based on a default value:
+
+[tabs]
+======
+Programmatic::
++
+[source,java,indent=0,role="primary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-default-programmatic]
+----
+
+Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-default-annotation]
+----
+
+Legacy Annotation::
++
+[source,java,indent=0,role="secondary"]
+----
+include::{snippets}/OptionSnippets.java[tag=option-default-legacyannotation]
+----
+======

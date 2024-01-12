@@ -1,0 +1,48 @@
+[[commands-registration-legacyannotation]]
+= Legacy Annotation
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+When you use the standard API, methods on beans are turned into executable commands, provided that:
+
+* The bean class bears the `@ShellComponent` annotation. (This is used to restrict the set of beans
+that are considered.)
+* The method bears the `@ShellMethod` annotation.
+
+[TIP]
+====
+The `@ShellComponent` is a stereotype annotation that is itself meta-annotated with `@Component`. As a result,
+you can use it in addition to the filtering mechanism to declare beans (for example, by using `@ComponentScan`).
+
+You can customize the name of the created bean by using the `value` attribute of the annotation.
+====
+
+[source, java, indent=0]
+----
+include::{snippets}/AnnotationRegistrationSnippets.java[tag=snippet1]
+----
+
+The only required attribute of the `@ShellMethod` annotation is its `value` attribute, which should have
+a short, one-sentence, description of what the command does. This lets your users
+get consistent help about your commands without having to leave the shell (see xref:commands/builtin/help.adoc[Help]).
+
+NOTE: The description of your command should be short -- no more than one or two sentences. For better
+consistency, it should start with a capital letter and end with a period.
+
+By default, you need not specify the key for your command (that is, the word(s) that should be used
+to invoke it in the shell). The name of the method is used as the command key, turning camelCase names into
+dashed, gnu-style, names (for example, `sayHello()` becomes `say-hello`).
+
+You can, however, explicitly set the command key, by using the `key` attribute of the annotation:
+
+[source, java, indent=0]
+----
+include::{snippets}/AnnotationRegistrationSnippets.java[tag=snippet2]
+----
+
+NOTE: The `key` attribute accepts multiple values.
+If you set multiple keys for a single method, the command is registered with those different aliases.
+
+TIP: The command key can contain pretty much any character, including spaces. When coming up with names though,
+keep in mind that consistency is often appreciated by users. That is, you should avoid mixing dashed-names with
+spaced names and other inconsistencies.

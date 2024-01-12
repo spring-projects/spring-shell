@@ -1,0 +1,117 @@
+[[using-shell-options-types]]
+= Types
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+This section talks about how particular data type is used as an option value.
+
+[[string]]
+== String
+
+`String` is a most simplest type as there's no conversion involved as what's
+coming in from a user is always a string.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-string-anno]
+----
+
+While it's not strictly required to define type as a `String` it's always
+adviced to do so.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-string-reg]
+----
+
+[[boolean]]
+== Boolean
+
+Using boolean types is a bit more involved as there are `boolean` and
+`Boolean` where latter can be _null_. Boolean types are usually used as
+flags meaning argument value may not be needed.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-boolean-anno]
+----
+
+[source, bash]
+----
+shell:>example
+arg1=false arg2=true arg3=false arg4=false arg5=true arg6=false
+
+shell:>example --arg4
+arg1=false arg2=true arg3=false arg4=true arg5=true arg6=false
+
+shell:>example --arg4 false
+arg1=false arg2=true arg3=false arg4=false arg5=true arg6=false
+----
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-boolean-reg]
+----
+
+[source, bash]
+----
+shell:>example
+arg1=false arg2=true arg3=false arg4=null arg5=true arg6=false
+
+shell:>example --arg4
+arg1=false arg2=true arg3=false arg4=true arg5=true arg6=false
+
+shell:>example --arg4 false
+arg1=false arg2=true arg3=false arg4=false arg5=true arg6=false
+----
+
+[[number]]
+== Number
+
+Numbers are converted as is.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-integer-anno]
+----
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-integer-reg]
+----
+
+[[enum]]
+== Enum
+
+Conversion to enums is possible if given value is exactly matching enum itself.
+Currently you can convert assuming case insensitivity.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-enum-class]
+----
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-enum-anno]
+----
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-enum-reg]
+----
+
+[[array]]
+== Array
+
+Arrays can be used as is with strings and primitive types.
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-string-array-anno]
+----
+
+[source, java, indent=0]
+----
+include::{snippets}/OptionTypesSnippets.java[tag=option-type-string-array-reg]
+----

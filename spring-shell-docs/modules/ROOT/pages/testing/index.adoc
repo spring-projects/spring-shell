@@ -1,0 +1,20 @@
+[[using-shell-testing]]
+= Testing
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Testing cli application is difficult due to various reasons:
+
+- There are differences between OS's.
+- Within OS there may be different shell implementations in use.
+- What goes into a shell and comes out from a shell my be totally
+  different what you see in shell itself due to control characters.
+- Shell may feel syncronous but most likely it is not meaning when
+  someting is written into it, you can't assume next update in
+  in it is not final.
+
+NOTE: Testing support is currently under development and will be
+      unstable for various parts.
+
+

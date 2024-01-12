@@ -1,0 +1,17 @@
+[[using-shell-basics]]
+= Basics
+:page-section-summary-toc: 1
+
+This section covers the basics of Spring Shell. Before going on to define actual commands and options,
+we need to go through some of the fundamental concepts of Spring Shell.
+
+Essentially, a few things needs to happen before you have a working Spring Shell application:
+
+- Create a Spring Boot application.
+- Define commands and options.
+- Package the application.
+- Run the application, either interactively or non-interactively.
+
+You can get a full working Spring Shell application without defining any user-level commands
+as some basic built-in commands (such as `help` and `history`) are provided.
+

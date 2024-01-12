@@ -1,0 +1,6 @@
+[[command-parser]]
+= Command Parser
+:page-section-summary-toc: 1
+
+Before a command can be executed, we need to parse the command and whatever options the user may have provided. Parsing
+comes between command registration and command execution.

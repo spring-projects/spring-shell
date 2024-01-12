@@ -1,0 +1,7 @@
+[[built-in-commands-exit]]
+= Exit
+:page-section-summary-toc: 1
+
+The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
+closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all
+commands to disk, so that they are available again on the next launch.

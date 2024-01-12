@@ -1,0 +1,37 @@
+[[using-shell-customization-commandnotfound]]
+= Command Not Found
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+On default a missing command is handled via `CommandNotFoundResultHandler`
+and outputs a simple message:
+
+[source, text]
+----
+shell:>missing
+No command found for 'missing'
+----
+
+Internally `CommandNotFoundResultHandler` is using `CommandNotFoundMessageProvider`
+which is a simple function taking a `ProviderContext` and returning a text
+message. Below is an example what a custom message provider might look like.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandNotFoundSnippets.java[tag=custom-provider]
+----
+
+It's possible to change this implementation by defining it as a bean.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandNotFoundSnippets.java[tag=provider-bean-1]
+----
+
+`CommandNotFoundResultHandler` is a functional interface so it can
+be writter as a lambda.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandNotFoundSnippets.java[tag=provider-bean-2]
+----

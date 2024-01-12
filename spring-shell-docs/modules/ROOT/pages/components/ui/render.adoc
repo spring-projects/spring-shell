@@ -1,0 +1,99 @@
+[[using-shell-components-ui-render]]
+= Component Render
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+You can implement component rendering in either of two ways: fully
+programmatically or by using a _ANTLR Stringtemplate_.
+Strictly speaking, there is a simple `Function` renderer interface
+that takes `Context` as an input and outputs a list of `AttributedString`.
+This lets you choose between templating and code.
+
+Templating is a good choice if you do not need to do anything complex or
+you just want to slightly modify existing component layouts. Rendering
+through code then gives you flexibility to do whatever you need.
+
+The programmatic way to render is to create a `Function`:
+
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet1]
+----
+
+Then you can hook it to a component:
+
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet2]
+----
+
+Components have their own context but usually share some functionality
+from a parent component types. The following tables show those context variables:
+
+[[textcomponentcontext-template-variables]]
+.TextComponentContext Template Variables
+|===
+|Key |Description
+
+|`resultValue`
+|The value after a component renders its result.
+
+|`name`
+|The name of a component -- that is, its title.
+
+|`message`
+|The possible message set for a component.
+
+|`messageLevel`
+|The level of a message -- one of `INFO`, `WARN`, or `ERROR`.
+
+|`hasMessageLevelInfo`
+|Return `true` if level is `INFO`. Otherwise, false.
+
+|`hasMessageLevelWarn`
+|Return `true` if level is `WARN`. Otherwise, false.
+
+|`hasMessageLevelError`
+|Return `true` if level is `ERROR`. Otherwise, false.
+
+|`input`
+|The raw user input.
+
+|===
+
+
+[[selectorcomponentcontext-template-variables]]
+.SelectorComponentContext Template Variables
+|===
+|Key |Description
+
+|`name`
+|The name of a component -- that is, its title.
+
+|`input`
+|The raw user input -- mostly used for filtering.
+
+|`itemStates`
+|The full list of item states.
+
+|`itemStateView`
+|The visible list of item states.
+
+|`isResult`
+|Return `true` if the context is in a result mode.
+
+|`cursorRow`
+|The current cursor row in a selector.
+
+|===
+
+
+[[componentcontext-template-variables]]
+.ComponentContext Template Variables
+|===
+|Key |Description
+
+|`terminalWidth`
+|The width of terminal, type is _Integer_ and defaults to _NULL_ if not set.
+
+|===

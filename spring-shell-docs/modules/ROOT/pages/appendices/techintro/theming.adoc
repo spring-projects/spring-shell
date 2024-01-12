@@ -1,0 +1,55 @@
+[#appendix-tech-intro-theming]
+= Theming
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+Styling in a theming is provided by a use of a _AttributedString_ from `JLine`.
+Unfortunately styling in `JLine` is mostly undocumented but we try to go through
+some of its features here.
+
+In `JLine` a style spec is a string having a special format. Spec can be given
+multiple times if separated by a comma. A spec will either define a color for
+foreground, background or its mode. Special format `<spec>:=<spec>` allows to
+define a default within latter spec if former for some reason is invalid.
+
+If spec contains a colon its former part indicates either foreground or background
+and possible values are `foreground`, `fg`, `f`, `background`, `bg`, `b`, `foreground-rgb`,
+`fg-rgb`, `f-rgb`, `background-rgb`, `bg-rgb` or `b-rgb`. Without rbg a color value
+is name from an allowable colors `black`, `red`, `green`, `yellow`, `blue`, `magenta`,
+`cyan` or `white`. Colors have their short formats `k`, `r`, `g`, `y`, `b`, `m`, `c` and `w`
+respectively. If color is prefixed with either `!` or `bright-`, bright mode is automatically
+applied. Prefixing with `~` will resolve from JLine internal bsd color table.
+
+If rgb format is expected and prefixed with either `x` or `#` a normal
+hex format is used.
+
+[source, text]
+----
+fg-red
+fg-r
+fg-rgb:red
+fg-rgb:xff3333
+fg-rgb:#ff3333
+----
+
+If spec contains special names `default`, `bold`, `faint`, `italic`, `underline`, `blink`,
+`inverse`, `inverse-neg`, `inverseneg`, `conceal`, `crossed-out`, `crossedout` or `hidden`
+a style is changed accordingly with an existing color.
+
+[source, text]
+----
+bold
+bold,fg:red
+----
+
+If spec is a number or numbers separated with semicolon, format is a plain part of an ansi
+ascii codes.
+
+[source, text]
+----
+31
+31;1
+----
+
+NOTE: JLine special mapping format which would resolve spec starting with dot can't be
+used as we don't yet map those into Spring Shell styling names.
