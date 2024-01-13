@@ -1,0 +1,71 @@
+[[commands-alias]]
+= Alias
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+It is possible to define an _alias_ for a command. This is convenient for
+cases where you want to create a shorter version of a command or going
+through a complete command rename while keeping old one temporarily in
+place.
+
+Format for _alias_ is slighly different than a _command_. When _command_
+is defined as an array it's concatenated together into a single command.
+When _alias_ is defined as an array it's used to create a separate
+aliases.
+
+Aliases with a plain `CommandRegistration` is simple and clear as you
+get exactly what you define as there's no "magic" in it.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationAliasSnippets.java[tag=builder]
+----
+
+Defining alias with `@Command` annotation is a bit more involved as it
+can exist on a both class and method levels. Here are examples how it
+works.
+
+Alias just on a method gives you _myalias_.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationAliasSnippets.java[tag=command1]
+----
+
+Or _myalias1_ and _myalias2_ if defined as an array.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationAliasSnippets.java[tag=command2]
+----
+
+Alias only on a class level does nothing as it's simply an instruction
+for annotation on a *method level if defined*.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationAliasSnippets.java[tag=command3]
+----
+
+Alias on both class and method level combines those two together where
+class level works as an prefix and method level as combination of aliases.
+Alias on a class level is usually used together with a _command_ prefix
+to keep aliases on a same command level.
+
+Here you'd get alias _myalias1 myalias2_.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationAliasSnippets.java[tag=command4]
+----
+
+On a method level there's a special format, that being an *empty string*
+which allows you to create an alias but it only uses prefix from a
+class level.
+
+Here you'd get alias _myalias1_.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationAliasSnippets.java[tag=command5]
+----

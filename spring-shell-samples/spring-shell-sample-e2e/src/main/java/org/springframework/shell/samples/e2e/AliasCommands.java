@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,11 @@ public class AliasCommands {
 		public String testAlias2Annotation() {
 			return "Hello from alias command";
 		}
+
+		@Command(command = "alias-3 alias-31", alias = "alias-32 alias-33")
+		public String testAlias3Annotation() {
+			return "Hello from alias3 command";
+		}
 	}
 
 	@Component
@@ -85,6 +90,22 @@ public class AliasCommands {
 				.withTarget()
 					.function(ctx -> {
 						return "Hello from alias command";
+					})
+					.and()
+				.build();
+		}
+
+		@Bean
+		public CommandRegistration testAlias3Registration(CommandRegistration.BuilderSupplier builder) {
+			return builder.get()
+				.command(REG, "alias-3 alias-31")
+				.group(GROUP)
+				.withAlias()
+					.command(REG, "alias-32 alias-33")
+					.and()
+				.withTarget()
+					.function(ctx -> {
+						return "Hello from alias3 command";
 					})
 					.and()
 				.build();

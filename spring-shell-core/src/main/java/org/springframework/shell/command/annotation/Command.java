@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,8 +69,8 @@ public @interface Command {
 	 * {@code alias1 sub1} it can be defined as:
 	 *
 	 * <pre class="code">
-	 * command = { "alias1", "sub1" }
-	 * command = "alias1 sub1"
+	 * alias = { "alias1", "sub1" }
+	 * alias = "alias1 sub1"
 	 * </pre>
 	 *
 	 * Values are split and trimmed meaning spaces doesn't matter.

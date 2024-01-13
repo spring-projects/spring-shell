@@ -13,6 +13,7 @@
 *** xref:commands/exceptionhandling/resolving.adoc[]
 *** xref:commands/exceptionhandling/mappings.adoc[]
 *** xref:commands/exceptionhandling/annotation.adoc[]
+** xref:commands/alias.adoc[]
 ** xref:commands/hidden.adoc[]
 ** xref:commands/helpoptions.adoc[]
 ** xref:commands/interactionmode.adoc[]

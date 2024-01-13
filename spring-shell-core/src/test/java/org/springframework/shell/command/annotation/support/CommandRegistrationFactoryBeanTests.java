@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.springframework.shell.command.annotation.support;
 
 import java.util.Collections;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -375,4 +376,186 @@ class CommandRegistrationFactoryBeanTests {
 					bd.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_METHOD_PARAMETERS, parameters);
 				});
 	}
+
+	@Nested
+	class Aliases {
+
+		@Test
+		void aliasOnlyOnMethod() {
+			configCommon(AliasOnlyOnMethod.class, new AliasOnlyOnMethod(), "command1", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one two");
+						assertThat(registration.getAliases()).hasSize(1);
+						assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("four");
+					});
+		}
+
+		@Command(command = "one")
+		private static class AliasOnlyOnMethod {
+
+			@Command(command = "two", alias = "four")
+			void command1(){
+			}
+		}
+
+		@Test
+		void aliasOnlyOnClass() {
+			configCommon(AliasOnlyOnClass.class, new AliasOnlyOnClass(), "command1", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one two");
+						assertThat(registration.getAliases()).hasSize(0);
+					});
+		}
+
+		@Command(command = "one", alias = "three")
+		private static class AliasOnlyOnClass {
+
+			@Command(command = "two")
+			void command1(){
+			}
+		}
+
+		@Test
+		void aliasOnlyOnMethodMultiCommandString() {
+			configCommon(AliasOnlyOnMethodMultiCommandString.class, new AliasOnlyOnMethodMultiCommandString(), "command1", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one two");
+						assertThat(registration.getAliases()).hasSize(1);
+						assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("four five");
+					});
+		}
+
+		@Command(command = "one")
+		private static class AliasOnlyOnMethodMultiCommandString {
+
+			@Command(command = "two", alias = "four five")
+			void command1(){
+			}
+		}
+
+		@Test
+		void aliasOnlyOnMethodMultiCommandArray() {
+			configCommon(AliasOnlyOnMethodMultiCommandArray.class, new AliasOnlyOnMethodMultiCommandArray(), "command1", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one two");
+						assertThat(registration.getAliases()).hasSize(2);
+						assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("four");
+						assertThat(registration.getAliases().get(1).getCommand()).isEqualTo("five");
+					});
+		}
+
+		@Command(command = "one")
+		private static class AliasOnlyOnMethodMultiCommandArray {
+
+			@Command(command = "two", alias = {"four", "five"})
+			void command1(){
+			}
+		}
+
+		@Test
+		void aliasOnBothMethodStringEmpty() {
+			configCommon(AliasOnBothMethodStringEmpty.class, new AliasOnBothMethodStringEmpty(), "command1", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one two");
+						assertThat(registration.getAliases()).hasSize(1);
+						assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("three");
+					});
+		}
+
+		@Command(command = "one", alias = "three")
+		private static class AliasOnBothMethodStringEmpty {
+
+			@Command(command = "two", alias = "")
+			void command1(){
+			}
+		}
+
+		@Test
+		void aliasOnBoth() {
+			configCommon(AliasOnBoth.class, new AliasOnBoth(), "command1", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one two");
+						assertThat(registration.getAliases()).hasSize(1);
+						assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("three four");
+					});
+		}
+
+		@Command(command = "one", alias = "three")
+		private static class AliasOnBoth {
+
+			@Command(command = "two", alias = "four")
+			void command1(){
+			}
+		}
+
+		@Test
+		void aliasWithCommandOnBothMethodStringEmpty() {
+			configCommon(AliasWithCommandOnBothMethodStringEmpty.class, new AliasWithCommandOnBothMethodStringEmpty(), "command1", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one");
+						assertThat(registration.getAliases()).hasSize(1);
+						assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("ten");
+					});
+			configCommon(AliasWithCommandOnBothMethodStringEmpty.class, new AliasWithCommandOnBothMethodStringEmpty(), "command2", new Class[] { })
+					.run((context) -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+								CommandRegistrationFactoryBean.class);
+						assertThat(fb).isNotNull();
+						CommandRegistration registration = fb.getObject();
+						assertThat(registration).isNotNull();
+						assertThat(registration.getCommand()).isEqualTo("one two");
+						assertThat(registration.getAliases()).hasSize(1);
+						assertThat(registration.getAliases().get(0).getCommand()).isEqualTo("ten twelve");
+					});
+		}
+
+		@Command(command = "one", alias = "ten")
+		private static class AliasWithCommandOnBothMethodStringEmpty {
+
+			@Command(command = "", alias = "")
+			void command1(){
+			}
+
+			@Command(command = "two", alias = "twelve")
+			void command2(){
+			}
+		}
+
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,6 +108,10 @@ class CommandAnnotationUtilsTests {
 			.get(Command.class);
 	private static MergedAnnotation<Command> aliasValues4 = MergedAnnotations.from(AliasValues4.class)
 			.get(Command.class);
+	private static MergedAnnotation<Command> aliasValues5 = MergedAnnotations.from(AliasValues5.class)
+			.get(Command.class);
+	private static MergedAnnotation<Command> aliasValues6 = MergedAnnotations.from(AliasValues6.class)
+			.get(Command.class);
 
 	@Command
 	private static class AliasDefault {
@@ -129,6 +133,14 @@ class CommandAnnotationUtilsTests {
 	private static class AliasValues4 {
 	}
 
+	@Command(alias = { "one" })
+	private static class AliasValues5 {
+	}
+
+	@Command(alias = { "" })
+	private static class AliasValues6 {
+	}
+
 	@Test
 	void testAlias() {
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasDefault, aliasDefault)).isEmpty();
@@ -139,7 +151,9 @@ class CommandAnnotationUtilsTests {
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasDefault, aliasValues3))
 				.isEqualTo(new String[][] { { "five" }, { "six" }, { "seven" } });
 		assertThat(CommandAnnotationUtils.deduceAlias(aliasDefault, aliasValues4))
-				.isEqualTo(new String[][] { { "eight" }, { "nine" } });
+				.isEqualTo(new String[][] { { "eight nine" } });
+		assertThat(CommandAnnotationUtils.deduceAlias(aliasValues5, aliasValues6))
+				.isEqualTo(new String[][] { { "one" } });
 	}
 
 	private static MergedAnnotation<Command> groupValue1 = MergedAnnotations.from(GroupValues1.class)
