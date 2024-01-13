@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,10 +159,11 @@ class CommandAnnotationUtils {
 			.collect(Collectors.toList());
 
 		return Stream.of(right.getStringArray(field))
-			.flatMap(command -> Stream.of(command.split(" ")))
-			.filter(command -> StringUtils.hasText(command))
 			.map(command -> command.strip())
-			.map(command -> Stream.concat(prefix.stream(), Stream.of(command)).collect(Collectors.toList()))
+			.map(command -> Stream.concat(
+					prefix.stream(),
+					Stream.of(command).filter(c -> StringUtils.hasText(c)))
+				.collect(Collectors.toList()))
 			.map(arr -> arr.toArray(String[]::new))
 			.toArray(String[][]::new);
 	}
