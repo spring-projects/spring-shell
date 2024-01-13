@@ -21,6 +21,9 @@ node {
 
 antora {
 	version = '3.2.0-alpha.2'
+	if (project.hasProperty('antoraLocalBarePlaybook') && antoraLocalBarePlaybook.toBoolean()) {
+		playbook = 'local-bare-antora-playbook.yml'
+	}
 	options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
 	dependencies = [
 			'@antora/atlas-extension': '1.0.0-alpha.1',
