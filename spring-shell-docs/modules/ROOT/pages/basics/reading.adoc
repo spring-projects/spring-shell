@@ -14,6 +14,4 @@ new annotation model relates to use of `@Command`.
 
 The programmatic model is how things are actually registered, even if you use annotations.
 
-NOTE: Currently whole documentation structure is in transit to provide better
-structure how things can be used using different ways to provide configurations.
-So pardon a for little confusion now and there during a transit.
+NOTE: The documentation structure is getting revised to clarify how to provide configurations in separate ways. Thank you for understanding while that work is still in progress. 
