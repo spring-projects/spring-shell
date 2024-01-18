@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,7 +151,24 @@ public interface Screen {
 		 */
 		WriterBuilder layer(int index);
 
+		/**
+		 * Define a color this {@link Writer} operates on.
+		 * {@code WriterBuilder} defaults to no defined color.
+		 *
+		 * @param color the color
+		 * @return a writer builder for chaining
+		 * @See Color
+		 */
 		WriterBuilder color(int color);
+
+		/**
+		 * Define a style this {@link Writer} operates on.
+		 * {@code WriterBuilder} defaults to no defined style.
+		 *
+		 * @param style the style
+		 * @return a writer builder for chaining
+		 * @see ScreenItem
+		 */
 		WriterBuilder style(int style);
 
 		/**
