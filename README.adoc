@@ -1,4 +1,4 @@
-= Spring Shell
+= Spring Shell image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?search.rootProjectNames=spring-shell"]
 
 Spring Shell helps you to create Spring-powered, production-grade applications targeting
 _CLI_ space. It takes an opinionated view of the Spring platform so that new and existing
