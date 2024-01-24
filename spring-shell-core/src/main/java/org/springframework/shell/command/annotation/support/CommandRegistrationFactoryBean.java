@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import org.springframework.messaging.handler.invocation.InvocableHandlerMethod;
 import org.springframework.shell.Availability;
 import org.springframework.shell.AvailabilityProvider;
 import org.springframework.shell.Utils;
+import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandHandlingResult;
 import org.springframework.shell.command.CommandRegistration;
@@ -322,6 +323,10 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 			mp.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
 			String longName = mp.getParameterName();
 			Class<?> parameterType = mp.getParameterType();
+			// skip known types which are coming in via parameter resolvers
+			if (ClassUtils.isAssignable(parameterType, CommandContext.class)) {
+				return;
+			}
 			if (longName != null) {
 				log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
 				OptionSpec optionSpec = builder.withOption();

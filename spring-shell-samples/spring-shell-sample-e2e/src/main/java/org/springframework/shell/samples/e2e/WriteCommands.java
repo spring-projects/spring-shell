@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.stereotype.Component;
@@ -40,6 +42,21 @@ public class WriteCommands {
 
 		@ShellMethod(key = LEGACY_ANNO + "write-systemout", group = GROUP)
 		public void writeSystemOutAnnotation() {
+			System.out.println("hi");
+		}
+	}
+
+	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
+	public static class Annotation extends BaseE2ECommands {
+
+		@Command(command = "write-terminalwriter")
+		public void writeTerminalWriter(CommandContext ctx) {
+			ctx.getTerminal().writer().println("hi");
+			ctx.getTerminal().writer().flush();
+		}
+
+		@Command(command = "write-systemout")
+		public void writeSystemOut() {
 			System.out.println("hi");
 		}
 	}

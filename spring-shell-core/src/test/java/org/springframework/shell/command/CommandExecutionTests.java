@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,6 +104,81 @@ public class CommandExecutionTests extends AbstractCommandTests {
 		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
 		assertThat(pojo1.method1Count).isEqualTo(1);
 		assertThat(pojo1.method1Ctx).isNotNull();
+	}
+
+	@Test
+	public void testMixedWithCtx1() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.description("help")
+			.withOption()
+				.longNames("arg1")
+				.description("some arg1")
+				.and()
+			.withOption()
+				.longNames("arg2")
+				.description("some arg1")
+				.and()
+			.withTarget()
+				.method(pojo1, "method1Mixed1")
+				.and()
+			.build();
+		commandCatalog.register(r1);
+		execution.evaluate(new String[] { "command1" });
+		assertThat(pojo1.method1Mixed1Count).isEqualTo(1);
+		assertThat(pojo1.method1Mixed1Arg1).isNull();
+		assertThat(pojo1.method1Mixed1Ctx).isNotNull();
+		assertThat(pojo1.method1Mixed1Arg2).isNull();
+	}
+
+	@Test
+	public void testMixedWithCtx2() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.description("help")
+			.withOption()
+				.longNames("arg1")
+				.description("some arg1")
+				.and()
+			.withOption()
+				.longNames("arg2")
+				.description("some arg1")
+				.and()
+			.withTarget()
+				.method(pojo1, "method1Mixed1")
+				.and()
+			.build();
+		commandCatalog.register(r1);
+		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
+		assertThat(pojo1.method1Mixed1Count).isEqualTo(1);
+		assertThat(pojo1.method1Mixed1Arg1).isEqualTo("myarg1value");
+		assertThat(pojo1.method1Mixed1Ctx).isNotNull();
+		assertThat(pojo1.method1Mixed1Arg2).isNull();
+	}
+
+	@Test
+	public void testMixedWithCtx3() {
+		CommandRegistration r1 = CommandRegistration.builder()
+			.command("command1")
+			.description("help")
+			.withOption()
+				.longNames("arg1")
+				.description("some arg1")
+				.and()
+			.withOption()
+				.longNames("arg2")
+				.description("some arg1")
+				.and()
+			.withTarget()
+				.method(pojo1, "method1Mixed1")
+				.and()
+			.build();
+		commandCatalog.register(r1);
+		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value", "--arg2", "myarg2value" });
+		assertThat(pojo1.method1Mixed1Count).isEqualTo(1);
+		assertThat(pojo1.method1Mixed1Arg1).isEqualTo("myarg1value");
+		assertThat(pojo1.method1Mixed1Ctx).isNotNull();
+		assertThat(pojo1.method1Mixed1Arg2).isEqualTo("myarg2value");
 	}
 
 	@Test
