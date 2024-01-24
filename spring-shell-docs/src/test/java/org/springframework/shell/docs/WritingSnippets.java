@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,16 @@ package org.springframework.shell.docs;
 import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.standard.ShellMethod;
 
 class WritingSnippets {
 
 	class Dump1 {
 
-		// tag::anno-terminal-writer[]
+		// tag::legacyanno-terminal-writer[]
 		@Autowired
 		Terminal terminal;
 
@@ -33,6 +35,17 @@ class WritingSnippets {
 		public void example() {
 			terminal.writer().println("hi");
 			terminal.writer().flush();
+		}
+		// end::legacyanno-terminal-writer[]
+	}
+
+	class Dump2 {
+
+		// tag::anno-terminal-writer[]
+		@Command
+		public void example(CommandContext ctx) {
+			ctx.getTerminal().writer().println("hi");
+			ctx.getTerminal().writer().flush();
 		}
 		// end::anno-terminal-writer[]
 	}

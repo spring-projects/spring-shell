@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,10 @@ public abstract class AbstractCommandTests {
 
 		public int method1Count;
 		public CommandContext method1Ctx;
+		public int method1Mixed1Count;
+		public String method1Mixed1Arg1;
+		public CommandContext method1Mixed1Ctx;
+		public String method1Mixed1Arg2;
 		public int method2Count;
 		public int method3Count;
 		public int method4Count;
@@ -66,6 +70,13 @@ public abstract class AbstractCommandTests {
 		public void method1(CommandContext ctx) {
 			method1Ctx = ctx;
 			method1Count++;
+		}
+
+		public void method1Mixed1(String arg1, CommandContext ctx, String arg2) {
+			method1Mixed1Arg1 = arg1;
+			method1Mixed1Ctx = ctx;
+			method1Mixed1Arg2 = arg2;
+			method1Mixed1Count++;
 		}
 
 		public String method2() {
