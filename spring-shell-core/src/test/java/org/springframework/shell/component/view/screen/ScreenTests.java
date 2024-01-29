@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.geom.VerticalAlign;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ScreenTests extends AbstractViewTests {
@@ -103,6 +104,24 @@ class ScreenTests extends AbstractViewTests {
 		assertThat(items[0][1].getContent()).isEqualTo("x");
 		assertThat(items[0][2].getContent()).isEqualTo("x");
 		assertThat(items[0][3].getContent()).isEqualTo("t");
+	}
+
+	@Test
+	void discardAndDoNotErrorTextWriteOutsideScreen() {
+		assertThatCode(() -> {
+			screen24x80.writerBuilder().build().text("text", 79, 0);
+			screen24x80.writerBuilder().build().text("text", 80, 0);
+			screen24x80.writerBuilder().build().text("text", 0, 24);
+		}).doesNotThrowAnyException();
+	}
+
+	@Test
+	void discardAndDoNotErrorBorderWriteOutsideScreen() {
+		assertThatCode(() -> {
+			screen24x80.writerBuilder().build().border(0, 0, 81, 24);
+			screen24x80.writerBuilder().build().border(0, 0, 80, 25);
+			screen24x80.writerBuilder().build().border(0, 0, 81, 25);
+		}).doesNotThrowAnyException();
 	}
 
 }
