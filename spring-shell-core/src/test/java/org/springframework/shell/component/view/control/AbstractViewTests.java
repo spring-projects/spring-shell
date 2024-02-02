@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class AbstractViewTests {
 
 	protected Screen screen24x80;
+	protected Screen screen1x80;
 	protected Screen screen7x10;
 	protected Screen screen10x10;
 	protected Screen screen0x0;
@@ -44,6 +45,7 @@ public class AbstractViewTests {
 	@BeforeEach
 	void setup() {
 		screen24x80 = new DefaultScreen(24, 80);
+		screen1x80 = new DefaultScreen(1, 80);
 		screen7x10 = new DefaultScreen(7, 10);
 		screen0x0 = new DefaultScreen();
 		screen10x10 = new DefaultScreen(10, 10);
@@ -60,6 +62,7 @@ public class AbstractViewTests {
 
 	protected void clearScreens() {
 		screen24x80.resize(24, 80);
+		screen1x80.resize(1, 80);
 		screen7x10.resize(7, 10);
 		screen0x0.resize(0, 0);
 		screen10x10.resize(10, 10);
