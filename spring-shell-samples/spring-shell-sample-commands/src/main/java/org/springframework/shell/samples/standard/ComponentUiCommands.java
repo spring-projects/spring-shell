@@ -133,7 +133,8 @@ public class ComponentUiCommands extends AbstractShellComponent {
 
 	@Command(command = "componentui progress2")
 	public void progress2() {
-		ProgressView view = new ProgressView(0, 100, ProgressViewItem.ofText(10, HorizontalAlign.LEFT),
+		ProgressView view = new ProgressView(0, 100,
+				ProgressViewItem.ofText(10, HorizontalAlign.LEFT),
 				ProgressViewItem.ofSpinner(3, HorizontalAlign.LEFT),
 				ProgressViewItem.ofPercent(0, HorizontalAlign.RIGHT));
 		view.setDescription("name");
@@ -149,6 +150,17 @@ public class ComponentUiCommands extends AbstractShellComponent {
 		view.setDescription("name");
 		view.setRect(0, 0, 20, 1);
 		view.setSpinner(Spinner.of(Spinner.DOTS1, 80));
+		view.start();
+
+		runProgress(view);
+	}
+
+	@Command(command = "componentui progress4")
+	public void progress4() {
+		ProgressView view = new ProgressView();
+		view.setDescription("name");
+		view.setRect(0, 0, 20, 1);
+		view.setThemeResolver(getThemeResolver());
 		view.start();
 
 		runProgress(view);

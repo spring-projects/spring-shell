@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.style.FigureSettings;
+import org.springframework.shell.style.SpinnerSettings;
 import org.springframework.shell.style.StyleSettings;
 import org.springframework.shell.style.TemplateExecutor;
 import org.springframework.shell.style.Theme;
@@ -90,7 +91,7 @@ public class ThemingAutoConfigurationTests {
 
 	static class MyThemeSettings extends ThemeSettings {
 		MyThemeSettings() {
-			super(StyleSettings.defaults(), FigureSettings.defaults());
+			super(StyleSettings.defaults(), FigureSettings.defaults(), SpinnerSettings.defaults());
 		}
 	}
 

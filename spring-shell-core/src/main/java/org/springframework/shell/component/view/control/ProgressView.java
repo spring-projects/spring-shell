@@ -28,6 +28,7 @@ import org.springframework.shell.component.view.control.cell.TextCell;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Rectangle;
+import org.springframework.shell.style.SpinnerSettings;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.Assert;
 
@@ -75,10 +76,10 @@ public class ProgressView extends BoxView {
 				TextCell<Context> cell = TextCell.of(item, ctx -> {
 					int frame = 0;
 
-					Spinner spin = ctx.getSpinner();
-					if (spin == null) {
-						spin = Spinner.of(Spinner.LINE1, 130);
-					}
+					// via view setting, then via theming, then fallback default
+					Spinner spin = ctx.resolveThemeSpinner(SpinnerSettings.TAG_DOT, ctx.getSpinner(),
+							Spinner.of(Spinner.LINE1, 130));
+
 					if (ctx.getState().running()) {
 						// we know start time and current update time,
 						// calculate elapsed time "frame" to pick rolling
@@ -344,6 +345,11 @@ public class ProgressView extends BoxView {
 			}
 
 			@Override
+			public Spinner resolveThemeSpinner(String tag, Spinner defaultSpinner, Spinner fallbackSpinner) {
+				return ProgressView.this.resolveThemeSpinner(tag, defaultSpinner, fallbackSpinner);
+			}
+
+			@Override
 			public Spinner getSpinner() {
 				return ProgressView.this.spinner;
 			}
@@ -392,6 +398,8 @@ public class ProgressView extends BoxView {
 		 * @return resolved style
 		 */
 		int resolveThemeStyle(String tag, int defaultStyle);
+
+		Spinner resolveThemeSpinner(String tag, Spinner defaultSpinner, Spinner fallbackSpinner);
 
 	}
 
