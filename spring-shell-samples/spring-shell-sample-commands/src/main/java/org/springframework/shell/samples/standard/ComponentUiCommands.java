@@ -31,6 +31,7 @@ import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.control.InputView;
 import org.springframework.shell.component.view.control.ProgressView;
 import org.springframework.shell.component.view.control.ProgressView.ProgressViewItem;
+import org.springframework.shell.component.view.control.Spinner;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.VerticalAlign;
@@ -95,13 +96,7 @@ public class ComponentUiCommands extends AbstractShellComponent {
 		return String.format("Input was '%s'", input);
 	}
 
-	@Command(command = "componentui progress1")
-	public void progress1() {
-		ProgressView view = new ProgressView();
-		view.setDescription("name");
-		view.setRect(0, 0, 20, 1);
-
-
+	private void runProgress(ProgressView view) {
 		ViewComponent component = new ViewComponent(getTerminal(), view);
 		EventLoop eventLoop = component.getEventLoop();
 
@@ -123,8 +118,17 @@ public class ComponentUiCommands extends AbstractShellComponent {
 				}
 			}));
 
-
 		component.run();
+	}
+
+	@Command(command = "componentui progress1")
+	public void progress1() {
+		ProgressView view = new ProgressView();
+		view.setDescription("name");
+		view.setRect(0, 0, 20, 1);
+		view.start();
+
+		runProgress(view);
 	}
 
 	@Command(command = "componentui progress2")
@@ -134,31 +138,20 @@ public class ComponentUiCommands extends AbstractShellComponent {
 				ProgressViewItem.ofPercent(0, HorizontalAlign.RIGHT));
 		view.setDescription("name");
 		view.setRect(0, 0, 20, 1);
+		view.start();
 
+		runProgress(view);
+	}
 
-		ViewComponent component = new ViewComponent(getTerminal(), view);
-		EventLoop eventLoop = component.getEventLoop();
+	@Command(command = "componentui progress3")
+	public void progress3() {
+		ProgressView view = new ProgressView();
+		view.setDescription("name");
+		view.setRect(0, 0, 20, 1);
+		view.setSpinner(Spinner.of(Spinner.DOTS1, 80));
+		view.start();
 
-		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(100)).map(l -> {
-			Message<Long> message = MessageBuilder
-				.withPayload(l)
-				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
-				.build();
-			return message;
-		});
-		eventLoop.dispatch(ticks);
-
-		eventLoop.onDestroy(eventLoop.events()
-			.filter(m -> EventLoop.Type.USER.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
-			.subscribe(m -> {
-				if (m.getPayload() instanceof Long) {
-					view.tickAdvance(5);
-					eventLoop.dispatch(ShellMessageBuilder.ofRedraw());
-				}
-			}));
-
-
-		component.run();
+		runProgress(view);
 	}
 
 }
