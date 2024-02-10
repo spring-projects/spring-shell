@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.shell.component.ViewComponentBuilder;
+import org.springframework.shell.component.ViewComponentExecutor;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.TerminalUICustomizer;
@@ -43,6 +45,20 @@ public class TerminalUIAutoConfiguration {
 		builder = builder.themeResolver(themeResolver);
 		builder = builder.customizers(customizerProvider.orderedStream().toList());
 		return builder;
+	}
+
+	@Bean
+	@Scope("prototype")
+	@ConditionalOnMissingBean
+	public ViewComponentBuilder viewComponentBuilder(TerminalUIBuilder terminalUIBuilder,
+			ViewComponentExecutor viewComponentExecutor, Terminal terminal) {
+		return new ViewComponentBuilder(terminalUIBuilder, viewComponentExecutor, terminal);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public ViewComponentExecutor viewComponentExecutor() {
+		return new ViewComponentExecutor();
 	}
 
 }

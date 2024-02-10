@@ -23,6 +23,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.component.ViewComponent;
+import org.springframework.shell.component.ViewComponent.ViewComponentRun;
 import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.message.ShellMessageHeaderAccessor;
 import org.springframework.shell.component.message.StaticShellMessageHeaderAccessor;
@@ -90,14 +91,15 @@ public class ComponentUiCommands extends AbstractShellComponent {
 	public String stringInput() {
 		InputView view = new InputView();
 		view.setRect(0, 0, 10, 1);
-		ViewComponent component = new ViewComponent(getTerminal(), view);
-		component.run();
+		ViewComponent component = getViewComponentBuilder().build(view);
+		component.runBlocking();
 		String input = view.getInputText();
 		return String.format("Input was '%s'", input);
 	}
 
 	private void runProgress(ProgressView view) {
-		ViewComponent component = new ViewComponent(getTerminal(), view);
+		ViewComponent component = getViewComponentBuilder().build(view);
+
 		EventLoop eventLoop = component.getEventLoop();
 
 		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(100)).map(l -> {
@@ -118,7 +120,7 @@ public class ComponentUiCommands extends AbstractShellComponent {
 				}
 			}));
 
-		component.run();
+		component.runAsync().await();
 	}
 
 	@Command(command = "componentui progress1")
@@ -164,6 +166,62 @@ public class ComponentUiCommands extends AbstractShellComponent {
 		view.start();
 
 		runProgress(view);
+	}
+
+	@Command(command = "componentui progress5")
+	public void progress5() {
+		ProgressView view = new ProgressView(0, 100,
+				ProgressViewItem.ofText(10, HorizontalAlign.LEFT),
+				ProgressViewItem.ofSpinner(3, HorizontalAlign.LEFT),
+				ProgressViewItem.ofPercent(0, HorizontalAlign.RIGHT));
+
+		view.setDescription("name");
+		view.setRect(0, 0, 20, 1);
+		view.start();
+
+		ViewComponent component = getViewComponentBuilder().build(view);
+		component.setUseTerminalWidth(false);
+
+		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(100)).map(l -> {
+			Message<Long> message = MessageBuilder
+				.withPayload(l)
+				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
+				.build();
+			return message;
+		});
+		EventLoop eventLoop = component.getEventLoop();
+		eventLoop.dispatch(ticks);
+		eventLoop.onDestroy(eventLoop.events()
+			.filter(m -> EventLoop.Type.USER.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+			.subscribe(m -> {
+				if (m.getPayload() instanceof Long) {
+					view.tickAdvance(5);
+					eventLoop.dispatch(ShellMessageBuilder.ofRedraw());
+				}
+			}));
+
+		ViewComponentRun run = component.runAsync();
+
+		for (int i = 0; i < 4; i++) {
+
+			if (run.isDone()) {
+				break;
+			}
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+			}
+			if (run.isDone()) {
+				break;
+			}
+
+			String msg = String.format("%s                     ", i);
+			getTerminal().writer().write(msg + System.lineSeparator());
+			getTerminal().writer().flush();
+
+		}
+
+		run.cancel();
 	}
 
 }

@@ -17,6 +17,8 @@ package org.springframework.shell.component;
 
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
@@ -33,11 +35,13 @@ import org.springframework.util.Assert;
  */
 public class ViewComponent {
 
+	private final static Logger log = LoggerFactory.getLogger(ViewComponent.class);
 	private final Terminal terminal;
 	private final View view;
 	private EventLoop eventLoop;
-	private TerminalUI ui;
+	private TerminalUI terminalUI;
 	private boolean useTerminalWidth = true;
+	private ViewComponentExecutor viewComponentExecutor;
 
 	/**
 	 * Construct view component with a given {@link Terminal} and {@link View}.
@@ -45,19 +49,36 @@ public class ViewComponent {
 	 * @param terminal the terminal
 	 * @param view the main view
 	 */
-	public ViewComponent(Terminal terminal, View view) {
+	public ViewComponent(TerminalUI terminalUI, Terminal terminal, ViewComponentExecutor viewComponentExecutor,
+			View view) {
+		Assert.notNull(terminalUI, "terminal ui must be set");
 		Assert.notNull(terminal, "terminal must be set");
 		Assert.notNull(view, "view must be set");
+		this.terminalUI = terminalUI;
 		this.terminal = terminal;
 		this.view = view;
-		this.ui = new TerminalUI(terminal);
-		this.eventLoop = ui.getEventLoop();
+		this.viewComponentExecutor = viewComponentExecutor;
+		this.eventLoop = terminalUI.getEventLoop();
+	}
+
+	/**
+	 * Run a component asyncronously. Returned state can be used to wait, cancel or
+	 * see its completion status.
+	 *
+	 * @return run state
+	 */
+	public ViewComponentRun runAsync() {
+		ViewComponentRun run = viewComponentExecutor.start(() -> {
+			runBlocking();
+		});
+		return run;
 	}
 
 	/**
 	 * Run a view execution loop.
 	 */
-	public void run() {
+	public void runBlocking() {
+		log.debug("Start run()");
 		eventLoop.onDestroy(eventLoop.viewEvents(ViewDoneEvent.class, view)
 			.subscribe(event -> {
 					exit();
@@ -69,8 +90,9 @@ public class ViewComponent {
 		if (useTerminalWidth) {
 			view.setRect(rect.x(), rect.y(), terminalSize.getColumns() - rect.x(), rect.height());
 		}
-		ui.setRoot(view, false);
-		ui.run();
+		terminalUI.setRoot(view, false);
+		terminalUI.run();
+		log.debug("End run()");
 	}
 
 	/**
@@ -96,6 +118,30 @@ public class ViewComponent {
 	 */
 	public void exit() {
 		eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
+	}
+
+	/**
+	 * Represent run state of an async run of a component.
+	 */
+	public interface ViewComponentRun {
+
+		/**
+		 * Await component termination.
+		 */
+		void await();
+
+		/**
+		 * Cancel component run.
+		 */
+		void cancel();
+
+		/**
+	     * Returns {@code true} if component run has completed.
+		 *
+	     * @return {@code true} if component run has completed
+		 */
+		boolean isDone();
+
 	}
 
 }

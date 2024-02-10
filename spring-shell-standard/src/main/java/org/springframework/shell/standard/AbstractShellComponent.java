@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.Shell;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.completion.CompletionResolver;
+import org.springframework.shell.component.ViewComponentBuilder;
 import org.springframework.shell.style.TemplateExecutor;
 import org.springframework.shell.style.ThemeResolver;
 
@@ -55,6 +56,8 @@ public abstract class AbstractShellComponent implements ApplicationContextAware,
 
     private ObjectProvider<ThemeResolver> themeResolverProvider;
 
+    private ObjectProvider<ViewComponentBuilder> viewComponentBuilderProvider;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
@@ -73,6 +76,7 @@ public abstract class AbstractShellComponent implements ApplicationContextAware,
         completionResolverProvider = applicationContext.getBeanProvider(CompletionResolver.class);
         templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
         themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
+        viewComponentBuilderProvider = applicationContext.getBeanProvider(ViewComponentBuilder.class);
     }
 
     protected ApplicationContext getApplicationContext() {
@@ -105,5 +109,9 @@ public abstract class AbstractShellComponent implements ApplicationContextAware,
 
     protected ThemeResolver getThemeResolver() {
         return themeResolverProvider.getObject();
+    }
+
+    protected ViewComponentBuilder getViewComponentBuilder() {
+        return viewComponentBuilderProvider.getObject();
     }
 }
