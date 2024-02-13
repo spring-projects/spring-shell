@@ -19,14 +19,17 @@ ext {
 		def properties = new Properties()
 		properties.load(it)
 		set("springBootVersion", properties["springBootVersion"])
+		set("nativeBuildToolsVersion", properties["nativeBuildToolsVersion"])
 	}
 }
 
 dependencies {
 	implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+	implementation "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 	implementation("org.springframework:spring-core")
 	implementation 'org.asciidoctor:asciidoctor-gradle-jvm:3.3.2'
 	implementation 'org.jfrog.buildinfo:build-info-extractor-gradle:4.29.0'
+	implementation "org.graalvm.buildtools:native-gradle-plugin:${nativeBuildToolsVersion}"
 }
 
 gradlePlugin {

@@ -1,7 +1,5 @@
 plugins {
 	id 'org.springframework.shell.sample'
-	id 'org.springframework.boot'
-	id 'org.graalvm.buildtools.native'
 }
 
 description = 'Spring Shell Samples'
@@ -14,26 +12,3 @@ dependencies {
 	testImplementation 'org.awaitility:awaitility'
 }
 
-springBoot {
-	buildInfo()
-}
-
-if (project.hasProperty('springShellSampleE2E') && springShellSampleE2E.toBoolean()) {
-	bootJar {
-	   	archiveName = "$baseName.$extension"
-	}
-}
-
-graalvmNative {
-	metadataRepository {
-		enabled = true
-	}
-	binaries {
-		main {
-			if (project.hasProperty('springShellSampleMusl') && springShellSampleMusl.toBoolean()) {
-				buildArgs.add('--static')
-				buildArgs.add('--libc=musl')
-			}
-		}
-	}
-}
