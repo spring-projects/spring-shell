@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,6 @@ import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.ViewEvent;
 import org.springframework.shell.component.view.event.processor.AnimationEventLoopProcessor;
 import org.springframework.shell.component.view.event.processor.TaskEventLoopProcessor;
-import org.springframework.util.Assert;
 
 /**
  * Default implementation of an {@link EventLoop}.
@@ -202,8 +201,11 @@ public class DefaultEventLoop implements EventLoop {
 	// }
 
 	private boolean doSend(Message<?> message, long timeout) {
-		Assert.state(this.active && this.many.currentSubscriberCount() > 0,
-				() -> "The [" + this + "] doesn't have subscribers to accept messages");
+		if (!this.active || this.many.currentSubscriberCount() == 0) {
+			return false;
+		}
+		// Assert.state(this.active && this.many.currentSubscriberCount() > 0,
+		// 		() -> "The [" + this + "] doesn't have subscribers to accept messages");
 		long remainingTime = 0;
 		if (timeout > 0) {
 			remainingTime = timeout;
