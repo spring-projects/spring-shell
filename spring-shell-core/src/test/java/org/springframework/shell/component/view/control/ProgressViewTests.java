@@ -16,6 +16,7 @@
 package org.springframework.shell.component.view.control;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -27,6 +28,7 @@ import org.springframework.shell.component.view.control.ProgressView.ProgressVie
 import org.springframework.shell.component.view.control.ProgressView.ProgressViewItem;
 import org.springframework.shell.component.view.control.ProgressView.ProgressViewStartEvent;
 import org.springframework.shell.component.view.control.ProgressView.ProgressViewStateChangeEvent;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,20 +42,23 @@ public class ProgressViewTests extends AbstractViewTests {
 		@Test
 		void constructDefault() {
 			view = new ProgressView();
+			assertThat(getViewItems(view)).hasSize(3);
 			assertThat(view.getState().tickValue()).isEqualTo(0);
 		}
 
 		@Test
 		void constructBounds() {
 			view = new ProgressView(10, 30);
+			assertThat(getViewItems(view)).hasSize(3);
 			assertThat(view.getState().tickValue()).isEqualTo(10);
 			assertThat(view.getState().tickStart()).isEqualTo(10);
 			assertThat(view.getState().tickEnd()).isEqualTo(30);
 		}
 
-		void xxx() {
+		@Test
+		void constructJustText() {
 			view = new ProgressView(10, 30, ProgressViewItem.ofText());
-			ProgressViewItem.ofText();
+			assertThat(getViewItems(view)).hasSize(1);
 		}
 
 	}
@@ -179,4 +184,10 @@ public class ProgressViewTests extends AbstractViewTests {
 
 	}
 
+	private static List<ProgressViewItem> getViewItems(ProgressView view) {
+
+		@SuppressWarnings("unchecked")
+		List<ProgressViewItem> items = (List<ProgressViewItem>) ReflectionTestUtils.getField(view, "items");
+		return items;
+	}
 }

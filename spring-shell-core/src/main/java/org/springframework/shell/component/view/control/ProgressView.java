@@ -15,22 +15,33 @@
  */
 package org.springframework.shell.component.view.control;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.Disposable;
+import reactor.core.Disposables;
+import reactor.core.publisher.Flux;
 
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.shell.component.message.ShellMessageBuilder;
+import org.springframework.shell.component.message.ShellMessageHeaderAccessor;
+import org.springframework.shell.component.message.StaticShellMessageHeaderAccessor;
 import org.springframework.shell.component.view.control.cell.TextCell;
+import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.style.SpinnerSettings;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 /**
  * {@code ProgressView} is used to show a progress indicator.
@@ -100,23 +111,33 @@ public class ProgressView extends BoxView {
 			};
 
 	/**
-	 * Construct view with {@code tickStart 0} and {@code tickEnd 100}.
+	 * Construct view with {@code tickStart 0} and {@code tickEnd 100}. Uses default
+	 * {@link ProgressViewItem}s.
 	 */
 	public ProgressView() {
 		this(0, 100);
 	}
 
 	/**
-	 * Construct view with given bounds for {@code tickStart} and {@code tickEnd}.
-	 * {@code tickStart} needs to be equal or more than zero. {@code tickEnd} needs
-	 * to be higher than {@code tickStart}. Defines default items for {@code text},
-	 * {@code spinner} and {@code percent}.
+	 * Construct view with {@code tickStart 0} and {@code tickEnd 100}. Uses default
+	 * {@link ProgressViewItem}s.
 	 *
 	 * @param tickStart the tick start
-	 * @param tickEnd the tick end
+	 * @param tickEnd   the tick end
 	 */
 	public ProgressView(int tickStart, int tickEnd) {
 		this(tickStart, tickEnd, new ProgressViewItem[] { ProgressViewItem.ofText(), ProgressViewItem.ofSpinner(),
+				ProgressViewItem.ofPercent() });
+	}
+
+	/**
+	 * Construct view with given {@link ProgressViewItem}s using {@code tickStart 0}
+	 * and {@code tickEnd 100}.
+	 *
+	 * @param items the progress view items
+	 */
+	public ProgressView(ProgressViewItem... items) {
+		this(0, 100, new ProgressViewItem[] { ProgressViewItem.ofText(), ProgressViewItem.ofSpinner(),
 				ProgressViewItem.ofPercent() });
 	}
 
@@ -208,6 +229,9 @@ public class ProgressView extends BoxView {
 		this.spinner = spinner;
 	}
 
+	/**
+	 * Starts a runtime logic. Call to already started progress has no effect.
+	 */
 	public void start() {
 		if (running) {
 			return;
@@ -215,12 +239,61 @@ public class ProgressView extends BoxView {
 		running = true;
 		startTime = System.currentTimeMillis();
 		ProgressState state = getState();
+		scheduleTicks();
 		dispatch(ShellMessageBuilder.ofView(this, ProgressViewStartEvent.of(this, state)));
 	}
 
+	private Disposable.Composite disposables;
+	private final String TAG_KEY = "ProgressView";
+	private final String TAG_VALUE = UUID.randomUUID().toString();
+
+	private void scheduleTicks() {
+		if (disposables != null) {
+			return;
+		}
+		EventLoop eventLoop = getEventLoop();
+		if (eventLoop == null) {
+			return;
+		}
+		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(50)).map(l -> {
+			Message<Long> message = MessageBuilder
+				.withPayload(l)
+				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
+				.setHeader(TAG_KEY, TAG_VALUE)
+				.build();
+			return message;
+		});
+		Disposable ticksDisposable = ticks.subscribe(m -> {
+			eventLoop.dispatch(m);
+		});
+		Disposable eventsDisposable = eventLoop.events()
+			.filter(m -> EventLoop.Type.USER.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+			.filter(m -> ObjectUtils.nullSafeEquals(m.getHeaders().get(TAG_KEY), TAG_VALUE))
+			.subscribe(m -> {
+				requestRedraw();
+			});
+		disposables = Disposables.composite();
+		disposables.add(eventsDisposable);
+		disposables.add(ticksDisposable);
+	}
+
+	private void requestRedraw() {
+		EventLoop eventLoop = getEventLoop();
+		if (eventLoop != null) {
+			eventLoop.dispatch(ShellMessageBuilder.ofRedraw());
+		}
+	}
+
+	/**
+	 * Stops a runtime logic.
+	 */
 	public void stop() {
 		if (!running) {
 			return;
+		}
+		if (disposables != null) {
+			disposables.dispose();
+			disposables = null;
 		}
 		running = false;
 		ProgressState state = getState();
@@ -309,6 +382,7 @@ public class ProgressView extends BoxView {
 		if (changed) {
 			ProgressState state = getState();
 			dispatch(ShellMessageBuilder.ofView(this, ProgressViewStateChangeEvent.of(this, state)));
+			requestRedraw();
 		}
 	}
 

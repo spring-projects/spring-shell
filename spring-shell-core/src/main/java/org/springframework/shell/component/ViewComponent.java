@@ -59,6 +59,7 @@ public class ViewComponent {
 		this.view = view;
 		this.viewComponentExecutor = viewComponentExecutor;
 		this.eventLoop = terminalUI.getEventLoop();
+		view.setEventLoop(this.eventLoop);
 	}
 
 	/**

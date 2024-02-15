@@ -15,25 +15,17 @@
  */
 package org.springframework.shell.samples.standard;
 
-import java.time.Duration;
+import java.util.ArrayList;
 
-import reactor.core.publisher.Flux;
-
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.ViewComponent;
 import org.springframework.shell.component.ViewComponent.ViewComponentRun;
-import org.springframework.shell.component.message.ShellMessageBuilder;
-import org.springframework.shell.component.message.ShellMessageHeaderAccessor;
-import org.springframework.shell.component.message.StaticShellMessageHeaderAccessor;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.control.InputView;
 import org.springframework.shell.component.view.control.ProgressView;
 import org.springframework.shell.component.view.control.ProgressView.ProgressViewItem;
-import org.springframework.shell.component.view.control.Spinner;
-import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.VerticalAlign;
 import org.springframework.shell.standard.AbstractShellComponent;
@@ -97,131 +89,91 @@ public class ComponentUiCommands extends AbstractShellComponent {
 		return String.format("Input was '%s'", input);
 	}
 
-	private void runProgress(ProgressView view) {
-		ViewComponent component = getViewComponentBuilder().build(view);
-
-		EventLoop eventLoop = component.getEventLoop();
-
-		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(100)).map(l -> {
-			Message<Long> message = MessageBuilder
-				.withPayload(l)
-				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
-				.build();
-			return message;
-		});
-		eventLoop.dispatch(ticks);
-
-		eventLoop.onDestroy(eventLoop.events()
-			.filter(m -> EventLoop.Type.USER.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
-			.subscribe(m -> {
-				if (m.getPayload() instanceof Long) {
-					view.tickAdvance(5);
-					eventLoop.dispatch(ShellMessageBuilder.ofRedraw());
-				}
-			}));
-
-		component.runAsync().await();
-	}
-
-	@Command(command = "componentui progress1")
-	public void progress1() {
-		ProgressView view = new ProgressView();
-		view.setDescription("name");
+	@Command(command = "componentui progress")
+	public void progress(
+		@Option(defaultValue = "desc") String description,
+		@Option(defaultValue = "true") boolean textEnabled,
+		@Option(defaultValue = "true") boolean spinnerEnabled,
+		@Option(defaultValue = "true") boolean percentEnabled,
+		@Option(defaultValue = "0") int textSize,
+		@Option(defaultValue = "0") int spinnerSize,
+		@Option(defaultValue = "0") int percentSize,
+		@Option(defaultValue = "CENTER") HorizontalAlign textAlign,
+		@Option(defaultValue = "CENTER") HorizontalAlign spinnerAlign,
+		@Option(defaultValue = "CENTER") HorizontalAlign percentAlign,
+		@Option(defaultValue = "-1") int logMessagesRate,
+		@Option(defaultValue = "200") long advanceSleep,
+		@Option(defaultValue = "false") boolean logMessagesSleep
+	) {
+		ArrayList<ProgressViewItem> items = new ArrayList<>();
+		if (textEnabled) {
+			items.add(ProgressViewItem.ofText(textSize, textAlign));
+		}
+		if (spinnerEnabled) {
+			items.add(ProgressViewItem.ofSpinner(spinnerSize, spinnerAlign));
+		}
+		if (percentEnabled) {
+			items.add(ProgressViewItem.ofPercent(percentSize, percentAlign));
+		}
+		ProgressViewItem[] itemsArray = items.toArray(new ProgressViewItem[0]);
+		ProgressView view = new ProgressView(itemsArray);
+		view.setDescription(description);
 		view.setRect(0, 0, 20, 1);
-		view.start();
-
-		runProgress(view);
-	}
-
-	@Command(command = "componentui progress2")
-	public void progress2() {
-		ProgressView view = new ProgressView(0, 100,
-				ProgressViewItem.ofText(10, HorizontalAlign.LEFT),
-				ProgressViewItem.ofSpinner(3, HorizontalAlign.LEFT),
-				ProgressViewItem.ofPercent(0, HorizontalAlign.RIGHT));
-		view.setDescription("name");
-		view.setRect(0, 0, 20, 1);
-		view.start();
-
-		runProgress(view);
-	}
-
-	@Command(command = "componentui progress3")
-	public void progress3() {
-		ProgressView view = new ProgressView();
-		view.setDescription("name");
-		view.setRect(0, 0, 20, 1);
-		view.setSpinner(Spinner.of(Spinner.DOTS1, 80));
-		view.start();
-
-		runProgress(view);
-	}
-
-	@Command(command = "componentui progress4")
-	public void progress4() {
-		ProgressView view = new ProgressView();
-		view.setDescription("name");
-		view.setRect(0, 0, 20, 1);
-		view.setThemeResolver(getThemeResolver());
-		view.start();
-
-		runProgress(view);
-	}
-
-	@Command(command = "componentui progress5")
-	public void progress5() {
-		ProgressView view = new ProgressView(0, 100,
-				ProgressViewItem.ofText(10, HorizontalAlign.LEFT),
-				ProgressViewItem.ofSpinner(3, HorizontalAlign.LEFT),
-				ProgressViewItem.ofPercent(0, HorizontalAlign.RIGHT));
-
-		view.setDescription("name");
-		view.setRect(0, 0, 20, 1);
-		view.start();
 
 		ViewComponent component = getViewComponentBuilder().build(view);
-		component.setUseTerminalWidth(false);
-
-		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(100)).map(l -> {
-			Message<Long> message = MessageBuilder
-				.withPayload(l)
-				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
-				.build();
-			return message;
-		});
-		EventLoop eventLoop = component.getEventLoop();
-		eventLoop.dispatch(ticks);
-		eventLoop.onDestroy(eventLoop.events()
-			.filter(m -> EventLoop.Type.USER.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
-			.subscribe(m -> {
-				if (m.getPayload() instanceof Long) {
-					view.tickAdvance(5);
-					eventLoop.dispatch(ShellMessageBuilder.ofRedraw());
-				}
-			}));
+		view.start();
 
 		ViewComponentRun run = component.runAsync();
 
-		for (int i = 0; i < 4; i++) {
-
+		for (int i = 0; i < 51; i++) {
 			if (run.isDone()) {
 				break;
 			}
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-			}
+			sleep(advanceSleep);
 			if (run.isDone()) {
 				break;
 			}
-
-			String msg = String.format("%s                     ", i);
-			getTerminal().writer().write(msg + System.lineSeparator());
-			getTerminal().writer().flush();
-
+			if (logMessagesRate > 0 && (i % logMessagesRate) == 0) {
+				int width = getTerminal().getWidth();
+				String msg = String.format("%-" + width + "s", i);
+				getTerminal().writer().write(msg + System.lineSeparator());
+				getTerminal().writer().flush();
+			}
+			view.tickAdvance(1);
 		}
 
+		if (logMessagesSleep) {
+			view.stop();
+			sleep(2000);
+			view.start();
+		}
+
+		for (int i = 51; i < 101; i++) {
+			if (run.isDone()) {
+				break;
+			}
+			sleep(advanceSleep);
+			if (run.isDone()) {
+				break;
+			}
+			if (logMessagesRate > 0 && (i % logMessagesRate) == 0) {
+				int width = getTerminal().getWidth();
+				String msg = String.format("%-" + width + "s", i);
+				getTerminal().writer().write(msg + System.lineSeparator());
+				getTerminal().writer().flush();
+			}
+			view.tickAdvance(1);
+		}
+
+		view.stop();
 		run.cancel();
+	}
+
+	private static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+		}
 	}
 
 }
