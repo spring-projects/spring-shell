@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.Shell;
 import org.springframework.shell.ShellRunner;
-import org.springframework.util.ObjectUtils;
 
 /**
  * A {@link ShellRunner} that looks for process arguments that start with {@literal @}, which are then interpreted as
@@ -61,11 +60,11 @@ public class ScriptShellRunner implements ShellRunner {
 
 	@Override
 	public boolean canRun(ApplicationArguments args) {
-		List<File> scriptsToRun = args.getNonOptionArgs().stream()
-				.filter(s -> s.startsWith("@"))
-				.map(s -> new File(s.substring(1)))
-				.collect(Collectors.toList());
-		return !ObjectUtils.isEmpty(scriptsToRun);
+		String[] sourceArgs = args.getSourceArgs();
+		if (sourceArgs.length > 0 && sourceArgs[0].startsWith("@") && sourceArgs[0].length() > 1) {
+			return true;
+		}
+		return false;
 	}
 
 	//tag::documentation[]
