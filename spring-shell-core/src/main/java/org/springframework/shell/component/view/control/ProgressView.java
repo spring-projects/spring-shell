@@ -137,8 +137,7 @@ public class ProgressView extends BoxView {
 	 * @param items the progress view items
 	 */
 	public ProgressView(ProgressViewItem... items) {
-		this(0, 100, new ProgressViewItem[] { ProgressViewItem.ofText(), ProgressViewItem.ofSpinner(),
-				ProgressViewItem.ofPercent() });
+		this(0, 100, items);
 	}
 
 	/**

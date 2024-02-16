@@ -61,6 +61,12 @@ public class ProgressViewTests extends AbstractViewTests {
 			assertThat(getViewItems(view)).hasSize(1);
 		}
 
+		@Test
+		void constructJustTextJustItems() {
+			view = new ProgressView(ProgressViewItem.ofText());
+			assertThat(getViewItems(view)).hasSize(1);
+		}
+
 	}
 
 	@Nested
