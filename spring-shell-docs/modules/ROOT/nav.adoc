@@ -66,6 +66,7 @@
 *** xref:tui/views/list.adoc[]
 *** xref:tui/views/menu.adoc[]
 *** xref:tui/views/menubar.adoc[]
+*** xref:tui/views/progress.adoc[]
 *** xref:tui/views/statusbar.adoc[]
 ** xref:tui/events/index.adoc[]
 *** xref:tui/events/eventloop.adoc[]

@@ -1,0 +1,81 @@
+[[tui-views-progress]]
+= ProgressView
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+_ProgressView_ is a base implementation providing functionality to draw a progress info.
+Inherits xref:tui/views/box.adoc[].
+
+_ProgressView_ draws its content using concepts described below
+
+* _ProgressState_ contains various info about a runtime state
+** _tickStart_ Lower bound of tick value
+** _tickEnd_ Upper bound of tick value
+** _tickValue_ Current tick value
+** _running_ Running state, either true or false
+** _startTime_ Start time in millis when progress was started
+** _updateTime_ Last known time in millis when progress has updated
+* _ProgressContext_ is a context used with _ProgressViewItem_
+** _description_ The description given to progress
+** _state_ The _ProgressState_
+** _view_ The owning _ProgressView_
+** _spinner_ The _Spinner_ representation used with _ProgressView_
+** Other methods to help with item drawing
+* _ProgressViewItem_ is a representation of a cell used in _ProgressView_
+
+There are few build-in items namely `text`, `spinner` and `percent`.
+
+Default _ProgressView_ gives you `text`, `spinner` and `percent`.
+
+[source, java, indent=0]
+----
+include::{snippets}/ProgressViewSnippets.java[tag=default]
+----
+
+And looks like:
+
+[asciinema,rows=1]
+----
+include::example$tui-progress-1.cast[]
+----
+
+== Customisation
+
+Here's some examples for various customisations:
+
+[source, java, indent=0]
+----
+include::{snippets}/ProgressViewSnippets.java[tag=allmixedalignandsize]
+----
+
+Align `text` and `spinner` to left and give them less space. Align `percent` to right
+and give it remaining space.
+
+[asciinema,rows=1]
+----
+include::example$tui-progress-2.cast[]
+----
+
+== Default Bindings
+Does not have any default bindings.
+
+== Events
+
+Events are sent depending on a state of a progress.
+
+.ProgressView Events
+|===
+|Event |Description
+
+|ProgressViewStartEvent
+|Progress tracking has started
+
+|ProgressViewEndEvent
+|Progress tracking has stopped
+
+|ProgressViewStateChangeEvent
+|Progress tracking state has changed
+
+
+|===
