@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,6 @@ import org.springframework.shell.component.view.control.MenuView.MenuItem;
 import org.springframework.shell.component.view.control.MenuView.MenuItemCheckStyle;
 import org.springframework.shell.component.view.control.StatusBarView;
 import org.springframework.shell.component.view.control.StatusBarView.StatusItem;
-import org.springframework.shell.component.view.control.View;
 import org.springframework.shell.component.view.control.cell.AbstractListCell;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent;
@@ -56,6 +55,7 @@ import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.geom.VerticalAlign;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
+import org.springframework.shell.samples.catalog.scenario.Scenario.ScenarioContext;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.ObjectUtils;
@@ -78,7 +78,7 @@ public class Catalog {
 
 	// mapping from category name to scenarios(can belong to multiple categories)
 	private final Map<String, List<ScenarioData>> categoryMap = new TreeMap<>();
-	private View currentScenarioView = null;
+	private ScenarioContext currentScenarioContext = null;
 	private TerminalUI ui;
 	private ListView<String> categories;
 	private ListView<ScenarioData> scenarios;
@@ -130,8 +130,9 @@ public class Catalog {
 		eventLoop.onDestroy(eventLoop.keyEvents()
 			.doOnNext(m -> {
 				if (m.getPlainKey() == Key.q && m.hasCtrl()) {
-					if (currentScenarioView != null) {
-						currentScenarioView = null;
+					if (currentScenarioContext != null) {
+						currentScenarioContext.stop();
+						currentScenarioContext = null;
 						ui.setRoot(app, true);
 						ui.setFocus(categories);
 					}
@@ -172,13 +173,11 @@ public class Catalog {
 		// handle event when scenario is chosen
 		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_SCENARIO_TYPEREF, scenarios)
 			.subscribe(event -> {
-				View view = event.args().item().scenario().configure(ui).build();
-				ui.configure(view);
-				// View view = event.args().item().scenario()
-				// 	.configure(ui, eventLoop, themeResolver, activeThemeName)
-				// 	.build();
-				component.setRoot(view, true);
-				currentScenarioView = view;
+				ScenarioContext context = event.args().item().scenario().configure(ui).buildContext();
+				ui.configure(context.view());
+				component.setRoot(context.view(), true);
+				context.start();
+				currentScenarioContext = context;
 			}));
 
 
