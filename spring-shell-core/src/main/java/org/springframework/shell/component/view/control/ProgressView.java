@@ -63,16 +63,16 @@ public class ProgressView extends BoxView {
 	private GridView grid;
 	private long startTime;
 	private long updateTime;
-	private List<TextCell<Context>> cells = new ArrayList<>();
+	private List<TextCell<ProgressContext>> cells = new ArrayList<>();
 
-	private final static Function<Context, TextCell<Context>> DEFAULT_DESCRIPTION_FACTORY =
+	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_DESCRIPTION_FACTORY =
 			(item) -> TextCell.of(item, ctx -> {
 				return ctx.getDescription();
 			});
 
-	private final static Function<Context, TextCell<Context>> DEFAULT_PERCENT_FACTORY =
+	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_PERCENT_FACTORY =
 			(item) -> {
-				TextCell<Context> cell = TextCell.of(item, ctx -> {
+				TextCell<ProgressContext> cell = TextCell.of(item, ctx -> {
 					ProgressState state = ctx.getState();
 					int percentAbs = state.tickEnd() - state.tickStart();
 					int relativeValue = state.tickValue() - state.tickStart();
@@ -82,9 +82,9 @@ public class ProgressView extends BoxView {
 				return cell;
 			};
 
-	private final static Function<Context, TextCell<Context>> DEFAULT_SPINNER_FACTORY =
+	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_SPINNER_FACTORY =
 			item -> {
-				TextCell<Context> cell = TextCell.of(item, ctx -> {
+				TextCell<ProgressContext> cell = TextCell.of(item, ctx -> {
 					int frame = 0;
 
 					// via view setting, then via theming, then fallback default
@@ -166,11 +166,11 @@ public class ProgressView extends BoxView {
 	 */
 	public static class ProgressViewItem {
 
-		private final Function<Context, TextCell<Context>> factory;
+		private final Function<ProgressContext, TextCell<ProgressContext>> factory;
 		private final int size;
 		private final HorizontalAlign align;
 
-		public ProgressViewItem(Function<Context, TextCell<Context>> factory, int size, HorizontalAlign align) {
+		public ProgressViewItem(Function<ProgressContext, TextCell<ProgressContext>> factory, int size, HorizontalAlign align) {
 			this.factory = factory;
 			this.size = size;
 			this.align = align;
@@ -300,8 +300,8 @@ public class ProgressView extends BoxView {
 	}
 
 	private static class BoxWrapper extends BoxView {
-		TextCell<Context> delegate;
-		BoxWrapper(TextCell<Context> delegate) {
+		TextCell<ProgressContext> delegate;
+		BoxWrapper(TextCell<ProgressContext> delegate) {
 			this.delegate = delegate;
 		}
 		@Override
@@ -319,7 +319,7 @@ public class ProgressView extends BoxView {
 		int index = 0;
 		for (ProgressViewItem item : items) {
 			columnSizes[index] = item.size;
-			TextCell<Context> cell = item.factory.apply(buildContext());
+			TextCell<ProgressContext> cell = item.factory.apply(buildContext());
 			cells.add(cell);
 			cell.setHorizontalAlign(item.align);
 			grid.addItem(new BoxWrapper(cell), 0, index, 1, 1, 0, 0);
@@ -335,8 +335,8 @@ public class ProgressView extends BoxView {
 		long current = System.currentTimeMillis();
 
 		updateTime = current;
-		Context context = buildContext();
-		for (TextCell<Context> cell : cells) {
+		ProgressContext context = buildContext();
+		for (TextCell<ProgressContext> cell : cells) {
 			cell.setItem(context);
 		}
 
@@ -394,8 +394,8 @@ public class ProgressView extends BoxView {
 		return ProgressState.of(tickStart, tickEnd, tickValue, running, startTime, updateTime);
 	}
 
-	private Context buildContext() {
-		return new Context() {
+	private ProgressContext buildContext() {
+		return new ProgressContext() {
 
 			@Override
 			public String getDescription() {
@@ -432,7 +432,7 @@ public class ProgressView extends BoxView {
 	/**
 	 * Context for {@code ProgressView} cell components.
 	 */
-	public interface Context {
+	public interface ProgressContext {
 
 		/**
 		 * Get a {@link ProgressView} description.
