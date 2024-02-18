@@ -32,7 +32,7 @@ public class TaskEventLoopProcessor implements EventLoopProcessor {
 	public boolean canProcess(Message<?> message) {
 		if (EventLoop.Type.TASK.equals(StaticShellMessageHeaderAccessor.getEventType(message))) {
 			Object payload = message.getPayload();
-			if (payload instanceof Runnable r) {
+			if (payload instanceof Runnable) {
 				return true;
 			}
 			else if(payload instanceof KeyBindingConsumerArgs) {
@@ -48,7 +48,7 @@ public class TaskEventLoopProcessor implements EventLoopProcessor {
 	@Override
 	public Flux<? extends Message<?>> process(Message<?> message) {
 		Object payload = message.getPayload();
-		if (payload instanceof Runnable r) {
+		if (payload instanceof Runnable) {
 			return processRunnable(message);
 		}
 		else if(payload instanceof KeyBindingConsumerArgs) {
