@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ class TestingSnippets {
 		@Test
 		void test() {
 			NonInteractiveShellSession session = client
-				.nonInterative("help", "help")
+				.nonInterative("help")
 				.run();
 
 			await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
