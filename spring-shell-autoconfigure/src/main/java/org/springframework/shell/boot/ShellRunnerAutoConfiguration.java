@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class ShellRunnerAutoConfiguration {
 	public static class NonePrimaryCommandConfiguration {
 
 		@Bean
-		@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true", matchIfMissing = true)
+		@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true", matchIfMissing = false)
 		public InteractiveShellRunner interactiveApplicationRunner(LineReader lineReader, PromptProvider promptProvider,
 				Shell shell, ShellContext shellContext) {
 			return new InteractiveShellRunner(lineReader, promptProvider, shell, shellContext);
@@ -75,7 +75,7 @@ public class ShellRunnerAutoConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnProperty(prefix = "spring.shell.script", value = "enabled", havingValue = "true", matchIfMissing = true)
+		@ConditionalOnProperty(prefix = "spring.shell.script", value = "enabled", havingValue = "true", matchIfMissing = false)
 		public ScriptShellRunner scriptApplicationRunner(Parser parser, Shell shell) {
 			return new ScriptShellRunner(parser, shell);
 		}

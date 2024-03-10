@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,10 @@ class ShellRunnerAutoConfigurationTests {
 
 	@Nested
 	class Interactive {
+
 		@Test
-		void enabledByDefault() {
-			contextRunner.run(context -> assertThat(context).hasSingleBean(InteractiveShellRunner.class));
+		void disabledByDefault() {
+			contextRunner.run(context -> assertThat(context).doesNotHaveBean(InteractiveShellRunner.class));
 		}
 
 		@Test
@@ -67,6 +68,7 @@ class ShellRunnerAutoConfigurationTests {
 
 	@Nested
 	class NonInteractive {
+
 		@Test
 		void enabledByDefault() {
 			contextRunner.run(context -> assertThat(context).hasSingleBean(NonInteractiveShellRunner.class));
@@ -101,9 +103,10 @@ class ShellRunnerAutoConfigurationTests {
 
 	@Nested
 	class Script {
+
 		@Test
-		void enabledByDefault() {
-			contextRunner.run(context -> assertThat(context).hasSingleBean(ScriptShellRunner.class));
+		void disabledByDefault() {
+			contextRunner.run(context -> assertThat(context).doesNotHaveBean(ScriptShellRunner.class));
 		}
 
 		@Test

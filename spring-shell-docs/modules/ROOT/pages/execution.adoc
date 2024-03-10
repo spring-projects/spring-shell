@@ -31,6 +31,22 @@ and its default implementation makes a choice which `ShellRunner` is used. There
 only one `ShellApplicationRunner` but it can be redefined if needed for some reason.
 
 Three `ShellRunner` implementation exists, named `InteractiveShellRunner`,
-`NonInteractiveShellRunner` and `ScriptShellRunner`. These are enabled on default but
-can be disable if needed using properties `spring.shell.interactive.enabled`,
-`spring.shell.noninteractive.enabled` and `spring.shell.script.enabled` respecively.
+`NonInteractiveShellRunner` and `ScriptShellRunner`. Only `NonInteractiveShellRunner`
+is enabled by default. Enabled state can be modified using properties
+`spring.shell.interactive.enabled`, `spring.shell.noninteractive.enabled` and
+`spring.shell.script.enabled` respecively.
+
+For example enabling interactive and script runners use properties:
+
+[source, yaml]
+----
+spring:
+  shell:
+    interactive:
+      enabled: true
+    script:
+      enabled: true
+----
+
+NOTE: Versions up to `3.2.x` had all runners enabled by default, starting from `3.3.x`
+      only `NonInteractiveShellRunner` is enabled by default.

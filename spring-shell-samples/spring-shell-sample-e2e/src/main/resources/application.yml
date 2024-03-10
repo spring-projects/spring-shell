@@ -2,6 +2,8 @@ spring:
   main:
     banner-mode: off
   shell:
+    interactive:
+      enabled: true
     ## pick global default option naming
     # option:
     #   naming:
