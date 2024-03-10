@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -238,7 +238,7 @@ public class Shell {
 
 		CommandExecution execution = CommandExecution.of(
 				argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal,
-				conversionService, commandRegistry);
+				shellContext, conversionService, commandRegistry);
 
 		List<CommandExceptionResolver> commandExceptionResolvers = commandRegistration.get().getExceptionResolvers();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.jline.terminal.Terminal;
 
 import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.shell.command.CommandParser.CommandParserResults;
+import org.springframework.shell.context.ShellContext;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -78,6 +79,13 @@ public interface CommandContext {
 	Terminal getTerminal();
 
 	/**
+	 * Gets a {@link ShellContext} associated with {@link CommandContext}.
+	 *
+	 * @return a shell context
+	 */
+	ShellContext getShellContext();
+
+	/**
 	 * Gets an instance of a default {@link CommandContext}.
 	 *
 	 * @param args the arguments
@@ -87,8 +95,8 @@ public interface CommandContext {
 	 * @return a command context
 	 */
 	static CommandContext of(String[] args, CommandParserResults results, Terminal terminal,
-			CommandRegistration commandRegistration) {
-		return new DefaultCommandContext(args, results, terminal, commandRegistration);
+			CommandRegistration commandRegistration, ShellContext shellContext) {
+		return new DefaultCommandContext(args, results, terminal, commandRegistration, shellContext);
 	}
 
 	/**
@@ -100,13 +108,15 @@ public interface CommandContext {
 		private final CommandParserResults results;
 		private final Terminal terminal;
 		private final CommandRegistration commandRegistration;
+		private final ShellContext shellContext;
 
 		DefaultCommandContext(String[] args, CommandParserResults results, Terminal terminal,
-				CommandRegistration commandRegistration) {
+				CommandRegistration commandRegistration, ShellContext shellContext) {
 			this.args = args;
 			this.results = results;
 			this.terminal = terminal;
 			this.commandRegistration = commandRegistration;
+			this.shellContext = shellContext;
 		}
 
 		@Override
@@ -142,6 +152,11 @@ public interface CommandContext {
 		@Override
 		public Terminal getTerminal() {
 			return terminal;
+		}
+
+		@Override
+		public ShellContext getShellContext() {
+			return shellContext;
 		}
 
 		private Optional<CommandParserResult> find(String name) {

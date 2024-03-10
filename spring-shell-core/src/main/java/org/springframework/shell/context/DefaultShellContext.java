@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,15 @@ import org.springframework.util.Assert;
 public class DefaultShellContext implements ShellContext {
 
 	private InteractionMode interactionMode = InteractionMode.ALL;
+	private final boolean pty;
+
+	public DefaultShellContext() {
+		this(false);
+	}
+
+	public DefaultShellContext(boolean pty) {
+		this.pty = pty;
+	}
 
 	@Override
 	public InteractionMode getInteractionMode() {
@@ -35,5 +44,10 @@ public class DefaultShellContext implements ShellContext {
 	public void setInteractionMode(InteractionMode interactionMode) {
 		Assert.notNull(interactionMode, "mode cannot be null");
 		this.interactionMode = interactionMode;
+	}
+
+	@Override
+	public boolean hasPty() {
+		return this.pty;
 	}
 }

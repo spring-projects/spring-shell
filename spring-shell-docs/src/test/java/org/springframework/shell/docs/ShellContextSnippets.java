@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,40 @@
  */
 package org.springframework.shell.docs;
 
-import jakarta.validation.constraints.Null;
-
-import org.springframework.shell.command.CommandContext;
+import org.springframework.shell.context.InteractionMode;
+import org.springframework.shell.context.ShellContext;
 
 @SuppressWarnings("unused")
-public class CommandContextSnippets {
+class ShellContextSnippets {
 
-	CommandContext ctx = CommandContext.of(null, null, null, null, null);
+	ShellContext ctx = new ShellContext() {
+
+		@Override
+		public InteractionMode getInteractionMode() {
+			return null;
+		}
+
+		@Override
+		public void setInteractionMode(InteractionMode interactionMode) {
+		}
+
+		@Override
+		public boolean hasPty() {
+			return false;
+		}
+
+	};
 
 	void dump1() {
-		// tag::snippet1[]
-		String arg = ctx.getOptionValue("arg");
-		// end::snippet1[]
+		// tag::hasPty[]
+		boolean hasPty = ctx.hasPty();
+		// end::hasPty[]
 	}
 
 	void dump2() {
-		// tag::snippet2[]
-		ctx.getTerminal().writer().println("hi");
-		// end::snippet2[]
+		// tag::interactionMode[]
+		InteractionMode interactionMode = ctx.getInteractionMode();
+		// end::interactionMode[]
 	}
 
 }

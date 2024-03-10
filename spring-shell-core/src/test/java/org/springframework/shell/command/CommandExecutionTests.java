@@ -47,7 +47,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
 		resolvers.add(new ArgumentHeaderMethodArgumentResolver(conversionService, null));
 		resolvers.add(new CommandContextMethodArgumentResolver());
-		execution = CommandExecution.of(resolvers, null, null, conversionService, commandCatalog);
+		execution = CommandExecution.of(resolvers, null, null, null, conversionService, commandCatalog);
 	}
 
 	@Test

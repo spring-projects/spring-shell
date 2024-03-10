@@ -1,0 +1,25 @@
+[[shell-context]]
+= Shell Context
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+The `ShellContext` interface gives access to a currently running
+shell context. You can use it to get access to a generic shell options.
+
+_InteractionMode_ is telling if shell is running on a _non-interactive_ or
+_interactive_ mode.
+
+[source, java, indent=0]
+----
+include::{snippets}/ShellContextSnippets.java[tag=interactionMode]
+----
+
+_Pty_ is telling if current terminal has a pty features which not a case
+when output is piped into file or if terminal is run in a ci system.
+
+[source, java, indent=0]
+----
+include::{snippets}/ShellContextSnippets.java[tag=hasPty]
+----
+

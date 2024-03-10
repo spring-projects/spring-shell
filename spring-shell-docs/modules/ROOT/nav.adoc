@@ -87,6 +87,7 @@
 *** xref:appendices/techintro/registration.adoc[]
 *** xref:appendices/techintro/parser.adoc[]
 *** xref:appendices/techintro/execution.adoc[]
+*** xref:appendices/techintro/shellcontext.adoc[]
 *** xref:appendices/techintro/commandcontext.adoc[]
 *** xref:appendices/techintro/commandcatalog.adoc[]
 *** xref:appendices/techintro/theming.adoc[]

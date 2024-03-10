@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ import org.springframework.shell.command.CommandRegistration.TargetInfo.TargetTy
 import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.command.invocation.ShellMethodArgumentResolverComposite;
 import org.springframework.shell.command.parser.ParserConfig;
+import org.springframework.shell.context.ShellContext;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -65,7 +66,7 @@ public interface CommandExecution {
 	 * @return default command execution
 	 */
 	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers) {
-		return new DefaultCommandExecution(resolvers, null, null, null, null);
+		return new DefaultCommandExecution(resolvers, null, null, null, null, null);
 	}
 
 	/**
@@ -78,8 +79,8 @@ public interface CommandExecution {
 	 * @return default command execution
 	 */
 	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-			Terminal terminal, ConversionService conversionService) {
-		return new DefaultCommandExecution(resolvers, validator, terminal, conversionService, null);
+			Terminal terminal, ShellContext shellContext, ConversionService conversionService) {
+		return new DefaultCommandExecution(resolvers, validator, terminal, shellContext, conversionService, null);
 	}
 
 	/**
@@ -92,8 +93,8 @@ public interface CommandExecution {
 	 * @return default command execution
 	 */
 	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-			Terminal terminal, ConversionService conversionService, CommandCatalog commandCatalog) {
-		return new DefaultCommandExecution(resolvers, validator, terminal, conversionService, commandCatalog);
+			Terminal terminal, ShellContext shellContext, ConversionService conversionService, CommandCatalog commandCatalog) {
+		return new DefaultCommandExecution(resolvers, validator, terminal, shellContext, conversionService, commandCatalog);
 	}
 
 	/**
@@ -104,14 +105,16 @@ public interface CommandExecution {
 		private List<? extends HandlerMethodArgumentResolver> resolvers;
 		private Validator validator;
 		private Terminal terminal;
+		private ShellContext shellContext;
 		private ConversionService conversionService;
 		private CommandCatalog commandCatalog;
 
 		public DefaultCommandExecution(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-				Terminal terminal, ConversionService conversionService, CommandCatalog commandCatalog) {
+				Terminal terminal, ShellContext shellContext, ConversionService conversionService, CommandCatalog commandCatalog) {
 			this.resolvers = resolvers;
 			this.validator = validator;
 			this.terminal = terminal;
+			this.shellContext = shellContext;
 			this.conversionService = conversionService;
 			this.commandCatalog = commandCatalog;
 		}
@@ -175,7 +178,7 @@ public interface CommandExecution {
 				throw new CommandParserExceptionsException("Command parser resulted errors", results.errors());
 			}
 
-			CommandContext ctx = CommandContext.of(args, results, terminal, usedRegistration);
+			CommandContext ctx = CommandContext.of(args, results, terminal, usedRegistration, shellContext);
 
 			Object res = null;
 
