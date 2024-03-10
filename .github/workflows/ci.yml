@@ -56,7 +56,7 @@ jobs:
             --server-id-deploy repo.spring.io \
             --repo-resolve snapshot \
             --repo-deploy snapshot
-          echo JFROG_CLI_BUILD_NAME=spring-shell-main >> $GITHUB_ENV
+          echo JFROG_CLI_BUILD_NAME=spring-shell-32x >> $GITHUB_ENV
           echo JFROG_CLI_BUILD_NUMBER=$GITHUB_RUN_NUMBER >> $GITHUB_ENV
       - name: Build and Publish
         run: |
