@@ -10,9 +10,3 @@ Spring Shell lets you create such a runnable application, where the user enters 
 
 Spring Shell includes advanced features (such as parsing, tab completion, colorization of output, fancy ASCII-art table display, input conversion, and validation), freeing you to focus on core command logic.
 
-(C) 2017 - 2023 VMware, Inc.
-
-_Copies of this document may be made for your own use and for distribution to
-others, provided that you do not charge any fee for such copies and further
-provided that each copy contains this Copyright Notice, whether distributed in
-print or electronically._
