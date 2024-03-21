@@ -165,9 +165,8 @@ jobs:
         jf rt download \
           --spec .github/release-files-spec.json \
           --spec-vars "buildname=$JFROG_CLI_BUILD_NAME;buildnumber=$JFROG_CLI_BUILD_NUMBER"
-    - uses: jvalkeal/nexus-sync@v0
+    - uses: spring-io/nexus-sync-action@main
       with:
-        url: ${{ secrets.OSSRH_URL }}
         username: ${{ secrets.OSSRH_S01_TOKEN_USERNAME }}
         password: ${{ secrets.OSSRH_S01_TOKEN_PASSWORD }}
         staging-profile-name: ${{ secrets.OSSRH_STAGING_PROFILE_NAME }}
@@ -178,6 +177,3 @@ jobs:
         release: true
         release-timeout: 5400
         generate-checksums: true
-        pgp-sign: true
-        pgp-sign-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-        pgp-sign-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
