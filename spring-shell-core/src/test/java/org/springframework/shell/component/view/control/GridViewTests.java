@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,24 @@ class GridViewTests extends AbstractViewTests {
 			grid.draw(screen24x80);
 
 			verify(sbox1).setRect(1, 1, 78, 22);
+		}
+
+		@Test
+		void positionsWith1x1FixedSizeGoTopLeft() {
+			BoxView box1 = new BoxView();
+			BoxView sbox1 = spy(box1);
+			GridView grid = new GridView();
+
+			grid.setShowBorders(false);
+			grid.setRowSize(1);
+			grid.setColumnSize(1);
+			grid.setShowBorder(false);
+			grid.addItem(sbox1, 0, 0, 1, 1, 0, 0);
+
+			grid.setRect(0, 0, 80, 24);
+			grid.draw(screen24x80);
+
+			verify(sbox1).setRect(0, 0, 1, 1);
 		}
 
 		@Test
