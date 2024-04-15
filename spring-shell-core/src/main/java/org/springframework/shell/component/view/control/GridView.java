@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -523,20 +523,6 @@ public class GridView extends BoxView {
 				break;
 			}
 			offsetX += width2 + add;
-		}
-
-		// Line up the last row/column with the end of the available area.
-		int border = 0;
-		if (isShowBorders()) {
-			border = 1;
-		}
-		int last = rowPos.length - 1;
-		if (rowPos[last] + rowHeight[last] + border - offsetY < height) {
-			offsetY = rowPos[last] - height + rowHeight[last] + border;
-		}
-		last = columnPos.length - 1;
-		if (columnPos[last] + columnWidth[last] + border - offsetX < width) {
-			offsetX = columnPos[last] - width + columnWidth[last] + border;
 		}
 
 		// The focused item must be within the visible area.
