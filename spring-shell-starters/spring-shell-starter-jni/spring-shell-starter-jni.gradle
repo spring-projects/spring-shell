@@ -1,0 +1,11 @@
+plugins {
+	id 'org.springframework.shell.starter'
+}
+
+description = 'Spring Shell Starter JNI'
+
+dependencies {
+	management platform(project(':spring-shell-management'))
+	api(project(':spring-shell-starters:spring-shell-starter'))
+	implementation 'org.jline:jline-terminal-jni'
+}
