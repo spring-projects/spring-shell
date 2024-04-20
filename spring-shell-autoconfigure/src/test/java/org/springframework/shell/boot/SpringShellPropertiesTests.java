@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getHistory().getName()).isNull();
 					assertThat(properties.getConfig().getLocation()).isNull();
 					assertThat(properties.getConfig().getEnv()).isNull();
-					assertThat(properties.getScript().isEnabled()).isTrue();
-					assertThat(properties.getInteractive().isEnabled()).isTrue();
+					assertThat(properties.getScript().isEnabled()).isFalse();
+					assertThat(properties.getInteractive().isEnabled()).isFalse();
 					assertThat(properties.getNoninteractive().isEnabled()).isTrue();
 					assertThat(properties.getNoninteractive().getPrimaryCommand()).isNull();
 					assertThat(properties.getTheme().getName()).isNull();
@@ -81,8 +81,8 @@ public class SpringShellPropertiesTests {
 				.withPropertyValues("spring.shell.history.name=fakename")
 				.withPropertyValues("spring.shell.config.location=fakelocation")
 				.withPropertyValues("spring.shell.config.env=FAKE_ENV")
-				.withPropertyValues("spring.shell.script.enabled=false")
-				.withPropertyValues("spring.shell.interactive.enabled=false")
+				.withPropertyValues("spring.shell.script.enabled=true")
+				.withPropertyValues("spring.shell.interactive.enabled=true")
 				.withPropertyValues("spring.shell.noninteractive.enabled=false")
 				.withPropertyValues("spring.shell.noninteractive.primary-command=fakecommand")
 				.withPropertyValues("spring.shell.theme.name=fake")
@@ -121,8 +121,8 @@ public class SpringShellPropertiesTests {
 					assertThat(properties.getHistory().getName()).isEqualTo("fakename");
 					assertThat(properties.getConfig().getLocation()).isEqualTo("fakelocation");
 					assertThat(properties.getConfig().getEnv()).isEqualTo("FAKE_ENV");
-					assertThat(properties.getScript().isEnabled()).isFalse();
-					assertThat(properties.getInteractive().isEnabled()).isFalse();
+					assertThat(properties.getScript().isEnabled()).isTrue();
+					assertThat(properties.getInteractive().isEnabled()).isTrue();
 					assertThat(properties.getNoninteractive().isEnabled()).isFalse();
 					assertThat(properties.getNoninteractive().getPrimaryCommand()).isEqualTo("fakecommand");
 					assertThat(properties.getTheme().getName()).isEqualTo("fake");
