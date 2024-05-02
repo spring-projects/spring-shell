@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -13,7 +13,13 @@ jobs:
         include:
           - nickname: linux jdk17
             java: 17
-            disable-samples: true
+            os: ubuntu-latest
+          - nickname: macos jdk17
+            java: 17
+            os: macos-latest
+          - nickname: windows jdk17
+            java: 17
+            os: windows-latest
     name: CI PR ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v3
@@ -23,6 +29,4 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: gradle
       - name: Build
-        env:
-          DISABLE_SAMPLES: ${{ matrix.disable-samples }}
         run: ./gradlew build

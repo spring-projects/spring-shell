@@ -8,13 +8,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - nickname: linux jdk17
             java: 17
+            os: ubuntu-latest
+          - nickname: macos jdk17
+            java: 17
+            os: macos-latest
+          - nickname: windows jdk17
+            java: 17
+            os: windows-latest
     name: CI Build ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v3
