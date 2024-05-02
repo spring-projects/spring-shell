@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,14 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.shell.InputProvider;
 import org.springframework.shell.Shell;
 import org.springframework.shell.context.DefaultShellContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 public class NonInteractiveShellRunnerTests {
@@ -38,26 +40,25 @@ public class NonInteractiveShellRunnerTests {
 	private Shell shell;
 
 	@Test
-	public void testEmptyArgsDontRun() {
+	public void testEmptyArgsDontRun() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(null, null);
-		DefaultApplicationArguments args = new DefaultApplicationArguments();
-		assertThat(runner.canRun(args)).isFalse();
+		assertThat(runner.run(new String[0])).isFalse();
 	}
 
 	@Test
-	public void testNonEmptyArgsRun() {
-		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(null, null);
-		DefaultApplicationArguments args = new DefaultApplicationArguments("hi");
-		assertThat(runner.canRun(args)).isTrue();
+	public void testNonEmptyArgsRun() throws Exception {
+		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
+		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
+		Mockito.doNothing().when(shell).run(valueCapture.capture());
+		assertThat(runner.run(ofArgs("hi"))).isTrue();
 	}
 
 	@Test
 	public void shouldQuoteWithWhitespace() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
-		DefaultApplicationArguments args = new DefaultApplicationArguments("foo bar");
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
-		runner.run(args);
+		assertThat(runner.run(ofArgs("foo bar"))).isTrue();
 		InputProvider value = valueCapture.getValue();
 		assertThat(value.readInput().rawText()).isEqualTo("\"foo bar\"");
 	}
@@ -65,10 +66,9 @@ public class NonInteractiveShellRunnerTests {
 	@Test
 	public void shouldNotQuoteIfQuoted() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
-		DefaultApplicationArguments args = new DefaultApplicationArguments("'foo bar'");
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
-		runner.run(args);
+		assertThat(runner.run(ofArgs("'foo bar'"))).isTrue();
 		InputProvider value = valueCapture.getValue();
 		assertThat(value.readInput().rawText()).isEqualTo("'foo bar'");
 	}
@@ -76,11 +76,37 @@ public class NonInteractiveShellRunnerTests {
 	@Test
 	public void shouldNotQuoteWithoutWhitespace() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
-		DefaultApplicationArguments args = new DefaultApplicationArguments("foobar");
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
-		runner.run(args);
+		assertThat(runner.run(ofArgs("foobar"))).isTrue();
 		InputProvider value = valueCapture.getValue();
 		assertThat(value.readInput().rawText()).isEqualTo("foobar");
 	}
+
+	@Test
+	void oldApiCanRunReturnFalse() {
+		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, null);
+		assertThat(runner.canRun(ofApplicationArguments())).isFalse();
+	}
+
+	@Test
+	void oldApiRunThrows() {
+		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, null);
+		assertThatThrownBy(() -> {
+			runner.run(ofApplicationArguments());
+		});
+	}
+
+	private static ApplicationArguments ofApplicationArguments(String... args) {
+		return new DefaultApplicationArguments(args);
+	}
+
+	private static String[] ofArgs(String... args) {
+		String[] a = new String[args.length];
+		for (int i = 0; i < args.length; i++) {
+			a[i] = args[i];
+		}
+		return a;
+	}
+
 }

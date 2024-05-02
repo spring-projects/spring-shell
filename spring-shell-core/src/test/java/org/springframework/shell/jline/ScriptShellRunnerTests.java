@@ -15,38 +15,75 @@
  */
 package org.springframework.shell.jline;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
+import org.springframework.shell.Shell;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(MockitoExtension.class)
 public class ScriptShellRunnerTests {
+
+	@Mock
+	Shell shell;
 
 	private ScriptShellRunner runner = new ScriptShellRunner(null, null);
 
 	@Test
-	void shouldNotRunWhenNoArgs() {
-		assertThat(runner.canRun(of())).isFalse();
+	void shouldNotRunWhenNoArgs() throws Exception {
+		assertThat(runner.run(ofArgs())).isFalse();
 	}
 
 	@Test
-	void shouldNotRunWhenInOptionValue() {
-		assertThat(runner.canRun(of("--foo", "@"))).isFalse();
+	void shouldNotRunWhenInOptionValue() throws Exception {
+		assertThat(runner.run(ofArgs("--foo", "@"))).isFalse();
 	}
 
 	@Test
-	void shouldNotRunWhenJustFirstArgWithoutFile() {
-		assertThat(runner.canRun(of("@"))).isFalse();
+	void shouldNotRunWhenJustFirstArgWithoutFile() throws Exception {
+		assertThat(runner.run(ofArgs("@"))).isFalse();
 	}
 
 	@Test
-	void shouldRunWhenFirstArgHavingFile() {
-		assertThat(runner.canRun(of("@file"))).isTrue();
+	void shouldRunWhenFirstArgHavingFile(@TempDir Path workingDir) throws Exception {
+		Path path = workingDir.resolve("test");
+		Path file = Files.createFile(path);
+		String pathStr = file.toAbsolutePath().toString();
+		ScriptShellRunner runner = new ScriptShellRunner(null, shell);
+		assertThat(runner.run(new String[]{"@" + pathStr})).isTrue();
 	}
 
-	private static ApplicationArguments of(String... args) {
+	@Test
+	void oldApiCanRunReturnFalse() {
+		assertThat(runner.canRun(ofApplicationArguments())).isFalse();
+	}
+
+	@Test
+	void oldApiRunThrows() {
+		assertThatThrownBy(() -> {
+			runner.run(ofApplicationArguments());
+		});
+	}
+
+	private static ApplicationArguments ofApplicationArguments(String... args) {
 		return new DefaultApplicationArguments(args);
+	}
+
+	private static String[] ofArgs(String... args) {
+		String[] a = new String[args.length];
+		for (int i = 0; i < args.length; i++) {
+			a[i] = args[i];
+		}
+		return a;
 	}
 }
