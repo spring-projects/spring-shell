@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
 import org.jline.reader.impl.DefaultParser;
 
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
@@ -34,6 +33,7 @@ import org.springframework.shell.ShellRunner;
 import org.springframework.shell.Utils;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -65,8 +65,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
     private static final String SINGLE_QUOTE = "\'";
     private static final String DOUBLE_QUOTE = "\"";
 
-	private Function<ApplicationArguments, List<String>> commandsFromInputArgs = args -> {
-		if (args.getSourceArgs().length == 0) {
+	private Function<String[], List<String>> commandsFromArgs = args -> {
+		if (ObjectUtils.isEmpty(args)) {
 			if (StringUtils.hasText(primaryCommand)) {
 				Collections.singletonList(primaryCommand);
 			}
@@ -75,7 +75,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			}
 		}
 		// re-quote if needed having whitespace
-		String raw = Arrays.stream(args.getSourceArgs())
+		String raw = Arrays.stream(args)
 			.map(a -> {
 				if (!isQuoted(a) && StringUtils.containsWhitespace(a)) {
 					return "\"" + a + "\"";
@@ -113,12 +113,12 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	/**
 	 * Sets the function that creates the command() to run from the input application arguments.
 	 *
-	 * @param commandsFromInputArgs function that takes input application arguments and creates zero or more commands
+	 * @param commandsFromArgs function that takes input application arguments and creates zero or more commands
 	 *                                 where each command is a string that specifies the command and options
 	 *                                 (eg. 'history --file myHistory.txt')
 	 */
-	public void setCommandsFromInputArgs(Function<ApplicationArguments, List<String>> commandsFromInputArgs) {
-		this.commandsFromInputArgs = commandsFromInputArgs;
+	public void setCommandsFromArgs(Function<String[], List<String>> commandsFromArgs) {
+		this.commandsFromArgs = commandsFromArgs;
 	}
 
 	/**
@@ -131,19 +131,18 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	}
 
 	@Override
-	public boolean canRun(ApplicationArguments args) {
-		return !commandsFromInputArgs.apply(args).isEmpty();
-	}
-
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
-		List<String> commands = this.commandsFromInputArgs.apply(args);
+	public boolean run(String[] args) throws Exception {
+		List<String> commands = commandsFromArgs.apply(args);
+		if (commands.isEmpty()) {
+			return false;
+		}
 		List<ParsedLine> parsedLines = commands.stream()
 				.map(rawCommandLine -> lineParser.parse(rawCommandLine, rawCommandLine.length() + 1))
 				.collect(Collectors.toList());
 		MultiParsedLineInputProvider inputProvider = new MultiParsedLineInputProvider(parsedLines);
+		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		shell.run(inputProvider);
+		return true;
 	}
 
 	/**

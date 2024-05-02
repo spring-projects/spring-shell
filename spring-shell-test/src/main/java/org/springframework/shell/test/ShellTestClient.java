@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -340,7 +340,12 @@ public interface ShellTestClient extends Closeable {
 					try {
 						log.trace("Running {}", data.runner());
 						data.state().set(-1);
-						data.runner().run(data.args());
+						if (data.runner().canRun(data.args)) {
+							data.runner().run(data.args());
+						}
+						else {
+							data.runner().run(data.args().getSourceArgs());
+						}
 						data.state().set(0);
 						log.trace("Running done {}", data.runner());
 					} catch (Exception e) {

@@ -19,15 +19,16 @@ package org.springframework.shell.jline;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jline.reader.Parser;
 
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.Shell;
 import org.springframework.shell.ShellRunner;
+import org.springframework.util.ObjectUtils;
 
 /**
  * A {@link ShellRunner} that looks for process arguments that start with {@literal @}, which are then interpreted as
@@ -59,19 +60,16 @@ public class ScriptShellRunner implements ShellRunner {
 	}
 
 	@Override
-	public boolean canRun(ApplicationArguments args) {
-		String[] sourceArgs = args.getSourceArgs();
-		if (sourceArgs.length > 0 && sourceArgs[0].startsWith("@") && sourceArgs[0].length() > 1) {
-			return true;
+	public boolean run(String[] args) throws Exception {
+		String[] sourceArgs = args;
+		if (ObjectUtils.isEmpty(sourceArgs)) {
+			return false;
 		}
-		return false;
-	}
+		if (!(sourceArgs[0].startsWith("@") && sourceArgs[0].length() > 1)) {
+			return false;
+		}
 
-	//tag::documentation[]
-
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		List<File> scriptsToRun = args.getNonOptionArgs().stream()
+		List<File> scriptsToRun = Arrays.asList(args).stream()
 				.filter(s -> s.startsWith("@"))
 				.map(s -> new File(s.substring(1)))
 				.collect(Collectors.toList());
@@ -82,7 +80,8 @@ public class ScriptShellRunner implements ShellRunner {
 				shell.run(inputProvider);
 			}
 		}
+
+		return true;
 	}
-	//end::documentation[]
 
 }

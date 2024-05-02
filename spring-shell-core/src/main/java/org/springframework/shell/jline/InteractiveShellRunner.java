@@ -21,7 +21,6 @@ import org.jline.reader.LineReader;
 import org.jline.reader.UserInterruptException;
 import org.jline.utils.AttributedString;
 
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.Input;
@@ -67,14 +66,10 @@ public class InteractiveShellRunner implements ShellRunner {
 	}
 
 	@Override
-	public void run(ApplicationArguments args) throws Exception {
+	public boolean run(String[] args) throws Exception {
 		shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
 		InputProvider inputProvider = new JLineInputProvider(lineReader, promptProvider);
 		shell.run(inputProvider);
-	}
-
-	@Override
-	public boolean canRun(ApplicationArguments args) {
 		return true;
 	}
 

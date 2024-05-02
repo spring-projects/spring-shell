@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,27 @@ public class DefaultShellApplicationRunner implements ShellApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		log.debug("Checking shell runners {}", shellRunners);
+
+		// Handle new ShellRunner api
+		String[] sourceArgs = args.getSourceArgs();
+		boolean canRun = false;
+		for (ShellRunner runner : shellRunners) {
+			try {
+				canRun = runner.run(sourceArgs);
+			} catch (Exception e) {
+				break;
+			}
+			if (canRun) {
+				break;
+			}
+		}
+
+		if (canRun) {
+			// new api handled execution
+			return;
+		}
+
+		// Handle old deprecated ShellRunner api
 		Optional<ShellRunner> optional = shellRunners.stream()
 				.filter(sh -> sh.canRun(args))
 				.findFirst();
