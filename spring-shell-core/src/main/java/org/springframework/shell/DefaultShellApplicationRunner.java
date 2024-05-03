@@ -61,11 +61,9 @@ public class DefaultShellApplicationRunner implements ShellApplicationRunner {
 		String[] sourceArgs = args.getSourceArgs();
 		boolean canRun = false;
 		for (ShellRunner runner : shellRunners) {
-			try {
-				canRun = runner.run(sourceArgs);
-			} catch (Exception e) {
-				break;
-			}
+			// let exception to get thrown as needed i.e. for
+			// exit code mappings
+			canRun = runner.run(sourceArgs);
 			if (canRun) {
 				break;
 			}
