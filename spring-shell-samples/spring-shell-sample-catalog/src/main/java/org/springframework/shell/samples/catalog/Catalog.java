@@ -235,7 +235,7 @@ public class Catalog {
 		@Override
 		protected void drawContent(Screen screen) {
 			Rectangle rect = getRect();
-			Writer writer = screen.writerBuilder().style(getStyle()).build();
+			Writer writer = screen.writerBuilder().style(getStyle()).color(getForegroundColor()).build();
 			writer.text(String.format("%-20s %s", getItem().name(), getItem().description()), rect.x(), rect.y());
 		}
 	}

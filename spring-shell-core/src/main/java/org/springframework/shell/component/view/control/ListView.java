@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,6 +169,8 @@ public class ListView<T> extends BoxView {
 			Rectangle rect = getInnerRect();
 			int y = rect.y();
 			int selectedStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
+			int selectedForegroundColor = resolveThemeForeground(StyleSettings.TAG_HIGHLIGHT, -1, -1);
+			int selectedBackgroundColor = resolveThemeBackground(StyleSettings.TAG_HIGHLIGHT, -1, -1);
 			int i = 0;
 
 			for (ListCell<T> c : cells) {
@@ -178,10 +180,13 @@ public class ListView<T> extends BoxView {
 				}
 				c.setRect(rect.x(), y++, rect.width(), 1);
 				if (i == start + pos) {
+					c.setForegroundColor(selectedForegroundColor);
+					c.setBackgroundColor(selectedBackgroundColor);
 					c.setStyle(selectedStyle);
 				}
 				else {
 					c.setBackgroundColor(-1);
+					c.setForegroundColor(-1);
 					c.setStyle(-1);
 				}
 				c.draw(screen);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,9 +35,15 @@ import org.springframework.shell.component.view.event.KeyHandler.KeyHandlerResul
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
+import org.springframework.shell.component.view.screen.Color;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.geom.Rectangle;
+import org.springframework.shell.style.StyleSettings;
+import org.springframework.shell.style.Theme;
+import org.springframework.shell.style.ThemeRegistry;
+import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.style.ThemeSettings;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,6 +57,38 @@ class ListViewTests extends AbstractViewTests {
 	private static final String POSITION_FIELD = "pos";
 	private static final String SCROLL_METHOD = "scrollIndex";
 	ListView<String> view;
+
+	ThemeResolver themeResolver;
+
+	@BeforeEach
+	public void setupListView() {
+		ThemeRegistry themeRegistry = new ThemeRegistry();
+		themeRegistry.register(new Theme() {
+			@Override
+			public String getName() {
+				return "default";
+			}
+
+			@Override
+			public ThemeSettings getSettings() {
+
+				return new ThemeSettings() {
+					@Override
+					public StyleSettings styles() {
+						return new StyleSettings() {
+							@Override
+							public String highlight() {
+								return "bold,italic,bg-rgb:#0000FF,fg-rgb:#FF0000";
+							}
+						};
+					}
+				};
+			}
+		});
+
+		themeResolver = new ThemeResolver(themeRegistry, "default");
+	}
+
 
 	@Nested
 	class Events {
@@ -187,6 +225,32 @@ class ListViewTests extends AbstractViewTests {
 			view.setRect(0, 0, 80, 24);
 			view.draw(screen24x80);
 			assertThat(forScreen(screen24x80)).hasBorder(0, 0, 80, 24);
+		}
+
+		@Test
+		void selectedHighlightNoTheme() {
+			view = new ListView<>();
+			view.setShowBorder(true);
+			view.setRect(0, 0, 10, 7);
+			view.setItems(Arrays.asList("item1", "item2", "item3"));
+			view.draw(screen7x10);
+			assertThat(forScreen(screen7x10)).hasStyle(1, 1, 1);
+			assertThat(forScreen(screen7x10)).hasForegroundColor(1, 1, -1);
+			assertThat(forScreen(screen7x10)).hasBackgroundColor(1, 1, -1);
+		}
+
+		@Test
+		void selectedHighlightThemeSet() {
+			view = new ListView<>();
+			view.setThemeResolver(themeResolver);
+			view.setThemeName("default");
+			view.setShowBorder(true);
+			view.setRect(0, 0, 10, 7);
+			view.setItems(Arrays.asList("item1", "item2", "item3"));
+			view.draw(screen7x10);
+			assertThat(forScreen(screen7x10)).hasStyle(1, 1, 5);
+			assertThat(forScreen(screen7x10)).hasForegroundColor(1, 1, Color.RED);
+			assertThat(forScreen(screen7x10)).hasBackgroundColor(1, 1, Color.BLUE);
 		}
 
 		@Test

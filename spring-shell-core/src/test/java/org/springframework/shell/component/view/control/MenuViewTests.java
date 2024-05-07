@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,12 @@ import org.springframework.shell.component.view.control.MenuView.MenuViewSelecte
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.MouseEvent;
 import org.springframework.shell.component.view.event.MouseHandler.MouseHandlerResult;
+import org.springframework.shell.component.view.screen.Color;
+import org.springframework.shell.style.StyleSettings;
+import org.springframework.shell.style.Theme;
+import org.springframework.shell.style.ThemeRegistry;
+import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.style.ThemeSettings;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +47,37 @@ class MenuViewTests extends AbstractViewTests {
 	private static final String SELECTED_FIELD = "activeItemIndex";
 	private static final String RADIO_ACTIVE_FIELD = "radioActive";
 	private static final String CHECKED_ACTIVE_FIELD = "checkedActive";
+
+	ThemeResolver themeResolver;
+
+	@BeforeEach
+	public void setupMenuView() {
+		ThemeRegistry themeRegistry = new ThemeRegistry();
+		themeRegistry.register(new Theme() {
+			@Override
+			public String getName() {
+				return "default";
+			}
+
+			@Override
+			public ThemeSettings getSettings() {
+
+				return new ThemeSettings() {
+					@Override
+					public StyleSettings styles() {
+						return new StyleSettings() {
+							@Override
+							public String highlight() {
+								return "bold,italic,bg-rgb:#0000FF,fg-rgb:#FF0000";
+							}
+						};
+					}
+				};
+			}
+		});
+
+		themeResolver = new ThemeResolver(themeRegistry, "default");
+	}
 
 	@Nested
 	class Construction {
@@ -127,10 +164,12 @@ class MenuViewTests extends AbstractViewTests {
 	@Nested
 	class Styling {
 
+		MenuView view;
+
 		@Test
 		void hasBorder() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			MenuView view = new MenuView(Arrays.asList(menuItem));
+			view = new MenuView(Arrays.asList(menuItem));
 			view.setShowBorder(true);
 			view.setRect(0, 0, 80, 24);
 			view.draw(screen24x80);
@@ -138,9 +177,35 @@ class MenuViewTests extends AbstractViewTests {
 		}
 
 		@Test
+		void selectedHighlightNoTheme() {
+			MenuItem menuItem = new MenuView.MenuItem("sub1");
+			view = new MenuView(Arrays.asList(menuItem));
+			view.setShowBorder(true);
+			view.setRect(0, 0, 10, 7);
+			view.draw(screen7x10);
+			assertThat(forScreen(screen7x10)).hasStyle(1, 1, 1);
+			assertThat(forScreen(screen7x10)).hasForegroundColor(1, 1, -1);
+			assertThat(forScreen(screen7x10)).hasBackgroundColor(1, 1, -1);
+		}
+
+		@Test
+		void selectedHighlightThemeSet() {
+			MenuItem menuItem = new MenuView.MenuItem("sub1");
+			view = new MenuView(Arrays.asList(menuItem));
+			view.setThemeResolver(themeResolver);
+			view.setThemeName("default");
+			view.setShowBorder(true);
+			view.setRect(0, 0, 10, 7);
+			view.draw(screen7x10);
+			assertThat(forScreen(screen7x10)).hasStyle(1, 1, 5);
+			assertThat(forScreen(screen7x10)).hasForegroundColor(1, 1, Color.RED);
+			assertThat(forScreen(screen7x10)).hasBackgroundColor(1, 1, Color.BLUE);
+		}
+
+		@Test
 		void defaultItemCheckStyleIsNoCheck() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			MenuView view = new MenuView(Arrays.asList(menuItem));
+			view = new MenuView(Arrays.asList(menuItem));
 			assertThat(view.getItems()).allSatisfy(item -> {
 				assertThat(item.getCheckStyle()).isEqualTo(MenuItemCheckStyle.NOCHECK);
 			});
