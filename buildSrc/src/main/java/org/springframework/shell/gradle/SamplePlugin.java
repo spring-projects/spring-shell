@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.springframework.shell.gradle;
+
+import java.util.ArrayList;
 
 import org.graalvm.buildtools.gradle.NativeImagePlugin;
 import org.graalvm.buildtools.gradle.dsl.GraalVMExtension;
@@ -74,10 +76,14 @@ class SamplePlugin implements Plugin<Project> {
 
 	private void configureGraalVmExtension(Project project) {
 		GraalVMExtension extension = project.getExtensions().getByType(GraalVMExtension.class);
+		ArrayList<String> options = new ArrayList<String>();
 		if (isEnabled(project, MUSL)) {
-			extension.getBinaries().getByName(NativeImagePlugin.NATIVE_MAIN_EXTENSION).buildArgs("--static",
-					"--libc=musl");
+			options.add("--static");
+			options.add("--libc=musl");
 		}
+		// force compatibility as detection i.e. in macos runners is flaky
+		options.add("-march=compatibility");
+		extension.getBinaries().getByName(NativeImagePlugin.NATIVE_MAIN_EXTENSION).buildArgs(options.toArray());
 	}
 
 	private boolean isEnabled(Project project, String property) {
