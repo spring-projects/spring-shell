@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,9 +143,15 @@ public class MenuView extends BoxView {
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getInnerRect();
 		int y = rect.y();
-		Writer writer = screen.writerBuilder().layer(getLayer()).build();
-		int themeStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
-		Writer writer2 = screen.writerBuilder().layer(getLayer()).style(themeStyle).build();
+		int selectedStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
+		int selectedForegroundColor = resolveThemeForeground(StyleSettings.TAG_HIGHLIGHT, -1, -1);
+		int selectedBackgroundColor = resolveThemeBackground(StyleSettings.TAG_HIGHLIGHT, -1, -1);
+		Writer writer = screen.writerBuilder()
+			.layer(getLayer()).build();
+		Writer selectedWriter = screen.writerBuilder()
+			.layer(getLayer())
+			.color(selectedForegroundColor)
+			.style(selectedStyle).build();
 		int i = 0;
 		boolean hasCheck = false;
 		for (MenuItem item : items) {
@@ -174,7 +180,11 @@ public class MenuView extends BoxView {
 			}
 			String text = prefix + item.getTitle();
 			if (activeItemIndex == i) {
-				writer2.text(text, rect.x(), y);
+				selectedWriter.text(text, rect.x(), y);
+				if (selectedBackgroundColor > -1) {
+					Rectangle itemRect = new Rectangle(rect.x(), y, rect.width(), 1);
+					selectedWriter.background(itemRect, selectedBackgroundColor);
+				}
 			}
 			else {
 				writer.text(text, rect.x(), y);
