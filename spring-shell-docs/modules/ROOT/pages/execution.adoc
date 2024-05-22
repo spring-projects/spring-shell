@@ -50,3 +50,15 @@ spring:
 
 NOTE: Versions up to `3.2.x` had all runners enabled by default, starting from `3.3.x`
       only `NonInteractiveShellRunner` is enabled by default.
+
+Starting from `3.3.x` a `ShellRunner` interface has a new method:
+
+[source, java]
+----
+default boolean run(String[] args) throws Exception {
+  return false;
+}
+----
+
+IMPORTANT: This will the main api going forward and other existing methods taking boot's
+`ApplicationArguments` has been deprecated and will be removed in future.
