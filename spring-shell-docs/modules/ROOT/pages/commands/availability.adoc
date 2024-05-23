@@ -1,5 +1,7 @@
 [[dynamic-command-availability]]
-= Dynamic Command Availability
+= Command Availability
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 Registered commands do not always make sense, due to the internal state of the application.
 For example, there may be a `download` command, but it only works once the user has used `connect` on a remote
@@ -8,34 +10,35 @@ the command exists but that it is not available at the time.
 Spring Shell lets you do that, even letting you provide a short explanation of the reason for
 the command not being available.
 
+== Programmatic
+
+With programmatic registration you can use `availability` method which takes
+`Supplier<Availability>`.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-programmatic]
+----
+
+== Annotation
+
+With annotation based commands you can use `@CommandAvailability` together with
+`AvailabilityProvider`.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-annotation]
+----
+
+== Legacy Annotation
+
 There are three possible ways for a command to indicate availability.
 They all use a no-arg method that returns an instance of `Availability`.
 Consider the following example:
 
-[source, java]
+[source, java, indent=0]
 ----
-@ShellComponent
-public class MyCommands {
-
-    private boolean connected;
-
-    @ShellMethod("Connect to the server.")
-    public void connect(String user, String password) {
-        [...]
-        connected = true;
-    }
-
-    @ShellMethod("Download the nuclear codes.")
-    public void download() {
-        [...]
-    }
-
-    public Availability downloadAvailability() {
-        return connected
-            ? Availability.available()
-            : Availability.unavailable("you are not connected");
-    }
-}
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-in-shellcomponent]
 ----
 
 The `connect` method is used to connect to the server (details omitted), altering the state
@@ -65,20 +68,11 @@ You should not start the sentence with a capital or add a final period
 If naming the availability method after the name of the command method does not suit you, you
 can provide an explicit name by using the `@ShellMethodAvailability` annotation:
 
-[source, java]
+[source, java, indent=0]
 ----
-    @ShellMethod("Download the nuclear codes.")
-    @ShellMethodAvailability("availabilityCheck") // <1>
-    public void download() {
-        [...]
-    }
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-name-in-shellcomponent]
+----
 
-    public Availability availabilityCheck() { // <1>
-        return connected
-            ? Availability.available()
-            : Availability.unavailable("you are not connected");
-    }
-----
 <1> the names have to match
 
 Finally, it is often the case that several commands in the same class share the same internal state and, thus,
@@ -86,24 +80,9 @@ should all be available or unavailable as a group. Instead of having to stick th
 on all command methods, Spring Shell lets you flip things around and put the `@ShellMethodAvailabilty`
 annotation on the availability method, specifying the names of the commands that it controls:
 
-[source, java]
+[source, java, indent=0]
 ----
-    @ShellMethod("Download the nuclear codes.")
-    public void download() {
-        [...]
-    }
-
-    @ShellMethod("Disconnect from the server.")
-    public void disconnect() {
-        [...]
-    }
-
-    @ShellMethodAvailability({"download", "disconnect"})
-    public Availability availabilityCheck() {
-        return connected
-            ? Availability.available()
-            : Availability.unavailable("you are not connected");
-    }
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-name-multi-in-shellcomponent]
 ----
 
 [TIP]
@@ -112,24 +91,11 @@ The default value for the `@ShellMethodAvailability.value()` attribute is `*`. T
 wildcard matches all command names. This makes it easy to turn all commands of a single class on or off
 with a single availability method:
 
-[source,java]
+[source, java, indent=0]
 ----
-@ShellComponent
-public class Toggles {
-  @ShellMethodAvailability
-  public Availability availabilityOnWeekdays() {
-    return Calendar.getInstance().get(DAY_OF_WEEK) == SUNDAY
-      ? Availability.available()
-      : Availability.unavailable("today is not Sunday");
-  }
-
-  @ShellMethod
-  public void foo() {}
-
-  @ShellMethod
-  public void bar() {}
-}
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-default-value-in-shellcomponent]
 ----
+
 =====
 
 TIP: Spring Shell does not impose many constraints on how to write commands and how to organize classes.
