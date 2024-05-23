@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,11 @@ import org.springframework.shell.AvailabilityProvider;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.CommandAvailability;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 public class AvailabilityCommands {
@@ -65,6 +67,28 @@ public class AvailabilityCommands {
 		public Availability testAvailability3LegacyAnnotationAvailability3() {
 			return Availability.unavailable("not available 3");
 		}
+
+		private boolean connected = false;
+
+		@ShellMethod(key = LEGACY_ANNO + "availability-set", group = GROUP)
+		public void testAvailabilitySetLegacyAnnotation(
+			@ShellOption(value = "connected") boolean connected
+		) {
+			this.connected = connected;
+		}
+
+		@ShellMethod(key = LEGACY_ANNO + "availability-use", group = GROUP)
+		@ShellMethodAvailability("testAvailabilityLegacyAnnotationConnected")
+		public void testAvailabilityUseLegacyAnnotation(
+		) {
+		}
+
+		public Availability testAvailabilityLegacyAnnotationConnected() {
+			return connected
+				? Availability.available()
+				: Availability.unavailable("you are not connected");
+		}
+
 	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
@@ -81,6 +105,29 @@ public class AvailabilityCommands {
 		public AvailabilityProvider testAvailability1AnnotationAvailability() {
 			return () -> Availability.unavailable("not available");
 		}
+
+		private boolean connected = false;
+
+		@Command(command = "availability-set")
+		public void testAvailabilitySetAnnotation(
+			@Option(longNames = "connected") boolean connected
+		) {
+			this.connected = connected;
+		}
+
+		@Command(command = "availability-use")
+		@CommandAvailability(provider = "testAvailabilityAnnotationConnected")
+		public void testAvailabilityUseAnnotation(
+		) {
+		}
+
+		@Bean
+		public AvailabilityProvider testAvailabilityAnnotationConnected() {
+			return () -> connected
+				? Availability.available()
+				: Availability.unavailable("you are not connected");
+		}
+
 	}
 
 	@Component
@@ -119,5 +166,46 @@ public class AvailabilityCommands {
 		AvailabilityProvider testAvailability2AnnotationAvailability() {
 			return () -> Availability.unavailable("not available");
 		}
+
+		private boolean connected = false;
+
+		@Bean
+		public CommandRegistration testAvailabilitySetRegistration() {
+			return getBuilder()
+				.command(REG, "availability-set")
+				.group(GROUP)
+				.withOption()
+					.longNames("connected")
+					.required()
+					.type(boolean.class)
+					.and()
+				.withTarget()
+					.consumer(ctx -> {
+						boolean connected = ctx.getOptionValue("connected");
+						this.connected = connected;
+					})
+					.and()
+				.build();
+		}
+
+		@Bean
+		public CommandRegistration testAvailabilityUseRegistration() {
+			return getBuilder()
+				.command(REG, "availability-use")
+				.group(GROUP)
+				.availability(testAvailabilityRegistrationConnected())
+				.withTarget()
+					.consumer(ctx -> {
+					})
+					.and()
+				.build();
+		}
+
+		public AvailabilityProvider testAvailabilityRegistrationConnected() {
+			return () -> connected
+				? Availability.available()
+				: Availability.unavailable("you are not connected");
+		}
+
 	}
 }
