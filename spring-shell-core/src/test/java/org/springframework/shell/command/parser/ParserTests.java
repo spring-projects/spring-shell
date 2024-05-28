@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,6 +116,18 @@ class ParserTests extends AbstractParsingTests {
 				assertThat(ms.getMessage()).contains("Failed to convert");
 			});
 		}
+
+		@Test
+		void optionValueShouldBeNegativeInteger() {
+			register(ROOT6_OPTION_INT);
+			ParseResult result = parse("root6", "--arg1", "-1");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults().get(0).value()).isEqualTo(-1);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
 	}
 
 	@Nested
