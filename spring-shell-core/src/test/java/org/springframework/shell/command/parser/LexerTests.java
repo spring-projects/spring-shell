@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import org.springframework.shell.command.parser.Lexer.LexerResult;
 import org.springframework.shell.command.parser.ParserConfig.Feature;
@@ -430,6 +432,42 @@ class LexerTests extends AbstractParsingTests {
 		assertThat(tokens).extracting(Token::getType).containsExactly(TokenType.COMMAND, TokenType.ARGUMENT,
 				TokenType.ARGUMENT);
 	}
+
+	@Nested
+	class ShortOptions {
+
+		@ParameterizedTest
+		@ValueSource(strings = {
+			"-1",
+			"-1a",
+			"-a1",
+			"-ab1",
+			"-ab1c"
+		})
+		void shouldNotBeOptionWhenDoesntLookLikeShortPosix(String arg) {
+			register(ROOT6_OPTION_INT);
+			List<Token> tokens = tokenize("root6", "--arg1", arg);
+
+			assertThat(tokens).extracting(Token::getType).containsExactly(TokenType.COMMAND, TokenType.OPTION,
+					TokenType.ARGUMENT);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = {
+			"-a",
+			"-ab",
+			"-abc",
+			"--abc"
+		})
+		void shouldBeOptionWhenLooksLikeShortPosix(String arg) {
+			register(ROOT6_OPTION_INT);
+			List<Token> tokens = tokenize("root6", "--arg1", arg);
+
+			assertThat(tokens).extracting(Token::getType).containsExactly(TokenType.COMMAND, TokenType.OPTION,
+					TokenType.OPTION);
+		}
+	}
+
 
 	@Nested
 	class Directives {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -201,11 +201,16 @@ public interface Lexer {
 					}
 				}
 				else if (isLastTokenOfType(tokenList, TokenType.OPTION)) {
-					if (argument.startsWith("-")) {
+					// posix short style can only have one or more letters
+					int decuceArgumentStyle = decuceArgumentStyle(argument);
+					if (decuceArgumentStyle > 0) {
 						tokenList.add(Token.of(argument, TokenType.OPTION, i2));
 					}
-					else {
+					else if (decuceArgumentStyle < 0) {
 						tokenList.add(Token.of(argument, TokenType.ARGUMENT, i2));
+					}
+					else {
+						tokenList.add(Token.of(argument, TokenType.OPTION, i2));
 					}
 				}
 				else if (isLastTokenOfType(tokenList, TokenType.COMMAND)) {
@@ -242,6 +247,29 @@ public interface Lexer {
 				}
 			}
 			return false;
+		}
+
+		private static int decuceArgumentStyle(String str) {
+			// positive - looks like posix short
+			// 0 - looks like long option
+			// negative - looks like argument, not option
+			if (str.length() < 2) {
+				return -1;
+			}
+			if (str.charAt(0) != '-') {
+				return -1;
+			}
+			if (str.length() > 1 && str.charAt(0) == '-' && str.charAt(1) == '-') {
+				return 0;
+			}
+			int ret = 1;
+			for (int i = 1; i < str.length(); i++) {
+				if (!Character.isLetter(str.charAt(i))) {
+					ret = -1;
+					break;
+				}
+			}
+			return ret;
 		}
 	}
 }
