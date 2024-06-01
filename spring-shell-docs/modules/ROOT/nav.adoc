@@ -1,5 +1,6 @@
 * xref:index.adoc[Overview]
 * xref:getting-started.adoc[]
+* xref:upgrading.adoc[]
 * xref:basics/index.adoc[]
 ** xref:basics/reading.adoc[]
 * xref:commands/index.adoc[]

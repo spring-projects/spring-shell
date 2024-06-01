@@ -1,0 +1,5 @@
+= Upgrading
+
+Instructions for how to upgrade from earlier versions of Spring Shell are
+provided on the project https://github.com/spring-projects/spring-shell/wiki[wiki].
+Follow the links in the release notes section.
