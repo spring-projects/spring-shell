@@ -18,5 +18,6 @@ antora {
 		'@asciidoctor/tabs': '1.0.0-beta.3',
 		'@springio/antora-extensions': '1.8.1',
 		'@springio/asciidoctor-extensions': '1.0.0-alpha.8',
+		'asciinema-player': '3.7.1'
 	]
 }
