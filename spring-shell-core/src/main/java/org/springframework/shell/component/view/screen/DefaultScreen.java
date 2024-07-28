@@ -30,6 +30,8 @@ import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Position;
 import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.geom.VerticalAlign;
+import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 import org.springframework.util.Assert;
 
 /**
@@ -307,6 +309,29 @@ public class DefaultScreen implements Screen, DisplayLines {
 					}
 					if (style > -1) {
 						item.style = style;
+					}
+				}
+			}
+		}
+
+		@Override
+		public void text(AttributedString text, int x, int y) {
+			Layer layer = getLayer(index);
+			for (int i = 0; i < text.length() && i < columns; i++) {
+				DefaultScreenItem item = layer.getScreenItem(x + i, y);
+				if (item != null) {
+					char c = text.charAt(i);
+					AttributedStyle as = text.styleAt(i);
+					ResolvedValues rv = ThemeResolver.resolveValues(as);
+					item.content = Character.toString(c);
+					if (rv.foreground() > -1) {
+						item.foreground = rv.foreground();
+					}
+					if (rv.style() > -1) {
+						item.style = rv.style();
+					}
+					if (rv.background() > -1) {
+						item.background = rv.background();
 					}
 				}
 			}

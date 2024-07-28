@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.component.view.screen;
 
+import org.jline.utils.AttributedString;
+
 import org.springframework.lang.Nullable;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Position;
@@ -106,6 +108,16 @@ public interface Screen {
 		 * @param y the y position
 		 */
 		void text(String text, int x, int y);
+
+		/**
+		 * Write an attributed text horizontally starting from a position defined by
+		 * {@code x} and {@code y} within a bounds of a {@link Screen}.
+		 *
+		 * @param text the text to write
+		 * @param x the x position
+		 * @param y the y position
+		 */
+		void text(AttributedString text, int x, int y);
 
 		/**
 		 * Write a border with a given rectangle coordinates.

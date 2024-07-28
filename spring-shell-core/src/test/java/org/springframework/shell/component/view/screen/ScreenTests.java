@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.component.view.screen;
 
+import org.jline.utils.AttributedString;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.shell.component.view.control.AbstractViewTests;
@@ -53,6 +54,13 @@ class ScreenTests extends AbstractViewTests {
 	@Test
 	void printsText() {
 		screen24x80.writerBuilder().build().text("text", 0, 0);
+		assertThat(forScreen(screen24x80)).hasHorizontalText("text", 0, 0, 4);
+	}
+
+	@Test
+	void printsAttributedText() {
+		AttributedString text = new AttributedString("text");
+		screen24x80.writerBuilder().build().text(text, 0, 0);
 		assertThat(forScreen(screen24x80)).hasHorizontalText("text", 0, 0, 4);
 	}
 

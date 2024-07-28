@@ -70,7 +70,7 @@ public class ThemeResolver {
 	 * @param attributedStyle the attibuted style
 	 * @return resolved values
 	 */
-	public ResolvedValues resolveValues(AttributedStyle attributedStyle) {
+	public static ResolvedValues resolveValues(AttributedStyle attributedStyle) {
 		long style = attributedStyle.getStyle();
 		long s = style & ~(F_FOREGROUND | F_BACKGROUND);
 		s = (s & 0x00007FFF);
