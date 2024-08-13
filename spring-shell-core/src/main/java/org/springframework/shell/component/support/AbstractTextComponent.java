@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +62,7 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		for (char i = 32; i < KeyMap.KEYMAP_LENGTH - 1; i++) {
 			keyMap.bind(OPERATION_CHAR, Character.toString(i));
 		}
+		keyMap.setUnicode(OPERATION_UNICODE);
 	}
 
 	@Override
