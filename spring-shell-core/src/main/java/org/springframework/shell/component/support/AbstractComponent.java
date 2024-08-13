@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	public final static String OPERATION_EXIT = "EXIT";
 	public final static String OPERATION_BACKSPACE = "BACKSPACE";
 	public final static String OPERATION_CHAR = "CHAR";
+	public final static String OPERATION_UNICODE = "UNICODE";
 	public final static String OPERATION_SELECT = "SELECT";
 	public final static String OPERATION_DOWN = "DOWN";
 	public final static String OPERATION_UP = "UP";
