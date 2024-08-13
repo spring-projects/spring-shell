@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,6 +164,29 @@ public class StringInputTests extends AbstractShellTests {
 
 		assertThat(run1Context).isNotNull();
 		assertThat(run1Context.getResultValue()).isEqualTo("test");
+	}
+
+	@Test
+	public void testResultUserInputUnicode() throws InterruptedException {
+		ComponentContext<?> empty = ComponentContext.empty();
+		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+
+		service.execute(() -> {
+			StringInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+			latch1.countDown();
+		});
+
+		TestBuffer testBuffer = new TestBuffer().append("😂").cr();
+		write(testBuffer.getBytes());
+
+		latch1.await(2, TimeUnit.SECONDS);
+		StringInputContext run1Context = result1.get();
+
+		assertThat(run1Context).isNotNull();
+		assertThat(run1Context.getResultValue()).isEqualTo("😂");
 	}
 
 	@Test
