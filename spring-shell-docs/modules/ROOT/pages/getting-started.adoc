@@ -66,6 +66,18 @@ dependencyManagement {
 }
 ----
 
+IMPORTANT: Versions up to `3.2.x` had all runners enabled by default, starting from `3.3.x`
+only `NonInteractiveShellRunner` is enabled by default. This means you need to enable
+`InteractiveShellRunner` to get REPL.
+
+[source, yaml]
+----
+spring:
+  shell:
+    interactive:
+      enabled: true
+----
+
 CAUTION: Given that Spring Shell starts the REPL (Read-Eval-Print-Loop) because this
 dependency is present, you need to either skip tests when you build (`-DskipTests`)
 throughout this tutorial or remove the sample integration test that was generated
