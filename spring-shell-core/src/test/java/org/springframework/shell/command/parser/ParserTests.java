@@ -15,8 +15,12 @@
  */
 package org.springframework.shell.command.parser;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.springframework.shell.command.parser.Parser.ParseResult;
 import org.springframework.shell.command.parser.ParserConfig.Feature;
@@ -159,6 +163,31 @@ class ParserTests extends AbstractParsingTests {
 					ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
 				}
 			);
+		}
+
+		static Stream<RegAndArgs> shouldHaveErrorForUnrecognisedOption() {
+			return Stream.of(
+				RegAndArgs.of(ROOT1, "root1", "--arg1"),
+				RegAndArgs.of(ROOT3, "root3", "--arg2", "--arg1"),
+				RegAndArgs.of(ROOT3, "root3", "--arg1", "--arg2"),
+				RegAndArgs.of(ROOT3, "root3", "--arg2", "fake1", "--arg1"),
+				RegAndArgs.of(ROOT3, "root3", "--arg1", "--arg2", "fake1"),
+				RegAndArgs.of(ROOT3, "root3", "--arg2", "fake1", "--arg1", "fake2"),
+				RegAndArgs.of(ROOT3, "root3", "--arg1", "fake2", "--arg2", "fake1")
+				);
+		}
+
+		@ParameterizedTest
+		@MethodSource
+		void shouldHaveErrorForUnrecognisedOption(RegAndArgs regAndArgs) {
+			register(regAndArgs.reg());
+			ParseResult result = parse(regAndArgs.args());
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
+				message -> {
+					ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
+				}
+			);
+
 		}
 
 		@Test

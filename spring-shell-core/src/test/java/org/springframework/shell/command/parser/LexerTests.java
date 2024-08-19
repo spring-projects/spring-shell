@@ -275,6 +275,38 @@ class LexerTests extends AbstractParsingTests {
 	}
 
 	@Test
+	void notDefinedOptionShouldBeOptionAfterDefinedOptionHavingArgument() {
+		register(ROOT3);
+		List<Token> tokens = tokenize("root3", "--arg1", "value1", "--arg2");
+
+		assertThat(tokens).satisfiesExactly(
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.COMMAND)
+						.hasPosition(0)
+						.hasValue("root3");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.OPTION)
+						.hasPosition(1)
+						.hasValue("--arg1");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.ARGUMENT)
+						.hasPosition(2)
+						.hasValue("value1");
+				},
+				token -> {
+					ParserAssertions.assertThat(token)
+						.isType(TokenType.OPTION)
+						.hasPosition(3)
+						.hasValue("--arg2");
+				});
+	}
+
+	@Test
 	void optionsWithoutValuesFromRoot() {
 		register(ROOT5);
 		List<Token> tokens = tokenize("root5", "--arg1", "--arg2");
