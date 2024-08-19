@@ -222,7 +222,13 @@ public interface Lexer {
 					}
 				}
 				else if (isLastTokenOfType(tokenList, TokenType.ARGUMENT)) {
-					tokenList.add(Token.of(argument, TokenType.ARGUMENT, i2));
+					int decuceArgumentStyle = decuceArgumentStyle(argument);
+					if (decuceArgumentStyle < 0) {
+						tokenList.add(Token.of(argument, TokenType.ARGUMENT, i2));
+					}
+					else {
+						tokenList.add(Token.of(argument, TokenType.OPTION, i2));
+					}
 				}
 
 			}
