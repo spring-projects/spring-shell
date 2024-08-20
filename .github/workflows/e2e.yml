@@ -76,7 +76,9 @@ jobs:
           #   nickname: win
           - os: macos-12
             nickname: macos
-          - os: macos-11
+          - os: macos-13
+            nickname: macos
+          - os: macos-14
             nickname: macos
           - os: ubuntu-22.04
             nickname: linux
