@@ -1,15 +1,8 @@
 antora:
   extensions:
-  - '@antora/collector-extension'
-  - '@antora/atlas-extension'
-  - '@springio/antora-extensions/set-algolia-env-extension'
-  - '@springio/antora-extensions/partial-build-extension'
-  - require: '@springio/antora-extensions/latest-version-extension'
-  - require: '@springio/antora-extensions/inject-collector-cache-config-extension'
-  - require: '@springio/antora-extensions/root-component-extension'
-    root_component_name: 'shell'
-  - require: '@springio/antora-extensions/asciinema-extension'
-  - '@springio/antora-extensions/static-page-extension'
+    - require: '@springio/antora-extensions'
+      root_component_name: 'shell'
+    - require: '@springio/antora-extensions/asciinema-extension'
 site:
   title: Spring Shell
   url: https://docs.spring.io/spring-shell/reference
@@ -33,6 +26,7 @@ asciidoc:
   extensions:
   - '@asciidoctor/tabs'
   - '@springio/asciidoctor-extensions'
+  - '@springio/asciidoctor-extensions/javadoc-extension'
 urls:
   latest_version_segment_strategy: redirect:to
   latest_version_segment: ''
