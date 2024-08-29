@@ -15,22 +15,6 @@ dependencies {
 	testImplementation 'org.awaitility:awaitility'
 }
 
-jar {
-	enabled = false
-}
-
-javadoc {
-	enabled = false
-}
-
-javadocJar {
-	enabled = false
-}
-
-sourcesJar {
-	enabled = false
-}
-
 antora {
 	version = '3.2.0-alpha.6'
 	if (project.hasProperty('antoraLocalBarePlaybook') && antoraLocalBarePlaybook.toBoolean()) {
