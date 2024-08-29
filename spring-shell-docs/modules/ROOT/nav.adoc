@@ -97,3 +97,4 @@
 ** xref:appendices/tui/index.adoc[]
 *** xref:appendices/tui/viewdev.adoc[]
 *** xref:appendices/tui/catalog.adoc[]
+* xref:attachment$api/java/index.html[Javadoc,role=link-external,window=_blank]

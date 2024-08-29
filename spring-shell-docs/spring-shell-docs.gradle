@@ -15,22 +15,35 @@ dependencies {
 	testImplementation 'org.awaitility:awaitility'
 }
 
-node {
-	version = '16.15.0'
+jar {
+	enabled = false
+}
+
+javadoc {
+	enabled = false
+}
+
+javadocJar {
+	enabled = false
+}
+
+sourcesJar {
+	enabled = false
 }
 
 antora {
-	version = '3.2.0-alpha.2'
+	version = '3.2.0-alpha.6'
 	if (project.hasProperty('antoraLocalBarePlaybook') && antoraLocalBarePlaybook.toBoolean()) {
 		playbook = 'local-bare-antora-playbook.yml'
 	}
 	options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
 	dependencies = [
 			'@antora/atlas-extension': '1.0.0-alpha.1',
-			'@antora/collector-extension': '1.0.0-alpha.3',
-			'@asciidoctor/tabs': '1.0.0-beta.3',
-			'@springio/antora-extensions': '1.8.1',
-			'@springio/asciidoctor-extensions': '1.0.0-alpha.8',
+			'@antora/collector-extension': '1.0.0-alpha.7',
+			'@asciidoctor/tabs': '1.0.0-beta.6',
+			'@springio/antora-extensions': '1.14.2',
+			'@springio/asciidoctor-extensions': '1.0.0-alpha.12',
+			'asciinema-player': '3.7.1'
 	]
 }
 

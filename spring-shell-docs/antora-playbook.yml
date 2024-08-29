@@ -3,12 +3,7 @@
 # The purpose of this Antora playbook is to build the docs in the current branch.
 antora:
   extensions:
-    - '@springio/antora-extensions/partial-build-extension'
-    - require: '@springio/antora-extensions/latest-version-extension'
-    - require: '@springio/antora-extensions/inject-collector-cache-config-extension'
-    - '@antora/collector-extension'
-    - '@antora/atlas-extension'
-    - require: '@springio/antora-extensions/root-component-extension'
+    - require: '@springio/antora-extensions'
       root_component_name: 'shell'
     - require: '@springio/antora-extensions/asciinema-extension'
 site:
@@ -30,6 +25,7 @@ asciidoc:
   extensions:
     - '@asciidoctor/tabs'
     - '@springio/asciidoctor-extensions'
+    - '@springio/asciidoctor-extensions/javadoc-extension'
   sourcemap: true
 urls:
   latest_version_segment: ''

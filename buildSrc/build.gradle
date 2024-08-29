@@ -26,7 +26,6 @@ dependencies {
 	implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
 	implementation "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 	implementation("org.springframework:spring-core")
-	implementation 'org.asciidoctor:asciidoctor-gradle-jvm:3.3.2'
 	implementation 'org.jfrog.buildinfo:build-info-extractor-gradle:4.29.0'
 	implementation "org.graalvm.buildtools:native-gradle-plugin:${nativeBuildToolsVersion}"
 }
@@ -48,10 +47,6 @@ gradlePlugin {
 		docsPlugin {
 			id = "org.springframework.shell.docs"
 			implementationClass = "org.springframework.shell.gradle.DocsPlugin"
-		}
-		distPlugin {
-			id = "org.springframework.shell.root"
-			implementationClass = "org.springframework.shell.gradle.RootPlugin"
 		}
 		samplePlugin {
 			id = "org.springframework.shell.sample"
