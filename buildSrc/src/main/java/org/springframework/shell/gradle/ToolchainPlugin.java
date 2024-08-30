@@ -30,7 +30,7 @@ public class ToolchainPlugin implements Plugin<Project> {
 
 	private void configureToolchain(Project project) {
 		ToolchainExtension toolchain = project.getExtensions().create("toolchain", ToolchainExtension.class, project);
-		project.afterEvaluate((evaluated) -> configure(evaluated, toolchain));
+		configure(project, toolchain);
 	}
 
 	private void configure(Project project, ToolchainExtension toolchain) {
