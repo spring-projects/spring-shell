@@ -52,5 +52,9 @@ gradlePlugin {
 			id = "org.springframework.shell.sample"
 			implementationClass = "org.springframework.shell.gradle.SamplePlugin"
 		}
+		toolchainPlugin {
+			id = "org.springframework.shell.toolchain"
+			implementationClass = "org.springframework.shell.gradle.ToolchainPlugin"
+		}
 	}
 }

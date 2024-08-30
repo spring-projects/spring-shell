@@ -28,7 +28,9 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: adopt
-          java-version: ${{ matrix.java }}
+          java-version: |
+            22
+            17
           cache: gradle
       - name: Build
         run: ./gradlew build
@@ -41,7 +43,9 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: adopt
-          java-version: 17
+          java-version: |
+            22
+            17
           cache: gradle
       - uses: jfrog/setup-jfrog-cli@v3
         with:

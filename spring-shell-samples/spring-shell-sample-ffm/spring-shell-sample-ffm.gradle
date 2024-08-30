@@ -1,0 +1,20 @@
+plugins {
+	id 'org.springframework.shell.sample'
+	id 'org.springframework.shell.toolchain'
+}
+
+description = 'Spring Shell Sample FFM'
+
+tasks.named("bootJar") {
+	manifest {
+		attributes 'Enable-Native-Access': 'ALL-UNNAMED'
+	}
+}
+
+dependencies {
+	management platform(project(":spring-shell-management"))
+	implementation project(':spring-shell-starters:spring-shell-starter-ffm')
+	testImplementation project(':spring-shell-starters:spring-shell-starter-test')
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.awaitility:awaitility'
+}
