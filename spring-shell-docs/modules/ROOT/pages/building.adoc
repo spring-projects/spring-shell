@@ -3,6 +3,93 @@
 
 This section covers how to build a Spring Shell application.
 
+== Starters
+
+. Spring Shell Starters
+[]
+|===
+|Name |Description
+
+|spring-shell-starter| Basic Spring Shell modules
+|spring-shell-starter-jansi| With JLine jansi provider
+|spring-shell-starter-jni| With JLine jni provider
+|spring-shell-starter-jna| With JLine jna provider
+|spring-shell-starter-ffm| With JLine ffm provider (requires JDK22+)
+|spring-shell-starter-test| Spring Shell testing support
+|===
+
+== Terminal Providers
+
+Interacting with an underlying terminal where your program is running has
+traditionally been relatively complex process while it may look like
+there's not that much happening as it's all just text.
+
+Remember all those old manual typewriters or matrix printers?
+A character is printed where a cursor is which then need to be moved
+if printing in a different position. In a nutshell that's how current
+terminal emulators work.
+
+To access and understand existing terminal emulator environment better
+JLine can use native code via its own shared libraries. JLine detects
+which providers are present and then makes a choice which one to use.
+Traditionally there's been 3 providers, `jansi`, `jni` and `jna` which
+should all provide same functionalities.
+
+Our starters can be used to spesifically pick some of these JLine
+providers.
+
+== FFM
+
+With `JDK22` a _Foreign Function and Memory API_ came out from a preview
+which is supposed to be a replacement for `JNI` providing much better
+and safer native API.
+
+Starting from `3.4.x` we've added a support to compile Spring Shell
+application with `JLine` `ffm` terminal provider. This obviously mean
+that application needs to be run with `JDK22+`. There is a new JDK
+intermediate release every 6 months and long term support(LTS) release
+every 2 years. Until there's an existing LTS release Spring Shell can
+align with Spring Framework we will use latest JDK release. Obviously
+this means that you may need to upgrade your JDK in an inconvenient
+time if you choose to use `ffm`. We're also bound to JDK version
+`JLine` itself uses to compile its `ffm` parts.
+
+FFM itself will cause jvm to print warnings when some part of it are
+used. These warnings are obviously annoying with terminal applications
+as it may interfere and cause a little bit of a mess. In future JDK
+versions these warnings will also be added for an older JNI modules and
+at some point these warnings will be changed into hard errors. User will
+be required to enable these native "unsafe" parts manually.
+
+JVM option for this in a command line is:
+
+[source, bash]
+----
+--enable-native-access=ALL-UNNAMED
+----
+
+If you have a jar file you can have this setting in its `META-INF/MANIFEST.MF`.
+
+[source]
+----
+Enable-Native-Access: ALL-UNNAMED
+----
+
+Which can be added during a build i.e. if using gradle:
+
+[source, groovy]
+----
+tasks.named("bootJar") {
+    manifest {
+        attributes 'Enable-Native-Access': 'ALL-UNNAMED'
+    }
+}
+----
+
+IMPORTANT: What comes for enabling native parts in a JDK, JLine has been
+proactive and already has a check for this and will throw error if
+native access is not enabled.
+
 [[native]]
 == Native Support
 
