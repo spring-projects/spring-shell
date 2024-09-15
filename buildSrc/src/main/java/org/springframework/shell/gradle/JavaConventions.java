@@ -52,7 +52,6 @@ class JavaConventions {
 	private void configureJavadocConventions(Project project) {
 		project.getTasks().withType(Javadoc.class, (javadoc) -> {
 			CoreJavadocOptions options = (CoreJavadocOptions) javadoc.getOptions();
-			options.source("17");
 			options.encoding("UTF-8");
 			options.addStringOption("Xdoclint:none", "-quiet");
 		});
