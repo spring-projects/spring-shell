@@ -34,7 +34,7 @@ jobs:
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ matrix.graal }}
-          java-version: 21
+          java-version: 22
           components: native-image
           native-image-musl: ${{ matrix.musl }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +95,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: adopt
-          java-version: 21
+          java-version: 22
           cache: gradle
       - name: Use Python 3.11
         uses: actions/setup-python@v4
