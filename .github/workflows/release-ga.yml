@@ -14,7 +14,9 @@ jobs:
     - uses: actions/setup-java@v3
       with:
         distribution: adopt
-        java-version: 17
+        java-version: |
+          22
+          17
     - uses: jvalkeal/setup-maven@v1
       with:
         maven-version: 3.8.4
