@@ -751,11 +751,28 @@ public interface CommandRegistration {
 		OptionSpec withOption();
 
 		/**
+		 * Define an option what this command should user for. Can be used multiple
+		 * times.
+		 *
+		 * @param customizer the option spec consumer
+		 * @return option spec for chaining
+		 */
+		Builder withOption(Consumer<OptionSpec> customizer);
+
+		/**
 		 * Define a target what this command should execute
 		 *
 		 * @return target spec for chaining
 		 */
 		TargetSpec withTarget();
+
+		/**
+		 * Define a target what this command should execute
+		 *
+		 * @param customizer the target spec consumer
+		 * @return target spec for chaining
+		 */
+		Builder withTarget(Consumer<TargetSpec> customizer);
 
 		/**
 		 * Define an alias what this command should execute
@@ -765,11 +782,27 @@ public interface CommandRegistration {
 		AliasSpec withAlias();
 
 		/**
+		 * Define an alias what this command should execute
+		 *
+		 * @param customizer the alias spec consumer
+		 * @return alias spec for chaining
+		 */
+		Builder withAlias(Consumer<AliasSpec> customizer);
+
+		/**
 		 * Define an exit code what this command should execute
 		 *
 		 * @return exit code spec for chaining
 		 */
 		ExitCodeSpec withExitCode();
+
+		/**
+		 * Define an exit code what this command should execute
+		 *
+		 * @param customizer the exit code spec consumer
+		 * @return exit code spec for chaining
+		 */
+		Builder withExitCode(Consumer<ExitCodeSpec> customizer);
 
 		/**
 		 * Define an error handling what this command should use
@@ -779,11 +812,27 @@ public interface CommandRegistration {
 		ErrorHandlingSpec withErrorHandling();
 
 		/**
+		 * Define an error handling what this command should use
+		 *
+		 * @param customizer the error handling spec consumer
+		 * @return error handling spec for chaining
+		 */
+		Builder withErrorHandling(Consumer<ErrorHandlingSpec> customizer);
+
+		/**
 		 * Define help options what this command should use.
 		 *
 		 * @return help options spec for chaining
 		 */
 		HelpOptionsSpec withHelpOptions();
+
+		/**
+		 * Define help options what this command should use.
+		 *
+		 * @param customizer the help options spec consumer
+		 * @return help options spec for chaining
+		 */
+		Builder withHelpOptions(Consumer<HelpOptionsSpec> customizer);
 
 		/**
 		 * Builds a {@link CommandRegistration}.
@@ -1408,10 +1457,26 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public Builder withOption(Consumer<OptionSpec> customizer) {
+			DefaultOptionSpec spec = new DefaultOptionSpec(this);
+			customizer.accept(spec);
+			optionSpecs.add(spec);
+			return this;
+		}
+
+		@Override
 		public TargetSpec withTarget() {
 			DefaultTargetSpec spec = new DefaultTargetSpec(this);
 			targetSpec = spec;
 			return spec;
+		}
+
+		@Override
+		public Builder withTarget(Consumer<TargetSpec> customizer) {
+			DefaultTargetSpec spec = new DefaultTargetSpec(this);
+			customizer.accept(spec);
+			targetSpec = spec;
+			return this;
 		}
 
 		@Override
@@ -1422,10 +1487,26 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public Builder withAlias(Consumer<AliasSpec> customizer) {
+			DefaultAliasSpec spec = new DefaultAliasSpec(this);
+			customizer.accept(spec);
+			this.aliasSpecs.add(spec);
+			return this;
+		}
+
+		@Override
 		public ExitCodeSpec withExitCode() {
 			DefaultExitCodeSpec spec = new DefaultExitCodeSpec(this);
 			this.exitCodeSpec = spec;
 			return spec;
+		}
+
+		@Override
+		public Builder withExitCode(Consumer<ExitCodeSpec> customizer) {
+			DefaultExitCodeSpec spec = new DefaultExitCodeSpec(this);
+			customizer.accept(spec);
+			this.exitCodeSpec = spec;
+			return this;
 		}
 
 		@Override
@@ -1436,11 +1517,28 @@ public interface CommandRegistration {
 		}
 
 		@Override
+		public Builder withErrorHandling(Consumer<ErrorHandlingSpec> customizer) {
+			DefaultErrorHandlingSpec spec = new DefaultErrorHandlingSpec(this);
+			customizer.accept(spec);
+			this.errorHandlingSpec = spec;
+			return this;
+		}
+
+		@Override
 		public HelpOptionsSpec withHelpOptions() {
 			if (this.helpOptionsSpec == null) {
 				this.helpOptionsSpec = new DefaultHelpOptionsSpec(this);
 			}
 			return this.helpOptionsSpec;
+		}
+
+		@Override
+		public Builder withHelpOptions(Consumer<HelpOptionsSpec> customizer) {
+			if (this.helpOptionsSpec == null) {
+				this.helpOptionsSpec = new DefaultHelpOptionsSpec(this);
+			}
+			customizer.accept(this.helpOptionsSpec);
+			return this;
 		}
 
 		@Override
