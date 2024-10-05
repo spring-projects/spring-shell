@@ -79,6 +79,23 @@ class ParserTests extends AbstractParsingTests {
 				}
 			);
 		}
+
+		@Test
+		void commandArgumentsGetsAddedAfterDoubleDashOptionValueSeparatedByEqualSign() {
+			register(ROOT3);
+			ParseResult result = parse("root3", "--arg1=value1", "--", "arg1", "arg2");
+
+			assertThat(result.argumentResults()).satisfiesExactly(
+					ar -> {
+						assertThat(ar.value()).isEqualTo("arg1");
+						assertThat(ar.position()).isEqualTo(0);
+					},
+					ar -> {
+						assertThat(ar.value()).isEqualTo("arg2");
+						assertThat(ar.position()).isEqualTo(1);
+					}
+			);
+		}
 	}
 
 	@Nested
@@ -96,9 +113,32 @@ class ParserTests extends AbstractParsingTests {
 		}
 
 		@Test
+		void optionValueShouldBeIntegerOptionValueSeparatedByEqualSign() {
+			register(ROOT6_OPTION_INT);
+			ParseResult result = parse("root6", "--arg1=1");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults().get(0).value()).isEqualTo(1);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
 		void optionValueShouldBeIntegerArray() {
 			register(ROOT6_OPTION_INTARRAY);
 			ParseResult result = parse("root6", "--arg1", "1", "2");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults().get(0).value()).isEqualTo(new int[] { 1, 2 });
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
+		void optionValueShouldBeIntegerArrayOptionValueSeparatedByEqualSign() {
+			register(ROOT6_OPTION_INTARRAY);
+			//TODO: is this how we want to indicate arrays after the equal sign
+			ParseResult result = parse("root6", "--arg1=1", "2");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
@@ -122,9 +162,35 @@ class ParserTests extends AbstractParsingTests {
 		}
 
 		@Test
+		void optionValueFailsFromStringToIntegerOptionValueSeparatedByEqualSign() {
+			register(ROOT6_OPTION_INT);
+			ParseResult result = parse("root6", "--arg1=x");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults().get(0).value()).isEqualTo("x");
+			assertThat(result.messageResults()).isNotEmpty();
+			assertThat(result.messageResults()).satisfiesExactly(ms -> {
+				// "2002E:(pos 0): Illegal option value 'x', reason 'Failed to convert from type [java.lang.String] to type [int] for value 'x''"
+				assertThat(ms.getMessage()).contains("Failed to convert");
+			});
+		}
+
+		@Test
 		void optionValueShouldBeNegativeInteger() {
 			register(ROOT6_OPTION_INT);
 			ParseResult result = parse("root6", "--arg1", "-1");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults().get(0).value()).isEqualTo(-1);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
+		void optionValueShouldBeNegativeIntegerOptionValueSeparatedByEqualSign() {
+			register(ROOT6_OPTION_INT);
+			ParseResult result = parse("root6", "--arg1=-1");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
@@ -312,6 +378,26 @@ class ParserTests extends AbstractParsingTests {
 			);
 			assertThat(result.messageResults()).isEmpty();
 		}
+
+		@Test
+		void shouldFindTwoLongOptionArgumentOptionValueSeparatedByEqualSign() {
+			register(ROOT3_OPTION_ARG1_ARG2);
+			ParseResult result = parse("root3", "--arg1=value1", "--arg2=value2");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+					r -> {
+						assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+						assertThat(r.value()).isEqualTo("value1");
+					},
+					r -> {
+						assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+						assertThat(r.value()).isEqualTo("value2");
+					}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
 	}
 
 	@Nested
@@ -350,6 +436,22 @@ class ParserTests extends AbstractParsingTests {
 		}
 
 		@Test
+		void shouldFindShortOptionWithOptionValueSeparatedByEqualSign() {
+			register(ROOT3_SHORT_OPTION_A);
+			ParseResult result = parse("root3", "-a=aaa");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+					r -> {
+						assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+						assertThat(r.value()).isEqualTo("aaa");
+					}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
 		void shouldFindShortOptions() {
 			register(ROOT3_SHORT_OPTION_A_B);
 			ParseResult result = parse("root3", "-a", "aaa", "-b", "bbb");
@@ -370,9 +472,39 @@ class ParserTests extends AbstractParsingTests {
 		}
 
 		@Test
+		void shouldFindShortOptionsWithOptionValueSeparatedByEqualSign() {
+			register(ROOT3_SHORT_OPTION_A_B);
+			ParseResult result = parse("root3", "-a=aaa", "-b=bbb");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+					r -> {
+						assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+						assertThat(r.value()).isEqualTo("aaa");
+					},
+					r -> {
+						assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'b' });
+						assertThat(r.value()).isEqualTo("bbb");
+					}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
 		void shouldFindShortOptionsRequired() {
 			register(ROOT3_SHORT_OPTION_A_B_REQUIRED);
 			ParseResult result = parse("root3", "-a", "aaa", "-b", "bbb");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
+		void shouldFindShortOptionsRequiredWithOptionValueSeparatedByEqualSign() {
+			register(ROOT3_SHORT_OPTION_A_B_REQUIRED);
+			ParseResult result = parse("root3", "-a=aaa", "-b=bbb");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
@@ -435,6 +567,25 @@ class ParserTests extends AbstractParsingTests {
 				r -> {
 					assertThat(r.value()).isEqualTo("value1");
 				}
+			);
+			assertThat(result.messageResults()).isEmpty();
+		}
+
+		@Test
+		void shouldFindLongOptionRegLowerCommandUpperWithOptionValueSeparatedByEqualSign() {
+			register(ROOT3);
+			ParserConfig config = new ParserConfig()
+					.disable(Feature.CASE_SENSITIVE_COMMANDS)
+					.disable(Feature.CASE_SENSITIVE_OPTIONS)
+					;
+			ParseResult result = parse(config, "root3", "--Arg1=value1");
+			assertThat(result).isNotNull();
+			assertThat(result.commandRegistration()).isNotNull();
+			assertThat(result.optionResults()).isNotEmpty();
+			assertThat(result.optionResults()).satisfiesExactly(
+					r -> {
+						assertThat(r.value()).isEqualTo("value1");
+					}
 			);
 			assertThat(result.messageResults()).isEmpty();
 		}
@@ -610,6 +761,31 @@ class ParserTests extends AbstractParsingTests {
 				}
 			);
 		}
+
+		@Test
+		void positionOverridesDefaultsKeepsDefaultWhenOptionWithOptionValueSeparatedByEqualSign() {
+			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
+			ParseResult result = parse("root7", "--arg1=a", "b");
+			assertThat(result.messageResults()).isEmpty();
+			assertThat(result.argumentResults()).satisfiesExactly(
+					r -> {
+						assertThat(r.value()).isEqualTo("b");
+						assertThat(r.position()).isEqualTo(0);
+					}
+			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
+					r -> {
+						assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+						assertThat(r.value()).isEqualTo("a");
+					},
+					r -> {
+						assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+						assertThat(r.value()).isEqualTo("b");
+					}
+			);
+		}
+
+
 
 		@Test
 		void positionWithLastHavingNoDefault() {

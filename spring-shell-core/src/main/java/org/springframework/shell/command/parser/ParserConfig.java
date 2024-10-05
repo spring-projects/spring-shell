@@ -62,8 +62,12 @@ public class ParserConfig {
 		/**
 		 * Defines if options are parsed using case-sensitivity, enabled on default.
 		 */
-		CASE_SENSITIVE_OPTIONS(true)
-		;
+		CASE_SENSITIVE_OPTIONS(true),
+
+
+		ALLOW_KEY_VALUE_SEPARATOR(true);
+
+
 
 		private final boolean defaultState;
 		private final long mask;
