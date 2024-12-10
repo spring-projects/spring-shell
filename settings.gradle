@@ -49,12 +49,18 @@ include 'spring-shell-table'
 include 'spring-shell-test'
 include 'spring-shell-test-autoconfigure'
 
+def ffm = settings.properties.hasProperty('includeFfm') && settings.properties.property('includeFfm').asBoolean()
+
 file("${rootDir}/spring-shell-starters").eachDirMatch(~/spring-shell-starter.*/) {
-	include "spring-shell-starters:${it.name}"
+	if((!it.name.endsWith('ffm') && !ffm) || ffm) { // skipping
+		include "spring-shell-starters:${it.name}"
+	}
 }
 
 file("${rootDir}/spring-shell-samples").eachDirMatch(~/spring-shell-sample.*/) {
-	include "spring-shell-samples:${it.name}"
+	if((!it.name.endsWith('ffm') && !ffm) || ffm) { // skipping
+		include "spring-shell-samples:${it.name}"
+	}
 }
 
 rootProject.children.each { project ->
