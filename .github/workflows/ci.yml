@@ -54,8 +54,8 @@ jobs:
             --use-wrapper \
             --uses-plugin \
             --deploy-ivy-desc=false \
-            --server-id-resolve repo.spring.io \
-            --server-id-deploy repo.spring.io \
+            --server-id-resolve spring-cloud \
+            --server-id-deploy spring-cloud \
             --repo-resolve snapshot \
             --repo-deploy snapshot
           echo JFROG_CLI_BUILD_NAME=spring-shell-33x >> $GITHUB_ENV
