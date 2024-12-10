@@ -44,9 +44,8 @@ jobs:
           java-version: 17
           cache: gradle
       - uses: jfrog/setup-jfrog-cli@v3
-        with:
-          version: 2.21.5
         env:
+          JF_URL: 'https://repo.spring.io'
           JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
       - name: Configure JFrog Cli
         run: |
