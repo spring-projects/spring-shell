@@ -21,13 +21,12 @@ jobs:
       with:
         maven-version: 3.8.4
     - uses: jfrog/setup-jfrog-cli@v3
-      with:
-        version: 2.21.5
       env:
+        JF_URL: 'https://repo.spring.io'
         JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
-        jf rt gradlec \
+        jf gradlec \
           --use-wrapper \
           --uses-plugin \
           --deploy-ivy-desc=false \
@@ -61,7 +60,7 @@ jobs:
         GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_SECRET_ACCESS_KEY }}
       run: |
-        jf rt gradle build artifactoryPublish
+        jf gradle build artifactoryPublish
         jf rt build-publish
     - name: Push Release
       env:
@@ -83,9 +82,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: jfrog/setup-jfrog-cli@v3
-      with:
-        version: 2.21.5
       env:
+        JF_URL: 'https://repo.spring.io'
         JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
@@ -159,9 +157,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: jfrog/setup-jfrog-cli@v3
-      with:
-        version: 2.21.5
       env:
+        JF_URL: 'https://repo.spring.io'
         JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
