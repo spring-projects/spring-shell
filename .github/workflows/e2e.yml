@@ -72,10 +72,6 @@ jobs:
         include:
           - os: windows-2022
             nickname: win
-          # - os: windows-2019
-          #   nickname: win
-          - os: macos-13
-            nickname: macos
           - os: macos-14
             nickname: macos
           - os: macos-15
