@@ -16,7 +16,7 @@ jobs:
             graal: latest
             musl: false
           - nickname: macos
-            os: macos-12
+            os: macos-latest
             graal: latest
             musl: false
           - nickname: linux
@@ -74,11 +74,11 @@ jobs:
             nickname: win
           # - os: windows-2019
           #   nickname: win
-          - os: macos-12
-            nickname: macos
           - os: macos-13
             nickname: macos
           - os: macos-14
+            nickname: macos
+          - os: macos-15
             nickname: macos
           - os: ubuntu-22.04
             nickname: linux
