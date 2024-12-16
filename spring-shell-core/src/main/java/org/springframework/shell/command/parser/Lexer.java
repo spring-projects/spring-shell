@@ -77,6 +77,58 @@ public interface Lexer {
 		private record ArgumentsSplit(List<String> before, List<String> after) {
 		}
 
+
+		/**
+		 * Loops over a list of arguments and if any of the arguments would follow the pattern ".*=.*"
+		 * it splits those arguments.
+		 * @param arguments the original arguments list
+		 * @return List<String> containing the arguments without key-value separator
+		 */
+		private static List<String> splitKeyAndValueBySeparator(List<String> arguments) {
+			if(arguments != null){
+				if(arguments.isEmpty()){
+					return arguments;
+				}else{
+					List<String> result = new ArrayList<>();
+
+					for (String argument : arguments) {
+						if (argument == null) {
+							result.add(null);
+						} else if (argument.isEmpty()) {
+							result.add("");
+						} else if (argument.matches(".*=.*")) {
+							String[] parts = argument.split("=", 2);
+							result.add(parts[0].trim());
+							result.add(parts[1].trim());
+						} else {
+							result.add(argument); // Add non-key-value arguments as-is
+						}
+					}
+					return result;
+				}
+			}else{
+				return null;
+			}
+
+		}
+
+		/**
+		 * Returns the argument split with the before and after list. In case isKeyValueSeparatorEnabled is true, it will however first separate the keys from values, adding
+		 * each as an argument to the list so the tokenize method can work with this them as previously implemented.
+		 * @param before before list
+		 * @param after after list
+		 * @param isKeyValueSeparatorEnabled true if key=value is allowed, otherwise not.
+		 * @return ArgumentsSplit
+		 */
+		private ArgumentsSplit prepareArgumentSplitWithoutKeyValueSeparator(List<String> before, List<String> after, boolean isKeyValueSeparatorEnabled){
+			if(isKeyValueSeparatorEnabled){
+				return new ArgumentsSplit(splitKeyAndValueBySeparator(before), splitKeyAndValueBySeparator(after));
+			}else{
+				return new ArgumentsSplit(before, after);
+			}
+		}
+
+
 		/**
 		 * Splits arguments from a point first valid command is found, where
 		 * {@code before} is everything before commands and {@code after} what's
@@ -100,11 +152,12 @@ public interface Lexer {
 			}
 			else if (i == 0) {
 				if (foundSplit) {
-					return new ArgumentsSplit(Collections.emptyList(), arguments);
+					return prepareArgumentSplitWithoutKeyValueSeparator(Collections.emptyList(), arguments, config.isEnabled(Feature.ALLOW_KEY_VALUE_SEPARATOR));
 				}
-				return new ArgumentsSplit(arguments, Collections.emptyList());
+				return prepareArgumentSplitWithoutKeyValueSeparator(arguments, Collections.emptyList(), config.isEnabled(Feature.ALLOW_KEY_VALUE_SEPARATOR));
 			}
-			return new ArgumentsSplit(arguments.subList(0, i), arguments.subList(i, arguments.size()));
+
+			return prepareArgumentSplitWithoutKeyValueSeparator(arguments.subList(0, i), arguments.subList(i, arguments.size()), config.isEnabled(Feature.ALLOW_KEY_VALUE_SEPARATOR));
 		}
 
 		private List<String> extractDirectives(List<String> arguments) {
