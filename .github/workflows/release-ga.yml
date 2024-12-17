@@ -21,7 +21,7 @@ jobs:
         JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
     - name: Configure JFrog Cli
       run: |
-        jf rt gradlec \
+        jf gradlec \
           --use-wrapper \
           --uses-plugin \
           --deploy-ivy-desc=false \
@@ -55,7 +55,7 @@ jobs:
         GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_SECRET_ACCESS_KEY }}
       run: |
-        jf rt gradle build distZip artifactoryPublish
+        jf gradle build distZip artifactoryPublish
         jf rt build-publish
     - name: Push Release
       env:
