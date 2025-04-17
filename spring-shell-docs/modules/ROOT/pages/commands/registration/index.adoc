@@ -14,7 +14,7 @@ Starting from _3.1.x_ a better support for defining commands using
 xref:commands/registration/annotation.adoc[annotations] were added. Firstly because eventually standard
 package providing xref:commands/registration/legacyannotation.adoc[legacy annotations] will get deprecated
 and removed. Secondly so that we're able to provide same set of features than using underlying
-`CommandRegistration`. Creating new a annotation model allows us to rethink and modernise that
+`CommandRegistration`. Creating a new annotation model allows us to rethink and modernise that
 part without breaking existing applications.
 
 
