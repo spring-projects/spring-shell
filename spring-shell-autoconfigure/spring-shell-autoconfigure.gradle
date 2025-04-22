@@ -10,6 +10,11 @@ dependencies {
 	implementation project(':spring-shell-core')
 	implementation project(':spring-shell-standard')
 	implementation project(':spring-shell-standard-commands')
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.springframework.boot:spring-boot-test')
+	testImplementation('org.junit.jupiter:junit-jupiter-engine')
+	testImplementation('org.junit.jupiter:junit-jupiter-params')
+    testImplementation('org.junit.platform:junit-platform-launcher')
+	testImplementation("org.mockito:mockito-junit-jupiter")
+	testImplementation('org.assertj:assertj-core')
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
