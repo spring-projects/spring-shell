@@ -9,6 +9,11 @@ dependencies {
 	implementation project(':spring-shell-core')
 	optional 'org.assertj:assertj-core'
 	optional 'org.junit.jupiter:junit-jupiter-api'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.springframework.boot:spring-boot-test')
+	testImplementation('org.junit.jupiter:junit-jupiter-engine')
+	testImplementation('org.junit.jupiter:junit-jupiter-params')
+    testImplementation('org.junit.platform:junit-platform-launcher')
+	testImplementation("org.mockito:mockito-junit-jupiter")
+	testImplementation('org.assertj:assertj-core')
 	testImplementation 'org.awaitility:awaitility'
 }
