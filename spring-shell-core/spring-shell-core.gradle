@@ -17,7 +17,6 @@ dependencies {
 	api('org.jline:jline-terminal')
 	api('org.antlr:ST4')
 	api('commons-io:commons-io')
-	compileOnly 'com.google.code.findbugs:jsr305'
 	testImplementation('org.springframework.boot:spring-boot-test')
 	testImplementation('org.junit.jupiter:junit-jupiter-engine')
 	testImplementation('org.junit.jupiter:junit-jupiter-params')
