@@ -5,13 +5,13 @@
 Throughout this documentation, we make references to configuring something by using
 annotations or programmatic examples.
 
-NOTE: There are two annotation models, xref:commands/registration/annotation.adoc[annotations]
-referred to new annotation model, xref:commands/registration/legacyannotation.adoc[legacy annotations]
-referred to old legacy annotation model.
+NOTE: There are two annotation models: the xref:commands/registration/annotation.adoc[annotations] model
+referred to as the new annotation model, and the xref:commands/registration/legacyannotation.adoc[legacy annotations]
+model referred to as the old legacy annotation model.
 
-Old legacy annotation model mostly relates to use of `@ShellMethod` and `@ShellOption` and
-new annotation model relates to use of `@Command`.
+The old legacy annotation model mostly relates to the use of `@ShellMethod` and `@ShellOption` and
+the new annotation model relates to the use of `@Command`.
 
 The programmatic model is how things are actually registered, even if you use annotations.
 
-NOTE: The documentation structure is getting revised to clarify how to provide configurations in separate ways. Thank you for understanding while that work is still in progress. 
+NOTE: The documentation structure is getting revised to clarify how to provide configurations in separate ways.

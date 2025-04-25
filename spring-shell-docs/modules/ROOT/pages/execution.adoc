@@ -60,5 +60,5 @@ default boolean run(String[] args) throws Exception {
 }
 ----
 
-IMPORTANT: This will the main api going forward and other existing methods taking boot's
-`ApplicationArguments` has been deprecated and will be removed in future.
+IMPORTANT: This will be the main api going forward and other existing methods taking boot's
+`ApplicationArguments` have been deprecated and will be removed in a future release.

@@ -5,9 +5,9 @@
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-This is a technical introduction to _UI Framework_.
+This is a technical introduction to the _UI Framework_.
 
-_UI Framework_ is a toolkit to build rich console apps.
+The _UI Framework_ is a toolkit to build rich console apps.
 
 
 

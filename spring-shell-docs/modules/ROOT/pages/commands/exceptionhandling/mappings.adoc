@@ -5,15 +5,15 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 Default behaviour of an exit codes is as:
 
-- Errors from a command option parsing will result code of `2`
-- Any generic error will result result code of `1`
-- Obviously in any other case result code is `0`
+- Errors from a command option parsing will result to a code of `2`
+- Any generic error will result to a code of `1`
+- Obviously in any other case will result to a code of `0`
 
 Every `CommandRegistration` can define its own mappings between _Exception_ and _exit code_.
-Essentially we're bound to functionality in `Spring Boot` regarding _exit code_ and simply
+Spring shell uses a similar approach to `Spring Boot` regarding _exit code_ and simply
 integrate into that.
 
-Assuming there is an exception show below which would be thrown from a command:
+Assuming there is an exception shown below which would be thrown from a command:
 
 [source, java, indent=0]
 ----

@@ -6,16 +6,16 @@ ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/she
 
 Views have their own default bindings which can be changed.
 
-You can subscribe into all key events:
+You can subscribe to all key events:
 
 [source, java, indent=0]
 ----
 include::{snippets}/KeyHandlingSnippets.java[tag=sample]
 ----
 
-`KeyEvent` is a record containing info about a binding coming out
+`KeyEvent` is a record containing information about a binding coming out
 from a terminal.
 
 Some views allow you to register hot keys which are processed before
-normal key handling. More about this can be found from
+normal key handling. More about this can be found in
 xref:appendices/tui/viewdev.adoc#register-bindings[Register Bindings].

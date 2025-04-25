@@ -4,9 +4,9 @@
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 _AppView_ is a base implementation providing functionality to draw opinionated _application view_.
-Inherits xref:tui/views/box.adoc[].
+This view inherits from xref:tui/views/box.adoc[].
 
-Generic idea is to have menu and status views which typically are xref:tui/views/menubar.adoc[] and
+The generic idea is to have menu and status views which typically are xref:tui/views/menubar.adoc[] and
 xref:tui/views/statusbar.adoc[] respectively. Main content view is then whatever user want to show
 in it.
 

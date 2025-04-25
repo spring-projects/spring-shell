@@ -2,7 +2,7 @@
 = View Development
 :page-section-summary-toc: 1
 
-While a _view_ just need to implement `View` it's usually convenient to just
+While a _view_ just needs to implement `View`, it's usually convenient to just
 use `BoxView` as a parent.
 
 [[register-bindings]]

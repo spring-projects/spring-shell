@@ -25,17 +25,17 @@ traditionally been relatively complex process while it may look like
 there's not that much happening as it's all just text.
 
 Remember all those old manual typewriters or matrix printers?
-A character is printed where a cursor is which then need to be moved
+A character is printed then a cursor needs to be moved
 if printing in a different position. In a nutshell that's how current
 terminal emulators work.
 
-To access and understand existing terminal emulator environment better
+To access and understand existing terminal emulators environment better,
 JLine can use native code via its own shared libraries. JLine detects
 which providers are present and then makes a choice which one to use.
 Traditionally there's been 3 providers, `jansi`, `jni` and `jna` which
 should all provide same functionalities.
 
-Our starters can be used to spesifically pick some of these JLine
+Our starters can be used to specifically pick some of these JLine
 providers.
 
 == FFM
@@ -127,7 +127,7 @@ When gradle build is run with `./gradlew nativeCompile` you should get binary
 under `build/native/nativeCompile` directory.
 
 For `maven` use `spring-boot-starter-parent` as parent and you'll get `native`
-profile which can be used to do a compilation. You need to configure metadata repository
+profile which can be used to do a native compilation. You need to configure metadata repository:
 
 [source, xml, subs=attributes+]
 ----

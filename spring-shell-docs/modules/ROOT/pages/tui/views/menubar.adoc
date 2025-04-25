@@ -5,7 +5,7 @@
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 _MenuBarView_ is a base implementation providing functionality to draw a menu bar.
-Inherits xref:tui/views/box.adoc[].
+_MenuBarView_ inherits from xref:tui/views/box.adoc[].
 
 [source, text]
 ----
@@ -24,7 +24,7 @@ include::{snippets}/MenuBarViewSnippets.java[tag=snippet1]
 ----
 
 == Default Bindings
-Default _key bindigs_ are:
+Default _key bindings_ are:
 
 .Key
 |===
@@ -38,7 +38,7 @@ Default _key bindigs_ are:
 
 |===
 
-Default _mouse bindigs_ are:
+Default _mouse bindings_ are:
 
 .Mouse
 |===

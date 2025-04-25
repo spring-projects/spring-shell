@@ -4,10 +4,10 @@
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 It is possible to _hide_ a command which is convenient in cases where it is not yet ready for
-prime time, is meant for debugging purposes or you have any other reason you dont want to
-advertise its presense.
+prime time, or is meant for debugging purposes or you have any other reason you don't want to
+advertise its presence.
 
-Hidden command can be executed if you know it and its options. It is effectively removed
+A hidden command can be executed if you know it and its options. It is effectively removed
 from:
 
 * Help listing
@@ -15,7 +15,7 @@ from:
 * Command completion in interactive mode
 * Bash completion
 
-Below is an example how to define command as _hidden_. It shows available builder methods
+Below is an example of how to define _hidden_ command. It shows available builder methods
 to define _hidden_ state.
 
 [source, java, indent=0]

@@ -5,10 +5,10 @@
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 _ListView_ is a base implementation providing functionality to draw a list of
-_items_. Inherits xref:tui/views/box.adoc[].
+_items_. _ListView_ inherits from xref:tui/views/box.adoc[].
 
 _ListView<T>_ is typed as its _item_ and can take any object. Further _item_
-processing happens in a _CellFactory_. For conveniance there is a support
+processing happens in a _CellFactory_. For convenience, there is a support
 for generic higher level list feature showing checked states as normal
 _check_ and _radio_ types. Essentially what you can have is a list of
 items which are shown as is, shown where any items can have a checked
@@ -63,7 +63,7 @@ Default _view commands_ are:
 
 |===
 
-Default _key bindigs_ are:
+Default _key bindings_ are:
 
 .Key
 |===
@@ -83,7 +83,7 @@ Default _key bindigs_ are:
 
 |===
 
-Default _mouse bindigs_ are:
+Default _mouse bindings_ are:
 
 .Mouse
 |===

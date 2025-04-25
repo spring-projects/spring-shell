@@ -5,22 +5,22 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 _Spring Shell_ has a build-in `help` command but not all favour getting command help
 from it as you always need to call it with arguments for target command. It's
-common in many cli frameworks for every command having options _--help_ and _-h_
+common in many CLI frameworks for every command having options _--help_ and _-h_
 to print out command help.
 
 Default functionality is that every command will get modified to have options
 _--help_ and _-h_, which if present in a given command will automatically
-short circuit command execution into a existing `help` command regardless
-what other command-line options is typed.
+short circuit command execution into an existing `help` command regardless
+what other command-line options are typed.
 
-Below example shows its default settings.
+The following example shows its default settings:
 
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationHelpOptionsSnippets.java[tag=defaults]
 ----
 
-It is possible to change default behaviour via configuration options.
+It is possible to change default behaviour via configuration options:
 
 [source, yaml]
 ----
@@ -33,6 +33,6 @@ spring:
       command: help
 ----
 
-NOTE: Commands defined programmationally or via annotations will automatically add
-help options. With annotation model you can only turn things off globally, programmatic
-model gives option to modify settings per command.
+NOTE: Commands defined programmatically or via annotations will automatically add
+help options. With the annotation model you can only turn things off globally, while
+with the programmatic model you can modify settings per command.

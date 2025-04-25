@@ -2,5 +2,5 @@
 = Clear
 :page-section-summary-toc: 1
 
-The `clear` command does what you would expect and clears the screen, resetting the prompt
+The `clear` command clears the screen, resetting the prompt
 in the top left corner.

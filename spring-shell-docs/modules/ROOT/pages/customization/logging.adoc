@@ -1,11 +1,11 @@
 [[using-shell-customization-logging]]
 = Logging
 
-On default a _Spring Boot_ application will log messages into a console which
+By default, a _Spring Boot_ application logs messages into a console which
 at minimum is annoying and may also mix output from a shell commands.
-Fortunately there is a simple way to instruct logging changes via boot properties.
+Fortunately, there is a simple way to instruct logging changes via Spring Boot properties.
 
-Completely silence console logging by defining its pattern as an empty value.
+To completely silence console logging, set the console's logging pattern to an empty value:
 
 [source, yaml]
 ----
@@ -14,7 +14,7 @@ logging:
     console:
 ----
 
-If you need log from a shell then write those into a file.
+If you need log from a shell then write those into a file:
 
 [source, yaml]
 ----
@@ -23,7 +23,7 @@ logging:
     name: shell.log
 ----
 
-If you need different log levels.
+If you need different log levels:
 
 [source, yaml]
 ----
@@ -34,8 +34,8 @@ logging:
         shell: debug
 ----
 
-Passing contiguration properties as command line options is not supported but
-you can use any other ways supported by boot, for example.
+Passing configuration properties as command line options is not supported,
+but you can use other ways supported by Spring Boot, for example:
 
 [source, bash]
 ----
@@ -43,5 +43,5 @@ $ java -Dlogging.level.root=debug -jar demo.jar
 $ LOGGING_LEVEL_ROOT=debug java -jar demo.jar
 ----
 
-NOTE: In a GraalVM image settings are locked during compilation which means
+NOTE: In a GraalVM image, settings are locked during compilation which means
       you can't change log levels at runtime.

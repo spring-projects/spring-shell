@@ -6,8 +6,8 @@ ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/she
 `TerminalUI` is a main implementation to drive ui execution logic.
 
 == Create TerminalUI
-You can build `TerminalUI` manually but recommended way is to use `TerminalUIBuilder`
-build is autoconfigured for you and will set needed services.
+You can build `TerminalUI` manually but the recommended way is to use `TerminalUIBuilder`
+which is autoconfigured for you and will set needed services.
 
 [source, java, indent=0]
 ----
@@ -34,8 +34,8 @@ include::{snippets}/TerminalUiSnippets.java[tag=uirun]
 
 == Exiting App
 
-If you want to exit from an app using normal _CTRL-Q_ key combination listen
-events and request _interrupt_.
+If you want to exit from an app using normal _CTRL-Q_ key combination, then
+you need to register a listener for events and request to _interrupt_ the execution.
 
 [source, java, indent=0]
 ----

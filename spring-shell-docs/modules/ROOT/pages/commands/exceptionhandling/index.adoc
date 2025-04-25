@@ -4,15 +4,15 @@
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-Exceptions happen from a user code wether it is intentional or not. This section describes
-how `spring-shell` handles exceptions and gives instructions and best practices how to
+Exceptions happen from a user code whether it is intentional or not. This section describes
+how Spring Shell handles exceptions and gives instructions and best practices on how to
 work with it.
 
-Many command line applications when applicable return an _exit code_ which running environment
-can use to differentiate if command has been executed successfully or not. In a `spring-shell`
-this mostly relates when a command is run on a non-interactive mode meaning one command
-is always executed once with an instance of a `spring-shell`. Take a note that _exit code_
-always relates to non-interactive shell.
+Many command line applications return an _exit code_ which can be used by the
+running environment to differentiate if command has been executed successfully or not.
+In Spring Shell, this mostly relates to when a command is run in a non-interactive mode,
+meaning one command is always executed once with an instance of a `spring-shell`. Take a note
+that _exit code_ always relates to non-interactive shell.
 
 
 
