@@ -4,10 +4,10 @@
 
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
-Catalog application is showing various ways how Terminal UI Framework can be used.
-In this section we discuss how this application works. It can be considered to be
+Catalog application shows various ways how the Terminal UI Framework can be used.
+In this section, we discuss how this application works. It can be considered as
 a reference application as it's using most of the features available and tries
-to follow best practices.
+to follow the best practices.
 
 [[create-scenario]]
 == Create Scenario

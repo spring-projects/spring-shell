@@ -5,10 +5,9 @@
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
 If your shell application is made for exactly a single purpose having only one
-command it may be beneficial to configure it for this. Property
-`spring.shell.noninteractive.primary-command` if defined will disable all other
-runners than `NonInteractiveShellRunner` and configures it to use
-defined _Primary Command_.
+command, it may be beneficial to configure it for this. If the property
+`spring.shell.noninteractive.primary-command` is defined, it will disable all other
+runners than `NonInteractiveShellRunner` and configures it to use the defined _Primary Command_.
 
 [source, yaml]
 ----
@@ -18,6 +17,6 @@ spring:
       primary-command: mycommand
 ----
 
-For example if you have a command `mycommand` with option `arg`
-it had to be executed with `<shellapp> mycommand --arg hi`, but with above
-setting it can be executed with `<shellapp> --arg hi`.
+For example, if you have a command `mycommand` with option `arg`
+that is expected to be executed with `<shellapp> mycommand --arg hi` in a multi-command app,
+then with the above configuration it can be executed with `<shellapp> --arg hi`.

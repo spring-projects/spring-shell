@@ -18,8 +18,8 @@ methods which takes `CompletionContext` and returns a list of
 `CompletionProposal` instances. `CompletionContext` gives you various
 information about a current context like command registration and option.
 
-NOTE: Generic resolvers can be registered as a beans if those are useful
-for all commands and scenarious. For example existing completion
+NOTE: Generic resolvers can be registered as beans if those are useful
+for all commands and scenarios. For example existing completion
 implementation `RegistrationOptionsCompletionResolver` handles completions
 for a option names.
 

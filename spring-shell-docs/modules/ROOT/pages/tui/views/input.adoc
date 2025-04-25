@@ -4,7 +4,7 @@
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 _InputView_ is a base implementation providing functionality to draw and modify
-text in a bounded _Rectancle_.
+text in a bounded _Rectangle_.
 
 [source, java, indent=0]
 ----
@@ -32,7 +32,7 @@ Default _view commands_ are:
 
 |===
 
-Default _key bindigs_ are:
+Default _key bindings_ are:
 
 .Key
 |===

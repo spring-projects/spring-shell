@@ -4,4 +4,4 @@
 
 ifndef::snippets[:snippets: ../../../../test/java/org/springframework/shell/docs]
 
-Framework provides a build-in views which are documented below.
+Spring Shell provides a built-in views which are documented below.

@@ -5,7 +5,7 @@
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 _BoxView_ is a base implementation providing functionality to draw into a
-bounded _Rectancle_. Only direct use of it is its `drawFunction` which
+bounded _Rectangle_. Only direct use of it is its `drawFunction` which
 allows to do simple things without implementing a full custom `View`.
 
 
@@ -15,10 +15,10 @@ include::{snippets}/BoxViewSnippets.java[tag=sample]
 ----
 
 == Customisation
-_BoxView_ as mostly being a base class contains some useful features
-like if it should draw a border and what what are its paddings.
+_BoxView_ is mostly being a base class that contains some useful features
+like if it should draw a border and what are its paddings.
 Border can have a title and its color and focused color can be
-defined. It's also possible to explicitely set background color
+defined. It's also possible to explicitly set a background color
 which will override one from styling.
 
 == Default Bindings

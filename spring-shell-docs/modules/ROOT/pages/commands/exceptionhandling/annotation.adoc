@@ -6,13 +6,13 @@ ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 `@ShellComponent` classes can have `@ExceptionResolver` methods to handle exceptions from component
 methods. These are meant for annotated methods.
 
-The exception may match against a top-level exception being propagated (e.g. a direct IOException
-being thrown) or against a nested cause within a wrapper exception (e.g. an IOException wrapped
-inside an IllegalStateException). This can match at arbitrary cause levels.
+The exception may match against a top-level exception being propagated (e.g. a direct `IOException`
+being thrown) or against a nested cause within a wrapper exception (e.g. an `IOException` wrapped
+inside an `IllegalStateException`). This can match at arbitrary cause levels.
 
 For matching exception types, preferably declare the target exception as a method argument, as
 the preceding example(s) shows. When multiple exception methods match, a root exception match is
-generally preferred to a cause exception match. More specifically, the ExceptionDepthComparator
+generally preferred to a cause exception match. More specifically, the `ExceptionDepthComparator`
 is used to sort exceptions based on their depth from the thrown exception type.
 
 Alternatively, the annotation declaration may narrow the exception types to match, as the
@@ -38,7 +38,7 @@ include::{snippets}/ErrorHandlingSnippets.java[tag=exception-resolver-with-exitc
 
 `@ExceptionResolver` with `void` return type is automatically handled as handled exception.
 You can then also define `@ExitCode` and use `Terminal` if you need to write something
-into console.
+into the console:
 
 [source, java, indent=0]
 ----

@@ -8,10 +8,9 @@ cases where you want to create a shorter version of a command or going
 through a complete command rename while keeping old one temporarily in
 place.
 
-Format for _alias_ is slighly different than a _command_. When _command_
+The format of _alias_ is slightly different from a _command_. When _command_
 is defined as an array it's concatenated together into a single command.
-When _alias_ is defined as an array it's used to create a separate
-aliases.
+When _alias_ is defined as an array it's used to create separate aliases.
 
 Aliases with a plain `CommandRegistration` is simple and clear as you
 get exactly what you define as there's no "magic" in it.

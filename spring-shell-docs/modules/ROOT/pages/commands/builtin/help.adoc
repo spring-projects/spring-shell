@@ -2,9 +2,7 @@
 = Help
 
 Running a shell application often implies that the user is in a graphically limited
-environment. Also, while we are nearly always connected in the era of mobile phones,
-accessing a web browser or any other rich UI application (such as a PDF viewer) may not always
-be possible. This is why it is important that the shell commands are correctly self-documented, and this is where the `help`
+environment. This is why it is important that the shell commands are correctly self-documented, and this is where the `help`
 command comes in.
 
 Typing `help` + `ENTER` lists all the commands known to the shell (including xref:commands/availability.adoc[unavailable] commands)
