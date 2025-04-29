@@ -66,7 +66,13 @@ public class FileInputProvider implements InputProvider, Closeable {
         if (line == null) {
             return null;
         } else {
-            ParsedLine parsedLine = parser.parse(sb.toString(), sb.toString().length());
+			// gh-277: if it's a commented line then skip as it is equal to NO_INPUT
+			ParsedLine parsedLine;
+			if (isCommentedLine(line)) {
+				parsedLine = parser.parse("", -1, Parser.ParseContext.COMPLETE);
+			} else {
+				parsedLine = parser.parse(sb.toString(), sb.toString().length());
+			}
             return new ParsedLineInput(parsedLine);
         }
     }
@@ -75,4 +81,8 @@ public class FileInputProvider implements InputProvider, Closeable {
     public void close() throws IOException {
         reader.close();
     }
+
+	private boolean isCommentedLine(String line) {
+		return line.matches("\\s*//.*");
+	}
 }
