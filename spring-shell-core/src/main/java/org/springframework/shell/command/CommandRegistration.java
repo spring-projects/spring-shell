@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ import org.springframework.util.StringUtils;
  * Interface defining a command registration endpoint.
  *
  * @author Janne Valkealahti
+ * @author Andrey Litvitski
  */
 public interface CommandRegistration {
 
@@ -765,6 +766,14 @@ public interface CommandRegistration {
 		AliasSpec withAlias();
 
 		/**
+		 * Define an alias what this command should execute
+		 *
+		 * @param commands the commands
+		 * @return builder for chaining
+		 */
+		Builder withAlias(String... commands);
+
+		/**
 		 * Define an exit code what this command should execute
 		 *
 		 * @return exit code spec for chaining
@@ -1419,6 +1428,20 @@ public interface CommandRegistration {
 			DefaultAliasSpec spec = new DefaultAliasSpec(this);
 			this.aliasSpecs.add(spec);
 			return spec;
+		}
+
+		@Override
+		public Builder withAlias(String... commands) {
+			Assert.notNull(commands, "commands must be set");
+			DefaultAliasSpec spec = new DefaultAliasSpec(this);
+			spec.commands = Arrays.asList(commands).stream()
+					.flatMap(c -> Stream.of(c.split(" ")))
+					.filter(c -> StringUtils.hasText(c))
+					.map(c -> c.trim())
+					.collect(Collectors.toList())
+					.toArray(new String[0]);
+			this.aliasSpecs.add(spec);
+			return this;
 		}
 
 		@Override
