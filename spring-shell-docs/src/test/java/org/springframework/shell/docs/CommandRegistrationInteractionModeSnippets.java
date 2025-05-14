@@ -16,8 +16,8 @@
 package org.springframework.shell.docs;
 
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.context.InteractionMode;
-import org.springframework.shell.standard.ShellMethod;
 
 public class CommandRegistrationInteractionModeSnippets {
 
@@ -38,7 +38,7 @@ public class CommandRegistrationInteractionModeSnippets {
 	static class Dump1 {
 
 		// tag::snippet2[]
-		@ShellMethod(key = "mycommand", interactionMode = InteractionMode.INTERACTIVE)
+		@Command(command = "mycommand", interactionMode = InteractionMode.INTERACTIVE)
 		public void mycommand() {
 		}
 		// end::snippet2[]
