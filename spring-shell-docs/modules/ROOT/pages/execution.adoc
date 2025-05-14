@@ -20,7 +20,7 @@ Some commands may not have any useful meanings when they run in interactive mode
 or (conversely) in non-interactive mode. For example, a built-in `exit` command would
 have no meaning in non-interactive mode, because it is used to exit interactive mode.
 
-The `@ShellMethod` annotation has a field called `interactionMode` that you can use to inform
+The `@Command` annotation has a field called `interactionMode` that you can use to inform
 shell about when a particular command is available.
 
 [[using-shell-execution-shellrunner]]
