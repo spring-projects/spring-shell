@@ -27,16 +27,16 @@ class WritingSnippets {
 
 	class Dump1 {
 
-		// tag::legacyanno-terminal-writer[]
+		// tag::inject-terminal-writer[]
 		@Autowired
 		Terminal terminal;
 
-		@ShellMethod
+		@Command
 		public void example() {
 			terminal.writer().println("hi");
 			terminal.writer().flush();
 		}
-		// end::legacyanno-terminal-writer[]
+		// end::inject-terminal-writer[]
 	}
 
 	class Dump2 {
