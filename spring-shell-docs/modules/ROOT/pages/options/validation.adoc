@@ -20,5 +20,5 @@ From the preceding example, you get the following behavior for free:
 ----
 shell:>change-password hello
 The following constraints were not met:
-	--password string : size must be between 8 and 40 (You passed 'hello')
+	--password : size must be between 8 and 40 (You passed 'hello')
 ----

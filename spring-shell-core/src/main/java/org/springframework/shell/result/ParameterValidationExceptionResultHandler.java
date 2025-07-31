@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.result;
 
+import jakarta.validation.Path;
+
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
@@ -26,6 +28,7 @@ import org.springframework.shell.ParameterValidationException;
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public class ParameterValidationExceptionResultHandler
 		extends TerminalAwareResultHandler<ParameterValidationException> {
@@ -39,10 +42,19 @@ public class ParameterValidationExceptionResultHandler
 		terminal.writer().println(new AttributedString("The following constraints were not met:",
 				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
 		result.getConstraintViolations().stream()
-				.forEach(v -> {
-					terminal.writer().println(new AttributedString(v.toString(),
+				.forEach(violation -> {
+					Path propertyPath = violation.getPropertyPath();
+					String violationMessage = violation.getMessage();
+					String errorMessage = String.format("\t--%s: %s", extractPropertyName(propertyPath), violationMessage);
+					terminal.writer().println(new AttributedString(errorMessage,
 						AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi(terminal));
 				});
+	}
+
+	private String extractPropertyName(Path propertyPath) {
+		String path = propertyPath.toString();
+		int lastIndexOfDot = path.lastIndexOf(".");
+		return lastIndexOfDot == -1 ? path : path.substring(lastIndexOfDot + 1);
 	}
 
 }
