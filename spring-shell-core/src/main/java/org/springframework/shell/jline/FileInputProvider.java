@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,17 +63,11 @@ public class FileInputProvider implements InputProvider, Closeable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (line == null) {
+        if (line == null || isComment(line)) {
             return null;
         } else {
-			// gh-277: if it's a commented line then skip as it is equal to NO_INPUT
-			ParsedLine parsedLine;
-			if (isCommentedLine(line)) {
-				parsedLine = parser.parse("", -1, Parser.ParseContext.COMPLETE);
-			} else {
-				parsedLine = parser.parse(sb.toString(), sb.toString().length());
-			}
-            return new ParsedLineInput(parsedLine);
+			ParsedLine parsedLine = parser.parse(sb.toString(), sb.toString().length());
+			return new ParsedLineInput(parsedLine);
         }
     }
 
@@ -82,7 +76,7 @@ public class FileInputProvider implements InputProvider, Closeable {
         reader.close();
     }
 
-	private boolean isCommentedLine(String line) {
+	private boolean isComment(String line) {
 		return line.matches("\\s*//.*");
 	}
 }
