@@ -29,5 +29,5 @@ It's possible to autowire `Terminal` to get access to its writer.
 
 [source, java, indent=0]
 ----
-include::{snippets}/WritingSnippets.java[tag=legacyanno-terminal-writer]
+include::{snippets}/WritingSnippets.java[tag=inject-terminal-writer]
 ----
