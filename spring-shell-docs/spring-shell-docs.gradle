@@ -27,11 +27,11 @@ antora {
 	}
 	options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
 	dependencies = [
-			'@antora/atlas-extension': '1.0.0-alpha.1',
-			'@antora/collector-extension': '1.0.0-alpha.7',
+			'@antora/atlas-extension': '1.0.0-alpha.2',
+			'@antora/collector-extension': '1.0.1',
 			'@asciidoctor/tabs': '1.0.0-beta.6',
-			'@springio/antora-extensions': '1.14.2',
-			'@springio/asciidoctor-extensions': '1.0.0-alpha.12',
+			'@springio/antora-extensions': '1.14.7',
+			'@springio/asciidoctor-extensions': '1.0.0-alpha.17',
 			'asciinema-player': '3.7.1'
 	]
 }
