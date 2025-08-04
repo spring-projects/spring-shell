@@ -14,7 +14,7 @@ You can define the interaction mode with `CommandRegisration`:
 include::{snippets}/CommandRegistrationInteractionModeSnippets.java[tag=snippet1]
 ----
 
-Or with `@ShellMethod`.
+Or with `@Command`.
 
 [source, java, indent=0]
 ----
