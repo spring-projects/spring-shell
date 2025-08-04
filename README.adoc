@@ -1,11 +1,11 @@
 = Spring Shell image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?search.rootProjectNames=spring-shell"]
 
-Spring Shell helps you to create Spring-powered, production-grade applications targeting
+Spring Shell helps you create Spring-powered, production-grade applications targeting the
 _CLI_ space. It takes an opinionated view of the Spring platform so that new and existing
-users can quickly get to the bits they need.
+users can quickly get the bits they need.
 
 You can use Spring Shell to create stand-alone Java applications that can be started using
-java -jar or more sophisticated GraalVM native ways to create platform dependant apps.
+`java -jar` or more sophisticated GraalVM native ways to create platform dependant apps.
 
 Our primary goals are:
 
@@ -38,7 +38,7 @@ public class DemoApplication {
 }
 ----
 
-Running it as _jar_ interactive:
+Running it as an executable _jar_ in an interactive mode:
 
 [source,bash]
 ----
@@ -63,7 +63,7 @@ shell:>hi
 hi
 ----
 
-Running it as _jar_ non-interactive:
+Or running it in a non-interactive mode:
 
 [source,bash]
 ----
@@ -91,7 +91,7 @@ We like to know the Spring Boot and Shell version, operating system, and JVM ver
 
 == Building from Source
 
-Active development branch is `main` targeting work for `3.2.x`. `3.1.x`, `3.0.x` and `2.1.x` are for maintaining current active releases.
+The `main` branch contains the work for the next major release `4.0.0`.
 
 Building and running tests:
 
