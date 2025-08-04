@@ -1,4 +1,4 @@
-name: Stage Release in Artifactory
+name: Stage Release 3.4.x in Artifactory
 
 on:
   workflow_dispatch:
@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4.2.2
+        with:
+          ref: '3.4.x'
 
       - name: Spring Gradle Build Action
         uses: spring-io/spring-gradle-build-action@v2

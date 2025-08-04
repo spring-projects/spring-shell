@@ -1,4 +1,4 @@
-name: Manual
+name: Manual 3.4.x
 
 on:
   workflow_dispatch:
@@ -22,9 +22,12 @@ jobs:
             os: ubuntu-latest
             graal: 22.3.0
             musl: true
-    name: Build ${{ matrix.nickname }}
+    name: Build 3.4.x on ${{ matrix.nickname }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: '3.4.x'
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ matrix.graal }}

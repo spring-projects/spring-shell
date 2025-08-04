@@ -1,10 +1,10 @@
-name: CI
+name: CI 3.4.x
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - 3.4.x
     paths-ignore:
       - '.github/**'
 
@@ -24,9 +24,12 @@ jobs:
           - nickname: windows jdk17
             java: 17
             os: windows-latest
-    name: CI Build ${{ matrix.nickname }}
+    name: CI Build for 3.4.x on ${{ matrix.nickname }}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - name: Checkout source code
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: '3.4.x'
       - name: Spring Gradle Build Action
         uses: spring-io/spring-gradle-build-action@v2
         with:
@@ -39,7 +42,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'spring-projects'
     steps:
-      - uses: actions/checkout@v4.2.2
+      - name: Checkout source code
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: '3.4.x'
       - name: Spring Gradle Build Action
         uses: spring-io/spring-gradle-build-action@v2
         with:
@@ -53,7 +59,7 @@ jobs:
           uri: 'https://repo.spring.io'
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          build-name: 'spring-shell-main'
+          build-name: 'spring-shell-3.4.x'
           repository: 'libs-snapshot-local'
           folder: 'deployment-repository'
           signing-key: ${{ secrets.GPG_PRIVATE_KEY }}

@@ -1,4 +1,4 @@
-name: e2e
+name: e2e 3.4.x
 run-name: ${{ format('{0} ({1})', github.workflow, github.ref_name) }}
 
 on:
@@ -30,7 +30,10 @@ jobs:
         shell: bash
         run: |
           sysctl machdep.cpu
-      - uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: '3.4.x'
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ matrix.graal }}
@@ -82,14 +85,17 @@ jobs:
             nickname: linux
           - os: ubuntu-20.04
             nickname: linux
-    name: E2E ${{ matrix.os }}
+    name: E2E build for 3.4.x on ${{ matrix.os }}
     steps:
       - name: macos info
         if: runner.os == 'macOS'
         shell: bash
         run: |
           sysctl machdep.cpu
-      - uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: '3.4.x'
       - uses: actions/setup-java@v3
         with:
           distribution: adopt

@@ -1,4 +1,4 @@
-name: CI Native
+name: CI Native 3.4.x
 
 on:
   workflow_dispatch:
@@ -21,7 +21,10 @@ jobs:
             os: windows-latest
     name: CI Build ${{ matrix.nickname }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: '3.4.x'
       - uses: actions/setup-java@v3
         with:
           distribution: adopt

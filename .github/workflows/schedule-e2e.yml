@@ -1,4 +1,4 @@
-name: Schedule e2e
+name: Schedule 3.4.x e2e
 
 on:
   workflow_dispatch:
@@ -14,12 +14,13 @@ jobs:
     if: github.repository_owner == 'spring-projects'
     strategy:
       matrix:
-        branch: [ main, 3.3.x, 3.2.x ]
+        branch: [ 3.4.x ]
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+    - name: Checkout source code
+      uses: actions/checkout@v4.2.2
       with:
+        ref: '3.4.x'
         fetch-depth: 1
     - name: Dispatch
       env:
