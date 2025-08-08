@@ -106,28 +106,27 @@ better with shell apps.
 == Your First Command
 
 Now we can add our first command. To do so, create a new class (named whatever you want) and
-annotate it with `@ShellComponent` which is a variation of `@Component` that is used to restrict
+annotate it with `@Command` which is a variation of `@Component` that is used to restrict
 the set of classes that are scanned for candidate commands.
 
 Then we can create a `helloWorld` method that takes `String` as an argument and
-returns it with "Hello world". Add `@ShellMethod` and optionally change command name
-using `key` parameter. You can use `@ShellOption` to define argument default value
+returns it with "Hello world". Add `@Command` and optionally change command name
+using `command` parameter. You can use `@Option` to define argument default value
 if it's not given when running a command.
 
 [source, java]
 ----
 package com.example.demo;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 
-@ShellComponent
+@Command
 public class MyCommands {
 
-	@ShellMethod(key = "hello-world")
+	@Command(command = "hello-world")
 	public String helloWorld(
-		@ShellOption(defaultValue = "spring") String arg
+		@Option(defaultValue = "spring") String arg
 	) {
 		return "Hello world " + arg;
 	}
