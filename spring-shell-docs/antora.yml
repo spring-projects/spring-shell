@@ -5,16 +5,10 @@ nav:
   - modules/ROOT/nav.adoc
 ext:
   collector:
-    - run:
-        command: gradlew -q "-Dorg.gradle.jvmargs=-Xmx3g -XX:+HeapDumpOnOutOfMemoryError" :spring-shell-docs:generateAntoraYml
-        local: true
-      scan:
-        dir: ./build/generated-antora-resources
-    - run:
-        command: gradlew -q "-Dorg.gradle.jvmargs=-Xmx3g -XX:+HeapDumpOnOutOfMemoryError" :spring-shell-docs:aggregatedJavadoc
-        local: true
-      scan:
-        dir: ./build/generated-antora-javadocs
+    run:
+      command: ./mvnw process-resources -pl spring-shell-docs -am
+    scan:
+      dir: ./target/classes/antora-resources
 
 asciidoc:
   attributes:

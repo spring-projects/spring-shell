@@ -24,3 +24,5 @@ shell.log.*.tmp
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.flattened-pom.xml
+/**/*/.flattened-pom.xml

@@ -1,5 +1,0 @@
-plugins {
-	id 'org.springframework.shell.bom'
-}
-
-description = 'Spring Shell BOM'

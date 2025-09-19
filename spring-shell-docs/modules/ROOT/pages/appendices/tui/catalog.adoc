@@ -17,7 +17,17 @@ _scenario_ package and implement it as something shown below.
 
 [source, java, indent=0]
 ----
-include::{snippets}/CatalogSnippets.java[tag=samplescenario]
+@ScenarioComponent(
+        name = "Scenario name",
+        description = "Scenario short description",
+        category = { Scenario.CATEGORY_OTHER })
+public class SampleScenario extends AbstractScenario {
+
+    @Override
+    public View build() {
+        return new BoxView();
+    }
+}
 ----
 
 NOTE: You need to define all fields, `name`, `description` and `category`

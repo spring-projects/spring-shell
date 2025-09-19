@@ -1,3 +1,6 @@
 org.springframework.aot.hint.RuntimeHintsRegistrar=\
 org.springframework.shell.standard.StandardResourcesRuntimeHints,\
-org.springframework.shell.standard.completion.StandardCompletionModelsRuntimeHints
+org.springframework.shell.standard.completion.StandardCompletionModelsRuntimeHints,\
+org.springframework.shell.standard.commands.StandardCommandsResourcesRuntimeHints,\
+org.springframework.shell.standard.commands.StandardCommandsModelsRuntimeHints
+

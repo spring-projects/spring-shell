@@ -1,3 +1,0 @@
-org.springframework.aot.hint.RuntimeHintsRegistrar=\
-org.springframework.shell.standard.commands.StandardCommandsResourcesRuntimeHints,\
-org.springframework.shell.standard.commands.StandardCommandsModelsRuntimeHints
