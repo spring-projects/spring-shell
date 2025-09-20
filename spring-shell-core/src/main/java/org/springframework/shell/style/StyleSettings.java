@@ -34,15 +34,19 @@ public abstract class StyleSettings {
 
 	/**
 	 * Styling for keys or names in a lists:
-	 * <list key1> : list value1
-	 * <list key2> : list value2
+	 * <ul>
+	 * <li>list key1 : list value1</li>
+	 * <li>list key2 : list value2</li>
+	 * </ul>
 	 */
 	public final static String TAG_LIST_KEY = "style-list-key";
 
 	/**
 	 * Styling for keys or names in a lists:
-	 * list key1 : <list value1>
-	 * list key2 : <list value2>
+	 * <ul>
+	 * <li>list key1 : list value1</li>
+	 * <li>list key2 : list value2</li>
+	 * </ul>
 	 */
 	public final static String TAG_LIST_VALUE = "style-list-value";
 

@@ -169,7 +169,7 @@ public interface Screen {
 		 *
 		 * @param color the color
 		 * @return a writer builder for chaining
-		 * @See Color
+		 * @see Color
 		 */
 		WriterBuilder color(int color);
 

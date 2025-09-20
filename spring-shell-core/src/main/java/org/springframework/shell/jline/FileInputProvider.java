@@ -28,7 +28,6 @@ import java.io.Reader;
 
 /**
  * An {@link InputProvider} that reads input from file-like sources.
- * <p>
  * <p>Still uses a {@link org.jline.reader.Parser} to interpret word boundaries. Supports backslashes at end
  * of line to signal line continuation.</p>
  *

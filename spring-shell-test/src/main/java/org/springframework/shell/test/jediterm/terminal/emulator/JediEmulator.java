@@ -36,10 +36,10 @@ import org.springframework.shell.test.jediterm.typeahead.Ascii;
 
 /**
  * The main terminal emulator class.
- * <p/>
+ * <p>
  * Obtains data from the  {@link org.springframework.shell.test.jediterm.terminal.TerminalDataStream}, interprets terminal ANSI escape sequences as commands and directs them
  * as well as plain data characters to the  {@link org.springframework.shell.test.jediterm.terminal.Terminal}
- *
+ *</p>
  * @author jediterm authors
  */
 public class JediEmulator extends DataStreamIteratingEmulator {

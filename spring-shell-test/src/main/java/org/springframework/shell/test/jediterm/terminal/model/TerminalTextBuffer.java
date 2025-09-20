@@ -39,7 +39,6 @@ import org.springframework.shell.test.jediterm.terminal.util.Pair;
  * screen after resize. ScrollBuffer stores all lines before the first line currently shown on the screen. TextBuffer
  * stores lines that are shown currently on the screen and they have there(in TextBuffer) their initial length (even if
  * it doesn't fit to screen width).
- * <p/>
  *
  * @author jediterm authors
  */

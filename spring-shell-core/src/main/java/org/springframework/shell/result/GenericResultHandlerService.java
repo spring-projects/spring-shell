@@ -36,7 +36,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Base {@ResultHandlerService} implementation suitable for use in most
+ * Base {@link ResultHandlerService} implementation suitable for use in most
  * environments.
  *
  * @author Janne Valkealahti

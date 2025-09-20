@@ -46,7 +46,7 @@ import org.springframework.util.ObjectUtils;
 /**
  * {@code ProgressView} is used to show a progress indicator.
  *
- * Defaults to <textItem> <spinnerItem> <percentItem>
+ * Defaults to textItem, spinnerItem, percentItem
  *
  * @author Janne Valkealahti
  */
