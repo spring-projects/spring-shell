@@ -12,10 +12,6 @@
 	<name>Spring Shell Documentation</name>
 	<description>Spring Shell reference documentation</description>
 
-	<properties>
-		<io.spring.maven.antora-version>0.0.4</io.spring.maven.antora-version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
@@ -51,9 +47,9 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>io.spring.maven.antora</groupId>
+				<groupId>org.antora</groupId>
 				<artifactId>antora-maven-plugin</artifactId>
-				<version>${io.spring.maven.antora-version}</version>
+				<version>${antora-maven-plugin.version}</version>
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
