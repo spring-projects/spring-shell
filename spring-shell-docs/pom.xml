@@ -45,6 +45,16 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/antora</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>antora.yml</include>
+					<include>antora-playbook.yml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.antora</groupId>
@@ -53,6 +63,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<nodeVersion>${nodejs.version}</nodeVersion>
+					<playbookFile>target/classes/antora-playbook.yml</playbookFile>
 				</configuration>
 			</plugin>
 			<plugin>

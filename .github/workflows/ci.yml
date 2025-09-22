@@ -41,13 +41,11 @@ jobs:
           signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Generate Java docs
-        run: |
-          ./mvnw --no-transfer-progress javadoc:aggregate
+        run: ./mvnw --no-transfer-progress javadoc:aggregate
 
       - name: Generate Reference docs
         working-directory: spring-shell-docs
-        run: |
-          ../mvnw --no-transfer-progress antora
+        run: ../mvnw --no-transfer-progress resources:resources antora
 
       - name: Setup SSH key
         env:

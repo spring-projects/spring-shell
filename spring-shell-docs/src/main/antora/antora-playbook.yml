@@ -3,7 +3,7 @@ site:
   url: https://docs.spring.io/spring-shell/reference/
 content:
   sources:
-    - url: ./..
+    - url: ${project.basedir}/..
       start_path: spring-shell-docs
       worktrees: true
 asciidoc:
@@ -13,6 +13,9 @@ asciidoc:
     hide-uri-scheme: '@'
     tabs-sync-option: '@'
     chomp: 'all'
+    attribute-missing: 'warn'
+    snippets: example$docs-src/test/java/org/springframework/shell/docs
+    project-version: ${project.parent.version}
   sourcemap: true
 runtime:
   log:

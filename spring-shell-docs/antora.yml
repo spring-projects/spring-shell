@@ -3,9 +3,3 @@ version: 4.0.0-SNAPSHOT
 title: Spring Shell
 nav:
   - modules/ROOT/nav.adoc
-
-asciidoc:
-  attributes:
-    attribute-missing: 'warn'
-    chomp: 'all'
-    snippets: example$docs-src/test/java/org/springframework/shell/docs
