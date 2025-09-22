@@ -28,7 +28,7 @@ jobs:
         run: ./mvnw -DaltDeploymentRepository=local::file:deployment-repository --no-transfer-progress --batch-mode --update-snapshots deploy
 
       - name: Deploy to Artifactory
-        if: ${{ github.repository == 'spring-projects/spring-batch' && github.ref_name == 'main' }}
+        if: ${{ github.repository == 'spring-projects/spring-shell' && github.ref_name == 'main' }}
         uses: spring-io/artifactory-deploy-action@v0.0.2
         with:
           uri: 'https://repo.spring.io'
