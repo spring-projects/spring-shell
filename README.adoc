@@ -81,12 +81,10 @@ Are you having trouble with Spring Shell? We want to help!
 Spring Shell uses GitHub's integrated issue tracking system to record bugs and feature requests.
 If you want to raise an issue, please follow the recommendations below:
 
-* Before you log a bug, please search the {github}/issues[issue tracker] to see if someone has already reported the problem.
-* If the issue doesn't already exist, {github}/issues/new[create a new issue].
-* Please provide as much information as possible with the issue report.
-We like to know the Spring Boot and Shell version, operating system, and JVM version you're using.
-* If you need to paste code or include a stack trace, use Markdown.
-+++```+++ escapes before and after your text.
+* Before you log a bug, please search the issue tracker to see if someone has already reported the problem.
+* If the issue doesn't already exist, create a new issue.
+* Please provide as much information as possible with the issue report. We need to know the Spring Boot and Shell version, operating system, and JVM version you're using.
+* If you need to paste code or include a stack trace, please use Markdown's +++```+++ escapes before and after your text.
 * If possible, try to create a test case or project that replicates the problem and attach it to the issue.
 
 == Building from Source
@@ -96,25 +94,8 @@ The `main` branch contains the work for the next major release `4.0.0`.
 Building and running tests:
 
 ```
-./gradlew build
+./mvnw install
 ```
-
-Publishing to local maven cache:
-
-```
-./gradlew publishToMavenLocal
-```
-
-== Example
-https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/[Samples] contains various examples how to use `spring-shell`.
-
-```
-./gradlew :spring-shell-samples:spring-shell-sample-catalog:build -x test
-./gradlew :spring-shell-samples:spring-shell-sample-commands:build -x test
-./gradlew :spring-shell-samples:spring-shell-sample-e2e:build -x test
-```
-
-Native build can be enabled using property `-PspringShellSampleNative=true`. On linux a `musl` can be activated with `-PspringShellSampleMusl=true`. Note that musl needs to be properly configured in the environment.
 
 == License
 Spring Shell is Open Source software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
