@@ -1,7 +1,3 @@
-antora:
-  extensions:
-    - require: '@springio/antora-extensions'
-      root_component_name: 'shell'
 site:
   title: Spring Shell
   url: https://docs.spring.io/spring-shell/reference/
@@ -17,8 +13,6 @@ asciidoc:
     hide-uri-scheme: '@'
     tabs-sync-option: '@'
     chomp: 'all'
-  extensions:
-    - '@asciidoctor/tabs'
   sourcemap: true
 runtime:
   log:

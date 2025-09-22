@@ -56,8 +56,11 @@
 		<mockito.version>5.19.0</mockito.version>
 		<awaitility.version>4.3.0</awaitility.version>
 
-		<!-- plugin versions -->
+		<!-- documentation dependencies -->
+		<nodejs.version>24.8.0</nodejs.version>
 		<antora-maven-plugin.version>1.0.0-alpha.5</antora-maven-plugin.version>
+
+		<!-- plugin versions -->
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>

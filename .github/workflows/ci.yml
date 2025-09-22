@@ -42,12 +42,12 @@ jobs:
 
       - name: Generate Java docs
         run: |
-          ./mvnw javadoc:aggregate
+          ./mvnw --no-transfer-progress javadoc:aggregate
 
       - name: Generate Reference docs
         working-directory: spring-shell-docs
         run: |
-          ../mvnw antora
+          ../mvnw --no-transfer-progress antora
 
       - name: Setup SSH key
         env:

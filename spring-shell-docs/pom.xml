@@ -51,6 +51,9 @@
 				<artifactId>antora-maven-plugin</artifactId>
 				<version>${antora-maven-plugin.version}</version>
 				<extensions>true</extensions>
+				<configuration>
+					<nodeVersion>${nodejs.version}</nodeVersion>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
