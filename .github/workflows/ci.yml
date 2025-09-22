@@ -39,3 +39,42 @@ jobs:
           folder: 'deployment-repository'
           signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
           signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Generate Java docs
+        run: |
+          ./mvnw javadoc:aggregate
+
+      - name: Generate Reference docs
+        working-directory: spring-shell-docs
+        run: |
+          ../mvnw antora
+
+      - name: Setup SSH key
+        env:
+          DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
+          DOCS_SSH_HOST_KEY: ${{ secrets.DOCS_SSH_HOST_KEY }}
+        run: |
+          mkdir "$HOME/.ssh"
+          echo "$DOCS_SSH_KEY" > "$HOME/.ssh/key"
+          chmod 600 "$HOME/.ssh/key"
+          echo "$DOCS_SSH_HOST_KEY" > "$HOME/.ssh/known_hosts"
+
+      - name: Capture project version
+        run: echo PROJECT_VERSION=$(./mvnw help:evaluate -Dexpression=project.version --quiet -DforceStdout) >> $GITHUB_ENV
+
+      - name: Deploy docs
+        env:
+          DOCS_HOST: ${{ secrets.DOCS_HOST }}
+          DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
+          DOCS_PATH: /opt/www/domains/spring.io/docs/htdocs/spring-shell
+        run: |
+          ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/docs && mkdir -p $PROJECT_VERSION"
+          scp -i $HOME/.ssh/key -r target/reports/apidocs $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/docs/$PROJECT_VERSION
+          scp -i $HOME/.ssh/key -r spring-shell-docs/target/site/shell/$PROJECT_VERSION $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/reference
+
+      - name: Bust Cloudflare Cache
+        uses: spring-io/spring-doc-actions/bust-cloudflare-antora-cache@v0.0.20
+        with:
+          context-root: spring-shell
+          cloudflare-zone-id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          cloudflare-cache-token: ${{ secrets.CLOUDFLARE_CACHE_TOKEN }}
