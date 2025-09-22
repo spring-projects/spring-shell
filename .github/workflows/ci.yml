@@ -10,44 +10,25 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - nickname: linux jdk17
-            java: 17
-            os: ubuntu-latest
-          - nickname: macos jdk17
-            java: 17
-            os: macos-latest
-          - nickname: windows jdk17
-            java: 17
-            os: windows-latest
-    name: CI Build ${{ matrix.nickname }}
-    steps:
-      - uses: actions/checkout@v4.2.2
-      - name: Spring Gradle Build Action
-        uses: spring-io/spring-gradle-build-action@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Build with Gradle
-        run: ./gradlew build
-  publish:
-    needs: build
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'spring-projects'
+
+    name: CI Build
     steps:
-      - uses: actions/checkout@v4.2.2
-      - name: Spring Gradle Build Action
-        uses: spring-io/spring-gradle-build-action@v2
+      - name: Checkout source code
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4.7.1
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build with Gradle
-        run: ./gradlew -Dmaven.repo.local=$(pwd)/deployment-repository -x test build publishToMavenLocal
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: ./mvnw -DaltDeploymentRepository=local::file:deployment-repository --no-transfer-progress --batch-mode --update-snapshots deploy
+
       - name: Deploy to Artifactory
+        if: ${{ github.repository == 'spring-projects/spring-batch' && github.ref_name == 'main' }}
         uses: spring-io/artifactory-deploy-action@v0.0.2
         with:
           uri: 'https://repo.spring.io'
