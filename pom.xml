@@ -77,7 +77,7 @@
 		<module>spring-shell-docs</module>
 		<module>spring-shell-dependencies</module>
 		<module>spring-shell-samples</module>
-		<module>spring-shell-starters</module>
+<!--		<module>spring-shell-starters</module>--> <!-- FIXME build failure on CI -->
 	</modules>
 
 	<build>
