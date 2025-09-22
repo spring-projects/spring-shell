@@ -3,17 +3,9 @@ version: true
 title: Spring Shell
 nav:
   - modules/ROOT/nav.adoc
-ext:
-  collector:
-    run:
-      command: ./mvnw process-resources -pl spring-shell-docs -am
-    scan:
-      dir: ./target/classes/antora-resources
 
 asciidoc:
   attributes:
     attribute-missing: 'warn'
-    # FIXME: the copyright is not removed
-    # FIXME: The package is not renamed
     chomp: 'all'
     snippets: example$docs-src/test/java/org/springframework/shell/docs

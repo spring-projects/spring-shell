@@ -4,9 +4,6 @@
 To see what Spring Shell has to offer, we can write a trivial _hello world_
 shell application that has a simple argument.
 
-IMPORTANT: _Spring Shell_ is based on _Spring Boot_ {spring-boot-version} and
-_Spring Framework_ {spring-version} and thus requires _JDK 17_.
-
 [[creating-a-project]]
 == Creating a Project
 
@@ -22,7 +19,7 @@ With _maven_ you're expected to have something like:
 [source, xml, subs=attributes+]
 ----
 <properties>
-    <spring-shell.version>{project-version}</spring-shell.version>
+    <spring-shell.version>LATEST_VERSION</spring-shell.version>
 </properties>
 
 <dependencies>
@@ -61,7 +58,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.shell:spring-shell-dependencies:{project-version}"
+        mavenBom "org.springframework.shell:spring-shell-dependencies:LATEST_VERSION"
     }
 }
 ----
