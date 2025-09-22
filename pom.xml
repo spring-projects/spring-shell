@@ -4,7 +4,7 @@
 
 	<groupId>org.springframework.shell</groupId>
 	<artifactId>spring-shell-parent</artifactId>
-	<name>Spring Shell Parent POM</name>
+	<name>Spring Shell</name>
 	<description>Parent POM for Spring Shell</description>
 	<version>4.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
