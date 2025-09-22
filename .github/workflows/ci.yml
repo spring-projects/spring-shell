@@ -70,7 +70,9 @@ jobs:
         run: |
           ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/docs && mkdir -p $PROJECT_VERSION"
           scp -i $HOME/.ssh/key -r target/reports/apidocs $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/docs/$PROJECT_VERSION/api
-          scp -i $HOME/.ssh/key -r spring-shell-docs/target/site/shell/$PROJECT_VERSION $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/reference
+          
+          ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/reference && mkdir -p $PROJECT_VERSION"
+          scp -i $HOME/.ssh/key -r spring-shell-docs/target/site/shell/$PROJECT_VERSION $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/reference/$PROJECT_VERSION
 
       - name: Bust Cloudflare Cache
         uses: spring-io/spring-doc-actions/bust-cloudflare-antora-cache@v0.0.20
