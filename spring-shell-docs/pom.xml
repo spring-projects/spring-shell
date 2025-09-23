@@ -50,7 +50,6 @@
 				<directory>src/main/antora</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>antora.yml</include>
 					<include>antora-playbook.yml</include>
 				</includes>
 			</resource>
