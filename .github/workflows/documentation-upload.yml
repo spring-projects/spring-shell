@@ -31,7 +31,7 @@ jobs:
       - name: Update release version
         run: |
           ./mvnw versions:set -DgenerateBackupPoms=false -DnewVersion=$RELEASE_VERSION
-          sed -i "s/version: 4.0.0-SNAPSHOT/version: 4.0.0-M1/" spring-shell-docs/antora.yml
+          sed -i "s/version: $PROJECT_VERSION/version: $RELEASE_VERSION/" spring-shell-docs/antora.yml
 
       - name: Generate Java docs
         run: ./mvnw --no-transfer-progress javadoc:aggregate
