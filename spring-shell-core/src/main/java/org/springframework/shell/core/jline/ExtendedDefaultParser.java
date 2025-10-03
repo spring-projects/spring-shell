@@ -152,7 +152,6 @@ public class ExtendedDefaultParser implements Parser {
 	 * that the character is not escaped by any of {@link #getQuoteChars}, and is not
 	 * escaped by ant of the {@link #getEscapeChars}, and returns true from
 	 * {@link #isDelimiterChar}.
-	 *
 	 * @param buffer The complete command buffer
 	 * @param pos The index of the character in the buffer
 	 * @return True if the character should be a delimiter
@@ -198,7 +197,6 @@ public class ExtendedDefaultParser implements Parser {
 
 	/**
 	 * Check if a character is escaped (i.e. if the previous character is an escape)
-	 *
 	 * @param buffer the buffer to check in
 	 * @param pos the position of the character to check
 	 * @return true if the character at the specified position in the given buffer is an
@@ -229,6 +227,7 @@ public class ExtendedDefaultParser implements Parser {
 	 * @author <a href="mailto:mwp1@cornell.edu">Marc Prud'hommeaux</a>
 	 */
 	public class ExtendedArgumentList implements ParsedLine, CompletingParsedLine {
+
 		private final String line;
 
 		private final List<String> words;
@@ -284,14 +283,18 @@ public class ExtendedDefaultParser implements Parser {
 			StringBuilder sb = new StringBuilder(candidate);
 			Predicate<Integer> needToBeEscaped;
 			// Completion is protected by an opening quote:
-			// Delimiters (spaces) don't need to be escaped, nor do other quotes, but everything else does.
+			// Delimiters (spaces) don't need to be escaped, nor do other quotes, but
+			// everything else does.
 			// Also, close the quote at the end
 			if (openingQuote != null) {
-				needToBeEscaped = i -> isRawEscapeChar(sb.charAt(i)) || String.valueOf(sb.charAt(i)).equals(openingQuote);
-			} // No quote protection, need to escape everything: delimiter chars (spaces), quote chars
-			// and escapes themselves
+				needToBeEscaped = i -> isRawEscapeChar(sb.charAt(i))
+						|| String.valueOf(sb.charAt(i)).equals(openingQuote);
+			} // No quote protection, need to escape everything: delimiter chars (spaces),
+				// quote chars
+				// and escapes themselves
 			else {
-				needToBeEscaped = i -> isDelimiterChar(sb, i) || isRawEscapeChar(sb.charAt(i)) || isRawQuoteChar(sb.charAt(i));
+				needToBeEscaped = i -> isDelimiterChar(sb, i) || isRawEscapeChar(sb.charAt(i))
+						|| isRawQuoteChar(sb.charAt(i));
 			}
 			for (int i = 0; i < sb.length(); i++) {
 				if (needToBeEscaped.test(i)) {
@@ -303,6 +306,7 @@ public class ExtendedDefaultParser implements Parser {
 			}
 			return sb;
 		}
+
 	}
 
 	private boolean isRawEscapeChar(char key) {
@@ -326,7 +330,8 @@ public class ExtendedDefaultParser implements Parser {
 	/**
 	 * Another copy from JLine's {@link org.jline.reader.impl.LineReaderImpl}
 	 *
-	 * Used to wrap {@link org.jline.reader.ParsedLine} into {@link org.jline.reader.CompletingParsedLine}
+	 * Used to wrap {@link org.jline.reader.ParsedLine} into
+	 * {@link org.jline.reader.CompletingParsedLine}
 	 */
 	private static org.jline.reader.CompletingParsedLine wrap(ParsedLine line) {
 		if (line instanceof org.jline.reader.CompletingParsedLine) {
@@ -337,27 +342,35 @@ public class ExtendedDefaultParser implements Parser {
 				public String word() {
 					return line.word();
 				}
+
 				public int wordCursor() {
 					return line.wordCursor();
 				}
+
 				public int wordIndex() {
 					return line.wordIndex();
 				}
+
 				public List<String> words() {
 					return line.words();
 				}
+
 				public String line() {
 					return line.line();
 				}
+
 				public int cursor() {
 					return line.cursor();
 				}
+
 				public CharSequence escape(CharSequence candidate, boolean complete) {
 					return candidate;
 				}
+
 				public int rawWordCursor() {
 					return wordCursor();
 				}
+
 				public int rawWordLength() {
 					return word().length();
 				}

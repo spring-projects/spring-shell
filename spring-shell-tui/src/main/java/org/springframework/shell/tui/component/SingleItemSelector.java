@@ -48,7 +48,8 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 
 	private @Nullable SingleItemSelectorContext<T, I> currentContext;
 
-	public SingleItemSelector(Terminal terminal, List<I> items, @Nullable String name, @Nullable Comparator<I> comparator) {
+	public SingleItemSelector(Terminal terminal, List<I> items, @Nullable String name,
+			@Nullable Comparator<I> comparator) {
 		super(terminal, name, items, true, comparator);
 		setRenderer(new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/single-item-selector-default.stg");
@@ -93,21 +94,18 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 
 		/**
 		 * Gets a result item.
-		 *
 		 * @return a result item
 		 */
 		Optional<I> getResultItem();
 
 		/**
 		 * Gets a value.
-		 *
 		 * @return a value
 		 */
 		Optional<String> getValue();
 
 		/**
 		 * Creates an empty {@link SingleItemSelectorContext}.
-		 *
 		 * @return empty context
 		 */
 		static <C, I extends Nameable & Matchable & Itemable<C>> SingleItemSelectorContext<C, I> empty() {
@@ -116,16 +114,18 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 
 		/**
 		 * Creates a {@link SingleItemSelectorContext}.
-		 *
 		 * @return context
 		 */
-		static <C, I extends Nameable & Matchable & Itemable<C>> SingleItemSelectorContext<C, I> empty(Function<C, String> itemMapper) {
+		static <C, I extends Nameable & Matchable & Itemable<C>> SingleItemSelectorContext<C, I> empty(
+				Function<C, String> itemMapper) {
 			return new DefaultSingleItemSelectorContext<>(itemMapper);
 		}
+
 	}
 
-	private static class DefaultSingleItemSelectorContext<T, I extends Nameable & Matchable & Itemable<T>> extends
-			BaseSelectorComponentContext<T, I, SingleItemSelectorContext<T, I>> implements SingleItemSelectorContext<T, I> {
+	private static class DefaultSingleItemSelectorContext<T, I extends Nameable & Matchable & Itemable<T>>
+			extends BaseSelectorComponentContext<T, I, SingleItemSelectorContext<T, I>>
+			implements SingleItemSelectorContext<T, I> {
 
 		private Function<T, String> itemMapper = item -> item.toString();
 
@@ -155,15 +155,13 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 			getValue().ifPresent(value -> {
 				attributes.put("value", value);
 			});
-			List<Map<String, Object>> rows = getItemStateView().stream()
-				.map(is -> {
-					Map<String, Object> map = new HashMap<>();
-					map.put("name", is.getName());
-					Integer cursorRow = getCursorRow();
-					map.put("selected", cursorRow != null && cursorRow == is.getIndex());
-					return map;
-				})
-				.collect(Collectors.toList());
+			List<Map<String, Object>> rows = getItemStateView().stream().map(is -> {
+				Map<String, Object> map = new HashMap<>();
+				map.put("name", is.getName());
+				Integer cursorRow = getCursorRow();
+				map.put("selected", cursorRow != null && cursorRow == is.getIndex());
+				return map;
+			}).collect(Collectors.toList());
 			attributes.put("rows", rows);
 			// finally wrap it into 'model' as that's what
 			// we expect in stg template.
@@ -176,6 +174,7 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 		public String toString() {
 			return "DefaultSingleItemSelectorContext [super=" + super.toString() + "]";
 		}
+
 	}
 
 	private class DefaultRenderer implements Function<SingleItemSelectorContext<T, I>, List<AttributedString>> {
@@ -184,5 +183,7 @@ public class SingleItemSelector<T, I extends Nameable & Matchable & Enableable &
 		public List<AttributedString> apply(SingleItemSelectorContext<T, I> context) {
 			return renderTemplateResource(context.toTemplateModel());
 		}
+
 	}
+
 }

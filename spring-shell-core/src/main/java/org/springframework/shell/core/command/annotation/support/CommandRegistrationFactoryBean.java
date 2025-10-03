@@ -59,13 +59,12 @@ import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.util.*;
 
 /**
- * Factory bean used in {@link CommandRegistrationBeanRegistrar} to build
- * instance of {@link CommandRegistration}. Main logic of constructing
- * {@link CommandRegistration} out from annotated command target is
- * in this factory.
+ * Factory bean used in {@link CommandRegistrationBeanRegistrar} to build instance of
+ * {@link CommandRegistration}. Main logic of constructing {@link CommandRegistration} out
+ * from annotated command target is in this factory.
  *
- * This factory needs a name of a {@code commandBeanName} which is a name of bean
- * hosting command methods, {@code commandBeanType} which is type of a bean,
+ * This factory needs a name of a {@code commandBeanName} which is a name of bean hosting
+ * command methods, {@code commandBeanType} which is type of a bean,
  * {@code commandMethodName} which is a name of {@link Method} in a bean,
  * {@code commandMethodParameters} for method parameter types and optionally
  * {@code BuilderSupplier} if context provides pre-configured builder.
@@ -75,23 +74,34 @@ import org.springframework.util.*;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>, ApplicationContextAware, InitializingBean {
+class CommandRegistrationFactoryBean
+		implements FactoryBean<CommandRegistration>, ApplicationContextAware, InitializingBean {
 
 	private final Logger log = LoggerFactory.getLogger(CommandRegistrationFactoryBean.class);
+
 	public static final String COMMAND_BEAN_TYPE = "commandBeanType";
+
 	public static final String COMMAND_BEAN_NAME = "commandBeanName";
+
 	public static final String COMMAND_METHOD_NAME = "commandMethodName";
+
 	public static final String COMMAND_METHOD_PARAMETERS = "commandMethodParameters";
 
 	@SuppressWarnings("NullAway.Init")
 	private ObjectProvider<CommandRegistration.BuilderSupplier> supplier;
+
 	@SuppressWarnings("NullAway.Init")
 	private ApplicationContext applicationContext;
+
 	@SuppressWarnings("NullAway.Init")
 	private Object commandBean;
+
 	private @Nullable Class<?> commandBeanType;
+
 	private @Nullable String commandBeanName;
+
 	private @Nullable String commandMethodName;
+
 	private Class<?> @Nullable [] commandMethodParameters;
 
 	@Override
@@ -145,9 +155,9 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 		Assert.notNull(method, "'method' must not be null");
 
 		MergedAnnotation<Command> classAnn = MergedAnnotations.from(commandBeanType, SearchStrategy.TYPE_HIERARCHY)
-				.get(Command.class);
+			.get(Command.class);
 		MergedAnnotation<Command> methodAnn = MergedAnnotations.from(method, SearchStrategy.TYPE_HIERARCHY)
-				.get(Command.class);
+			.get(Command.class);
 
 		Builder builder = getBuilder();
 
@@ -176,14 +186,12 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 
 		// availability
 		MergedAnnotation<CommandAvailability> caAnn = MergedAnnotations.from(method, SearchStrategy.TYPE_HIERARCHY)
-				.get(CommandAvailability.class);
+			.get(CommandAvailability.class);
 		if (caAnn.isPresent()) {
 			String[] refs = caAnn.getStringArray("provider");
-			List<AvailabilityProvider> avails = Stream.of(refs)
-				.map(r -> {
-					return this.applicationContext.getBean(r, AvailabilityProvider.class);
-				})
-				.collect(Collectors.toList());
+			List<AvailabilityProvider> avails = Stream.of(refs).map(r -> {
+				return this.applicationContext.getBean(r, AvailabilityProvider.class);
+			}).collect(Collectors.toList());
 			if (!avails.isEmpty()) {
 				builder.availability(() -> {
 					for (AvailabilityProvider avail : avails) {
@@ -213,7 +221,8 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 		}
 
 		// error handling
-		ExceptionResolverMethodResolver exceptionResolverMethodResolver = new ExceptionResolverMethodResolver(commandBean.getClass());
+		ExceptionResolverMethodResolver exceptionResolverMethodResolver = new ExceptionResolverMethodResolver(
+				commandBean.getClass());
 		MethodCommandExceptionResolver methodCommandExceptionResolver = new MethodCommandExceptionResolver();
 		methodCommandExceptionResolver.bean = commandBean;
 		methodCommandExceptionResolver.exceptionResolverMethodResolver = exceptionResolverMethodResolver;
@@ -225,18 +234,18 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 	private void onCommandParameter(MethodParameter mp, Builder builder) {
 
 		MergedAnnotation<Option> optionAnn = MergedAnnotations.from(mp.getParameter(), SearchStrategy.TYPE_HIERARCHY)
-				.get(Option.class);
+			.get(Option.class);
 
 		Option so = mp.getParameterAnnotation(Option.class);
 		log.debug("Registering with mp='{}' so='{}'", mp, so);
 		if (so != null) {
 			List<String> longNames = new ArrayList<>();
 			List<Character> shortNames = new ArrayList<>();
-			for(int i = 0; i < so.shortNames().length; i++) {
+			for (int i = 0; i < so.shortNames().length; i++) {
 				shortNames.add(so.shortNames()[i]);
 			}
 			if (!ObjectUtils.isEmpty(so.longNames())) {
-				for(int i = 0; i < so.longNames().length; i++) {
+				for (int i = 0; i < so.longNames().length; i++) {
 					longNames.add(so.longNames()[i]);
 				}
 			}
@@ -292,7 +301,7 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 				if (StringUtils.hasText(so.defaultValue())) {
 					optionSpec.defaultValue(so.defaultValue());
 				}
-				else if (ClassUtils.isAssignable(boolean.class, parameterType)){
+				else if (ClassUtils.isAssignable(boolean.class, parameterType)) {
 					optionSpec.required(false);
 					optionSpec.defaultValue("false");
 				}
@@ -318,10 +327,11 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 					}
 				}
 				// if (ovAnn != null && StringUtils.hasText(ovAnn.ref())) {
-				// 	CompletionProvider cr = this.applicationContext.getBean(ovAnn.ref(), CompletionProvider.class);
-				// 	if (cr != null) {
-				// 		optionSpec.completion(ctx -> cr.apply(ctx));
-				// 	}
+				// CompletionProvider cr = this.applicationContext.getBean(ovAnn.ref(),
+				// CompletionProvider.class);
+				// if (cr != null) {
+				// optionSpec.completion(ctx -> cr.apply(ctx));
+				// }
 				// }
 
 			}
@@ -360,6 +370,7 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 
 		@SuppressWarnings("NullAway.Init")
 		Object bean;
+
 		@SuppressWarnings("NullAway.Init")
 		ExceptionResolverMethodResolver exceptionResolverMethodResolver;
 
@@ -373,12 +384,14 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 			try {
 				Object invoke = invocable.invoke(null, ex);
 				if (invoke instanceof CommandHandlingResult) {
-					return (CommandHandlingResult)invoke;
+					return (CommandHandlingResult) invoke;
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 			}
 			return null;
 		}
 
 	}
+
 }

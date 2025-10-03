@@ -24,4 +24,5 @@ import java.util.function.Supplier;
  */
 @FunctionalInterface
 public interface AvailabilityProvider extends Supplier<Availability> {
+
 }

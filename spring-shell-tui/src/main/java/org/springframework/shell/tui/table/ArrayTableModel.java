@@ -48,4 +48,5 @@ public class ArrayTableModel extends TableModel {
 	public @Nullable Object getValue(int row, int column) {
 		return data[row][column];
 	}
+
 }

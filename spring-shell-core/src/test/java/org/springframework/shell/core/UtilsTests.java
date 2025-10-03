@@ -60,4 +60,5 @@ class UtilsTests {
 		split = Utils.split(new String[] { "-a1", "a1", "a2" }, predicate);
 		assertThat(split).containsExactly(List.of("-a1", "a1", "a2"));
 	}
+
 }

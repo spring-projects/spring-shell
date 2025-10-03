@@ -38,9 +38,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils.MethodFilter;
 
 /**
- * Delegate used by {@link EnableCommandRegistrar} and
- * {@link CommandScanRegistrar} to register a bean definition(s) for a
- * {@link Command @Command} class.
+ * Delegate used by {@link EnableCommandRegistrar} and {@link CommandScanRegistrar} to
+ * register a bean definition(s) for a {@link Command @Command} class.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -48,9 +47,11 @@ import org.springframework.util.ReflectionUtils.MethodFilter;
 public final class CommandRegistrationBeanRegistrar {
 
 	private final BeanDefinitionRegistry registry;
+
 	private final BeanFactory beanFactory;
-	private static final MethodFilter COMMAND_METHODS = method ->
-			AnnotatedElementUtils.hasAnnotation(method, Command.class);
+
+	private static final MethodFilter COMMAND_METHODS = method -> AnnotatedElementUtils.hasAnnotation(method,
+			Command.class);
 
 	public CommandRegistrationBeanRegistrar(BeanDefinitionRegistry registry) {
 		this.registry = registry;
@@ -59,7 +60,7 @@ public final class CommandRegistrationBeanRegistrar {
 
 	public void register(Class<?> type) {
 		MergedAnnotation<Command> annotation = MergedAnnotations.from(type, SearchStrategy.TYPE_HIERARCHY)
-				.get(Command.class);
+			.get(Command.class);
 		register(type, annotation);
 	}
 
@@ -77,9 +78,10 @@ public final class CommandRegistrationBeanRegistrar {
 			String name = type.getName();
 			String methodName = m.getName();
 			Class<?>[] methodParameterTypes = m.getParameterTypes();
-			String postfix = Stream.of(methodParameterTypes).map(clazz -> ClassUtils.getShortName(clazz))
-					.collect(Collectors.joining());
-			name = name +  "/" + methodName + postfix;
+			String postfix = Stream.of(methodParameterTypes)
+				.map(clazz -> ClassUtils.getShortName(clazz))
+				.collect(Collectors.joining());
+			name = name + "/" + methodName + postfix;
 
 			if (!containsBeanDefinition(name)) {
 				registerCommandMethodBeanDefinition(type, name, containerBean, methodName, methodParameterTypes);
@@ -90,13 +92,13 @@ public final class CommandRegistrationBeanRegistrar {
 
 	private void registerCommandClassBeanDefinition(String beanName, Class<?> type,
 			MergedAnnotation<Command> annotation) {
-		Assert.state(annotation.isPresent(), () -> "No " + Command.class.getSimpleName()
-				+ " annotation found on  '" + type.getName() + "'.");
+		Assert.state(annotation.isPresent(),
+				() -> "No " + Command.class.getSimpleName() + " annotation found on  '" + type.getName() + "'.");
 		this.registry.registerBeanDefinition(beanName, createCommandClassBeanDefinition(type));
 	}
 
-	private void registerCommandMethodBeanDefinition(Class<?> commandBeanType, String commandBeanName, String containerBean, String methodName,
-			Class<?>[] methodParameterTypes) {
+	private void registerCommandMethodBeanDefinition(Class<?> commandBeanType, String commandBeanName,
+			String containerBean, String methodName, Class<?>[] methodParameterTypes) {
 		this.registry.registerBeanDefinition(commandBeanName,
 				createCommandMethodBeanDefinition(commandBeanType, containerBean, methodName, methodParameterTypes));
 	}
@@ -111,7 +113,8 @@ public final class CommandRegistrationBeanRegistrar {
 		definition.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_BEAN_TYPE, commandBeanType);
 		definition.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_BEAN_NAME, commandBeanName);
 		definition.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_METHOD_NAME, commandMethodName);
-		definition.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_METHOD_PARAMETERS, commandMethodParameters);
+		definition.getPropertyValues()
+			.add(CommandRegistrationFactoryBean.COMMAND_METHOD_PARAMETERS, commandMethodParameters);
 		return definition;
 	}
 
@@ -129,4 +132,5 @@ public final class CommandRegistrationBeanRegistrar {
 		}
 		return false;
 	}
+
 }

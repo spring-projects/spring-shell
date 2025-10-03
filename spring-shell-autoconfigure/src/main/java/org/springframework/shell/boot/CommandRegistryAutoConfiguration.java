@@ -43,9 +43,8 @@ public class CommandRegistryAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(CommandRegistry.class)
 	public CommandRegistry commandRegistry(ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
-										  ObjectProvider<CommandResolver> commandResolvers,
-										  ObjectProvider<CommandRegistryCustomizer> commandRegistryCustomizers,
-										  ShellContext shellContext) {
+			ObjectProvider<CommandResolver> commandResolvers,
+			ObjectProvider<CommandRegistryCustomizer> commandRegistryCustomizers, ShellContext shellContext) {
 		List<CommandResolver> resolvers = commandResolvers.orderedStream().collect(Collectors.toList());
 		CommandRegistry registry = CommandRegistry.of(resolvers, shellContext);
 		methodTargetRegistrars.orderedStream().forEach(resolver -> {
@@ -58,7 +57,8 @@ public class CommandRegistryAutoConfiguration {
 	}
 
 	@Bean
-	public CommandRegistryCustomizer defaultCommandRegistryCustomizer(ObjectProvider<CommandRegistration> commandRegistrations) {
+	public CommandRegistryCustomizer defaultCommandRegistryCustomizer(
+			ObjectProvider<CommandRegistration> commandRegistrations) {
 		return registry -> {
 			commandRegistrations.orderedStream().forEach(registration -> {
 				registry.register(registration);
@@ -82,7 +82,8 @@ public class CommandRegistryAutoConfiguration {
 
 	@Bean
 	@ConditionalOnBean(OptionNameModifier.class)
-	public CommandRegistrationCustomizer customOptionNameModifierCommandRegistrationCustomizer(OptionNameModifier modifier) {
+	public CommandRegistrationCustomizer customOptionNameModifierCommandRegistrationCustomizer(
+			OptionNameModifier modifier) {
 		return builder -> {
 			builder.defaultOptionNameModifier(modifier);
 		};
@@ -91,7 +92,8 @@ public class CommandRegistryAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(OptionNameModifier.class)
 	@ConditionalOnProperty(prefix = "spring.shell.option.naming", name = "case-type")
-	public CommandRegistrationCustomizer defaultOptionNameModifierCommandRegistrationCustomizer(SpringShellProperties properties) {
+	public CommandRegistrationCustomizer defaultOptionNameModifierCommandRegistrationCustomizer(
+			SpringShellProperties properties) {
 		return builder -> {
 			switch (properties.getOption().getNaming().getCaseType()) {
 				case NOOP:
@@ -124,4 +126,5 @@ public class CommandRegistryAutoConfiguration {
 			return builder;
 		};
 	}
+
 }

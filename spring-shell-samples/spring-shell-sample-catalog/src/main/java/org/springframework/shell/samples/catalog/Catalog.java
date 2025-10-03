@@ -62,30 +62,41 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Catalog app logic. Builds a simple application ui where scenarios can be
- * selected and run.
+ * Catalog app logic. Builds a simple application ui where scenarios can be selected and
+ * run.
  *
  * @author Janne Valkealahti
  */
 public class Catalog {
 
 	// ref types helping with deep nested generics from events
-	private final static ParameterizedTypeReference<ListViewOpenSelectedItemEvent<ScenarioData>> LISTVIEW_SCENARIO_TYPEREF
-		= new ParameterizedTypeReference<ListViewOpenSelectedItemEvent<ScenarioData>>() {};
-	private final static ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF
-		= new ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>>() {};
+	private final static ParameterizedTypeReference<ListViewOpenSelectedItemEvent<ScenarioData>> LISTVIEW_SCENARIO_TYPEREF = new ParameterizedTypeReference<ListViewOpenSelectedItemEvent<ScenarioData>>() {
+	};
+
+	private final static ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF = new ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>>() {
+	};
+
 	private final static Logger log = LoggerFactory.getLogger(Catalog.class);
 
 	// mapping from category name to scenarios(can belong to multiple categories)
 	private final Map<String, List<ScenarioData>> categoryMap = new TreeMap<>();
+
 	private ScenarioContext currentScenarioContext = null;
+
 	private TerminalUI ui;
+
 	private ListView<String> categories;
+
 	private ListView<ScenarioData> scenarios;
+
 	private AppView app;
+
 	private EventLoop eventLoop;
+
 	private ThemeResolver themeResolver;
+
 	private String activeThemeName = "default";
+
 	private TerminalUIBuilder terminalUIBuilder;
 
 	public Catalog(TerminalUIBuilder terminalUIBuilder, ThemeResolver themeResolver, List<Scenario> scenarios) {
@@ -127,21 +138,19 @@ public class Catalog {
 
 		// handle logic to switch between main scenario browser
 		// and currently active scenario
-		eventLoop.onDestroy(eventLoop.keyEvents()
-			.doOnNext(m -> {
-				if (m.getPlainKey() == Key.q && m.hasCtrl()) {
-					if (currentScenarioContext != null) {
-						currentScenarioContext.stop();
-						currentScenarioContext = null;
-						ui.setRoot(app, true);
-						ui.setFocus(categories);
-					}
-					else {
-						requestQuit();
-					}
+		eventLoop.onDestroy(eventLoop.keyEvents().doOnNext(m -> {
+			if (m.getPlainKey() == Key.q && m.hasCtrl()) {
+				if (currentScenarioContext != null) {
+					currentScenarioContext.stop();
+					currentScenarioContext = null;
+					ui.setRoot(app, true);
+					ui.setFocus(categories);
 				}
-			})
-			.subscribe());
+				else {
+					requestQuit();
+				}
+			}
+		}).subscribe());
 
 		// start main scenario browser
 		ui.setRoot(app, true);
@@ -171,42 +180,38 @@ public class Catalog {
 		component.configure(app);
 
 		// handle event when scenario is chosen
-		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_SCENARIO_TYPEREF, scenarios)
-			.subscribe(event -> {
-				ScenarioContext context = event.args().item().scenario().configure(ui).buildContext();
-				ui.configure(context.view());
-				component.setRoot(context.view(), true);
-				context.start();
-				currentScenarioContext = context;
-			}));
-
+		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_SCENARIO_TYPEREF, scenarios).subscribe(event -> {
+			ScenarioContext context = event.args().item().scenario().configure(ui).buildContext();
+			ui.configure(context.view());
+			component.setRoot(context.view(), true);
+			context.start();
+			currentScenarioContext = context;
+		}));
 
 		// handle event when category selection is changed
-		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_STRING_TYPEREF, categories)
-			.subscribe(event -> {
-				if (event.args().item() != null) {
-					String selected = event.args().item();
-					List<ScenarioData> list = categoryMap.get(selected);
-					scenarios.setItems(list);
-				}
-			}));
+		eventLoop.onDestroy(eventLoop.viewEvents(LISTVIEW_STRING_TYPEREF, categories).subscribe(event -> {
+			if (event.args().item() != null) {
+				String selected = event.args().item();
+				List<ScenarioData> list = categoryMap.get(selected);
+				scenarios.setItems(list);
+			}
+		}));
 
 		// handle focus change between lists
-		eventLoop.onDestroy(eventLoop.viewEvents(AppViewEvent.class, app)
-			.subscribe(event -> {
-					switch (event.args().direction()) {
-						case NEXT -> ui.setFocus(scenarios);
-						case PREVIOUS -> ui.setFocus(categories);
-					}
-				}
-			));
+		eventLoop.onDestroy(eventLoop.viewEvents(AppViewEvent.class, app).subscribe(event -> {
+			switch (event.args().direction()) {
+				case NEXT -> ui.setFocus(scenarios);
+				case PREVIOUS -> ui.setFocus(categories);
+			}
+		}));
 
 		return app;
 	}
 
 	private ListView<String> buildCategorySelector() {
 		ListView<String> categories = new ListView<>();
-		categories.shortcut(Key.a | KeyMask.CtrlMask, () -> {});
+		categories.shortcut(Key.a | KeyMask.CtrlMask, () -> {
+		});
 		ui.configure(categories);
 
 		List<String> items = List.copyOf(categoryMap.keySet());
@@ -238,11 +243,13 @@ public class Catalog {
 			Writer writer = screen.writerBuilder().style(getStyle()).color(getForegroundColor()).build();
 			writer.text(String.format("%-20s %s", getItem().name(), getItem().description()), rect.x(), rect.y());
 		}
+
 	}
 
 	private ListView<ScenarioData> buildScenarioSelector() {
 		ListView<ScenarioData> scenarios = new ListView<>();
-		scenarios.shortcut(Key.s | KeyMask.CtrlMask, () -> {});
+		scenarios.shortcut(Key.s | KeyMask.CtrlMask, () -> {
+		});
 		ui.configure(scenarios);
 		scenarios.setTitle("Scenarios (CTRL+S)");
 		scenarios.setFocusedTitleStyle(ScreenItem.STYLE_BOLD);
@@ -269,7 +276,10 @@ public class Catalog {
 
 		BoxView content = new BoxView();
 		content.setDrawFunction((screen, rect) -> {
-			screen.writerBuilder().layer(1).build().text("Catalog Sample App", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			screen.writerBuilder()
+				.layer(1)
+				.build()
+				.text("Catalog Sample App", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
 			return rect;
 		});
 		DialogView dialog = new DialogView(content, button);
@@ -285,21 +295,14 @@ public class Catalog {
 	private MenuBarView buildMenuBar(EventLoop eventLoop) {
 		Runnable quitAction = () -> requestQuit();
 		Runnable aboutAction = () -> about();
-		MenuItem[] themeItems = themeResolver.themeNames().stream()
-			.map(tn -> {
-				return MenuItem.of(tn, MenuItemCheckStyle.RADIO, styleAction(tn), "default".equals(tn));
-			})
-			.toArray(MenuItem[]::new);
+		MenuItem[] themeItems = themeResolver.themeNames().stream().map(tn -> {
+			return MenuItem.of(tn, MenuItemCheckStyle.RADIO, styleAction(tn), "default".equals(tn));
+		}).toArray(MenuItem[]::new);
 		MenuBarView menuBar = MenuBarView.of(
-			MenuBarItem.of("File",
-					MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction))
-				.setHotKey(Key.f | KeyMask.AltMask),
-			MenuBarItem.of("Theme",
-					themeItems)
-				.setHotKey(Key.t | KeyMask.AltMask),
-			MenuBarItem.of("Help",
-					MenuItem.of("About", MenuItemCheckStyle.NOCHECK, aboutAction))
-		);
+				MenuBarItem.of("File", MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction))
+					.setHotKey(Key.f | KeyMask.AltMask),
+				MenuBarItem.of("Theme", themeItems).setHotKey(Key.t | KeyMask.AltMask),
+				MenuBarItem.of("Help", MenuItem.of("About", MenuItemCheckStyle.NOCHECK, aboutAction)));
 
 		ui.configure(menuBar);
 		return menuBar;
@@ -308,14 +311,13 @@ public class Catalog {
 	private StatusBarView buildStatusBar(EventLoop eventLoop) {
 		Runnable quitAction = () -> requestQuit();
 		Runnable visibilyAction = () -> app.toggleStatusBarVisibility();
-		StatusBarView statusBar = new StatusBarView(new StatusItem[] {
-			StatusItem.of("CTRL-Q Quit", quitAction),
-			StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10)
-		});
+		StatusBarView statusBar = new StatusBarView(new StatusItem[] { StatusItem.of("CTRL-Q Quit", quitAction),
+				StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10) });
 		ui.configure(statusBar);
 		return statusBar;
 	}
 
-	private record ScenarioData(Scenario scenario, String name, String description, String[] category){};
+	private record ScenarioData(Scenario scenario, String name, String description, String[] category) {
+	};
 
 }

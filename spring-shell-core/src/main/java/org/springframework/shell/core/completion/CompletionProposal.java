@@ -21,7 +21,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * Represents a proposal for TAB completion, made not only of the text to append, but also metadata about the proposal.
+ * Represents a proposal for TAB completion, made not only of the text to append, but also
+ * metadata about the proposal.
  *
  * @author Eric Bottard
  * @author Piotr Olaszewski
@@ -49,14 +50,14 @@ public class CompletionProposal {
 	private @Nullable String category;
 
 	/**
-	 * Whether the proposal should bypass escaping and quoting rules. This is useful for command proposals, which can
-	 * appear as true multi-word Strings.
+	 * Whether the proposal should bypass escaping and quoting rules. This is useful for
+	 * command proposals, which can appear as true multi-word Strings.
 	 */
 	private boolean dontQuote = false;
 
 	/**
-	 * Whether the proposal cant be completed further. By setting complete to false then it will not append an space
-	 * making it easier to continue tab completion
+	 * Whether the proposal cant be completed further. By setting complete to false then
+	 * it will not append an space making it easier to continue tab completion
 	 */
 	private boolean complete = true;
 
@@ -109,7 +110,6 @@ public class CompletionProposal {
 		return complete;
 	}
 
-
 	public CompletionProposal dontQuote(boolean dontQuote) {
 		this.dontQuote = dontQuote;
 		return this;
@@ -126,18 +126,19 @@ public class CompletionProposal {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 		CompletionProposal that = (CompletionProposal) o;
-		return dontQuote == that.dontQuote &&
-				Objects.equals(value, that.value) &&
-				Objects.equals(displayText, that.displayText) &&
-				Objects.equals(description, that.description) &&
-				Objects.equals(category, that.category);
+		return dontQuote == that.dontQuote && Objects.equals(value, that.value)
+				&& Objects.equals(displayText, that.displayText) && Objects.equals(description, that.description)
+				&& Objects.equals(category, that.category);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(value, displayText, description, category, dontQuote);
 	}
+
 }

@@ -28,41 +28,41 @@ public class HelpOptionCommands extends BaseE2ECommands {
 
 		@Bean
 		public CommandRegistration testHelpOptionDefaultRegistration() {
-			return getBuilder()
-				.command(REG, "help-option-default")
+			return getBuilder().command(REG, "help-option-default")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.defaultValue("hi")
-					.and()
+				.longNames("arg1")
+				.defaultValue("hi")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration testHelpOptionExistsRegistration() {
-			return getBuilder()
-				.command(REG, "help-option-exists")
+			return getBuilder().command(REG, "help-option-exists")
 				.group(GROUP)
 				.withOption()
-					.longNames("help")
-					.defaultValue("hi")
-					.and()
+				.longNames("help")
+				.defaultValue("hi")
+				.and()
 				.withHelpOptions()
-					.longNames("myhelp")
-					.and()
+				.longNames("myhelp")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("help");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("help");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

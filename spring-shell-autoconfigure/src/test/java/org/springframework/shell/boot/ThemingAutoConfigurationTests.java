@@ -40,33 +40,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ThemingAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(ThemingAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(ThemingAutoConfiguration.class));
 
 	@Test
 	void createsDefaultBeans() {
-		this.contextRunner
-				.run(context -> {
-					assertThat(context).hasSingleBean(TemplateExecutor.class);
-					assertThat(context).hasSingleBean(ThemeRegistry.class);
-					ThemeRegistry registry = context.getBean(ThemeRegistry.class);
-					assertThat(registry.get("default")).isNotNull();
-					assertThat(registry.get("dump")).isNotNull();
-					assertThat(context).hasSingleBean(ThemeResolver.class);
-					ThemeResolver resolver = context.getBean(ThemeResolver.class);
-					assertThat(resolver).extracting("theme").asInstanceOf(THEME).hasName("default", "dump");
-				});
+		this.contextRunner.run(context -> {
+			assertThat(context).hasSingleBean(TemplateExecutor.class);
+			assertThat(context).hasSingleBean(ThemeRegistry.class);
+			ThemeRegistry registry = context.getBean(ThemeRegistry.class);
+			assertThat(registry.get("default")).isNotNull();
+			assertThat(registry.get("dump")).isNotNull();
+			assertThat(context).hasSingleBean(ThemeResolver.class);
+			ThemeResolver resolver = context.getBean(ThemeResolver.class);
+			assertThat(resolver).extracting("theme").asInstanceOf(THEME).hasName("default", "dump");
+		});
 	}
 
 	@Test
 	void canRegisterCustomTheme() {
-		this.contextRunner
-				.withUserConfiguration(CustomThemeConfig.class)
-				.run(context -> {
-					assertThat(context).hasSingleBean(ThemeRegistry.class);
-					ThemeRegistry registry = context.getBean(ThemeRegistry.class);
-					assertThat(registry.get("default")).isNotNull();
-					assertThat(registry.get("mytheme")).isNotNull();
-				});
+		this.contextRunner.withUserConfiguration(CustomThemeConfig.class).run(context -> {
+			assertThat(context).hasSingleBean(ThemeRegistry.class);
+			ThemeRegistry registry = context.getBean(ThemeRegistry.class);
+			assertThat(registry.get("default")).isNotNull();
+			assertThat(registry.get("mytheme")).isNotNull();
+		});
 	}
 
 	@Configuration
@@ -87,12 +84,15 @@ class ThemingAutoConfigurationTests {
 				}
 			};
 		}
+
 	}
 
 	static class MyThemeSettings extends ThemeSettings {
+
 		MyThemeSettings() {
 			super(StyleSettings.defaults(), FigureSettings.defaults(), SpinnerSettings.defaults());
 		}
+
 	}
 
 	InstanceOfAssertFactory<Theme, ThemeAssert> THEME = new InstanceOfAssertFactory<>(Theme.class,
@@ -103,6 +103,7 @@ class ThemingAutoConfigurationTests {
 		public static ThemeAssert assertThat(Theme actual) {
 			return new ThemeAssert(actual);
 		}
+
 	}
 
 	static class ThemeAssert extends AbstractAssert<ThemeAssert, Theme> {
@@ -120,6 +121,7 @@ class ThemingAutoConfigurationTests {
 			}
 			return this;
 		}
+
 	}
 
 }

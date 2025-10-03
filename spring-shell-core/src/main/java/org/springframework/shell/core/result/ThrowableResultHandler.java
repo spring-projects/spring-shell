@@ -34,9 +34,9 @@ import org.springframework.util.StringUtils;
 /**
  * A {@link ResultHandler} that prints thrown exceptions messages in red.
  *
- * Stores the last exception reported, so that details can be printed using a
- * dedicated command if in interactive mode. Prints stacktrace if in
- * non-interactive mode as dedicated command could not be used.
+ * Stores the last exception reported, so that details can be printed using a dedicated
+ * command if in interactive mode. Prints stacktrace if in non-interactive mode as
+ * dedicated command could not be used.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
@@ -58,7 +58,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 	private final ShellContext shellContext;
 
 	public ThrowableResultHandler(Terminal terminal, CommandRegistry commandRegistry, ShellContext shellContext,
-								  ObjectProvider<InteractiveShellRunner> interactiveRunner) {
+			ObjectProvider<InteractiveShellRunner> interactiveRunner) {
 		super(terminal);
 		this.commandRegistry = commandRegistry;
 		this.shellContext = shellContext;
@@ -72,15 +72,18 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 
 		if (shouldHandle) {
 			String errorMsg = StringUtils.hasLength(result.getMessage()) ? result.getMessage() : result.toString();
-			terminal.writer().println(new AttributedString(errorMsg,
-				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
+			terminal.writer()
+				.println(new AttributedString(errorMsg, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.toAnsi());
 
 			String noteMsg;
 			if (showShortError()) {
 				noteMsg = new AttributedStringBuilder()
-					.append("Details of the error have been omitted. You can use the ", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.append("Details of the error have been omitted. You can use the ",
+							AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
 					.append(DETAILS_COMMAND_NAME, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED).bold())
-					.append(" command to print the full stacktrace.", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.append(" command to print the full stacktrace.",
+							AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
 					.toAnsi();
 			}
 			else {
@@ -88,8 +91,8 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 				PrintWriter pw = new PrintWriter(sw);
 				result.printStackTrace(pw);
 				String stacktraceStr = sw.toString();
-				noteMsg = new AttributedString(stacktraceStr,
-						AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi();
+				noteMsg = new AttributedString(stacktraceStr, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.toAnsi();
 			}
 			terminal.writer().println(noteMsg);
 			terminal.writer().flush();
@@ -122,4 +125,5 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 		return commandRegistry.getRegistrations().keySet().contains(DETAILS_COMMAND_NAME)
 				&& this.shellContext.getInteractionMode() == InteractionMode.INTERACTIVE;
 	}
+
 }

@@ -20,10 +20,11 @@ package org.springframework.shell.core.command.parser;
  *
  * @author Janne Valkealahti
  */
-public abstract sealed class TerminalAstNode
-		extends AstNode permits DirectiveNode, OptionArgumentNode, CommandArgumentNode {
+public abstract sealed class TerminalAstNode extends AstNode
+		permits DirectiveNode, OptionArgumentNode, CommandArgumentNode {
 
 	public TerminalAstNode(Token token) {
 		super(token);
 	}
+
 }

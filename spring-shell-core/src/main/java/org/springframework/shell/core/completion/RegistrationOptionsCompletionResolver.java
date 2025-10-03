@@ -37,13 +37,15 @@ public class RegistrationOptionsCompletionResolver implements CompletionResolver
 			return Collections.emptyList();
 		}
 		List<CompletionProposal> candidates = new ArrayList<>();
-		commandRegistration.getOptions().stream()
+		commandRegistration.getOptions()
+			.stream()
 			.flatMap(o -> Stream.of(o.getLongNames()))
 			.map(ln -> "--" + ln)
 			.filter(ln -> !context.getWords().contains(ln))
 			.map(CompletionProposal::new)
 			.forEach(candidates::add);
-		commandRegistration.getOptions().stream()
+		commandRegistration.getOptions()
+			.stream()
 			.flatMap(o -> Stream.of(o.getShortNames()))
 			.map(ln -> "-" + ln)
 			.filter(ln -> !context.getWords().contains(ln))
@@ -51,4 +53,5 @@ public class RegistrationOptionsCompletionResolver implements CompletionResolver
 			.forEach(candidates::add);
 		return candidates;
 	}
+
 }

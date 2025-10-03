@@ -46,7 +46,9 @@ import org.springframework.util.StringUtils;
 public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(PathInput.class);
+
 	private @Nullable PathInputContext currentContext;
+
 	private Function<String, Path> pathProvider = (path) -> Paths.get(path);
 
 	public PathInput(Terminal terminal) {
@@ -57,7 +59,8 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 		this(terminal, name, null);
 	}
 
-	public PathInput(Terminal terminal, @Nullable String name, @Nullable Function<PathInputContext, List<AttributedString>> renderer) {
+	public PathInput(Terminal terminal, @Nullable String name,
+			@Nullable Function<PathInputContext, List<AttributedString>> renderer) {
 		super(terminal, name, null);
 		setRenderer(renderer != null ? renderer : new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/path-input-default.stg");
@@ -120,7 +123,6 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 
 	/**
 	 * Sets a path provider.
-	 *
 	 * @param pathProvider the path provider
 	 */
 	public void setPathProvider(Function<String, Path> pathProvider) {
@@ -129,7 +131,6 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 
 	/**
 	 * Resolves a {@link Path} from a given raw {@code path}.
-	 *
 	 * @param path the raw path
 	 * @return a resolved path
 	 */
@@ -156,12 +157,12 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 
 		/**
 		 * Gets an empty {@link PathInputContext}.
-		 *
 		 * @return empty path input context
 		 */
 		public static PathInputContext empty() {
 			return new DefaultPathInputContext();
 		}
+
 	}
 
 	private static class DefaultPathInputContext extends BaseTextComponentContext<Path, PathInputContext>
@@ -174,6 +175,7 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 			model.put("model", attributes);
 			return model;
 		}
+
 	}
 
 	private class DefaultRenderer implements Function<PathInputContext, List<AttributedString>> {
@@ -182,5 +184,7 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 		public List<AttributedString> apply(PathInputContext context) {
 			return renderTemplateResource(context.toTemplateModel());
 		}
+
 	}
+
 }

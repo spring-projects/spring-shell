@@ -28,10 +28,9 @@ public class HelpCommands extends BaseE2ECommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "help-desc-1")
-		public void helpDesc1(
-			@Option(longNames = "arg1", defaultValue = "hi", description = "arg1 desc") String arg1
-		) {
+		public void helpDesc1(@Option(longNames = "arg1", defaultValue = "hi", description = "arg1 desc") String arg1) {
 		}
+
 	}
 
 	@Component
@@ -39,19 +38,20 @@ public class HelpCommands extends BaseE2ECommands {
 
 		@Bean
 		public CommandRegistration helpDesc1() {
-			return getBuilder()
-				.command(REG, "help-desc-1")
+			return getBuilder().command(REG, "help-desc-1")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.defaultValue("hi")
-					.description("arg1 desc")
-					.and()
+				.longNames("arg1")
+				.defaultValue("hi")
+				.description("arg1 desc")
+				.and()
 				.withTarget()
-					.consumer(ctx -> {})
-					.and()
+				.consumer(ctx -> {
+				})
+				.and()
 				.build();
 		}
+
 	}
 
 }

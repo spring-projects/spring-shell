@@ -35,8 +35,8 @@ public @interface CommandAvailability {
 
 	/**
 	 * Names of provider beans for {@link Availability}.
-	 *
 	 * @return names of supplier beans
 	 */
 	String[] provider() default {};
+
 }

@@ -29,8 +29,8 @@ import org.springframework.messaging.handler.invocation.HandlerMethodArgumentRes
 
 /**
  * Resolves method parameters by delegating to a list of registered
- * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}.
- * Previously resolved method parameters are cached for faster lookups.
+ * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}. Previously
+ * resolved method parameters are cached for faster lookups.
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -40,9 +40,8 @@ public class ShellMethodArgumentResolverComposite implements HandlerMethodArgume
 
 	private final List<HandlerMethodArgumentResolver> argumentResolvers = new ArrayList<>();
 
-	private final Map<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache =
-			new ConcurrentHashMap<>(256);
-
+	private final Map<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache = new ConcurrentHashMap<>(
+			256);
 
 	/**
 	 * Add the given {@link HandlerMethodArgumentResolver}.
@@ -57,8 +56,7 @@ public class ShellMethodArgumentResolverComposite implements HandlerMethodArgume
 	 * Add the given {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}.
 	 * @since 4.3
 	 */
-	public ShellMethodArgumentResolverComposite addResolvers(
-			@Nullable HandlerMethodArgumentResolver... resolvers) {
+	public ShellMethodArgumentResolverComposite addResolvers(@Nullable HandlerMethodArgumentResolver... resolvers) {
 
 		if (resolvers != null) {
 			Collections.addAll(this.argumentResolvers, resolvers);
@@ -95,10 +93,9 @@ public class ShellMethodArgumentResolverComposite implements HandlerMethodArgume
 		this.argumentResolverCache.clear();
 	}
 
-
 	/**
-	 * Whether the given {@linkplain MethodParameter method parameter} is
-	 * supported by any registered {@link HandlerMethodArgumentResolver}.
+	 * Whether the given {@linkplain MethodParameter method parameter} is supported by any
+	 * registered {@link HandlerMethodArgumentResolver}.
 	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -106,24 +103,23 @@ public class ShellMethodArgumentResolverComposite implements HandlerMethodArgume
 	}
 
 	/**
-	 * Iterate over registered
-	 * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}
-	 * and invoke the one that supports it.
+	 * Iterate over registered {@link HandlerMethodArgumentResolver
+	 * HandlerMethodArgumentResolvers} and invoke the one that supports it.
 	 * @throws IllegalArgumentException if no suitable argument resolver is found
 	 */
 	@Override
 	public @Nullable Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
 		HandlerMethodArgumentResolver resolver = getArgumentResolver(parameter);
 		if (resolver == null) {
-			throw new IllegalArgumentException("Unsupported parameter type [" +
-					parameter.getParameterType().getName() + "]. supportsParameter should be called first.");
+			throw new IllegalArgumentException("Unsupported parameter type [" + parameter.getParameterType().getName()
+					+ "]. supportsParameter should be called first.");
 		}
 		return resolver.resolveArgument(parameter, message);
 	}
 
 	/**
-	 * Find a registered {@link HandlerMethodArgumentResolver} that supports
-	 * the given method parameter.
+	 * Find a registered {@link HandlerMethodArgumentResolver} that supports the given
+	 * method parameter.
 	 */
 	private @Nullable HandlerMethodArgumentResolver getArgumentResolver(MethodParameter parameter) {
 		HandlerMethodArgumentResolver result = this.argumentResolverCache.get(parameter);

@@ -30,37 +30,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class StandardCommandsAutoConfigurationTests {
 
-	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(StandardCommandsAutoConfiguration.class, ThemingAutoConfiguration.class));
+	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(
+			AutoConfigurations.of(StandardCommandsAutoConfiguration.class, ThemingAutoConfiguration.class));
 
 	@Test
 	void testCompletionCommand() {
+		this.contextRunner.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history"))
+			.run(context -> assertThat(context).doesNotHaveBean(Completion.class));
 		this.contextRunner
-				.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history"))
-				.run(context -> assertThat(context).doesNotHaveBean(Completion.class));
-		this.contextRunner
-				.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history", "completion"))
-				.withPropertyValues("spring.shell.command.completion.root-command=fake")
-				.run(context -> assertThat(context).doesNotHaveBean(Completion.class));
-		this.contextRunner
-				.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history"))
-				.withPropertyValues("spring.shell.command.completion.root-command=fake")
-				.run(context -> assertThat(context).hasSingleBean(Completion.class));
+			.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history", "completion"))
+			.withPropertyValues("spring.shell.command.completion.root-command=fake")
+			.run(context -> assertThat(context).doesNotHaveBean(Completion.class));
+		this.contextRunner.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history"))
+			.withPropertyValues("spring.shell.command.completion.root-command=fake")
+			.run(context -> assertThat(context).hasSingleBean(Completion.class));
 	}
 
 	@Test
 	void testHelpCommand() {
-		this.contextRunner
-				.with(disableCommands("clear", "quit", "stacktrace", "script", "history", "completion"))
-				.withPropertyValues("spring.shell.command.help.grouping-mode=flat")
-				.run(context -> {
-					assertThat(context).hasSingleBean(Help.class);
-					Help help = context.getBean(Help.class);
-					Field showGroupsField = ReflectionUtils.findField(Help.class, "showGroups");
-					ReflectionUtils.makeAccessible(showGroupsField);
-					ReflectionUtils.getField(showGroupsField, help);
-					assertThat(ReflectionUtils.getField(showGroupsField, help)).isEqualTo(false);
-				});
+		this.contextRunner.with(disableCommands("clear", "quit", "stacktrace", "script", "history", "completion"))
+			.withPropertyValues("spring.shell.command.help.grouping-mode=flat")
+			.run(context -> {
+				assertThat(context).hasSingleBean(Help.class);
+				Help help = context.getBean(Help.class);
+				Field showGroupsField = ReflectionUtils.findField(Help.class, "showGroups");
+				ReflectionUtils.makeAccessible(showGroupsField);
+				ReflectionUtils.getField(showGroupsField, help);
+				assertThat(ReflectionUtils.getField(showGroupsField, help)).isEqualTo(false);
+			});
 	}
 
 	private static Function<ApplicationContextRunner, ApplicationContextRunner> disableCommands(String... commands) {
@@ -71,4 +68,5 @@ class StandardCommandsAutoConfigurationTests {
 			return cr;
 		};
 	}
+
 }

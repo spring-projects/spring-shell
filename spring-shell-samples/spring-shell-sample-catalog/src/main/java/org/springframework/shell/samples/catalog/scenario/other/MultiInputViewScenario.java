@@ -23,7 +23,8 @@ import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;;
 
-@ScenarioComponent(name = "Multi inputview", description = "Multi InputView sample", category = { Scenario.CATEGORY_OTHER })
+@ScenarioComponent(name = "Multi inputview", description = "Multi InputView sample",
+		category = { Scenario.CATEGORY_OTHER })
 public class MultiInputViewScenario extends AbstractScenario {
 
 	@Override

@@ -18,13 +18,15 @@ package org.springframework.shell.core;
 import org.springframework.core.MethodParameter;
 
 /**
- * Thrown when no ParameterResolver is found for a parameter during a resolve
- * operation.
+ * Thrown when no ParameterResolver is found for a parameter during a resolve operation.
  *
  * @author Camilo Gonzalez
  */
 public class ParameterResolverMissingException extends RuntimeException {
+
 	public ParameterResolverMissingException(MethodParameter parameter) {
-		super(String.format("No parameter resolver found for parameter with index %d (named '%s') of %s ", parameter.getParameterIndex(), parameter.getParameterName(), parameter.getMethod()));
+		super(String.format("No parameter resolver found for parameter with index %d (named '%s') of %s ",
+				parameter.getParameterIndex(), parameter.getParameterName(), parameter.getMethod()));
 	}
+
 }

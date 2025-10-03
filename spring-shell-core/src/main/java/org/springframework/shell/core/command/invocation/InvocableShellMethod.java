@@ -52,14 +52,15 @@ import org.springframework.util.StringUtils;
 
 /**
  * Encapsulates information about a handler method consisting of a
- * {@linkplain #getMethod() method} and a {@linkplain #getBean() bean}.
- * Provides convenient access to method parameters, the method return value,
- * method annotations, etc.
+ * {@linkplain #getMethod() method} and a {@linkplain #getBean() bean}. Provides
+ * convenient access to method parameters, the method return value, method annotations,
+ * etc.
  *
- * <p>The class may be created with a bean instance or with a bean name
- * (e.g. lazy-init bean, prototype bean). Use {@link #createWithResolvedBean()}
- * to obtain a {@code HandlerMethod} instance with a bean instance resolved
- * through the associated {@link BeanFactory}.
+ * <p>
+ * The class may be created with a bean instance or with a bean name (e.g. lazy-init bean,
+ * prototype bean). Use {@link #createWithResolvedBean()} to obtain a
+ * {@code HandlerMethod} instance with a bean instance resolved through the associated
+ * {@link BeanFactory}.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -112,7 +113,8 @@ public class InvocableShellMethod {
 	 * Create an instance from a bean instance, method name, and parameter types.
 	 * @throws NoSuchMethodException when the method cannot be found
 	 */
-	public InvocableShellMethod(Object bean, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
+	public InvocableShellMethod(Object bean, String methodName, Class<?>... parameterTypes)
+			throws NoSuchMethodException {
 		Assert.notNull(bean, "Bean is required");
 		Assert.notNull(methodName, "Method name is required");
 		this.bean = bean;
@@ -125,9 +127,9 @@ public class InvocableShellMethod {
 	}
 
 	/**
-	 * Create an instance from a bean name, a method, and a {@code BeanFactory}.
-	 * The method {@link #createWithResolvedBean()} may be used later to
-	 * re-create the {@code HandlerMethod} with an initialized bean.
+	 * Create an instance from a bean name, a method, and a {@code BeanFactory}. The
+	 * method {@link #createWithResolvedBean()} may be used later to re-create the
+	 * {@code HandlerMethod} with an initialized bean.
 	 */
 	public InvocableShellMethod(String beanName, BeanFactory beanFactory, Method method) {
 		Assert.hasText(beanName, "Bean name is required");
@@ -148,7 +150,6 @@ public class InvocableShellMethod {
 
 	/**
 	 * Sets a conversion service
-	 *
 	 * @param conversionService the conversion service
 	 */
 	public void setConversionService(@Nullable ConversionService conversionService) {
@@ -191,38 +192,42 @@ public class InvocableShellMethod {
 	}
 
 	/**
-	 * Set {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers} to use to use for resolving method argument values.
+	 * Set {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers} to use to
+	 * use for resolving method argument values.
 	 */
 	public void setMessageMethodArgumentResolvers(ShellMethodArgumentResolverComposite argumentResolvers) {
 		this.resolvers = argumentResolvers;
 	}
 
 	/**
-	 * Set the ParameterNameDiscoverer for resolving parameter names when needed
-	 * (e.g. default request attribute name).
-	 * <p>Default is a {@link org.springframework.core.DefaultParameterNameDiscoverer}.
+	 * Set the ParameterNameDiscoverer for resolving parameter names when needed (e.g.
+	 * default request attribute name).
+	 * <p>
+	 * Default is a {@link org.springframework.core.DefaultParameterNameDiscoverer}.
 	 */
 	public void setParameterNameDiscoverer(ParameterNameDiscoverer parameterNameDiscoverer) {
 		this.parameterNameDiscoverer = parameterNameDiscoverer;
 	}
 
 	/**
-	 * Invoke the method after resolving its argument values in the context of the given message.
-	 * <p>Argument values are commonly resolved through
-	 * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}.
-	 * The {@code providedArgs} parameter however may supply argument values to be used directly,
-	 * i.e. without argument resolution.
-	 * <p>Delegates to {@link #getMethodArgumentValues} and calls {@link #doInvoke} with the
+	 * Invoke the method after resolving its argument values in the context of the given
+	 * message.
+	 * <p>
+	 * Argument values are commonly resolved through {@link HandlerMethodArgumentResolver
+	 * HandlerMethodArgumentResolvers}. The {@code providedArgs} parameter however may
+	 * supply argument values to be used directly, i.e. without argument resolution.
+	 * <p>
+	 * Delegates to {@link #getMethodArgumentValues} and calls {@link #doInvoke} with the
 	 * resolved arguments.
 	 * @param message the current message being processed
 	 * @param providedArgs "given" arguments matched by type, not resolved
 	 * @return the raw value returned by the invoked method
-	 * @throws Exception raised if no suitable argument resolver can be found,
-	 * or if the method raised an exception
+	 * @throws Exception raised if no suitable argument resolver can be found, or if the
+	 * method raised an exception
 	 * @see #getMethodArgumentValues
 	 * @see #doInvoke
 	 */
-	public @Nullable Object invoke(@Nullable Message<?> message, Object @Nullable... providedArgs) throws Exception {
+	public @Nullable Object invoke(@Nullable Message<?> message, Object @Nullable ... providedArgs) throws Exception {
 		Object[] args = getMethodArgumentValues(message, providedArgs);
 		if (log.isTraceEnabled()) {
 			log.trace("Arguments: " + Arrays.toString(args));
@@ -233,9 +238,11 @@ public class InvocableShellMethod {
 	/**
 	 * Get the method argument values for the current message, checking the provided
 	 * argument values and falling back to the configured argument resolvers.
-	 * <p>The resulting array will be passed into {@link #doInvoke}.
+	 * <p>
+	 * The resulting array will be passed into {@link #doInvoke}.
 	 */
-	protected Object[] getMethodArgumentValues(@Nullable Message<?> message, Object @Nullable... providedArgs) throws Exception {
+	protected Object[] getMethodArgumentValues(@Nullable Message<?> message, Object @Nullable ... providedArgs)
+			throws Exception {
 		MethodParameter[] parameters = getMethodParameters();
 		if (ObjectUtils.isEmpty(parameters)) {
 			return EMPTY_ARGS;
@@ -263,8 +270,10 @@ public class InvocableShellMethod {
 		for (int i = 0; i < parameters.length; i++) {
 			if (!holders[i].resolved) {
 				if (providedArgs != null && unresolvedCount <= providedArgs.length) {
-					if (conversionService.canConvert(providedArgs[providedArgsIndex].getClass(), holders[i].parameter.getParameterType())) {
-						holders[i].arg = conversionService.convert(providedArgs[providedArgsIndex], holders[i].parameter.getParameterType());
+					if (conversionService.canConvert(providedArgs[providedArgsIndex].getClass(),
+							holders[i].parameter.getParameterType())) {
+						holders[i].arg = conversionService.convert(providedArgs[providedArgsIndex],
+								holders[i].parameter.getParameterType());
 						providedArgsIndex++;
 					}
 				}
@@ -276,8 +285,11 @@ public class InvocableShellMethod {
 	}
 
 	private static class ResolvedHolder {
+
 		boolean resolved;
+
 		MethodParameter parameter;
+
 		@Nullable Object arg;
 
 		public ResolvedHolder(boolean resolved, MethodParameter parameter, @Nullable Object arg) {
@@ -285,6 +297,7 @@ public class InvocableShellMethod {
 			this.parameter = parameter;
 			this.arg = arg;
 		}
+
 	}
 
 	/**
@@ -295,7 +308,7 @@ public class InvocableShellMethod {
 			if (validator != null) {
 				Method bridgedMethod = getBridgedMethod();
 				Set<ConstraintViolation<Object>> constraintViolations = validator.forExecutables()
-						.validateParameters(getBean(), bridgedMethod, args);
+					.validateParameters(getBean(), bridgedMethod, args);
 				if (constraintViolations.size() > 0) {
 					throw new ParameterValidationException(constraintViolations);
 				}
@@ -324,7 +337,6 @@ public class InvocableShellMethod {
 			}
 		}
 	}
-
 
 	MethodParameter getAsyncReturnValueType(@Nullable Object returnValue) {
 		return new AsyncResultMethodParameter(returnValue);
@@ -355,8 +367,9 @@ public class InvocableShellMethod {
 
 	/**
 	 * This method returns the type of the handler for this handler method.
-	 * <p>Note that if the bean type is a CGLIB-generated class, the original
-	 * user-defined class is returned.
+	 * <p>
+	 * Note that if the bean type is a CGLIB-generated class, the original user-defined
+	 * class is returned.
 	 */
 	public Class<?> getBeanType() {
 		return this.beanType;
@@ -364,7 +377,8 @@ public class InvocableShellMethod {
 
 	/**
 	 * If the bean method is a bridge method, this method returns the bridged
-	 * (user-defined) method. Otherwise it returns the same method as {@link #getMethod()}.
+	 * (user-defined) method. Otherwise it returns the same method as
+	 * {@link #getMethod()}.
 	 */
 	protected Method getBridgedMethod() {
 		return this.bridgedMethod;
@@ -399,10 +413,10 @@ public class InvocableShellMethod {
 	}
 
 	/**
-	 * Return a single annotation on the underlying method traversing its super methods
-	 * if no annotation can be found on the given method itself.
-	 * <p>Also supports <em>merged</em> composed annotations with attribute
-	 * overrides.
+	 * Return a single annotation on the underlying method traversing its super methods if
+	 * no annotation can be found on the given method itself.
+	 * <p>
+	 * Also supports <em>merged</em> composed annotations with attribute overrides.
 	 * @param annotationType the type of annotation to introspect the method for
 	 * @return the annotation, or {@code null} if none found
 	 * @see AnnotatedElementUtils#findMergedAnnotation
@@ -421,16 +435,16 @@ public class InvocableShellMethod {
 	}
 
 	/**
-	 * Return the HandlerMethod from which this HandlerMethod instance was
-	 * resolved via {@link #createWithResolvedBean()}.
+	 * Return the HandlerMethod from which this HandlerMethod instance was resolved via
+	 * {@link #createWithResolvedBean()}.
 	 */
 	public @Nullable InvocableShellMethod getResolvedFromHandlerMethod() {
 		return this.resolvedFromHandlerMethod;
 	}
 
 	/**
-	 * If the provided instance contains a bean name rather than an object instance,
-	 * the bean name is resolved before a {@link InvocableShellMethod} is created and
+	 * If the provided instance contains a bean name rather than an object instance, the
+	 * bean name is resolved before a {@link InvocableShellMethod} is created and
 	 * returned.
 	 */
 	public InvocableShellMethod createWithResolvedBean() {
@@ -450,7 +464,6 @@ public class InvocableShellMethod {
 		int args = this.method.getParameterCount();
 		return getBeanType().getSimpleName() + "#" + this.method.getName() + "[" + args + " args]";
 	}
-
 
 	@Override
 	public boolean equals(@Nullable Object other) {
@@ -474,10 +487,10 @@ public class InvocableShellMethod {
 		return this.method.toGenericString();
 	}
 
-
 	// Support methods for use in "InvocableHandlerMethod" sub-class variants..
 
-	protected static @Nullable Object findProvidedArgument(MethodParameter parameter, @Nullable Object... providedArgs) {
+	protected static @Nullable Object findProvidedArgument(MethodParameter parameter,
+			@Nullable Object... providedArgs) {
 		if (!ObjectUtils.isEmpty(providedArgs)) {
 			for (Object providedArg : providedArgs) {
 				if (parameter.getParameterType().isInstance(providedArg)) {
@@ -489,25 +502,25 @@ public class InvocableShellMethod {
 	}
 
 	protected static String formatArgumentError(MethodParameter param, String message) {
-		return "Could not resolve parameter [" + param.getParameterIndex() + "] in " +
-				param.getExecutable().toGenericString() + (StringUtils.hasText(message) ? ": " + message : "");
+		return "Could not resolve parameter [" + param.getParameterIndex() + "] in "
+				+ param.getExecutable().toGenericString() + (StringUtils.hasText(message) ? ": " + message : "");
 	}
 
 	/**
 	 * Assert that the target bean class is an instance of the class where the given
 	 * method is declared. In some cases the actual endpoint instance at request-
-	 * processing time may be a JDK dynamic proxy (lazy initialization, prototype
-	 * beans, and others). Endpoint classes that require proxying should prefer
-	 * class-based proxy mechanisms.
+	 * processing time may be a JDK dynamic proxy (lazy initialization, prototype beans,
+	 * and others). Endpoint classes that require proxying should prefer class-based proxy
+	 * mechanisms.
 	 */
 	protected void assertTargetBean(Method method, Object targetBean, Object[] args) {
 		Class<?> methodDeclaringClass = method.getDeclaringClass();
 		Class<?> targetBeanClass = targetBean.getClass();
 		if (!methodDeclaringClass.isAssignableFrom(targetBeanClass)) {
-			String text = "The mapped handler method class '" + methodDeclaringClass.getName() +
-					"' is not an instance of the actual endpoint bean class '" +
-					targetBeanClass.getName() + "'. If the endpoint requires proxying " +
-					"(e.g. due to @Transactional), please use class-based proxying.";
+			String text = "The mapped handler method class '" + methodDeclaringClass.getName()
+					+ "' is not an instance of the actual endpoint bean class '" + targetBeanClass.getName()
+					+ "'. If the endpoint requires proxying "
+					+ "(e.g. due to @Transactional), please use class-based proxying.";
 			throw new IllegalStateException(formatInvokeError(text, args));
 		}
 	}
@@ -515,17 +528,14 @@ public class InvocableShellMethod {
 	protected String formatInvokeError(String text, Object[] args) {
 
 		String formattedArgs = IntStream.range(0, args.length)
-				.mapToObj(i -> (args[i] != null ?
-						"[" + i + "] [type=" + args[i].getClass().getName() + "] [value=" + args[i] + "]" :
-						"[" + i + "] [null]"))
-				.collect(Collectors.joining(",\n", " ", " "));
+			.mapToObj(i -> (args[i] != null
+					? "[" + i + "] [type=" + args[i].getClass().getName() + "] [value=" + args[i] + "]"
+					: "[" + i + "] [null]"))
+			.collect(Collectors.joining(",\n", " ", " "));
 
-		return text + "\n" +
-				"Endpoint [" + getBeanType().getName() + "]\n" +
-				"Method [" + getBridgedMethod().toGenericString() + "] " +
-				"with argument values:\n" + formattedArgs;
+		return text + "\n" + "Endpoint [" + getBeanType().getName() + "]\n" + "Method ["
+				+ getBridgedMethod().toGenericString() + "] " + "with argument values:\n" + formattedArgs;
 	}
-
 
 	/**
 	 * A MethodParameter with HandlerMethod-specific behavior.
@@ -559,8 +569,8 @@ public class InvocableShellMethod {
 		public HandlerMethodParameter clone() {
 			return new HandlerMethodParameter(this);
 		}
-	}
 
+	}
 
 	/**
 	 * A MethodParameter for a HandlerMethod return type based on an actual return value.
@@ -588,6 +598,7 @@ public class InvocableShellMethod {
 		public ReturnValueMethodParameter clone() {
 			return new ReturnValueMethodParameter(this);
 		}
+
 	}
 
 	private class AsyncResultMethodParameter extends HandlerMethodParameter {
@@ -628,6 +639,7 @@ public class InvocableShellMethod {
 		public AsyncResultMethodParameter clone() {
 			return new AsyncResultMethodParameter(this);
 		}
+
 	}
 
 }

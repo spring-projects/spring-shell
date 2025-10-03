@@ -35,13 +35,12 @@ import org.springframework.shell.tui.style.StyleSettings;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link StatusBarView} shows {@link StatusItem items} horizontally and is
- * typically used in layouts which builds complete terminal UI's.
+ * {@link StatusBarView} shows {@link StatusItem items} horizontally and is typically used
+ * in layouts which builds complete terminal UI's.
  *
- * {@link StatusItem item} {@code primary} denotes if item is drawn to left
- * or right, {@code priority} on which order items are drawn until bar runs
- * out of space. Default {@code primary} is {@code true} and {@code priority}
- * is {@code 0}.
+ * {@link StatusItem item} {@code primary} denotes if item is drawn to left or right,
+ * {@code priority} on which order items are drawn until bar runs out of space. Default
+ * {@code primary} is {@code true} and {@code priority} is {@code 0}.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -49,7 +48,9 @@ import org.springframework.util.StringUtils;
 public class StatusBarView extends BoxView {
 
 	private final Logger log = LoggerFactory.getLogger(StatusBarView.class);
+
 	private final List<StatusItem> items = new ArrayList<>();
+
 	private @Nullable String itemSeparator = " | ";
 
 	public StatusBarView() {
@@ -71,7 +72,6 @@ public class StatusBarView extends BoxView {
 
 	/**
 	 * Gets the item separator.
-	 *
 	 * @return a separator
 	 */
 	public @Nullable String getItemSeparator() {
@@ -79,9 +79,8 @@ public class StatusBarView extends BoxView {
 	}
 
 	/**
-	 * Sets the item separator. Separator can be {@code null} or empty which
-	 * essentially disables it.
-	 *
+	 * Sets the item separator. Separator can be {@code null} or empty which essentially
+	 * disables it.
 	 * @param itemSeparator the item separator
 	 */
 	public void setItemSeparator(@Nullable String itemSeparator) {
@@ -174,7 +173,6 @@ public class StatusBarView extends BoxView {
 
 	/**
 	 * Sets items.
-	 *
 	 * @param items status items
 	 */
 	public void setItems(List<StatusItem> items) {
@@ -198,7 +196,6 @@ public class StatusBarView extends BoxView {
 
 	/**
 	 * Gets a status items.
-	 *
 	 * @return the status items
 	 */
 	public List<StatusItem> getItems() {
@@ -206,14 +203,12 @@ public class StatusBarView extends BoxView {
 	}
 
 	private void registerHotKeys() {
-		getItems().stream()
-			.filter(item -> item.getHotKey() != null)
-			.forEach(item -> {
-				Runnable action = item.getAction();
-				if (action != null) {
-					registerHotKeyBinding(item.getHotKey(), action);
-				}
-			});
+		getItems().stream().filter(item -> item.getHotKey() != null).forEach(item -> {
+			Runnable action = item.getAction();
+			if (action != null) {
+				registerHotKeyBinding(item.getHotKey(), action);
+			}
+		});
 	}
 
 	/**
@@ -222,9 +217,13 @@ public class StatusBarView extends BoxView {
 	public static class StatusItem {
 
 		private String title;
+
 		private @Nullable Runnable action;
+
 		private @Nullable Integer hotKey;
+
 		private boolean primary = true;
+
 		private int priority = 0;
 
 		public StatusItem(String title) {

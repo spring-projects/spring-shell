@@ -16,10 +16,10 @@
 package org.springframework.shell.tui.component.view.control;
 
 /**
- * Commands which can be performed by the application or bound to keys in a
- * {@link View}. This class is a placeholder for constants of types usually
- * needed in a views. We've chosen this not to be enumerable so that there
- * would not be restrictions in an api's to use these types.
+ * Commands which can be performed by the application or bound to keys in a {@link View}.
+ * This class is a placeholder for constants of types usually needed in a views. We've
+ * chosen this not to be enumerable so that there would not be restrictions in an api's to
+ * use these types.
  *
  * @author Janne Valkealahti
  */

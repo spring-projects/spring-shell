@@ -37,4 +37,5 @@ public final class CommandNode extends NonterminalAstNode {
 	public String toString() {
 		return "CommandNode [command=" + command + ", children=" + getChildren() + ", token=" + getToken() + "]";
 	}
+
 }

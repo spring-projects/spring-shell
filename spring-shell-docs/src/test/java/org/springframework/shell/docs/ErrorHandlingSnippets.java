@@ -36,6 +36,7 @@ class ErrorHandlingSnippets {
 		public int getExitCode() {
 			return 0;
 		}
+
 	}
 	// end::my-exception-class[]
 
@@ -49,16 +50,13 @@ class ErrorHandlingSnippets {
 			}
 			return null;
 		}
+
 	}
 	// end::my-exception-resolver-class[]
 
 	void dump1() {
 		// tag::example1[]
-		CommandRegistration.builder()
-			.withErrorHandling()
-				.resolver(new CustomExceptionResolver())
-				.and()
-			.build();
+		CommandRegistration.builder().withErrorHandling().resolver(new CustomExceptionResolver()).and().build();
 		// end::example1[]
 	}
 
@@ -72,6 +70,7 @@ class ErrorHandlingSnippets {
 			return CommandHandlingResult.of("Hi, handled exception\n", 42);
 		}
 		// end::exception-resolver-with-type-in-annotation[]
+
 	}
 
 	static class Dump2 {
@@ -82,6 +81,7 @@ class ErrorHandlingSnippets {
 			return CommandHandlingResult.of("Hi, handled custom exception\n", 42);
 		}
 		// end::exception-resolver-with-type-in-method[]
+
 	}
 
 	static class Dump3 {
@@ -92,6 +92,7 @@ class ErrorHandlingSnippets {
 			return new CustomExceptionResolver();
 		}
 		// end::my-exception-resolver-class-as-bean[]
+
 	}
 
 	static class Dump4 {
@@ -103,6 +104,7 @@ class ErrorHandlingSnippets {
 			return "Hi, handled exception";
 		}
 		// end::exception-resolver-with-exitcode-annotation[]
+
 	}
 
 	static class Dump5 {
@@ -112,10 +114,12 @@ class ErrorHandlingSnippets {
 		@ExitCode(code = 5)
 		void errorHandler(Exception e, Terminal terminal) {
 			PrintWriter writer = terminal.writer();
-			String msg =  "Hi, handled exception " + e.toString();
+			String msg = "Hi, handled exception " + e.toString();
 			writer.println(msg);
 			writer.flush();
 		}
 		// end::exception-resolver-with-void[]
+
 	}
+
 }

@@ -25,22 +25,20 @@ public class PositionalArgumentsCommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "positional-args-1")
-		public String testPositionalArgs1(
-				@Option(arity = OptionArity.EXACTLY_ONE) String arg1,
+		public String testPositionalArgs1(@Option(arity = OptionArity.EXACTLY_ONE) String arg1,
 				@Option(arity = OptionArity.EXACTLY_ONE) String arg2,
-				@Option(arity = OptionArity.EXACTLY_ONE) String arg3
-		) {
-				return String.format("Hi arg1='%s' arg2='%s' arg3='%s'", arg1, arg2, arg3);
+				@Option(arity = OptionArity.EXACTLY_ONE) String arg3) {
+			return String.format("Hi arg1='%s' arg2='%s' arg3='%s'", arg1, arg2, arg3);
 		}
 
 		@Command(command = "positional-args-2")
 		public String testPositionalArgs2(
 				@Option(arity = OptionArity.EXACTLY_ONE, defaultValue = "defaultArg1") String arg1,
 				@Option(arity = OptionArity.EXACTLY_ONE, defaultValue = "defaultArg2") String arg2,
-				@Option(arity = OptionArity.EXACTLY_ONE) String arg3
-		) {
-				return String.format("Hi arg1='%s' arg2='%s' arg3='%s'", arg1, arg2, arg3);
+				@Option(arity = OptionArity.EXACTLY_ONE) String arg3) {
+			return String.format("Hi arg1='%s' arg2='%s' arg3='%s'", arg1, arg2, arg3);
 		}
+
 	}
 
 }

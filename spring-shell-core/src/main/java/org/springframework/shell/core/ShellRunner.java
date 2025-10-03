@@ -26,7 +26,6 @@ public interface ShellRunner {
 	/**
 	 * Execute {@code ShellRunner} with given args. Return value indicates if run
 	 * operation happened and no further runners should be used.
-	 *
 	 * @param args the raw arguments
 	 * @return true if run execution happened
 	 * @throws Exception possible error during run

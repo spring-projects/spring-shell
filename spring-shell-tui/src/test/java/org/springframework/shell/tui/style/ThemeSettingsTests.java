@@ -40,24 +40,15 @@ class ThemeSettingsTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {
-			StyleSettings.TAG_TITLE,
-			StyleSettings.TAG_VALUE,
-			StyleSettings.TAG_LIST_KEY,
-			StyleSettings.TAG_LIST_VALUE,
-			StyleSettings.TAG_LEVEL_INFO,
-			StyleSettings.TAG_LEVEL_WARN,
-			StyleSettings.TAG_LEVEL_ERROR,
-			StyleSettings.TAG_ITEM_ENABLED,
-			StyleSettings.TAG_ITEM_DISABLED,
-			StyleSettings.TAG_ITEM_SELECTED,
-			StyleSettings.TAG_ITEM_UNSELECTED,
-			StyleSettings.TAG_ITEM_SELECTOR,
-			StyleSettings.TAG_HIGHLIGHT,
-			StyleSettings.TAG_BACKGROUND })
+	@ValueSource(strings = { StyleSettings.TAG_TITLE, StyleSettings.TAG_VALUE, StyleSettings.TAG_LIST_KEY,
+			StyleSettings.TAG_LIST_VALUE, StyleSettings.TAG_LEVEL_INFO, StyleSettings.TAG_LEVEL_WARN,
+			StyleSettings.TAG_LEVEL_ERROR, StyleSettings.TAG_ITEM_ENABLED, StyleSettings.TAG_ITEM_DISABLED,
+			StyleSettings.TAG_ITEM_SELECTED, StyleSettings.TAG_ITEM_UNSELECTED, StyleSettings.TAG_ITEM_SELECTOR,
+			StyleSettings.TAG_HIGHLIGHT, StyleSettings.TAG_BACKGROUND })
 	void testTags(String tag) {
 		ThemeSettings themeSettings = ThemeSettings.defaults();
 		String resolveTag = themeSettings.styles().resolveTag(tag);
 		assertThat(resolveTag).isNotNull();
 	}
+
 }

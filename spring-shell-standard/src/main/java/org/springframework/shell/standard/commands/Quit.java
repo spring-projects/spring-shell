@@ -29,18 +29,26 @@ public class Quit {
 	/**
 	 * Marker interface for beans providing {@literal quit} functionality to the shell.
 	 *
-	 * <p>To override the quit command, simply register your own bean implementing that interface
-	 * and the standard implementation will back off.</p>
+	 * <p>
+	 * To override the quit command, simply register your own bean implementing that
+	 * interface and the standard implementation will back off.
+	 * </p>
 	 *
-	 * <p>To disable the {@literal quit} command entirely, set the {@literal spring.shell.command.quit.enabled=false}
-	 * property in the environment.</p>
+	 * <p>
+	 * To disable the {@literal quit} command entirely, set the
+	 * {@literal spring.shell.command.quit.enabled=false} property in the environment.
+	 * </p>
 	 *
 	 * @author Eric Bottard
 	 */
-	public interface Command {}
+	public interface Command {
 
-	@org.springframework.shell.core.command.annotation.Command(description = "Exit the shell.", command = {"quit", "exit"}, interactionMode = InteractionMode.INTERACTIVE)
+	}
+
+	@org.springframework.shell.core.command.annotation.Command(description = "Exit the shell.",
+			command = { "quit", "exit" }, interactionMode = InteractionMode.INTERACTIVE)
 	public void quit() {
 		throw new ExitRequest();
 	}
+
 }

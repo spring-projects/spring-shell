@@ -23,6 +23,7 @@ package org.springframework.shell.core.command.parser;
 public final class OptionArgumentNode extends TerminalAstNode {
 
 	private final OptionNode parentOptionNode;
+
 	private final String value;
 
 	public OptionArgumentNode(Token token, OptionNode parentOptionNode, String value) {

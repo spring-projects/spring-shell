@@ -17,15 +17,16 @@
 package org.springframework.shell.core.result;
 
 /**
- * Implementations know how to deal with results of method invocations, whether normal results or exceptions thrown.
+ * Implementations know how to deal with results of method invocations, whether normal
+ * results or exceptions thrown.
  *
  * @author Eric Bottard
  */
 public interface ResultHandler<T> {
 
 	/**
-	 * Deal with some method execution result, whether it was the normal return value, or some kind
-	 * of {@link Throwable}.
+	 * Deal with some method execution result, whether it was the normal return value, or
+	 * some kind of {@link Throwable}.
 	 */
 	void handleResult(T result);
 

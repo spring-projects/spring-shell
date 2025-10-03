@@ -39,6 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommandExecutionCustomConversionTests {
 
 	private CommandExecution execution;
+
 	private CommandRegistry commandRegistry;
 
 	@BeforeEach
@@ -52,7 +53,8 @@ class CommandExecutionCustomConversionTests {
 		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		DumbTerminal terminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
-		execution = CommandExecution.of(resolvers, null, terminal, new DefaultShellContext(), conversionService, commandRegistry);
+		execution = CommandExecution.of(resolvers, null, terminal, new DefaultShellContext(), conversionService,
+				commandRegistry);
 	}
 
 	@Test
@@ -63,11 +65,11 @@ class CommandExecutionCustomConversionTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method1")
-				.and()
+			.method(pojo1, "method1")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
@@ -82,11 +84,11 @@ class CommandExecutionCustomConversionTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method2")
-				.and()
+			.method(pojo1, "method2")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
@@ -103,13 +105,13 @@ class CommandExecutionCustomConversionTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.arity(OptionArity.ONE_OR_MORE)
-				.position(0)
-				.and()
+			.longNames("arg1")
+			.arity(OptionArity.ONE_OR_MORE)
+			.position(0)
+			.and()
 			.withTarget()
-				.method(pojo1, "method2")
-				.and()
+			.method(pojo1, "method2")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
@@ -128,12 +130,12 @@ class CommandExecutionCustomConversionTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.type(type)
-				.and()
+			.longNames("arg1")
+			.type(type)
+			.and()
 			.withTarget()
-				.method(pojo1, "method3")
-				.and()
+			.method(pojo1, "method3")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
@@ -153,14 +155,14 @@ class CommandExecutionCustomConversionTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.arity(OptionArity.ONE_OR_MORE)
-				.position(0)
-				.type(type)
-				.and()
+			.longNames("arg1")
+			.arity(OptionArity.ONE_OR_MORE)
+			.position(0)
+			.type(type)
+			.and()
 			.withTarget()
-				.method(pojo1, "method3")
-				.and()
+			.method(pojo1, "method3")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
@@ -178,11 +180,11 @@ class CommandExecutionCustomConversionTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
@@ -199,13 +201,13 @@ class CommandExecutionCustomConversionTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.arity(OptionArity.ONE_OR_MORE)
-				.position(0)
-				.and()
+			.longNames("arg1")
+			.arity(OptionArity.ONE_OR_MORE)
+			.position(0)
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
@@ -220,13 +222,17 @@ class CommandExecutionCustomConversionTests {
 		public Pojo2 convert(String from) {
 			return new Pojo2(from);
 		}
+
 	}
 
 	static class Pojo1 {
 
 		public Pojo2 method1Pojo2;
+
 		public Pojo2[] method2Pojo2;
+
 		public List<Pojo2> method3Pojo2;
+
 		public Set<Pojo2> method4Pojo2;
 
 		public void method1(Pojo2 arg1) {
@@ -244,6 +250,7 @@ class CommandExecutionCustomConversionTests {
 		public void method4(Set<Pojo2> arg1) {
 			method4Pojo2 = arg1;
 		}
+
 	}
 
 	static class Pojo2 {
@@ -256,5 +263,7 @@ class CommandExecutionCustomConversionTests {
 		public Pojo2(String arg) {
 			this.arg = arg;
 		}
+
 	}
+
 }

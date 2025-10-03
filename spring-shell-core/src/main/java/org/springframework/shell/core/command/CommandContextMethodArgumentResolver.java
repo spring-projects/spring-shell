@@ -41,8 +41,9 @@ public class CommandContextMethodArgumentResolver implements HandlerMethodArgume
 	}
 
 	@Override
-	public @Nullable Object resolveArgument(MethodParameter parameter, Message<?> message){
+	public @Nullable Object resolveArgument(MethodParameter parameter, Message<?> message) {
 		CommandContext commandContext = message.getHeaders().get(HEADER_COMMAND_CONTEXT, CommandContext.class);
 		return parameter.isOptional() ? Optional.ofNullable(commandContext) : commandContext;
 	}
+
 }

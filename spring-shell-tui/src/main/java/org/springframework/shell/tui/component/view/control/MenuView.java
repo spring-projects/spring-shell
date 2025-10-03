@@ -39,8 +39,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link MenuView} shows {@link MenuView} items vertically and is
- * typically used in layouts which builds complete terminal UI's.
+ * {@link MenuView} shows {@link MenuView} items vertically and is typically used in
+ * layouts which builds complete terminal UI's.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -48,7 +48,9 @@ import org.springframework.util.StringUtils;
 public class MenuView extends BoxView {
 
 	private final Logger log = LoggerFactory.getLogger(MenuView.class);
+
 	private final List<MenuItem> items = new ArrayList<>();
+
 	private int activeItemIndex = -1;
 
 	// we support only one radio group
@@ -66,7 +68,6 @@ public class MenuView extends BoxView {
 
 	/**
 	 * Construct menu view with menu items.
-	 *
 	 * @param items the menu items
 	 */
 	public MenuView(MenuItem[] items) {
@@ -75,7 +76,6 @@ public class MenuView extends BoxView {
 
 	/**
 	 * Construct menu view with menu items.
-	 *
 	 * @param items the menu items
 	 */
 	public MenuView(@Nullable List<MenuItem> items) {
@@ -83,9 +83,8 @@ public class MenuView extends BoxView {
 	}
 
 	/**
-	 * Sets a new menu items. Will always clear existing items and if {@code null}
-	 * is passed this effectively keeps items empty.
-	 *
+	 * Sets a new menu items. Will always clear existing items and if {@code null} is
+	 * passed this effectively keeps items empty.
 	 * @param items the menu items
 	 */
 	public void setItems(@Nullable List<MenuItem> items) {
@@ -109,7 +108,6 @@ public class MenuView extends BoxView {
 
 	/**
 	 * Gets a menu items.
-	 *
 	 * @return the menu items
 	 */
 	public List<MenuItem> getItems() {
@@ -118,7 +116,6 @@ public class MenuView extends BoxView {
 
 	/**
 	 * Gets a preferred dimension menu needs to show it's content.
-	 *
 	 * @return preferred dimension
 	 */
 	public Dimension getPreferredDimension() {
@@ -147,12 +144,12 @@ public class MenuView extends BoxView {
 		int selectedStyle = resolveThemeStyle(StyleSettings.TAG_HIGHLIGHT, ScreenItem.STYLE_BOLD);
 		int selectedForegroundColor = resolveThemeForeground(StyleSettings.TAG_HIGHLIGHT, -1, -1);
 		int selectedBackgroundColor = resolveThemeBackground(StyleSettings.TAG_HIGHLIGHT, -1, -1);
-		Writer writer = screen.writerBuilder()
-			.layer(getLayer()).build();
+		Writer writer = screen.writerBuilder().layer(getLayer()).build();
 		Writer selectedWriter = screen.writerBuilder()
 			.layer(getLayer())
 			.color(selectedForegroundColor)
-			.style(selectedStyle).build();
+			.style(selectedStyle)
+			.build();
 		int i = 0;
 		boolean hasCheck = false;
 		for (MenuItem item : items) {
@@ -225,7 +222,6 @@ public class MenuView extends BoxView {
 
 	/**
 	 * Toggle {@link MenuItem} checked state.
-	 *
 	 * @param item the menu item to toggle
 	 */
 	public void toggle(MenuItem item) {
@@ -275,7 +271,7 @@ public class MenuView extends BoxView {
 		if (index >= items.size()) {
 			activeItemIndex = 0;
 		}
-		else if(index < 0) {
+		else if (index < 0) {
 			activeItemIndex = items.size() - 1;
 		}
 		else {
@@ -290,7 +286,6 @@ public class MenuView extends BoxView {
 	/**
 	 * Gets an index of a item at given position. Returns negative index if position
 	 * doesn't map to existing item.
-	 *
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 * @return an index or negative if not found
@@ -329,6 +324,7 @@ public class MenuView extends BoxView {
 		 * The menu item is part of a menu radio group and will indicate selected state.
 		 */
 		RADIO
+
 	}
 
 	/**
@@ -336,17 +332,20 @@ public class MenuView extends BoxView {
 	 *
 	 * @see Menu
 	 */
-	public static class MenuItem  {
+	public static class MenuItem {
 
 		private final String title;
+
 		private final @Nullable MenuItemCheckStyle checkStyle;
+
 		private final @Nullable List<MenuItem> items;
+
 		private @Nullable Runnable action;
+
 		private boolean initialCheckState = false;
 
 		/**
 		 * Construct menu item with a title.
-		 *
 		 * @param title the title
 		 */
 		public MenuItem(String title) {
@@ -355,7 +354,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Construct menu item with a title and a check style.
-		 *
 		 * @param title the title
 		 * @param checkStyle the check style
 		 */
@@ -365,7 +363,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Construct menu item with a title, a check style and a runnable.
-		 *
 		 * @param title the title
 		 * @param checkStyle the check style
 		 * @param action the action to run when item is chosen
@@ -375,15 +372,15 @@ public class MenuView extends BoxView {
 		}
 
 		/**
-		 * Construct menu item with a title, a check style, a runnable and initial
-		 * checked state.
-		 *
+		 * Construct menu item with a title, a check style, a runnable and initial checked
+		 * state.
 		 * @param title the title
 		 * @param checkStyle the check style
 		 * @param action the action to run when item is chosen
 		 * @param initialCheckState initial checked state
 		 */
-		public MenuItem(String title, MenuItemCheckStyle checkStyle, @Nullable Runnable action, boolean initialCheckState) {
+		public MenuItem(String title, MenuItemCheckStyle checkStyle, @Nullable Runnable action,
+				boolean initialCheckState) {
 			Assert.state(StringUtils.hasText(title), "title must have text");
 			Assert.notNull(checkStyle, "check style cannot be null");
 			this.title = title;
@@ -407,7 +404,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Return a {@link MenuItem} with a given {@code title}.
-		 *
 		 * @param title the title
 		 * @return a menu item
 		 */
@@ -416,9 +412,7 @@ public class MenuView extends BoxView {
 		}
 
 		/**
-		 * Return a {@link MenuItem} with a given {@code title} and a
-		 * {@code check style}.
-		 *
+		 * Return a {@link MenuItem} with a given {@code title} and a {@code check style}.
 		 * @param title the title
 		 * @param checkStyle the check style
 		 * @return a menu item
@@ -431,7 +425,8 @@ public class MenuView extends BoxView {
 			return new MenuItem(title, checkStyle, action);
 		}
 
-		public static MenuItem of(String title, MenuItemCheckStyle checkStyle, Runnable action, boolean initialCheckState) {
+		public static MenuItem of(String title, MenuItemCheckStyle checkStyle, Runnable action,
+				boolean initialCheckState) {
 			return new MenuItem(title, checkStyle, action, initialCheckState);
 		}
 
@@ -445,7 +440,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Gets initial check state.
-		 *
 		 * @return initial check state
 		 */
 		public boolean isInitialCheckState() {
@@ -454,7 +448,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Get a {@code title}. Never null, empty or just having white spaces.
-		 *
 		 * @return a title
 		 */
 		public String getTitle() {
@@ -462,9 +455,8 @@ public class MenuView extends BoxView {
 		}
 
 		/**
-		 * Gets a check style. This will be {@code null} if constructed via
-		 * {@link Menu} as style doesn't apply items being a sub-menu.
-		 *
+		 * Gets a check style. This will be {@code null} if constructed via {@link Menu}
+		 * as style doesn't apply items being a sub-menu.
 		 * @return a check style
 		 */
 		public @Nullable MenuItemCheckStyle getCheckStyle() {
@@ -474,17 +466,17 @@ public class MenuView extends BoxView {
 		/**
 		 * Gets sub menu items. This will be {@code null} if not constructed via
 		 * {@link Menu} as plain {@link MenuItem} can't have other items.
-		 *
 		 * @return a menu items
 		 */
 		public @Nullable List<MenuItem> getItems() {
 			return items;
 		}
+
 	}
 
 	/**
-	 * {@link Menu} represents an item in a {@link MenuView} being a specialisation
-	 * of {@link MenuItem} indicating it having a sub-menu.
+	 * {@link Menu} represents an item in a {@link MenuView} being a specialisation of
+	 * {@link MenuItem} indicating it having a sub-menu.
 	 *
 	 * @see MenuItem
 	 */
@@ -492,7 +484,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Construct menu with a title.
-		 *
 		 * @param title the title
 		 */
 		public Menu(String title) {
@@ -501,7 +492,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Construct menu with a title and a menu items.
-		 *
 		 * @param title the title
 		 * @param items the menu items
 		 */
@@ -511,7 +501,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Construct menu with a title and a menu items.
-		 *
 		 * @param title the title
 		 * @param items the menu items
 		 */
@@ -521,7 +510,6 @@ public class MenuView extends BoxView {
 
 		/**
 		 * Return a {@link Menu} with a given {@code title} and {@link MenuItem}s.
-		 *
 		 * @param title the title
 		 * @param items the menu items
 		 * @return a menu
@@ -529,6 +517,7 @@ public class MenuView extends BoxView {
 		public static Menu of(String title, MenuItem... items) {
 			return new Menu(title, items);
 		}
+
 	}
 
 	/**

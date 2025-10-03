@@ -41,15 +41,14 @@ class TerminalUiSnippets {
 			BoxView view = new BoxView();
 			ui.configure(view);
 			view.setDrawFunction((screen, rect) -> {
-				screen.writerBuilder()
-					.build()
-					.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+				screen.writerBuilder().build().text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
 				return rect;
 			});
 			ui.setRoot(view, true);
 			ui.run();
 		}
 		// end::introsample[]
+
 	}
 
 	class Sample3 {
@@ -64,15 +63,15 @@ class TerminalUiSnippets {
 			ui.configure(view);
 			ui.setRoot(view, true);
 			EventLoop eventLoop = ui.getEventLoop();
-			eventLoop.keyEvents()
-				.subscribe(event -> {
-					if (event.getPlainKey() == Key.q && event.hasCtrl()) {
-						eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
-					}
-				});
+			eventLoop.keyEvents().subscribe(event -> {
+				if (event.getPlainKey() == Key.q && event.hasCtrl()) {
+					eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
+				}
+			});
 			ui.run();
 		}
 		// end::exitingfromloop[]
+
 	}
 
 	@SuppressWarnings("unused")
@@ -87,6 +86,7 @@ class TerminalUiSnippets {
 			// do something with ui
 		}
 		// end::uibuilderautowire[]
+
 	}
 
 	class SampleConfigureView {
@@ -99,6 +99,7 @@ class TerminalUiSnippets {
 			ui.configure(view);
 		}
 		// end::configureview[]
+
 	}
 
 	class SampleUiLoop {
@@ -110,6 +111,7 @@ class TerminalUiSnippets {
 			ui.run();
 		}
 		// end::uirun[]
+
 	}
 
 	class SampleUiModal {
@@ -125,6 +127,7 @@ class TerminalUiSnippets {
 			ui.setModal(null);
 		}
 		// end::uimodal[]
+
 	}
 
 }

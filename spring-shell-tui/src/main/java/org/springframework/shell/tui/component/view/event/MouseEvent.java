@@ -17,9 +17,8 @@ package org.springframework.shell.tui.component.view.event;
 
 /**
  *
- *                           unused                        modifier       button           type
- *   [                                                   ] [      ] [               ] [            ]
- *   31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+ * unused modifier button type [ ] [ ] [ ] [ ] 31 30 29 28 27 26 25 24 23 22 21 20 19 18
+ * 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
  *
  *
  */
@@ -79,35 +78,56 @@ public record MouseEvent(int x, int y, int mouse) {
 	}
 
 	public static class Type {
+
 		public static final int Released = 0x00000001;
+
 		public static final int Pressed = 0x00000002;
+
 		public static final int Wheel = 0x00000004;
+
 		public static final int Moved = 0x00000008;
+
 		public static final int Dragged = 0x00000010;
+
 	}
 
 	public static class Button {
+
 		public static final int NoButton = 0x00000020;
+
 		public static final int Button1 = 0x00000040;
+
 		public static final int Button2 = 0x00000080;
+
 		public static final int Button3 = 0x00000100;
+
 		public static final int WheelUp = 0x00000200;
+
 		public static final int WheelDown = 0x00000400;
+
 	}
 
 	public static class Modifier {
+
 		public static final int Shift = 0x00000800;
+
 		public static final int Alt = 0x00001000;
+
 		public static final int Control = 0x00002000;
+
 	}
 
 	public static class MouseMask {
+
 		// bits 0-4
 		public static final int TypeMask = 0x0000001f;
+
 		// bits 5-10
 		public static final int ButtonMask = 0x000007e0;
+
 		// bits 11-13
 		public static final int ModifierMask = 0x00003800;
+
 	}
 
 }

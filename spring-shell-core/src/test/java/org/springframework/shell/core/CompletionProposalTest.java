@@ -24,41 +24,46 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CompletionProposalTest {
 
-    private final String PROPOSAL = "test proposal";
-    private final String DESCRIPTION = "description";
-    private final String DISPLAY_TEXT = "displayText";
-    private final boolean DONT_QUOTE = true;
-    private final String CATEGORY = "category";
-    CompletionProposal completionProposal;
+	private final String PROPOSAL = "test proposal";
 
+	private final String DESCRIPTION = "description";
 
-    @BeforeEach
-    public void setup() {
-        completionProposal = new CompletionProposal(PROPOSAL);
-        completionProposal.category(CATEGORY);
-        completionProposal.description(DESCRIPTION);
-        completionProposal.displayText(DISPLAY_TEXT);
-        completionProposal.dontQuote(DONT_QUOTE);
-    }
+	private final String DISPLAY_TEXT = "displayText";
 
-    @Test
-    public void equals() {
-        CompletionProposal completionProposal2 = new CompletionProposal(PROPOSAL);
-        completionProposal2.category(CATEGORY);
-        completionProposal2.description(DESCRIPTION);
-        completionProposal2.displayText(DISPLAY_TEXT);
-        completionProposal2.dontQuote(DONT_QUOTE);
+	private final boolean DONT_QUOTE = true;
 
-        assertEquals(completionProposal, completionProposal2);
-    }
+	private final String CATEGORY = "category";
 
-    @Test
-    public void hashcode() {
-        CompletionProposal completionProposal2 = new CompletionProposal(PROPOSAL);
-        completionProposal2.category(CATEGORY);
-        completionProposal2.description(DESCRIPTION);
-        completionProposal2.displayText(DISPLAY_TEXT);
-        completionProposal2.dontQuote(DONT_QUOTE);
-        assertEquals(completionProposal.hashCode(), completionProposal2.hashCode());
-    }
+	CompletionProposal completionProposal;
+
+	@BeforeEach
+	public void setup() {
+		completionProposal = new CompletionProposal(PROPOSAL);
+		completionProposal.category(CATEGORY);
+		completionProposal.description(DESCRIPTION);
+		completionProposal.displayText(DISPLAY_TEXT);
+		completionProposal.dontQuote(DONT_QUOTE);
+	}
+
+	@Test
+	public void equals() {
+		CompletionProposal completionProposal2 = new CompletionProposal(PROPOSAL);
+		completionProposal2.category(CATEGORY);
+		completionProposal2.description(DESCRIPTION);
+		completionProposal2.displayText(DISPLAY_TEXT);
+		completionProposal2.dontQuote(DONT_QUOTE);
+
+		assertEquals(completionProposal, completionProposal2);
+	}
+
+	@Test
+	public void hashcode() {
+		CompletionProposal completionProposal2 = new CompletionProposal(PROPOSAL);
+		completionProposal2.category(CATEGORY);
+		completionProposal2.description(DESCRIPTION);
+		completionProposal2.displayText(DISPLAY_TEXT);
+		completionProposal2.dontQuote(DONT_QUOTE);
+		assertEquals(completionProposal.hashCode(), completionProposal2.hashCode());
+	}
+
 }

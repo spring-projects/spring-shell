@@ -46,10 +46,12 @@ class ShellTestIntegrationTests {
 	void testInteractive1() {
 		InteractiveShellSession session = client.interactive().run();
 
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("shell"));
+		await().atMost(2, TimeUnit.SECONDS)
+			.untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("shell"));
 
 		session.write(session.writeSequence().text("help").carriageReturn().build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("AVAILABLE COMMANDS"));
+		await().atMost(2, TimeUnit.SECONDS)
+			.untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("AVAILABLE COMMANDS"));
 
 		session.write(session.writeSequence().carriageReturn().build());
 		await().atMost(4, TimeUnit.SECONDS).untilAsserted(() -> {
@@ -73,7 +75,8 @@ class ShellTestIntegrationTests {
 	void testInteractive2() {
 		InteractiveShellSession session = client.interactive().run();
 
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("shell:"));
+		await().atMost(2, TimeUnit.SECONDS)
+			.untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("shell:"));
 
 		session.write(session.writeSequence().ctrl('c').build());
 		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.isComplete()).isTrue());
@@ -84,11 +87,10 @@ class ShellTestIntegrationTests {
 		Condition<String> helpCondition = new Condition<>(line -> line.contains("AVAILABLE COMMANDS"),
 				"Help has expected output");
 
-		Condition<String> helpHelpCondition = new Condition<>(line -> line.contains("help - Display help about available commands"),
-				"Help help has expected output");
+		Condition<String> helpHelpCondition = new Condition<>(
+				line -> line.contains("help - Display help about available commands"), "Help help has expected output");
 
-		Condition<String> emptyCondition = new Condition<>(line -> line.trim().isEmpty(),
-				"Have only whitespace");
+		Condition<String> emptyCondition = new Condition<>(line -> line.trim().isEmpty(), "Have only whitespace");
 
 		NonInteractiveShellSession session = client.nonInterative("help").run();
 
@@ -118,8 +120,7 @@ class ShellTestIntegrationTests {
 
 	@Test
 	void testNonInteractive2() {
-		Condition<String> helloCondition = new Condition<>(line -> line.contains("hello"),
-				"Hello has expected output");
+		Condition<String> helloCondition = new Condition<>(line -> line.contains("hello"), "Hello has expected output");
 
 		NonInteractiveShellSession session = client.nonInterative("hello").run();
 
@@ -128,4 +129,5 @@ class ShellTestIntegrationTests {
 			assertThat(lines).areExactly(1, helloCondition);
 		});
 	}
+
 }

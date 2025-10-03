@@ -49,8 +49,8 @@ public class Help extends AbstractCommand {
 	 * Marker interface for beans providing {@literal help} functionality to the shell.
 	 *
 	 * <p>
-	 * To override the help command, simply register your own bean implementing that interface
-	 * and the standard implementation will back off.
+	 * To override the help command, simply register your own bean implementing that
+	 * interface and the standard implementation will back off.
 	 * </p>
 	 *
 	 * <p>
@@ -61,39 +61,40 @@ public class Help extends AbstractCommand {
 	 * @author Eric Bottard
 	 */
 	public interface Command {
+
 	}
 
 	private boolean showGroups = true;
-	private TemplateExecutor templateExecutor;
-	private @Nullable String commandTemplate;
-	private @Nullable String commandsTemplate;
 
+	private TemplateExecutor templateExecutor;
+
+	private @Nullable String commandTemplate;
+
+	private @Nullable String commandsTemplate;
 
 	public Help(TemplateExecutor templateExecutor) {
 		this.templateExecutor = templateExecutor;
 	}
 
 	@org.springframework.shell.core.command.annotation.Command(command = "Display help about available commands")
-	public AttributedString help(
-			@Option(defaultValue = Option.NULL, shortNames = { 'C'}, longNames = {"--command" }, description = "The command to obtain help for.", arity = CommandRegistration.OptionArity.ONE_OR_MORE)
-			// FIXME @OptionValues(provider = CommandValueProvider.class) // How to migrate valueProvider?
-			String @Nullable [] command)
+	public AttributedString help(@Option(defaultValue = Option.NULL, shortNames = { 'C' }, longNames = { "--command" },
+			description = "The command to obtain help for.", arity = CommandRegistration.OptionArity.ONE_OR_MORE)
+	// FIXME @OptionValues(provider = CommandValueProvider.class) // How to migrate
+	// valueProvider?
+	String @Nullable [] command)
 
 			throws IOException {
 		if (command == null) {
 			return renderCommands();
 		}
 		else {
-			String commandStr = Stream.of(command)
-				.map(c -> c.trim())
-				.collect(Collectors.joining(" "));
+			String commandStr = Stream.of(command).map(c -> c.trim()).collect(Collectors.joining(" "));
 			return renderCommand(commandStr);
 		}
 	}
 
 	/**
 	 * Sets a location for a template rendering command help.
-	 *
 	 * @param commandTemplate the command template location
 	 */
 	public void setCommandTemplate(String commandTemplate) {
@@ -102,7 +103,6 @@ public class Help extends AbstractCommand {
 
 	/**
 	 * Sets a location for a template rendering commands help.
-	 *
 	 * @param commandsTemplate the commands template location
 	 */
 	public void setCommandsTemplate(String commandsTemplate) {
@@ -110,9 +110,8 @@ public class Help extends AbstractCommand {
 	}
 
 	/**
-	 * Sets if groups should be shown in a listing, defaults to true. If not enabled
-	 * a simple list is shown without groups.
-	 *
+	 * Sets if groups should be shown in a listing, defaults to true. If not enabled a
+	 * simple list is shown without groups.
 	 * @param showGroups the flag to show groups
 	 */
 	public void setShowGroups(boolean showGroups) {
@@ -121,7 +120,7 @@ public class Help extends AbstractCommand {
 
 	private AttributedString renderCommands() {
 		Map<String, CommandRegistration> registrations = Utils
-				.removeHiddenCommands(getCommandRegistry().getRegistrations());
+			.removeHiddenCommands(getCommandRegistry().getRegistrations());
 
 		boolean isStg = commandTemplate != null && commandTemplate.endsWith(".stg");
 
@@ -136,7 +135,7 @@ public class Help extends AbstractCommand {
 
 	private AttributedString renderCommand(String command) {
 		Map<String, CommandRegistration> registrations = Utils
-				.removeHiddenCommands(getCommandRegistry().getRegistrations());
+			.removeHiddenCommands(getCommandRegistry().getRegistrations());
 		CommandRegistration registration = registrations.get(command);
 		if (registration == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
@@ -156,8 +155,10 @@ public class Help extends AbstractCommand {
 	private static String resourceAsString(Resource resource) {
 		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
 			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
+
 }

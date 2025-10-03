@@ -18,4 +18,5 @@ package org.springframework.shell.tui.style;
 import java.util.function.Supplier;
 
 public interface ThemeActive extends Supplier<String> {
+
 }

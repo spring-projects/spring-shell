@@ -61,9 +61,9 @@ class ZshCompletionsTests {
 		ZshCompletions completions = new ZshCompletions(context, commandRegistry);
 		String zsh = completions.generate("root-command");
 		assertThat(zsh).contains("root-command")
-				.contains("testmethod1)")
-				.contains("_root-command_testmethod1")
-				.contains("--arg1");
+			.contains("testmethod1)")
+			.contains("_root-command_testmethod1")
+			.contains("--arg1");
 	}
 
 	@Test
@@ -73,9 +73,9 @@ class ZshCompletionsTests {
 		ZshCompletions completions = new ZshCompletions(context, commandRegistry);
 		String zsh = completions.generate("root-command");
 		assertThat(zsh).contains("root-command")
-				.contains("testmethod1)")
-				.contains("_root-command_testmethod1")
-				.contains("--arg1");
+			.contains("testmethod1)")
+			.contains("_root-command_testmethod1")
+			.contains("--arg1");
 	}
 
 	private void registerFromMethod(CommandRegistry commandRegistry) {
@@ -84,11 +84,11 @@ class ZshCompletionsTests {
 			.command("testmethod1")
 			.description("desc")
 			.withTarget()
-				.method(pojo1, "method1")
-				.and()
+			.method(pojo1, "method1")
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.build();
 		commandRegistry.register(registration);
 	}
@@ -101,17 +101,20 @@ class ZshCompletionsTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command(command)
 			.withTarget()
-				.function(function)
-				.and()
+			.function(function)
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.build();
 		commandRegistry.register(registration);
 	}
 
 	protected static class Pojo1 {
 
-		void method1() {}
+		void method1() {
+		}
+
 	}
+
 }

@@ -24,7 +24,6 @@ public interface BaseInputSpec<T extends BaseInputSpec<T>> {
 
 	/**
 	 * Sets order of this component.
-	 *
 	 * @param order the order
 	 * @return a builder
 	 */
@@ -32,8 +31,8 @@ public interface BaseInputSpec<T extends BaseInputSpec<T>> {
 
 	/**
 	 * Usual this trick to get typed child.
-	 *
 	 * @return a builder
 	 */
 	T getThis();
+
 }

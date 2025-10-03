@@ -19,7 +19,6 @@ import org.springframework.shell.tui.component.view.screen.Screen;
 import org.springframework.shell.tui.geom.Rectangle;
 import org.springframework.shell.tui.style.StyleSettings;
 
-
 /**
  * {@code WindowView} is a {@link View} defining area within view itself.
  *
@@ -28,16 +27,19 @@ import org.springframework.shell.tui.style.StyleSettings;
 public class WindowView extends AbstractView {
 
 	private int backgroundColor = -1;
+
 	private int minWidth = 30;
+
 	private int maxWidth = 60;
+
 	private int minHeight = 8;
+
 	private int maxHeight = 12;
 
 	/**
 	 * Sets a background color. If color is set to {@code null} it indicates that
 	 * background should be set to be {@code empty} causing possible layer to be
 	 * non-transparent.
-	 *
 	 * @param backgroundColor the background color
 	 */
 	public void setBackgroundColor(int backgroundColor) {
@@ -57,7 +59,6 @@ public class WindowView extends AbstractView {
 
 	/**
 	 * Gets an inner rectangle of this view.
-	 *
 	 * @return an inner rectangle of this view
 	 */
 	protected Rectangle getInnerRect() {

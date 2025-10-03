@@ -24,8 +24,7 @@ import java.lang.annotation.Target;
 import org.springframework.shell.core.completion.CompletionProvider;
 
 /**
- * Annotation marking a method parameter which completion proposals should be
- * used.
+ * Annotation marking a method parameter which completion proposals should be used.
  *
  * @author Janne Valkealahti
  */
@@ -36,8 +35,8 @@ public @interface OptionValues {
 
 	/**
 	 * Names of beans for {@link CompletionProvider}.
-	 *
 	 * @return names of CompletionProvider beans
 	 */
 	String[] provider() default {};
+
 }

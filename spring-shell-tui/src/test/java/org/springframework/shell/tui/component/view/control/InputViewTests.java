@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InputViewTests extends AbstractViewTests {
 
 	private static final String CURSOR_INDEX_FIELD = "cursorIndex";
+
 	private static final String CURSOR_POSITION_METHOD = "cursorPosition";
 
 	InputView view;
@@ -221,12 +222,8 @@ class InputViewTests extends AbstractViewTests {
 
 		@Test
 		void handlesKeyEnter() {
-			Flux<ViewDoneEvent> actions = eventLoop
-					.viewEvents(ViewDoneEvent.class);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<ViewDoneEvent> actions = eventLoop.viewEvents(ViewDoneEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			KeyHandlerResult result = handleKey(view, KeyEvent.Key.Enter);
 

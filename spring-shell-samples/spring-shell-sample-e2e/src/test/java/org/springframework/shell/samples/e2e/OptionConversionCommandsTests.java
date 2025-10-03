@@ -56,4 +56,5 @@ class OptionConversionCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession(command, interactive);
 		assertScreenContainsText(session, "Hello [MyPojo [arg=hi]]");
 	}
+
 }

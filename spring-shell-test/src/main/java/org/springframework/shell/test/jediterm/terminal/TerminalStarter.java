@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.shell.test.jediterm.terminal.emulator.Emulator;
 import org.springframework.shell.test.jediterm.terminal.emulator.JediEmulator;
 
-
 /**
  * Runs terminal emulator. Manages threads to send response.
  *
@@ -83,7 +82,7 @@ public class TerminalStarter implements TerminalOutputStream {
 	}
 
 	// public byte[] getCode(final int key, final int modifiers) {
-	// 	return myTerminal.getCodeForKey(key, modifiers);
+	// return myTerminal.getCodeForKey(key, modifiers);
 	// }
 
 	public void postResize(int width, int height, RequestOrigin origin) {
@@ -99,7 +98,7 @@ public class TerminalStarter implements TerminalOutputStream {
 	 */
 	public static void resize(Emulator emulator, Terminal terminal, TtyConnector ttyConnector, int width, int height,
 			RequestOrigin origin, BiConsumer<Long, Runnable> taskScheduler) {
-		CompletableFuture<?> promptUpdated = ((JediEmulator)emulator).getPromptUpdatedAfterResizeFuture(taskScheduler);
+		CompletableFuture<?> promptUpdated = ((JediEmulator) emulator).getPromptUpdatedAfterResizeFuture(taskScheduler);
 		terminal.resize(width, height, origin, promptUpdated);
 		ttyConnector.resize(width, height);
 	}
@@ -152,4 +151,5 @@ public class TerminalStarter implements TerminalOutputStream {
 			}
 		});
 	}
+
 }

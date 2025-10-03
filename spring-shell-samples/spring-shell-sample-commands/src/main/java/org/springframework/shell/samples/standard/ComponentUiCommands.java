@@ -39,9 +39,7 @@ public class ComponentUiCommands extends AbstractCommand {
 		BoxView view = new BoxView();
 		view.setShowBorder(true);
 		view.setDrawFunction((screen, rect) -> {
-			screen.writerBuilder()
-				.build()
-				.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			screen.writerBuilder().build().text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
 			return rect;
 		});
 		ui.setRoot(view, true);
@@ -55,9 +53,7 @@ public class ComponentUiCommands extends AbstractCommand {
 		view.setRect(0, 0, 40, 5);
 		view.setShowBorder(true);
 		view.setDrawFunction((screen, rect) -> {
-			screen.writerBuilder()
-				.build()
-				.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			screen.writerBuilder().build().text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
 			return rect;
 		});
 		ui.setRoot(view, false);
@@ -70,9 +66,7 @@ public class ComponentUiCommands extends AbstractCommand {
 		BoxView view = new BoxView();
 		view.setShowBorder(true);
 		view.setDrawFunction((screen, rect) -> {
-			screen.writerBuilder()
-				.build()
-				.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			screen.writerBuilder().build().text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
 			return rect;
 		});
 		ui.setRoot(view, false);
@@ -90,21 +84,15 @@ public class ComponentUiCommands extends AbstractCommand {
 	}
 
 	@Command(command = "componentui progress")
-	public void progress(
-		@Option(defaultValue = "desc") String description,
-		@Option(defaultValue = "true") boolean textEnabled,
-		@Option(defaultValue = "true") boolean spinnerEnabled,
-		@Option(defaultValue = "true") boolean percentEnabled,
-		@Option(defaultValue = "0") int textSize,
-		@Option(defaultValue = "0") int spinnerSize,
-		@Option(defaultValue = "0") int percentSize,
-		@Option(defaultValue = "CENTER") HorizontalAlign textAlign,
-		@Option(defaultValue = "CENTER") HorizontalAlign spinnerAlign,
-		@Option(defaultValue = "CENTER") HorizontalAlign percentAlign,
-		@Option(defaultValue = "-1") int logMessagesRate,
-		@Option(defaultValue = "200") long advanceSleep,
-		@Option(defaultValue = "false") boolean logMessagesSleep
-	) {
+	public void progress(@Option(defaultValue = "desc") String description,
+			@Option(defaultValue = "true") boolean textEnabled, @Option(defaultValue = "true") boolean spinnerEnabled,
+			@Option(defaultValue = "true") boolean percentEnabled, @Option(defaultValue = "0") int textSize,
+			@Option(defaultValue = "0") int spinnerSize, @Option(defaultValue = "0") int percentSize,
+			@Option(defaultValue = "CENTER") HorizontalAlign textAlign,
+			@Option(defaultValue = "CENTER") HorizontalAlign spinnerAlign,
+			@Option(defaultValue = "CENTER") HorizontalAlign percentAlign,
+			@Option(defaultValue = "-1") int logMessagesRate, @Option(defaultValue = "200") long advanceSleep,
+			@Option(defaultValue = "false") boolean logMessagesSleep) {
 		ArrayList<ProgressViewItem> items = new ArrayList<>();
 		if (textEnabled) {
 			items.add(ProgressViewItem.ofText(textSize, textAlign));
@@ -172,7 +160,8 @@ public class ComponentUiCommands extends AbstractCommand {
 	private static void sleep(long millis) {
 		try {
 			Thread.sleep(millis);
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e) {
 		}
 	}
 

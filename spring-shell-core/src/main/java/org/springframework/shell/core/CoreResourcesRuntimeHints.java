@@ -31,4 +31,5 @@ class CoreResourcesRuntimeHints implements RuntimeHintsRegistrar {
 	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 		hints.resources().registerPattern("org/springframework/shell/component/*.stg");
 	}
+
 }

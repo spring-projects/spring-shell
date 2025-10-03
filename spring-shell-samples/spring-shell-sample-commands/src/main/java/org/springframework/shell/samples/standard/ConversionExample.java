@@ -30,6 +30,7 @@ class ConversionCommands {
 }
 
 class DomainObject {
+
 	private final String value;
 
 	DomainObject(String value) {
@@ -44,6 +45,7 @@ class DomainObject {
 	public String toString() {
 		return "DomainObject [value=" + value + "]";
 	}
+
 }
 
 @Component
@@ -53,4 +55,5 @@ class CustomDomainConverter implements Converter<String, DomainObject> {
 	public DomainObject convert(String source) {
 		return new DomainObject(source);
 	}
+
 }

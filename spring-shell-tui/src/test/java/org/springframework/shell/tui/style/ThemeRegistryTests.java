@@ -29,4 +29,5 @@ class ThemeRegistryTests {
 		assertThat(registry.get("name1")).isSameAs(theme);
 		assertThat(registry.get("name2")).isNull();
 	}
+
 }

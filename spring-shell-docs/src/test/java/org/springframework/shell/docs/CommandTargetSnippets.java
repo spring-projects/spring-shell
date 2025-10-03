@@ -25,6 +25,7 @@ public class CommandTargetSnippets {
 		String command(String arg) {
 			return arg;
 		}
+
 	}
 	// end::snippet11[]
 
@@ -34,47 +35,31 @@ public class CommandTargetSnippets {
 		CommandRegistration.builder()
 			.command("command")
 			.withTarget()
-				.method(pojo, "command")
-				.and()
+			.method(pojo, "command")
+			.and()
 			.withOption()
-				.longNames("arg")
-				.and()
+			.longNames("arg")
+			.and()
 			.build();
 		// end::snippet12[]
 	}
 
 	void dump2() {
 		// tag::snippet2[]
-		CommandRegistration.builder()
-			.command("command")
-			.withTarget()
-				.function(ctx -> {
-					String arg = ctx.getOptionValue("arg");
-					return String.format("hi, arg value is '%s'", arg);
-				})
-				.and()
-			.withOption()
-				.longNames("arg")
-				.and()
-			.build();
+		CommandRegistration.builder().command("command").withTarget().function(ctx -> {
+			String arg = ctx.getOptionValue("arg");
+			return String.format("hi, arg value is '%s'", arg);
+		}).and().withOption().longNames("arg").and().build();
 		// end::snippet2[]
 	}
 
 	void dump3() {
 		// tag::snippet3[]
-		CommandRegistration.builder()
-			.command("command")
-			.withTarget()
-				.consumer(ctx -> {
-					String arg = ctx.getOptionValue("arg");
-					ctx.getTerminal().writer()
-						.println(String.format("hi, arg value is '%s'", arg));
-				})
-			.and()
-			.withOption()
-				.longNames("arg")
-				.and()
-			.build();
+		CommandRegistration.builder().command("command").withTarget().consumer(ctx -> {
+			String arg = ctx.getOptionValue("arg");
+			ctx.getTerminal().writer().println(String.format("hi, arg value is '%s'", arg));
+		}).and().withOption().longNames("arg").and().build();
 		// end::snippet3[]
 	}
+
 }

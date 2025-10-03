@@ -27,4 +27,5 @@ public class DefaultPathInputSpec extends BasePathInput {
 	public DefaultPathInputSpec(BaseBuilder builder, String id) {
 		super(builder, id);
 	}
+
 }

@@ -24,8 +24,8 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * This represents a directive to set some borders on cells of a table.
- * Multiple specifications can be combined on a single table.
+ * This represents a directive to set some borders on cells of a table. Multiple
+ * specifications can be combined on a single table.
  *
  * @author Eric Bottard
  * @author Piotr Olaszewski
@@ -59,9 +59,10 @@ public class BorderSpecification {
 	private final BorderStyle style;
 
 	/**
-	 * Specifications are created by {@link Table#addBorder(int, int, int, int, int, BorderStyle)}.
+	 * Specifications are created by
+	 * {@link Table#addBorder(int, int, int, int, int, BorderStyle)}.
 	 */
-	/*default*/ BorderSpecification(int row1, int column1, int row2, int column2, int match, BorderStyle style) {
+	/* default */ BorderSpecification(int row1, int column1, int row2, int column2, int match, BorderStyle style) {
 		this.row1 = row1;
 		this.row2 = row2;
 		this.column1 = column1;
@@ -73,7 +74,7 @@ public class BorderSpecification {
 	/**
 	 * Does this specification result in the need to paint a vertical bar at row,column?
 	 */
-	/*default*/ char verticals(int row, int column) {
+	/* default */ char verticals(int row, int column) {
 		boolean result = (match & LEFT) == LEFT && column == column1;
 		result |= (match & INNER_VERTICAL) == INNER_VERTICAL && column > column1 && column < column2;
 		result |= (match & RIGHT) == RIGHT && column == column2;
@@ -84,9 +85,10 @@ public class BorderSpecification {
 	}
 
 	/**
-	 * Does this specification result in the need to paint an horizontal bar at row,column?
+	 * Does this specification result in the need to paint an horizontal bar at
+	 * row,column?
 	 */
-	/*default*/ char horizontals(int row, int column) {
+	/* default */ char horizontals(int row, int column) {
 		boolean result = (match & TOP) == TOP && row == row1;
 		result |= (match & INNER_HORIZONTAL) == INNER_HORIZONTAL && row > row1 && row < row2;
 		result |= (match & BOTTOM) == BOTTOM && row == row2;
@@ -98,23 +100,25 @@ public class BorderSpecification {
 
 	@Override
 	public String toString() {
-		return String.format("%s[(%d, %d)->(%d, %d), %s, %s]", getClass().getSimpleName(), row1, column1, row2, column2, style, matchConstants());
+		return String.format("%s[(%d, %d)->(%d, %d), %s, %s]", getClass().getSimpleName(), row1, column1, row2, column2,
+				style, matchConstants());
 	}
 
 	private String matchConstants() {
 		try {
-			for (String field : new String[] {"NONE", "INNER", "FULL", "OUTLINE"}) {
+			for (String field : new String[] { "NONE", "INNER", "FULL", "OUTLINE" }) {
 				Field reflectedField = ReflectionUtils.findField(getClass(), field);
 				if (reflectedField == null) {
 					continue;
 				}
 				int value = reflectedField.getInt(null);
-				if (match  == value) {
+				if (match == value) {
 					return field;
 				}
 			}
 			List<String> constants = new ArrayList<String>();
-			for (String field : new String[] {"TOP", "BOTTOM", "LEFT", "RIGHT", "INNER_HORIZONTAL", "INNER_VERTICAL"}) {
+			for (String field : new String[] { "TOP", "BOTTOM", "LEFT", "RIGHT", "INNER_HORIZONTAL",
+					"INNER_VERTICAL" }) {
 				Field reflectedField = ReflectionUtils.findField(getClass(), field);
 				if (reflectedField == null) {
 					continue;
@@ -130,4 +134,5 @@ public class BorderSpecification {
 			throw new RuntimeException(e);
 		}
 	}
+
 }

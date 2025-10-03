@@ -35,4 +35,5 @@ public final class CommandArgumentNode extends TerminalAstNode {
 	public @Nullable CommandNode getParentCommandNode() {
 		return parent;
 	}
+
 }

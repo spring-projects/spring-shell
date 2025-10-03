@@ -43,7 +43,9 @@ import org.springframework.util.StringUtils;
 public class ConfirmationInput extends AbstractTextComponent<Boolean, ConfirmationInputContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(ConfirmationInput.class);
+
 	private final boolean defaultValue;
+
 	private @Nullable ConfirmationInputContext currentContext;
 
 	public ConfirmationInput(Terminal terminal) {
@@ -148,7 +150,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 			context.setMessage(null);
 			return;
 		}
-		Boolean yesno =  parseBoolean(input);
+		Boolean yesno = parseBoolean(input);
 		if (yesno == null) {
 			String msg = String.format("Sorry, your input is invalid: '%s', try again", input);
 			context.setMessage(msg, MessageLevel.ERROR);
@@ -162,21 +164,18 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 
 		/**
 		 * Gets a default value.
-		 *
 		 * @return a default value
 		 */
 		@Nullable Boolean getDefaultValue();
 
 		/**
 		 * Sets a default value.
-		 *
 		 * @param defaultValue the default value
 		 */
 		void setDefaultValue(Boolean defaultValue);
 
 		/**
 		 * Gets an empty {@link ConfirmationInputContext}.
-		 *
 		 * @return empty path input context
 		 */
 		public static ConfirmationInputContext empty() {
@@ -185,16 +184,16 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 
 		/**
 		 * Gets an {@link ConfirmationInputContext}.
-		 *
 		 * @return path input context
 		 */
 		public static ConfirmationInputContext of(@Nullable Boolean defaultValue) {
 			return new DefaultConfirmationInputContext(defaultValue);
 		}
+
 	}
 
-	private static class DefaultConfirmationInputContext extends BaseTextComponentContext<Boolean, ConfirmationInputContext>
-			implements ConfirmationInputContext {
+	private static class DefaultConfirmationInputContext
+			extends BaseTextComponentContext<Boolean, ConfirmationInputContext> implements ConfirmationInputContext {
 
 		private @Nullable Boolean defaultValue;
 
@@ -220,6 +219,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 			model.put("model", attributes);
 			return model;
 		}
+
 	}
 
 	private class DefaultRenderer implements Function<ConfirmationInputContext, List<AttributedString>> {
@@ -228,5 +228,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 		public List<AttributedString> apply(ConfirmationInputContext context) {
 			return renderTemplateResource(context.toTemplateModel());
 		}
+
 	}
+
 }

@@ -44,8 +44,11 @@ import static org.awaitility.Awaitility.await;
 class PathInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
+
 	private AtomicReference<PathInputContext> result1;
+
 	private FileSystem fileSystem;
+
 	private Function<String, Path> pathProvider;
 
 	@BeforeEach
@@ -126,4 +129,5 @@ class PathInputTests extends AbstractShellTests {
 			assertThat(run1Context.getResultValue().toString()).contains("tmp");
 		});
 	}
+
 }

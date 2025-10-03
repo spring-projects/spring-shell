@@ -23,7 +23,9 @@ package org.springframework.shell.tui.style;
 public abstract class ThemeSettings {
 
 	private StyleSettings styleSettings;
+
 	private FigureSettings figureSettings;
+
 	private SpinnerSettings spinnerSettings;
 
 	/**
@@ -35,7 +37,6 @@ public abstract class ThemeSettings {
 
 	/**
 	 * Creates theme settings with styles.
-	 *
 	 * @param styleSettings style settings
 	 */
 	public ThemeSettings(StyleSettings styleSettings) {
@@ -44,7 +45,6 @@ public abstract class ThemeSettings {
 
 	/**
 	 * Creates theme settings with styles and figures.
-	 *
 	 * @param styleSettings style settings
 	 * @param figureSettings figure settings
 	 */
@@ -54,7 +54,6 @@ public abstract class ThemeSettings {
 
 	/**
 	 * Creates theme settings with styles, figures and spinners.
-	 *
 	 * @param styleSettings style settings
 	 * @param figureSettings figure settings
 	 * @param spinnerSettings spinner settings
@@ -67,7 +66,6 @@ public abstract class ThemeSettings {
 
 	/**
 	 * Gets a {@link StyleSettings}.
-	 *
 	 * @return style settings
 	 */
 	public StyleSettings styles() {
@@ -76,7 +74,6 @@ public abstract class ThemeSettings {
 
 	/**
 	 * Gets a {@link FigureSettings}.
-	 *
 	 * @return figure settings
 	 */
 	public FigureSettings figures() {
@@ -85,7 +82,6 @@ public abstract class ThemeSettings {
 
 	/**
 	 * Gets a {@link SpinnerSettings}.
-	 *
 	 * @return spinner settings
 	 */
 	public SpinnerSettings spinners() {
@@ -94,16 +90,15 @@ public abstract class ThemeSettings {
 
 	/**
 	 * Gets a default theme settings.
-	 *
 	 * @return default theme settings
 	 */
 	public static ThemeSettings defaults() {
-		return new DefaultThemeSettings(StyleSettings.defaults(), FigureSettings.defaults(), SpinnerSettings.defaults());
+		return new DefaultThemeSettings(StyleSettings.defaults(), FigureSettings.defaults(),
+				SpinnerSettings.defaults());
 	}
 
 	/**
 	 * Gets a dump theme settings.
-	 *
 	 * @return dump theme settings
 	 */
 	public static ThemeSettings dump() {
@@ -116,8 +111,11 @@ public abstract class ThemeSettings {
 			super();
 		}
 
-		DefaultThemeSettings(StyleSettings styleSettings, FigureSettings figureSettings, SpinnerSettings spinnerSettings) {
+		DefaultThemeSettings(StyleSettings styleSettings, FigureSettings figureSettings,
+				SpinnerSettings spinnerSettings) {
 			super(styleSettings, figureSettings, spinnerSettings);
 		}
+
 	}
+
 }

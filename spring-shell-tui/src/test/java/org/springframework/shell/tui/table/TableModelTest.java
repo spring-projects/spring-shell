@@ -29,10 +29,11 @@ class TableModelTest {
 
 	@Test
 	void testTranspose() {
-		TableModel model = new ArrayTableModel(new String[][] {{"a", "b", "c"}, {"d", "e", "f"}});
+		TableModel model = new ArrayTableModel(new String[][] { { "a", "b", "c" }, { "d", "e", "f" } });
 
 		assertThat(model.transpose().getColumnCount()).isEqualTo(2);
 		assertThat(model.transpose().getRowCount()).isEqualTo(3);
 		assertThat(model.transpose().getValue(2, 1)).isEqualTo("f");
 	}
+
 }

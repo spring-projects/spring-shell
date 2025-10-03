@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StringToStyleExpressionRendererTests {
 
 	private static final Locale LOCALE = Locale.getDefault();
+
 	private static StringToStyleExpressionRenderer renderer;
 
 	@BeforeAll
@@ -56,11 +57,9 @@ class StringToStyleExpressionRendererTests {
 	}
 
 	static Stream<Arguments> truncate() {
-		return Stream.of(
-			Arguments.of("0123456789", "truncate-width:6-prefix:2", "01.."),
-			Arguments.of("0123456789", "truncate-width:6-prefix:0", "0123.."),
-			Arguments.of("0123456789", "truncate-width:11-prefix:0", "0123456789")
-		);
+		return Stream.of(Arguments.of("0123456789", "truncate-width:6-prefix:2", "01.."),
+				Arguments.of("0123456789", "truncate-width:6-prefix:0", "0123.."),
+				Arguments.of("0123456789", "truncate-width:11-prefix:0", "0123456789"));
 	}
 
 	@ParameterizedTest
@@ -78,4 +77,5 @@ class StringToStyleExpressionRendererTests {
 	void handleMissingWidth() {
 		assertThat(renderer.toString("0123456789", "truncate-prefix:6", LOCALE)).isEqualTo("0123456789");
 	}
+
 }

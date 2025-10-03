@@ -60,7 +60,7 @@ class ScriptShellRunnerTests {
 		Path file = Files.createFile(path);
 		String pathStr = file.toAbsolutePath().toString();
 		ScriptShellRunner shellRunner = new ScriptShellRunner(null, shell);
-		assertThat(shellRunner.run(new String[]{"@" + pathStr})).isTrue();
+		assertThat(shellRunner.run(new String[] { "@" + pathStr })).isTrue();
 	}
 
 	private static ApplicationArguments ofApplicationArguments(String... args) {
@@ -74,4 +74,5 @@ class ScriptShellRunnerTests {
 		}
 		return a;
 	}
+
 }

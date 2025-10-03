@@ -27,14 +27,12 @@ public class ResultHandlerNotFoundException extends ResultHandlingException {
 
 	/**
 	 * Create a new handling executor not found exception.
-     *
 	 * @param resultType the result type requested to handle from
 	 */
 	public ResultHandlerNotFoundException(@Nullable TypeDescriptor resultType) {
 		super("No handler found capable of handling from type [" + resultType + "]");
-        this.resultType = resultType;
+		this.resultType = resultType;
 	}
-
 
 	/**
 	 * Return the source type that was requested to convert from.
@@ -42,4 +40,5 @@ public class ResultHandlerNotFoundException extends ResultHandlingException {
 	public @Nullable TypeDescriptor getResultType() {
 		return this.resultType;
 	}
+
 }

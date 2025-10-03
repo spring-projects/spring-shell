@@ -34,12 +34,16 @@ import org.springframework.shell.tui.style.ThemeResolver;
 public class ThemeCommands {
 
 	List<String> colorGround = Arrays.asList("fg", "bg");
+
 	List<String> colors = Arrays.asList("black", "red", "green", "yellow", "blue", "magenta", "cyan", "white");
+
 	List<String> named = Arrays.asList("default", "bold", "faint", "italic", "underline", "blink", "inverse",
 			"inverseneg", "conceal", "crossedout", "hidden");
+
 	List<String> rgbRedHue = Arrays.asList("#ff0000", "#ff4000", "#ff8000", "#ffbf00", "#ffff00", "#bfff00", "#80ff00",
 			"#40ff00", "#00ff00", "#00ff40", "#00ff80", "#00ffbf", "#00ffff", "#00bfff", "#0080ff", "#0040ff",
 			"#0000ff", "#4000ff", "#8000ff", "#bf00ff", "#ff00ff", "#ff00bf", "#ff0080", "#ff0040", "#ff0000");
+
 	List<String> themeTags = Arrays.asList(StyleSettings.TAG_TITLE, StyleSettings.TAG_VALUE, StyleSettings.TAG_LIST_KEY,
 			StyleSettings.TAG_LIST_VALUE, StyleSettings.TAG_LEVEL_INFO, StyleSettings.TAG_LEVEL_WARN,
 			StyleSettings.TAG_LEVEL_ERROR, StyleSettings.TAG_ITEM_ENABLED, StyleSettings.TAG_ITEM_DISABLED,
@@ -51,53 +55,48 @@ public class ThemeCommands {
 	@Command(command = "theme showcase values", description = "Showcase colors and styles", group = "Styles")
 	public AttributedString showcaseValues() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
-		combinations1().stream()
-				.forEach(spec -> {
-					AttributedStyle style = themeResolver.resolveStyle(spec);
-					AttributedString styledStr = new AttributedString(spec, style);
-					builder.append(String.format("%-25s", spec));
-					builder.append(" ");
-					builder.append(styledStr);
-					builder.append("\n");
-				});
+		combinations1().stream().forEach(spec -> {
+			AttributedStyle style = themeResolver.resolveStyle(spec);
+			AttributedString styledStr = new AttributedString(spec, style);
+			builder.append(String.format("%-25s", spec));
+			builder.append(" ");
+			builder.append(styledStr);
+			builder.append("\n");
+		});
 		return builder.toAttributedString();
 	}
 
 	@Command(command = "theme showcase rgb", description = "Showcase colors and styles with rgb", group = "Styles")
 	public AttributedString showcaseRgb() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
-		combinations2().stream()
-				.forEach(spec -> {
-					AttributedStyle style = themeResolver.resolveStyle(spec);
-					AttributedString styledStr = new AttributedString(spec, style);
-					builder.append(String.format("%-25s", spec));
-					builder.append(" ");
-					builder.append(styledStr);
-					builder.append("\n");
-				});
+		combinations2().stream().forEach(spec -> {
+			AttributedStyle style = themeResolver.resolveStyle(spec);
+			AttributedString styledStr = new AttributedString(spec, style);
+			builder.append(String.format("%-25s", spec));
+			builder.append(" ");
+			builder.append(styledStr);
+			builder.append("\n");
+		});
 		return builder.toAttributedString();
 	}
 
 	@Command(command = "theme style list", description = "List styles", group = "Styles")
 	public AttributedString styleList() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
-		themeTags.stream()
-				.forEach(tag -> {
-					String resolvedStyle = themeResolver.resolveStyleTag(tag);
-					AttributedStyle style = themeResolver.resolveStyle(resolvedStyle);
-					AttributedString styledStr = new AttributedString(tag, style);
-					builder.append(String.format("%-25s", tag));
-					builder.append(" ");
-					builder.append(styledStr);
-					builder.append("\n");
-				});
+		themeTags.stream().forEach(tag -> {
+			String resolvedStyle = themeResolver.resolveStyleTag(tag);
+			AttributedStyle style = themeResolver.resolveStyle(resolvedStyle);
+			AttributedString styledStr = new AttributedString(tag, style);
+			builder.append(String.format("%-25s", tag));
+			builder.append(" ");
+			builder.append(styledStr);
+			builder.append("\n");
+		});
 		return builder.toAttributedString();
 	}
 
 	@Command(command = "theme style resolve", description = "Resolve given style", group = "Styles")
-	public AttributedString styleResolve(
-		@Option(longNames = "--spec", defaultValue = "default") String spec
-	) {
+	public AttributedString styleResolve(@Option(longNames = "--spec", defaultValue = "default") String spec) {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		AttributedStyle style = themeResolver.resolveStyle(spec);
 		AttributedString styledStr = new AttributedString(spec, style);
@@ -108,8 +107,7 @@ public class ThemeCommands {
 
 	@Command(command = "theme expression resolve", description = "Resolve given style expression", group = "Styles")
 	public AttributedString expressionResolve(
-		@Option(longNames = "--expression", defaultValue = "hi @{bold from} expression") String expression
-	) {
+			@Option(longNames = "--expression", defaultValue = "hi @{bold from} expression") String expression) {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		AttributedString styledStr = themeResolver.evaluateExpression(expression);
 		builder.append(styledStr);
@@ -120,18 +118,17 @@ public class ThemeCommands {
 	@Command(command = "theme figure list", description = "List figures", group = "Styles")
 	public AttributedString figureList() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
-		Stream.of(FigureSettings.tags())
-				.forEach(tag -> {
-					builder.append(String.format("%-25s", tag));
-					builder.append(" ");
-					String resolveFigureTag = themeResolver.resolveFigureTag(tag);
-					combinations3().stream().forEach(spec -> {
-						AttributedStyle style = themeResolver.resolveStyle(spec);
-						builder.append(" ");
-						builder.append(new AttributedString(resolveFigureTag, style));
-					});
-					builder.append("\n");
-				});
+		Stream.of(FigureSettings.tags()).forEach(tag -> {
+			builder.append(String.format("%-25s", tag));
+			builder.append(" ");
+			String resolveFigureTag = themeResolver.resolveFigureTag(tag);
+			combinations3().stream().forEach(spec -> {
+				AttributedStyle style = themeResolver.resolveStyle(spec);
+				builder.append(" ");
+				builder.append(new AttributedString(resolveFigureTag, style));
+			});
+			builder.append("\n");
+		});
 		return builder.toAttributedString();
 	}
 
@@ -166,4 +163,5 @@ public class ThemeCommands {
 		});
 		return styles;
 	}
+
 }

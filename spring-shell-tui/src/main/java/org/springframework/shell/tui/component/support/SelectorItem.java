@@ -32,9 +32,13 @@ public interface SelectorItem<T> extends Nameable, Matchable, Enableable, Select
 	}
 
 	public static class SelectorItemWrapper<T> implements SelectorItem<T> {
+
 		private String name;
+
 		private boolean enabled;
+
 		private T item;
+
 		private boolean selected;
 
 		public SelectorItemWrapper(String name, T item) {
@@ -75,5 +79,7 @@ public interface SelectorItem<T> extends Nameable, Matchable, Enableable, Select
 		public boolean isSelected() {
 			return selected;
 		}
+
 	}
+
 }

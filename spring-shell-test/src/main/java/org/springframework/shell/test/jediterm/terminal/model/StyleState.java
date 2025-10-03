@@ -21,7 +21,9 @@ import org.springframework.shell.test.jediterm.terminal.TextStyle;
  * @author jediterm authors
  */
 public class StyleState {
+
 	private TextStyle myCurrentStyle = TextStyle.EMPTY;
+
 	private TextStyle myDefaultStyle = TextStyle.EMPTY;
 
 	private TextStyle myMergedStyle = null;
@@ -33,14 +35,13 @@ public class StyleState {
 		return TextStyle.getCanonicalStyle(getMergedStyle());
 	}
 
-
-	private static TextStyle merge( TextStyle style,  TextStyle defaultStyle) {
+	private static TextStyle merge(TextStyle style, TextStyle defaultStyle) {
 		TextStyle.Builder builder = style.toBuilder();
 		// if (style.getBackground() == null && defaultStyle.getBackground() != null) {
-		//   builder.setBackground(defaultStyle.getBackground());
+		// builder.setBackground(defaultStyle.getBackground());
 		// }
 		// if (style.getForeground() == null && defaultStyle.getForeground() != null) {
-		//   builder.setForeground(defaultStyle.getForeground());
+		// builder.setForeground(defaultStyle.getForeground());
 		// }
 		return builder.build();
 	}
@@ -60,19 +61,19 @@ public class StyleState {
 	}
 
 	// public TerminalColor getBackground() {
-	//   return getBackground(null);
+	// return getBackground(null);
 	// }
 
 	// public TerminalColor getBackground(TerminalColor color) {
-	//   return color != null ? color : myDefaultStyle.getBackground();
+	// return color != null ? color : myDefaultStyle.getBackground();
 	// }
 
 	// public TerminalColor getForeground() {
-	//   return getForeground(null);
+	// return getForeground(null);
 	// }
 
 	// public TerminalColor getForeground(TerminalColor color) {
-	//   return color != null ? color : myDefaultStyle.getForeground();
+	// return color != null ? color : myDefaultStyle.getForeground();
 	// }
 
 	public void setCurrent(TextStyle current) {
@@ -86,4 +87,5 @@ public class StyleState {
 		}
 		return myMergedStyle;
 	}
+
 }

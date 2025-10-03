@@ -40,7 +40,9 @@ import org.springframework.util.Assert;
 public class MethodCommandExceptionResolver implements CommandExceptionResolver {
 
 	private final static Logger log = LoggerFactory.getLogger(MethodCommandExceptionResolver.class);
+
 	private final Object bean;
+
 	private final @Nullable Terminal terminal;
 
 	public MethodCommandExceptionResolver(Object bean) {
@@ -101,7 +103,7 @@ public class MethodCommandExceptionResolver implements CommandExceptionResolver 
 				if (ecFromAnn != null) {
 					return CommandHandlingResult.of(result.message(), ecFromAnn);
 				}
-				return (CommandHandlingResult)invoke;
+				return (CommandHandlingResult) invoke;
 			}
 			else if (invoke instanceof String msg) {
 				if (ecFromAnn != null) {
@@ -130,4 +132,5 @@ public class MethodCommandExceptionResolver implements CommandExceptionResolver 
 		}
 
 	}
+
 }

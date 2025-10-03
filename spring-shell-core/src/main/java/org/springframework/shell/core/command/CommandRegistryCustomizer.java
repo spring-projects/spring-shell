@@ -26,8 +26,8 @@ public interface CommandRegistryCustomizer {
 
 	/**
 	 * Customize a command catalog.
-	 *
 	 * @param commandRegistry a command catalog
 	 */
 	void customize(CommandRegistry commandRegistry);
+
 }

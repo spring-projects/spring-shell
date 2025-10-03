@@ -56,4 +56,5 @@ class ArityCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession(command, interactive);
 		assertScreenContainsText(session, "Hello [1.0,2.0]");
 	}
+
 }

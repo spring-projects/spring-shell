@@ -27,12 +27,10 @@ import org.springframework.shell.tui.component.view.control.View;
 import org.springframework.shell.tui.component.view.event.EventLoop;
 
 /**
- * Lightweight type-safe header accessor avoiding object creation just to access
- * a header.
+ * Lightweight type-safe header accessor avoiding object creation just to access a header.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
- *
  * @see ShellMessageHeaderAccessor
  */
 public final class StaticShellMessageHeaderAccessor {
@@ -68,13 +66,12 @@ public final class StaticShellMessageHeaderAccessor {
 
 	/**
 	 * Get a {@link ContextView} header if present.
-	 *
 	 * @param message the message to get a header from.
 	 * @return the {@link ContextView} header if present.
 	 */
 	public static ContextView getReactorContext(Message<?> message) {
 		ContextView reactorContext = message.getHeaders()
-				.get(ShellMessageHeaderAccessor.REACTOR_CONTEXT, ContextView.class);
+			.get(ShellMessageHeaderAccessor.REACTOR_CONTEXT, ContextView.class);
 		if (reactorContext == null) {
 			reactorContext = Context.empty();
 		}
@@ -83,12 +80,11 @@ public final class StaticShellMessageHeaderAccessor {
 
 	/**
 	 * Get a {@link EventLoop.Type} header if present.
-	 *
 	 * @param message the message to get a header from.
 	 * @return the {@link EventLoop.Type} header if present.
 	 */
 	public static EventLoop.@Nullable Type getEventType(Message<?> message) {
-		return message.getHeaders()
-				.get(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.class);
+		return message.getHeaders().get(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.class);
 	}
+
 }

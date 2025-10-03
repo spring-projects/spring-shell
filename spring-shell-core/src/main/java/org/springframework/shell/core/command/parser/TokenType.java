@@ -17,9 +17,6 @@ package org.springframework.shell.core.command.parser;
 
 public enum TokenType {
 
-	ARGUMENT,
-	COMMAND,
-	OPTION,
-	DOUBLEDASH,
-	DIRECTIVE
+	ARGUMENT, COMMAND, OPTION, DOUBLEDASH, DIRECTIVE
+
 }

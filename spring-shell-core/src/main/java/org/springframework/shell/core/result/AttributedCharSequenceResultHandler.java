@@ -20,7 +20,8 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedCharSequence;
 
 /**
- * A {@link ResultHandler} that knows how to render JLine's {@link AttributedCharSequence}.
+ * A {@link ResultHandler} that knows how to render JLine's
+ * {@link AttributedCharSequence}.
  *
  * @author Eric Bottard
  */
@@ -35,4 +36,5 @@ public class AttributedCharSequenceResultHandler extends TerminalAwareResultHand
 		terminal.writer().println(result.toAnsi(terminal));
 		terminal.writer().flush();
 	}
+
 }

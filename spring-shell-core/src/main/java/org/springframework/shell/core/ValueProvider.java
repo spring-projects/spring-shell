@@ -21,8 +21,8 @@ import org.springframework.shell.core.completion.CompletionContext;
 import org.springframework.shell.core.completion.CompletionProposal;
 
 /**
- * Beans implementing this interface are queried during TAB completion to gather
- * possible values of a parameter.
+ * Beans implementing this interface are queried during TAB completion to gather possible
+ * values of a parameter.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
@@ -31,9 +31,9 @@ public interface ValueProvider {
 
 	/**
 	 * Complete completion proposals.
-	 *
 	 * @param completionContext the context
 	 * @return the completion proposals
 	 */
 	List<CompletionProposal> complete(CompletionContext completionContext);
+
 }

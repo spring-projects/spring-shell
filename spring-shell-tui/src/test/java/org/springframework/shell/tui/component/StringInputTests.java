@@ -38,7 +38,9 @@ import static org.awaitility.Awaitility.await;
 class StringInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
+
 	private AtomicReference<StringInputContext> result1;
+
 	private AtomicReference<StringInputContext> result2;
 
 	@BeforeEach
@@ -230,4 +232,5 @@ class StringInputTests extends AbstractShellTests {
 			assertThat(run2Context.getResultValue()).isEqualTo("component1ResultValue");
 		});
 	}
+
 }

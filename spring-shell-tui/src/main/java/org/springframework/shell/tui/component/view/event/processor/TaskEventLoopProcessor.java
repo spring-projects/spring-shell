@@ -35,10 +35,10 @@ public class TaskEventLoopProcessor implements EventLoopProcessor {
 			if (payload instanceof Runnable) {
 				return true;
 			}
-			else if(payload instanceof KeyBindingConsumerArgs) {
+			else if (payload instanceof KeyBindingConsumerArgs) {
 				return true;
 			}
-			else if(payload instanceof MouseBindingConsumerArgs) {
+			else if (payload instanceof MouseBindingConsumerArgs) {
 				return true;
 			}
 		}
@@ -51,10 +51,10 @@ public class TaskEventLoopProcessor implements EventLoopProcessor {
 		if (payload instanceof Runnable) {
 			return processRunnable(message);
 		}
-		else if(payload instanceof KeyBindingConsumerArgs) {
+		else if (payload instanceof KeyBindingConsumerArgs) {
 			return processKeyConsumer(message);
 		}
-		else if(payload instanceof MouseBindingConsumerArgs) {
+		else if (payload instanceof MouseBindingConsumerArgs) {
 			return processMouseConsumer(message);
 		}
 		// should not happen
@@ -88,4 +88,5 @@ public class TaskEventLoopProcessor implements EventLoopProcessor {
 			.then(Mono.just(MessageBuilder.withPayload(new Object()).build()))
 			.flux();
 	}
+
 }

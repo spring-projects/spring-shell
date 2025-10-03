@@ -40,4 +40,5 @@ class RectangleTests {
 		rect = new Rectangle(1, 1, 1, 1);
 		assertThat(rect.isEmpty()).isFalse();
 	}
+
 }

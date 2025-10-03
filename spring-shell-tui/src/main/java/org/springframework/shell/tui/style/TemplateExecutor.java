@@ -38,9 +38,13 @@ import org.stringtemplate.v4.misc.STMessage;
 public class TemplateExecutor {
 
 	private final static Logger log = LoggerFactory.getLogger(TemplateExecutor.class);
+
 	private final static STErrorListener ERROR_LISTENER = new LoggingSTErrorListener();
+
 	private final ThemeResolver themeResolver;
+
 	private StringToStyleExpressionRenderer renderer1;
+
 	private PartsTextRenderer renderer2;
 
 	public TemplateExecutor(ThemeResolver themeResolver) {
@@ -51,7 +55,6 @@ public class TemplateExecutor {
 
 	/**
 	 * Render template with a given attributes.
-	 *
 	 * @param template the ST template
 	 * @param attributes the ST template attributes
 	 * @return a rendered template
@@ -71,10 +74,9 @@ public class TemplateExecutor {
 	}
 
 	/**
-	 * Render template group with a given attributes expecting to find instance
-	 * named {@code main}.
-	 *
-	 * @param template   the ST template
+	 * Render template group with a given attributes expecting to find instance named
+	 * {@code main}.
+	 * @param template the ST template
 	 * @param attributes the ST template attributes
 	 * @return a rendered template
 	 */
@@ -124,5 +126,7 @@ public class TemplateExecutor {
 		public void internalError(STMessage msg) {
 			log.debug("internalError [{}]", msg);
 		}
+
 	}
+
 }

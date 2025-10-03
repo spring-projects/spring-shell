@@ -30,6 +30,7 @@ public class Completion extends AbstractCommand {
 	 * Marker interface used in auto-config.
 	 */
 	public interface Command {
+
 	}
 
 	private String rootCommand;
@@ -38,15 +39,18 @@ public class Completion extends AbstractCommand {
 		this.rootCommand = rootCommand;
 	}
 
-	@org.springframework.shell.core.command.annotation.Command(command = "completion bash", description = "Generate bash completion script")
+	@org.springframework.shell.core.command.annotation.Command(command = "completion bash",
+			description = "Generate bash completion script")
 	public String bash() {
 		BashCompletions bashCompletions = new BashCompletions(getResourceLoader(), getCommandRegistry());
 		return bashCompletions.generate(rootCommand);
 	}
 
-	@org.springframework.shell.core.command.annotation.Command(command = "completion zsh", description = "Generate zsh completion script")
+	@org.springframework.shell.core.command.annotation.Command(command = "completion zsh",
+			description = "Generate zsh completion script")
 	public String zsh() {
 		ZshCompletions zshCompletions = new ZshCompletions(getResourceLoader(), getCommandRegistry());
 		return zshCompletions.generate(rootCommand);
 	}
+
 }

@@ -32,16 +32,9 @@ public class CompletionSnippets {
 
 	// tag::builder-1[]
 	void dump1() {
-		CommandRegistration.builder()
-			.withOption()
-				.longNames("arg1")
-				.completion(ctx -> {
-					return Arrays.asList("val1", "val2").stream()
-						.map(CompletionProposal::new)
-						.collect(Collectors.toList());
-				})
-				.and()
-			.build();
+		CommandRegistration.builder().withOption().longNames("arg1").completion(ctx -> {
+			return Arrays.asList("val1", "val2").stream().map(CompletionProposal::new).collect(Collectors.toList());
+		}).and().build();
 	}
 	// end::builder-1[]
 
@@ -50,10 +43,9 @@ public class CompletionSnippets {
 
 		@Override
 		public List<CompletionProposal> apply(CompletionContext t) {
-			return Arrays.asList("val1", "val2").stream()
-				.map(CompletionProposal::new)
-				.collect(Collectors.toList());
+			return Arrays.asList("val1", "val2").stream().map(CompletionProposal::new).collect(Collectors.toList());
 		}
+
 	}
 	// end::resolver-1[]
 
@@ -62,21 +54,21 @@ public class CompletionSnippets {
 
 		@Override
 		public List<CompletionProposal> apply(CompletionContext completionContext) {
-			return Arrays.asList("val1", "val2").stream()
-				.map(CompletionProposal::new)
-				.collect(Collectors.toList());
+			return Arrays.asList("val1", "val2").stream().map(CompletionProposal::new).collect(Collectors.toList());
 		}
+
 	}
 	// end::provider-1[]
 
 	static class Dump1 {
+
 		// tag::anno-method[]
 		@Command(command = "complete", description = "complete")
-		public String complete(
-			@Option @OptionValues(provider = "myCompletionProvider") String arg1)
-		{
+		public String complete(@Option @OptionValues(provider = "myCompletionProvider") String arg1) {
 			return "You said " + arg1;
 		}
 		// end::anno-method[]
+
 	}
+
 }

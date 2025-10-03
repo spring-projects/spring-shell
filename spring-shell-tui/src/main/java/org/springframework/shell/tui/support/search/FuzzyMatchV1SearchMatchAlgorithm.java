@@ -23,7 +23,8 @@ package org.springframework.shell.tui.support.search;
 class FuzzyMatchV1SearchMatchAlgorithm extends AbstractSearchMatchAlgorithm {
 
 	@Override
-	public SearchMatchResult match(boolean caseSensitive, boolean normalize, boolean forward, String text, String pattern) {
+	public SearchMatchResult match(boolean caseSensitive, boolean normalize, boolean forward, String text,
+			String pattern) {
 		int pidx = 0;
 		int sidx = -1;
 		int eidx = -1;
@@ -88,4 +89,5 @@ class FuzzyMatchV1SearchMatchAlgorithm extends AbstractSearchMatchAlgorithm {
 		}
 		return SearchMatchResult.of(-1, -1, 0, new int[0], this);
 	}
+
 }

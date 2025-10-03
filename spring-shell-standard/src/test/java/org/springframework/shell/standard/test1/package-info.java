@@ -15,4 +15,3 @@
  */
 
 package org.springframework.shell.standard.test1;
-

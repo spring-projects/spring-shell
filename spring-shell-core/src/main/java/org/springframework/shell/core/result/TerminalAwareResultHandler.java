@@ -38,4 +38,5 @@ public abstract class TerminalAwareResultHandler<T> implements ResultHandler<T> 
 	}
 
 	protected abstract void doHandleResult(T result);
+
 }

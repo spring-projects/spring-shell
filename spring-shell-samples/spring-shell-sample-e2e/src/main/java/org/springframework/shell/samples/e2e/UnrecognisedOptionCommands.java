@@ -26,34 +26,29 @@ public class UnrecognisedOptionCommands {
 
 		@Bean
 		public CommandRegistration testUnrecognisedOptionNoOtherRegistration() {
-			return getBuilder()
-				.command(REG, "unrecognised-option-noother")
-				.group(GROUP)
-				.withTarget()
-					.function(ctx -> {
-						return "Hi";
-					})
-					.and()
-				.build();
+			return getBuilder().command(REG, "unrecognised-option-noother").group(GROUP).withTarget().function(ctx -> {
+				return "Hi";
+			}).and().build();
 		}
 
 		@Bean
 		public CommandRegistration testUnrecognisedOptionWithRequiredRegistration() {
-			return getBuilder()
-				.command(REG, "unrecognised-option-withrequired")
+			return getBuilder().command(REG, "unrecognised-option-withrequired")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.description("Desc arg1")
-					.required()
-					.and()
+				.longNames("arg1")
+				.description("Desc arg1")
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

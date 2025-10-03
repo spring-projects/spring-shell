@@ -25,8 +25,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.shell.core.command.annotation.support.EnableCommandRegistrar;
 
 /**
- * Enable support for {@link Command @Command} annotated classes.
- * {@code @Command} classes can be registered directly on this annotation.
+ * Enable support for {@link Command @Command} annotated classes. {@code @Command} classes
+ * can be registered directly on this annotation.
  *
  * @author Janne Valkealahti
  */
@@ -38,8 +38,8 @@ public @interface EnableCommand {
 
 	/**
 	 * Defines candicate classes for shell commands.
-	 *
 	 * @return candidate classes for shell commands
 	 */
 	Class<?>[] value() default {};
+
 }

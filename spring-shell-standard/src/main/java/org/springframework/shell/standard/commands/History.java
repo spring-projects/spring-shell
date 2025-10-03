@@ -26,45 +26,56 @@ import java.util.List;
 import org.springframework.shell.core.command.annotation.Option;
 
 /**
- * A command that displays all previously run commands, optionally dumping to a file readable by {@link Script}.
+ * A command that displays all previously run commands, optionally dumping to a file
+ * readable by {@link Script}.
  *
  * @author Eric Bottard
  */
 public class History {
 
-    private final org.jline.reader.History jLineHistory;
+	private final org.jline.reader.History jLineHistory;
 
-    public History(org.jline.reader.History jLineHistory) {
-        this.jLineHistory = jLineHistory;
-    }
+	public History(org.jline.reader.History jLineHistory) {
+		this.jLineHistory = jLineHistory;
+	}
 
-    /**
-     * Marker interface for beans providing {@literal history} functionality to the shell.
-     * <p>
-     * <p>To override the history command, simply register your own bean implementing that interface
-     * and the standard implementation will back off.</p>
-     * <p>
-     * <p>To disable the {@literal history} command entirely, set the {@literal spring.shell.command.history.enabled=false}
-     * property in the environment.</p>
-     *
-     * @author Eric Bottard
-     */
-    public interface Command {
-    }
+	/**
+	 * Marker interface for beans providing {@literal history} functionality to the shell.
+	 * <p>
+	 * <p>
+	 * To override the history command, simply register your own bean implementing that
+	 * interface and the standard implementation will back off.
+	 * </p>
+	 * <p>
+	 * <p>
+	 * To disable the {@literal history} command entirely, set the
+	 * {@literal spring.shell.command.history.enabled=false} property in the environment.
+	 * </p>
+	 *
+	 * @author Eric Bottard
+	 */
+	public interface Command {
 
-    @org.springframework.shell.core.command.annotation.Command(description = "Display or save the history of previously run commands")
-    public List<String> history(@Option(description = "A file to save history to.", defaultValue = Option.NULL) File file) throws IOException {
-        if (file == null) {
-            List<String> result = new ArrayList<>(jLineHistory.size());
-            jLineHistory.forEach(e -> result.add(e.line()));
-            return result;
-        } else {
-            try (FileWriter w = new FileWriter(file)) {
-                for (org.jline.reader.History.Entry entry : jLineHistory) {
-                    w.append(entry.line()).append(System.lineSeparator());
-                }
-            }
-            return Collections.singletonList(String.format("Wrote %d entries to %s", jLineHistory.size(), file));
-        }
-    }
+	}
+
+	@org.springframework.shell.core.command.annotation.Command(
+			description = "Display or save the history of previously run commands")
+	public List<String> history(
+			@Option(description = "A file to save history to.", defaultValue = Option.NULL) File file)
+			throws IOException {
+		if (file == null) {
+			List<String> result = new ArrayList<>(jLineHistory.size());
+			jLineHistory.forEach(e -> result.add(e.line()));
+			return result;
+		}
+		else {
+			try (FileWriter w = new FileWriter(file)) {
+				for (org.jline.reader.History.Entry entry : jLineHistory) {
+					w.append(entry.line()).append(System.lineSeparator());
+				}
+			}
+			return Collections.singletonList(String.format("Wrote %d entries to %s", jLineHistory.size(), file));
+		}
+	}
+
 }

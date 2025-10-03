@@ -38,17 +38,18 @@ import org.springframework.util.StringUtils;
 public class TerminalUIBuilder {
 
 	private final Terminal terminal;
+
 	private final Set<TerminalUICustomizer> customizers;
+
 	private final @Nullable ThemeResolver themeResolver;
+
 	private final @Nullable String themeName;
 
 	/**
 	 * Create a new {@link TerminalUIBuilder} instance.
-	 *
 	 * @param terminal the terminal
-	 * @param customizers any {@link TerminalUICustomizer TerminalUICustomizers}
-	 *                    that should be applied when the {@link TerminalUI} is
-	 *                    built
+	 * @param customizers any {@link TerminalUICustomizer TerminalUICustomizers} that
+	 * should be applied when the {@link TerminalUI} is built
 	 */
 	public TerminalUIBuilder(Terminal terminal, TerminalUICustomizer... customizers) {
 		this.terminal = terminal;
@@ -59,16 +60,14 @@ public class TerminalUIBuilder {
 
 	/**
 	 * Create a new {@link TerminalUIBuilder} instance.
-	 *
 	 * @param terminal the terminal
-	 * @param customizers any {@link TerminalUICustomizer TerminalUICustomizers}
-	 *                    that should be applied when the {@link TerminalUI} is
-	 *                    built
+	 * @param customizers any {@link TerminalUICustomizer TerminalUICustomizers} that
+	 * should be applied when the {@link TerminalUI} is built
 	 * @param themeResolver the theme resolver
 	 * @param themeName the theme name
 	 */
-	public TerminalUIBuilder(Terminal terminal, Set<TerminalUICustomizer> customizers, @Nullable ThemeResolver themeResolver,
-			@Nullable String themeName) {
+	public TerminalUIBuilder(Terminal terminal, Set<TerminalUICustomizer> customizers,
+			@Nullable ThemeResolver themeResolver, @Nullable String themeName) {
 		this.terminal = terminal;
 		this.customizers = customizers;
 		this.themeResolver = themeResolver;
@@ -77,7 +76,6 @@ public class TerminalUIBuilder {
 
 	/**
 	 * Sets a {@link ThemeResolver} for {@link TerminalUI} to build.
-	 *
 	 * @param themeResolver the theme resolver
 	 * @return a new builder instance
 	 */
@@ -87,7 +85,6 @@ public class TerminalUIBuilder {
 
 	/**
 	 * Sets a {@code theme name} for {@link TerminalUI} to build.
-	 *
 	 * @param themeName the theme name
 	 * @return a new builder instance
 	 */
@@ -96,11 +93,10 @@ public class TerminalUIBuilder {
 	}
 
 	/**
-	 * Set the {@link TerminalUICustomizer TerminalUICustomizer} that should be
-	 * applied to the {@link TerminalUI}. Customizers are applied in the order that they
-	 * were added after builder configuration has been applied. Setting this value will
-	 * replace any previously configured customizers.
-	 *
+	 * Set the {@link TerminalUICustomizer TerminalUICustomizer} that should be applied to
+	 * the {@link TerminalUI}. Customizers are applied in the order that they were added
+	 * after builder configuration has been applied. Setting this value will replace any
+	 * previously configured customizers.
 	 * @param customizers the customizers to set
 	 * @return a new builder instance
 	 */
@@ -111,7 +107,6 @@ public class TerminalUIBuilder {
 
 	/**
 	 * Build a new {@link TerminalUI} instance and configure it using this builder.
-	 *
 	 * @return a configured {@link TerminalUI} instance.
 	 */
 	public TerminalUI build() {
@@ -120,7 +115,6 @@ public class TerminalUIBuilder {
 
 	/**
 	 * Configure the provided {@link TerminalUI} instance using this builder.
-	 *
 	 * @param <T> the type of terminal ui
 	 * @param terminalUI the {@link TerminalUI} to configure
 	 * @return the terminal ui instance

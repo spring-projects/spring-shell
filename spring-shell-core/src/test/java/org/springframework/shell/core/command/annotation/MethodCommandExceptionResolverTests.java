@@ -46,6 +46,7 @@ class MethodCommandExceptionResolverTests {
 			called = e;
 			return CommandHandlingResult.of("Hi, handled exception\n", 42);
 		}
+
 	}
 
 	@Test
@@ -67,6 +68,7 @@ class MethodCommandExceptionResolverTests {
 			called = true;
 			return CommandHandlingResult.of("Hi, handled exception\n", 42);
 		}
+
 	}
 
 	@Test
@@ -88,6 +90,7 @@ class MethodCommandExceptionResolverTests {
 			called = e;
 			return CommandHandlingResult.of("Hi, handled exception\n", 42);
 		}
+
 	}
 
 	@Test
@@ -103,6 +106,7 @@ class MethodCommandExceptionResolverTests {
 		CommandHandlingResult errorHandler() {
 			return RESULT;
 		}
+
 	}
 
 	@Test
@@ -121,10 +125,13 @@ class MethodCommandExceptionResolverTests {
 		CommandHandlingResult errorHandler(RuntimeException e1, IOException e2) {
 			return RESULT;
 		}
+
 	}
 
 	private static CommandHandlingResult RESULT = CommandHandlingResult.of("Hi, handled exception\n", 42);
 
 	private static class CustomException1 extends RuntimeException {
+
 	}
+
 }

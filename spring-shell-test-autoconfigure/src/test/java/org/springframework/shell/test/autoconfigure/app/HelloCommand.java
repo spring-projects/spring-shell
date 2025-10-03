@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.test.autoconfigure.app;
 
-
 import org.springframework.shell.core.command.annotation.Command;
 
 @Command
@@ -25,4 +24,5 @@ public class HelloCommand {
 	public String hello() {
 		return "hello";
 	}
+
 }

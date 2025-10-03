@@ -27,4 +27,5 @@ public interface ViewEvent {
 	default ViewEventArgs args() {
 		return ViewEventArgs.EMPTY;
 	}
+
 }

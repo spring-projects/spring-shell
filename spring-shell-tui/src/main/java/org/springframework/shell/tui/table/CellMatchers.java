@@ -60,8 +60,9 @@ public class CellMatchers {
 
 	/**
 	 * @param theRow the row to select
-	 * @param col    the column to select
-	 * @return a matcher that applies to exactly one cell of the table, identified by its row and colum.
+	 * @param col the column to select
+	 * @return a matcher that applies to exactly one cell of the table, identified by its
+	 * row and colum.
 	 */
 	public static CellMatcher at(final int theRow, final int col) {
 		return new CellMatcher() {
@@ -90,4 +91,5 @@ public class CellMatchers {
 			}
 		};
 	}
+
 }

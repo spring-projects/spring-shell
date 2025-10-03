@@ -28,14 +28,15 @@ public enum InteractionMode {
 	ALL,
 
 	/**
-	 * Non-interactive mode which is expected to exit and doesn't have any kind of
-	 * running mode to keep shell alive.
+	 * Non-interactive mode which is expected to exit and doesn't have any kind of running
+	 * mode to keep shell alive.
 	 */
 	NONINTERACTIVE,
 
 	/**
-	 * Interactive mode which is expected to not exit and do have a running mode to
-	 * keep shell alive.
+	 * Interactive mode which is expected to not exit and do have a running mode to keep
+	 * shell alive.
 	 */
 	INTERACTIVE
+
 }

@@ -66,12 +66,10 @@ import static org.jline.keymap.KeyMap.ctrl;
 import static org.jline.keymap.KeyMap.key;
 
 /**
- * Component resolving {@link Path} based on base path and optional search term.
- * User is expected to type a base path and then delimited by space and a search
- * term.
+ * Component resolving {@link Path} based on base path and optional search term. User is
+ * expected to type a base path and then delimited by space and a search term.
  *
- * Based on algorithms i.e. from https://github.com/junegunn/fzf and other
- * sources.
+ * Based on algorithms i.e. from https://github.com/junegunn/fzf and other sources.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -79,10 +77,15 @@ import static org.jline.keymap.KeyMap.key;
 public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(PathSearch.class);
+
 	private final static String DEFAULT_TEMPLATE_LOCATION = "classpath:org/springframework/shell/component/path-search-default.stg";
+
 	private final PathSearchConfig config;
+
 	private @Nullable PathSearchContext currentContext;
+
 	private Function<String, Path> pathProvider = (path) -> Paths.get(path);
+
 	private final SelectorList<PathViewItem> selectorList;
 
 	public PathSearch(Terminal terminal) {
@@ -184,7 +187,6 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
 	/**
 	 * Sets a path provider.
-	 *
 	 * @param pathProvider the path provider
 	 */
 	public void setPathProvider(Function<String, Path> pathProvider) {
@@ -193,7 +195,6 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
 	/**
 	 * Resolves a {@link Path} from a given raw {@code path}.
-	 *
 	 * @param path the raw path
 	 * @return a resolved path
 	 */
@@ -208,11 +209,9 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	}
 
 	private void selectorListUpdated(PathSearchContext context) {
-		List<PathViewItem> pathViews = selectorList.getProjection().stream()
-			.map(i -> {
-				return new PathViewItem(i.getItem().getPath(), i.getItem().getPartsText(), i.isSelected());
-			})
-			.collect(Collectors.toList());
+		List<PathViewItem> pathViews = selectorList.getProjection().stream().map(i -> {
+			return new PathViewItem(i.getItem().getPath(), i.getItem().getPartsText(), i.isSelected());
+		}).collect(Collectors.toList());
 		context.setPathViewItems(pathViews);
 	}
 
@@ -223,26 +222,23 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			return;
 		}
 		PathScannerResult result = this.config.pathScanner.get().apply(path, context);
-		List<PathViewItem> items = result.getScoredPaths().stream()
-			.filter(scoredPath -> {
-				if (result.hasFilter()) {
-					return scoredPath.result.getScore() > 0;
-				}
-				else {
-					return true;
-				}
-			})
-			.map(scoredPath -> {
-					int[] positions = scoredPath.getResult().getPositions();
-					String text = scoredPath.getPath().toString();
-					if (!StringUtils.hasText(text)) {
-						text = ".";
-					}
-					PartsText partsText = PathSearchContext.ofPositions(text, positions);
-					PathViewItem item = new PathViewItem(scoredPath.getPath(), partsText, false);
-					return item;
-				})
-			.collect(Collectors.toList());
+		List<PathViewItem> items = result.getScoredPaths().stream().filter(scoredPath -> {
+			if (result.hasFilter()) {
+				return scoredPath.result.getScore() > 0;
+			}
+			else {
+				return true;
+			}
+		}).map(scoredPath -> {
+			int[] positions = scoredPath.getResult().getPositions();
+			String text = scoredPath.getPath().toString();
+			if (!StringUtils.hasText(text)) {
+				text = ".";
+			}
+			PartsText partsText = PathSearchContext.ofPositions(text, positions);
+			PathViewItem item = new PathViewItem(scoredPath.getPath(), partsText, false);
+			return item;
+		}).collect(Collectors.toList());
 
 		long total = result.getDirCount() + result.getFileCount();
 		if (total > -1) {
@@ -260,11 +256,17 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	public static class PathSearchConfig {
 
 		private int maxPathsShow = 5;
+
 		private int maxPathsSearch = 20;
+
 		private boolean searchForward = true;
+
 		private boolean searchCaseSensitive = false;
+
 		private boolean searchNormalize = false;
-		private Supplier<BiFunction<String, PathSearchContext, PathScannerResult>> pathScanner = () -> DefaultPathScanner.of();
+
+		private Supplier<BiFunction<String, PathSearchContext, PathScannerResult>> pathScanner = () -> DefaultPathScanner
+			.of();
 
 		public int getMaxPathsShow() {
 			return this.maxPathsShow;
@@ -312,6 +314,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		public void setSearchNormalize(boolean searchNormalize) {
 			this.searchNormalize = searchNormalize;
 		}
+
 	}
 
 	/**
@@ -320,8 +323,11 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	public static class PathScannerResult {
 
 		private final List<ScoredPath> scoredPaths;
+
 		private long dirCount = -1;
+
 		private long fileCount = -1;
+
 		private boolean hasFilter = false;
 
 		PathScannerResult(List<ScoredPath> scoredPaths, long dirCount, long fileCount, boolean hasFilter) {
@@ -336,7 +342,8 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			return new PathScannerResult(scoredPaths, -1, -1, hasFilter);
 		}
 
-		public static PathScannerResult of(List<ScoredPath> scoredPaths, long dirCount, long fileCount, boolean hasFilter) {
+		public static PathScannerResult of(List<ScoredPath> scoredPaths, long dirCount, long fileCount,
+				boolean hasFilter) {
 			return new PathScannerResult(scoredPaths, dirCount, fileCount, hasFilter);
 		}
 
@@ -355,6 +362,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		public boolean hasFilter() {
 			return hasFilter;
 		}
+
 	}
 
 	/**
@@ -364,35 +372,30 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
 		/**
 		 * Gets a path view items.
-		 *
 		 * @return path view items
 		 */
 		@Nullable List<PathViewItem> getPathViewItems();
 
 		/**
 		 * Sets a path view items.
-		 *
 		 * @param items the path view items
 		 */
 		void setPathViewItems(List<PathViewItem> items);
 
 		/**
 		 * Get path search config.
-		 *
 		 * @return a path search config
 		 */
 		PathSearchConfig getPathSearchConfig();
 
 		/**
 		 * Sets a path search config.
-		 *
 		 * @param config a path search config
 		 */
 		void setPathSearchConfig(PathSearchConfig config);
 
 		/**
 		 * Gets an empty {@link PathSearchContext}.
-		 *
 		 * @return empty path search context
 		 */
 		public static PathSearchContext empty() {
@@ -406,7 +409,9 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		public static class PathViewItem implements Nameable {
 
 			private Path path;
+
 			private PartsText partsText;
+
 			private boolean selected;
 
 			public PathViewItem(Path path, PartsText partsText, boolean selected) {
@@ -431,12 +436,11 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			public PartsText getPartsText() {
 				return partsText;
 			}
-		}
 
+		}
 
 		/**
 		 * Split given text into {@link PartText}'s by given positions.
-		 *
 		 * @param text the text to split
 		 * @param positions the positions array, expected to be ordered and no duplicates
 		 * @return parts text
@@ -498,12 +502,14 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			}
 			return parts;
 		}
+
 	}
 
 	private static class DefaultPathSearchContext extends BaseTextComponentContext<Path, PathSearchContext>
 			implements PathSearchContext {
 
 		private @Nullable List<PathViewItem> pathViewItems;
+
 		private PathSearchConfig pathSearchConfig = new PathSearchConfig();
 
 		@Override
@@ -534,6 +540,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			model.put("model", attributes);
 			return model;
 		}
+
 	}
 
 	private class DefaultRenderer implements Function<PathSearchContext, List<AttributedString>> {
@@ -542,6 +549,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		public List<AttributedString> apply(PathSearchContext context) {
 			return renderTemplateResource(context.toTemplateModel());
 		}
+
 	}
 
 	/**
@@ -550,6 +558,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	public static class ScoredPath implements Comparable<ScoredPath> {
 
 		private final Path path;
+
 		private final SearchMatchResult result;
 
 		ScoredPath(Path path, SearchMatchResult result) {
@@ -578,6 +587,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			}
 			return scoreCompare;
 		}
+
 	}
 
 	private static class DefaultPathScanner implements BiFunction<String, PathSearchContext, PathScannerResult> {
@@ -594,7 +604,8 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			String match = split.length == 2 ? split[1] : null;
 
 			// walk files to find candidates
-			PathSearchPathVisitor visitor = new PathSearchPathVisitor(context.getPathSearchConfig().getMaxPathsSearch());
+			PathSearchPathVisitor visitor = new PathSearchPathVisitor(
+					context.getPathSearchConfig().getMaxPathsSearch());
 			try {
 				String p = split[0];
 				if (".".equals(p)) {
@@ -605,28 +616,28 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 				Files.walkFileTree(path, visitor);
 				log.debug("walked files {} dirs {}", visitor.getPathCounters().getFileCounter().get(),
 						visitor.getPathCounters().getDirectoryCounter().get());
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				log.debug("PathSearchPathVisitor caused exception", e);
 			}
 
 			// match and score candidates
- 			Set<ScoredPath> treeSet = new HashSet<ScoredPath>();
-			Stream.concat(visitor.getFileList().stream(), visitor.getDirList().stream())
-				.forEach(p -> {
-					SearchMatchResult result;
-					if (StringUtils.hasText(match)) {
-						SearchMatch searchMatch = SearchMatch.builder()
-							.caseSensitive(context.getPathSearchConfig().isSearchCaseSensitive())
-							.normalize(context.getPathSearchConfig().isSearchNormalize())
-							.forward(context.getPathSearchConfig().searchForward)
-							.build();
-						result = searchMatch.match(p.toString(), match);
-					}
-					else {
-						result = SearchMatchResult.ofMinus();
-					}
-					treeSet.add(ScoredPath.of(p, result));
-				});
+			Set<ScoredPath> treeSet = new HashSet<ScoredPath>();
+			Stream.concat(visitor.getFileList().stream(), visitor.getDirList().stream()).forEach(p -> {
+				SearchMatchResult result;
+				if (StringUtils.hasText(match)) {
+					SearchMatch searchMatch = SearchMatch.builder()
+						.caseSensitive(context.getPathSearchConfig().isSearchCaseSensitive())
+						.normalize(context.getPathSearchConfig().isSearchNormalize())
+						.forward(context.getPathSearchConfig().searchForward)
+						.build();
+					result = searchMatch.match(p.toString(), match);
+				}
+				else {
+					result = SearchMatchResult.ofMinus();
+				}
+				treeSet.add(ScoredPath.of(p, result));
+			});
 
 			// sort and limit
 			return treeSet.stream()
@@ -636,15 +647,17 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 						list -> PathScannerResult.of(list, visitor.getPathCounters().getDirectoryCounter().get(),
 								visitor.getPathCounters().getFileCounter().get(), StringUtils.hasText(match))));
 		}
+
 	}
 
 	/**
-	 * Extension to AccumulatorPathVisitor which allows to break out from scanning
-	 * when enough results are found.
+	 * Extension to AccumulatorPathVisitor which allows to break out from scanning when
+	 * enough results are found.
 	 */
 	private static class PathSearchPathVisitor extends AccumulatorPathVisitor {
 
 		private final int limitFiles;
+
 		private final static IOFileFilter DNFILTER = new NotFileFilter(new WildcardFileFilter(".*"));
 
 		PathSearchPathVisitor(int limitFiles) {
@@ -660,5 +673,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			}
 			return result;
 		}
+
 	}
+
 }

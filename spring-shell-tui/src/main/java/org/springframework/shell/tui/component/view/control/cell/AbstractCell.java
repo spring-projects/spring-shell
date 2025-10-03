@@ -26,8 +26,11 @@ import org.springframework.shell.tui.component.view.screen.Screen;
 public abstract class AbstractCell<T> extends AbstractControl implements Cell<T> {
 
 	private T item;
+
 	private int style = -1;
+
 	private int foregroundColor = -1;
+
 	private int backgroundColor = -1;
 
 	public AbstractCell(T item) {

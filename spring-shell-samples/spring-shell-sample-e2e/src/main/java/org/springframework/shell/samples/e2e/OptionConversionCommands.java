@@ -33,36 +33,25 @@ public class OptionConversionCommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "option-conversion-integer")
-		public String optionConversionIntegerAnnotation(
-			@Option(longNames = "arg1")
-			Integer arg1
-		) {
+		public String optionConversionIntegerAnnotation(@Option(longNames = "arg1") Integer arg1) {
 			return "Hello " + arg1;
 		}
 
 		@Command(command = "option-conversion-custom")
-		public String optionConversionCustomAnnotation(
-			@Option(longNames = "arg1")
-			MyPojo arg1
-		) {
+		public String optionConversionCustomAnnotation(@Option(longNames = "arg1") MyPojo arg1) {
 			return "Hello " + arg1;
 		}
 
 		@Command(command = "option-conversion-customset")
-		public String optionConversionCustomSetAnnotation(
-			@Option(longNames = "arg1")
-			Set<MyPojo> arg1
-		) {
+		public String optionConversionCustomSetAnnotation(@Option(longNames = "arg1") Set<MyPojo> arg1) {
 			return "Hello " + arg1;
 		}
 
 		@Command(command = "option-conversion-customarray")
-		public String optionConversionCustomArrayAnnotation(
-			@Option(longNames = "arg1")
-			MyPojo[] arg1
-		) {
+		public String optionConversionCustomArrayAnnotation(@Option(longNames = "arg1") MyPojo[] arg1) {
 			return "Hello " + Arrays.asList(arg1);
 		}
+
 	}
 
 	@Component
@@ -70,37 +59,35 @@ public class OptionConversionCommands {
 
 		@Bean
 		public CommandRegistration optionConversionIntegerRegistration() {
-			return getBuilder()
-				.command(REG, "option-conversion-integer")
+			return getBuilder().command(REG, "option-conversion-integer")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(Integer.class)
-					.and()
+				.longNames("arg1")
+				.type(Integer.class)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						Integer arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					Integer arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionConversionCustomRegistration() {
-			return getBuilder()
-				.command(REG, "option-conversion-custom")
+			return getBuilder().command(REG, "option-conversion-custom")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(MyPojo.class)
-					.and()
+				.longNames("arg1")
+				.type(MyPojo.class)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						MyPojo arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					MyPojo arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
@@ -111,35 +98,35 @@ public class OptionConversionCommands {
 				.command(REG, "option-conversion-customset")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(rtype)
-					.and()
+				.longNames("arg1")
+				.type(rtype)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						Set<MyPojo> arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					Set<MyPojo> arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionConversionCustomArrayRegistration() {
-			return getBuilder()
-				.command(REG, "option-conversion-customarray")
+			return getBuilder().command(REG, "option-conversion-customarray")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(MyPojo[].class)
-					.and()
+				.longNames("arg1")
+				.type(MyPojo[].class)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						MyPojo[] arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + Arrays.asList(arg1);
-					})
-					.and()
+				.function(ctx -> {
+					MyPojo[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + Arrays.asList(arg1);
+				})
+				.and()
 				.build();
 		}
+
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -149,9 +136,11 @@ public class OptionConversionCommands {
 		public Converter<String, MyPojo> stringToMyPojoConverter() {
 			return new StringToMyPojoConverter();
 		}
+
 	}
 
 	public static class MyPojo {
+
 		private String arg;
 
 		public MyPojo(String arg) {
@@ -170,6 +159,7 @@ public class OptionConversionCommands {
 		public String toString() {
 			return "MyPojo [arg=" + arg + "]";
 		}
+
 	}
 
 	static class StringToMyPojoConverter implements Converter<String, MyPojo> {
@@ -178,5 +168,7 @@ public class OptionConversionCommands {
 		public MyPojo convert(String from) {
 			return new MyPojo(from);
 		}
+
 	}
+
 }

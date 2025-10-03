@@ -58,15 +58,13 @@ public interface CommandExecution {
 
 	/**
 	 * Evaluate a command with a given arguments.
-	 *
-	 * @param args         the command args
+	 * @param args the command args
 	 * @return evaluated execution
 	 */
 	@Nullable Object evaluate(String[] args);
 
 	/**
 	 * Gets an instance of a default {@link CommandExecution}.
-	 *
 	 * @param resolvers the handler method argument resolvers
 	 * @return default command execution
 	 */
@@ -76,7 +74,6 @@ public interface CommandExecution {
 
 	/**
 	 * Gets an instance of a default {@link CommandExecution}.
-	 *
 	 * @param resolvers the handler method argument resolvers
 	 * @param validator the validator
 	 * @param terminal the terminal
@@ -90,16 +87,17 @@ public interface CommandExecution {
 
 	/**
 	 * Gets an instance of a default {@link CommandExecution}.
-	 *
 	 * @param resolvers the handler method argument resolvers
 	 * @param validator the validator
 	 * @param terminal the terminal
 	 * @param conversionService the conversion services
 	 * @return default command execution
 	 */
-	public static CommandExecution of(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-			Terminal terminal, ShellContext shellContext, ConversionService conversionService, CommandRegistry commandRegistry) {
-		return new DefaultCommandExecution(resolvers, validator, terminal, shellContext, conversionService, commandRegistry);
+	public static CommandExecution of(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers,
+			Validator validator, Terminal terminal, ShellContext shellContext, ConversionService conversionService,
+			CommandRegistry commandRegistry) {
+		return new DefaultCommandExecution(resolvers, validator, terminal, shellContext, conversionService,
+				commandRegistry);
 	}
 
 	/**
@@ -108,14 +106,20 @@ public interface CommandExecution {
 	static class DefaultCommandExecution implements CommandExecution {
 
 		private @Nullable List<? extends HandlerMethodArgumentResolver> resolvers;
+
 		private @Nullable Validator validator;
+
 		private @Nullable Terminal terminal;
+
 		private @Nullable ShellContext shellContext;
+
 		private @Nullable ConversionService conversionService;
+
 		private @Nullable CommandRegistry commandRegistry;
 
-		public DefaultCommandExecution(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers, @Nullable Validator validator,
-				@Nullable Terminal terminal, @Nullable ShellContext shellContext, @Nullable ConversionService conversionService, @Nullable CommandRegistry commandRegistry) {
+		public DefaultCommandExecution(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers,
+				@Nullable Validator validator, @Nullable Terminal terminal, @Nullable ShellContext shellContext,
+				@Nullable ConversionService conversionService, @Nullable CommandRegistry commandRegistry) {
 			this.resolvers = resolvers;
 			this.validator = validator;
 			this.terminal = terminal;
@@ -125,7 +129,8 @@ public interface CommandExecution {
 		}
 
 		public @Nullable Object evaluate(String[] args) {
-			Map<String, CommandRegistration> registrations = commandRegistry == null ? Map.of() : commandRegistry.getRegistrations();
+			Map<String, CommandRegistration> registrations = commandRegistry == null ? Map.of()
+					: commandRegistry.getRegistrations();
 			CommandParser parser = CommandParser.of(conversionService, registrations, new ParserConfig());
 			CommandParserResults results = parser.parse(args);
 			CommandRegistration registration = results.registration();
@@ -140,39 +145,39 @@ public interface CommandExecution {
 			// check help options to short circuit
 			boolean handleHelpOption = false;
 			HelpOptionInfo helpOption = registration.getHelpOption();
-			if (helpOption.isEnabled() && helpOption.getCommand() != null && (!ObjectUtils.isEmpty(helpOption.getLongNames()) || !ObjectUtils.isEmpty(helpOption.getShortNames()))) {
-				handleHelpOption = results.results().stream()
-					.filter(cpr -> {
-						boolean present = false;
-						if (helpOption.getLongNames() != null) {
-							present = Arrays.asList(cpr.option().getLongNames()).stream()
-								.filter(ln -> ObjectUtils.containsElement(helpOption.getLongNames(), ln))
-								.findFirst()
-								.isPresent();
-						}
-						if (present) {
-							return true;
-						}
-						if (helpOption.getShortNames() != null) {
-							present = Arrays.asList(cpr.option().getShortNames()).stream()
-								.filter(sn -> ObjectUtils.containsElement(helpOption.getShortNames(), sn))
-								.findFirst()
-								.isPresent();
-						}
-						return present;
-					})
-					.findFirst()
-					.isPresent();
+			if (helpOption.isEnabled() && helpOption.getCommand() != null
+					&& (!ObjectUtils.isEmpty(helpOption.getLongNames())
+							|| !ObjectUtils.isEmpty(helpOption.getShortNames()))) {
+				handleHelpOption = results.results().stream().filter(cpr -> {
+					boolean present = false;
+					if (helpOption.getLongNames() != null) {
+						present = Arrays.asList(cpr.option().getLongNames())
+							.stream()
+							.filter(ln -> ObjectUtils.containsElement(helpOption.getLongNames(), ln))
+							.findFirst()
+							.isPresent();
+					}
+					if (present) {
+						return true;
+					}
+					if (helpOption.getShortNames() != null) {
+						present = Arrays.asList(cpr.option().getShortNames())
+							.stream()
+							.filter(sn -> ObjectUtils.containsElement(helpOption.getShortNames(), sn))
+							.findFirst()
+							.isPresent();
+					}
+					return present;
+				}).findFirst().isPresent();
 			}
 
 			// if needed switch registration to help command if we're short circuiting
 			CommandRegistration usedRegistration;
 			if (handleHelpOption) {
 				String command = registration.getCommand();
-				CommandParser helpParser = CommandParser.of(conversionService, registrations,
-						new ParserConfig());
+				CommandParser helpParser = CommandParser.of(conversionService, registrations, new ParserConfig());
 				CommandRegistration helpCommandRegistration = registrations
-						.get(registration.getHelpOption().getCommand());
+					.get(registration.getHelpOption().getCommand());
 				CommandParserResults helpResults = helpParser.parse(new String[] { "help", "--command", command });
 				results = helpResults;
 				usedRegistration = helpCommandRegistration;
@@ -211,24 +216,29 @@ public interface CommandExecution {
 					results.results().stream().forEach(r -> {
 						if (r.option().getLongNames() != null) {
 							for (String n : r.option().getLongNames()) {
-								messageBuilder.setHeader(ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n, r.value());
+								messageBuilder.setHeader(ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n,
+										r.value());
 								paramValues.put(n, r.value());
 							}
-							// need to provide backmapping for orinal names which were modified
+							// need to provide backmapping for orinal names which were
+							// modified
 							for (String n : r.option().getLongNamesModified()) {
-								messageBuilder.setHeader(ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n, r.value());
+								messageBuilder.setHeader(ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n,
+										r.value());
 								paramValues.put(n, r.value());
 							}
 						}
 						if (r.option().getShortNames() != null) {
 							for (Character n : r.option().getShortNames()) {
-								messageBuilder.setHeader(ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n.toString(), r.value());
+								messageBuilder.setHeader(
+										ArgumentHeaderMethodArgumentResolver.ARGUMENT_PREFIX + n.toString(), r.value());
 							}
 						}
 					});
 					messageBuilder.setHeader(CommandContextMethodArgumentResolver.HEADER_COMMAND_CONTEXT, ctx);
 
-					InvocableShellMethod invocableShellMethod = new InvocableShellMethod(targetInfo.getBean(), targetInfo.getMethod());
+					InvocableShellMethod invocableShellMethod = new InvocableShellMethod(targetInfo.getBean(),
+							targetInfo.getMethod());
 					invocableShellMethod.setConversionService(conversionService);
 					invocableShellMethod.setValidator(validator);
 					ShellMethodArgumentResolverComposite argumentResolvers = new ShellMethodArgumentResolverComposite();
@@ -236,25 +246,29 @@ public interface CommandExecution {
 						argumentResolvers.addResolvers(resolvers);
 					}
 					if (!paramValues.isEmpty() && conversionService != null) {
-						argumentResolvers.addResolver(new ParamNameHandlerMethodArgumentResolver(paramValues, conversionService));
+						argumentResolvers
+							.addResolver(new ParamNameHandlerMethodArgumentResolver(paramValues, conversionService));
 					}
 					invocableShellMethod.setMessageMethodArgumentResolvers(argumentResolvers);
 
-					res = invocableShellMethod.invoke(messageBuilder.build(), (Object[])null);
+					res = invocableShellMethod.invoke(messageBuilder.build(), (Object[]) null);
 
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					throw new CommandExecutionException(e);
 				}
 			}
 
 			return res;
 		}
+
 	}
 
 	@Order(100)
 	static class ParamNameHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
 		private final Map<String, Object> paramValues = new HashMap<>();
+
 		private final ConversionService conversionService;
 
 		ParamNameHandlerMethodArgumentResolver(Map<String, Object> paramValues, ConversionService conversionService) {
@@ -270,8 +284,8 @@ public interface CommandExecution {
 			}
 			Class<?> sourceType = paramValues.get(parameterName) != null ? paramValues.get(parameterName).getClass()
 					: null;
-			return paramValues.containsKey(parameterName) && conversionService
-					.canConvert(sourceType, parameter.getParameterType());
+			return paramValues.containsKey(parameterName)
+					&& conversionService.canConvert(sourceType, parameter.getParameterType());
 		}
 
 		@Override
@@ -292,6 +306,7 @@ public interface CommandExecution {
 		public CommandExecutionException(Throwable cause) {
 			super(cause);
 		}
+
 	}
 
 	public static class CommandParserExceptionsException extends RuntimeException {
@@ -303,13 +318,15 @@ public interface CommandExecution {
 			this.parserExceptions = parserExceptions;
 		}
 
-		public static CommandParserExceptionsException of(String message, List<CommandParserException> parserExceptions) {
+		public static CommandParserExceptionsException of(String message,
+				List<CommandParserException> parserExceptions) {
 			return new CommandParserExceptionsException(message, parserExceptions);
 		}
 
 		public List<CommandParserException> getParserExceptions() {
 			return parserExceptions;
 		}
+
 	}
 
 	static class CommandExecutionHandlerMethodArgumentResolvers {
@@ -323,5 +340,7 @@ public interface CommandExecution {
 		public List<? extends HandlerMethodArgumentResolver> getResolvers() {
 			return resolvers;
 		}
+
 	}
+
 }

@@ -28,8 +28,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * Base class that allows reading a sample result rendering of a table, based on the actual
- * class and method name of the test.
+ * Base class that allows reading a sample result rendering of a table, based on the
+ * actual class and method name of the test.
  *
  * @author Eric Bottard
  */
@@ -43,8 +43,7 @@ class AbstractTestWithSample {
 	}
 
 	protected String sample() throws IOException {
-		String sampleName = String.format("%s-%s.txt",
-				this.getClass().getSimpleName(), testName);
+		String sampleName = String.format("%s-%s.txt", this.getClass().getSimpleName(), testName);
 		InputStream stream = TableTest.class.getResourceAsStream(sampleName);
 		Assert.notNull(stream, "Can't find expected rendering result at " + sampleName);
 		return FileCopyUtils.copyToString(new InputStreamReader(stream, StandardCharsets.UTF_8)).replace("&", "");
@@ -63,4 +62,5 @@ class AbstractTestWithSample {
 		}
 		return new ArrayTableModel(data);
 	}
+
 }

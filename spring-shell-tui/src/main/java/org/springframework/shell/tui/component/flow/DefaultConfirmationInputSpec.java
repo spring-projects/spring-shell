@@ -27,4 +27,5 @@ public class DefaultConfirmationInputSpec extends BaseConfirmationInput {
 	public DefaultConfirmationInputSpec(BaseBuilder builder, String id) {
 		super(builder, id);
 	}
+
 }

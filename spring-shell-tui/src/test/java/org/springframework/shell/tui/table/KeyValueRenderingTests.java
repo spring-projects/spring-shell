@@ -37,9 +37,8 @@ class KeyValueRenderingTests extends AbstractTestWithSample {
 		values.put("a", "b");
 		values.put("long-key", "c");
 		values.put("d", "long-value");
-		TableModel model = new ArrayTableModel(new Object[][] {{"Thing", "Properties"}, {"Something", values}});
-		TableBuilder tableBuilder = new TableBuilder(model)
-				.addHeaderAndVerticalsBorders(BorderStyle.fancy_light);
+		TableModel model = new ArrayTableModel(new Object[][] { { "Thing", "Properties" }, { "Something", values } });
+		TableBuilder tableBuilder = new TableBuilder(model).addHeaderAndVerticalsBorders(BorderStyle.fancy_light);
 		Tables.configureKeyValueRendering(tableBuilder, " = ");
 		Table table = tableBuilder.build();
 		String result = table.render(10);
@@ -52,12 +51,12 @@ class KeyValueRenderingTests extends AbstractTestWithSample {
 		values.put("a", "b");
 		values.put("long-key", "c");
 		values.put("d", "long-value");
-		TableModel model = new ArrayTableModel(new Object[][] {{"Thing", "Properties"}, {"Something", values}});
-		TableBuilder tableBuilder = new TableBuilder(model)
-				.addHeaderAndVerticalsBorders(BorderStyle.fancy_light);
+		TableModel model = new ArrayTableModel(new Object[][] { { "Thing", "Properties" }, { "Something", values } });
+		TableBuilder tableBuilder = new TableBuilder(model).addHeaderAndVerticalsBorders(BorderStyle.fancy_light);
 		Tables.configureKeyValueRendering(tableBuilder, " = ");
 		Table table = tableBuilder.build();
 		String result = table.render(80);
 		assertThat(result).isEqualTo(sample());
 	}
+
 }

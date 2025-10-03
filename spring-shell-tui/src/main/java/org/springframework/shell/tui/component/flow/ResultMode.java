@@ -23,15 +23,16 @@ package org.springframework.shell.tui.component.flow;
 public enum ResultMode {
 
 	/**
-	 * Blindly accept a given {@code resultValue} resulting component run to be
-	 * skipped and value set as a result automatically.
+	 * Blindly accept a given {@code resultValue} resulting component run to be skipped
+	 * and value set as a result automatically.
 	 */
 	ACCEPT,
 
 	/**
-	 * Verify a given {@code resultValue} with a component run. It is up to a
-	 * component to define how it's done but usually result value is set as a
-	 * default value which allows user to just continue.
+	 * Verify a given {@code resultValue} with a component run. It is up to a component to
+	 * define how it's done but usually result value is set as a default value which
+	 * allows user to just continue.
 	 */
 	VERIFY
+
 }

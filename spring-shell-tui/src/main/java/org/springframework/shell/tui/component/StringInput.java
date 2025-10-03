@@ -42,8 +42,11 @@ import org.springframework.util.StringUtils;
 public class StringInput extends AbstractTextComponent<String, StringInputContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(StringInput.class);
+
 	private final @Nullable String defaultValue;
+
 	private @Nullable StringInputContext currentContext;
+
 	private @Nullable Character maskCharacter;
 
 	public StringInput(Terminal terminal) {
@@ -55,7 +58,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	}
 
 	public StringInput(Terminal terminal, @Nullable String name, @Nullable String defaultValue,
-					  @Nullable Function<StringInputContext, List<AttributedString>> renderer) {
+			@Nullable Function<StringInputContext, List<AttributedString>> renderer) {
 		super(terminal, name, null);
 		setRenderer(renderer != null ? renderer : new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/string-input-default.stg");
@@ -64,7 +67,6 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 	/**
 	 * Sets a mask character for input and result value.
-	 *
 	 * @param maskCharacter a mask character
 	 */
 	public void setMaskCharacter(@Nullable Character maskCharacter) {
@@ -134,56 +136,48 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 		/**
 		 * Gets a default value.
-		 *
 		 * @return a default value
 		 */
 		@Nullable String getDefaultValue();
 
 		/**
 		 * Sets a default value.
-		 *
 		 * @param defaultValue the default value
 		 */
 		void setDefaultValue(@Nullable String defaultValue);
 
 		/**
 		 * Sets a mask character.
-		 *
 		 * @param maskCharacter the mask character
 		 */
 		void setMaskCharacter(Character maskCharacter);
 
 		/**
 		 * Gets a masked input.
-		 *
 		 * @return a masked input
 		 */
 		@Nullable String getMaskedInput();
 
 		/**
 		 * Gets a masked result value.
-		 *
 		 * @return masked result value
 		 */
 		@Nullable String getMaskedResultValue();
 
 		/**
 		 * Returns flag if there is a mask character defined.
-		 *
 		 * @return true if mask character defined, false otherwise
 		 */
 		boolean hasMaskCharacter();
 
 		/**
 		 * Gets a mask character.
-		 *
 		 * @return a mask character.
 		 */
 		@Nullable Character getMaskCharacter();
 
 		/**
 		 * Gets an empty {@link StringInputContext}.
-		 *
 		 * @return empty path input context
 		 */
 		public static StringInputContext empty() {
@@ -192,18 +186,19 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 		/**
 		 * Gets an {@link StringInputContext}.
-		 *
 		 * @return path input context
 		 */
 		public static StringInputContext of(@Nullable String defaultValue, @Nullable Character maskCharacter) {
 			return new DefaultStringInputContext(defaultValue, maskCharacter);
 		}
+
 	}
 
 	private static class DefaultStringInputContext extends BaseTextComponentContext<String, StringInputContext>
 			implements StringInputContext {
 
 		private @Nullable String defaultValue;
+
 		private @Nullable Character maskCharacter;
 
 		public DefaultStringInputContext(@Nullable String defaultValue, @Nullable Character maskCharacter) {
@@ -267,6 +262,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 				return str;
 			}
 		}
+
 	}
 
 	private class DefaultRenderer implements Function<StringInputContext, List<AttributedString>> {
@@ -275,5 +271,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		public List<AttributedString> apply(StringInputContext context) {
 			return renderTemplateResource(context.toTemplateModel());
 		}
+
 	}
+
 }

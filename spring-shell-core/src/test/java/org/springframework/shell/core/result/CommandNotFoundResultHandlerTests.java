@@ -80,8 +80,8 @@ class CommandNotFoundResultHandlerTests {
 		List<String> commands = Arrays.asList("one", "two");
 		Map<String, CommandRegistration> registrations = Collections.emptyMap();
 		CommandNotFound e = new CommandNotFound(commands, registrations, "text");
-		given(provider.getIfAvailable()).willReturn(ctx -> String.format("%s%s%s%s%s", "hi", ctx.error() == e ? "true" : "false",
-				String.join("", ctx.commands()),
+		given(provider.getIfAvailable()).willReturn(ctx -> String.format("%s%s%s%s%s", "hi",
+				ctx.error() == e ? "true" : "false", String.join("", ctx.commands()),
 				ctx.registrations() == registrations ? "true" : "false", ctx.text()));
 		given(provider.getIfAvailable(any())).willCallRealMethod();
 		given(terminal.writer()).willReturn(writer);
@@ -90,4 +90,5 @@ class CommandNotFoundResultHandlerTests {
 		String string = out.toString();
 		assertThat(string).contains("hitrueonetwotruetext");
 	}
+
 }

@@ -47,91 +47,78 @@ public interface CommandRegistration {
 
 	/**
 	 * Gets a command for this registration.
-	 *
 	 * @return command
 	 */
 	String getCommand();
 
 	/**
 	 * Gets an {@link InteractionMode}.
-	 *
 	 * @return the interaction mode
 	 */
 	InteractionMode getInteractionMode();
 
 	/**
 	 * Get group for a command.
-	 *
 	 * @return the group
 	 */
 	@Nullable String getGroup();
 
 	/**
 	 * Returns if command is hidden.
-	 *
 	 * @return true if command is hidden
 	 */
 	boolean isHidden();
 
 	/**
 	 * Get description for a command.
-	 *
 	 * @return the description
 	 */
 	@Nullable String getDescription();
 
 	/**
 	 * Get {@link Availability} for a command
-	 *
 	 * @return the availability
 	 */
 	Availability getAvailability();
 
 	/**
 	 * Gets target info.
-	 *
 	 * @return the target info
 	 */
 	TargetInfo getTarget();
 
 	/**
 	 * Gets an options.
-	 *
 	 * @return the options
 	 */
 	List<CommandOption> getOptions();
 
 	/**
 	 * Gets an aliases.
-	 *
 	 * @return the aliases
 	 */
 	List<CommandAlias> getAliases();
 
 	/**
 	 * Gets an exit code.
-	 *
 	 * @return the exit code
 	 */
 	CommandExitCode getExitCode();
 
 	/**
 	 * Gets an exception resolvers.
-	 *
 	 * @return the exception resolvers
 	 */
 	List<CommandExceptionResolver> getExceptionResolvers();
 
 	/**
 	 * Gets a help option info.
-	 *
 	 * @return the help option info
 	 */
 	HelpOptionInfo getHelpOption();
 
 	/**
 	 * Gets a new instance of a {@link Builder}.
-	 *
 	 * @return a new builder instance
 	 */
 	public static Builder builder() {
@@ -139,19 +126,21 @@ public interface CommandRegistration {
 	}
 
 	/**
-	 * Interface used to supply instance of a {@link Builder}. Meant to be a single
-	 * point access to centrally configured builder in an application context.
+	 * Interface used to supply instance of a {@link Builder}. Meant to be a single point
+	 * access to centrally configured builder in an application context.
 	 */
 	@FunctionalInterface
 	public interface BuilderSupplier extends Supplier<Builder> {
+
 	}
 
 	/**
-	 * Interface used to modify option long name. Usual use case is i.e. making
-	 * conversion from a {@code camelCase} to {@code snake-case}.
+	 * Interface used to modify option long name. Usual use case is i.e. making conversion
+	 * from a {@code camelCase} to {@code snake-case}.
 	 */
 	@FunctionalInterface
 	public interface OptionNameModifier extends Function<String, String> {
+
 	}
 
 	/**
@@ -161,7 +150,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define long option names.
-		 *
 		 * @param names the long option names
 		 * @return option spec for chaining
 		 */
@@ -169,7 +157,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define short option names.
-		 *
 		 * @param names the long option names
 		 * @return option spec for chaining
 		 */
@@ -177,10 +164,8 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a type for an option. This method is a shortcut for
-		 * {@link #type(ResolvableType)} which is a preferred way to
-		 * define type with generics. Will override one from
-		 * {@link #type(ResolvableType)}.
-		 *
+		 * {@link #type(ResolvableType)} which is a preferred way to define type with
+		 * generics. Will override one from {@link #type(ResolvableType)}.
 		 * @param type the type
 		 * @return option spec for chaining
 		 * @see #type(ResolvableType)
@@ -188,10 +173,8 @@ public interface CommandRegistration {
 		OptionSpec type(Type type);
 
 		/**
-		 * Define a {@link ResolvableType} for an option. This method is
-		 * a preferred way to define type with generics. Will override one
-		 * from {@link #type(Type)}.
-		 *
+		 * Define a {@link ResolvableType} for an option. This method is a preferred way
+		 * to define type with generics. Will override one from {@link #type(Type)}.
 		 * @param type the resolvable type
 		 * @return option spec for chaining
 		 */
@@ -199,7 +182,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a {@code description} for an option.
-		 *
 		 * @param description the option description
 		 * @return option spec for chaining
 		 */
@@ -207,23 +189,20 @@ public interface CommandRegistration {
 
 		/**
 		 * Define if option is required.
-		 *
 		 * @param required the required flag
 		 * @return option spec for chaining
 		 */
 		OptionSpec required(boolean required);
 
 		/**
-		 * Define option to be required. Syntatic sugar calling
-		 * {@link #required(boolean)} with {@code true}.
-		 *
+		 * Define option to be required. Syntatic sugar calling {@link #required(boolean)}
+		 * with {@code true}.
 		 * @return option spec for chaining
 		 */
 		OptionSpec required();
 
 		/**
 		 * Define a {@code defaultValue} for an option.
-		 *
 		 * @param defaultValue the option default value
 		 * @return option spec for chaining
 		 */
@@ -231,7 +210,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define an optional hint for possible positional mapping.
-		 *
 		 * @param position the position
 		 * @return option spec for chaining
 		 */
@@ -239,7 +217,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define an {@code arity} for an option.
-		 *
 		 * @param min the min arity
 		 * @param max the max arity
 		 * @return option spec for chaining
@@ -248,7 +225,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define an {@code arity} for an option.
-		 *
 		 * @param arity the arity
 		 * @return option spec for chaining
 		 */
@@ -256,7 +232,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a {@code label} for an option.
-		 *
 		 * @param label the label
 		 * @return option spec for chaining
 		 */
@@ -264,7 +239,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a {@code completion function} for an option.
-		 *
 		 * @param completion the completion function
 		 * @return option spec for chaining
 		 */
@@ -272,7 +246,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define an option name modifier.
-		 *
 		 * @param modifier the option name modifier function
 		 * @return option spec for chaining
 		 */
@@ -280,10 +253,10 @@ public interface CommandRegistration {
 
 		/**
 		 * Return a builder for chaining.
-		 *
 		 * @return a builder for chaining
 		 */
 		Builder and();
+
 	}
 
 	/**
@@ -292,8 +265,8 @@ public interface CommandRegistration {
 	public enum OptionArity {
 
 		/**
-		 * Used to indicate that arity is not set. Exists as a workaround for a case
-		 * where it's not possible to use null values.
+		 * Used to indicate that arity is not set. Exists as a workaround for a case where
+		 * it's not possible to use null values.
 		 */
 		NONE,
 
@@ -321,6 +294,7 @@ public interface CommandRegistration {
 		 * Define min(1), max(MAXINTEGER).
 		 */
 		ONE_OR_MORE;
+
 	}
 
 	/**
@@ -330,35 +304,30 @@ public interface CommandRegistration {
 
 		/**
 		 * Get target type
-		 *
 		 * @return the target type
 		 */
 		TargetType getTargetType();
 
 		/**
 		 * Get the bean.
-		 *
 		 * @return the bean
 		 */
 		@Nullable Object getBean();
 
 		/**
 		 * Get the bean method
-		 *
 		 * @return the bean method
 		 */
 		@Nullable Method getMethod();
 
 		/**
 		 * Get the function
-		 *
 		 * @return the function
 		 */
 		@Nullable Function<CommandContext, ?> getFunction();
 
 		/**
 		 * Get the consumer
-		 *
 		 * @return the consumer
 		 */
 		@Nullable Consumer<CommandContext> getConsumer();
@@ -376,19 +345,25 @@ public interface CommandRegistration {
 		}
 
 		enum TargetType {
+
 			METHOD, FUNCTION, CONSUMER;
+
 		}
 
 		static class DefaultTargetInfo implements TargetInfo {
 
 			private final TargetType targetType;
+
 			private final @Nullable Object bean;
+
 			private final @Nullable Method method;
+
 			private final @Nullable Function<CommandContext, ?> function;
+
 			private final @Nullable Consumer<CommandContext> consumer;
 
 			public DefaultTargetInfo(TargetType targetType, @Nullable Object bean, @Nullable Method method,
-									@Nullable Function<CommandContext, ?> function, @Nullable Consumer<CommandContext> consumer) {
+					@Nullable Function<CommandContext, ?> function, @Nullable Consumer<CommandContext> consumer) {
 				this.targetType = targetType;
 				this.bean = bean;
 				this.method = method;
@@ -420,7 +395,9 @@ public interface CommandRegistration {
 			public @Nullable Consumer<CommandContext> getConsumer() {
 				return consumer;
 			}
+
 		}
+
 	}
 
 	/**
@@ -430,7 +407,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Register a method target.
-		 *
 		 * @param bean the bean
 		 * @param method the method
 		 * @param paramTypes the parameter types
@@ -440,7 +416,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Register a method target.
-		 *
 		 * @param bean the bean
 		 * @param method the method
 		 * @return a target spec for chaining
@@ -449,7 +424,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Register a function target.
-		 *
 		 * @param function the function to register
 		 * @return a target spec for chaining
 		 */
@@ -457,7 +431,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Register a consumer target.
-		 *
 		 * @param consumer the consumer to register
 		 * @return a target spec for chaining
 		 */
@@ -465,10 +438,10 @@ public interface CommandRegistration {
 
 		/**
 		 * Return a builder for chaining.
-		 *
 		 * @return a builder for chaining
 		 */
 		Builder and();
+
 	}
 
 	/**
@@ -478,7 +451,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define commands for an alias.
-		 *
 		 * @param commands the commands
 		 * @return a target spec for chaining
 		 */
@@ -486,7 +458,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define group for an alias.
-		 *
 		 * @param group the group
 		 * @return a target spec for chaining
 		 */
@@ -494,10 +465,10 @@ public interface CommandRegistration {
 
 		/**
 		 * Return a builder for chaining.
-		 *
 		 * @return a builder for chaining
 		 */
 		Builder and();
+
 	}
 
 	/**
@@ -507,7 +478,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define mapping from exception to code.
-		 *
 		 * @param e the exception
 		 * @param code the exit code
 		 * @return a target spec for chaining
@@ -515,7 +485,6 @@ public interface CommandRegistration {
 		ExitCodeSpec map(Class<? extends Throwable> e, int code);
 
 		/**
-		 *
 		 * @param function
 		 * @return
 		 */
@@ -523,10 +492,10 @@ public interface CommandRegistration {
 
 		/**
 		 * Return a builder for chaining.
-		 *
 		 * @return a builder for chaining
 		 */
 		Builder and();
+
 	}
 
 	/**
@@ -536,7 +505,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Add {@link CommandExceptionResolver}.
-		 *
 		 * @param resolver the resolver
 		 * @return a error handling for chaining
 		 */
@@ -544,38 +512,34 @@ public interface CommandRegistration {
 
 		/**
 		 * Return a builder for chaining.
-		 *
 		 * @return a builder for chaining
 		 */
 		Builder and();
+
 	}
 
 	public interface HelpOptionInfo {
 
 		/**
 		 * Gets whether help options are enabled.
-		 *
 		 * @return whether help options are enabled
 		 */
 		boolean isEnabled();
 
 		/**
 		 * Gets long names options for help.
-		 *
 		 * @return long names options for help
 		 */
 		String @Nullable [] getLongNames();
 
 		/**
 		 * Gets short names options for help.
-		 *
 		 * @return short names options for help
 		 */
 		Character @Nullable [] getShortNames();
 
 		/**
 		 * Gets command for help.
-		 *
 		 * @return command for help
 		 */
 		@Nullable String getCommand();
@@ -584,18 +548,23 @@ public interface CommandRegistration {
 			return of(false, null, null, null);
 		}
 
-		static HelpOptionInfo of(boolean enabled, String @Nullable[] longNames, Character @Nullable[] shortNames, @Nullable String command) {
+		static HelpOptionInfo of(boolean enabled, String @Nullable [] longNames, Character @Nullable [] shortNames,
+				@Nullable String command) {
 			return new DefaultHelpOptionInfo(enabled, longNames, shortNames, command);
 		}
 
 		static class DefaultHelpOptionInfo implements HelpOptionInfo {
 
 			private final @Nullable String command;
+
 			private final String @Nullable [] longNames;
+
 			private final Character @Nullable [] shortNames;
+
 			private final boolean enabled;
 
-			public DefaultHelpOptionInfo(boolean enabled, String @Nullable [] longNames, Character @Nullable [] shortNames, @Nullable String command) {
+			public DefaultHelpOptionInfo(boolean enabled, String @Nullable [] longNames,
+					Character @Nullable [] shortNames, @Nullable String command) {
 				this.command = command;
 				this.longNames = longNames;
 				this.shortNames = shortNames;
@@ -621,7 +590,9 @@ public interface CommandRegistration {
 			public @Nullable String getCommand() {
 				return command;
 			}
+
 		}
+
 	}
 
 	/**
@@ -631,7 +602,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Whether help options are enabled.
-		 *
 		 * @param enabled the enabled flag
 		 * @return a help option for chaining
 		 */
@@ -639,7 +609,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Sets long names options for help.
-		 *
 		 * @param longNames the long names
 		 * @return a help option for chaining
 		 */
@@ -647,7 +616,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Sets short names options for help.
-		 *
 		 * @param shortNames the short names
 		 * @return a help option for chaining
 		 */
@@ -655,7 +623,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Sets command used for help.
-		 *
 		 * @param command the command
 		 * @return a help option for chaining
 		 */
@@ -663,10 +630,10 @@ public interface CommandRegistration {
 
 		/**
 		 * Return a builder for chaining.
-		 *
 		 * @return a builder for chaining
 		 */
 		Builder and();
+
 	}
 
 	/**
@@ -675,11 +642,10 @@ public interface CommandRegistration {
 	public interface Builder {
 
 		/**
-		 * Define commands this registration uses. Essentially defines a full set of
-		 * main and sub commands. It doesn't matter if full command is defined in one
-		 * string or multiple strings as "words" are splitted and trimmed with
-		 * whitespaces. You will get result of {@code command subcommand1 subcommand2, ...}.
-		 *
+		 * Define commands this registration uses. Essentially defines a full set of main
+		 * and sub commands. It doesn't matter if full command is defined in one string or
+		 * multiple strings as "words" are splitted and trimmed with whitespaces. You will
+		 * get result of {@code command subcommand1 subcommand2, ...}.
 		 * @param commands the commands
 		 * @return builder for chaining
 		 */
@@ -687,7 +653,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define {@link InteractionMode} for a command.
-		 *
 		 * @param mode the interaction mode
 		 * @return builder for chaining
 		 */
@@ -695,7 +660,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a description text for a command.
-		 *
 		 * @param description the description text
 		 * @return builder for chaining
 		 */
@@ -703,7 +667,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define an {@link Availability} suppliear for a command.
-		 *
 		 * @param availability the availability
 		 * @return builder for chaining
 		 */
@@ -711,7 +674,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a group for a command.
-		 *
 		 * @param group the group
 		 * @return builder for chaining
 		 */
@@ -719,7 +681,6 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a command to be hidden.
-		 *
 		 * @return builder for chaining
 		 * @see #hidden(boolean)
 		 */
@@ -727,87 +688,90 @@ public interface CommandRegistration {
 
 		/**
 		 * Define a command to be hidden by a given flag.
-		 *
 		 * @param hidden the hidden flag
 		 * @return builder for chaining
 		 */
 		Builder hidden(boolean hidden);
 
 		/**
-		 * Provides a global option name modifier. Will be used with all options to
-		 * modify long names. Usual use case is to enforce naming convention i.e. to
-		 * have {@code snake-case} for all names.
-		 *
+		 * Provides a global option name modifier. Will be used with all options to modify
+		 * long names. Usual use case is to enforce naming convention i.e. to have
+		 * {@code snake-case} for all names.
 		 * @param modifier to modifier to change option name
 		 * @return builder for chaining
 		 */
 		Builder defaultOptionNameModifier(Function<String, String> modifier);
 
 		/**
-		 * Define an option what this command should user for. Can be used multiple
-		 * times.
-		 *
+		 * Define an option what this command should user for. Can be used multiple times.
 		 * @return option spec for chaining
 		 */
 		OptionSpec withOption();
 
 		/**
 		 * Define a target what this command should execute
-		 *
 		 * @return target spec for chaining
 		 */
 		TargetSpec withTarget();
 
 		/**
 		 * Define an alias what this command should execute
-		 *
 		 * @return alias spec for chaining
 		 */
 		AliasSpec withAlias();
 
 		/**
 		 * Define an exit code what this command should execute
-		 *
 		 * @return exit code spec for chaining
 		 */
 		ExitCodeSpec withExitCode();
 
 		/**
 		 * Define an error handling what this command should use
-		 *
 		 * @return error handling spec for chaining
 		 */
 		ErrorHandlingSpec withErrorHandling();
 
 		/**
 		 * Define help options what this command should use.
-		 *
 		 * @return help options spec for chaining
 		 */
 		HelpOptionsSpec withHelpOptions();
 
 		/**
 		 * Builds a {@link CommandRegistration}.
-		 *
 		 * @return a command registration
 		 */
 		CommandRegistration build();
+
 	}
 
 	static class DefaultOptionSpec implements OptionSpec {
 
 		private BaseBuilder builder;
+
 		private String[] longNames = new String[0];
+
 		private Character[] shortNames = new Character[0];
+
 		private @Nullable ResolvableType type;
+
 		private @Nullable String description;
+
 		private boolean required;
+
 		private @Nullable String defaultValue;
+
 		private @Nullable Integer position;
+
 		private @Nullable Integer arityMin;
+
 		private @Nullable Integer arityMax;
+
 		private @Nullable String label;
+
 		private @Nullable CompletionResolver completion;
+
 		private @Nullable Function<String, String> optionNameModifier;
 
 		DefaultOptionSpec(BaseBuilder builder) {
@@ -987,14 +951,19 @@ public interface CommandRegistration {
 			}
 			return null;
 		}
+
 	}
 
 	static class DefaultTargetSpec implements TargetSpec {
 
 		private BaseBuilder builder;
+
 		private @Nullable Object bean;
+
 		private @Nullable Method method;
+
 		private @Nullable Function<CommandContext, ?> function;
+
 		private @Nullable Consumer<CommandContext> consumer;
 
 		DefaultTargetSpec(BaseBuilder builder) {
@@ -1032,12 +1001,15 @@ public interface CommandRegistration {
 		public Builder and() {
 			return builder;
 		}
+
 	}
 
 	static class DefaultAliasSpec implements AliasSpec {
 
 		private BaseBuilder builder;
+
 		private String[] commands = new String[0];
+
 		private @Nullable String group;
 
 		DefaultAliasSpec(BaseBuilder builder) {
@@ -1047,7 +1019,8 @@ public interface CommandRegistration {
 		@Override
 		public AliasSpec command(String... commands) {
 			Assert.notNull(commands, "commands must be set");
-			this.commands = Arrays.asList(commands).stream()
+			this.commands = Arrays.asList(commands)
+				.stream()
 				.flatMap(c -> Stream.of(c.split(" ")))
 				.filter(c -> StringUtils.hasText(c))
 				.map(c -> c.trim())
@@ -1066,11 +1039,13 @@ public interface CommandRegistration {
 		public Builder and() {
 			return builder;
 		}
+
 	}
 
 	static class DefaultExitCodeSpec implements ExitCodeSpec {
 
 		private BaseBuilder builder;
+
 		private final List<Function<Throwable, Integer>> functions = new ArrayList<>();
 
 		DefaultExitCodeSpec(BaseBuilder builder) {
@@ -1099,11 +1074,13 @@ public interface CommandRegistration {
 		public Builder and() {
 			return builder;
 		}
+
 	}
 
 	static class DefaultErrorHandlingSpec implements ErrorHandlingSpec {
 
 		private BaseBuilder builder;
+
 		private final List<CommandExceptionResolver> resolvers = new ArrayList<>();
 
 		DefaultErrorHandlingSpec(BaseBuilder builder) {
@@ -1120,14 +1097,19 @@ public interface CommandRegistration {
 		public Builder and() {
 			return builder;
 		}
+
 	}
 
 	static class DefaultHelpOptionsSpec implements HelpOptionsSpec {
 
 		private BaseBuilder builder;
+
 		private @Nullable String command;
+
 		private String @Nullable [] longNames;
+
 		private Character @Nullable [] shortNames;
+
 		private boolean enabled = true;
 
 		DefaultHelpOptionsSpec(BaseBuilder builder) {
@@ -1151,7 +1133,7 @@ public interface CommandRegistration {
 
 		@Override
 		public HelpOptionsSpec longNames(String... longNames) {
-				this.longNames = longNames;
+			this.longNames = longNames;
 			return this;
 		}
 
@@ -1171,28 +1153,42 @@ public interface CommandRegistration {
 		public Builder and() {
 			return builder;
 		}
+
 	}
 
 	static class DefaultCommandRegistration implements CommandRegistration {
 
 		private String command;
+
 		private InteractionMode interactionMode;
+
 		private @Nullable String group;
+
 		private boolean hidden;
+
 		private @Nullable String description;
+
 		private @Nullable Supplier<Availability> availability;
+
 		private @Nullable List<CommandOption> options;
+
 		private List<DefaultOptionSpec> optionSpecs;
+
 		private DefaultTargetSpec targetSpec;
+
 		private List<DefaultAliasSpec> aliasSpecs;
+
 		private @Nullable DefaultExitCodeSpec exitCodeSpec;
+
 		private @Nullable DefaultErrorHandlingSpec errorHandlingSpec;
+
 		private @Nullable DefaultHelpOptionsSpec helpOptionsSpec;
 
 		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, @Nullable String group,
-				boolean hidden,	@Nullable String description, @Nullable Supplier<Availability> availability,
+				boolean hidden, @Nullable String description, @Nullable Supplier<Availability> availability,
 				List<DefaultOptionSpec> optionSpecs, DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs,
-				@Nullable DefaultExitCodeSpec exitCodeSpec, @Nullable DefaultErrorHandlingSpec errorHandlingSpec, @Nullable DefaultHelpOptionsSpec helpOptionsSpec) {
+				@Nullable DefaultExitCodeSpec exitCodeSpec, @Nullable DefaultErrorHandlingSpec errorHandlingSpec,
+				@Nullable DefaultHelpOptionsSpec helpOptionsSpec) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.group = group;
@@ -1242,20 +1238,18 @@ public interface CommandRegistration {
 			if (options != null) {
 				return options;
 			}
-			options = optionSpecs.stream()
-				.map(o -> {
-					String[] longNames = o.getLongNames();
-					String[] longNamesModified = null;
-					Function<String, String> modifier = o.getOptionNameModifier();
-					if (modifier != null) {
-						longNamesModified = Arrays.copyOf(longNames, longNames.length);
-						longNames = Arrays.stream(longNames).map(modifier).toArray(String[]::new);
-					}
-					return CommandOption.of(longNames, longNamesModified, o.getShortNames(), o.getDescription(), o.getType(),
-							o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(), o.getArityMax(),
-							o.getLabel(), o.getCompletion());
-					})
-				.collect(Collectors.toList());
+			options = optionSpecs.stream().map(o -> {
+				String[] longNames = o.getLongNames();
+				String[] longNamesModified = null;
+				Function<String, String> modifier = o.getOptionNameModifier();
+				if (modifier != null) {
+					longNamesModified = Arrays.copyOf(longNames, longNames.length);
+					longNames = Arrays.stream(longNames).map(modifier).toArray(String[]::new);
+				}
+				return CommandOption.of(longNames, longNamesModified, o.getShortNames(), o.getDescription(),
+						o.getType(), o.isRequired(), o.getDefaultValue(), o.getPosition(), o.getArityMin(),
+						o.getArityMax(), o.getLabel(), o.getCompletion());
+			}).collect(Collectors.toList());
 			if (helpOptionsSpec != null) {
 				String[] longNames = helpOptionsSpec.longNames != null ? helpOptionsSpec.longNames : null;
 				Character[] shortNames = helpOptionsSpec.shortNames != null ? helpOptionsSpec.shortNames : null;
@@ -1281,11 +1275,9 @@ public interface CommandRegistration {
 
 		@Override
 		public List<CommandAlias> getAliases() {
-			return this.aliasSpecs.stream()
-				.map(spec -> {
-					return CommandAlias.of(commandArrayToName(spec.commands), spec.group);
-				})
-				.collect(Collectors.toList());
+			return this.aliasSpecs.stream().map(spec -> {
+				return CommandAlias.of(commandArrayToName(spec.commands), spec.group);
+			}).collect(Collectors.toList());
 		}
 
 		@Override
@@ -1320,37 +1312,53 @@ public interface CommandRegistration {
 		}
 
 		private static String commandArrayToName(String[] commands) {
-			return Arrays.asList(commands).stream()
+			return Arrays.asList(commands)
+				.stream()
 				.flatMap(c -> Stream.of(c.split(" ")))
 				.filter(c -> StringUtils.hasText(c))
 				.map(c -> c.trim())
 				.collect(Collectors.joining(" "));
 		}
+
 	}
 
 	static class DefaultBuilder extends BaseBuilder {
+
 	}
 
 	static abstract class BaseBuilder implements Builder {
 
-		private String @Nullable[] commands;
+		private String @Nullable [] commands;
+
 		private InteractionMode interactionMode = InteractionMode.ALL;
+
 		private @Nullable String group;
+
 		private boolean hidden;
+
 		private @Nullable String description;
+
 		private @Nullable Supplier<Availability> availability;
+
 		private List<DefaultOptionSpec> optionSpecs = new ArrayList<>();
+
 		private List<DefaultAliasSpec> aliasSpecs = new ArrayList<>();
+
 		private @Nullable DefaultTargetSpec targetSpec;
+
 		private @Nullable DefaultExitCodeSpec exitCodeSpec;
+
 		private @Nullable DefaultErrorHandlingSpec errorHandlingSpec;
+
 		private @Nullable DefaultHelpOptionsSpec helpOptionsSpec;
+
 		private @Nullable Function<String, String> defaultOptionNameModifier;
 
 		@Override
 		public Builder command(String... commands) {
 			Assert.notNull(commands, "commands must be set");
-			this.commands = Arrays.asList(commands).stream()
+			this.commands = Arrays.asList(commands)
+				.stream()
 				.flatMap(c -> Stream.of(c.split(" ")))
 				.filter(c -> StringUtils.hasText(c))
 				.map(c -> c.trim())
@@ -1395,7 +1403,7 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public Builder defaultOptionNameModifier(Function<String,String> modifier) {
+		public Builder defaultOptionNameModifier(Function<String, String> modifier) {
 			this.defaultOptionNameModifier = modifier;
 			return this;
 		}
@@ -1451,5 +1459,7 @@ public interface CommandRegistration {
 			return new DefaultCommandRegistration(commands, interactionMode, group, hidden, description, availability,
 					optionSpecs, targetSpec, aliasSpecs, exitCodeSpec, errorHandlingSpec, helpOptionsSpec);
 		}
+
 	}
+
 }

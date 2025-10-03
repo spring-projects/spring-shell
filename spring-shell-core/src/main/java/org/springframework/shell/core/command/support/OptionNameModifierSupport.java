@@ -28,25 +28,27 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Support facilities for {@link OptionNameModifier} providing common naming
- * types.
+ * Support facilities for {@link OptionNameModifier} providing common naming types.
  *
  * @author Janne Valkealahti
  */
 public abstract class OptionNameModifierSupport {
 
 	public static final OptionNameModifier NOOP = name -> name;
+
 	public static final OptionNameModifier CAMELCASE = name -> toCamelCase(name);
+
 	public static final OptionNameModifier SNAKECASE = name -> toSnakeCase(name);
+
 	public static final OptionNameModifier KEBABCASE = name -> toKebabCase(name);
+
 	public static final OptionNameModifier PASCALCASE = name -> toPascalCase(name);
 
 	private static final Pattern PATTERN = Pattern
-			.compile("[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+");
+		.compile("[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+");
 
 	/**
 	 * Convert given name to {@code camelCase}.
-	 *
 	 * @param name the name to modify
 	 * @return a modified name as camel case
 	 */
@@ -56,7 +58,6 @@ public abstract class OptionNameModifierSupport {
 
 	/**
 	 * Convert given name to {@code snake_case}.
-	 *
 	 * @param name the name to modify
 	 * @return a modified name as snake case
 	 */
@@ -66,7 +67,6 @@ public abstract class OptionNameModifierSupport {
 
 	/**
 	 * Convert given name to {@code kebab-case}.
-	 *
 	 * @param name the name to modify
 	 * @return a modified name as kebab case
 	 */
@@ -76,7 +76,6 @@ public abstract class OptionNameModifierSupport {
 
 	/**
 	 * Convert given name to {@code PascalCase}.
-	 *
 	 * @param name the name to modify
 	 * @return a modified name as pascal case
 	 */
@@ -95,37 +94,39 @@ public abstract class OptionNameModifierSupport {
 	}
 
 	private static String toCapitalizeCase(String name, final boolean capitalizeFirstLetter, final char... delimiters) {
-        if (!StringUtils.hasText(name)) {
-            return name;
-        }
-        String nameL = name.toLowerCase();
+		if (!StringUtils.hasText(name)) {
+			return name;
+		}
+		String nameL = name.toLowerCase();
 
 		final int strLen = nameL.length();
-        final int[] newCodePoints = new int[strLen];
-        final Set<Integer> delimiterSet = toDelimiterSet(delimiters);
+		final int[] newCodePoints = new int[strLen];
+		final Set<Integer> delimiterSet = toDelimiterSet(delimiters);
 
 		int outOffset = 0;
-        boolean capitalizeNext = capitalizeFirstLetter;
+		boolean capitalizeNext = capitalizeFirstLetter;
 
 		boolean delimiterFound = false;
 
 		for (int index = 0; index < strLen;) {
-            final int codePoint = nameL.codePointAt(index);
+			final int codePoint = nameL.codePointAt(index);
 
-            if (delimiterSet.contains(codePoint)) {
-                capitalizeNext = outOffset != 0;
-                index += Character.charCount(codePoint);
-				delimiterFound  = true;
-            } else if (capitalizeNext || outOffset == 0 && capitalizeFirstLetter) {
-                final int titleCaseCodePoint = Character.toTitleCase(codePoint);
-                newCodePoints[outOffset++] = titleCaseCodePoint;
-                index += Character.charCount(titleCaseCodePoint);
-                capitalizeNext = false;
-            } else {
-                newCodePoints[outOffset++] = codePoint;
-                index += Character.charCount(codePoint);
-            }
-        }
+			if (delimiterSet.contains(codePoint)) {
+				capitalizeNext = outOffset != 0;
+				index += Character.charCount(codePoint);
+				delimiterFound = true;
+			}
+			else if (capitalizeNext || outOffset == 0 && capitalizeFirstLetter) {
+				final int titleCaseCodePoint = Character.toTitleCase(codePoint);
+				newCodePoints[outOffset++] = titleCaseCodePoint;
+				index += Character.charCount(titleCaseCodePoint);
+				capitalizeNext = false;
+			}
+			else {
+				newCodePoints[outOffset++] = codePoint;
+				index += Character.charCount(codePoint);
+			}
+		}
 
 		if (!delimiterFound) {
 			if (capitalizeFirstLetter) {
@@ -136,28 +137,28 @@ public abstract class OptionNameModifierSupport {
 			}
 		}
 
-        return new String(newCodePoints, 0, outOffset);
-    }
+		return new String(newCodePoints, 0, outOffset);
+	}
 
-    /**
+	/**
 	 * Converts an array of delimiters to a hash set of code points. Code point of
 	 * space(32) is added as the default value. The generated hash set provides O(1)
 	 * lookup time.
-	 *
 	 * @param delimiters set of characters to determine capitalization, null means
-	 *                   whitespace
+	 * whitespace
 	 * @return Integers of code points
 	 */
-    private static Set<Integer> toDelimiterSet(final char[] delimiters) {
-        final Set<Integer> delimiterHashSet = new HashSet<>();
-        delimiterHashSet.add(Character.codePointAt(new char[]{' '}, 0));
+	private static Set<Integer> toDelimiterSet(final char[] delimiters) {
+		final Set<Integer> delimiterHashSet = new HashSet<>();
+		delimiterHashSet.add(Character.codePointAt(new char[] { ' ' }, 0));
 		if (ObjectUtils.isEmpty(delimiters)) {
-            return delimiterHashSet;
+			return delimiterHashSet;
 		}
 
-        for (int index = 0; index < delimiters.length; index++) {
-            delimiterHashSet.add(Character.codePointAt(delimiters, index));
-        }
-        return delimiterHashSet;
-    }
+		for (int index = 0; index < delimiters.length; index++) {
+			delimiterHashSet.add(Character.codePointAt(delimiters, index));
+		}
+		return delimiterHashSet;
+	}
+
 }

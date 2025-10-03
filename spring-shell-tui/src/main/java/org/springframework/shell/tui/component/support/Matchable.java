@@ -23,4 +23,5 @@ import org.jspecify.annotations.Nullable;
 public interface Matchable {
 
 	boolean matches(@Nullable String match);
+
 }

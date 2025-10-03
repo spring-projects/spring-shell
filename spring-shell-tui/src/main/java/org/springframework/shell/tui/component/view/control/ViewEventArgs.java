@@ -24,4 +24,5 @@ public interface ViewEventArgs {
 
 	public static final ViewEventArgs EMPTY = new ViewEventArgs() {
 	};
+
 }

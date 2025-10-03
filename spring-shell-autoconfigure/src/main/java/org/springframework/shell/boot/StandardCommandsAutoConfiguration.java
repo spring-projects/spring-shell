@@ -57,7 +57,8 @@ public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(Help.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.help", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.help", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public Help help(SpringShellProperties properties, ObjectProvider<TemplateExecutor> templateExecutor) {
 		TemplateExecutor executor = templateExecutor.getIfAvailable();
 		Assert.notNull(executor, "'executor' must not be null");
@@ -72,35 +73,40 @@ public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(Clear.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.clear", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.clear", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public Clear clear() {
 		return new Clear();
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(Quit.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.quit", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.quit", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public Quit quit() {
 		return new Quit();
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(Stacktrace.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.stacktrace", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.stacktrace", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public Stacktrace stacktrace(ObjectProvider<ThrowableResultHandler> throwableResultHandler) {
 		return new Stacktrace(throwableResultHandler);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(Script.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.script", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.script", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public Script script(Parser parser) {
 		return new Script(parser);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(History.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.history", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.history", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public History historyCommand(org.jline.reader.History jLineHistory) {
 		return new History(jLineHistory);
 	}
@@ -116,7 +122,8 @@ public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(Version.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.version", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.version", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public Version version(SpringShellProperties properties, ObjectProvider<BuildProperties> buildProperties,
 			ObjectProvider<GitProperties> gitProperties, ObjectProvider<TemplateExecutor> templateExecutor) {
 		TemplateExecutor executor = templateExecutor.getIfAvailable();
@@ -126,4 +133,5 @@ public class StandardCommandsAutoConfiguration {
 		version.setTemplate(versionProperties.getTemplate());
 		return version;
 	}
+
 }

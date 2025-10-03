@@ -27,36 +27,31 @@ public interface CommandHandlingResult {
 
 	/**
 	 * Gets a message for this {@code CommandHandlingResult}.
-	 *
 	 * @return a message
 	 */
 	@Nullable String message();
 
 	/**
-	 * Gets an exit code for this {@code CommandHandlingResult}. Exit code only has meaning
-	 * if shell is in non-interactive mode.
-	 *
+	 * Gets an exit code for this {@code CommandHandlingResult}. Exit code only has
+	 * meaning if shell is in non-interactive mode.
 	 * @return an exit code
 	 */
 	@Nullable Integer exitCode();
 
 	/**
 	 * Indicate whether this {@code CommandHandlingResult} has a result.
-	 *
 	 * @return true if result exist
 	 */
 	public boolean isPresent();
 
 	/**
 	 * Indicate whether this {@code CommandHandlingResult} does not have a result.
-	 *
 	 * @return true if result doesn't exist
 	 */
 	public boolean isEmpty();
 
 	/**
 	 * Gets an empty instance of {@code CommandHandlingResult}.
-	 *
 	 * @return empty instance of {@code CommandHandlingResult}
 	 */
 	public static CommandHandlingResult empty() {
@@ -65,7 +60,6 @@ public interface CommandHandlingResult {
 
 	/**
 	 * Gets an instance of {@code CommandHandlingResult}.
-	 *
 	 * @param message the message
 	 * @return instance of {@code CommandHandlingResult}
 	 */
@@ -75,7 +69,6 @@ public interface CommandHandlingResult {
 
 	/**
 	 * Gets an instance of {@code CommandHandlingResult}.
-	 *
 	 * @param message the message
 	 * @param exitCode the exit code
 	 * @return instance of {@code CommandHandlingResult}
@@ -87,6 +80,7 @@ public interface CommandHandlingResult {
 	static class DefaultHandlingResult implements CommandHandlingResult {
 
 		private final @Nullable String message;
+
 		private final @Nullable Integer exitCode;
 
 		DefaultHandlingResult(String message) {
@@ -117,5 +111,7 @@ public interface CommandHandlingResult {
 		public boolean isEmpty() {
 			return !isPresent();
 		}
+
 	}
+
 }

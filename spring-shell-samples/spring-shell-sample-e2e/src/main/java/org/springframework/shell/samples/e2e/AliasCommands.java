@@ -39,6 +39,7 @@ public class AliasCommands {
 		public String testAlias3Annotation() {
 			return "Hello from alias3 command";
 		}
+
 	}
 
 	@Component
@@ -50,13 +51,13 @@ public class AliasCommands {
 				.command(REG, "alias-1")
 				.group(GROUP)
 				.withAlias()
-					.command(REG, "aliasfor-1")
-					.and()
+				.command(REG, "aliasfor-1")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						return "Hello from alias command";
-					})
-					.and()
+				.function(ctx -> {
+					return "Hello from alias command";
+				})
+				.and()
 				.build();
 		}
 
@@ -66,16 +67,16 @@ public class AliasCommands {
 				.command(REG, "alias-2")
 				.group(GROUP)
 				.withAlias()
-					.command(REG, "alias1for-2")
-					.and()
+				.command(REG, "alias1for-2")
+				.and()
 				.withAlias()
-					.command(REG, "alias2for-2")
-					.and()
+				.command(REG, "alias2for-2")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						return "Hello from alias command";
-					})
-					.and()
+				.function(ctx -> {
+					return "Hello from alias command";
+				})
+				.and()
 				.build();
 		}
 
@@ -85,15 +86,16 @@ public class AliasCommands {
 				.command(REG, "alias-3 alias-31")
 				.group(GROUP)
 				.withAlias()
-					.command(REG, "alias-32 alias-33")
-					.and()
+				.command(REG, "alias-32 alias-33")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						return "Hello from alias3 command";
-					})
-					.and()
+				.function(ctx -> {
+					return "Hello from alias3 command";
+				})
+				.and()
 				.build();
 		}
+
 	}
 
 }

@@ -30,22 +30,18 @@ public interface TextCell<T> extends Cell<T> {
 	/**
 	 * Sets horizontal align for a text to draw. Defaults to
 	 * {@link HorizontalAlign#CENTER}.
-	 *
 	 * @param hAlign the horizontal align
 	 */
 	void setHorizontalAlign(HorizontalAlign hAlign);
 
 	/**
-	 * Sets vertical align for a text to draw. Defaults to
-	 * {@link VerticalAlign#CENTER}.
-	 *
+	 * Sets vertical align for a text to draw. Defaults to {@link VerticalAlign#CENTER}.
 	 * @param vAlign the vertical align
 	 */
 	void setVerticalAlign(VerticalAlign vAlign);
 
 	/**
 	 * Helper method to build a {@code TextCell}.
-	 *
 	 * @param <T> type of an item
 	 * @param item the item
 	 * @param itemFunction the item function
@@ -57,7 +53,6 @@ public interface TextCell<T> extends Cell<T> {
 
 	/**
 	 * Helper method to build a {@code TextCell}.
-	 *
 	 * @param <T> type of an item
 	 * @param item the item
 	 * @param itemFunction the item function

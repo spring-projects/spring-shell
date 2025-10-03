@@ -31,8 +31,7 @@ public class AvailabilityCommands {
 
 		@Command(command = "availability-1")
 		@CommandAvailability(provider = "testAvailability1AnnotationAvailability")
-		public String testAvailability1Annotation(
-		) {
+		public String testAvailability1Annotation() {
 			return "Hello";
 		}
 
@@ -44,23 +43,18 @@ public class AvailabilityCommands {
 		private boolean connected = false;
 
 		@Command(command = "availability-set")
-		public void testAvailabilitySetAnnotation(
-			@Option(longNames = "connected") boolean connected
-		) {
+		public void testAvailabilitySetAnnotation(@Option(longNames = "connected") boolean connected) {
 			this.connected = connected;
 		}
 
 		@Command(command = "availability-use")
 		@CommandAvailability(provider = "testAvailabilityAnnotationConnected")
-		public void testAvailabilityUseAnnotation(
-		) {
+		public void testAvailabilityUseAnnotation() {
 		}
 
 		@Bean
 		public AvailabilityProvider testAvailabilityAnnotationConnected() {
-			return () -> connected
-				? Availability.available()
-				: Availability.unavailable("you are not connected");
+			return () -> connected ? Availability.available() : Availability.unavailable("you are not connected");
 		}
 
 	}
@@ -70,31 +64,23 @@ public class AvailabilityCommands {
 
 		@Bean
 		public CommandRegistration testAvailability1Registration() {
-			return getBuilder()
-				.command(REG, "availability-1")
-				.group(GROUP)
-				.availability(() -> {
-					return Availability.unavailable("not available");
-				})
-				.withTarget()
-					.function(ctx -> {
-						return "Hello";
-					})
-					.and()
-				.build();
+			return getBuilder().command(REG, "availability-1").group(GROUP).availability(() -> {
+				return Availability.unavailable("not available");
+			}).withTarget().function(ctx -> {
+				return "Hello";
+			}).and().build();
 		}
 
 		@Bean
 		public CommandRegistration testAvailability2Registration() {
-			return getBuilder()
-				.command(REG, "availability-2")
+			return getBuilder().command(REG, "availability-2")
 				.group(GROUP)
 				.availability(testAvailability2AnnotationAvailability())
 				.withTarget()
-					.function(ctx -> {
-						return "Hello";
-					})
-					.and()
+				.function(ctx -> {
+					return "Hello";
+				})
+				.and()
 				.build();
 		}
 
@@ -106,41 +92,38 @@ public class AvailabilityCommands {
 
 		@Bean
 		public CommandRegistration testAvailabilitySetRegistration() {
-			return getBuilder()
-				.command(REG, "availability-set")
+			return getBuilder().command(REG, "availability-set")
 				.group(GROUP)
 				.withOption()
-					.longNames("connected")
-					.required()
-					.type(boolean.class)
-					.and()
+				.longNames("connected")
+				.required()
+				.type(boolean.class)
+				.and()
 				.withTarget()
-					.consumer(ctx -> {
-						boolean connected = ctx.getOptionValue("connected");
-						this.connected = connected;
-					})
-					.and()
+				.consumer(ctx -> {
+					boolean connected = ctx.getOptionValue("connected");
+					this.connected = connected;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration testAvailabilityUseRegistration() {
-			return getBuilder()
-				.command(REG, "availability-use")
+			return getBuilder().command(REG, "availability-use")
 				.group(GROUP)
 				.availability(testAvailabilityRegistrationConnected())
 				.withTarget()
-					.consumer(ctx -> {
-					})
-					.and()
+				.consumer(ctx -> {
+				})
+				.and()
 				.build();
 		}
 
 		public AvailabilityProvider testAvailabilityRegistrationConnected() {
-			return () -> connected
-				? Availability.available()
-				: Availability.unavailable("you are not connected");
+			return () -> connected ? Availability.available() : Availability.unavailable("you are not connected");
 		}
 
 	}
+
 }

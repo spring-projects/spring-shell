@@ -68,13 +68,11 @@ public class ComponentCommands extends AbstractCommand {
 	}
 
 	@Command(command = "component path search", description = "Path search", group = "Components")
-	public String pathSearch(
-		@Option(defaultValue = Option.NULL) Integer maxPathsShow,
-		@Option(defaultValue = Option.NULL) Integer maxPathsSearch,
-		@Option(defaultValue = "true") boolean searchForward,
-		@Option(defaultValue = "false") boolean searchCaseSensitive,
-		@Option(defaultValue = "false") boolean searchNormalize
-	) {
+	public String pathSearch(@Option(defaultValue = Option.NULL) Integer maxPathsShow,
+			@Option(defaultValue = Option.NULL) Integer maxPathsSearch,
+			@Option(defaultValue = "true") boolean searchForward,
+			@Option(defaultValue = "false") boolean searchCaseSensitive,
+			@Option(defaultValue = "false") boolean searchNormalize) {
 		PathSearchConfig config = new PathSearch.PathSearchConfig();
 		if (maxPathsShow != null) {
 			config.setMaxPathsShow(maxPathsShow);
@@ -102,9 +100,7 @@ public class ComponentCommands extends AbstractCommand {
 	}
 
 	@Command(command = "component single", description = "Single selector", group = "Components")
-	public String singleSelector(
-		@Option(defaultValue = Option.NULL) Boolean longKeys
-	) {
+	public String singleSelector(@Option(defaultValue = Option.NULL) Boolean longKeys) {
 		List<SelectorItem<String>> items = new ArrayList<>();
 		items.add(SelectorItem.of("key1", "value1"));
 		items.add(SelectorItem.of("key2", "value2"));
@@ -112,20 +108,18 @@ public class ComponentCommands extends AbstractCommand {
 			items.add(SelectorItem.of("key3 long long long long long", "value3"));
 			items.add(SelectorItem.of("key4 long long long long long long long long long long", "value4"));
 		}
-		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-				items, "testSimple", null);
+		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(), items,
+				"testSimple", null);
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
 		SingleItemSelectorContext<String, SelectorItem<String>> context = component
-				.run(SingleItemSelectorContext.empty());
+			.run(SingleItemSelectorContext.empty());
 		String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
 		return "Got value " + result;
 	}
 
 	@Command(command = "component multi", description = "Multi selector", group = "Components")
-	public String multiSelector(
-		@Option(defaultValue = Option.NULL) Boolean longKeys
-	) {
+	public String multiSelector(@Option(defaultValue = Option.NULL) Boolean longKeys) {
 		List<SelectorItem<String>> items = new ArrayList<>();
 		items.add(SelectorItem.of("key1", "value1"));
 		items.add(SelectorItem.of("key2", "value2", false, true));
@@ -134,15 +128,13 @@ public class ComponentCommands extends AbstractCommand {
 			items.add(SelectorItem.of("key4 long long long long long", "value4", false, true));
 			items.add(SelectorItem.of("key5 long long long long long long long long long long", "value5"));
 		}
-		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
-				items, "testSimple", null);
+		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(), items,
+				"testSimple", null);
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
 		MultiItemSelectorContext<String, SelectorItem<String>> context = component
-				.run(MultiItemSelectorContext.empty());
-		String result = context.getResultItems().stream()
-				.map(si -> si.getItem())
-				.collect(Collectors.joining(","));
+			.run(MultiItemSelectorContext.empty());
+		String result = context.getResultItems().stream().map(si -> si.getItem()).collect(Collectors.joining(","));
 		return "Got value " + result;
 	}
 
@@ -170,7 +162,7 @@ public class ComponentCommands extends AbstractCommand {
 			if (context.getResultValue() != null) {
 				builder.append(context.getResultValue());
 			}
-			else  {
+			else {
 				String input = context.getInput();
 				if (StringUtils.hasText(input)) {
 					builder.append(input);
@@ -182,5 +174,7 @@ public class ComponentCommands extends AbstractCommand {
 
 			return Arrays.asList(builder.toAttributedString());
 		}
+
 	}
+
 }

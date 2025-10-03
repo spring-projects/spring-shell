@@ -32,7 +32,9 @@ import org.springframework.shell.tui.style.ThemeResolver;
 public class CatalogCommand extends AbstractCommand {
 
 	private final List<Scenario> scenarios;
+
 	private final TerminalUIBuilder terminalUIBuilder;
+
 	private final ThemeResolver themeResolver;
 
 	public CatalogCommand(List<Scenario> scenarios, TerminalUIBuilder terminalUIBuilder, ThemeResolver themeResolver) {
@@ -46,4 +48,5 @@ public class CatalogCommand extends AbstractCommand {
 		Catalog catalog = new Catalog(terminalUIBuilder, themeResolver, scenarios);
 		catalog.run();
 	}
+
 }

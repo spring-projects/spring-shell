@@ -58,7 +58,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class HelpTests {
 
 	private static Locale previousLocale;
+
 	private String testName;
+
 	private final CommandsPojo commandsPojo = new CommandsPojo();
 
 	@Autowired
@@ -92,29 +94,29 @@ class HelpTests {
 			.command("first-command")
 			.description("A rather extensive description of some command.")
 			.withTarget()
-				.method(commandsPojo, "firstCommand")
-				.and()
+			.method(commandsPojo, "firstCommand")
+			.and()
 			.withOption()
-				.shortNames('r')
-				.description("Whether to delete recursively")
-				.type(boolean.class)
-				.and()
+			.shortNames('r')
+			.description("Whether to delete recursively")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('f')
-				.description("Do not ask for confirmation. YOLO")
-				.type(boolean.class)
-				.and()
+			.shortNames('f')
+			.description("Do not ask for confirmation. YOLO")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('n')
-				.description("The answer to everything")
-				.defaultValue("42")
-				.type(int.class)
-				.and()
+			.shortNames('n')
+			.description("The answer to everything")
+			.defaultValue("42")
+			.type(int.class)
+			.and()
 			.withOption()
-				.shortNames('o')
-				.description("Some other parameters")
-				.type(float[].class)
-				.and()
+			.shortNames('o')
+			.description("Some other parameters")
+			.type(float[].class)
+			.and()
 			.build();
 		commandRegistry.register(registration);
 		String help = this.help.help(new String[] { "first-command" }).toString();
@@ -142,7 +144,7 @@ class HelpTests {
 	@Test
 	void testUnknownCommand() {
 		assertThatThrownBy(() -> this.help.help(new String[] { "some", "unknown", "command" }))
-				.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	private String removeNewLines(String str) {
@@ -150,7 +152,9 @@ class HelpTests {
 	}
 
 	private String sample() throws IOException {
-		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt", HelpTests.class).getInputStream();
+		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt",
+				HelpTests.class)
+			.getInputStream();
 		return removeNewLines(FileCopyUtils.copyToString(new InputStreamReader(is, StandardCharsets.UTF_8)));
 	}
 
@@ -159,14 +163,14 @@ class HelpTests {
 			.command("first-command")
 			.description("A rather extensive description of some command.")
 			.withAlias()
-				.command("1st-command")
-				.and()
+			.command("1st-command")
+			.and()
 			.withTarget()
-				.method(commandsPojo, "firstCommand")
-				.and()
+			.method(commandsPojo, "firstCommand")
+			.and()
 			.withOption()
-				.shortNames('r')
-				.and()
+			.shortNames('r')
+			.and()
 			.build();
 		commandRegistry.register(registration1);
 
@@ -174,11 +178,11 @@ class HelpTests {
 			.command("second-command")
 			.description("The second command. This one is known under several aliases as well.")
 			.withAlias()
-				.command("yet-another-command")
-				.and()
+			.command("yet-another-command")
+			.and()
 			.withTarget()
-				.method(commandsPojo, "secondCommand")
-				.and()
+			.method(commandsPojo, "secondCommand")
+			.and()
 			.build();
 		commandRegistry.register(registration2);
 
@@ -186,8 +190,8 @@ class HelpTests {
 			.command("third-command")
 			.description("The last command.")
 			.withTarget()
-				.method(commandsPojo, "thirdCommand")
-				.and()
+			.method(commandsPojo, "thirdCommand")
+			.and()
 			.build();
 		commandRegistry.register(registration3);
 
@@ -196,8 +200,8 @@ class HelpTests {
 			.description("The first command in a separate group.")
 			.group("Example Group")
 			.withTarget()
-				.method(commandsPojo, "firstCommandInGroup")
-				.and()
+			.method(commandsPojo, "firstCommandInGroup")
+			.and()
 			.build();
 		commandRegistry.register(registration4);
 
@@ -206,8 +210,8 @@ class HelpTests {
 			.description("The second command in a separate group.")
 			.group("Example Group")
 			.withTarget()
-				.method(commandsPojo, "secondCommandInGroup")
-				.and()
+			.method(commandsPojo, "secondCommandInGroup")
+			.and()
 			.build();
 		commandRegistry.register(registration5);
 	}
@@ -231,6 +235,7 @@ class HelpTests {
 			help.setCommandsTemplate("classpath:template/help-commands-default.stg");
 			return help;
 		}
+
 	}
 
 	@Command
@@ -239,15 +244,18 @@ class HelpTests {
 		@Command // FIXME how to migrate (prefix = "--")
 		public void firstCommand(
 				// Single key and arity = 0. Help displayed on same line
-				@Option(description = "Whether to delete recursively", arity = CommandRegistration.OptionArity.ZERO, shortNames = {'r'}) boolean r,
+				@Option(description = "Whether to delete recursively", arity = CommandRegistration.OptionArity.ZERO,
+						shortNames = { 'r' }) boolean r,
 				// Multiple keys and arity 0. Help displayed on next line
-				@Option(description = "Do not ask for confirmation. YOLO", arity = CommandRegistration.OptionArity.ZERO, shortNames = {'f'}, longNames = {"force"}) boolean force,
+				@Option(description = "Do not ask for confirmation. YOLO", arity = CommandRegistration.OptionArity.ZERO,
+						shortNames = { 'f' }, longNames = { "force" }) boolean force,
 				// Single key, arity >= 1. Help displayed on next line. Optional
 				// Also, bears bean validation annotation
-				@Option(description = "The answer to everything", defaultValue = "42", shortNames = {'n'}) @Max(5) int n,
-		        // Single key, arity > 1.
-		        @Option(description = "Some other parameters", arity = CommandRegistration.OptionArity.ONE_OR_MORE, shortNames = {'o'}) float[] o
-		) {
+				@Option(description = "The answer to everything", defaultValue = "42",
+						shortNames = { 'n' }) @Max(5) int n,
+				// Single key, arity > 1.
+				@Option(description = "Some other parameters", arity = CommandRegistration.OptionArity.ONE_OR_MORE,
+						shortNames = { 'o' }) float[] o) {
 		}
 
 		@Command
@@ -265,5 +273,7 @@ class HelpTests {
 		@Command
 		public void secondCommandInGroup() {
 		}
+
 	}
+
 }

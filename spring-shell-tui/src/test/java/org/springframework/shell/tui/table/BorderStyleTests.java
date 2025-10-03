@@ -61,75 +61,78 @@ class BorderStyleTests extends AbstractTestWithSample {
 
 	@Test
 	void testMixedOldSchoolWithAir() throws IOException {
-		Table table = new TableBuilder(generate(2, 2))
-				.addFullBorder(BorderStyle.air)
-				.addOutlineBorder(BorderStyle.oldschool)
-				.build();
+		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.air)
+			.addOutlineBorder(BorderStyle.oldschool)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
 	void testMixedFancyLightAndHeavy() throws IOException {
-		Table table = new TableBuilder(generate(2, 2))
-				.addFullBorder(BorderStyle.fancy_heavy)
-				.addOutlineBorder(BorderStyle.fancy_light)
-				.build();
+		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.fancy_heavy)
+			.addOutlineBorder(BorderStyle.fancy_light)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
 	void testMixedFancyHeavyAndLight() throws IOException {
-		Table table = new TableBuilder(generate(2, 2))
-				.addFullBorder(BorderStyle.fancy_light)
-				.addOutlineBorder(BorderStyle.fancy_heavy)
-				.build();
+		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.fancy_light)
+			.addOutlineBorder(BorderStyle.fancy_heavy)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
 	void testMixedDoubleAndSingle() throws IOException {
-		Table table = new TableBuilder(generate(2, 2))
-				.addFullBorder(BorderStyle.fancy_light)
-				.addOutlineBorder(BorderStyle.fancy_double)
-				.build();
+		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.fancy_light)
+			.addOutlineBorder(BorderStyle.fancy_double)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
 	void testMixedSingleAndDouble() throws IOException {
-		Table table = new TableBuilder(generate(2, 2))
-				.addFullBorder(BorderStyle.fancy_double)
-				.addOutlineBorder(BorderStyle.fancy_light)
-				.build();
+		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.fancy_double)
+			.addOutlineBorder(BorderStyle.fancy_light)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
 	void testMixedLightInternalAndHeavy() throws IOException {
-		Table table = new TableBuilder(generate(3, 3))
-				.addFullBorder(BorderStyle.fancy_heavy)
-				.paintBorder(BorderStyle.fancy_light, BorderSpecification.OUTLINE).fromRowColumn(1, 1).toRowColumn(2, 2)
-				.build();
+		Table table = new TableBuilder(generate(3, 3)).addFullBorder(BorderStyle.fancy_heavy)
+			.paintBorder(BorderStyle.fancy_light, BorderSpecification.OUTLINE)
+			.fromRowColumn(1, 1)
+			.toRowColumn(2, 2)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
 	void testMixedHeavyInternalAndLight() throws IOException {
-		Table table = new TableBuilder(generate(3, 3))
-				.addFullBorder(BorderStyle.fancy_light)
-				.paintBorder(BorderStyle.fancy_heavy, BorderSpecification.OUTLINE).fromRowColumn(1, 1).toRowColumn(2, 2)
-				.build();
+		Table table = new TableBuilder(generate(3, 3)).addFullBorder(BorderStyle.fancy_light)
+			.paintBorder(BorderStyle.fancy_heavy, BorderSpecification.OUTLINE)
+			.fromRowColumn(1, 1)
+			.toRowColumn(2, 2)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
 	void testHeavyOutlineAndHeader_LightVerticals_AirHorizontals() throws IOException {
-		Table table = new TableBuilder(generate(4, 4))
-				.addOutlineBorder(BorderStyle.fancy_heavy)
-				.paintBorder(BorderStyle.fancy_light, BorderSpecification.INNER_VERTICAL).fromTopLeft().toBottomRight()
-				.paintBorder(BorderStyle.air, BorderSpecification.INNER_HORIZONTAL).fromTopLeft().toBottomRight()
-				.paintBorder(BorderStyle.fancy_heavy, BorderSpecification.OUTLINE).fromTopLeft().toRowColumn(1, 4)
-				.build();
+		Table table = new TableBuilder(generate(4, 4)).addOutlineBorder(BorderStyle.fancy_heavy)
+			.paintBorder(BorderStyle.fancy_light, BorderSpecification.INNER_VERTICAL)
+			.fromTopLeft()
+			.toBottomRight()
+			.paintBorder(BorderStyle.air, BorderSpecification.INNER_HORIZONTAL)
+			.fromTopLeft()
+			.toBottomRight()
+			.paintBorder(BorderStyle.fancy_heavy, BorderSpecification.OUTLINE)
+			.fromTopLeft()
+			.toRowColumn(1, 4)
+			.build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
+
 }

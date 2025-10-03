@@ -39,4 +39,5 @@ public class ExitRequest extends RuntimeException {
 	public int status() {
 		return code;
 	}
+
 }

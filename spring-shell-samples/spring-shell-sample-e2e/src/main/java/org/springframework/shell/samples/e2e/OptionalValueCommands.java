@@ -32,12 +32,10 @@ public class OptionalValueCommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "optional-value")
-		public String testOptionalValueAnnotation(
-				@Option(longNames = "arg1")
-				String arg1
-		) {
-				return "Hello " + arg1;
+		public String testOptionalValueAnnotation(@Option(longNames = "arg1") String arg1) {
+			return "Hello " + arg1;
 		}
+
 	}
 
 	@Component
@@ -45,19 +43,20 @@ public class OptionalValueCommands {
 
 		@Bean
 		public CommandRegistration testOptionalValueRegistration() {
-			return getBuilder()
-				.command(REG, "optional-value")
+			return getBuilder().command(REG, "optional-value")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.and()
+				.longNames("arg1")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

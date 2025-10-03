@@ -32,16 +32,18 @@ class RegistrationOptionsCompletionResolverTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.and()
+			.longNames("arg2")
+			.and()
 			.build();
-		CompletionContext ctx = new CompletionContext(List.of("hello", "world", ""), 2, "".length(), registration, null);
+		CompletionContext ctx = new CompletionContext(List.of("hello", "world", ""), 2, "".length(), registration,
+				null);
 		List<CompletionProposal> proposals = resolver.apply(ctx);
 		assertThat(proposals).isNotNull().hasSize(2);
 	}
@@ -51,16 +53,18 @@ class RegistrationOptionsCompletionResolverTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.and()
+			.longNames("arg2")
+			.and()
 			.build();
-		CompletionContext ctx = new CompletionContext(List.of("hello", "world", "--arg1", ""), 2, "".length(), registration, null);
+		CompletionContext ctx = new CompletionContext(List.of("hello", "world", "--arg1", ""), 2, "".length(),
+				registration, null);
 		List<CompletionProposal> proposals = resolver.apply(ctx);
 		assertThat(proposals).isNotNull().hasSize(1);
 	}

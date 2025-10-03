@@ -16,7 +16,6 @@
 
 package org.springframework.shell.standard.test1;
 
-
 import org.springframework.shell.core.command.annotation.Command;
 
 public class GroupOneCommands {

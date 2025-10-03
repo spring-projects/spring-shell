@@ -27,21 +27,18 @@ public interface CommandAlias {
 
 	/**
 	 * Gets a command an alias.
-	 *
 	 * @return command
 	 */
 	String getCommand();
 
 	/**
 	 * Get group for an alias.
-	 *
 	 * @return the group
 	 */
 	@Nullable String getGroup();
 
 	/**
 	 * Gets an instance of a default {@link CommandAlias}.
-	 *
 	 * @param command the command
 	 * @param group the group
 	 * @return default command alias
@@ -56,6 +53,7 @@ public interface CommandAlias {
 	public static class DefaultCommandAlias implements CommandAlias {
 
 		private final String command;
+
 		private final @Nullable String group;
 
 		public DefaultCommandAlias(String command, @Nullable String group) {
@@ -72,5 +70,7 @@ public interface CommandAlias {
 		public @Nullable String getGroup() {
 			return group;
 		}
+
 	}
+
 }

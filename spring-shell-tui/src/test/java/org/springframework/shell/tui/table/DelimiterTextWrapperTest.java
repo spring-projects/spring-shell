@@ -31,15 +31,16 @@ class DelimiterTextWrapperTest {
 
 	@Test
 	void testNoWordSplit() {
-		String[] text = new String[] {"the quick brown fox jumps over the lazy dog."};
+		String[] text = new String[] { "the quick brown fox jumps over the lazy dog." };
 		assertThat(wrapper.wrap(text, 10)).containsExactly("the quick ", "brown fox ", "jumps over", "the lazy  ",
 				"dog.      ");
 	}
 
 	@Test
 	void testWordSplit() {
-		String[] text = new String[] {"the quick brown fox jumps over the lazy dog."};
+		String[] text = new String[] { "the quick brown fox jumps over the lazy dog." };
 		assertThat(wrapper.wrap(text, 4)).containsExactly("the ", "quic", "k   ", "brow", "n   ", "fox ", "jump",
 				"s   ", "over", "the ", "lazy", "dog.");
 	}
+
 }

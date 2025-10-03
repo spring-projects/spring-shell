@@ -32,11 +32,10 @@ import org.springframework.shell.tui.component.support.SelectorItem;
  *
  * @author Janne Valkealahti
  */
-public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSpec>{
+public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSpec> {
 
 	/**
 	 * Sets a name.
-	 *
 	 * @param name the name
 	 * @return a builder
 	 */
@@ -44,7 +43,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Sets a result values.
-	 *
 	 * @param resultValues the result values
 	 * @return a builder
 	 */
@@ -52,7 +50,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Sets a result mode.
-	 *
 	 * @param resultMode the result mode
 	 * @return a builder
 	 */
@@ -60,7 +57,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Adds a list of select items.
-	 *
 	 * @param selectItems the select items
 	 * @return a builder
 	 */
@@ -68,7 +64,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Sets a {@link Comparator} for sorting items.
-	 *
 	 * @param comparator the item comparator
 	 * @return a builder
 	 */
@@ -76,15 +71,14 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Sets a renderer function.
-	 *
 	 * @param renderer the renderer
 	 * @return a builder
 	 */
-	MultiItemSelectorSpec renderer(Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer);
+	MultiItemSelectorSpec renderer(
+			Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer);
 
 	/**
 	 * Sets a default renderer template location.
-	 *
 	 * @param location the template location
 	 * @return a builder
 	 */
@@ -92,7 +86,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Sets a maximum number of items in a selector list;
-	 *
 	 * @param max the maximum number of items
 	 * @return a builder
 	 */
@@ -100,7 +93,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Adds a pre-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -108,7 +100,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Adds a post-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -117,7 +108,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 	/**
 	 * Automatically stores result from a {@link MultiItemSelectorContext} into
 	 * {@link ComponentContext} with key given to builder. Defaults to {@code true}.
-	 *
 	 * @param store the flag if storing result
 	 * @return a builder
 	 */
@@ -126,7 +116,6 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 	/**
 	 * Define a function which may return id of a next component to go. Returning a
 	 * {@code null} or non existent id indicates that flow should stop.
-	 *
 	 * @param next next component function
 	 * @return a builder
 	 */
@@ -134,8 +123,8 @@ public interface MultiItemSelectorSpec extends BaseInputSpec<MultiItemSelectorSp
 
 	/**
 	 * Build and return parent builder.
-	 *
 	 * @return the parent builder
 	 */
 	Builder and();
+
 }

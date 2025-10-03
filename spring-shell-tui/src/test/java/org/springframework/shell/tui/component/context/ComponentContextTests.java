@@ -43,4 +43,5 @@ class ComponentContextTests {
 		assertThat(context.get("foo", String.class)).isEqualTo("bar");
 		assertThatThrownBy(() -> context.get("foo", Integer.class)).isInstanceOf(IllegalArgumentException.class);
 	}
+
 }

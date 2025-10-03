@@ -28,7 +28,9 @@ import org.springframework.shell.core.jline.PromptProvider;
 /**
  * Main entry point for the application.
  *
- * <p>Creates the application context and start the REPL.</p>
+ * <p>
+ * Creates the application context and start the REPL.
+ * </p>
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
@@ -49,4 +51,5 @@ public class SpringShellSample {
 	public PromptProvider myPromptProvider() {
 		return () -> new AttributedString("my-shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
 	}
+
 }

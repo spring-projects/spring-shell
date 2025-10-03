@@ -35,7 +35,8 @@ public class CommandParserExceptionResolver implements CommandExceptionResolver 
 		if (ex instanceof CommandParserExceptionsException cpee) {
 			AttributedStringBuilder builder = new AttributedStringBuilder();
 			cpee.getParserExceptions().stream().forEach(e -> {
-				builder.append(new AttributedString(e.getMessage(), AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)));
+				builder.append(
+						new AttributedString(e.getMessage(), AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)));
 				builder.append("\n");
 			});
 			String as = builder.toAttributedString().toAnsi();
@@ -43,4 +44,5 @@ public class CommandParserExceptionResolver implements CommandExceptionResolver 
 		}
 		return null;
 	}
+
 }

@@ -45,4 +45,5 @@ class HelpOptionCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession(command, interactive);
 		assertScreenContainsText(session, "NAME");
 	}
+
 }

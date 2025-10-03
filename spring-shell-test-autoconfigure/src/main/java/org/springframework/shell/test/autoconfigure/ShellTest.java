@@ -36,8 +36,8 @@ import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
- * Annotation that can be used for a Shell test that focuses
- * <strong>only</strong> on Shell components.
+ * Annotation that can be used for a Shell test that focuses <strong>only</strong> on
+ * Shell components.
  *
  * @author Janne Valkealahti
  */
@@ -57,14 +57,12 @@ public @interface ShellTest {
 	/**
 	 * Properties in form {@literal key=value} that should be added to the Spring
 	 * {@link Environment} before the test runs.
-	 *
 	 * @return the properties to add
 	 */
 	String[] properties() default {};
 
 	/**
 	 * Set emulated terminal width.
-	 *
 	 * @return emulated terminal width
 	 */
 	@PropertyMapping(value = "spring.shell.test.terminal-width", skip = PropertyMapping.Skip.ON_DEFAULT_VALUE)
@@ -72,7 +70,6 @@ public @interface ShellTest {
 
 	/**
 	 * Set emulated terminal height.
-	 *
 	 * @return emulated terminal height
 	 */
 	@PropertyMapping(value = "spring.shell.test.terminal-height", skip = PropertyMapping.Skip.ON_DEFAULT_VALUE)
@@ -91,7 +88,6 @@ public @interface ShellTest {
 	/**
 	 * A set of include filters which can be used to add otherwise filtered beans to the
 	 * application context.
-	 *
 	 * @return include filters to apply
 	 */
 	Filter[] includeFilters() default {};
@@ -99,16 +95,15 @@ public @interface ShellTest {
 	/**
 	 * A set of exclude filters which can be used to filter beans that would otherwise be
 	 * added to the application context.
-	 *
 	 * @return exclude filters to apply
 	 */
 	Filter[] excludeFilters() default {};
 
 	/**
 	 * Auto-configuration exclusions that should be applied for this test.
-	 *
 	 * @return auto-configuration exclusions to apply
 	 */
 	@AliasFor(annotation = ImportAutoConfiguration.class, attribute = "exclude")
 	Class<?>[] excludeAutoConfiguration() default {};
+
 }

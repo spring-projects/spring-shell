@@ -30,7 +30,7 @@ class ArrayTableModelTest {
 
 	@Test
 	void testValid() {
-		TableModel model = new ArrayTableModel(new String[][] {{"a", "b"}, {"c", "d"}});
+		TableModel model = new ArrayTableModel(new String[][] { { "a", "b" }, { "c", "d" } });
 		assertThat(model.getColumnCount()).isEqualTo(2);
 		assertThat(model.getRowCount()).isEqualTo(2);
 		assertThat(model.getValue(0, 1)).isEqualTo("b");
@@ -45,7 +45,8 @@ class ArrayTableModelTest {
 
 	@Test
 	void testInvalidDimensions() {
-		assertThatThrownBy(() -> new ArrayTableModel(new String[][] {{"a", "b"}, {"c", "d", "e"}}))
-				.isInstanceOf(IllegalArgumentException.class);
+		assertThatThrownBy(() -> new ArrayTableModel(new String[][] { { "a", "b" }, { "c", "d", "e" } }))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
+
 }

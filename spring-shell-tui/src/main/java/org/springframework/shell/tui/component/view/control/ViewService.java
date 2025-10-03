@@ -27,22 +27,20 @@ public interface ViewService {
 
 	/**
 	 * Gets a current modal view.
-	 *
 	 * @return current modal view
 	 */
 	@Nullable View getModal();
 
 	/**
 	 * Sets a new modal view. Setting modal to {@code null} clears existing modal.
-	 *
 	 * @param view a view to use as modal
 	 */
 	void setModal(@Nullable View view);
 
 	/**
 	 * Sets a view to be focused. Setting focus to {@code null} clears focused view.
-	 *
 	 * @param view a view to be focused
 	 */
 	void setFocus(@Nullable View view);
+
 }

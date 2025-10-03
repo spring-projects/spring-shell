@@ -61,4 +61,5 @@ class BorderFactoryTest extends AbstractTestWithSample {
 		String result = table.render(80);
 		assertThat(result).isEqualTo(sample());
 	}
+
 }

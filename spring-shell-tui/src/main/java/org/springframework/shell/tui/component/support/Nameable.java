@@ -17,5 +17,6 @@ package org.springframework.shell.tui.component.support;
 
 public interface Nameable {
 
-    String getName();
+	String getName();
+
 }

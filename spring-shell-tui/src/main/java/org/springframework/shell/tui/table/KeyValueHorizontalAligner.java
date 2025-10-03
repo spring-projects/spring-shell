@@ -17,10 +17,13 @@
 package org.springframework.shell.tui.table;
 
 /**
- * A text alignment strategy that aligns text horizontally so that all instances of some special character(s)
- * line up perfectly in a column.
+ * A text alignment strategy that aligns text horizontally so that all instances of some
+ * special character(s) line up perfectly in a column.
  *
- * <p>Typically used to render numbers which may or may not have a decimal point, or series of key-value pairs</p>
+ * <p>
+ * Typically used to render numbers which may or may not have a decimal point, or series
+ * of key-value pairs
+ * </p>
  *
  * @author Eric Bottard
  */
@@ -69,4 +72,5 @@ public class KeyValueHorizontalAligner implements Aligner {
 		}
 		return sb.toString();
 	}
+
 }

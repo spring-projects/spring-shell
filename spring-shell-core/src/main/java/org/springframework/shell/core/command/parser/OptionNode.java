@@ -37,4 +37,5 @@ public final class OptionNode extends NonterminalAstNode {
 	public String toString() {
 		return "OptionNode [name=" + name + ", children=" + getChildren() + ", token=" + getToken() + "]";
 	}
+
 }

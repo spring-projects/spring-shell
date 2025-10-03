@@ -39,9 +39,13 @@ import org.springframework.util.StringUtils;
 public class ThemeResolver {
 
 	private StyleSource styleSource = new MemoryStyleSource();
+
 	private StyleResolver styleResolver = new StyleResolver(styleSource, "default");
+
 	private StyleExpression styleExpression = new StyleExpression(styleResolver);
+
 	private ThemeRegistry themeRegistry;
+
 	private final @Nullable Theme theme;
 
 	public ThemeResolver(ThemeRegistry themeRegistry, String themeName) {
@@ -51,25 +55,34 @@ public class ThemeResolver {
 
 	// copied from jline as no public access
 	private static final long F_FOREGROUND_IND = 0x00000100;
+
 	private static final long F_FOREGROUND_RGB = 0x00000200;
+
 	private static final long F_FOREGROUND = F_FOREGROUND_IND | F_FOREGROUND_RGB;
+
 	private static final long F_BACKGROUND_IND = 0x00000400;
+
 	private static final long F_BACKGROUND_RGB = 0x00000800;
+
 	private static final long F_BACKGROUND = F_BACKGROUND_IND | F_BACKGROUND_RGB;
+
 	private static final int FG_COLOR_EXP = 15;
+
 	private static final int BG_COLOR_EXP = 39;
+
 	private static final long FG_COLOR = 0xFFFFFFL << FG_COLOR_EXP;
+
 	private static final long BG_COLOR = 0xFFFFFFL << BG_COLOR_EXP;
 
 	/**
 	 * Stores resolved values for {@link ThemeResolver#resolveValues(AttributedStyle)}.
 	 */
-	public record ResolvedValues(int style, int foreground, int background){}
+	public record ResolvedValues(int style, int foreground, int background) {
+	}
 
 	/**
-	 * Resolve {@code style}, {@code foreground color} and {@code background color}
-	 * from an {@link AttributedStyle}.
-	 *
+	 * Resolve {@code style}, {@code foreground color} and {@code background color} from
+	 * an {@link AttributedStyle}.
 	 * @param attributedStyle the attibuted style
 	 * @return resolved values
 	 */
@@ -90,12 +103,11 @@ public class ThemeResolver {
 			bg = Colors.DEFAULT_COLORS_256[bg & 0xFF];
 		}
 
-		return new ResolvedValues((int)s, hasFb ? fg : -1, hasBg ? bg : -1);
+		return new ResolvedValues((int) s, hasFb ? fg : -1, hasBg ? bg : -1);
 	}
 
 	/**
 	 * Return all known theme names.
-	 *
 	 * @return all theme names
 	 */
 	public Set<String> themeNames() {
@@ -104,7 +116,6 @@ public class ThemeResolver {
 
 	/**
 	 * Evaluate expression.
-	 *
 	 * @param expression the expression
 	 * @return evaluated attributed string
 	 */
@@ -112,10 +123,8 @@ public class ThemeResolver {
 		return styleExpression.evaluate(expression);
 	}
 
-
 	/**
 	 * Resolve style from a tag with activated theme.
-	 *
 	 * @param tag the tag
 	 * @return a style
 	 */
@@ -126,7 +135,6 @@ public class ThemeResolver {
 
 	/**
 	 * Resolve style from a tag with given theme.
-	 *
 	 * @param tag the tag
 	 * @param themeName the theme name
 	 * @return a style
@@ -139,7 +147,6 @@ public class ThemeResolver {
 
 	/**
 	 * Resolve figure from a tag with activated theme.
-	 *
 	 * @param tag the tag
 	 * @return a style
 	 */
@@ -150,7 +157,6 @@ public class ThemeResolver {
 
 	/**
 	 * Resolve spinner from a tag with activated theme.
-	 *
 	 * @param tag the tag
 	 * @return a spinner
 	 */
@@ -161,11 +167,11 @@ public class ThemeResolver {
 
 	/**
 	 * Resolve {@link AttributedStyle} from a {@code spec}.
-	 *
 	 * @param spec the spec
 	 * @return resolved attributed style
 	 */
 	public AttributedStyle resolveStyle(String spec) {
 		return styleResolver.resolve(spec);
 	}
+
 }

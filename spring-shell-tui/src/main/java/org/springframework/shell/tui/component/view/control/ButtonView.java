@@ -38,6 +38,7 @@ import org.springframework.shell.tui.style.StyleSettings;
 public class ButtonView extends BoxView {
 
 	private @Nullable String text;
+
 	private @Nullable Runnable action;
 
 	public ButtonView() {

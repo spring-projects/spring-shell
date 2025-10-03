@@ -43,7 +43,8 @@ public class ShellRunnerAutoConfiguration {
 	public static class PrimaryCommandConfiguration {
 
 		@Bean
-		@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
+		@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true",
+				matchIfMissing = true)
 		public NonInteractiveShellRunner nonInteractiveApplicationRunner(Shell shell, ShellContext shellContext,
 				ObjectProvider<NonInteractiveShellRunnerCustomizer> customizer, SpringShellProperties properties) {
 			NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(shell, shellContext,
@@ -59,14 +60,16 @@ public class ShellRunnerAutoConfiguration {
 	public static class NonePrimaryCommandConfiguration {
 
 		@Bean
-		@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true", matchIfMissing = false)
+		@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true",
+				matchIfMissing = false)
 		public InteractiveShellRunner interactiveApplicationRunner(LineReader lineReader, PromptProvider promptProvider,
 				Shell shell, ShellContext shellContext) {
 			return new InteractiveShellRunner(lineReader, promptProvider, shell, shellContext);
 		}
 
 		@Bean
-		@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true", matchIfMissing = true)
+		@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true",
+				matchIfMissing = true)
 		public NonInteractiveShellRunner nonInteractiveApplicationRunner(Shell shell, ShellContext shellContext,
 				ObjectProvider<NonInteractiveShellRunnerCustomizer> customizer) {
 			NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(shell, shellContext);
@@ -75,10 +78,12 @@ public class ShellRunnerAutoConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnProperty(prefix = "spring.shell.script", value = "enabled", havingValue = "true", matchIfMissing = false)
+		@ConditionalOnProperty(prefix = "spring.shell.script", value = "enabled", havingValue = "true",
+				matchIfMissing = false)
 		public ScriptShellRunner scriptApplicationRunner(Parser parser, Shell shell) {
 			return new ScriptShellRunner(parser, shell);
 		}
 
 	}
+
 }

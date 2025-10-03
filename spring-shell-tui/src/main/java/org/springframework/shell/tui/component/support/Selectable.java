@@ -18,4 +18,5 @@ package org.springframework.shell.tui.component.support;
 public interface Selectable {
 
 	boolean isSelected();
+
 }

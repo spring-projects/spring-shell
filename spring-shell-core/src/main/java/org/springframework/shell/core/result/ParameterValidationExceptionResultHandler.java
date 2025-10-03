@@ -39,16 +39,18 @@ public class ParameterValidationExceptionResultHandler
 
 	@Override
 	protected void doHandleResult(ParameterValidationException result) {
-		terminal.writer().println(new AttributedString("The following constraints were not met:",
-				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
-		result.getConstraintViolations().stream()
-				.forEach(violation -> {
-					Path propertyPath = violation.getPropertyPath();
-					String violationMessage = violation.getMessage();
-					String errorMessage = String.format("\t--%s: %s", extractPropertyName(propertyPath), violationMessage);
-					terminal.writer().println(new AttributedString(errorMessage,
-						AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi(terminal));
-				});
+		terminal.writer()
+			.println(new AttributedString("The following constraints were not met:",
+					AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+				.toAnsi());
+		result.getConstraintViolations().stream().forEach(violation -> {
+			Path propertyPath = violation.getPropertyPath();
+			String violationMessage = violation.getMessage();
+			String errorMessage = String.format("\t--%s: %s", extractPropertyName(propertyPath), violationMessage);
+			terminal.writer()
+				.println(new AttributedString(errorMessage, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.toAnsi(terminal));
+		});
 	}
 
 	private String extractPropertyName(Path propertyPath) {

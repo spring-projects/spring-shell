@@ -15,28 +15,26 @@
  */
 package org.springframework.shell.test.jediterm.terminal;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author jediterm authors
  */
 public enum TerminalMode {
-	Null,
-	CursorKey {
+
+	Null, CursorKey {
 		@Override
 		public void setEnabled(Terminal terminal, boolean enabled) {
 			terminal.setApplicationArrowKeys(enabled);
 		}
 	},
-	ANSI,
-	WideColumn {
+	ANSI, WideColumn {
 		@Override
 		public void setEnabled(Terminal terminal, boolean enabled) {
 			// Skip resizing as it would require to resize parent container.
-			// Other terminal emulators (iTerm2, Terminal.app, GNOME Terminal) ignore it too.
+			// Other terminal emulators (iTerm2, Terminal.app, GNOME Terminal) ignore it
+			// too.
 			terminal.clearScreen();
 			terminal.resetScrollRegions();
 		}
@@ -53,9 +51,7 @@ public enum TerminalMode {
 			terminal.useAlternateBuffer(enabled);
 		}
 	},
-	SmoothScroll,
-	ReverseVideo,
-	OriginMode {
+	SmoothScroll, ReverseVideo, OriginMode {
 		@Override
 		public void setEnabled(Terminal terminal, boolean enabled) {
 		}
@@ -63,12 +59,10 @@ public enum TerminalMode {
 	AutoWrap {
 		@Override
 		public void setEnabled(Terminal terminal, boolean enabled) {
-			//we do nothing just switching the mode
+			// we do nothing just switching the mode
 		}
 	},
-	AutoRepeatKeys,
-	Interlace,
-	Keypad {
+	AutoRepeatKeys, Interlace, Keypad {
 		@Override
 		public void setEnabled(Terminal terminal, boolean enabled) {
 			terminal.setApplicationKeypad(enabled);
@@ -91,27 +85,25 @@ public enum TerminalMode {
 			terminal.setBlinkingCursor(enabled);
 		}
 	},
-	AllowWideColumn,
-	ReverseWrapAround,
-	AutoNewLine {
+	AllowWideColumn, ReverseWrapAround, AutoNewLine {
 		@Override
 		public void setEnabled(Terminal terminal, boolean enabled) {
 			terminal.setAutoNewLine(enabled);
 		}
 	},
-	KeyboardAction,
-	InsertMode,
-	SendReceive,
-	EightBitInput, //Interpret "meta" key, sets eighth bit. (enables the eightBitInput resource).
-							 // http://www.leonerd.org.uk/hacks/hints/xterm-8bit.html
+	KeyboardAction, InsertMode, SendReceive, EightBitInput, // Interpret "meta" key, sets
+															// eighth bit. (enables the
+															// eightBitInput resource).
+															// http://www.leonerd.org.uk/hacks/hints/xterm-8bit.html
 
-	AltSendsEscape //See section Alt and Meta Keys in http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
-					{
-						@Override
-						public void setEnabled(Terminal terminal, boolean enabled) {
-							terminal.setAltSendsEscape(enabled);
-						}
-					},
+	AltSendsEscape // See section Alt and Meta Keys in
+					// http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+	{
+		@Override
+		public void setEnabled(Terminal terminal, boolean enabled) {
+			terminal.setAltSendsEscape(enabled);
+		}
+	},
 
 	// https://cirw.in/blog/bracketed-paste
 	// http://www.xfree86.org/current/ctlseqs.html#Bracketed%20Paste%20Mode
@@ -120,12 +112,12 @@ public enum TerminalMode {
 		public void setEnabled(Terminal terminal, boolean enabled) {
 			terminal.setBracketedPasteMode(enabled);
 		}
-	}
-	;
+	};
 
 	private static final Logger LOG = LoggerFactory.getLogger(TerminalMode.class);
 
 	public void setEnabled(Terminal terminal, boolean enabled) {
 		LOG.warn("Mode " + name() + " is not implemented, setting to " + enabled);
 	}
+
 }

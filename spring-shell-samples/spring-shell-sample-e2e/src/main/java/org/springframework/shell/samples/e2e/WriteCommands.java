@@ -36,6 +36,7 @@ public class WriteCommands {
 		public void writeSystemOut() {
 			System.out.println("hi");
 		}
+
 	}
 
 	@Component
@@ -43,29 +44,19 @@ public class WriteCommands {
 
 		@Bean
 		public CommandRegistration writeTerminalWriterRegistration() {
-			return getBuilder()
-				.command(REG, "write-terminalwriter")
-				.group(GROUP)
-				.withTarget()
-					.consumer(ctx -> {
-						ctx.getTerminal().writer().println("hi");
-						ctx.getTerminal().writer().flush();
-					})
-					.and()
-				.build();
+			return getBuilder().command(REG, "write-terminalwriter").group(GROUP).withTarget().consumer(ctx -> {
+				ctx.getTerminal().writer().println("hi");
+				ctx.getTerminal().writer().flush();
+			}).and().build();
 		}
 
 		@Bean
 		public CommandRegistration writeSystemOutRegistration() {
-			return getBuilder()
-				.command(REG, "write-terminalwriter")
-				.group(GROUP)
-				.withTarget()
-					.consumer(ctx -> {
-						System.out.println("hi");
-					})
-					.and()
-				.build();
+			return getBuilder().command(REG, "write-terminalwriter").group(GROUP).withTarget().consumer(ctx -> {
+				System.out.println("hi");
+			}).and().build();
 		}
+
 	}
+
 }

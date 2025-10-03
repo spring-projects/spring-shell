@@ -31,21 +31,29 @@ public class Clear extends AbstractCommand {
 	/**
 	 * Marker interface for beans providing {@literal clear} functionality to the shell.
 	 *
-	 * <p>To override the clear command, simply register your own bean implementing that interface
-	 * and the standard implementation will back off.</p>
+	 * <p>
+	 * To override the clear command, simply register your own bean implementing that
+	 * interface and the standard implementation will back off.
+	 * </p>
 	 *
-	 * <p>To disable the {@literal clear} command entirely, set the {@literal spring.shell.command.clear.enabled=false}
-	 * property in the environment.</p>
+	 * <p>
+	 * To disable the {@literal clear} command entirely, set the
+	 * {@literal spring.shell.command.clear.enabled=false} property in the environment.
+	 * </p>
 	 *
 	 * @author Eric Bottard
 	 */
-	public interface Command {}
+	public interface Command {
+
+	}
 
 	public Clear() {
 	}
 
-	@org.springframework.shell.core.command.annotation.Command(command = "Clear the shell screen.", interactionMode = InteractionMode.INTERACTIVE)
+	@org.springframework.shell.core.command.annotation.Command(command = "Clear the shell screen.",
+			interactionMode = InteractionMode.INTERACTIVE)
 	public void clear() {
 		getTerminal().puts(InfoCmp.Capability.clear_screen);
 	}
+
 }

@@ -20,10 +20,10 @@ import org.springframework.shell.tui.component.view.control.View;
 import org.springframework.shell.tui.component.view.screen.Screen;
 
 /**
- * Base interface for all cells. Typically a {@link Cell} is a building block in
- * a {@link View} not needing to be aware of how it is drawn into a {@link Screen}
- * but needs to aware of its "item", bounds via {@link Control} and other
- * properties like {@code background}.
+ * Base interface for all cells. Typically a {@link Cell} is a building block in a
+ * {@link View} not needing to be aware of how it is drawn into a {@link Screen} but needs
+ * to aware of its "item", bounds via {@link Control} and other properties like
+ * {@code background}.
  *
  * @author Janne Valkealahti
  */
@@ -31,35 +31,30 @@ public interface Cell<T> extends Control {
 
 	/**
 	 * Get item bound to a cell.
-	 *
 	 * @return item bound to a cell
 	 */
 	T getItem();
 
 	/**
 	 * Sets an item to bound into a cell.
-	 *
 	 * @param item item to bound into a cell
 	 */
 	void setItem(T item);
 
 	/**
 	 * Sets a style.
-	 *
 	 * @param style the style
 	 */
 	void setStyle(int style);
 
 	/**
 	 * Sets a foreground color.
-	 *
 	 * @param foregroundColor the background color
 	 */
 	void setForegroundColor(int foregroundColor);
 
 	/**
 	 * Sets a background color.
-	 *
 	 * @param backgroundColor the background color
 	 */
 	void setBackgroundColor(int backgroundColor);

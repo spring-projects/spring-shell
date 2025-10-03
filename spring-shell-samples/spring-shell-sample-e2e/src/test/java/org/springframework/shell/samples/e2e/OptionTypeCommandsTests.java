@@ -104,4 +104,5 @@ class OptionTypeCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession(command, interactive);
 		assertScreenContainsText(session, "Hello [one, two]");
 	}
+
 }

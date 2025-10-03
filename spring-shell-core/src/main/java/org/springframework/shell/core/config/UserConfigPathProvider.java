@@ -18,8 +18,8 @@ package org.springframework.shell.core.config;
 import java.nio.file.Path;
 
 /**
- * Interface providing a {@link Path} to a location where
- * user level runtime configuration files are strored.
+ * Interface providing a {@link Path} to a location where user level runtime configuration
+ * files are strored.
  *
  * @author Janne Valkealahti
  */
@@ -28,8 +28,8 @@ public interface UserConfigPathProvider {
 
 	/**
 	 * Provides a path to a user config location.
-	 *
 	 * @return a path to user config location
 	 */
 	Path provide();
+
 }

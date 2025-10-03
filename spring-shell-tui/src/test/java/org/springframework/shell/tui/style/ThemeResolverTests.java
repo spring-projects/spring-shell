@@ -52,7 +52,7 @@ class ThemeResolverTests {
 		assertThat(themeResolver.resolveStyleTag(StyleSettings.TAG_TITLE)).isEqualTo("bold");
 		assertThat(themeResolver.resolveStyle("bold")).isEqualTo(AttributedStyle.BOLD);
 		assertThat(themeResolver.evaluateExpression("@{bold foo}"))
-				.isEqualTo(new AttributedString("foo", AttributedStyle.BOLD));
+			.isEqualTo(new AttributedString("foo", AttributedStyle.BOLD));
 	}
 
 	@Test

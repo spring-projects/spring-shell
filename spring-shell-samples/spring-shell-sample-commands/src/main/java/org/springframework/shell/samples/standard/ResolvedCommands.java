@@ -41,12 +41,14 @@ public class ResolvedCommands {
 		Server2CommandResolver server2CommandResolver() {
 			return new Server2CommandResolver();
 		}
+
 	}
 
 	@Command
 	public static class ResolvedCommandsCommands {
 
 		private final Server1CommandResolver server1CommandResolver;
+
 		private final Server2CommandResolver server2CommandResolver;
 
 		ResolvedCommandsCommands(Server1CommandResolver server1CommandResolver,
@@ -78,11 +80,13 @@ public class ResolvedCommands {
 			server2CommandResolver.enabled = false;
 			return "Disabled server2";
 		}
+
 	}
 
 	static class Server1CommandResolver implements CommandResolver {
 
 		private final List<CommandRegistration> registrations = new ArrayList<>();
+
 		boolean enabled = false;
 
 		Server1CommandResolver() {
@@ -91,10 +95,10 @@ public class ResolvedCommands {
 				.group(GROUP)
 				.description("server1 command1")
 				.withTarget()
-					.function(ctx -> {
-						return "hi from server1 command1";
-					})
-					.and()
+				.function(ctx -> {
+					return "hi from server1 command1";
+				})
+				.and()
 				.build();
 			registrations.add(resolved1);
 		}
@@ -103,11 +107,13 @@ public class ResolvedCommands {
 		public List<CommandRegistration> resolve() {
 			return enabled ? registrations : Collections.emptyList();
 		}
+
 	}
 
 	static class Server2CommandResolver implements CommandResolver {
 
 		private final List<CommandRegistration> registrations = new ArrayList<>();
+
 		boolean enabled = false;
 
 		Server2CommandResolver() {
@@ -116,20 +122,20 @@ public class ResolvedCommands {
 				.group(GROUP)
 				.description("server2 command1")
 				.withTarget()
-					.function(ctx -> {
-						return "hi from server2 command1";
-					})
-					.and()
+				.function(ctx -> {
+					return "hi from server2 command1";
+				})
+				.and()
 				.build();
 			CommandRegistration resolved2 = CommandRegistration.builder()
 				.command("resolve server2 command2")
 				.group(GROUP)
 				.description("server2 command2")
 				.withTarget()
-					.function(ctx -> {
-						return "hi from server2 command2";
-					})
-					.and()
+				.function(ctx -> {
+					return "hi from server2 command2";
+				})
+				.and()
 				.build();
 			registrations.add(resolved1);
 			registrations.add(resolved2);
@@ -139,5 +145,7 @@ public class ResolvedCommands {
 		public List<CommandRegistration> resolve() {
 			return enabled ? registrations : Collections.emptyList();
 		}
+
 	}
+
 }

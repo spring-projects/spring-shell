@@ -34,7 +34,6 @@ public class ThemeRegistry {
 
 	/**
 	 * Gets a theme from a registry.
-	 *
 	 * @param name the theme name
 	 * @return a theme
 	 */
@@ -44,7 +43,6 @@ public class ThemeRegistry {
 
 	/**
 	 * Register a theme.
-	 *
 	 * @param theme the theme
 	 */
 	public void register(Theme theme) {
@@ -54,10 +52,10 @@ public class ThemeRegistry {
 
 	/**
 	 * Gets all theme names registered.
-	 *
 	 * @return theme names
 	 */
 	public Set<String> getThemeNames() {
 		return themes.keySet();
 	}
+
 }

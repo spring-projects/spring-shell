@@ -28,16 +28,15 @@ public interface ResultHandlerService {
 
 	/**
 	 * Handle result.
-	 *
 	 * @param result the result
 	 */
 	void handle(@Nullable Object result);
 
 	/**
 	 * Handle result to the specified {@link TypeDescriptor}.
-	 *
 	 * @param result the result
 	 * @param resultType the result type
 	 */
 	void handle(@Nullable Object result, @Nullable TypeDescriptor resultType);
+
 }

@@ -53,16 +53,27 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		extends AbstractComponent<C> {
 
 	private final static Logger log = LoggerFactory.getLogger(AbstractSelectorComponent.class);
+
 	protected final @Nullable String name;
+
 	private final List<I> items;
+
 	private Comparator<I> comparator = (o1, o2) -> 0;
+
 	private boolean exitSelects;
+
 	private int maxItems = 5;
+
 	private Function<T, String> itemMapper = item -> item.toString();
+
 	private boolean stale = false;
+
 	private AtomicInteger start = new AtomicInteger(0);
+
 	private AtomicInteger pos = new AtomicInteger(0);
+
 	private @Nullable I defaultExpose;
+
 	private boolean expose = false;
 
 	public AbstractSelectorComponent(Terminal terminal, @Nullable String name, List<I> items, boolean exitSelects,
@@ -78,7 +89,6 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 
 	/**
 	 * Set max items to show.
-	 *
 	 * @param maxItems max items
 	 */
 	public void setMaxItems(int maxItems) {
@@ -88,7 +98,6 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 
 	/**
 	 * Sets an item mapper.
-	 *
 	 * @param itemMapper the item mapper
 	 */
 	public void setItemMapper(Function<T, String> itemMapper) {
@@ -98,7 +107,6 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 
 	/**
 	 * Gets an item mapper.
-	 *
 	 * @return
 	 */
 	public Function<T, String> getItemMapper() {
@@ -107,7 +115,6 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 
 	/**
 	 * Sets default expose item when component start.
-	 *
 	 * @param defaultExpose the default item
 	 */
 	public void setDefaultExpose(@Nullable I defaultExpose) {
@@ -119,7 +126,6 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 
 	/**
 	 * Gets items.
-	 *
 	 * @return a list of items
 	 */
 	protected List<I> getItems() {
@@ -237,9 +243,9 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 					});
 				}
 				List<I> values = requireNonNullElse(thisContext.getItemStates(), new ArrayList<ItemState<I>>()).stream()
-						.filter(i -> i.selected)
-						.map(i -> i.item)
-						.collect(Collectors.toList());
+					.filter(i -> i.selected)
+					.map(i -> i.item)
+					.collect(Collectors.toList());
 				thisContext.setResultItems(values);
 				return true;
 			default:
@@ -260,12 +266,14 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		if (itemStates == null) {
 			AtomicInteger index = new AtomicInteger(0);
 			itemStates = requireNonNullElse(context.getItems(), new ArrayList<I>()).stream()
-					.sorted(comparator)
-					.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled(), item.isSelected()))
-					.collect(Collectors.toList());
+				.sorted(comparator)
+				.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled(),
+						item.isSelected()))
+				.collect(Collectors.toList());
 		}
 		for (int i = 0; i < itemStates.size(); i++) {
-			if (defaultExpose != null && ObjectUtils.nullSafeEquals(itemStates.get(i).getName(), defaultExpose.getName())) {
+			if (defaultExpose != null
+					&& ObjectUtils.nullSafeEquals(itemStates.get(i).getName(), defaultExpose.getName())) {
 				if (i < maxItems) {
 					this.pos.set(i);
 				}
@@ -283,35 +291,34 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		if (itemStates == null) {
 			AtomicInteger index = new AtomicInteger(0);
 			itemStates = requireNonNullElse(context.getItems(), new ArrayList<I>()).stream()
-					.sorted(comparator)
-					.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled(), item.isSelected()))
-					.collect(Collectors.toList());
+				.sorted(comparator)
+				.map(item -> ItemState.of(item, item.getName(), index.getAndIncrement(), item.isEnabled(),
+						item.isSelected()))
+				.collect(Collectors.toList());
 			context.setItemStates(itemStates);
 		}
 		AtomicInteger reindex = new AtomicInteger(0);
-		List<ItemState<I>> filtered = itemStates.stream()
-			.filter(i -> {
-				return i.matches(context.getInput());
-			})
-			.map(i -> {
-				i.index = reindex.getAndIncrement();
-				return i;
-			})
-			.collect(Collectors.toList());
-		List<ItemState<I>> items = filtered.stream()
-			.skip(skip)
-			.limit(maxItems)
-			.collect(Collectors.toList());
+		List<ItemState<I>> filtered = itemStates.stream().filter(i -> {
+			return i.matches(context.getInput());
+		}).map(i -> {
+			i.index = reindex.getAndIncrement();
+			return i;
+		}).collect(Collectors.toList());
+		List<ItemState<I>> items = filtered.stream().skip(skip).limit(maxItems).collect(Collectors.toList());
 		return new ItemStateViewProjection(items, filtered.size());
 	}
 
 	private class ItemStateViewProjection {
+
 		List<ItemState<I>> items;
+
 		int total;
+
 		ItemStateViewProjection(List<ItemState<I>> items, int total) {
 			this.items = items;
 			this.total = total;
 		}
+
 	}
 
 	/**
@@ -322,117 +329,102 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 
 		/**
 		 * Gets a name.
-		 *
 		 * @return a name
 		 */
 		@Nullable String getName();
 
 		/**
 		 * Sets a name
-		 *
 		 * @param name the name
 		 */
 		void setName(String name);
 
 		/**
 		 * Gets an input.
-		 *
 		 * @return an input
 		 */
 		@Nullable String getInput();
 
 		/**
 		 * Sets an input.
-		 *
 		 * @param input the input
 		 */
 		void setInput(@Nullable String input);
 
 		/**
 		 * Gets an item states
-		 *
 		 * @return an item states
 		 */
 		@Nullable List<ItemState<I>> getItemStates();
 
 		/**
 		 * Sets an item states.
-		 *
 		 * @param itemStateView the input state
 		 */
 		void setItemStates(List<ItemState<I>> itemStateView);
 
 		/**
 		 * Gets an item state view.
-		 *
 		 * @return an item state view
 		 */
 		@Nullable List<ItemState<I>> getItemStateView();
 
 		/**
 		 * Sets an item state view
-		 *
 		 * @param itemStateView the item state view
 		 */
 		void setItemStateView(List<ItemState<I>> itemStateView);
 
 		/**
 		 * Return if there is a result.
-		 *
 		 * @return true if context represents result
 		 */
 		boolean isResult();
 
 		/**
 		 * Gets a cursor row.
-		 *
 		 * @return a cursor row.
 		 */
 		@Nullable Integer getCursorRow();
 
 		/**
 		 * Sets a cursor row.
-		 *
 		 * @param cursorRow the cursor row
 		 */
 		void setCursorRow(Integer cursorRow);
 
 		/**
 		 * Gets an items.
-		 *
 		 * @return an items
 		 */
 		@Nullable List<I> getItems();
 
 		/**
 		 * Sets an items.
-		 *
 		 * @param items the items
 		 */
 		void setItems(List<I> items);
 
 		/**
 		 * Gets a result items.
-		 *
 		 * @return a result items
 		 */
 		@Nullable List<I> getResultItems();
 
 		/**
 		 * Sets a result items.
-		 *
 		 * @param items the result items
 		 */
 		void setResultItems(List<I> items);
 
 		/**
 		 * Creates an empty {@link SelectorComponentContext}.
-		 *
 		 * @return empty context
 		 */
 		static <T, I extends Nameable & Matchable & Itemable<T>, C extends SelectorComponentContext<T, I, C>> SelectorComponentContext<T, I, C> empty() {
 			return new BaseSelectorComponentContext<>();
 		}
+
 	}
 
 	/**
@@ -442,11 +434,17 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 			extends BaseComponentContext<C> implements SelectorComponentContext<T, I, C> {
 
 		private @Nullable String name;
+
 		private @Nullable String input;
+
 		private @Nullable List<ItemState<I>> itemStates;
+
 		private List<ItemState<I>> itemStateView = new ArrayList<>();
+
 		private @Nullable Integer cursorRow;
+
 		private @Nullable List<I> items;
+
 		private @Nullable List<I> resultItems;
 
 		@Override
@@ -539,16 +537,22 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		public String toString() {
 			return "DefaultSelectorComponentContext [cursorRow=" + cursorRow + "]";
 		}
+
 	}
 
 	/**
 	 * Class keeping item state.
 	 */
 	public static class ItemState<I extends Matchable> implements Matchable {
+
 		I item;
+
 		String name;
+
 		boolean selected;
+
 		boolean enabled;
+
 		int index;
 
 		ItemState(I item, String name, int index, boolean enabled, boolean selected) {
@@ -579,9 +583,11 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 			return enabled;
 		}
 
-		static <I extends Matchable> ItemState<I> of(I item, String name, int index, boolean enabled, boolean selected) {
+		static <I extends Matchable> ItemState<I> of(I item, String name, int index, boolean enabled,
+				boolean selected) {
 			return new ItemState<>(item, name, index, enabled, selected);
 		}
+
 	}
 
 }

@@ -45,12 +45,19 @@ import static org.jline.keymap.KeyMap.del;
 public abstract class AbstractShellTests {
 
 	private ExecutorService executorService;
+
 	private PipedInputStream pipedInputStream;
+
 	private PipedOutputStream pipedOutputStream;
+
 	private LinkedBlockingQueue<byte[]> bytesQueue;
+
 	private ByteArrayOutputStream consoleOut;
+
 	private Terminal terminal;
+
 	private TemplateExecutor templateExecutor;
+
 	private ResourceLoader resourceLoader;
 
 	@BeforeEach
@@ -89,7 +96,8 @@ public abstract class AbstractShellTests {
 					pipedOutputStream.write(take);
 					pipedOutputStream.flush();
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 			}
 		});
 	}
@@ -120,6 +128,7 @@ public abstract class AbstractShellTests {
 	}
 
 	protected class TestBuffer {
+
 		private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		public TestBuffer() {
@@ -137,7 +146,8 @@ public abstract class AbstractShellTests {
 		public String toString() {
 			try {
 				return out.toString(StandardCharsets.UTF_8.name());
-			} catch (UnsupportedEncodingException e) {
+			}
+			catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -194,5 +204,7 @@ public abstract class AbstractShellTests {
 			out.write((byte) i);
 			return this;
 		}
+
 	}
+
 }

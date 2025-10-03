@@ -33,7 +33,6 @@ public class ShellScreenAssert extends AbstractAssert<ShellScreenAssert, ShellSc
 
 	/**
 	 * Verifies that text if found from a screen.
-	 *
 	 * @param text the text to look for
 	 * @return this assertion object
 	 */
@@ -47,4 +46,5 @@ public class ShellScreenAssert extends AbstractAssert<ShellScreenAssert, ShellSc
 		}
 		return this;
 	}
+
 }

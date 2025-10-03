@@ -29,9 +29,13 @@ import org.springframework.shell.tui.style.ThemeResolver;
 public abstract class AbstractScenario implements Scenario {
 
 	private TerminalUI ui;
+
 	private ViewService viewService;
+
 	private EventLoop eventloop;
+
 	private ThemeResolver themeResolver;
+
 	private String themeName;
 
 	protected ViewService getViewService() {
@@ -74,4 +78,5 @@ public abstract class AbstractScenario implements Scenario {
 			ui.configure(view);
 		}
 	}
+
 }

@@ -26,6 +26,7 @@ import org.jspecify.annotations.Nullable;
 class CommandAvailabilityInfoModel {
 
 	private boolean available;
+
 	private @Nullable String reason;
 
 	CommandAvailabilityInfoModel(boolean available, @Nullable String reason) {
@@ -35,7 +36,6 @@ class CommandAvailabilityInfoModel {
 
 	/**
 	 * Builds {@link CommandAvailabilityInfoModel}.
-	 *
 	 * @param available the available flag
 	 * @param reason the reason
 	 * @return a command parameter availability model
@@ -51,4 +51,5 @@ class CommandAvailabilityInfoModel {
 	public @Nullable String getReason() {
 		return reason;
 	}
+
 }

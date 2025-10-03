@@ -25,12 +25,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommandRegistryTests extends AbstractCommandTests {
 
 	@Test
-	void testCommandRegistry () {
+	void testCommandRegistry() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("group1 sub1")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		CommandRegistry catalog = CommandRegistry.of();
 		catalog.register(r1);
@@ -40,15 +40,15 @@ class CommandRegistryTests extends AbstractCommandTests {
 	}
 
 	@Test
-	void testCommandAliases () {
+	void testCommandAliases() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("group1 sub1")
 			.withAlias()
-				.command("group1 sub2")
-				.and()
+			.command("group1 sub2")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		CommandRegistry catalog = CommandRegistry.of();
 		catalog.register(r1);
@@ -67,12 +67,14 @@ class CommandRegistryTests extends AbstractCommandTests {
 	}
 
 	class DynamicCommandResolver implements CommandResolver {
+
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("group1 sub1")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
+
 		boolean enabled = true;
 
 		@Override
@@ -83,5 +85,7 @@ class CommandRegistryTests extends AbstractCommandTests {
 			}
 			return regs;
 		}
+
 	}
+
 }

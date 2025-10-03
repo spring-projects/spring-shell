@@ -52,82 +52,82 @@ public class ComponentFlowCommands extends AbstractCommand {
 		single1SelectItems.put("key2", "value2");
 		List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
 				SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
-		ComponentFlow flow = componentFlowBuilder.clone().reset()
-				.withStringInput("field1")
-					.name("Field1")
-					.defaultValue("defaultField1Value")
-					.and()
-				.withStringInput("field2")
-					.name("Field2")
-					.and()
-				.withConfirmationInput("confirmation1")
-					.name("Confirmation1")
-					.and()
-				.withPathInput("path1")
-					.name("Path1")
-					.and()
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.and()
-				.withMultiItemSelector("multi1")
-					.name("Multi1")
-					.selectItems(multi1SelectItems)
-					.and()
-				.build();
+		ComponentFlow flow = componentFlowBuilder.clone()
+			.reset()
+			.withStringInput("field1")
+			.name("Field1")
+			.defaultValue("defaultField1Value")
+			.and()
+			.withStringInput("field2")
+			.name("Field2")
+			.and()
+			.withConfirmationInput("confirmation1")
+			.name("Confirmation1")
+			.and()
+			.withPathInput("path1")
+			.name("Path1")
+			.and()
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.and()
+			.withMultiItemSelector("multi1")
+			.name("Multi1")
+			.selectItems(multi1SelectItems)
+			.and()
+			.build();
 		flow.run();
 	}
 
 	@Command(command = "flow showcase2", description = "Showcase with options", group = "Flow")
-	public String showcase2(
-		@Option(description = "Field1 value", defaultValue = Option.NULL) String field1,
-		@Option(description = "Field2 value", defaultValue = Option.NULL) String field2,
-		@Option(description = "Confirmation1 value", defaultValue = Option.NULL) Boolean confirmation1,
-		@Option(description = "Path1 value", defaultValue = Option.NULL) String path1,
-		@Option(description = "Single1 value", defaultValue = Option.NULL) String single1,
-		@Option(description = "Multi1 value", defaultValue = Option.NULL) List<String> multi1
-	) {
+	public String showcase2(@Option(description = "Field1 value", defaultValue = Option.NULL) String field1,
+			@Option(description = "Field2 value", defaultValue = Option.NULL) String field2,
+			@Option(description = "Confirmation1 value", defaultValue = Option.NULL) Boolean confirmation1,
+			@Option(description = "Path1 value", defaultValue = Option.NULL) String path1,
+			@Option(description = "Single1 value", defaultValue = Option.NULL) String single1,
+			@Option(description = "Multi1 value", defaultValue = Option.NULL) List<String> multi1) {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("key1", "value1");
 		single1SelectItems.put("key2", "value2");
 		List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
 				SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
 		List<String> multi1ResultValues = multi1 != null ? multi1 : new ArrayList<>();
-		ComponentFlow flow = componentFlowBuilder.clone().reset()
-				.withStringInput("field1")
-					.name("Field1")
-					.defaultValue("defaultField1Value")
-					.resultValue(field1)
-					.resultMode(ResultMode.ACCEPT)
-					.and()
-				.withStringInput("field2")
-					.name("Field2")
-					.resultValue(field2)
-					.resultMode(ResultMode.ACCEPT)
-					.and()
-				.withConfirmationInput("confirmation1")
-					.name("Confirmation1")
-					.resultValue(confirmation1)
-					.resultMode(ResultMode.ACCEPT)
-					.and()
-				.withPathInput("path1")
-					.name("Path1")
-					.resultValue(path1)
-					.resultMode(ResultMode.ACCEPT)
-					.and()
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.resultValue(single1)
-					.resultMode(ResultMode.ACCEPT)
-					.and()
-				.withMultiItemSelector("multi1")
-					.name("Multi1")
-					.selectItems(multi1SelectItems)
-					.resultValues(multi1ResultValues)
-					.resultMode(ResultMode.ACCEPT)
-					.and()
-				.build();
+		ComponentFlow flow = componentFlowBuilder.clone()
+			.reset()
+			.withStringInput("field1")
+			.name("Field1")
+			.defaultValue("defaultField1Value")
+			.resultValue(field1)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
+			.withStringInput("field2")
+			.name("Field2")
+			.resultValue(field2)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
+			.withConfirmationInput("confirmation1")
+			.name("Confirmation1")
+			.resultValue(confirmation1)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
+			.withPathInput("path1")
+			.name("Path1")
+			.resultValue(path1)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.resultValue(single1)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
+			.withMultiItemSelector("multi1")
+			.name("Multi1")
+			.selectItems(multi1SelectItems)
+			.resultValues(multi1ResultValues)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
+			.build();
 		ComponentFlowResult result = flow.run();
 		StringBuilder buf = new StringBuilder();
 		result.getContext().stream().forEach(e -> {
@@ -145,108 +145,111 @@ public class ComponentFlowCommands extends AbstractCommand {
 			.command("flow", "showcase3")
 			.description("Showcase")
 			.withOption()
-				.longNames("field1")
-				.and()
+			.longNames("field1")
+			.and()
 			.withOption()
-				.longNames("field2")
-				.and()
+			.longNames("field2")
+			.and()
 			.withOption()
-				.longNames("confirmation1")
-				.type(Boolean.class)
-				.and()
+			.longNames("confirmation1")
+			.type(Boolean.class)
+			.and()
 			.withOption()
-				.longNames("path1")
-				.and()
+			.longNames("path1")
+			.and()
 			.withOption()
-				.longNames("single1")
-				.and()
+			.longNames("single1")
+			.and()
 			.withOption()
-				.longNames("multi1")
-				.and()
+			.longNames("multi1")
+			.and()
 			.withTarget()
-				.consumer(ctx -> {
+			.consumer(ctx -> {
 
-					String field1 = ctx.getOptionValue("field1");
-					String field2 = ctx.getOptionValue("field2");
-					Boolean confirmation1 = ctx.getOptionValue("confirmation1");
-					String path1 = ctx.getOptionValue("path1");
-					String single1 = ctx.getOptionValue("single1");
-					String asdf = ctx.getOptionValue("multi1");
-					List<String> multi1 = new ArrayList<>();
-					if (StringUtils.hasText(asdf)) {
-						multi1.add(asdf);
-					}
+				String field1 = ctx.getOptionValue("field1");
+				String field2 = ctx.getOptionValue("field2");
+				Boolean confirmation1 = ctx.getOptionValue("confirmation1");
+				String path1 = ctx.getOptionValue("path1");
+				String single1 = ctx.getOptionValue("single1");
+				String asdf = ctx.getOptionValue("multi1");
+				List<String> multi1 = new ArrayList<>();
+				if (StringUtils.hasText(asdf)) {
+					multi1.add(asdf);
+				}
 
-					Map<String, String> single1SelectItems = new HashMap<>();
-					single1SelectItems.put("key1", "value1");
-					single1SelectItems.put("key2", "value2");
-					List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
-							SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
-					ComponentFlow flow = componentFlowBuilder.clone().reset()
-							.withStringInput("field1")
-								.name("Field1")
-								.defaultValue("defaultField1Value")
-								.resultValue(field1)
-								.resultMode(ResultMode.ACCEPT)
-								.and()
-							.withStringInput("field2")
-								.name("Field2")
-								.resultValue(field2)
-								.resultMode(ResultMode.ACCEPT)
-								.and()
-							.withConfirmationInput("confirmation1")
-								.name("Confirmation1")
-								.resultValue(confirmation1)
-								.resultMode(ResultMode.ACCEPT)
-								.and()
-							.withPathInput("path1")
-								.name("Path1")
-								.resultValue(path1)
-								.resultMode(ResultMode.ACCEPT)
-								.and()
-							.withSingleItemSelector("single1")
-								.name("Single1")
-								.selectItems(single1SelectItems)
-								.resultValue(single1)
-								.resultMode(ResultMode.ACCEPT)
-								.and()
-							.withMultiItemSelector("multi1")
-								.name("Multi1")
-								.selectItems(multi1SelectItems)
-								.resultValues(multi1)
-								.resultMode(ResultMode.ACCEPT)
-								.and()
-							.build();
-					ComponentFlowResult result = flow.run();
+				Map<String, String> single1SelectItems = new HashMap<>();
+				single1SelectItems.put("key1", "value1");
+				single1SelectItems.put("key2", "value2");
+				List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
+						SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
+				ComponentFlow flow = componentFlowBuilder.clone()
+					.reset()
+					.withStringInput("field1")
+					.name("Field1")
+					.defaultValue("defaultField1Value")
+					.resultValue(field1)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+					.withStringInput("field2")
+					.name("Field2")
+					.resultValue(field2)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+					.withConfirmationInput("confirmation1")
+					.name("Confirmation1")
+					.resultValue(confirmation1)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+					.withPathInput("path1")
+					.name("Path1")
+					.resultValue(path1)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+					.withSingleItemSelector("single1")
+					.name("Single1")
+					.selectItems(single1SelectItems)
+					.resultValue(single1)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+					.withMultiItemSelector("multi1")
+					.name("Multi1")
+					.selectItems(multi1SelectItems)
+					.resultValues(multi1)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+					.build();
+				ComponentFlowResult result = flow.run();
 
-					boolean hasTty = !((ctx.getTerminal() instanceof DumbTerminal) && ctx.getTerminal().getSize().getRows() == 0);
-					if (hasTty) {
-						StringBuilder buf = new StringBuilder();
-						result.getContext().stream().forEach(e -> {
-							buf.append(e.getKey());
-							buf.append(" = ");
-							buf.append(e.getValue());
-							buf.append("\n");
-						});
-						ctx.getTerminal().writer().print(buf.toString());
-						ctx.getTerminal().writer().flush();
-					}
-					else {
-						List<CommandParser.CommandParserException> errors = new ArrayList<>();
-						result.getContext().stream().forEach(e -> {
-							if (e.getValue() == null) {
-								errors.add(CommandParserException.of(String.format("Missing option, longnames='%s'", e.getKey())));
-							}
-						});
-						if (!result.getContext().containsKey("single1")) {
-							errors.add(CommandParserException.of("Missing option, longnames='single'"));
+				boolean hasTty = !((ctx.getTerminal() instanceof DumbTerminal)
+						&& ctx.getTerminal().getSize().getRows() == 0);
+				if (hasTty) {
+					StringBuilder buf = new StringBuilder();
+					result.getContext().stream().forEach(e -> {
+						buf.append(e.getKey());
+						buf.append(" = ");
+						buf.append(e.getValue());
+						buf.append("\n");
+					});
+					ctx.getTerminal().writer().print(buf.toString());
+					ctx.getTerminal().writer().flush();
+				}
+				else {
+					List<CommandParser.CommandParserException> errors = new ArrayList<>();
+					result.getContext().stream().forEach(e -> {
+						if (e.getValue() == null) {
+							errors.add(CommandParserException
+								.of(String.format("Missing option, longnames='%s'", e.getKey())));
 						}
-						if (!errors.isEmpty()) {
-							throw CommandParserExceptionsException.of("Missing options", errors);
-						}
+					});
+					if (!result.getContext().containsKey("single1")) {
+						errors.add(CommandParserException.of("Missing option, longnames='single'"));
 					}
-				})
-				.and()
+					if (!errors.isEmpty()) {
+						throw CommandParserExceptionsException.of("Missing options", errors);
+					}
+				}
+			})
+			.and()
 			.build();
 	}
 
@@ -255,42 +258,43 @@ public class ComponentFlowCommands extends AbstractCommand {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("Field1", "field1");
 		single1SelectItems.put("Field2", "field2");
-		ComponentFlow flow = componentFlowBuilder.clone().reset()
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.next(ctx -> ctx.getResultItem().get().getItem())
-					.and()
-				.withStringInput("field1")
-					.name("Field1")
-					.defaultValue("defaultField1Value")
-					.next(ctx -> null)
-					.and()
-				.withStringInput("field2")
-					.name("Field2")
-					.defaultValue("defaultField2Value")
-					.next(ctx -> null)
-					.and()
-				.build();
+		ComponentFlow flow = componentFlowBuilder.clone()
+			.reset()
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.next(ctx -> ctx.getResultItem().get().getItem())
+			.and()
+			.withStringInput("field1")
+			.name("Field1")
+			.defaultValue("defaultField1Value")
+			.next(ctx -> null)
+			.and()
+			.withStringInput("field2")
+			.name("Field2")
+			.defaultValue("defaultField2Value")
+			.next(ctx -> null)
+			.and()
+			.build();
 		flow.run();
 	}
 
 	@Command(command = "flow autoselect", description = "Autoselect item", group = "Flow")
-	public void autoselect(
-			@Option(defaultValue = "Field3") String defaultValue
-		) {
+	public void autoselect(@Option(defaultValue = "Field3") String defaultValue) {
 		Map<String, String> single1SelectItems = IntStream.range(1, 10)
 			.boxed()
 			.collect(Collectors.toMap(i -> "Field" + i, i -> "field" + i));
 
-		ComponentFlow flow = componentFlowBuilder.clone().reset()
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.defaultSelect(defaultValue)
-					.sort((o1, o2) -> o1.getName().compareTo(o2.getName()))
-					.and()
-				.build();
+		ComponentFlow flow = componentFlowBuilder.clone()
+			.reset()
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.defaultSelect(defaultValue)
+			.sort((o1, o2) -> o1.getName().compareTo(o2.getName()))
+			.and()
+			.build();
 		flow.run();
 	}
+
 }

@@ -27,12 +27,9 @@ public class OptionNamingCommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "option-naming-1")
-		public String testOptionNaming1Annotation(
-			@Option(longNames = "from_snake") String snake,
-			@Option(longNames = "fromCamel") String camel,
-			@Option(longNames = "from-kebab") String kebab,
-			@Option(longNames = "FromPascal") String pascal
-		) {
+		public String testOptionNaming1Annotation(@Option(longNames = "from_snake") String snake,
+				@Option(longNames = "fromCamel") String camel, @Option(longNames = "from-kebab") String kebab,
+				@Option(longNames = "FromPascal") String pascal) {
 			return String.format("snake='%s' camel='%s' kebab='%s' pascal='%s' ", snake, camel, kebab, pascal);
 		}
 
@@ -43,40 +40,41 @@ public class OptionNamingCommands {
 
 		@Bean
 		public CommandRegistration testOptionNaming1Registration() {
-			return getBuilder()
-				.command(REG, "option-naming-1")
+			return getBuilder().command(REG, "option-naming-1")
 				.group(GROUP)
 				.withOption()
-					.longNames("from_snake")
-					.required()
-					.and()
+				.longNames("from_snake")
+				.required()
+				.and()
 				.withOption()
-					.longNames("fromCamel")
-					.required()
-					.and()
+				.longNames("fromCamel")
+				.required()
+				.and()
 				.withOption()
-					.longNames("from-kebab")
-					.required()
-					.and()
+				.longNames("from-kebab")
+				.required()
+				.and()
 				.withOption()
-					.longNames("FromPascal")
-					.required()
-					.and()
+				.longNames("FromPascal")
+				.required()
+				.and()
 				.withOption()
-					.longNames("arg1")
-					.nameModifier(name -> "x" + name)
-					// .required()
-					.and()
+				.longNames("arg1")
+				.nameModifier(name -> "x" + name)
+				// .required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String snake = ctx.getOptionValue("from_snake");
-						String camel = ctx.getOptionValue("fromCamel");
-						String kebab = ctx.getOptionValue("from-kebab");
-						String pascal = ctx.getOptionValue("FromPascal");
-						return String.format("snake='%s' camel='%s' kebab='%s' pascal='%s' ", snake, camel, kebab, pascal);
-					})
-					.and()
+				.function(ctx -> {
+					String snake = ctx.getOptionValue("from_snake");
+					String camel = ctx.getOptionValue("fromCamel");
+					String kebab = ctx.getOptionValue("from-kebab");
+					String pascal = ctx.getOptionValue("FromPascal");
+					return String.format("snake='%s' camel='%s' kebab='%s' pascal='%s' ", snake, camel, kebab, pascal);
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

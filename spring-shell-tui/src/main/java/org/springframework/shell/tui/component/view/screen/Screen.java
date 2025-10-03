@@ -24,9 +24,8 @@ import org.springframework.shell.tui.geom.Rectangle;
 import org.springframework.shell.tui.geom.VerticalAlign;
 
 /**
- * {@code Screen} is representing a virtual area which is sitting between a user
- * and lower level {@code jline} terminal providing convenient methods working
- * with visible content.
+ * {@code Screen} is representing a virtual area which is sitting between a user and lower
+ * level {@code jline} terminal providing convenient methods working with visible content.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -35,42 +34,36 @@ public interface Screen {
 
 	/**
 	 * Sets if cursor should be visible.
-	 *
 	 * @param show true if cursor should be visible
 	 */
 	void setShowCursor(boolean show);
 
 	/**
 	 * Gets if cursor is visible.
-	 *
 	 * @return true if cursor is visible
 	 */
 	boolean isShowCursor();
 
 	/**
 	 * Sets a cursor position.
-	 *
 	 * @param position new cursor position
 	 */
 	void setCursorPosition(Position position);
 
 	/**
 	 * Gets a cursor position.
-	 *
 	 * @return cursor position
 	 */
 	Position getCursorPosition();
 
 	/**
 	 * Gets a new instance of a {@link WriterBuilder}.
-	 *
 	 * @return a new writer builder
 	 */
 	WriterBuilder writerBuilder();
 
 	/**
 	 * Resize a screen.
-	 *
 	 * @param rows the new row count
 	 * @param columns the new column count
 	 */
@@ -78,14 +71,12 @@ public interface Screen {
 
 	/**
 	 * Gets a screen items.
-	 *
 	 * @return a screen items
 	 */
 	ScreenItem[][] getItems();
 
 	/**
 	 * Clip a screen with a given bounds.
-	 *
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 * @param width the width
@@ -95,15 +86,14 @@ public interface Screen {
 	@Nullable Screen clip(int x, int y, int width, int height);
 
 	/**
-	 * Interface to write into a {@link Screen}. Contains convenient methods user is
-	 * most likely to need to operate on a {@link Screen}.
+	 * Interface to write into a {@link Screen}. Contains convenient methods user is most
+	 * likely to need to operate on a {@link Screen}.
 	 */
 	interface Writer {
 
 		/**
 		 * Write a text horizontally starting from a position defined by {@code x} and
 		 * {@code y} within a bounds of a {@link Screen}.
-		 *
 		 * @param text the text to write
 		 * @param x the x position
 		 * @param y the y position
@@ -113,7 +103,6 @@ public interface Screen {
 		/**
 		 * Write an attributed text horizontally starting from a position defined by
 		 * {@code x} and {@code y} within a bounds of a {@link Screen}.
-		 *
 		 * @param text the text to write
 		 * @param x the x position
 		 * @param y the y position
@@ -122,7 +111,6 @@ public interface Screen {
 
 		/**
 		 * Write a border with a given rectangle coordinates.
-		 *
 		 * @param x the x position
 		 * @param y the y position
 		 * @param width the rectangle width
@@ -132,7 +120,6 @@ public interface Screen {
 
 		/**
 		 * Fill background with a given color.
-		 *
 		 * @param rect the rectange to fill
 		 * @param color the color to use
 		 */
@@ -140,34 +127,32 @@ public interface Screen {
 
 		/**
 		 * Write aligned text within a bounds.
-		 *
 		 * @param text the text to write
 		 * @param rect the rectangle bounds
 		 * @param hAlign the horizontal aligment
 		 * @param vAlign the vertical aligment
 		 */
 		void text(String text, Rectangle rect, @Nullable HorizontalAlign hAlign, @Nullable VerticalAlign vAlign);
+
 	}
 
 	/**
-	 * Builder interface for a {@link Writer}. Allows to defined settings a builder
-	 * will operare on.
+	 * Builder interface for a {@link Writer}. Allows to defined settings a builder will
+	 * operare on.
 	 */
 	interface WriterBuilder {
 
 		/**
-		 * Define a {@code z-index} this {@link Writer} operates on.
-		 * {@code WriterBuilder} defaults on a layer index {@code 0}.
-		 *
+		 * Define a {@code z-index} this {@link Writer} operates on. {@code WriterBuilder}
+		 * defaults on a layer index {@code 0}.
 		 * @param index the z-index
 		 * @return a writer builder for chaining
 		 */
 		WriterBuilder layer(int index);
 
 		/**
-		 * Define a color this {@link Writer} operates on.
-		 * {@code WriterBuilder} defaults to no defined color.
-		 *
+		 * Define a color this {@link Writer} operates on. {@code WriterBuilder} defaults
+		 * to no defined color.
 		 * @param color the color
 		 * @return a writer builder for chaining
 		 * @see Color
@@ -175,9 +160,8 @@ public interface Screen {
 		WriterBuilder color(int color);
 
 		/**
-		 * Define a style this {@link Writer} operates on.
-		 * {@code WriterBuilder} defaults to no defined style.
-		 *
+		 * Define a style this {@link Writer} operates on. {@code WriterBuilder} defaults
+		 * to no defined style.
 		 * @param style the style
 		 * @return a writer builder for chaining
 		 * @see ScreenItem
@@ -186,9 +170,10 @@ public interface Screen {
 
 		/**
 		 * Build a {@link Writer}.
-		 *
 		 * @return a build writer
 		 */
 		Writer build();
+
 	}
+
 }

@@ -21,20 +21,22 @@ import org.springframework.shell.core.command.CommandRegistration;
 class CommandRegistrationHelpOptionsSnippets {
 
 	class Dump1 {
+
 		// tag::defaults[]
 		@Bean
 		CommandRegistration commandRegistration() {
 			return CommandRegistration.builder()
 				.command("mycommand")
 				.withHelpOptions()
-					.enabled(true)
-					.longNames("help")
-					.shortNames('h')
-					.command("help")
-					.and()
+				.enabled(true)
+				.longNames("help")
+				.shortNames('h')
+				.command("help")
+				.and()
 				.build();
 		}
 		// end::defaults[]
+
 	}
 
 }

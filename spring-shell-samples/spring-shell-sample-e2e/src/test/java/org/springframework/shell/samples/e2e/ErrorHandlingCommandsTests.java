@@ -38,7 +38,8 @@ class ErrorHandlingCommandsTests extends AbstractSampleTests {
 	@E2ESource(command = "error-handling --arg1 throw2", annox = false)
 	void testErrorHandling2(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
-		assertScreenContainsText(session, "org.springframework.shell.samples.e2e.ErrorHandlingCommands$CustomException2");
+		assertScreenContainsText(session,
+				"org.springframework.shell.samples.e2e.ErrorHandlingCommands$CustomException2");
 	}
 
 	@Disabled("trouble with spring-shell-test")
@@ -67,6 +68,8 @@ class ErrorHandlingCommandsTests extends AbstractSampleTests {
 	@E2ESource(command = "error-handling --arg1 throw6", annox = false)
 	void testErrorHandling6(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
-		assertScreenContainsText(session, "Hi, handled custom exception org.springframework.shell.samples.e2e.ErrorHandlingCommands$CustomException4");
+		assertScreenContainsText(session,
+				"Hi, handled custom exception org.springframework.shell.samples.e2e.ErrorHandlingCommands$CustomException4");
 	}
+
 }

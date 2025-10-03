@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 public class DefaultFormatter implements Formatter {
 
 	public String[] format(@Nullable Object value) {
-		return value == null ? new String[] {""} : value.toString().split("\n");
+		return value == null ? new String[] { "" } : value.toString().split("\n");
 	}
 
 }

@@ -31,8 +31,10 @@ import org.springframework.util.Assert;
 /**
  * A table model that is backed by a list of beans.
  *
- * <p>One can control which properties are exposed (and their order). There is also
- * a convenience constructor for adding a special header row.</p>
+ * <p>
+ * One can control which properties are exposed (and their order). There is also a
+ * convenience constructor for adding a special header row.
+ * </p>
  *
  * @author Eric Bottard
  * @author Piotr Olaszewski
@@ -101,4 +103,5 @@ public class BeanListTableModel<T> extends TableModel {
 			return beanWrapper.getPropertyValue(propertyName);
 		}
 	}
+
 }

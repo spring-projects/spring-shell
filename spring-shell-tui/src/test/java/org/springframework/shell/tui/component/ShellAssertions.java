@@ -51,8 +51,9 @@ public class ShellAssertions {
 			}
 			if (!isSorted(indexes)) {
 				String expectedStr = Stream.of(expected).collect(Collectors.joining(","));
-				String indexStr = IntStream.of(indexes).mapToObj(i -> ((Integer) i).toString())
-						.collect(Collectors.joining(","));
+				String indexStr = IntStream.of(indexes)
+					.mapToObj(i -> ((Integer) i).toString())
+					.collect(Collectors.joining(","));
 				failWithMessage("Items [%s] are in wrong order, indexes are [%s], output is [%s]", expectedStr,
 						indexStr, actual);
 			}
@@ -66,5 +67,7 @@ public class ShellAssertions {
 			}
 			return true;
 		}
+
 	}
+
 }

@@ -24,25 +24,27 @@ import org.springframework.shell.core.Input;
 import org.springframework.shell.core.Utils;
 
 /**
- * An implementation of {@link Input} backed by the result of a {@link org.jline.reader.Parser#parse(String, int)}.
+ * An implementation of {@link Input} backed by the result of a
+ * {@link org.jline.reader.Parser#parse(String, int)}.
  *
  * @author Eric Bottard
  */
 class ParsedLineInput implements Input {
 
-    private final ParsedLine parsedLine;
+	private final ParsedLine parsedLine;
 
-    ParsedLineInput(ParsedLine parsedLine) {
-        this.parsedLine = parsedLine;
-    }
+	ParsedLineInput(ParsedLine parsedLine) {
+		this.parsedLine = parsedLine;
+	}
 
-    @Override
-    public String rawText() {
-        return parsedLine.line();
-    }
+	@Override
+	public String rawText() {
+		return parsedLine.line();
+	}
 
-    @Override
-    public List<String> words() {
-        return Utils.sanitizeInput(parsedLine.words());
-    }
+	@Override
+	public List<String> words() {
+		return Utils.sanitizeInput(parsedLine.words());
+	}
+
 }

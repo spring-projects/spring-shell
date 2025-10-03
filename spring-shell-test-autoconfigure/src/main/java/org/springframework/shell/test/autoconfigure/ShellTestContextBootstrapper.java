@@ -29,7 +29,10 @@ public class ShellTestContextBootstrapper extends SpringBootTestContextBootstrap
 
 	@Override
 	protected String[] getProperties(Class<?> testClass) {
-		return MergedAnnotations.from(testClass, SearchStrategy.INHERITED_ANNOTATIONS).get(ShellTest.class)
-				.getValue("properties", String[].class).orElse(null);
+		return MergedAnnotations.from(testClass, SearchStrategy.INHERITED_ANNOTATIONS)
+			.get(ShellTest.class)
+			.getValue("properties", String[].class)
+			.orElse(null);
 	}
+
 }

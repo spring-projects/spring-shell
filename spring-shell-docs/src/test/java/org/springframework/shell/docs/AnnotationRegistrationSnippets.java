@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.docs;
 
-
 import org.springframework.shell.core.command.annotation.Command;
 
 public class AnnotationRegistrationSnippets {
@@ -27,6 +26,7 @@ public class AnnotationRegistrationSnippets {
 		@Command
 		public void mycommand() {
 		}
+
 	}
 	// end::snippet1[]
 
@@ -38,5 +38,7 @@ public class AnnotationRegistrationSnippets {
 			return a + b;
 		}
 		// end::snippet2[]
+
 	}
+
 }

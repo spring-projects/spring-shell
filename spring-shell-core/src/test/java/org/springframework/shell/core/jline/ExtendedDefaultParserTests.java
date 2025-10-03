@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ExtendedDefaultParserTests {
 
 	private final ExtendedDefaultParser springParser = new ExtendedDefaultParser();
+
 	private final DefaultParser jlineParser = new DefaultParser();
 
 	static Stream<Arguments> args() {
@@ -37,53 +38,38 @@ class ExtendedDefaultParserTests {
 		// We've left these tests here to show issues
 		// differences between DefaultParser and
 		// ExtendedDefaultParser. relates gh517
-		return Stream.of(
-			Arguments.of(0, 1, 0, 0, "one"),
-			Arguments.of(3, 1, 0, 3, "one "),
-			Arguments.of(4, 2, 1, 0, "one "),
+		return Stream.of(Arguments.of(0, 1, 0, 0, "one"), Arguments.of(3, 1, 0, 3, "one "),
+				Arguments.of(4, 2, 1, 0, "one "),
 
-			Arguments.of(0, 2, 0, 0, "one two"),
-			Arguments.of(1, 2, 0, 1, "one two"),
-			Arguments.of(2, 2, 0, 2, "one two"),
-			Arguments.of(3, 2, 0, 3, "one two"),
-			Arguments.of(7, 2, 1, 3, "one two"),
-			Arguments.of(7, 2, 1, 3, "one two "),
-			Arguments.of(8, 3, 2, 0, "one two "),
+				Arguments.of(0, 2, 0, 0, "one two"), Arguments.of(1, 2, 0, 1, "one two"),
+				Arguments.of(2, 2, 0, 2, "one two"), Arguments.of(3, 2, 0, 3, "one two"),
+				Arguments.of(7, 2, 1, 3, "one two"), Arguments.of(7, 2, 1, 3, "one two "),
+				Arguments.of(8, 3, 2, 0, "one two "),
 
-			Arguments.of(0, 1, 0, 0, "'one'"),
-			// Arguments.of(5, 1, 0, 3, "'one' "),
-			Arguments.of(6, 2, 1, 0, "'one' "),
+				Arguments.of(0, 1, 0, 0, "'one'"),
+				// Arguments.of(5, 1, 0, 3, "'one' "),
+				Arguments.of(6, 2, 1, 0, "'one' "),
 
-			Arguments.of(0, 1, 0, 0, "'one'"),
-			Arguments.of(1, 1, 0, 0, "'one'"),
-			Arguments.of(2, 1, 0, 1, "'one'"),
-			Arguments.of(3, 1, 0, 2, "'one'"),
-			Arguments.of(4, 1, 0, 3, "'one'"),
-			// Arguments.of(5, 1, 0, 3, "'one'"),
+				Arguments.of(0, 1, 0, 0, "'one'"), Arguments.of(1, 1, 0, 0, "'one'"), Arguments.of(2, 1, 0, 1, "'one'"),
+				Arguments.of(3, 1, 0, 2, "'one'"), Arguments.of(4, 1, 0, 3, "'one'"),
+				// Arguments.of(5, 1, 0, 3, "'one'"),
 
-			Arguments.of(0, 1, 0, 0, "'one' "),
-			Arguments.of(1, 1, 0, 0, "'one' "),
-			Arguments.of(2, 1, 0, 1, "'one' "),
-			Arguments.of(3, 1, 0, 2, "'one' "),
-			Arguments.of(4, 1, 0, 3, "'one' "),
-			// Arguments.of(5, 1, 0, 3, "'one' "),
-			Arguments.of(6, 2, 1, 0, "'one' "),
+				Arguments.of(0, 1, 0, 0, "'one' "), Arguments.of(1, 1, 0, 0, "'one' "),
+				Arguments.of(2, 1, 0, 1, "'one' "), Arguments.of(3, 1, 0, 2, "'one' "),
+				Arguments.of(4, 1, 0, 3, "'one' "),
+				// Arguments.of(5, 1, 0, 3, "'one' "),
+				Arguments.of(6, 2, 1, 0, "'one' "),
 
-			Arguments.of(0, 1, 0, 0, "\"one\""),
-			Arguments.of(1, 1, 0, 0, "\"one\""),
-			Arguments.of(2, 1, 0, 1, "\"one\""),
-			Arguments.of(3, 1, 0, 2, "\"one\""),
-			Arguments.of(4, 1, 0, 3, "\"one\""),
-			// Arguments.of(5, 1, 0, 3, "\"one\""),
+				Arguments.of(0, 1, 0, 0, "\"one\""), Arguments.of(1, 1, 0, 0, "\"one\""),
+				Arguments.of(2, 1, 0, 1, "\"one\""), Arguments.of(3, 1, 0, 2, "\"one\""),
+				Arguments.of(4, 1, 0, 3, "\"one\""),
+				// Arguments.of(5, 1, 0, 3, "\"one\""),
 
-			Arguments.of(0, 1, 0, 0, "\"one\" "),
-			Arguments.of(1, 1, 0, 0, "\"one\" "),
-			Arguments.of(2, 1, 0, 1, "\"one\" "),
-			Arguments.of(3, 1, 0, 2, "\"one\" "),
-			Arguments.of(4, 1, 0, 3, "\"one\" "),
-			// Arguments.of(5, 1, 0, 3, "\"one\" "),
-			Arguments.of(6, 2, 1, 0, "\"one\" ")
-			);
+				Arguments.of(0, 1, 0, 0, "\"one\" "), Arguments.of(1, 1, 0, 0, "\"one\" "),
+				Arguments.of(2, 1, 0, 1, "\"one\" "), Arguments.of(3, 1, 0, 2, "\"one\" "),
+				Arguments.of(4, 1, 0, 3, "\"one\" "),
+				// Arguments.of(5, 1, 0, 3, "\"one\" "),
+				Arguments.of(6, 2, 1, 0, "\"one\" "));
 	}
 
 	@ParameterizedTest
@@ -103,4 +89,5 @@ class ExtendedDefaultParserTests {
 		assertThat(parse.wordIndex()).as("wordIndex").isEqualTo(wordIndex);
 		assertThat(parse.wordCursor()).as("wordCursor").isEqualTo(wordCursor);
 	}
+
 }

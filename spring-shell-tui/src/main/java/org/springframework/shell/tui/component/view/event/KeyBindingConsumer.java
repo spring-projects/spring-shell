@@ -19,4 +19,5 @@ import java.util.function.Consumer;
 
 @FunctionalInterface
 public interface KeyBindingConsumer extends Consumer<KeyEvent> {
+
 }

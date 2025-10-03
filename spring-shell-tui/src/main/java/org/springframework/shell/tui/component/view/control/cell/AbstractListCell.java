@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractListCell<T> extends AbstractCell<T> implements ListCell<T> {
 
 	private @Nullable ItemStyle itemStyle;
+
 	private boolean selected;
 
 	public AbstractListCell(T item) {

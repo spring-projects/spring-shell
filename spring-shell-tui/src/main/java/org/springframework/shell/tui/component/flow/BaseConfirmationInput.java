@@ -36,14 +36,23 @@ import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
 public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputSpec> implements ConfirmationInputSpec {
 
 	private @Nullable String name;
+
 	private @Nullable Boolean defaultValue;
+
 	private @Nullable Boolean resultValue;
+
 	private @Nullable ResultMode resultMode;
+
 	private @Nullable Function<ConfirmationInputContext, List<AttributedString>> renderer;
+
 	private List<Consumer<ConfirmationInputContext>> preHandlers = new ArrayList<>();
+
 	private List<Consumer<ConfirmationInputContext>> postHandlers = new ArrayList<>();
+
 	private boolean storeResult = true;
+
 	private @Nullable String templateLocation;
+
 	private @Nullable Function<ConfirmationInputContext, String> next;
 
 	public BaseConfirmationInput(BaseBuilder builder, String id) {
@@ -160,4 +169,5 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 	public @Nullable Function<ConfirmationInputContext, String> getNext() {
 		return next;
 	}
+
 }

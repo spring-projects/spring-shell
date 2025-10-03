@@ -64,18 +64,10 @@ class DialogViewTests extends AbstractViewTests {
 		void handlesMouseClick() {
 			MouseEvent click = mouseClick(1, 6);
 
-			Flux<ButtonViewSelectEvent> actions1 = eventLoop
-					.viewEvents(ButtonViewSelectEvent.class);
-			Flux<DialogViewCloseEvent> actions2 = eventLoop
-					.viewEvents(DialogViewCloseEvent.class);
-			StepVerifier verifier1 = StepVerifier.create(actions1)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
-			StepVerifier verifier2 = StepVerifier.create(actions2)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<ButtonViewSelectEvent> actions1 = eventLoop.viewEvents(ButtonViewSelectEvent.class);
+			Flux<DialogViewCloseEvent> actions2 = eventLoop.viewEvents(DialogViewCloseEvent.class);
+			StepVerifier verifier1 = StepVerifier.create(actions1).expectNextCount(1).thenCancel().verifyLater();
+			StepVerifier verifier2 = StepVerifier.create(actions2).expectNextCount(1).thenCancel().verifyLater();
 
 			MouseHandlerResult result = handleMouseClick(view, click);
 

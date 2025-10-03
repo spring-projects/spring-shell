@@ -26,6 +26,7 @@ import org.jspecify.annotations.Nullable;
 public final class DirectiveNode extends TerminalAstNode {
 
 	private final String name;
+
 	private final @Nullable String value;
 
 	public DirectiveNode(Token token, String name, @Nullable String value) {

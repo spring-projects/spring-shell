@@ -75,6 +75,7 @@ class BeanListTableModelTest extends AbstractTestWithSample {
 	}
 
 	public static class Person {
+
 		private int age;
 
 		private String firstName;
@@ -98,5 +99,7 @@ class BeanListTableModelTest extends AbstractTestWithSample {
 		public String getLastName() {
 			return lastName;
 		}
+
 	}
+
 }

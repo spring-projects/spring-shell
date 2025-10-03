@@ -125,4 +125,5 @@ public abstract class AbstractCommand implements ApplicationContextAware, Initia
 	protected ViewComponentBuilder getViewComponentBuilder() {
 		return viewComponentBuilderProvider.getObject();
 	}
+
 }

@@ -38,36 +38,31 @@ public interface CommandRegistry {
 
 	/**
 	 * Register a {@link CommandRegistration}.
-	 *
 	 * @param registration the command registration
 	 */
 	void register(CommandRegistration... registration);
 
 	/**
 	 * Unregister a {@link CommandRegistration}.
-	 *
 	 * @param registration the command registration
 	 */
 	void unregister(CommandRegistration... registration);
 
 	/**
 	 * Unregister a {@link CommandRegistration} by its command name.
-	 *
 	 * @param commandName the command name
 	 */
 	void unregister(String... commandName);
 
 	/**
-	 * Gets all {@link CommandRegistration}s mapped with their names.
-	 * Returned map is a copy and cannot be used to register new commands.
-	 *
+	 * Gets all {@link CommandRegistration}s mapped with their names. Returned map is a
+	 * copy and cannot be used to register new commands.
 	 * @return all command registrations
 	 */
 	Map<String, CommandRegistration> getRegistrations();
 
 	/**
 	 * Gets an instance of a default {@link CommandRegistry}.
-	 *
 	 * @return default command catalog
 	 */
 	static CommandRegistry of() {
@@ -76,7 +71,6 @@ public interface CommandRegistry {
 
 	/**
 	 * Gets an instance of a default {@link CommandRegistry}.
-	 *
 	 * @param resolvers the command resolvers
 	 * @param shellContext the shell context
 	 * @return default command catalog
@@ -91,7 +85,9 @@ public interface CommandRegistry {
 	static class DefaultCommandRegistry implements CommandRegistry {
 
 		private final Map<String, CommandRegistration> commandRegistrations = new HashMap<>();
+
 		private final Collection<CommandResolver> resolvers = new ArrayList<>();
+
 		private final @Nullable ShellContext shellContext;
 
 		DefaultCommandRegistry(@Nullable Collection<CommandResolver> resolvers, @Nullable ShellContext shellContext) {
@@ -139,7 +135,8 @@ public interface CommandRegistry {
 					regs.put(r.getCommand(), r);
 				});
 			}
-			return regs.entrySet().stream()
+			return regs.entrySet()
+				.stream()
 				.filter(filterByInteractionMode(shellContext))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		}
@@ -149,7 +146,8 @@ public interface CommandRegistry {
 		 * effectively disables filtering as as we only care if mode is set to interactive
 		 * or non-interactive.
 		 */
-		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(@Nullable ShellContext shellContext) {
+		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(
+				@Nullable ShellContext shellContext) {
 			return e -> {
 				InteractionMode mim = e.getValue().getInteractionMode();
 				InteractionMode cim = shellContext != null ? shellContext.getInteractionMode() : InteractionMode.ALL;
@@ -165,5 +163,7 @@ public interface CommandRegistry {
 				return true;
 			};
 		}
+
 	}
+
 }

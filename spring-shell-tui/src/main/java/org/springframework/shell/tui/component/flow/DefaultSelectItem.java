@@ -23,8 +23,11 @@ package org.springframework.shell.tui.component.flow;
 public class DefaultSelectItem implements SelectItem {
 
 	private String name;
+
 	private String item;
+
 	private boolean enabled;
+
 	private boolean selected;
 
 	public DefaultSelectItem(String name, String item, boolean enabled, boolean selected) {
@@ -53,4 +56,5 @@ public class DefaultSelectItem implements SelectItem {
 	public boolean selected() {
 		return selected;
 	}
+
 }

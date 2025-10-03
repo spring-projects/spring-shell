@@ -33,15 +33,13 @@ import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 /**
  * Scenario implementing a classic snake game.
  *
- * Demonstrates how we can just use box view to draw something
- * manually with its draw function.
+ * Demonstrates how we can just use box view to draw something manually with its draw
+ * function.
  *
- * Game logic.
- * 1. Snake starts in a center, initial direction needs arrow key
- * 2. Arrows control snake direction
- * 3. Eating a food crows a snake, new food is generated
- * 4. Game ends if snake eats itself or goes out of bounds
- * 5. Game ends if perfect score is established
+ * Game logic. 1. Snake starts in a center, initial direction needs arrow key 2. Arrows
+ * control snake direction 3. Eating a food crows a snake, new food is generated 4. Game
+ * ends if snake eats itself or goes out of bounds 5. Game ends if perfect score is
+ * established
  *
  * @author Janne Valkealahti
  */
@@ -57,27 +55,24 @@ public class SnakeGameScenario extends AbstractScenario {
 
 		// we're outside of a view so no bindings,
 		// just subscribe to events and handle what is needed.
-		getEventloop().onDestroy(getEventloop().keyEvents()
-			.subscribe(event -> {
-				Integer direction = switch (event.key()) {
-					case Key.CursorDown -> 1;
-					case Key.CursorUp -> -1;
-					case Key.CursorLeft -> -2;
-					case Key.CursorRight -> 2;
-					default -> 0;
-				};
-				if (direction != null) {
-					snakeGame.update(direction);
-				}
-			}));
+		getEventloop().onDestroy(getEventloop().keyEvents().subscribe(event -> {
+			Integer direction = switch (event.key()) {
+				case Key.CursorDown -> 1;
+				case Key.CursorUp -> -1;
+				case Key.CursorLeft -> -2;
+				case Key.CursorRight -> 2;
+				default -> 0;
+			};
+			if (direction != null) {
+				snakeGame.update(direction);
+			}
+		}));
 
 		// schedule game updates
-		getEventloop().onDestroy(Flux.interval(Duration.ofMillis(500))
-				.subscribe(l -> {
-					snakeGame.update(0);
-					getEventloop().dispatch(ShellMessageBuilder.ofRedraw());
-				}
-			));
+		getEventloop().onDestroy(Flux.interval(Duration.ofMillis(500)).subscribe(l -> {
+			snakeGame.update(0);
+			getEventloop().dispatch(ShellMessageBuilder.ofRedraw());
+		}));
 
 		// draw game area
 		view.setDrawFunction((screen, rect) -> {
@@ -88,7 +83,9 @@ public class SnakeGameScenario extends AbstractScenario {
 	}
 
 	private static class SnakeGame {
+
 		Board board;
+
 		Game game;
 
 		SnakeGame(int rows, int cols) {
@@ -133,10 +130,13 @@ public class SnakeGameScenario extends AbstractScenario {
 				}
 			}
 		}
+
 	}
 
 	private static class Cell {
+
 		final int row, col;
+
 		// 0 - empty, > 0 - snake, < 0 - food
 		int type;
 
@@ -145,10 +145,13 @@ public class SnakeGameScenario extends AbstractScenario {
 			this.col = col;
 			this.type = type;
 		}
+
 	}
 
 	private static class Board {
+
 		final int rows, cols;
+
 		Cell[][] cells;
 
 		Board(int rows, int cols, Cell initial) {
@@ -174,10 +177,13 @@ public class SnakeGameScenario extends AbstractScenario {
 			}
 			cells[row][column].type = -1;
 		}
+
 	}
 
 	private static class Snake {
+
 		LinkedList<Cell> cells = new LinkedList<>();
+
 		Cell head;
 
 		Snake(Cell cell) {
@@ -204,13 +210,19 @@ public class SnakeGameScenario extends AbstractScenario {
 			}
 			return false;
 		}
+
 	}
 
 	private static class Game {
+
 		Snake snake;
+
 		Board board;
+
 		int direction;
+
 		int points;
+
 		boolean gameOver;
 
 		Game(Snake snake, Board board) {
@@ -268,5 +280,7 @@ public class SnakeGameScenario extends AbstractScenario {
 			}
 			return board.cells[row][col];
 		}
+
 	}
+
 }

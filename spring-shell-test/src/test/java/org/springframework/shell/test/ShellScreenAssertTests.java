@@ -36,10 +36,11 @@ class ShellScreenAssertTests {
 	@Test
 	void assertContainsTextShouldThrow() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forScreen(ShellScreen.of(LINES1))).containsText("linex"));
+			.isThrownBy(() -> assertThat(forScreen(ShellScreen.of(LINES1))).containsText("linex"));
 	}
 
 	private AssertProvider<ShellScreenAssert> forScreen(ShellScreen screen) {
 		return () -> new ShellScreenAssert(screen);
 	}
+
 }

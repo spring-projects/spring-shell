@@ -23,11 +23,7 @@ class SearchMatchTests {
 
 	@Test
 	void testAlgoType() {
-		SearchMatch searchMatch = SearchMatch.builder()
-				.caseSensitive(true)
-				.normalize(true)
-				.forward(true)
-				.build();
+		SearchMatch searchMatch = SearchMatch.builder().caseSensitive(true).normalize(true).forward(true).build();
 		assertThat(searchMatch).isNotNull();
 		SearchMatchResult result;
 
@@ -37,4 +33,5 @@ class SearchMatchTests {
 		result = searchMatch.match("fake", "'fake");
 		assertThat(result.getAlgorithm()).isInstanceOf(ExactMatchNaiveSearchMatchAlgorithm.class);
 	}
+
 }

@@ -31,22 +31,26 @@ import org.springframework.shell.core.ShellRunner;
 import org.springframework.util.ObjectUtils;
 
 /**
- * A {@link ShellRunner} that looks for process arguments that start with {@literal @}, which are then interpreted as
- * references to script files to run and exit.
+ * A {@link ShellRunner} that looks for process arguments that start with {@literal @},
+ * which are then interpreted as references to script files to run and exit.
  *
- * <p>Has higher precedence than {@link NonInteractiveShellRunner} and {@link InteractiveShellRunner} which gives it
- * top priority to run the shell if scripts are found.
+ * <p>
+ * Has higher precedence than {@link NonInteractiveShellRunner} and
+ * {@link InteractiveShellRunner} which gives it top priority to run the shell if scripts
+ * are found.
  *
  * @author Eric Bottard
  */
-//tag::documentation[]
+// tag::documentation[]
 @Order(ScriptShellRunner.PRECEDENCE)
 public class ScriptShellRunner implements ShellRunner {
-//end::documentation[]
+
+	// end::documentation[]
 
 	/**
-	 * The precedence at which this runner is ordered by the DefaultApplicationRunner - which also controls
-	 * the order it is consulted on the ability to handle the current shell.
+	 * The precedence at which this runner is ordered by the DefaultApplicationRunner -
+	 * which also controls the order it is consulted on the ability to handle the current
+	 * shell.
 	 */
 	public static final int PRECEDENCE = InteractiveShellRunner.PRECEDENCE - 100;
 
@@ -69,10 +73,11 @@ public class ScriptShellRunner implements ShellRunner {
 			return false;
 		}
 
-		List<File> scriptsToRun = Arrays.asList(args).stream()
-				.filter(s -> s.startsWith("@"))
-				.map(s -> new File(s.substring(1)))
-				.collect(Collectors.toList());
+		List<File> scriptsToRun = Arrays.asList(args)
+			.stream()
+			.filter(s -> s.startsWith("@"))
+			.map(s -> new File(s.substring(1)))
+			.collect(Collectors.toList());
 
 		for (File file : scriptsToRun) {
 			try (Reader reader = new FileReader(file);

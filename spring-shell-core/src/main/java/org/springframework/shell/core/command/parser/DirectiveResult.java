@@ -18,8 +18,7 @@ package org.springframework.shell.core.command.parser;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Encapsulating {@code Directive} with its fields, {@code name} and
- * {@code value}.
+ * Encapsulating {@code Directive} with its fields, {@code name} and {@code value}.
  *
  * @author Janne Valkealahti
  */

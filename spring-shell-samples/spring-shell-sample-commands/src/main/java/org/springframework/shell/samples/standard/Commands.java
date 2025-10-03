@@ -27,7 +27,6 @@ import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
 
-
 /**
  * Example commands for the Shell 2 Standard resolver.
  *
@@ -72,9 +71,18 @@ public class Commands {
 	}
 
 	@Command(description = "Add array numbers.")
-	public double addDoubles(
-			@Option(arity = CommandRegistration.OptionArity.ONE_OR_MORE) // FIXME what if it's a number? like 3 in this case?
-			double[] numbers) {
+	public double addDoubles(@Option(arity = CommandRegistration.OptionArity.ONE_OR_MORE) // FIXME
+																							// what
+																							// if
+																							// it's
+																							// a
+																							// number?
+																							// like
+																							// 3
+																							// in
+																							// this
+																							// case?
+	double[] numbers) {
 		return Arrays.stream(numbers).sum();
 	}
 
@@ -89,4 +97,5 @@ public class Commands {
 		};
 		return iterable;
 	}
+
 }

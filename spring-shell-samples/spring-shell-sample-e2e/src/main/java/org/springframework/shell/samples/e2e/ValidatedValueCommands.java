@@ -31,26 +31,27 @@ public class ValidatedValueCommands {
 
 		@Bean
 		public CommandRegistration testValidatedValueRegistration() {
-			return getBuilder()
-				.command(REG, "validated-value")
+			return getBuilder().command(REG, "validated-value")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(Integer.class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(Integer.class)
+				.required()
+				.and()
 				.withOption()
-					.longNames("arg2")
-					.type(Integer.class)
-					.required()
-					.and()
+				.longNames("arg2")
+				.type(Integer.class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						Integer arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					Integer arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

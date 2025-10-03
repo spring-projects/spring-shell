@@ -55,62 +55,71 @@ import org.springframework.util.ObjectUtils;
 public class ProgressView extends BoxView {
 
 	private final static Logger log = LoggerFactory.getLogger(ProgressView.class);
+
 	private final int tickStart;
+
 	private final int tickEnd;
+
 	private int tickValue;
+
 	private boolean running = false;
+
 	private @Nullable String description;
+
 	private @Nullable Spinner spinner;
+
 	private List<ProgressViewItem> items;
+
 	private GridView grid;
+
 	private long startTime;
+
 	private long updateTime;
+
 	private List<TextCell<ProgressContext>> cells = new ArrayList<>();
 
-	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_DESCRIPTION_FACTORY =
-			(item) -> TextCell.of(item, ctx -> {
+	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_DESCRIPTION_FACTORY = (
+			item) -> TextCell.of(item, ctx -> {
 				return ctx.getDescription();
 			});
 
-	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_PERCENT_FACTORY =
-			(item) -> {
-				TextCell<ProgressContext> cell = TextCell.of(item, ctx -> {
-					ProgressState state = ctx.getState();
-					int percentAbs = state.tickEnd() - state.tickStart();
-					int relativeValue = state.tickValue() - state.tickStart();
-					int percent = (relativeValue * 100) / percentAbs;
-					return String.format("%s%%", percent);
-				});
-				return cell;
-			};
+	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_PERCENT_FACTORY = (item) -> {
+		TextCell<ProgressContext> cell = TextCell.of(item, ctx -> {
+			ProgressState state = ctx.getState();
+			int percentAbs = state.tickEnd() - state.tickStart();
+			int relativeValue = state.tickValue() - state.tickStart();
+			int percent = (relativeValue * 100) / percentAbs;
+			return String.format("%s%%", percent);
+		});
+		return cell;
+	};
 
-	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_SPINNER_FACTORY =
-			item -> {
-				TextCell<ProgressContext> cell = TextCell.of(item, ctx -> {
-					int frame = 0;
+	private final static Function<ProgressContext, TextCell<ProgressContext>> DEFAULT_SPINNER_FACTORY = item -> {
+		TextCell<ProgressContext> cell = TextCell.of(item, ctx -> {
+			int frame = 0;
 
-					// via view setting, then via theming, then fallback default
-					Spinner spin = ctx.resolveThemeSpinner(SpinnerSettings.TAG_DOT, ctx.getSpinner(),
-							Spinner.of(Spinner.LINE1, 130));
+			// via view setting, then via theming, then fallback default
+			Spinner spin = ctx.resolveThemeSpinner(SpinnerSettings.TAG_DOT, ctx.getSpinner(),
+					Spinner.of(Spinner.LINE1, 130));
 
-					if (ctx.getState().running()) {
-						// we know start time and current update time,
-						// calculate elapsed time "frame" to pick rolling
-						// spinner frame.
-						int interval = spin.getInterval();
-						long startTime = ctx.getState().startTime();
-						long updateTime = ctx.getState().updateTime();
-						long elapsedTime = updateTime - startTime;
-						long elapsedFrame = elapsedTime / interval;
-						frame = (int) elapsedFrame % spin.getFrames().length;
-						log.debug("Calculate frame {} {} {}", interval, elapsedTime, elapsedFrame);
-					}
-					log.debug("Drawing frame {}", frame);
+			if (ctx.getState().running()) {
+				// we know start time and current update time,
+				// calculate elapsed time "frame" to pick rolling
+				// spinner frame.
+				int interval = spin.getInterval();
+				long startTime = ctx.getState().startTime();
+				long updateTime = ctx.getState().updateTime();
+				long elapsedTime = updateTime - startTime;
+				long elapsedFrame = elapsedTime / interval;
+				frame = (int) elapsedFrame % spin.getFrames().length;
+				log.debug("Calculate frame {} {} {}", interval, elapsedTime, elapsedFrame);
+			}
+			log.debug("Drawing frame {}", frame);
 
-					return String.format("%s", spin.getFrames()[frame]);
-				});
-				return cell;
-			};
+			return String.format("%s", spin.getFrames()[frame]);
+		});
+		return cell;
+	};
 
 	/**
 	 * Construct view with {@code tickStart 0} and {@code tickEnd 100}. Uses default
@@ -123,9 +132,8 @@ public class ProgressView extends BoxView {
 	/**
 	 * Construct view with {@code tickStart 0} and {@code tickEnd 100}. Uses default
 	 * {@link ProgressViewItem}s.
-	 *
 	 * @param tickStart the tick start
-	 * @param tickEnd   the tick end
+	 * @param tickEnd the tick end
 	 */
 	public ProgressView(int tickStart, int tickEnd) {
 		this(tickStart, tickEnd, new ProgressViewItem[] { ProgressViewItem.ofText(), ProgressViewItem.ofSpinner(),
@@ -133,9 +141,8 @@ public class ProgressView extends BoxView {
 	}
 
 	/**
-	 * Construct view with given {@link ProgressViewItem}s using {@code tickStart 0}
-	 * and {@code tickEnd 100}.
-	 *
+	 * Construct view with given {@link ProgressViewItem}s using {@code tickStart 0} and
+	 * {@code tickEnd 100}.
 	 * @param items the progress view items
 	 */
 	public ProgressView(ProgressViewItem... items) {
@@ -144,9 +151,8 @@ public class ProgressView extends BoxView {
 
 	/**
 	 * Construct view with given bounds for {@code tickStart} and {@code tickEnd}.
-	 * {@code tickStart} needs to be equal or more than zero. {@code tickEnd} needs
-	 * to be higher than {@code tickStart}. Uses defined progress view items.
-	 *
+	 * {@code tickStart} needs to be equal or more than zero. {@code tickEnd} needs to be
+	 * higher than {@code tickStart}. Uses defined progress view items.
 	 * @param tickStart the tick start
 	 * @param tickEnd the tick end
 	 * @param items the progress view items
@@ -163,16 +169,19 @@ public class ProgressView extends BoxView {
 	}
 
 	/**
-	 * Defines an item within a progress view. Allows to set item's factory, size
-	 * and horizontal alignment.
+	 * Defines an item within a progress view. Allows to set item's factory, size and
+	 * horizontal alignment.
 	 */
 	public static class ProgressViewItem {
 
 		private final Function<ProgressContext, TextCell<ProgressContext>> factory;
+
 		private final int size;
+
 		private final HorizontalAlign align;
 
-		public ProgressViewItem(Function<ProgressContext, TextCell<ProgressContext>> factory, int size, HorizontalAlign align) {
+		public ProgressViewItem(Function<ProgressContext, TextCell<ProgressContext>> factory, int size,
+				HorizontalAlign align) {
 			this.factory = factory;
 			this.size = size;
 			this.align = align;
@@ -201,11 +210,11 @@ public class ProgressView extends BoxView {
 		public static ProgressViewItem ofPercent(int size, HorizontalAlign hAligh) {
 			return new ProgressViewItem(DEFAULT_PERCENT_FACTORY, size, hAligh);
 		}
+
 	}
 
 	/**
 	 * Gets a progress description.
-	 *
 	 * @return a progress description
 	 */
 	public @Nullable String getDescription() {
@@ -214,7 +223,6 @@ public class ProgressView extends BoxView {
 
 	/**
 	 * Sets a progress description. Used in items as a text item.
-	 *
 	 * @param description the progress description
 	 */
 	public void setDescription(String description) {
@@ -223,7 +231,6 @@ public class ProgressView extends BoxView {
 
 	/**
 	 * Sets an explicit spinner to use.
-	 *
 	 * @param spinner the spinner to use
 	 */
 	public void setSpinner(Spinner spinner) {
@@ -245,7 +252,9 @@ public class ProgressView extends BoxView {
 	}
 
 	private Disposable.@Nullable Composite disposables;
+
 	private final String TAG_KEY = "ProgressView";
+
 	private final String TAG_VALUE = UUID.randomUUID().toString();
 
 	private void scheduleTicks() {
@@ -257,8 +266,7 @@ public class ProgressView extends BoxView {
 			return;
 		}
 		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(50)).map(l -> {
-			Message<Long> message = MessageBuilder
-				.withPayload(l)
+			Message<Long> message = MessageBuilder.withPayload(l)
 				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
 				.setHeader(TAG_KEY, TAG_VALUE)
 				.build();
@@ -302,10 +310,13 @@ public class ProgressView extends BoxView {
 	}
 
 	private static class BoxWrapper extends BoxView {
+
 		TextCell<ProgressContext> delegate;
+
 		BoxWrapper(TextCell<ProgressContext> delegate) {
 			this.delegate = delegate;
 		}
+
 		@Override
 		protected void drawInternal(Screen screen) {
 			Rectangle rect = getRect();
@@ -313,6 +324,7 @@ public class ProgressView extends BoxView {
 			delegate.draw(screen);
 			super.drawInternal(screen);
 		}
+
 	}
 
 	private void initLayout() {
@@ -350,9 +362,8 @@ public class ProgressView extends BoxView {
 	}
 
 	/**
-	 * Advance {@code tickValue} by a given count. Note that negative count
-	 * will advance backwards.
-	 *
+	 * Advance {@code tickValue} by a given count. Note that negative count will advance
+	 * backwards.
 	 * @param count the count to advance tick value
 	 */
 	public void tickAdvance(int count) {
@@ -361,9 +372,8 @@ public class ProgressView extends BoxView {
 
 	/**
 	 * Sets a tick value. If value is lower or higher than {@code tickStart} or
-	 * {@code tickEnd} respectively {@code tickValue} will be set to low/high
-	 * bounds. This means {@code tickValue} is always kept within range inclusively.
-	 *
+	 * {@code tickEnd} respectively {@code tickValue} will be set to low/high bounds. This
+	 * means {@code tickValue} is always kept within range inclusively.
 	 * @param value the new tick value to set
 	 */
 	public void setTickValue(int value) {
@@ -389,7 +399,6 @@ public class ProgressView extends BoxView {
 
 	/**
 	 * Gets a state of this {@code ProgressView}.
-	 *
 	 * @return a view progress state
 	 */
 	public ProgressState getState() {
@@ -438,36 +447,31 @@ public class ProgressView extends BoxView {
 
 		/**
 		 * Get a {@link ProgressView} description.
-		 *
 		 * @return a progress description
 		 */
 		@Nullable String getDescription();
 
 		/**
 		 * Get a state of a {@link ProgressView}.
-		 *
 		 * @return progress view state
 		 */
 		ProgressState getState();
 
 		/**
 		 * Gets an encapsulating owner view.
-		 *
 		 * @return an owner view
 		 */
 		ProgressView getView();
 
 		/**
 		 * Gets a {@link Spinner} frames.
-		 *
 		 * @return spinner frames
 		 */
 		@Nullable Spinner getSpinner();
 
 		/**
-		 * Resolve style using existing {@link ThemeResolver} and {@code theme name}.
-		 * Use {@code defaultStyle} if resolving cannot happen.
-		 *
+		 * Resolve style using existing {@link ThemeResolver} and {@code theme name}. Use
+		 * {@code defaultStyle} if resolving cannot happen.
 		 * @param tag the style tag to use
 		 * @param defaultStyle the default style to use
 		 * @return resolved style

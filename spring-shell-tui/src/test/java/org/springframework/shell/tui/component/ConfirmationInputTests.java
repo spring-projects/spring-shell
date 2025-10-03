@@ -38,6 +38,7 @@ import static org.awaitility.Awaitility.await;
 class ConfirmationInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
+
 	private AtomicReference<ConfirmationInputContext> result1;
 
 	@BeforeEach
@@ -169,8 +170,7 @@ class ConfirmationInputTests extends AbstractShellTests {
 		TestBuffer testBuffer = new TestBuffer().append("N");
 		write(testBuffer.getBytes());
 
-		await().atMost(Duration.ofSeconds(4))
-				.untilAsserted(() -> assertThat(consoleOut()).contains("N"));
+		await().atMost(Duration.ofSeconds(4)).untilAsserted(() -> assertThat(consoleOut()).contains("N"));
 
 		testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
@@ -231,4 +231,5 @@ class ConfirmationInputTests extends AbstractShellTests {
 			assertThat(run1Context.getResultValue()).isNull();
 		});
 	}
+
 }

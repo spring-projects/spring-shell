@@ -35,6 +35,7 @@ class ButtonViewTests extends AbstractViewTests {
 
 	static final String TEXT_FIELD = "text";
 	static final String ACTION_FIELD = "action";
+
 	private ButtonView view;
 
 	@Nested
@@ -56,7 +57,8 @@ class ButtonViewTests extends AbstractViewTests {
 
 		@Test
 		void textAndAction() {
-			view = new ButtonView("text", () -> {});
+			view = new ButtonView("text", () -> {
+			});
 			assertThat(getStringField(view, TEXT_FIELD)).isEqualTo("text");
 			assertThat(getRunnableField(view, ACTION_FIELD)).isNotNull();
 		}
@@ -65,7 +67,8 @@ class ButtonViewTests extends AbstractViewTests {
 		void canSetTextAndAction() {
 			view = new ButtonView();
 			view.setText("text");
-			view.setAction(() -> {});
+			view.setAction(() -> {
+			});
 			assertThat(getStringField(view, TEXT_FIELD)).isEqualTo("text");
 			assertThat(getRunnableField(view, ACTION_FIELD)).isNotNull();
 		}
@@ -86,12 +89,8 @@ class ButtonViewTests extends AbstractViewTests {
 		void handlesMouseClick() {
 			MouseEvent click = mouseClick(1, 1);
 
-			Flux<ButtonViewSelectEvent> actions = eventLoop
-					.viewEvents(ButtonViewSelectEvent.class);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<ButtonViewSelectEvent> actions = eventLoop.viewEvents(ButtonViewSelectEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			MouseHandlerResult result = handleMouseClick(view, click);
 
@@ -101,12 +100,8 @@ class ButtonViewTests extends AbstractViewTests {
 
 		@Test
 		void handlesKeyEnter() {
-			Flux<ButtonViewSelectEvent> actions = eventLoop
-					.viewEvents(ButtonViewSelectEvent.class);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<ButtonViewSelectEvent> actions = eventLoop.viewEvents(ButtonViewSelectEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			KeyHandlerResult result = handleKey(view, KeyEvent.Key.Enter);
 

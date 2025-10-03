@@ -32,7 +32,7 @@ public class ApplicationRunnerAutoConfiguration {
 		return new ApplicationReadyEventListener();
 	}
 
-	static class ApplicationReadyEventListener implements ApplicationListener<ApplicationReadyEvent>{
+	static class ApplicationReadyEventListener implements ApplicationListener<ApplicationReadyEvent> {
 
 		@Override
 		public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -40,5 +40,7 @@ public class ApplicationRunnerAutoConfiguration {
 			// shell exits in case that context is kept alive
 			event.getApplicationContext().close();
 		}
+
 	}
+
 }

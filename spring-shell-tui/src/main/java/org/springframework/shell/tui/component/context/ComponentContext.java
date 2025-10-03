@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * Contract for base component context having access to basic key/value pairs.
- * This is a base context which components can extend to provide their own
- * component spesific contexts.
+ * Contract for base component context having access to basic key/value pairs. This is a
+ * base context which components can extend to provide their own component spesific
+ * contexts.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -32,7 +32,6 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 
 	/**
 	 * Gets an empty context.
-	 *
 	 * @param <C> the type of context
 	 * @return empty context
 	 */
@@ -42,7 +41,6 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 
 	/**
 	 * Gets a value from a context.
-	 *
 	 * @param <T> the type of context
 	 * @param key the key
 	 * @return a value
@@ -51,7 +49,6 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 
 	/**
 	 * Gets a value from a context with a given type to get cast to.
-	 *
 	 * @param <T> the type of context
 	 * @param key the key
 	 * @param type the class type
@@ -61,7 +58,6 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 
 	/**
 	 * Check if a context contains a key.
-	 *
 	 * @param key the key
 	 * @return true if context contains key
 	 */
@@ -69,7 +65,6 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 
 	/**
 	 * Put an entry into a context.
-	 *
 	 * @param key the entry key
 	 * @param value the entry value
 	 * @return a context
@@ -78,32 +73,28 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 
 	/**
 	 * Stream key/value pairs from this {@link ComponentContext}
-	 *
 	 * @return a {@link Stream} of key/value pairs held by this context
 	 */
 	Stream<Map.Entry<Object, Object>> stream();
 
 	/**
 	 * Get terminal width.
-	 *
 	 * @return a terminal width
 	 */
 	@Nullable Integer getTerminalWidth();
 
 	/**
 	 * Set terminal width.
-	 *
 	 * @param terminalWidth the width
 	 */
 	void setTerminalWidth(Integer terminalWidth);
 
 	/**
-	 * Gets context values as a map. Every context implementation can
-	 * do their own model as essentially what matter is a one coming
-	 * out from a last child which is one most likely to feed into
-	 * a template engine.
-	 *
+	 * Gets context values as a map. Every context implementation can do their own model
+	 * as essentially what matter is a one coming out from a last child which is one most
+	 * likely to feed into a template engine.
 	 * @return map of context values
 	 */
 	Map<String, @Nullable Object> toTemplateModel();
+
 }

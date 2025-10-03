@@ -36,6 +36,7 @@ class WritingSnippets {
 			terminal.writer().flush();
 		}
 		// end::inject-terminal-writer[]
+
 	}
 
 	class Dump2 {
@@ -47,19 +48,16 @@ class WritingSnippets {
 			ctx.getTerminal().writer().flush();
 		}
 		// end::anno-terminal-writer[]
+
 	}
 
 	void dump1() {
 		// tag::reg-terminal-writer[]
-		CommandRegistration.builder()
-			.command("example")
-			.withTarget()
-				.consumer(ctx -> {
-					ctx.getTerminal().writer().println("hi");
-					ctx.getTerminal().writer().flush();
-				})
-				.and()
-			.build();
+		CommandRegistration.builder().command("example").withTarget().consumer(ctx -> {
+			ctx.getTerminal().writer().println("hi");
+			ctx.getTerminal().writer().flush();
+		}).and().build();
 		// end::reg-terminal-writer[]
 	}
+
 }

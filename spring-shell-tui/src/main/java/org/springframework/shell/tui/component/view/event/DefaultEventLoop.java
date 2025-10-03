@@ -57,13 +57,21 @@ import org.springframework.shell.tui.component.view.event.processor.TaskEventLoo
 public class DefaultEventLoop implements EventLoop {
 
 	private final static Logger log = LoggerFactory.getLogger(DefaultEventLoop.class);
+
 	private final Queue<Message<?>> messageQueue = new PriorityQueue<>(MessageComparator.comparingPriority());
+
 	private final Many<Message<?>> many = Sinks.many().unicast().onBackpressureBuffer(messageQueue);
+
 	private Flux<Message<?>> sink;
-	// private final Sinks.Many<Boolean> subscribedSignal = Sinks.many().replay().limit(1);
+
+	// private final Sinks.Many<Boolean> subscribedSignal =
+	// Sinks.many().replay().limit(1);
 	private final Disposable.Composite disposables = Disposables.composite();
+
 	private final Scheduler scheduler = Schedulers.boundedElastic();
+
 	private volatile boolean active = true;
+
 	private final List<EventLoopProcessor> processors;
 
 	public DefaultEventLoop() {
@@ -81,21 +89,19 @@ public class DefaultEventLoop implements EventLoop {
 	}
 
 	private void init() {
-		sink = many.asFlux()
-			.flatMap(m -> {
-				Flux<? extends Message<?>> pm = null;
-				for (EventLoopProcessor processor : processors) {
-					if (processor.canProcess(m)) {
-						pm = processor.process(m);
-						break;
-					}
+		sink = many.asFlux().flatMap(m -> {
+			Flux<? extends Message<?>> pm = null;
+			for (EventLoopProcessor processor : processors) {
+				if (processor.canProcess(m)) {
+					pm = processor.process(m);
+					break;
 				}
-				if (pm != null) {
-					return pm;
-				}
-				return Mono.just(m);
-			})
-			.share();
+			}
+			if (pm != null) {
+				return pm;
+			}
+			return Mono.just(m);
+		}).share();
 	}
 
 	@Override
@@ -114,14 +120,14 @@ public class DefaultEventLoop implements EventLoop {
 	@Override
 	public Flux<Message<?>> events() {
 		return sink
-			// .doFinally((s) -> subscribedSignal.tryEmitNext(sink.currentSubscriberCount() > 0))
+		// .doFinally((s) -> subscribedSignal.tryEmitNext(sink.currentSubscriberCount() >
+		// 0))
 		;
 	}
 
 	@Override
 	public <T> Flux<T> events(EventLoop.Type type, Class<T> clazz) {
-		return events()
-			.filter(m -> type.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+		return events().filter(m -> type.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
 			.map(m -> m.getPayload())
 			.ofType(clazz);
 	}
@@ -132,40 +138,35 @@ public class DefaultEventLoop implements EventLoop {
 		ResolvableType resolvableType = ResolvableType.forType(typeRef);
 		Class<?> rawClass = resolvableType.getRawClass();
 		Assert.state(rawClass != null, "'rawClass' must not be null");
-		return (Flux<T>) events()
-			.filter(m -> type.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+		return (Flux<T>) events().filter(m -> type.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
 			.map(m -> m.getPayload())
 			.ofType(rawClass);
 	}
 
 	@Override
 	public Flux<KeyEvent> keyEvents() {
-		return events()
-			.filter(m -> EventLoop.Type.KEY.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+		return events().filter(m -> EventLoop.Type.KEY.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
 			.map(m -> m.getPayload())
 			.ofType(KeyEvent.class);
 	}
 
 	@Override
 	public Flux<MouseEvent> mouseEvents() {
-		return events()
-			.filter(m -> EventLoop.Type.MOUSE.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+		return events().filter(m -> EventLoop.Type.MOUSE.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
 			.map(m -> m.getPayload())
 			.ofType(MouseEvent.class);
 	}
 
 	@Override
 	public Flux<String> systemEvents() {
-		return events()
-			.filter(m -> EventLoop.Type.SYSTEM.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+		return events().filter(m -> EventLoop.Type.SYSTEM.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
 			.map(m -> m.getPayload())
 			.ofType(String.class);
 	}
 
 	@Override
 	public Flux<String> signalEvents() {
-		return events()
-			.filter(m -> EventLoop.Type.SIGNAL.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+		return events().filter(m -> EventLoop.Type.SIGNAL.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
 			.map(m -> m.getPayload())
 			.ofType(String.class);
 	}
@@ -195,14 +196,14 @@ public class DefaultEventLoop implements EventLoop {
 		disposables.add(disposable);
 	}
 
-
 	// @Override
 	// public void subcribe(Flux<? extends Message<?>> messages) {
-	// 	upstreamSubscriptions.add(
-	// 	messages
-	// 		// .delaySubscription(subscribedSignal.asFlux().filter(Boolean::booleanValue).next())
-	// 		.subscribe()
-	// 	);
+	// upstreamSubscriptions.add(
+	// messages
+	// //
+	// .delaySubscription(subscribedSignal.asFlux().filter(Boolean::booleanValue).next())
+	// .subscribe()
+	// );
 	// }
 
 	private boolean doSend(Message<?> message, long timeout) {
@@ -210,7 +211,7 @@ public class DefaultEventLoop implements EventLoop {
 			return false;
 		}
 		// Assert.state(this.active && this.many.currentSubscriberCount() > 0,
-		// 		() -> "The [" + this + "] doesn't have subscribers to accept messages");
+		// () -> "The [" + this + "] doesn't have subscribers to accept messages");
 		long remainingTime = 0;
 		if (timeout > 0) {
 			remainingTime = timeout;
@@ -232,54 +233,50 @@ public class DefaultEventLoop implements EventLoop {
 			case OK -> true;
 			case FAIL_NON_SERIALIZED, FAIL_OVERFLOW -> false;
 			case FAIL_ZERO_SUBSCRIBER ->
-					throw new IllegalStateException("The [" + this + "] doesn't have subscribers to accept messages");
+				throw new IllegalStateException("The [" + this + "] doesn't have subscribers to accept messages");
 			case FAIL_TERMINATED, FAIL_CANCELLED ->
-					throw new IllegalStateException("Cannot emit messages into the cancelled or terminated sink: " + many);
+				throw new IllegalStateException("Cannot emit messages into the cancelled or terminated sink: " + many);
 		};
 	}
 
 	// public void subscribe(Subscriber<? super Message<?>> subscriber) {
-	// 	sink.asFlux()
-	// 		.doFinally((s) -> subscribedSignal.tryEmitNext(sink.currentSubscriberCount() > 0))
-	// 		.share()
-	// 		.subscribe(subscriber);
+	// sink.asFlux()
+	// .doFinally((s) -> subscribedSignal.tryEmitNext(sink.currentSubscriberCount() > 0))
+	// .share()
+	// .subscribe(subscriber);
 
-	// 	upstreamSubscriptions.add(
-	// 		Mono.fromCallable(() -> sink.currentSubscriberCount() > 0)
-	// 				.filter(Boolean::booleanValue)
-	// 				.doOnNext(subscribedSignal::tryEmitNext)
-	// 				.repeatWhenEmpty((repeat) ->
-	// 						active ? repeat.delayElements(Duration.ofMillis(100)) : repeat)
-	// 				.subscribe());
+	// upstreamSubscriptions.add(
+	// Mono.fromCallable(() -> sink.currentSubscriberCount() > 0)
+	// .filter(Boolean::booleanValue)
+	// .doOnNext(subscribedSignal::tryEmitNext)
+	// .repeatWhenEmpty((repeat) ->
+	// active ? repeat.delayElements(Duration.ofMillis(100)) : repeat)
+	// .subscribe());
 	// }
 
 	public void subscribeTo(Publisher<? extends Message<?>> publisher) {
-		disposables.add(
-			Flux.from(publisher)
-				// .delaySubscription(subscribedSignal.asFlux().filter(Boolean::booleanValue).next())
-				.publishOn(scheduler)
-				.flatMap((message) ->
-						Mono.just(message)
-								.handle((messageToHandle, syncSink) -> sendReactiveMessage(messageToHandle))
-								.contextWrite(StaticShellMessageHeaderAccessor.getReactorContext(message))
-								)
-				.contextCapture()
-				.subscribe());
+		disposables.add(Flux.from(publisher)
+			// .delaySubscription(subscribedSignal.asFlux().filter(Boolean::booleanValue).next())
+			.publishOn(scheduler)
+			.flatMap((message) -> Mono.just(message)
+				.handle((messageToHandle, syncSink) -> sendReactiveMessage(messageToHandle))
+				.contextWrite(StaticShellMessageHeaderAccessor.getReactorContext(message)))
+			.contextCapture()
+			.subscribe());
 	}
 
 	private void sendReactiveMessage(Message<?> message) {
 		Message<?> messageToSend = message;
 		// We have just restored Reactor context, so no need in a header anymore.
 		if (messageToSend.getHeaders().containsKey(ShellMessageHeaderAccessor.REACTOR_CONTEXT)) {
-			messageToSend =
-					MessageBuilder.fromMessage(message)
-							.removeHeader(ShellMessageHeaderAccessor.REACTOR_CONTEXT)
-							.build();
+			messageToSend = MessageBuilder.fromMessage(message)
+				.removeHeader(ShellMessageHeaderAccessor.REACTOR_CONTEXT)
+				.build();
 		}
 		try {
 			dispatch(messageToSend);
 			// if (!doSend(messageToSend, 1000)) {
-			// 	log.warn("Failed to send message: {}", messageToSend);
+			// log.warn("Failed to send message: {}", messageToSend);
 			// }
 		}
 		catch (Exception ex) {
@@ -310,5 +307,7 @@ public class DefaultEventLoop implements EventLoop {
 		static Comparator<Message<?>> comparingPriority() {
 			return new MessageComparator();
 		}
+
 	}
+
 }

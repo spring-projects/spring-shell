@@ -27,19 +27,20 @@ import org.jspecify.annotations.Nullable;
 public abstract class TableModel {
 
 	/**
-	 * @return the number of rows that can be queried.
-	 * Values between 0 and {@code rowCount-1} inclusive are valid values.
+	 * @return the number of rows that can be queried. Values between 0 and
+	 * {@code rowCount-1} inclusive are valid values.
 	 */
 	public abstract int getRowCount();
 
 	/**
-	 * @return the number of columns that can be queried.
-	 * Values between 0 and {@code columnCount-1} inclusive are valid values.
+	 * @return the number of columns that can be queried. Values between 0 and
+	 * {@code columnCount-1} inclusive are valid values.
 	 */
 	public abstract int getColumnCount();
 
 	/**
-	 * @return the data value to be displayed at a given row and column, which may be null.
+	 * @return the data value to be displayed at a given row and column, which may be
+	 * null.
 	 * @param row the row that is being queried
 	 * @param column the column that is being queried
 	 */
@@ -66,4 +67,5 @@ public abstract class TableModel {
 			}
 		};
 	}
+
 }

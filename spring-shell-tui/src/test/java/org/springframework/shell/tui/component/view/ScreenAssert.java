@@ -29,8 +29,8 @@ import org.springframework.shell.tui.geom.Position;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Asserts for {@link Screen}. This is a work-in-progress implementation and
- * relevant parts are copied into spring-shell-test.
+ * Asserts for {@link Screen}. This is a work-in-progress implementation and relevant
+ * parts are copied into spring-shell-test.
  *
  * @author Janne Valkealahti
  */
@@ -42,7 +42,6 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 
 	/**
 	 * Verifies that the actual {@link Screen} has a cursor visible.
-	 *
 	 * @return this assertion object
 	 */
 	public ScreenAssert hasCursorVisible() {
@@ -55,7 +54,6 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 
 	/**
 	 * Verifies that the actual {@link Screen} has a cursor in a given position.
-	 *
 	 * @param x a x position in a screen
 	 * @param y a y position in a screen
 	 * @return this assertion object
@@ -72,7 +70,6 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 
 	/**
 	 * Verifies that the actual {@link Screen} has a foreground color in a position.
-	 *
 	 * @param x a x position in a screen
 	 * @param y a y position in a screen
 	 * @param color the color
@@ -84,15 +81,14 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 		ScreenItem i = items[y][x];
 		int expectedColor = i.getForeground();
 		if (expectedColor != color) {
-			failWithMessage("Expecting a Screen to have foreground color <%s> position <%s,%s> but was <%s>", color, x, y,
-					expectedColor);
+			failWithMessage("Expecting a Screen to have foreground color <%s> position <%s,%s> but was <%s>", color, x,
+					y, expectedColor);
 		}
 		return this;
 	}
 
 	/**
 	 * Verifies that the actual {@link Screen} has a foreground style in a position.
-	 *
 	 * @param x a x position in a screen
 	 * @param y a y position in a screen
 	 * @param style the style
@@ -105,14 +101,13 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 		int expectedStyle = i.getStyle();
 		if (expectedStyle != style) {
 			failWithMessage("Expecting a Screen to have style <%s> position <%s,%s> but was <%s>", style, x, y,
-			expectedStyle);
+					expectedStyle);
 		}
 		return this;
 	}
 
 	/**
 	 * Verifies that the actual {@link Screen} has a background color in a position.
-	 *
 	 * @param x a x position in a screen
 	 * @param y a y position in a screen
 	 * @param color the color
@@ -124,19 +119,18 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 		ScreenItem i = items[y][x];
 		int expectedColor = i.getBackground();
 		if (expectedColor != color) {
-			failWithMessage("Expecting a Screen to have background color <%s> position <%s,%s> but was <%s>", color, x, y,
-					expectedColor);
+			failWithMessage("Expecting a Screen to have background color <%s> position <%s,%s> but was <%s>", color, x,
+					y, expectedColor);
 		}
 		return this;
 	}
 
 	/**
-	 * Verifies that a given bounded box is legal for a screen and that characters
-	 * along border look like border characters.
-	 *
+	 * Verifies that a given bounded box is legal for a screen and that characters along
+	 * border look like border characters.
 	 * @param x a x position in a screen
 	 * @param y a y position in a screen
-	 * @param width  a width in a screen
+	 * @param width a width in a screen
 	 * @param height a height in a screen
 	 * @return this assertion object
 	 */
@@ -145,12 +139,11 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 	}
 
 	/**
-	 * Verifies that a given bounded box is legal for a screen and that characters
-	 * along border doesn't look like border characters.
-	 *
+	 * Verifies that a given bounded box is legal for a screen and that characters along
+	 * border doesn't look like border characters.
 	 * @param x a x position in a screen
 	 * @param y a y position in a screen
-	 * @param width  a width in a screen
+	 * @param width a width in a screen
 	 * @param height a height in a screen
 	 * @return this assertion object
 	 */
@@ -161,7 +154,6 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 	/**
 	 * Verifies that a given text can be found from a screen coordinates following
 	 * horizontal width.
-	 *
 	 * @param text a text to verify
 	 * @param x a x position of a text
 	 * @param y a y position of a text
@@ -187,7 +179,6 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 	/**
 	 * Verifies that a given text can not be found from a screen coordinates following
 	 * horizontal width.
-	 *
 	 * @param text a text to verify
 	 * @param x a x position of a text
 	 * @param y a y position of a text
@@ -223,7 +214,8 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 			Screen clip = actual.clip(x, y, width, height);
 			if (clip instanceof DisplayLines dl2) {
 				List<AttributedString> screenLines2 = dl2.getScreenLines();
-				buf.append(String.format("%nhave border in bounded box x=%s y=%s width=%s height=%s, was:%n", x, y, width, height));
+				buf.append(String.format("%nhave border in bounded box x=%s y=%s width=%s height=%s, was:%n", x, y,
+						width, height));
 				for (AttributedString line : screenLines2) {
 					buf.append(String.format("%n  %s", AttributedString.stripAnsi(line.toString())));
 				}
@@ -321,4 +313,5 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 			failWithMessage("Can't assert position x %s as width is %s", x, content[0].length);
 		}
 	}
+
 }

@@ -82,4 +82,5 @@ public class TableModelBuilder<T> {
 		};
 
 	}
+
 }

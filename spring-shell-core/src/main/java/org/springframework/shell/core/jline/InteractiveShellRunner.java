@@ -33,8 +33,10 @@ import org.springframework.shell.core.context.ShellContext;
 /**
  * A {@link ShellRunner} that bootstraps the shell in interactive mode.
  *
- * <p>Has lower precedence than {@link ScriptShellRunner} and {@link NonInteractiveShellRunner} which makes it the
- * default shell runner when the other runners opt-out of handling the shell.
+ * <p>
+ * Has lower precedence than {@link ScriptShellRunner} and
+ * {@link NonInteractiveShellRunner} which makes it the default shell runner when the
+ * other runners opt-out of handling the shell.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
@@ -44,8 +46,9 @@ import org.springframework.shell.core.context.ShellContext;
 public class InteractiveShellRunner implements ShellRunner {
 
 	/**
-	 * The precedence at which this runner is ordered by the DefaultApplicationRunner - which also controls
-	 * the order it is consulted on the ability to handle the current shell.
+	 * The precedence at which this runner is ordered by the DefaultApplicationRunner -
+	 * which also controls the order it is consulted on the ability to handle the current
+	 * shell.
 	 */
 	public static final int PRECEDENCE = 0;
 
@@ -93,7 +96,8 @@ public class InteractiveShellRunner implements ShellRunner {
 			catch (UserInterruptException e) {
 				if (e.getPartialLine().isEmpty()) {
 					throw new ExitRequest(1);
-				} else {
+				}
+				else {
 					return Input.EMPTY;
 				}
 			}
@@ -102,5 +106,7 @@ public class InteractiveShellRunner implements ShellRunner {
 			}
 			return new ParsedLineInput(lineReader.getParsedLine());
 		}
+
 	}
+
 }

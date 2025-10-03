@@ -21,6 +21,7 @@ package org.springframework.shell.test.jediterm.terminal.util;
 public class Pair<A, B> {
 
 	public final A first;
+
 	public final B second;
 
 	public static <A, B> Pair<A, B> create(A first, B second) {
@@ -54,13 +55,17 @@ public class Pair<A, B> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
-		Pair<?, ?> pair = (Pair<?, ?>)o;
+		Pair<?, ?> pair = (Pair<?, ?>) o;
 
-		if (first != null ? !first.equals(pair.first) : pair.first != null) return false;
-		if (second != null ? !second.equals(pair.second) : pair.second != null) return false;
+		if (first != null ? !first.equals(pair.first) : pair.first != null)
+			return false;
+		if (second != null ? !second.equals(pair.second) : pair.second != null)
+			return false;
 
 		return true;
 	}
@@ -74,4 +79,5 @@ public class Pair<A, B> {
 	public String toString() {
 		return "<" + first + "," + second + ">";
 	}
+
 }

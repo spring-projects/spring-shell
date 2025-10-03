@@ -48,9 +48,8 @@ class CommandModelTests extends AbstractParsingTests {
 	@Test
 	void oneRootCommandCaseInsensitive() {
 		register(ROOT1_UP);
-		ParserConfig configuration = new ParserConfig()
-				.disable(Feature.CASE_SENSITIVE_COMMANDS)
-				.disable(Feature.CASE_SENSITIVE_OPTIONS);
+		ParserConfig configuration = new ParserConfig().disable(Feature.CASE_SENSITIVE_COMMANDS)
+			.disable(Feature.CASE_SENSITIVE_OPTIONS);
 		CommandModel model = commandModel(configuration);
 
 		Map<String, Token> tokens = model.getValidRootTokens();
@@ -80,12 +79,11 @@ class CommandModelTests extends AbstractParsingTests {
 			assertThat(root1).isNotNull();
 			assertThat(root1.getChildren()).hasSize(1);
 			assertThat(root1.registration).isNull();
-			assertThat(root1.getChildren()).satisfiesExactly(
-				sub1 -> {
-					assertThat(sub1).isNotNull();
-					assertThat(sub1.getChildren()).isEmpty();
-					assertThat(sub1.registration).isNotNull();
-				});
+			assertThat(root1.getChildren()).satisfiesExactly(sub1 -> {
+				assertThat(sub1).isNotNull();
+				assertThat(sub1.getChildren()).isEmpty();
+				assertThat(sub1.registration).isNotNull();
+			});
 		});
 	}
 
@@ -110,22 +108,22 @@ class CommandModelTests extends AbstractParsingTests {
 			assertThat(root1.registration).isNull();
 			assertThat(root1.getValidTokens()).satisfies(map -> {
 				assertThat(map).hasSize(2);
-				assertThat(map).hasEntrySatisfying("sub1", token -> assertThat(token.getType()).isEqualTo(TokenType.COMMAND));
-				assertThat(map).hasEntrySatisfying("sub2", token -> assertThat(token.getType()).isEqualTo(TokenType.COMMAND));
+				assertThat(map).hasEntrySatisfying("sub1",
+						token -> assertThat(token.getType()).isEqualTo(TokenType.COMMAND));
+				assertThat(map).hasEntrySatisfying("sub2",
+						token -> assertThat(token.getType()).isEqualTo(TokenType.COMMAND));
 			});
-			assertThat(root1.getChildren()).satisfiesExactlyInAnyOrder(
-				sub1 -> {
-					assertThat(sub1.command).isEqualTo("sub1");
-					assertThat(sub1).isNotNull();
-					assertThat(sub1.getChildren()).isEmpty();
-					assertThat(sub1.registration).isNotNull();
-				},
-				sub2 -> {
-					assertThat(sub2.command).isEqualTo("sub2");
-					assertThat(sub2).isNotNull();
-					assertThat(sub2.getChildren()).isEmpty();
-					assertThat(sub2.registration).isNotNull();
-				});
+			assertThat(root1.getChildren()).satisfiesExactlyInAnyOrder(sub1 -> {
+				assertThat(sub1.command).isEqualTo("sub1");
+				assertThat(sub1).isNotNull();
+				assertThat(sub1.getChildren()).isEmpty();
+				assertThat(sub1.registration).isNotNull();
+			}, sub2 -> {
+				assertThat(sub2.command).isEqualTo("sub2");
+				assertThat(sub2).isNotNull();
+				assertThat(sub2.getChildren()).isEmpty();
+				assertThat(sub2.registration).isNotNull();
+			});
 		});
 	}
 
@@ -151,18 +149,16 @@ class CommandModelTests extends AbstractParsingTests {
 			assertThat(root1.registration).isNull();
 			assertThat(root1.getValidTokens()).satisfies(map -> {
 				assertThat(map).hasSize(1);
-				assertThat(map).hasEntrySatisfying("sub1", token -> assertThat(token.getType()).isEqualTo(TokenType.COMMAND));
+				assertThat(map).hasEntrySatisfying("sub1",
+						token -> assertThat(token.getType()).isEqualTo(TokenType.COMMAND));
 			});
-			assertThat(root1.getChildren()).satisfiesExactlyInAnyOrder(
-				sub1 -> {
-					assertThat(sub1.command).isEqualTo("sub1");
-					assertThat(sub1.getChildren()).satisfiesExactlyInAnyOrder(
+			assertThat(root1.getChildren()).satisfiesExactlyInAnyOrder(sub1 -> {
+				assertThat(sub1.command).isEqualTo("sub1");
+				assertThat(sub1.getChildren()).satisfiesExactlyInAnyOrder(
 						sub2 -> assertThat(sub2.getChildren()).isEmpty(),
 						sub3 -> assertThat(sub3.getChildren()).isEmpty(),
-						sub4 -> assertThat(sub4.getChildren()).isEmpty()
-					);
-				}
-			);
+						sub4 -> assertThat(sub4.getChildren()).isEmpty());
+			});
 		});
 	}
 
@@ -180,8 +176,7 @@ class CommandModelTests extends AbstractParsingTests {
 		register(ROOT2_SUB1_SUB2);
 		CommandModel model = commandModel();
 
-		assertThat(model.resolve(List.of("root2"))).satisfies(
-			info -> assertThat(info.registration).isNotNull()
-		);
+		assertThat(model.resolve(List.of("root2"))).satisfies(info -> assertThat(info.registration).isNotNull());
 	}
+
 }

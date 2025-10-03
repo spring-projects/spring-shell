@@ -54,8 +54,7 @@ public class ArgumentHeaderMethodArgumentResolver extends AbstractArgumentMethod
 	}
 
 	@Override
-	@Nullable
-	protected Object resolveArgumentInternal(MethodParameter parameter, Message<?> message, List<String> names)
+	@Nullable protected Object resolveArgumentInternal(MethodParameter parameter, Message<?> message, List<String> names)
 			throws Exception {
 		if (names.size() == 1) {
 			return message.getHeaders().get(ARGUMENT_PREFIX + names.get(0));
@@ -67,8 +66,8 @@ public class ArgumentHeaderMethodArgumentResolver extends AbstractArgumentMethod
 
 	@Override
 	protected void handleMissingValue(List<String> headerName, MethodParameter parameter, Message<?> message) {
-		throw new MessageHandlingException(message, "Missing header '" + headerName +
-				"' for method parameter type [" + parameter.getParameterType() + "]");
+		throw new MessageHandlingException(message,
+				"Missing header '" + headerName + "' for method parameter type [" + parameter.getParameterType() + "]");
 	}
 
 	private static final class HeaderNamedValueInfo extends NamedValueInfo {
@@ -76,5 +75,7 @@ public class ArgumentHeaderMethodArgumentResolver extends AbstractArgumentMethod
 		private HeaderNamedValueInfo(Header annotation) {
 			super(Arrays.asList(annotation.name()), annotation.required(), annotation.defaultValue());
 		}
+
 	}
+
 }

@@ -57,8 +57,8 @@ public class OptionMethodArgumentResolver extends AbstractArgumentMethodArgument
 	}
 
 	@Override
-	protected @Nullable Object resolveArgumentInternal(MethodParameter parameter, Message<?> message, List<String> names)
-			throws Exception {
+	protected @Nullable Object resolveArgumentInternal(MethodParameter parameter, Message<?> message,
+			List<String> names) throws Exception {
 		for (String name : names) {
 			if (message.getHeaders().containsKey(ARGUMENT_PREFIX + name)) {
 				return message.getHeaders().get(ARGUMENT_PREFIX + name);
@@ -79,5 +79,7 @@ public class OptionMethodArgumentResolver extends AbstractArgumentMethodArgument
 		private HeaderNamedValueInfo(Option annotation, List<String> names) {
 			super(names, false, null);
 		}
+
 	}
+
 }

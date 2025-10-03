@@ -35,6 +35,7 @@ class GridViewSnippets {
 			grid.addItem(new BoxView(), 1, 1, 1, 1, 0, 0);
 			// end::snippet1[]
 		}
+
 	}
 
 }

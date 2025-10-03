@@ -36,82 +36,54 @@ public class OptionTypeCommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "option-type-string")
-		public String optionTypeStringAnnotation(
-			@Option(longNames = "arg1")
-			String arg1
-		) {
+		public String optionTypeStringAnnotation(@Option(longNames = "arg1") String arg1) {
 			return "Hello " + arg1;
 		}
 
 		@Command(command = "option-type-boolean")
-		public String optionTypeBooleanAnnotation(
-			@Option(longNames = "arg1") boolean arg1,
-			@Option(longNames = "arg2", defaultValue = "true") boolean arg2,
-			@Option(longNames = "arg3", defaultValue = "false") boolean arg3,
-			@Option(longNames = "arg4") Boolean arg4,
-			@Option(longNames = "arg5", defaultValue = "true") Boolean arg5,
-			@Option(longNames = "arg6", defaultValue = "false") Boolean arg6,
-			boolean arg7
-		) {
+		public String optionTypeBooleanAnnotation(@Option(longNames = "arg1") boolean arg1,
+				@Option(longNames = "arg2", defaultValue = "true") boolean arg2,
+				@Option(longNames = "arg3", defaultValue = "false") boolean arg3,
+				@Option(longNames = "arg4") Boolean arg4,
+				@Option(longNames = "arg5", defaultValue = "true") Boolean arg5,
+				@Option(longNames = "arg6", defaultValue = "false") Boolean arg6, boolean arg7) {
 			return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s arg7=%s", arg1, arg2, arg3,
 					arg4, arg5, arg6, arg7);
 		}
 
 		@Command(command = "option-type-integer")
-		public String optionTypeIntegerAnnotation(
-			@Option(longNames = "arg1")
-			int arg1,
-			@Option(longNames = "arg2")
-			Integer arg2
-		) {
+		public String optionTypeIntegerAnnotation(@Option(longNames = "arg1") int arg1,
+				@Option(longNames = "arg2") Integer arg2) {
 			return String.format("Hello '%s' '%s'", arg1, arg2);
 		}
 
 		@Command(command = "option-type-enum")
-		public String optionTypeEnumAnnotation(
-			@Option(longNames = "arg1")
-			OptionTypeEnum arg1
-		) {
+		public String optionTypeEnumAnnotation(@Option(longNames = "arg1") OptionTypeEnum arg1) {
 			return "Hello " + arg1;
 		}
 
 		@Command(command = "option-type-string-array")
-		public String optionTypeStringArrayAnnotation(
-			@Option(longNames = "arg1")
-			String[] arg1
-		) {
+		public String optionTypeStringArrayAnnotation(@Option(longNames = "arg1") String[] arg1) {
 			return "Hello " + stringOfStrings(arg1);
 		}
 
 		@Command(command = "option-type-int-array")
-		public String optionTypeIntArrayAnnotation(
-			@Option(longNames = "arg1")
-			int[] arg1
-		) {
+		public String optionTypeIntArrayAnnotation(@Option(longNames = "arg1") int[] arg1) {
 			return "Hello " + stringOfInts(arg1);
 		}
 
 		@Command(command = "option-type-string-list")
-		public String optionTypeStringListAnnotation(
-			@Option(longNames = "arg1")
-			List<String> arg1
-		) {
+		public String optionTypeStringListAnnotation(@Option(longNames = "arg1") List<String> arg1) {
 			return "Hello " + arg1;
 		}
 
 		@Command(command = "option-type-string-set")
-		public String optionTypeStringSetAnnotation(
-			@Option(longNames = "arg1")
-			Set<String> arg1
-		) {
+		public String optionTypeStringSetAnnotation(@Option(longNames = "arg1") Set<String> arg1) {
 			return "Hello " + arg1;
 		}
 
 		@Command(command = "option-type-string-collection")
-		public String optionTypeStringCollectionAnnotation(
-			@Option(longNames = "arg1")
-			Collection<String> arg1
-		) {
+		public String optionTypeStringCollectionAnnotation(@Option(longNames = "arg1") Collection<String> arg1) {
 			return "Hello " + arg1;
 		}
 
@@ -122,235 +94,229 @@ public class OptionTypeCommands {
 
 		@Bean
 		public CommandRegistration optionTypeStringRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-string")
+			return getBuilder().command(REG, "option-type-string")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(String.class)
-					.position(0)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(String.class)
+				.position(0)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeBooleanRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-boolean")
+			return getBuilder().command(REG, "option-type-boolean")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(boolean.class)
-					.and()
+				.longNames("arg1")
+				.type(boolean.class)
+				.and()
 				.withOption()
-					.longNames("arg2")
-					.type(boolean.class)
-					.defaultValue("true")
-					.and()
+				.longNames("arg2")
+				.type(boolean.class)
+				.defaultValue("true")
+				.and()
 				.withOption()
-					.longNames("arg3")
-					.type(boolean.class)
-					.defaultValue("false")
-					.and()
+				.longNames("arg3")
+				.type(boolean.class)
+				.defaultValue("false")
+				.and()
 				.withOption()
-					.longNames("arg4")
-					.type(Boolean.class)
-					.and()
+				.longNames("arg4")
+				.type(Boolean.class)
+				.and()
 				.withOption()
-					.longNames("arg5")
-					.type(Boolean.class)
-					.defaultValue("true")
-					.and()
+				.longNames("arg5")
+				.type(Boolean.class)
+				.defaultValue("true")
+				.and()
 				.withOption()
-					.longNames("arg6")
-					.type(Boolean.class)
-					.defaultValue("false")
-					.and()
+				.longNames("arg6")
+				.type(Boolean.class)
+				.defaultValue("false")
+				.and()
 				.withOption()
-					.longNames("arg7")
-					.type(boolean.class)
-					.and()
+				.longNames("arg7")
+				.type(boolean.class)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						boolean arg1 = ctx.hasMappedOption("arg1") ? ctx.getOptionValue("arg1") : false;
-						boolean arg2 = ctx.getOptionValue("arg2");
-						boolean arg3 = ctx.getOptionValue("arg3");
-						Boolean arg4 = ctx.getOptionValue("arg4");
-						Boolean arg5 = ctx.getOptionValue("arg5");
-						Boolean arg6 = ctx.getOptionValue("arg6");
-						boolean arg7 = ctx.hasMappedOption("arg7") ? ctx.getOptionValue("arg7") : false;
-						return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s arg7=%s", arg1,
-								arg2, arg3, arg4, arg5, arg6, arg7);
-					})
-					.and()
+				.function(ctx -> {
+					boolean arg1 = ctx.hasMappedOption("arg1") ? ctx.getOptionValue("arg1") : false;
+					boolean arg2 = ctx.getOptionValue("arg2");
+					boolean arg3 = ctx.getOptionValue("arg3");
+					Boolean arg4 = ctx.getOptionValue("arg4");
+					Boolean arg5 = ctx.getOptionValue("arg5");
+					Boolean arg6 = ctx.getOptionValue("arg6");
+					boolean arg7 = ctx.hasMappedOption("arg7") ? ctx.getOptionValue("arg7") : false;
+					return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s arg7=%s", arg1, arg2,
+							arg3, arg4, arg5, arg6, arg7);
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeIntegerRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-integer")
+			return getBuilder().command(REG, "option-type-integer")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(int.class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(int.class)
+				.required()
+				.and()
 				.withOption()
-					.longNames("arg2")
-					.type(Integer.class)
-					.required()
-					.and()
+				.longNames("arg2")
+				.type(Integer.class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						int arg1 = ctx.getOptionValue("arg1");
-						Integer arg2 = ctx.getOptionValue("arg2");
-						return String.format("Hello '%s' '%s'", arg1, arg2);
-					})
-					.and()
+				.function(ctx -> {
+					int arg1 = ctx.getOptionValue("arg1");
+					Integer arg2 = ctx.getOptionValue("arg2");
+					return String.format("Hello '%s' '%s'", arg1, arg2);
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeEnumRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-enum")
+			return getBuilder().command(REG, "option-type-enum")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(OptionTypeEnum.class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(OptionTypeEnum.class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						OptionTypeEnum arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					OptionTypeEnum arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeStringArrayRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-string-array")
+			return getBuilder().command(REG, "option-type-string-array")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(String[].class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(String[].class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String[] arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + stringOfStrings(arg1);
-					})
-					.and()
+				.function(ctx -> {
+					String[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + stringOfStrings(arg1);
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeIntArrayRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-int-array")
+			return getBuilder().command(REG, "option-type-int-array")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(int[].class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(int[].class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						int[] arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + stringOfInts(arg1);
-					})
-					.and()
+				.function(ctx -> {
+					int[] arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + stringOfInts(arg1);
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeStringListRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-string-list")
+			return getBuilder().command(REG, "option-type-string-list")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(List.class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(List.class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						List<String> arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					List<String> arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeStringSetRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-string-set")
+			return getBuilder().command(REG, "option-type-string-set")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(Set.class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(Set.class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						Set<String> arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					Set<String> arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeStringCollectionRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-string-collection")
+			return getBuilder().command(REG, "option-type-string-collection")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(Collection.class)
-					.required()
-					.and()
+				.longNames("arg1")
+				.type(Collection.class)
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						Collection<String> arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					Collection<String> arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration optionTypeVoidRegistration() {
-			return getBuilder()
-				.command(REG, "option-type-void")
+			return getBuilder().command(REG, "option-type-void")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.type(void.class)
-					.and()
+				.longNames("arg1")
+				.type(void.class)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						return "Hello ";
-					})
-					.and()
+				.function(ctx -> {
+					return "Hello ";
+				})
+				.and()
 				.build();
 		}
+
 	}
 
 	public static enum OptionTypeEnum {
-		ONE,TWO,THREE
+
+		ONE, TWO, THREE
+
 	}
+
 }

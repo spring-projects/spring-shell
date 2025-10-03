@@ -44,9 +44,11 @@ public class Version extends AbstractCommand {
 	 * Marker interface used in auto-config.
 	 */
 	public interface Command {
+
 	}
 
 	private TemplateExecutor templateExecutor;
+
 	private @Nullable String template;
 
 	public Version(TemplateExecutor templateExecutor) {
@@ -69,8 +71,10 @@ public class Version extends AbstractCommand {
 	private static String resourceAsString(Resource resource) {
 		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
 			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
+
 }

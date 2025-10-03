@@ -29,9 +29,13 @@ import org.springframework.util.StringUtils;
 class CommandParameterInfoModel {
 
 	private String type;
+
 	private List<String> arguments;
+
 	private boolean required;
+
 	private @Nullable String description;
+
 	private @Nullable String defaultValue;
 
 	CommandParameterInfoModel(String type, List<String> arguments, boolean required, @Nullable String description,
@@ -45,7 +49,6 @@ class CommandParameterInfoModel {
 
 	/**
 	 * Builds {@link CommandParameterInfoModel}.
-	 *
 	 * @param type the type
 	 * @param arguments the arguments
 	 * @param required the required flag
@@ -54,7 +57,7 @@ class CommandParameterInfoModel {
 	 * @return a command parameter info model
 	 */
 	static CommandParameterInfoModel of(String type, List<String> arguments, boolean required,
-										@Nullable String description, @Nullable String defaultValue) {
+			@Nullable String description, @Nullable String defaultValue) {
 		return new CommandParameterInfoModel(type, arguments, required, description, defaultValue);
 	}
 
@@ -81,4 +84,5 @@ class CommandParameterInfoModel {
 	public boolean getHasDefaultValue() {
 		return StringUtils.hasText(this.defaultValue);
 	}
+
 }

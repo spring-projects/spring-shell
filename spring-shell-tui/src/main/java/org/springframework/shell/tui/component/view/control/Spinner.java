@@ -16,9 +16,9 @@
 package org.springframework.shell.tui.component.view.control;
 
 /**
- * {@code Spinner} represents how user is notified that something is happening
- * using a traditional spinner concept. Represented in a console with an array
- * of characters which are looped.
+ * {@code Spinner} represents how user is notified that something is happening using a
+ * traditional spinner concept. Represented in a console with an array of characters which
+ * are looped.
  *
  * @author Janne Valkealahti
  */
@@ -26,23 +26,20 @@ public interface Spinner {
 
 	/**
 	 * Gets a frame characters. Type is {@link String} to support unicode.
-	 *
 	 * @return a frame characters
 	 */
 	String[] getFrames();
 
 	/**
-	 * Gets an interval which should be used to estimate how often frame
-	 * should get changed. This is always an estimate as actual change
-	 * depends how ofter console gets redrawn.
-	 *
+	 * Gets an interval which should be used to estimate how often frame should get
+	 * changed. This is always an estimate as actual change depends how ofter console gets
+	 * redrawn.
 	 * @return an interval in milliseconds
 	 */
 	int getInterval();
 
 	/**
 	 * Construct {@link Spinner} from given frames and interval.
-	 *
 	 * @param frames the spinner frames
 	 * @param interval the spinner interval
 	 * @return a Spinner implementation
@@ -63,280 +60,41 @@ public interface Spinner {
 		};
 	}
 
-	final static String[] LINE1 = new String[] {
-		"-",
-		"\\",
-		"|",
-		"/"
-	};
+	final static String[] LINE1 = new String[] { "-", "\\", "|", "/" };
 
-	final static String[] DOTS1 = new String[] {
-		"⠋",
-		"⠙",
-		"⠹",
-		"⠸",
-		"⠼",
-		"⠴",
-		"⠦",
-		"⠧",
-		"⠇",
-		"⠏"
-	};
+	final static String[] DOTS1 = new String[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
 
-	final static String[] DOTS2 = new String[] {
-		"⣾",
-		"⣽",
-		"⣻",
-		"⢿",
-		"⡿",
-		"⣟",
-		"⣯",
-		"⣷"
-	};
+	final static String[] DOTS2 = new String[] { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" };
 
-	final static String[] DOTS3 = new String[] {
-		"⠋",
-		"⠙",
-		"⠚",
-		"⠞",
-		"⠖",
-		"⠦",
-		"⠴",
-		"⠲",
-		"⠳",
-		"⠓"
-	};
+	final static String[] DOTS3 = new String[] { "⠋", "⠙", "⠚", "⠞", "⠖", "⠦", "⠴", "⠲", "⠳", "⠓" };
 
-	final static String[] DOTS4 = new String[] {
-		"⠄",
-		"⠆",
-		"⠇",
-		"⠋",
-		"⠙",
-		"⠸",
-		"⠰",
-		"⠠",
-		"⠰",
-		"⠸",
-		"⠙",
-		"⠋",
-		"⠇",
-		"⠆"
-	};
+	final static String[] DOTS4 = new String[] { "⠄", "⠆", "⠇", "⠋", "⠙", "⠸", "⠰", "⠠", "⠰", "⠸", "⠙", "⠋", "⠇", "⠆" };
 
-	final static String[] DOTS5 = new String[] {
-		"⠋",
-		"⠙",
-		"⠚",
-		"⠒",
-		"⠂",
-		"⠂",
-		"⠒",
-		"⠲",
-		"⠴",
-		"⠦",
-		"⠖",
-		"⠒",
-		"⠐",
-		"⠐",
-		"⠒",
-		"⠓",
-		"⠋"
-	};
+	final static String[] DOTS5 = new String[] { "⠋", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠦", "⠖", "⠒", "⠐", "⠐",
+			"⠒", "⠓", "⠋" };
 
-	final static String[] DOTS6 = new String[] {
-		"⠁",
-		"⠉",
-		"⠙",
-		"⠚",
-		"⠒",
-		"⠂",
-		"⠂",
-		"⠒",
-		"⠲",
-		"⠴",
-		"⠤",
-		"⠄",
-		"⠄",
-		"⠤",
-		"⠴",
-		"⠲",
-		"⠒",
-		"⠂",
-		"⠂",
-		"⠒",
-		"⠚",
-		"⠙",
-		"⠉",
-		"⠁"
-	};
+	final static String[] DOTS6 = new String[] { "⠁", "⠉", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠤", "⠄", "⠄", "⠤",
+			"⠴", "⠲", "⠒", "⠂", "⠂", "⠒", "⠚", "⠙", "⠉", "⠁" };
 
-	final static String[] DOTS7 = new String[] {
-		"⠈",
-		"⠉",
-		"⠋",
-		"⠓",
-		"⠒",
-		"⠐",
-		"⠐",
-		"⠒",
-		"⠖",
-		"⠦",
-		"⠤",
-		"⠠",
-		"⠠",
-		"⠤",
-		"⠦",
-		"⠖",
-		"⠒",
-		"⠐",
-		"⠐",
-		"⠒",
-		"⠓",
-		"⠋",
-		"⠉",
-		"⠈"
-	};
+	final static String[] DOTS7 = new String[] { "⠈", "⠉", "⠋", "⠓", "⠒", "⠐", "⠐", "⠒", "⠖", "⠦", "⠤", "⠠", "⠠", "⠤",
+			"⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋", "⠉", "⠈" };
 
-	final static String[] DOTS8 = new String[] {
-		"⠁",
-		"⠁",
-		"⠉",
-		"⠙",
-		"⠚",
-		"⠒",
-		"⠂",
-		"⠂",
-		"⠒",
-		"⠲",
-		"⠴",
-		"⠤",
-		"⠄",
-		"⠄",
-		"⠤",
-		"⠠",
-		"⠠",
-		"⠤",
-		"⠦",
-		"⠖",
-		"⠒",
-		"⠐",
-		"⠐",
-		"⠒",
-		"⠓",
-		"⠋",
-		"⠉",
-		"⠈",
-		"⠈"
-	};
+	final static String[] DOTS8 = new String[] { "⠁", "⠁", "⠉", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠤", "⠄", "⠄",
+			"⠤", "⠠", "⠠", "⠤", "⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋", "⠉", "⠈", "⠈" };
 
-	final static String[] DOTS9 = new String[] {
-		"⢹",
-		"⢺",
-		"⢼",
-		"⣸",
-		"⣇",
-		"⡧",
-		"⡗",
-		"⡏"
-	};
+	final static String[] DOTS9 = new String[] { "⢹", "⢺", "⢼", "⣸", "⣇", "⡧", "⡗", "⡏" };
 
-	final static String[] DOTS10 = new String[] {
-		"⢄",
-		"⢂",
-		"⢁",
-		"⡁",
-		"⡈",
-		"⡐",
-		"⡠"
-	};
+	final static String[] DOTS10 = new String[] { "⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠" };
 
-	final static String[] DOTS11 = new String[] {
-		"⠁",
-		"⠂",
-		"⠄",
-		"⡀",
-		"⢀",
-		"⠠",
-		"⠐",
-		"⠈"
-	};
+	final static String[] DOTS11 = new String[] { "⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈" };
 
-	final static String[] DOTS12 = new String[] {
-		"⢀⠀",
-		"⡀⠀",
-		"⠄⠀",
-		"⢂⠀",
-		"⡂⠀",
-		"⠅⠀",
-		"⢃⠀",
-		"⡃⠀",
-		"⠍⠀",
-		"⢋⠀",
-		"⡋⠀",
-		"⠍⠁",
-		"⢋⠁",
-		"⡋⠁",
-		"⠍⠉",
-		"⠋⠉",
-		"⠋⠉",
-		"⠉⠙",
-		"⠉⠙",
-		"⠉⠩",
-		"⠈⢙",
-		"⠈⡙",
-		"⢈⠩",
-		"⡀⢙",
-		"⠄⡙",
-		"⢂⠩",
-		"⡂⢘",
-		"⠅⡘",
-		"⢃⠨",
-		"⡃⢐",
-		"⠍⡐",
-		"⢋⠠",
-		"⡋⢀",
-		"⠍⡁",
-		"⢋⠁",
-		"⡋⠁",
-		"⠍⠉",
-		"⠋⠉",
-		"⠋⠉",
-		"⠉⠙",
-		"⠉⠙",
-		"⠉⠩",
-		"⠈⢙",
-		"⠈⡙",
-		"⠈⠩",
-		"⠀⢙",
-		"⠀⡙",
-		"⠀⠩",
-		"⠀⢘",
-		"⠀⡘",
-		"⠀⠨",
-		"⠀⢐",
-		"⠀⡐",
-		"⠀⠠",
-		"⠀⢀",
-		"⠀⡀"
-	};
+	final static String[] DOTS12 = new String[] { "⢀⠀", "⡀⠀", "⠄⠀", "⢂⠀", "⡂⠀", "⠅⠀", "⢃⠀", "⡃⠀", "⠍⠀", "⢋⠀", "⡋⠀",
+			"⠍⠁", "⢋⠁", "⡋⠁", "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩", "⠈⢙", "⠈⡙", "⢈⠩", "⡀⢙", "⠄⡙", "⢂⠩", "⡂⢘", "⠅⡘", "⢃⠨",
+			"⡃⢐", "⠍⡐", "⢋⠠", "⡋⢀", "⠍⡁", "⢋⠁", "⡋⠁", "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩", "⠈⢙", "⠈⡙", "⠈⠩", "⠀⢙", "⠀⡙",
+			"⠀⠩", "⠀⢘", "⠀⡘", "⠀⠨", "⠀⢐", "⠀⡐", "⠀⠠", "⠀⢀", "⠀⡀" };
 
-	final static String[] DOTS13 = new String[] {
-		"⣼",
-		"⣹",
-		"⢻",
-		"⠿",
-		"⡟",
-		"⣏",
-		"⣧",
-		"⣶"
-	};
+	final static String[] DOTS13 = new String[] { "⣼", "⣹", "⢻", "⠿", "⡟", "⣏", "⣧", "⣶" };
 
-	final static String[] DOTS14 = new String[] {
-		".   ",
-		" .  ",
-		"  . ",
-		"   ."
-	};
+	final static String[] DOTS14 = new String[] { ".   ", " .  ", "  . ", "   ." };
 
 }

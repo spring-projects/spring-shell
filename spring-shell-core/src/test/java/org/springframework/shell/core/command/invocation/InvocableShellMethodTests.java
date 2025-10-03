@@ -41,5 +41,7 @@ class InvocableShellMethodTests {
 		public String handle(Integer intArg, String stringArg) {
 			return intArg + "-" + stringArg;
 		}
+
 	}
+
 }

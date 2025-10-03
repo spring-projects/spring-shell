@@ -36,12 +36,11 @@ public class CommandRegistrySnippets {
 
 	// tag::snippet2[]
 	static class CustomCommandResolver implements CommandResolver {
+
 		List<CommandRegistration> registrations = new ArrayList<>();
 
 		CustomCommandResolver() {
-			CommandRegistration resolved = CommandRegistration.builder()
-				.command("resolve command")
-				.build();
+			CommandRegistration resolved = CommandRegistration.builder().command("resolve command").build();
 			registrations.add(resolved);
 		}
 
@@ -49,6 +48,7 @@ public class CommandRegistrySnippets {
 		public List<CommandRegistration> resolve() {
 			return registrations;
 		}
+
 	}
 	// end::snippet2[]
 
@@ -57,11 +57,11 @@ public class CommandRegistrySnippets {
 
 		@Override
 		public void customize(CommandRegistry commandRegistry) {
-			CommandRegistration registration = CommandRegistration.builder()
-				.command("resolve command")
-				.build();
+			CommandRegistration registration = CommandRegistration.builder().command("resolve command").build();
 			commandRegistry.register(registration);
 		}
+
 	}
 	// end::snippet3[]
+
 }

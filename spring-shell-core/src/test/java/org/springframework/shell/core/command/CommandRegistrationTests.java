@@ -33,9 +33,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 
 	@Test
 	void testCommandMustBeSet() {
-		assertThatThrownBy(() -> CommandRegistration.builder().build())
-				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("command cannot be empty");
+		assertThatThrownBy(() -> CommandRegistration.builder().build()).isInstanceOf(IllegalArgumentException.class)
+			.hasMessageContaining("command cannot be empty");
 	}
 
 	@Test
@@ -43,8 +42,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getGroup()).isNull();
@@ -55,8 +54,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.interactionMode(InteractionMode.NONINTERACTIVE)
 			.group("fakegroup")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getInteractionMode()).isEqualTo(InteractionMode.NONINTERACTIVE);
 		assertThat(registration.getGroup()).isEqualTo("fakegroup");
@@ -67,32 +66,32 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 
 		registration = CommandRegistration.builder()
 			.command("command1", "command2")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1 command2");
 
 		registration = CommandRegistration.builder()
 			.command("command1 command2")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1 command2");
 
 		registration = CommandRegistration.builder()
 			.command(" command1  command2 ")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1 command2");
 	}
@@ -102,8 +101,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getTarget().getTargetType()).isEqualTo(TargetType.FUNCTION);
 		assertThat(registration.getTarget().getFunction()).isNotNull();
@@ -116,8 +115,9 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		assertThat(registration.getTarget().getTargetType()).isEqualTo(TargetType.CONSUMER);
 		assertThat(registration.getTarget().getFunction()).isNull();
@@ -131,8 +131,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
-				.method(pojo1, "method3", String.class)
-				.and()
+			.method(pojo1, "method3", String.class)
+			.and()
 			.build();
 		assertThat(registration.getTarget().getTargetType()).isEqualTo(TargetType.METHOD);
 		assertThat(registration.getTarget().getFunction()).isNull();
@@ -145,9 +145,9 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		assertThatThrownBy(() -> CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
-				.method(pojo1, "method3", String.class)
-				.function(function1)
-				.and()
+			.method(pojo1, "method3", String.class)
+			.function(function1)
+			.and()
 			.build()).isInstanceOf(IllegalStateException.class).hasMessageContaining("only one target can exist");
 	}
 
@@ -157,12 +157,12 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getDescription()).isEqualTo("help");
@@ -176,12 +176,12 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method3", String.class)
-				.and()
+			.method(pojo1, "method3", String.class)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getDescription()).isEqualTo("help");
@@ -194,14 +194,14 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('v')
-				.type(boolean.class)
-				.description("some arg1")
-				.label("mylabel")
-				.and()
+			.shortNames('v')
+			.type(boolean.class)
+			.description("some arg1")
+			.label("mylabel")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getDescription()).isEqualTo("help");
@@ -217,12 +217,13 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg")
-				.type(rtype)
-				.and()
+			.longNames("arg")
+			.type(rtype)
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getOptions()).hasSize(1);
@@ -235,14 +236,14 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('v')
-				.type(boolean.class)
-				.description("some arg1")
-				.required(true)
-				.and()
+			.shortNames('v')
+			.type(boolean.class)
+			.description("some arg1")
+			.required(true)
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getDescription()).isEqualTo("help");
@@ -254,14 +255,14 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('v')
-				.type(boolean.class)
-				.description("some arg1")
-				.required(false)
-				.and()
+			.shortNames('v')
+			.type(boolean.class)
+			.description("some arg1")
+			.required(false)
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 
 		assertThat(registration.getOptions()).hasSize(1);
@@ -271,13 +272,13 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('v')
-				.type(boolean.class)
-				.description("some arg1")
-				.and()
+			.shortNames('v')
+			.type(boolean.class)
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 
 		assertThat(registration.getOptions()).hasSize(1);
@@ -287,14 +288,14 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('v')
-				.type(boolean.class)
-				.description("some arg1")
-				.required()
-				.and()
+			.shortNames('v')
+			.type(boolean.class)
+			.description("some arg1")
+			.required()
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 
 		assertThat(registration.getOptions()).hasSize(1);
@@ -307,14 +308,14 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('v')
-				.type(boolean.class)
-				.description("some arg1")
-				.defaultValue("defaultValue")
-				.and()
+			.shortNames('v')
+			.type(boolean.class)
+			.description("some arg1")
+			.defaultValue("defaultValue")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getDescription()).isEqualTo("help");
@@ -327,15 +328,15 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.position(1)
-				.and()
+			.longNames("arg1")
+			.position(1)
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.and()
+			.longNames("arg2")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getOptions()).hasSize(2);
@@ -348,16 +349,17 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.arity(0, 0)
-				.and()
+			.longNames("arg1")
+			.arity(0, 0)
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
-			assertThat(registration.getOptions()).hasSize(1);
-			assertThat(registration.getOptions().get(0).getArityMin()).isZero();
-			assertThat(registration.getOptions().get(0).getArityMax()).isZero();
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0).getArityMin()).isZero();
+		assertThat(registration.getOptions().get(0).getArityMax()).isZero();
 	}
 
 	@Test
@@ -365,16 +367,17 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.arity(OptionArity.ZERO)
-				.and()
+			.longNames("arg1")
+			.arity(OptionArity.ZERO)
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
-			assertThat(registration.getOptions()).hasSize(1);
-			assertThat(registration.getOptions().get(0).getArityMin()).isZero();
-			assertThat(registration.getOptions().get(0).getArityMax()).isZero();
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0).getArityMin()).isZero();
+		assertThat(registration.getOptions().get(0).getArityMax()).isZero();
 	}
 
 	@Test
@@ -382,16 +385,17 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.arity(OptionArity.NONE)
-				.and()
+			.longNames("arg1")
+			.arity(OptionArity.NONE)
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
-			assertThat(registration.getOptions()).hasSize(1);
-			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(-1);
-			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(-1);
+		assertThat(registration.getOptions()).hasSize(1);
+		assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(-1);
+		assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(-1);
 	}
 
 	@Test
@@ -400,16 +404,16 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.group("Test Group")
 			.withAlias()
-				.command("alias1")
-				.group("Alias Group")
-				.and()
+			.command("alias1")
+			.group("Alias Group")
+			.and()
 			.withAlias()
-				.command("alias2")
-				.group("Alias Group")
-				.and()
+			.command("alias2")
+			.group("Alias Group")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getGroup()).isEqualTo("Test Group");
@@ -423,26 +427,21 @@ class CommandRegistrationTests extends AbstractCommandTests {
 	@Test
 	void testExitCodes() {
 		CommandRegistration registration;
-		registration = CommandRegistration.builder()
-			.command("command1")
-			.withTarget()
-				.function(function1)
-				.and()
-			.build();
+		registration = CommandRegistration.builder().command("command1").withTarget().function(function1).and().build();
 		assertThat(registration.getExitCode()).isNotNull();
 		assertThat(registration.getExitCode().getMappingFunctions()).isEmpty();
 
 		registration = CommandRegistration.builder()
 			.command("command1")
 			.withExitCode()
-				.map(RuntimeException.class, 1)
-				.map(IllegalArgumentException.class, 2)
-				.map(e -> 1)
-				.map(e -> 2)
-				.and()
+			.map(RuntimeException.class, 1)
+			.map(IllegalArgumentException.class, 2)
+			.map(e -> 1)
+			.map(e -> 2)
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getExitCode()).isNotNull();
 		assertThat(registration.getExitCode().getMappingFunctions()).hasSize(4);
@@ -451,12 +450,7 @@ class CommandRegistrationTests extends AbstractCommandTests {
 	@Test
 	void testAvailability() {
 		CommandRegistration registration;
-		registration = CommandRegistration.builder()
-			.command("command1")
-			.withTarget()
-				.function(function1)
-				.and()
-			.build();
+		registration = CommandRegistration.builder().command("command1").withTarget().function(function1).and().build();
 		assertThat(registration.getAvailability()).isNotNull();
 		assertThat(registration.getAvailability().isAvailable()).isTrue();
 
@@ -464,8 +458,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.availability(() -> Availability.unavailable("fake"))
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getAvailability()).isNotNull();
 		assertThat(registration.getAvailability().isAvailable()).isFalse();
@@ -477,12 +471,12 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.completion(ctx -> new ArrayList<>())
-				.and()
+			.longNames("arg1")
+			.completion(ctx -> new ArrayList<>())
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getOptions()).hasSize(1);
 		assertThat(registration.getOptions().get(0).getCompletion()).isNotNull();
@@ -495,21 +489,16 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		registration = CommandRegistration.builder()
 			.command("command1")
 			.withErrorHandling()
-				.resolver(er1)
-				.and()
+			.resolver(er1)
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.getExceptionResolvers()).hasSize(1);
 		assertThat(registration.getExceptionResolvers().get(0)).isSameAs(er1);
 
-		registration = CommandRegistration.builder()
-			.command("command1")
-			.withTarget()
-				.function(function1)
-				.and()
-			.build();
+		registration = CommandRegistration.builder().command("command1").withTarget().function(function1).and().build();
 		assertThat(registration.getExceptionResolvers()).isEmpty();
 	}
 
@@ -518,8 +507,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.isHidden()).isFalse();
 
@@ -527,8 +516,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.hidden()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.isHidden()).isTrue();
 
@@ -536,8 +525,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.hidden(false)
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.isHidden()).isFalse();
 
@@ -545,8 +534,8 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.command("command1")
 			.hidden(true)
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		assertThat(registration.isHidden()).isTrue();
 	}
@@ -556,14 +545,14 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withHelpOptions()
-				.enabled(true)
-				.longNames("help")
-				.shortNames('h')
-				.command("help")
-				.and()
+			.enabled(true)
+			.longNames("help")
+			.shortNames('h')
+			.command("help")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 
 		assertThat(registration.getOptions()).hasSize(1);
@@ -576,12 +565,13 @@ class CommandRegistrationTests extends AbstractCommandTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.nameModifier(name -> "x" + name)
-				.and()
+			.longNames("arg1")
+			.nameModifier(name -> "x" + name)
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 
 		assertThat(registration.getOptions()).hasSize(1);
@@ -597,11 +587,12 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.defaultOptionNameModifier(name -> "x" + name)
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 
 		assertThat(registration.getOptions()).hasSize(1);
@@ -617,14 +608,16 @@ class CommandRegistrationTests extends AbstractCommandTests {
 			.defaultOptionNameModifier(name -> "x" + name)
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		List<CommandOption> options1 = registration.getOptions();
 		List<CommandOption> options2 = registration.getOptions();
 		assertThat(options1).isEqualTo(options2);
 	}
+
 }

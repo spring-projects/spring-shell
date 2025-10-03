@@ -19,7 +19,8 @@ package org.springframework.shell.tui.table;
 import org.springframework.util.Assert;
 
 /**
- * A TextWrapper that delegates to another but makes sure that the contract is not violated.
+ * A TextWrapper that delegates to another but makes sure that the contract is not
+ * violated.
  *
  * @author Eric Bottard
  */
@@ -35,8 +36,10 @@ public class DebugTextWrapper implements TextWrapper {
 	public String[] wrap(String[] original, int columnWidth) {
 		String[] result = delegate.wrap(original, columnWidth);
 		for (String s : result) {
-			Assert.isTrue(s.length() == columnWidth, String.format("'%s' has the wrong length (%d), expected %d", s, s.length(), columnWidth));
+			Assert.isTrue(s.length() == columnWidth,
+					String.format("'%s' has the wrong length (%d), expected %d", s, s.length(), columnWidth));
 		}
 		return result;
 	}
+
 }

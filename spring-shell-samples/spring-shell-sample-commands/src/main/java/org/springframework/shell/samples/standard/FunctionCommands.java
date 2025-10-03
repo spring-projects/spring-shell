@@ -29,14 +29,14 @@ public class FunctionCommands {
 			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return String.format("hi, arg1 value is '%s'", arg1);
-				})
-				.and()
+			.function(ctx -> {
+				String arg1 = ctx.getOptionValue("arg1");
+				return String.format("hi, arg1 value is '%s'", arg1);
+			})
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.build();
 	}
 
@@ -47,25 +47,25 @@ public class FunctionCommands {
 			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
-				.function(ctx -> {
-					Boolean a = ctx.getOptionValue("a");
-					Boolean b = ctx.getOptionValue("b");
-					Boolean c = ctx.getOptionValue("c");
-					return String.format("hi, boolean values for a, b, c are '%s' '%s' '%s'", a, b, c);
-				})
-				.and()
+			.function(ctx -> {
+				Boolean a = ctx.getOptionValue("a");
+				Boolean b = ctx.getOptionValue("b");
+				Boolean c = ctx.getOptionValue("c");
+				return String.format("hi, boolean values for a, b, c are '%s' '%s' '%s'", a, b, c);
+			})
+			.and()
 			.withOption()
-				.shortNames('a')
-				.type(boolean.class)
-				.and()
+			.shortNames('a')
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('b')
-				.type(boolean.class)
-				.and()
+			.shortNames('b')
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('c')
-				.type(boolean.class)
-				.and()
+			.shortNames('c')
+			.type(boolean.class)
+			.and()
 			.build();
 	}
 
@@ -76,15 +76,14 @@ public class FunctionCommands {
 			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
-				.consumer(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					ctx.getTerminal().writer()
-						.println(String.format("hi, arg1 value is '%s'", arg1));
-				})
-				.and()
+			.consumer(ctx -> {
+				String arg1 = ctx.getOptionValue("arg1");
+				ctx.getTerminal().writer().println(String.format("hi, arg1 value is '%s'", arg1));
+			})
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.build();
 	}
 
@@ -95,14 +94,16 @@ public class FunctionCommands {
 			.description("function sample")
 			.group("Function Commands")
 			.withTarget()
-				.consumer(ctx -> {
-					ctx.getTerminal().writer()
-						.println(String.format("hi, command is '%s'", ctx.getCommandRegistration().getCommand()));
-				})
-				.and()
+			.consumer(ctx -> {
+				ctx.getTerminal()
+					.writer()
+					.println(String.format("hi, command is '%s'", ctx.getCommandRegistration().getCommand()));
+			})
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.build();
 	}
+
 }

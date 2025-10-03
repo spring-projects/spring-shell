@@ -27,4 +27,5 @@ public class DefaultSingleInputSpec extends BaseSingleItemSelector {
 	public DefaultSingleInputSpec(BaseBuilder builder, String id) {
 		super(builder, id);
 	}
+
 }

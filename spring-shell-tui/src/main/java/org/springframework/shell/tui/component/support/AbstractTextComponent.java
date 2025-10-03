@@ -50,7 +50,8 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		this(terminal, name, null);
 	}
 
-	public AbstractTextComponent(Terminal terminal, @Nullable String name, @Nullable Function<C, List<AttributedString>> renderer) {
+	public AbstractTextComponent(Terminal terminal, @Nullable String name,
+			@Nullable Function<C, List<AttributedString>> renderer) {
 		super(terminal);
 		this.name = name;
 		setRenderer(renderer);
@@ -78,7 +79,6 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 
 	/**
 	 * Gets a name.
-	 *
 	 * @return a name
 	 */
 	protected @Nullable String getName() {
@@ -89,63 +89,54 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 
 		/**
 		 * Gets a name.
-		 *
 		 * @return a name
 		 */
 		@Nullable String getName();
 
 		/**
 		 * Sets a name.
-		 *
 		 * @param name the name
 		 */
 		void setName(@Nullable String name);
 
 		/**
 		 * Gets an input.
-		 *
 		 * @return an input
 		 */
 		@Nullable String getInput();
 
 		/**
 		 * Sets an input.
-		 *
 		 * @param input the input
 		 */
 		void setInput(@Nullable String input);
 
 		/**
 		 * Sets a result value.
-		 *
 		 * @return a result value
 		 */
 		@Nullable T getResultValue();
 
 		/**
 		 * Sets a result value.
-		 *
 		 * @param resultValue the result value
 		 */
 		void setResultValue(@Nullable T resultValue);
 
 		/**
 		 * Sets a message.
-		 *
 		 * @return a message
 		 */
 		@Nullable String getMessage();
 
 		/**
 		 * Sets a message.
-		 *
 		 * @param message the message
 		 */
 		void setMessage(@Nullable String message);
 
 		/**
 		 * Sets a message with level.
-		 *
 		 * @param message the message
 		 * @param level the message level
 		 */
@@ -153,14 +144,12 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 
 		/**
 		 * Gets a {@link MessageLevel}.
-		 *
 		 * @return a message level
 		 */
 		MessageLevel getMessageLevel();
 
 		/**
 		 * Sets a {@link MessageLevel}.
-		 *
 		 * @param level the message level
 		 */
 		void setMessageLevel(MessageLevel level);
@@ -169,19 +158,24 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		 * Message levels which can be used to alter how message is shown.
 		 */
 		public enum MessageLevel {
-			INFO,
-			WARN,
-			ERROR
+
+			INFO, WARN, ERROR
+
 		}
+
 	}
 
-	public static class BaseTextComponentContext<T, C extends TextComponentContext<T, C>> extends BaseComponentContext<C>
-			implements TextComponentContext<T, C> {
+	public static class BaseTextComponentContext<T, C extends TextComponentContext<T, C>>
+			extends BaseComponentContext<C> implements TextComponentContext<T, C> {
 
 		private @Nullable String name;
+
 		private @Nullable String input;
+
 		private @Nullable T resultValue;
+
 		private @Nullable String message;
+
 		private MessageLevel messageLevel = MessageLevel.INFO;
 
 		@Override
@@ -254,5 +248,7 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 			attributes.put("input", getInput());
 			return attributes;
 		}
+
 	}
+
 }

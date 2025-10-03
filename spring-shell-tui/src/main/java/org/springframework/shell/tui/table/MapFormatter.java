@@ -37,7 +37,7 @@ public class MapFormatter implements Formatter {
 	@Override
 	public String[] format(@Nullable Object value) {
 		if (value == null) {
-			return new String[]{""};
+			return new String[] { "" };
 		}
 		Map<?, ?> map = (Map<?, ?>) value;
 		String[] result = new String[map.size()];
@@ -47,4 +47,5 @@ public class MapFormatter implements Formatter {
 		}
 		return result;
 	}
+
 }

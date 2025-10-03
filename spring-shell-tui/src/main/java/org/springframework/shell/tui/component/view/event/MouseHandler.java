@@ -34,18 +34,16 @@ public interface MouseHandler {
 
 	/**
 	 * Handle mouse event wrapped in a {@link MouseHandlerArgs}.
-	 *
 	 * @param args the mouse handler arguments
 	 * @return a handler result
 	 */
 	MouseHandlerResult handle(MouseHandlerArgs args);
 
 	/**
-	 * Returns a composed handler that first handles {@code this} handler and then
-	 * handles {@code other} handler if {@code predicate} against result from
-	 * {@code this} matches.
-	 *
-	 * @param other     the handler to handle after this handler
+	 * Returns a composed handler that first handles {@code this} handler and then handles
+	 * {@code other} handler if {@code predicate} against result from {@code this}
+	 * matches.
+	 * @param other the handler to handle after this handler
 	 * @param predicate the predicate test against results from this
 	 * @return a composed handler
 	 */
@@ -57,33 +55,30 @@ public interface MouseHandler {
 			}
 			return result;
 		};
-    }
+	}
 
 	/**
-	 * Returns a composed handler that first handles {@code this} handler and then
-	 * handles {@code other} if {@code this} consumed an event.
-	 *
+	 * Returns a composed handler that first handles {@code this} handler and then handles
+	 * {@code other} if {@code this} consumed an event.
 	 * @param other the handler to handle after this handler
 	 * @return a composed handler
 	 */
-    default MouseHandler thenIfConsumed(MouseHandler other) {
+	default MouseHandler thenIfConsumed(MouseHandler other) {
 		return thenConditionally(other, result -> result.consumed());
-    }
+	}
 
 	/**
-	 * Returns a composed handler that first handles {@code this} handler and then
-	 * handles {@code other} if {@code this} did not consume an event.
-	 *
+	 * Returns a composed handler that first handles {@code this} handler and then handles
+	 * {@code other} if {@code this} did not consume an event.
 	 * @param other the handler to handle after this handler
 	 * @return a composed handler
 	 */
-    default MouseHandler thenIfNotConsumed(MouseHandler other) {
+	default MouseHandler thenIfNotConsumed(MouseHandler other) {
 		return thenConditionally(other, result -> !result.consumed());
-    }
+	}
 
 	/**
-     * Returns a handler that always returns a non-consumed result.
-	 *
+	 * Returns a handler that always returns a non-consumed result.
 	 * @return a handler that always returns a non-consumed result
 	 */
 	static MouseHandler neverConsume() {
@@ -92,7 +87,6 @@ public interface MouseHandler {
 
 	/**
 	 * Construct {@link MouseHandlerArgs} from a {@link MouseEvent}.
-	 *
 	 * @param event the mouse event
 	 * @return a mouse handler args
 	 */
@@ -109,16 +103,15 @@ public interface MouseHandler {
 	}
 
 	/**
-	 * Construct {@link MouseHandlerResult} from a {@link MouseEvent} and a
-	 * {@link View}.
-	 *
+	 * Construct {@link MouseHandlerResult} from a {@link MouseEvent} and a {@link View}.
 	 * @param event the mouse event
 	 * @param consumed flag telling if event was consumed
 	 * @param focus the view which is requesting focus
 	 * @param capture the view which captured an event
 	 * @return a mouse handler result
 	 */
-	static MouseHandlerResult resultOf(MouseEvent event, boolean consumed, @Nullable View focus, @Nullable View capture) {
+	static MouseHandlerResult resultOf(MouseEvent event, boolean consumed, @Nullable View focus,
+			@Nullable View capture) {
 		return new MouseHandlerResult(event, consumed, focus, capture);
 	}
 
@@ -131,6 +124,7 @@ public interface MouseHandler {
 	 * @param capture the view which captured an event
 	 */
 	record MouseHandlerResult(@Nullable MouseEvent event, boolean consumed, @Nullable View focus,
-							  @Nullable View capture) {
+			@Nullable View capture) {
 	}
+
 }

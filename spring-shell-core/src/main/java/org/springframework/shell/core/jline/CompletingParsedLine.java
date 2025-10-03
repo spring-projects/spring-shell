@@ -20,8 +20,8 @@ import org.jline.reader.ParsedLine;
 
 /**
  * An extension of {@link ParsedLine} that, being aware of the quoting and escaping rules
- * of the {@link org.jline.reader.Parser} that produced it, knows if and how a completion candidate
- * should be escaped/quoted.
+ * of the {@link org.jline.reader.Parser} that produced it, knows if and how a completion
+ * candidate should be escaped/quoted.
  *
  * @author Eric Bottard
  * @author Piotr Olaszewski
@@ -30,4 +30,5 @@ import org.jline.reader.ParsedLine;
 public interface CompletingParsedLine {
 
 	CharSequence emit(CharSequence candidate);
+
 }

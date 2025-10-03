@@ -16,11 +16,12 @@
 package org.springframework.shell.test.jediterm.terminal;
 
 /**
- *  Sends a response from the terminal emulator.
+ * Sends a response from the terminal emulator.
  *
  * @author jediterm authors
  */
 public interface TerminalOutputStream {
+
 	/**
 	 * @deprecated use {@link #sendBytes(byte[], boolean)} instead
 	 */
@@ -38,7 +39,9 @@ public interface TerminalOutputStream {
 	default void sendBytes(byte[] response, boolean userInput) {
 		sendBytes(response);
 	}
+
 	default void sendString(String string, boolean userInput) {
 		sendString(string);
 	}
+
 }

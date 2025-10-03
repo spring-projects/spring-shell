@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 
 class GridViewTests extends AbstractViewTests {
 
-
 	@Nested
 	class ItemPositions {
 
@@ -579,6 +578,7 @@ class GridViewTests extends AbstractViewTests {
 			verify(grid2).setRect(1, 1, 78, 22);
 			verify(box).setRect(2, 2, 76, 20);
 		}
+
 	}
 
 }

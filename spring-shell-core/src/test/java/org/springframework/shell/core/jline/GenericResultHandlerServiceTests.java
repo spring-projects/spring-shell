@@ -55,6 +55,7 @@ class GenericResultHandlerServiceTests {
 		public void handleResult(String result) {
 			this.result = result;
 		}
+
 	}
 
 	private static class IntegerResultHandler implements ResultHandler<Integer> {
@@ -65,6 +66,7 @@ class GenericResultHandlerServiceTests {
 		public void handleResult(Integer result) {
 			this.result = result;
 		}
+
 	}
 
 	private static class ObjectResultHandler implements ResultHandler<Object> {
@@ -75,5 +77,7 @@ class GenericResultHandlerServiceTests {
 		public void handleResult(Object result) {
 			this.result = result;
 		}
+
 	}
+
 }

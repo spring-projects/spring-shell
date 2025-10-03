@@ -37,13 +37,17 @@ import org.springframework.util.StringUtils;
 class CommandInfoModel {
 
 	private String name;
+
 	private List<String> aliases;
+
 	private @Nullable String description;
+
 	private List<CommandParameterInfoModel> parameters;
+
 	private CommandAvailabilityInfoModel availability;
 
-	CommandInfoModel(String name, List<String> aliases, @Nullable String description, List<CommandParameterInfoModel> parameters,
-					 CommandAvailabilityInfoModel availability) {
+	CommandInfoModel(String name, List<String> aliases, @Nullable String description,
+			List<CommandParameterInfoModel> parameters, CommandAvailabilityInfoModel availability) {
 		this.name = name;
 		this.aliases = aliases;
 		this.description = description;
@@ -53,29 +57,27 @@ class CommandInfoModel {
 
 	/**
 	 * Builds {@link CommandInfoModel} from {@link CommandRegistration}.
-	 *
 	 * @param name the command name
 	 * @param registration the command registration
 	 * @return the command info model
 	 */
 	static CommandInfoModel of(String name, CommandRegistration registration) {
 		List<CommandOption> options = registration.getOptions();
-		List<CommandParameterInfoModel> parameters = options.stream()
-			.map(o -> {
-				String type = commandOptionType(o);
-				List<String> arguments = Stream.concat(
-						Stream.of(o.getLongNames()).map(a -> "--" + a),
-						Stream.of(o.getShortNames()).map(s -> "-" + s))
-					.collect(Collectors.toList());
-				boolean required = o.isRequired();
-				String description = o.getDescription();
-				String defaultValue = o.getDefaultValue();
-				return CommandParameterInfoModel.of(type, arguments, required, description, defaultValue);
-			})
-			.collect(Collectors.toList());
-
-		List<String> aliases = registration.getAliases().stream().map(ca -> ca.getCommand())
+		List<CommandParameterInfoModel> parameters = options.stream().map(o -> {
+			String type = commandOptionType(o);
+			List<String> arguments = Stream
+				.concat(Stream.of(o.getLongNames()).map(a -> "--" + a), Stream.of(o.getShortNames()).map(s -> "-" + s))
 				.collect(Collectors.toList());
+			boolean required = o.isRequired();
+			String description = o.getDescription();
+			String defaultValue = o.getDefaultValue();
+			return CommandParameterInfoModel.of(type, arguments, required, description, defaultValue);
+		}).collect(Collectors.toList());
+
+		List<String> aliases = registration.getAliases()
+			.stream()
+			.map(ca -> ca.getCommand())
+			.collect(Collectors.toList());
 
 		String description = registration.getDescription();
 		boolean available = true;
@@ -133,4 +135,5 @@ class CommandInfoModel {
 	public CommandAvailabilityInfoModel getAvailability() {
 		return availability;
 	}
+
 }

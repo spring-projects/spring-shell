@@ -32,30 +32,28 @@ class UserConfigAutoConfigurationTests {
 	private static final Logger log = LoggerFactory.getLogger(UserConfigAutoConfigurationTests.class);
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(UserConfigAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(UserConfigAutoConfiguration.class));
 
 	@Test
 	void testDefaults() {
-		this.contextRunner
-				.run(context -> {
-					assertThat(context).hasSingleBean(UserConfigPathProvider.class);
-					UserConfigPathProvider provider = context.getBean(UserConfigPathProvider.class);
-					Path path = provider.provide();
-					assertThat(path).isNotNull();
-					log.info("Path testDefaults: {}", path.toAbsolutePath());
-				});
+		this.contextRunner.run(context -> {
+			assertThat(context).hasSingleBean(UserConfigPathProvider.class);
+			UserConfigPathProvider provider = context.getBean(UserConfigPathProvider.class);
+			Path path = provider.provide();
+			assertThat(path).isNotNull();
+			log.info("Path testDefaults: {}", path.toAbsolutePath());
+		});
 	}
 
 	@Test
 	void testUserConfig() {
-		this.contextRunner
-				.withPropertyValues("spring.shell.config.location={userconfig}/test")
-				.run(context -> {
-					assertThat(context).hasSingleBean(UserConfigPathProvider.class);
-					UserConfigPathProvider provider = context.getBean(UserConfigPathProvider.class);
-					Path path = provider.provide();
-					assertThat(path).isNotNull();
-					log.info("Path testUserConfig: {}", path.toAbsolutePath());
-				});
+		this.contextRunner.withPropertyValues("spring.shell.config.location={userconfig}/test").run(context -> {
+			assertThat(context).hasSingleBean(UserConfigPathProvider.class);
+			UserConfigPathProvider provider = context.getBean(UserConfigPathProvider.class);
+			Path path = provider.provide();
+			assertThat(path).isNotNull();
+			log.info("Path testUserConfig: {}", path.toAbsolutePath());
+		});
 	}
+
 }

@@ -16,12 +16,13 @@
 package org.springframework.shell.core.completion;
 
 /**
- * Interface resolving completion proposals. This is same as
- * {@link CompletionProvider} but mean to be autowired globally.
+ * Interface resolving completion proposals. This is same as {@link CompletionProvider}
+ * but mean to be autowired globally.
  *
  * @author Janne Valkealahti
  * @see CompletionProvider
  */
 @FunctionalInterface
 public interface CompletionResolver extends CompletionProvider {
+
 }

@@ -25,4 +25,5 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface CompletionProvider extends Function<CompletionContext, List<CompletionProposal>> {
+
 }

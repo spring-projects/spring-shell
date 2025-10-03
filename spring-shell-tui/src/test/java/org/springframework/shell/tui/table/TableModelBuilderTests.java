@@ -70,17 +70,12 @@ class TableModelBuilderTests {
 	@Test
 	void simpleBuild() {
 		TableModelBuilder<Number> builder = new TableModelBuilder<>();
-		builder
-			.addRow()
-			.addValue(7).addValue(2)
-			.addRow()
-			.addValue(3).addValue(5.5)
-			.addRow()
-			.addValue(1).addValue(4);
+		builder.addRow().addValue(7).addValue(2).addRow().addValue(3).addValue(5.5).addRow().addValue(1).addValue(4);
 
 		TableModel model = builder.build();
 		assertThat(model.getColumnCount()).isEqualTo(2);
 		assertThat(model.getRowCount()).isEqualTo(3);
 		assertThat(model.getValue(1, 1)).isEqualTo(5.5);
 	}
+
 }

@@ -40,26 +40,23 @@ import static org.mockito.Mockito.when;
 class TerminalUIAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(TerminalUIAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(TerminalUIAutoConfiguration.class));
 
 	@Test
 	void terminalUICreated() {
-		this.contextRunner
-				.withUserConfiguration(MockConfiguration.class)
-				.run(context -> assertThat(context).hasSingleBean(TerminalUIBuilder.class));
+		this.contextRunner.withUserConfiguration(MockConfiguration.class)
+			.run(context -> assertThat(context).hasSingleBean(TerminalUIBuilder.class));
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
 	void canCustomize() {
-		this.contextRunner
-				.withUserConfiguration(TestConfiguration.class, MockConfiguration.class)
-				.run(context -> {
-					TerminalUIBuilder builder = context.getBean(TerminalUIBuilder.class);
-					Set<TerminalUICustomizer> customizers = (Set<TerminalUICustomizer>) ReflectionTestUtils
-							.getField(builder, "customizers");
-					assertThat(customizers).hasSize(1);
-				});
+		this.contextRunner.withUserConfiguration(TestConfiguration.class, MockConfiguration.class).run(context -> {
+			TerminalUIBuilder builder = context.getBean(TerminalUIBuilder.class);
+			Set<TerminalUICustomizer> customizers = (Set<TerminalUICustomizer>) ReflectionTestUtils.getField(builder,
+					"customizers");
+			assertThat(customizers).hasSize(1);
+		});
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -91,6 +88,7 @@ class TerminalUIAutoConfigurationTests {
 		TerminalUICustomizer terminalUICustomizer() {
 			return new TestTerminalUICustomizer();
 		}
+
 	}
 
 	static class TestTerminalUICustomizer implements TerminalUICustomizer {
@@ -99,6 +97,7 @@ class TerminalUIAutoConfigurationTests {
 		public void customize(TerminalUI terminalUI) {
 			terminalUI.setThemeName("test");
 		}
+
 	}
 
 }

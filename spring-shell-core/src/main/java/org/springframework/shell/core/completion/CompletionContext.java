@@ -43,12 +43,12 @@ public class CompletionContext {
 	private final @Nullable CommandRegistration commandRegistration;
 
 	/**
-	 *
-	 * @param words     words in the buffer, excluding words for the command name
+	 * @param words words in the buffer, excluding words for the command name
 	 * @param wordIndex the index of the word the cursor is in
-	 * @param position  the position inside the current word where the cursor is
+	 * @param position the position inside the current word where the cursor is
 	 */
-	public CompletionContext(List<String> words, int wordIndex, int position, @Nullable CommandRegistration commandRegistration, @Nullable CommandOption commandOption) {
+	public CompletionContext(List<String> words, int wordIndex, int position,
+			@Nullable CommandRegistration commandRegistration, @Nullable CommandOption commandOption) {
 		this.words = words;
 		this.wordIndex = wordIndex;
 		this.position = position;
@@ -91,7 +91,8 @@ public class CompletionContext {
 	}
 
 	/**
-	 * Return the whole word the cursor is in, or {@code null} if the cursor is past the last word.
+	 * Return the whole word the cursor is in, or {@code null} if the cursor is past the
+	 * last word.
 	 */
 	public @Nullable String currentWord() {
 		return wordIndex >= 0 && wordIndex < words.size() ? words.get(wordIndex) : null;
@@ -123,4 +124,5 @@ public class CompletionContext {
 	public CompletionContext commandRegistration(@Nullable CommandRegistration commandRegistration) {
 		return new CompletionContext(words, wordIndex, position, commandRegistration, commandOption);
 	}
+
 }

@@ -22,28 +22,29 @@ import org.springframework.shell.core.command.CommandRegistration;
 public class CommandRegistrationBeanSnippets {
 
 	class Dump1 {
+
 		// tag::plain[]
 		@Bean
 		CommandRegistration commandRegistration() {
-			return CommandRegistration.builder()
-				.command("mycommand")
-				.build();
+			return CommandRegistration.builder().command("mycommand").build();
 		}
 		// end::plain[]
+
 	}
 
 	class Dump2 {
+
 		// tag::fromsupplier[]
 		@Bean
 		CommandRegistration commandRegistration(CommandRegistration.BuilderSupplier builder) {
-			return builder.get()
-				.command("mycommand")
-				.build();
+			return builder.get().command("mycommand").build();
 		}
 		// end::fromsupplier[]
+
 	}
 
 	class Dump3 {
+
 		// tag::customizer[]
 		@Bean
 		CommandRegistrationCustomizer commandRegistrationCustomizerExample() {
@@ -52,5 +53,7 @@ public class CommandRegistrationBeanSnippets {
 			};
 		}
 		// end::customizer[]
+
 	}
+
 }

@@ -28,16 +28,16 @@ import org.springframework.util.Assert;
  * Shell spesific message builder.
  *
  * @param <T> the payload type.
- *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
 public final class ShellMessageBuilder<T> {
 
 	private final T payload;
-	private final ShellMessageHeaderAccessor headerAccessor;
-	private final @Nullable Message<T> originalMessage;
 
+	private final ShellMessageHeaderAccessor headerAccessor;
+
+	private final @Nullable Message<T> originalMessage;
 
 	private ShellMessageBuilder(T payload, @Nullable Message<T> originalMessage) {
 		Assert.notNull(payload, "payload must not be null");
@@ -45,13 +45,12 @@ public final class ShellMessageBuilder<T> {
 		this.originalMessage = originalMessage;
 		this.headerAccessor = new ShellMessageHeaderAccessor(originalMessage);
 		// if (originalMessage != null) {
-		// 		this.modified = (!this.payload.equals(originalMessage.getPayload()));
+		// this.modified = (!this.payload.equals(originalMessage.getPayload()));
 		// }
 	}
 
 	/**
 	 * Create a builder for a new {@link Message} instance with the provided payload.
-	 *
 	 * @param <T> The type of the payload.
 	 * @param payload the payload for the new message
 	 * @return A ShellMessageBuilder.
@@ -62,76 +61,52 @@ public final class ShellMessageBuilder<T> {
 
 	/**
 	 * Create a {@code redraw} message.
-	 *
 	 * @return a redraw message
 	 */
 	public static Message<String> ofRedraw() {
-		return new ShellMessageBuilder<>("redraw", null)
-			.setEventType(EventLoop.Type.SYSTEM)
-			.setPriority(0)
-			.build();
+		return new ShellMessageBuilder<>("redraw", null).setEventType(EventLoop.Type.SYSTEM).setPriority(0).build();
 	}
 
 	/**
 	 * Create a {@code interrupt} message.
-	 *
 	 * @return a interrupt message
 	 */
 	public static Message<String> ofInterrupt() {
-		return new ShellMessageBuilder<>("int", null)
-			.setEventType(EventLoop.Type.SYSTEM)
-			.setPriority(0)
-			.build();
+		return new ShellMessageBuilder<>("int", null).setEventType(EventLoop.Type.SYSTEM).setPriority(0).build();
 	}
 
 	/**
 	 * Create a {@code signal} message.
-	 *
 	 * @return a signal message
 	 */
 	public static Message<String> ofSignal(String signal) {
-		return new ShellMessageBuilder<>(signal, null)
-			.setEventType(EventLoop.Type.SIGNAL)
-			.setPriority(0)
-			.build();
+		return new ShellMessageBuilder<>(signal, null).setEventType(EventLoop.Type.SIGNAL).setPriority(0).build();
 	}
 
 	/**
 	 * Create a message of a {@link KeyEvent}.
-	 *
 	 * @param event the event type
 	 * @return a message with {@link KeyEvent} as a payload
 	 */
 	public static Message<KeyEvent> ofKeyEvent(KeyEvent event) {
-		return new ShellMessageBuilder<>(event, null)
-			.setEventType(EventLoop.Type.KEY)
-			.build();
+		return new ShellMessageBuilder<>(event, null).setEventType(EventLoop.Type.KEY).build();
 	}
 
 	/**
 	 * Create a message of a {@link MouseEvent}.
-	 *
 	 * @param event the event type
 	 * @return a message with {@link MouseEvent} as a payload
 	 */
 	public static Message<MouseEvent> ofMouseEvent(MouseEvent event) {
-		return new ShellMessageBuilder<>(event, null)
-			.setEventType(EventLoop.Type.MOUSE)
-			.build();
+		return new ShellMessageBuilder<>(event, null).setEventType(EventLoop.Type.MOUSE).build();
 	}
 
 	public static Message<?> ofView(View view, Object args) {
-		return new ShellMessageBuilder<>(args, null)
-			.setEventType(EventLoop.Type.VIEW)
-			.setView(view)
-			.build();
+		return new ShellMessageBuilder<>(args, null).setEventType(EventLoop.Type.VIEW).setView(view).build();
 	}
 
 	public static Message<String> ofViewFocus(String action, View view) {
-		return new ShellMessageBuilder<>(action, null)
-			.setEventType(EventLoop.Type.SYSTEM)
-			.setView(view)
-			.build();
+		return new ShellMessageBuilder<>(action, null).setEventType(EventLoop.Type.SYSTEM).setView(view).build();
 	}
 
 	public ShellMessageBuilder<T> setPriority(Integer priority) {

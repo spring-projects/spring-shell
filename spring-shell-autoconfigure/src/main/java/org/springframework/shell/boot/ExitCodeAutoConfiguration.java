@@ -69,6 +69,7 @@ public class ExitCodeAutoConfiguration {
 			// only map parsing error so that other mappers can do their job
 			return 0;
 		}
+
 	}
 
 	static class ShellExitCodeMappingsExceptionMapper implements ExitCodeExceptionMapper, ExitCodeMappings {
@@ -100,6 +101,7 @@ public class ExitCodeAutoConfiguration {
 			}
 			return exitCode;
 		}
+
 	}
 
 	static class ShellExitCodeException extends RuntimeException implements ExitCodeGenerator {
@@ -115,5 +117,7 @@ public class ExitCodeAutoConfiguration {
 		public int getExitCode() {
 			return code;
 		}
+
 	}
+
 }

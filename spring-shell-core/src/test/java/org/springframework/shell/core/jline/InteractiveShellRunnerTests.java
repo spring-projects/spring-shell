@@ -41,115 +41,116 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Disabled("Hands intermittently")
 class InteractiveShellRunnerTests {
 
-    private PipedOutputStream outIn;
-    private InteractiveShellRunner.JLineInputProvider jLineInputProvider;
+	private PipedOutputStream outIn;
 
+	private InteractiveShellRunner.JLineInputProvider jLineInputProvider;
 
-    private PromptProvider dummyPromptProvider() {
-        return () -> new AttributedString("dummy-shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
-    }
+	private PromptProvider dummyPromptProvider() {
+		return () -> new AttributedString("dummy-shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
+	}
 
-    private void initForShortcutKeyTest() throws Exception {
-        PipedInputStream in = new PipedInputStream();
-        outIn = new PipedOutputStream(in);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ExternalTerminal terminal = new ExternalTerminal("foo", "ansi", in, out, StandardCharsets.UTF_8);
-        Attributes attributes = terminal.getAttributes();
-        attributes.setLocalFlag(Attributes.LocalFlag.ISIG, true);
-        attributes.setControlChar(Attributes.ControlChar.VINTR, 3);
-        terminal.setAttributes(attributes);
-        LineReaderBuilder builder =
-                LineReaderBuilder.builder()
-                        .terminal(terminal);
+	private void initForShortcutKeyTest() throws Exception {
+		PipedInputStream in = new PipedInputStream();
+		outIn = new PipedOutputStream(in);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ExternalTerminal terminal = new ExternalTerminal("foo", "ansi", in, out, StandardCharsets.UTF_8);
+		Attributes attributes = terminal.getAttributes();
+		attributes.setLocalFlag(Attributes.LocalFlag.ISIG, true);
+		attributes.setControlChar(Attributes.ControlChar.VINTR, 3);
+		terminal.setAttributes(attributes);
+		LineReaderBuilder builder = LineReaderBuilder.builder().terminal(terminal);
 
-        LineReader lineReader = builder.build();
-        jLineInputProvider = new InteractiveShellRunner.JLineInputProvider(lineReader, dummyPromptProvider());
-    }
+		LineReader lineReader = builder.build();
+		jLineInputProvider = new InteractiveShellRunner.JLineInputProvider(lineReader, dummyPromptProvider());
+	}
 
-    @Test
-    void testClearWithCtrlC() throws Exception {
+	@Test
+	void testClearWithCtrlC() throws Exception {
 
-        initForShortcutKeyTest();
+		initForShortcutKeyTest();
 
-        CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch endLatch = new CountDownLatch(1);
-        Thread writeThread = new Thread(() -> {
-            try {
-                startLatch.await();
-                outIn.write('a');
-                outIn.write(3);
-                endLatch.await();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        Thread readThread = new Thread(() -> {
-            assertThatNoException().isThrownBy(() -> assertThat(jLineInputProvider.readInput().rawText()).isEqualTo(""));
-            endLatch.countDown();
-        });
-        readThread.start();
-        startLatch.countDown();
-        writeThread.start();
+		CountDownLatch startLatch = new CountDownLatch(1);
+		CountDownLatch endLatch = new CountDownLatch(1);
+		Thread writeThread = new Thread(() -> {
+			try {
+				startLatch.await();
+				outIn.write('a');
+				outIn.write(3);
+				endLatch.await();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		Thread readThread = new Thread(() -> {
+			assertThatNoException()
+				.isThrownBy(() -> assertThat(jLineInputProvider.readInput().rawText()).isEqualTo(""));
+			endLatch.countDown();
+		});
+		readThread.start();
+		startLatch.countDown();
+		writeThread.start();
 
-        readThread.join();
-        writeThread.join();
-    }
+		readThread.join();
+		writeThread.join();
+	}
 
+	@Test
+	void testExitWithCtrlC() throws Exception {
 
-    @Test
-    void testExitWithCtrlC() throws Exception {
+		initForShortcutKeyTest();
 
-        initForShortcutKeyTest();
+		CountDownLatch startLatch = new CountDownLatch(1);
+		CountDownLatch endLatch = new CountDownLatch(1);
+		Thread writeThread = new Thread(() -> {
+			try {
+				startLatch.await();
+				outIn.write(3);
+				endLatch.await();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		Thread readThread = new Thread(() -> {
+			assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
+			endLatch.countDown();
+		});
+		readThread.start();
+		startLatch.countDown();
+		writeThread.start();
 
-        CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch endLatch = new CountDownLatch(1);
-        Thread writeThread = new Thread(() -> {
-            try {
-                startLatch.await();
-                outIn.write(3);
-                endLatch.await();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        Thread readThread = new Thread(() -> {
-            assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
-            endLatch.countDown();
-        });
-        readThread.start();
-        startLatch.countDown();
-        writeThread.start();
+		readThread.join();
+		writeThread.join();
+	}
 
-        readThread.join();
-        writeThread.join();
-    }
+	@Test
+	void testExitWithCtrlD() throws Exception {
 
-    @Test
-    void testExitWithCtrlD() throws Exception {
+		initForShortcutKeyTest();
 
-        initForShortcutKeyTest();
+		CountDownLatch startLatch = new CountDownLatch(1);
+		CountDownLatch endLatch = new CountDownLatch(1);
+		Thread writeThread = new Thread(() -> {
+			try {
+				startLatch.await();
+				outIn.write(4);
+				endLatch.await();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		Thread readThread = new Thread(() -> {
+			assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
+			endLatch.countDown();
+		});
+		readThread.start();
+		startLatch.countDown();
+		writeThread.start();
 
-        CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch endLatch = new CountDownLatch(1);
-        Thread writeThread = new Thread(() -> {
-            try {
-                startLatch.await();
-                outIn.write(4);
-                endLatch.await();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        Thread readThread = new Thread(() -> {
-            assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
-            endLatch.countDown();
-        });
-        readThread.start();
-        startLatch.countDown();
-        writeThread.start();
-
-        readThread.join();
-        writeThread.join();
-    }
+		readThread.join();
+		writeThread.join();
+	}
 
 }

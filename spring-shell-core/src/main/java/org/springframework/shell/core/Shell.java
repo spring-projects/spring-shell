@@ -64,6 +64,7 @@ import org.springframework.util.StringUtils;
 public class Shell {
 
 	private static final Logger log = LoggerFactory.getLogger(Shell.class);
+
 	private final ResultHandlerService resultHandlerService;
 
 	/**
@@ -73,26 +74,35 @@ public class Shell {
 	public static final Object NO_INPUT = new Object();
 
 	private final Terminal terminal;
+
 	private final CommandRegistry commandRegistry;
+
 	protected List<CompletionResolver> completionResolvers = new ArrayList<>();
+
 	private @Nullable CommandExecutionHandlerMethodArgumentResolvers argumentResolvers;
+
 	private ConversionService conversionService = new DefaultConversionService();
+
 	private final ShellContext shellContext;
+
 	private final ExitCodeMappings exitCodeMappings;
+
 	private @Nullable Exception handlingResultNonInt = null;
+
 	private @Nullable CommandHandlingResult processExceptionNonInt = null;
 
 	/**
-	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid
-	 * value.
+	 * Marker object to distinguish unresolved arguments from {@code null}, which is a
+	 * valid value.
 	 */
 	protected static final Object UNRESOLVED = new Object();
 
 	private Validator validator = Utils.defaultValidator();
+
 	private List<CommandExceptionResolver> exceptionResolvers = new ArrayList<>();
 
 	public Shell(ResultHandlerService resultHandlerService, CommandRegistry commandRegistry, Terminal terminal,
-				 ShellContext shellContext, ExitCodeMappings exitCodeMappings) {
+			ShellContext shellContext, ExitCodeMappings exitCodeMappings) {
 		this.resultHandlerService = resultHandlerService;
 		this.commandRegistry = commandRegistry;
 		this.terminal = terminal;
@@ -133,8 +143,9 @@ public class Shell {
 	}
 
 	/**
-	 * The main program loop: acquire input, try to match it to a command and evaluate. Repeat
-	 * until a {@link ResultHandler} causes the process to exit or there is no input.
+	 * The main program loop: acquire input, try to match it to a command and evaluate.
+	 * Repeat until a {@link ResultHandler} causes the process to exit or there is no
+	 * input.
 	 * <p>
 	 * This method has public visibility so that it can be invoked by actual commands
 	 * (<em>e.g.</em> a {@literal script} command).
@@ -142,13 +153,15 @@ public class Shell {
 	 */
 	public void run(InputProvider inputProvider) throws Exception {
 		Object result = null;
-		while (!(result instanceof ExitRequest)) { // Handles ExitRequest thrown from Quit command
+		while (!(result instanceof ExitRequest)) { // Handles ExitRequest thrown from Quit
+													// command
 			Input input;
 			try {
 				input = inputProvider.readInput();
 			}
 			catch (Exception e) {
-				if (e instanceof ExitRequest) { // Handles ExitRequest thrown from hitting CTRL-C
+				if (e instanceof ExitRequest) { // Handles ExitRequest thrown from hitting
+												// CTRL-C
 					break;
 				}
 				resultHandlerService.handle(e);
@@ -185,12 +198,12 @@ public class Shell {
 	}
 
 	/**
-	 * Evaluate a single "line" of input from the user by trying to map words to a command and
-	 * arguments.
+	 * Evaluate a single "line" of input from the user by trying to map words to a command
+	 * and arguments.
 	 *
 	 * <p>
-	 * This method does not throw exceptions, it catches them and returns them as a regular
-	 * result
+	 * This method does not throw exceptions, it catches them and returns them as a
+	 * regular result
 	 * </p>
 	 */
 	protected @Nullable Object evaluate(Input input) {
@@ -211,27 +224,26 @@ public class Shell {
 
 		log.debug("Evaluate input with line=[{}], command=[{}]", line, command);
 
-		Optional<CommandRegistration> commandRegistration = registrations.values().stream()
-			.filter(r -> {
-				if (r.getCommand().equals(command)) {
+		Optional<CommandRegistration> commandRegistration = registrations.values().stream().filter(r -> {
+			if (r.getCommand().equals(command)) {
+				return true;
+			}
+			for (CommandAlias a : r.getAliases()) {
+				if (a.getCommand().equals(command)) {
 					return true;
 				}
-				for (CommandAlias a : r.getAliases()) {
-					if (a.getCommand().equals(command)) {
-						return true;
-					}
-				}
-				return false;
-			})
-			.findFirst();
+			}
+			return false;
+		}).findFirst();
 
 		if (commandRegistration.isEmpty()) {
 			return new CommandNotFound(words, new HashMap<>(registrations), input.rawText());
 		}
 
 		if (this.exitCodeMappings != null) {
-			List<Function<Throwable, Integer>> mappingFunctions = commandRegistration.get().getExitCode()
-					.getMappingFunctions();
+			List<Function<Throwable, Integer>> mappingFunctions = commandRegistration.get()
+				.getExitCode()
+				.getMappingFunctions();
 			this.exitCodeMappings.reset(mappingFunctions);
 		}
 
@@ -239,8 +251,8 @@ public class Shell {
 		Object sh = Signals.register("INT", () -> commandThread.interrupt());
 
 		CommandExecution execution = CommandExecution.of(
-				argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal,
-				shellContext, conversionService, commandRegistry);
+				argumentResolvers != null ? argumentResolvers.getResolvers() : null, validator, terminal, shellContext,
+				conversionService, commandRegistry);
 
 		List<CommandExceptionResolver> commandExceptionResolvers = commandRegistration.get().getExceptionResolvers();
 
@@ -250,7 +262,8 @@ public class Shell {
 			evaluate = execution.evaluate(words.toArray(new String[0]));
 		}
 		catch (UndeclaredThrowableException ute) {
-			if (ute.getCause() instanceof InterruptedException || ute.getCause() instanceof ClosedByInterruptException) {
+			if (ute.getCause() instanceof InterruptedException
+					|| ute.getCause() instanceof ClosedByInterruptException) {
 				Thread.interrupted(); // to reset interrupted flag
 			}
 			return ute.getCause();
@@ -283,7 +296,8 @@ public class Shell {
 					}
 					return null;
 				}
-			} catch (Exception e1) {
+			}
+			catch (Exception e1) {
 				e = e1;
 			}
 		}
@@ -293,8 +307,8 @@ public class Shell {
 		return evaluate;
 	}
 
-	private CommandHandlingResult processException(List<CommandExceptionResolver> commandExceptionResolvers, Exception e)
-			throws Exception {
+	private CommandHandlingResult processException(List<CommandExceptionResolver> commandExceptionResolvers,
+			Exception e) throws Exception {
 		CommandHandlingResult r = null;
 		for (CommandExceptionResolver resolver : commandExceptionResolvers) {
 			r = resolver.resolve(e);
@@ -317,24 +331,23 @@ public class Shell {
 	}
 
 	/**
-	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on an
-	 * empty line or blank space).
+	 * Return true if the parsed input ends up being empty (<em>e.g.</em> hitting ENTER on
+	 * an empty line or blank space).
 	 *
 	 * <p>
-	 * Also returns true (<em>i.e.</em> ask to ignore) when input starts with {@literal //},
-	 * which is used for comments.
+	 * Also returns true (<em>i.e.</em> ask to ignore) when input starts with
+	 * {@literal //}, which is used for comments.
 	 * </p>
 	 */
 	private boolean noInput(Input input) {
-		return input.words().isEmpty()
-				|| (input.words().size() == 1 && input.words().get(0).trim().isEmpty())
+		return input.words().isEmpty() || (input.words().size() == 1 && input.words().get(0).trim().isEmpty())
 				|| (input.words().iterator().next().matches("\\s*//.*"));
 	}
 
 	/**
-	 * Gather completion proposals given some (incomplete) input the user has already typed
-	 * in. When and how this method is invoked is implementation specific and decided by the
-	 * actual user interface.
+	 * Gather completion proposals given some (incomplete) input the user has already
+	 * typed in. When and how this method is invoked is implementation specific and
+	 * decided by the actual user interface.
 	 */
 	public List<CompletionProposal> complete(CompletionContext context) {
 
@@ -356,22 +369,22 @@ public class Shell {
 
 			// Try to complete arguments
 			List<CommandOption> matchedArgOptions = new ArrayList<>();
-			if (!argsContext.getWords().isEmpty() && argsContext.getWordIndex() > 0 && argsContext.getWords().size() > argsContext.getWordIndex()) {
+			if (!argsContext.getWords().isEmpty() && argsContext.getWordIndex() > 0
+					&& argsContext.getWords().size() > argsContext.getWordIndex()) {
 				if (registration != null) {
-					matchedArgOptions.addAll(matchOptions(registration.getOptions(), argsContext.getWords().get(argsContext.getWordIndex() - 1)));
+					matchedArgOptions.addAll(matchOptions(registration.getOptions(),
+							argsContext.getWords().get(argsContext.getWordIndex() - 1)));
 				}
 			}
 
-			List<CompletionProposal> argProposals =	matchedArgOptions.stream()
-				.flatMap(o -> {
-					Function<CompletionContext, List<CompletionProposal>> completion = o.getCompletion();
-					if (completion != null) {
-						List<CompletionProposal> apply = completion.apply(argsContext.commandOption(o));
-						return apply.stream();
-					}
-					return Stream.empty();
-				})
-				.collect(Collectors.toList());
+			List<CompletionProposal> argProposals = matchedArgOptions.stream().flatMap(o -> {
+				Function<CompletionContext, List<CompletionProposal>> completion = o.getCompletion();
+				if (completion != null) {
+					List<CompletionProposal> apply = completion.apply(argsContext.commandOption(o));
+					return apply.stream();
+				}
+				return Stream.empty();
+			}).collect(Collectors.toList());
 
 			candidates.addAll(argProposals);
 		}
@@ -385,43 +398,36 @@ public class Shell {
 		if (count == 1) {
 			if (trimmed.length() == 1) {
 				Character trimmedChar = trimmed.charAt(0);
-				options.stream()
-					.filter(o -> {
-						for (Character sn : o.getShortNames()) {
-							if (trimmedChar.equals(sn)) {
-								return true;
-							}
-						}
-						return false;
-					})
-				.findFirst()
-				.ifPresent(o -> matched.add(o));
-			}
-			else if (trimmed.length() > 1) {
-				trimmed.chars().mapToObj(i -> (char)i)
-					.forEach(c -> {
-						options.stream().forEach(o -> {
-							for (Character sn : o.getShortNames()) {
-								if (c.equals(sn)) {
-									matched.add(o);
-								}
-							}
-						});
-					});
-			}
-		}
-		else if (count == 2) {
-			options.stream()
-				.filter(o -> {
-					for (String ln : o.getLongNames()) {
-						if (trimmed.equals(ln)) {
+				options.stream().filter(o -> {
+					for (Character sn : o.getShortNames()) {
+						if (trimmedChar.equals(sn)) {
 							return true;
 						}
 					}
 					return false;
-				})
-				.findFirst()
-				.ifPresent(o -> matched.add(o));
+				}).findFirst().ifPresent(o -> matched.add(o));
+			}
+			else if (trimmed.length() > 1) {
+				trimmed.chars().mapToObj(i -> (char) i).forEach(c -> {
+					options.stream().forEach(o -> {
+						for (Character sn : o.getShortNames()) {
+							if (c.equals(sn)) {
+								matched.add(o);
+							}
+						}
+					});
+				});
+			}
+		}
+		else if (count == 2) {
+			options.stream().filter(o -> {
+				for (String ln : o.getLongNames()) {
+					if (trimmed.equals(ln)) {
+						return true;
+					}
+				}
+				return false;
+			}).findFirst().ifPresent(o -> matched.add(o));
 		}
 		return matched;
 	}
@@ -430,7 +436,9 @@ public class Shell {
 		// Workaround for https://github.com/spring-projects/spring-shell/issues/150
 		// (sadly, this ties this class to JLine somehow)
 		int lastWordStart = prefix.lastIndexOf(' ') + 1;
-		return Utils.removeHiddenCommands(commandRegistry.getRegistrations()).entrySet().stream()
+		return Utils.removeHiddenCommands(commandRegistry.getRegistrations())
+			.entrySet()
+			.stream()
 			.filter(e -> e.getKey().startsWith(prefix))
 			.map(e -> {
 				String c = e.getKey();
@@ -441,15 +449,14 @@ public class Shell {
 	}
 
 	private CompletionProposal toCommandProposal(String command, CommandRegistration registration) {
-		return new CompletionProposal(command)
-				.dontQuote(true)
-				.category("Available commands")
-				.description(registration.getDescription());
+		return new CompletionProposal(command).dontQuote(true)
+			.category("Available commands")
+			.description(registration.getDescription());
 	}
 
 	/**
-	 * Returns the longest command that can be matched as first word(s) in the given buffer.
-	 *
+	 * Returns the longest command that can be matched as first word(s) in the given
+	 * buffer.
 	 * @return a valid command name, or {@literal null} if none matched
 	 */
 	private @Nullable String findLongestCommand(String prefix, boolean filterHidden) {
@@ -457,9 +464,11 @@ public class Shell {
 		if (filterHidden) {
 			registrations = Utils.removeHiddenCommands(registrations);
 		}
-		String result = registrations.keySet().stream()
-				.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))
-				.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
+		String result = registrations.keySet()
+			.stream()
+			.filter(command -> prefix.equals(command) || prefix.startsWith(command + " "))
+			.reduce("", (c1, c2) -> c1.length() > c2.length() ? c1 : c2);
 		return "".equals(result) ? null : result;
 	}
+
 }

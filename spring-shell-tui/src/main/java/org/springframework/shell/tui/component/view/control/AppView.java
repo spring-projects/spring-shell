@@ -27,8 +27,8 @@ import org.springframework.shell.tui.style.ThemeResolver;
 import org.springframework.util.Assert;
 
 /**
- * {@link AppView} provides an opinionated terminal UI application view
- * controlling main viewing area, menubar, statusbar and modal window system.
+ * {@link AppView} provides an opinionated terminal UI application view controlling main
+ * viewing area, menubar, statusbar and modal window system.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -36,10 +36,15 @@ import org.springframework.util.Assert;
 public class AppView extends BoxView {
 
 	private @Nullable GridView grid;
+
 	private @Nullable View main;
+
 	private @Nullable View menu;
+
 	private @Nullable View status;
+
 	private boolean menuVisible = true;
+
 	private boolean statusVisible = true;
 
 	public AppView(View main, View menuBar, View statusBar) {
@@ -197,7 +202,6 @@ public class AppView extends BoxView {
 
 	/**
 	 * Sets visibility for a {@code menubar}.
-	 *
 	 * @param visible the menubar visibility
 	 */
 	public void setMenuBarVisible(boolean visible) {
@@ -207,7 +211,6 @@ public class AppView extends BoxView {
 
 	/**
 	 * Sets visibility for a {@code statusbar}.
-	 *
 	 * @param visible the statusbar visibility
 	 */
 	public void setStatusBarVisible(boolean visible) {
@@ -240,8 +243,9 @@ public class AppView extends BoxView {
 		 * Direction where next selection should go.
 		 */
 		public enum Direction {
-			PREVIOUS,
-			NEXT
+
+			PREVIOUS, NEXT
+
 		}
 
 		public static AppViewEventArgs of(Direction direction) {
@@ -261,4 +265,5 @@ public class AppView extends BoxView {
 			return new AppViewEvent(view, AppViewEventArgs.of(direction));
 		}
 	}
+
 }

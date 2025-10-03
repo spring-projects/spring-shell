@@ -32,4 +32,5 @@ public interface TerminalWidget {
 	TerminalSession getCurrentSession();
 
 	TerminalDisplay getTerminalDisplay();
+
 }

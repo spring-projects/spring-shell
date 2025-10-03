@@ -16,10 +16,9 @@
 package org.springframework.shell.tui.support.search;
 
 /**
- * Interface defining a search match for {@code text} agains {@code pattern}.
- * Resulting match result gives information in a context of {@code text} how and
- * where matches happens and provides a {@code score} number which can be to
- * sort results.
+ * Interface defining a search match for {@code text} agains {@code pattern}. Resulting
+ * match result gives information in a context of {@code text} how and where matches
+ * happens and provides a {@code score} number which can be to sort results.
  *
  * @author Janne Valkealahti
  */
@@ -28,7 +27,6 @@ public interface SearchMatch {
 
 	/**
 	 * Match a pattern into a given text.
-	 *
 	 * @param text the text to search
 	 * @param pattern the search pattern
 	 * @return a result
@@ -37,7 +35,6 @@ public interface SearchMatch {
 
 	/**
 	 * Gets an instance of a builder for a {@link SearchMatch}.
-	 *
 	 * @return builder for search match
 	 */
 	public static Builder builder() {
@@ -51,7 +48,6 @@ public interface SearchMatch {
 
 		/**
 		 * Set a flag for {@code caseSensitive}.
-		 *
 		 * @param caseSensitive the caseSensitive
 		 * @return builder for chaining
 		 */
@@ -59,7 +55,6 @@ public interface SearchMatch {
 
 		/**
 		 * Set a flag for {@code normalize}.
-		 *
 		 * @param normalize the normalize
 		 * @return builder for chaining
 		 */
@@ -67,7 +62,6 @@ public interface SearchMatch {
 
 		/**
 		 * Set a flag for {@code forward}.
-		 *
 		 * @param forward the forward
 		 * @return builder for chaining
 		 */
@@ -75,16 +69,18 @@ public interface SearchMatch {
 
 		/**
 		 * Build instance of a {@link SearchMatch}.
-		 *
 		 * @return a build instance of {@link SearchMatch}
 		 */
 		SearchMatch build();
+
 	}
 
 	static class DefaultBuilder implements Builder {
 
 		private boolean caseSensitive;
+
 		private boolean normalize;
+
 		private boolean forward;
 
 		@Override
@@ -109,12 +105,15 @@ public interface SearchMatch {
 		public SearchMatch build() {
 			return new DefaultSearchMatch(this.caseSensitive, this.normalize, this.forward);
 		}
+
 	}
 
 	static class DefaultSearchMatch implements SearchMatch {
 
 		private boolean caseSensitive;
+
 		private boolean normalize;
+
 		private boolean forward;
 
 		DefaultSearchMatch(boolean caseSensitive, boolean normalize, boolean forward) {
@@ -154,5 +153,7 @@ public interface SearchMatch {
 
 			return algo.match(caseSensitive, normalize, forward, text, pattern);
 		}
+
 	}
+
 }

@@ -45,24 +45,43 @@ import static org.springframework.shell.tui.component.ShellAssertions.assertStri
 class MultiItemSelectorTests extends AbstractShellTests {
 
 	private static final SimplePojo SIMPLE_POJO_1 = SimplePojo.of("data1");
+
 	private static final SimplePojo SIMPLE_POJO_2 = SimplePojo.of("data2");
+
 	private static final SimplePojo SIMPLE_POJO_3 = SimplePojo.of("data3");
+
 	private static final SimplePojo SIMPLE_POJO_4 = SimplePojo.of("data4");
+
 	private static final SimplePojo SIMPLE_POJO_5 = SimplePojo.of("data5");
+
 	private static final SimplePojo SIMPLE_POJO_6 = SimplePojo.of("data6");
+
 	private static final SimplePojo SIMPLE_POJO_7 = SimplePojo.of("data7");
+
 	private static final SimplePojo SIMPLE_POJO_8 = SimplePojo.of("data8");
+
 	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_1 = SelectorItem.of("simplePojo1", SIMPLE_POJO_1);
+
 	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_2 = SelectorItem.of("simplePojo2", SIMPLE_POJO_2);
+
 	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_3 = SelectorItem.of("simplePojo3", SIMPLE_POJO_3);
+
 	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_4 = SelectorItem.of("simplePojo4", SIMPLE_POJO_4);
+
 	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_5 = SelectorItem.of("simplePojo5", SIMPLE_POJO_5);
+
 	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_6 = SelectorItem.of("simplePojo6", SIMPLE_POJO_6);
-	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_7 = SelectorItem.of("simplePojo7", SIMPLE_POJO_7, false, false);
-	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_8 = SelectorItem.of("simplePojo8", SIMPLE_POJO_8, false, true);
+
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_7 = SelectorItem.of("simplePojo7", SIMPLE_POJO_7, false,
+			false);
+
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_8 = SelectorItem.of("simplePojo8", SIMPLE_POJO_8, false,
+			true);
 
 	private ExecutorService service;
+
 	private CountDownLatch latch;
+
 	private AtomicReference<List<SelectorItem<SimplePojo>>> result;
 
 	@BeforeEach
@@ -99,8 +118,8 @@ class MultiItemSelectorTests extends AbstractShellTests {
 	void testItemsShown() {
 		scheduleSelect();
 		await().atMost(Duration.ofSeconds(4))
-				.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("simplePojo1", "simplePojo2",
-						"simplePojo3", "simplePojo4"));
+			.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("simplePojo1", "simplePojo2",
+					"simplePojo3", "simplePojo4"));
 	}
 
 	@Test
@@ -108,15 +127,16 @@ class MultiItemSelectorTests extends AbstractShellTests {
 		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3, SELECTOR_ITEM_4,
 				SELECTOR_ITEM_5, SELECTOR_ITEM_6), 6);
 		await().atMost(Duration.ofSeconds(4))
-				.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("simplePojo1", "simplePojo2",
-						"simplePojo3", "simplePojo4", "simplePojo5", "simplePojo6"));
+			.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("simplePojo1", "simplePojo2",
+					"simplePojo3", "simplePojo4", "simplePojo5", "simplePojo6"));
 	}
 
 	@Test
 	void testItemsShownWithDisabled() {
 		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_7));
 		await().atMost(Duration.ofSeconds(4))
-				.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("[ ]  simplePojo1", "[ ]  simplePojo7"));
+			.untilAsserted(
+					() -> assertStringOrderThat(consoleOut()).containsInOrder("[ ]  simplePojo1", "[ ]  simplePojo7"));
 	}
 
 	@Test
@@ -206,7 +226,7 @@ class MultiItemSelectorTests extends AbstractShellTests {
 		Stream<String> datas = selected.stream().map(SelectorItem::getItem).map(SimplePojo::getData);
 		assertThat(datas).containsExactlyInAnyOrder("data4");
 	}
-	
+
 	@Test
 	void testDefaultSelection() throws InterruptedException {
 		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_7, SELECTOR_ITEM_8));
@@ -224,8 +244,7 @@ class MultiItemSelectorTests extends AbstractShellTests {
 	}
 
 	private void scheduleSelect() {
-		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3,
-				SELECTOR_ITEM_4));
+		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3, SELECTOR_ITEM_4));
 	}
 
 	private void scheduleSelect(Terminal terminal) {
@@ -242,8 +261,8 @@ class MultiItemSelectorTests extends AbstractShellTests {
 	}
 
 	private void scheduleSelect(List<SelectorItem<SimplePojo>> items, Integer maxItems, Terminal terminal) {
-		MultiItemSelector<SimplePojo, SelectorItem<SimplePojo>> selector = new MultiItemSelector<>(terminal,
-				items, "testSimple", null);
+		MultiItemSelector<SimplePojo, SelectorItem<SimplePojo>> selector = new MultiItemSelector<>(terminal, items,
+				"testSimple", null);
 		selector.setResourceLoader(new DefaultResourceLoader());
 		selector.setTemplateExecutor(getTemplateExecutor());
 
@@ -263,6 +282,7 @@ class MultiItemSelectorTests extends AbstractShellTests {
 	}
 
 	private static class SimplePojo {
+
 		String data;
 
 		SimplePojo(String data) {
@@ -281,5 +301,7 @@ class MultiItemSelectorTests extends AbstractShellTests {
 		public String toString() {
 			return data;
 		}
+
 	}
+
 }

@@ -16,5 +16,7 @@
 package org.springframework.shell.tui.geom;
 
 public enum VerticalAlign {
+
 	TOP, CENTER, BOTTOM
+
 }

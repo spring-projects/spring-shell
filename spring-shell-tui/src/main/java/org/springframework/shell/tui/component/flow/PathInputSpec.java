@@ -35,7 +35,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Sets a name.
-	 *
 	 * @param name the name
 	 * @return a builder
 	 */
@@ -43,7 +42,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Sets a result value.
-	 *
 	 * @param resultValue the result value
 	 * @return a builder
 	 */
@@ -51,7 +49,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Sets a result mode.
-	 *
 	 * @param resultMode the result mode
 	 * @return a builder
 	 */
@@ -59,7 +56,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Sets a default value.
-	 *
 	 * @param defaultValue the defult value
 	 * @return a builder
 	 */
@@ -67,7 +63,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Sets a renderer function.
-	 *
 	 * @param renderer the renderer
 	 * @return a builder
 	 */
@@ -75,7 +70,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Sets a default renderer template location.
-	 *
 	 * @param location the template location
 	 * @return a builder
 	 */
@@ -83,7 +77,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Adds a pre-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -91,7 +84,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Adds a post-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -100,7 +92,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 	/**
 	 * Automatically stores result from a {@link StringInputContext} into
 	 * {@link ComponentContext} with key given to builder. Defaults to {@code true}.
-	 *
 	 * @param store the flag if storing result
 	 * @return a builder
 	 */
@@ -109,7 +100,6 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 	/**
 	 * Define a function which may return id of a next component to go. Returning a
 	 * {@code null} or non existent id indicates that flow should stop.
-	 *
 	 * @param next next component function
 	 * @return a builder
 	 */
@@ -117,8 +107,8 @@ public interface PathInputSpec extends BaseInputSpec<PathInputSpec> {
 
 	/**
 	 * Build and return parent builder.
-	 *
 	 * @return the parent builder
 	 */
 	Builder and();
+
 }

@@ -59,23 +59,39 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractComponent<T extends ComponentContext<T>> implements ResourceLoaderAware {
 
 	private final static Logger log = LoggerFactory.getLogger(AbstractComponent.class);
+
 	public final static String OPERATION_EXIT = "EXIT";
+
 	public final static String OPERATION_BACKSPACE = "BACKSPACE";
+
 	public final static String OPERATION_CHAR = "CHAR";
+
 	public final static String OPERATION_UNICODE = "UNICODE";
+
 	public final static String OPERATION_SELECT = "SELECT";
+
 	public final static String OPERATION_DOWN = "DOWN";
+
 	public final static String OPERATION_UP = "UP";
 
 	private final Terminal terminal;
+
 	private final BindingReader bindingReader;
+
 	private final KeyMap<String> keyMap = new KeyMap<>();
+
 	private final List<Consumer<T>> preRunHandlers = new ArrayList<>();
+
 	private final List<Consumer<T>> postRunHandlers = new ArrayList<>();
+
 	private @Nullable Function<T, List<AttributedString>> renderer;
+
 	private boolean printResults = true;
+
 	private @Nullable String templateLocation;
+
 	private @Nullable TemplateExecutor templateExecutor;
+
 	private @Nullable ResourceLoader resourceLoader;
 
 	public AbstractComponent(Terminal terminal) {
@@ -91,7 +107,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Gets a {@link Terminal}.
-	 *
 	 * @return a terminal
 	 */
 	public Terminal getTerminal() {
@@ -100,7 +115,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Sets a display renderer.
-	 *
 	 * @param renderer the display renderer function
 	 */
 	public void setRenderer(@Nullable Function<T, List<AttributedString>> renderer) {
@@ -108,9 +122,8 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	}
 
 	/**
-	 * Render to be shows content of a display with set display renderer using a
-	 * given context.
-	 *
+	 * Render to be shows content of a display with set display renderer using a given
+	 * context.
 	 * @param context the context
 	 * @return list of attributed strings
 	 */
@@ -121,7 +134,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Adds a pre-run handler.
-	 *
 	 * @param handler the handler
 	 */
 	public void addPreRunHandler(Consumer<T> handler) {
@@ -130,7 +142,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Adds a post-run handler.
-	 *
 	 * @param handler the handler
 	 */
 	public void addPostRunHandler(Consumer<T> handler) {
@@ -139,7 +150,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Sets if results should be printed into a console, Defaults to {@code true}.
-	 *
 	 * @param printResults flag setting if results are printed
 	 */
 	public void setPrintResults(boolean printResults) {
@@ -148,7 +158,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Runs a component logic with a given context and returns updated context.
-	 *
 	 * @param context the context
 	 * @return a context
 	 */
@@ -166,7 +175,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Gets a template executor.
-	 *
 	 * @return a template executor
 	 */
 	public @Nullable TemplateExecutor getTemplateExecutor() {
@@ -175,7 +183,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Sets a template executor.
-	 *
 	 * @param templateExecutor the template executor
 	 */
 	public void setTemplateExecutor(TemplateExecutor templateExecutor) {
@@ -184,7 +191,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Sets a template location.
-	 *
 	 * @param templateLocation the template location
 	 */
 	public void setTemplateLocation(String templateLocation) {
@@ -193,7 +199,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Checks if this component has an existing {@code tty}.
-	 *
 	 * @return true if component has tty
 	 */
 	protected boolean hasTty() {
@@ -209,7 +214,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Render a given template with attributes.
-	 *
 	 * @param attributes the attributes
 	 * @return rendered content as attributed strings
 	 */
@@ -240,7 +244,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Gets a real component context using common this trick.
-	 *
 	 * @param context the context
 	 * @return a component context
 	 */
@@ -248,7 +251,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Read input.
-	 *
 	 * @param bindingReader the binding reader
 	 * @param keyMap the key map
 	 * @param context the context
@@ -258,7 +260,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Run internal logic called from public run method.
-	 *
 	 * @param context the context
 	 * @return a context
 	 */
@@ -266,14 +267,12 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Bind key map.
-	 *
 	 * @param keyMap
 	 */
 	protected abstract void bindKeyMap(KeyMap<String> keyMap);
 
 	/**
 	 * Enter into read loop. This should be called from a component.
-	 *
 	 * @param context the context
 	 */
 	protected void loop(ComponentContext<?> context) {
@@ -308,7 +307,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Run pre-run handlers
-	 *
 	 * @param context the context
 	 * @return a context
 	 */
@@ -319,7 +317,6 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 
 	/**
 	 * Run post-run handlers
-	 *
 	 * @param context the context
 	 * @return a context
 	 */
@@ -331,9 +328,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	private void printResults(ComponentContext<?> context) {
 		log.debug("About to write result with incoming context [{}] as class [{}] in [{}]", context, context.getClass(),
 				this);
-		String out = render(getThisContext(context)).stream()
-				.map(as -> as.toAnsi())
-				.collect(Collectors.joining("\n"));
+		String out = render(getThisContext(context)).stream().map(as -> as.toAnsi()).collect(Collectors.joining("\n"));
 		log.debug("Writing result [{}] in [{}]", out, this);
 		if (StringUtils.hasText(out)) {
 			terminal.writer().println(out);
@@ -344,8 +339,10 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	private static String resourceAsString(Resource resource) {
 		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
 			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
+
 }

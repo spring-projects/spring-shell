@@ -43,6 +43,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CommandExecutionTests extends AbstractCommandTests {
 
 	private CommandExecution execution;
+
 	private CommandRegistry commandRegistry;
 
 	@BeforeEach
@@ -55,7 +56,8 @@ class CommandExecutionTests extends AbstractCommandTests {
 		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		DumbTerminal terminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
-		execution = CommandExecution.of(resolvers, null, terminal, new DefaultShellContext(), conversionService, commandRegistry);
+		execution = CommandExecution.of(resolvers, null, terminal, new DefaultShellContext(), conversionService,
+				commandRegistry);
 	}
 
 	@Test
@@ -64,12 +66,12 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		Object result = execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
@@ -82,12 +84,12 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method3", String.class)
-				.and()
+			.method(pojo1, "method3", String.class)
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		Object result = execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
@@ -101,12 +103,12 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method1")
-				.and()
+			.method(pojo1, "method1")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
@@ -120,16 +122,16 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.description("some arg1")
-				.and()
+			.longNames("arg2")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method1Mixed1")
-				.and()
+			.method(pojo1, "method1Mixed1")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1" });
@@ -145,16 +147,16 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.description("some arg1")
-				.and()
+			.longNames("arg2")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method1Mixed1")
-				.and()
+			.method(pojo1, "method1Mixed1")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
@@ -170,16 +172,16 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.description("some arg1")
-				.and()
+			.longNames("arg2")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method1Mixed1")
-				.and()
+			.method(pojo1, "method1Mixed1")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value", "--arg2", "myarg2value" });
@@ -195,13 +197,13 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1" });
@@ -215,14 +217,14 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "myarg1value" });
@@ -236,11 +238,11 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		Object result = execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
@@ -255,14 +257,14 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "myarg1value1", "myarg1value2" });
@@ -276,14 +278,14 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.arity(OptionArity.ONE_OR_MORE)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.arity(OptionArity.ONE_OR_MORE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "myarg1value1", "myarg1value2" });
@@ -297,14 +299,14 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.arity(OptionArity.ONE_OR_MORE)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.arity(OptionArity.ONE_OR_MORE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method9")
-				.and()
+			.method(pojo1, "method9")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "myarg1value1", "myarg1value2" });
@@ -318,14 +320,14 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.arity(OptionArity.ONE_OR_MORE)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.arity(OptionArity.ONE_OR_MORE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method8")
-				.and()
+			.method(pojo1, "method8")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "1", "2" });
@@ -339,20 +341,20 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.description("some arg2")
-				.and()
+			.longNames("arg2")
+			.description("some arg2")
+			.and()
 			.withOption()
-				.longNames("arg3")
-				.description("some arg3")
-				.and()
+			.longNames("arg3")
+			.description("some arg3")
+			.and()
 			.withTarget()
-				.method(pojo1, "method6")
-				.and()
+			.method(pojo1, "method6")
+			.and()
 			.build();
 
 		commandRegistry.register(r1);
@@ -364,27 +366,26 @@ class CommandExecutionTests extends AbstractCommandTests {
 		assertThat(pojo1.method6Arg3).isEqualTo("myarg3value");
 	}
 
-
 	@Test
 	void testMethodMultipleIntArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.description("some arg2")
-				.and()
+			.longNames("arg2")
+			.description("some arg2")
+			.and()
 			.withOption()
-				.longNames("arg3")
-				.description("some arg3")
-				.and()
+			.longNames("arg3")
+			.description("some arg3")
+			.and()
 			.withTarget()
-				.method(pojo1, "method7")
-				.and()
+			.method(pojo1, "method7")
+			.and()
 			.build();
 
 		commandRegistry.register(r1);
@@ -401,26 +402,26 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.description("some arg2")
-				.position(1)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg2")
+			.description("some arg2")
+			.position(1)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withOption()
-				.longNames("arg3")
-				.description("some arg3")
-				.position(2)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg3")
+			.description("some arg3")
+			.position(2)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method6")
-				.and()
+			.method(pojo1, "method6")
+			.and()
 			.build();
 
 		commandRegistry.register(r1);
@@ -433,36 +434,34 @@ class CommandExecutionTests extends AbstractCommandTests {
 
 	@ParameterizedTest
 	@Disabled("concepts change")
-	@ValueSource(strings = {
-		"command1 myarg1value --arg2 myarg2value --arg3 myarg3value",
-		"command1 --arg1 myarg1value myarg2value --arg3 myarg3value",
-		"command1 --arg1 myarg1value --arg2 myarg2value myarg3value"
-	})
+	@ValueSource(strings = { "command1 myarg1value --arg2 myarg2value --arg3 myarg3value",
+			"command1 --arg1 myarg1value myarg2value --arg3 myarg3value",
+			"command1 --arg1 myarg1value --arg2 myarg2value myarg3value" })
 	void testMethodMultiplePositionalStringArgsMixed(String arg) {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.position(0)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.position(0)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.description("some arg2")
-				.position(1)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg2")
+			.description("some arg2")
+			.position(1)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withOption()
-				.longNames("arg3")
-				.description("some arg3")
-				.position(2)
-				.arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg3")
+			.description("some arg3")
+			.position(2)
+			.arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method6")
-				.and()
+			.method(pojo1, "method6")
+			.and()
 			.build();
 		String[] args = arg.split(" ");
 		commandRegistry.register(r1);
@@ -479,23 +478,23 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('a')
-				.description("short arg a")
-				.type(boolean.class)
-				.and()
+			.shortNames('a')
+			.description("short arg a")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('b')
-				.description("short arg b")
-				.type(boolean.class)
-				.and()
+			.shortNames('b')
+			.description("short arg b")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('c')
-				.description("short arg c")
-				.type(boolean.class)
-				.and()
+			.shortNames('c')
+			.description("short arg c")
+			.type(boolean.class)
+			.and()
 			.withTarget()
-				.method(pojo1, "method5")
-				.and()
+			.method(pojo1, "method5")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "-abc" });
@@ -510,23 +509,23 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.shortNames('a')
-				.description("short arg a")
-				.type(boolean.class)
-				.and()
+			.shortNames('a')
+			.description("short arg a")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('b')
-				.description("short arg b")
-				.type(boolean.class)
-				.and()
+			.shortNames('b')
+			.description("short arg b")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('c')
-				.description("short arg c")
-				.type(boolean.class)
-				.and()
+			.shortNames('c')
+			.description("short arg c")
+			.type(boolean.class)
+			.and()
 			.withTarget()
-				.method(pojo1, "method5")
-				.and()
+			.method(pojo1, "method5")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "-ac", "-b", "false" });
@@ -541,17 +540,17 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.type(float[].class)
-				.and()
+			.longNames("arg1")
+			.type(float[].class)
+			.and()
 			.withTarget()
-				.method(pojo1, "method8")
-				.and()
+			.method(pojo1, "method8")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "0.1" });
 		assertThat(pojo1.method8Count).isEqualTo(1);
-		assertThat(pojo1.method8Arg1).isEqualTo(new float[]{0.1f});
+		assertThat(pojo1.method8Arg1).isEqualTo(new float[] { 0.1f });
 	}
 
 	@Test
@@ -560,17 +559,17 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.type(float[].class)
-				.and()
+			.longNames("arg1")
+			.type(float[].class)
+			.and()
 			.withTarget()
-				.method(pojo1, "method8")
-				.and()
+			.method(pojo1, "method8")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "0.1", "0.2" });
 		assertThat(pojo1.method8Count).isEqualTo(1);
-		assertThat(pojo1.method8Arg1).isEqualTo(new float[]{0.1f, 0.2f});
+		assertThat(pojo1.method8Arg1).isEqualTo(new float[] { 0.1f, 0.2f });
 	}
 
 	@Test
@@ -578,11 +577,11 @@ class CommandExecutionTests extends AbstractCommandTests {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1" });
@@ -595,14 +594,14 @@ class CommandExecutionTests extends AbstractCommandTests {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.defaultValue("defaultValue1")
-				// .position(0)
-				// .arity(OptionArity.EXACTLY_ONE)
-				.and()
+			.longNames("arg1")
+			.defaultValue("defaultValue1")
+			// .position(0)
+			// .arity(OptionArity.EXACTLY_ONE)
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1" });
@@ -615,16 +614,17 @@ class CommandExecutionTests extends AbstractCommandTests {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.required()
-				.and()
+			.longNames("arg1")
+			.required()
+			.and()
 			.withTarget()
-				.method(pojo1, "method4")
-				.and()
+			.method(pojo1, "method4")
+			.and()
 			.build();
 
 		commandRegistry.register(r1);
-		assertThatThrownBy(() -> execution.evaluate(new String[] { "command1" })).isInstanceOf(CommandParserExceptionsException.class);
+		assertThatThrownBy(() -> execution.evaluate(new String[] { "command1" }))
+			.isInstanceOf(CommandParserExceptionsException.class);
 	}
 
 	@Test
@@ -633,13 +633,13 @@ class CommandExecutionTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.availability(() -> Availability.unavailable("fake reason"))
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		Object result = execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
@@ -651,12 +651,12 @@ class CommandExecutionTests extends AbstractCommandTests {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
-				.longNames("arg1")
-				.nameModifier(orig -> "x" + orig)
-				.and()
+			.longNames("arg1")
+			.nameModifier(orig -> "x" + orig)
+			.and()
 			.withTarget()
-				.function(function1)
-				.and()
+			.function(function1)
+			.and()
 			.build();
 		commandRegistry.register(r1);
 		Object result = execution.evaluate(new String[] { "command1", "--xarg1", "myarg1value" });

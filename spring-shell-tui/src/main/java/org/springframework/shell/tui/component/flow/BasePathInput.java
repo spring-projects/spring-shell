@@ -36,14 +36,23 @@ import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
 public abstract class BasePathInput extends BaseInput<PathInputSpec> implements PathInputSpec {
 
 	private @Nullable String name;
+
 	private @Nullable String resultValue;
+
 	private @Nullable ResultMode resultMode;
+
 	private @Nullable String defaultValue;
+
 	private @Nullable Function<PathInputContext, List<AttributedString>> renderer;
+
 	private List<Consumer<PathInputContext>> preHandlers = new ArrayList<>();
+
 	private List<Consumer<PathInputContext>> postHandlers = new ArrayList<>();
+
 	private boolean storeResult = true;
+
 	private @Nullable String templateLocation;
+
 	private @Nullable Function<PathInputContext, String> next;
 
 	public BasePathInput(BaseBuilder builder, String id) {
@@ -160,4 +169,5 @@ public abstract class BasePathInput extends BaseInput<PathInputSpec> implements 
 	public @Nullable Function<PathInputContext, String> getNext() {
 		return next;
 	}
+
 }

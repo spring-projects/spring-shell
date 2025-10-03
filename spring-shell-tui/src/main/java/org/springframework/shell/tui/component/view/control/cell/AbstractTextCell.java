@@ -32,7 +32,9 @@ import org.springframework.shell.tui.style.StyleSettings;
 public abstract class AbstractTextCell<T> extends AbstractCell<T> implements TextCell<T> {
 
 	private Function<T, String> itemFunction;
+
 	private HorizontalAlign hAlign = HorizontalAlign.CENTER;
+
 	private VerticalAlign vAlign = VerticalAlign.CENTER;
 
 	public AbstractTextCell(T item, Function<T, String> itemFunction) {

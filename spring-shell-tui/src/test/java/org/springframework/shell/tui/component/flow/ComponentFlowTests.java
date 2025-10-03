@@ -41,31 +41,31 @@ class ComponentFlowTests extends AbstractShellTests {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("key1", "value1");
 		single1SelectItems.put("key2", "value2");
-		List<SelectItem> multi1SelectItems = List.of(SelectItem.of("key1", "value1"),
-				SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
+		List<SelectItem> multi1SelectItems = List.of(SelectItem.of("key1", "value1"), SelectItem.of("key2", "value2"),
+				SelectItem.of("key3", "value3"));
 		ComponentFlow wizard = ComponentFlow.builder()
-				.terminal(getTerminal())
-				.resourceLoader(getResourceLoader())
-				.templateExecutor(getTemplateExecutor())
-				.withStringInput("field1")
-					.name("Field1")
-					.defaultValue("defaultField1Value")
-					.and()
-				.withStringInput("field2")
-					.name("Field2")
-					.and()
-				.withPathInput("path1")
-					.name("Path1")
-					.and()
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.and()
-				.withMultiItemSelector("multi1")
-					.name("Multi1")
-					.selectItems(multi1SelectItems)
-					.and()
-				.build();
+			.terminal(getTerminal())
+			.resourceLoader(getResourceLoader())
+			.templateExecutor(getTemplateExecutor())
+			.withStringInput("field1")
+			.name("Field1")
+			.defaultValue("defaultField1Value")
+			.and()
+			.withStringInput("field2")
+			.name("Field2")
+			.and()
+			.withPathInput("path1")
+			.name("Path1")
+			.and()
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.and()
+			.withMultiItemSelector("multi1")
+			.name("Multi1")
+			.selectItems(multi1SelectItems)
+			.and()
+			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
 		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
@@ -111,33 +111,33 @@ class ComponentFlowTests extends AbstractShellTests {
 		ComponentFlow wizard = ComponentFlow.builder()
 			.terminal(getTerminal())
 			.withStringInput("id1")
-				.name("name")
-				.resultValue("value1")
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.name("name")
+			.resultValue("value1")
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withPathInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withSingleItemSelector("id3")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withMultiItemSelector("id4")
-				.resultValues(List.of("value4"))
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.resultValues(List.of("value4"))
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withConfirmationInput("id5")
-				.resultValue(false)
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.resultValue(false)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.build();
 
-			ExecutorService service = Executors.newFixedThreadPool(1);
-			AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
 
-			service.execute(() -> result.set(wizard.run()));
+		service.execute(() -> result.set(wizard.run()));
 
 		await().atMost(Duration.ofSeconds(4)).untilAsserted(() -> {
 			ComponentFlowResult inputWizardResult = result.get();
@@ -164,21 +164,21 @@ class ComponentFlowTests extends AbstractShellTests {
 			.resourceLoader(getResourceLoader())
 			.templateExecutor(getTemplateExecutor())
 			.withStringInput("id1")
-				.name("name")
-				.next(ctx -> ctx.get("id1"))
-				.and()
+			.name("name")
+			.next(ctx -> ctx.get("id1"))
+			.and()
 			.withStringInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.withStringInput("id3")
-				.name("name")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
@@ -210,21 +210,21 @@ class ComponentFlowTests extends AbstractShellTests {
 			.resourceLoader(getResourceLoader())
 			.templateExecutor(getTemplateExecutor())
 			.withStringInput("id1")
-				.name("name")
-				.next(ctx -> ctx.get("id1"))
-				.and()
+			.name("name")
+			.next(ctx -> ctx.get("id1"))
+			.and()
 			.withStringInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.withStringInput("id3")
-				.name("name")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
@@ -260,21 +260,21 @@ class ComponentFlowTests extends AbstractShellTests {
 			.resourceLoader(getResourceLoader())
 			.templateExecutor(getTemplateExecutor())
 			.withStringInput("id1")
-				.name("name")
-				.next(ctx -> ctx.get("id1"))
-				.and()
+			.name("name")
+			.next(ctx -> ctx.get("id1"))
+			.and()
 			.withStringInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.withStringInput("id3")
-				.name("name")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
@@ -305,15 +305,15 @@ class ComponentFlowTests extends AbstractShellTests {
 		single1SelectItems.put("key1", "value1");
 		single1SelectItems.put("key2", "value2");
 		ComponentFlow wizard = ComponentFlow.builder()
-				.terminal(getTerminal())
-				.resourceLoader(getResourceLoader())
-				.templateExecutor(getTemplateExecutor())
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.defaultSelect("key2")
-					.and()
-				.build();
+			.terminal(getTerminal())
+			.resourceLoader(getResourceLoader())
+			.templateExecutor(getTemplateExecutor())
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.defaultSelect("key2")
+			.and()
+			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
 		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
@@ -340,14 +340,8 @@ class ComponentFlowTests extends AbstractShellTests {
 		selectItems2.put("key2", "value2");
 		selectItems2.put("key3", "value3");
 
-		Builder builder1 = ComponentFlow.builder()
-			.withSingleItemSelector("field1")
-				.selectItems(selectItems1)
-				.and();
-		Builder builder2 = ComponentFlow.builder()
-			.withSingleItemSelector("field2")
-				.selectItems(selectItems2)
-				.and();
+		Builder builder1 = ComponentFlow.builder().withSingleItemSelector("field1").selectItems(selectItems1).and();
+		Builder builder2 = ComponentFlow.builder().withSingleItemSelector("field2").selectItems(selectItems2).and();
 
 		List<BaseSingleItemSelector> field1 = (List<BaseSingleItemSelector>) ReflectionTestUtils.getField(builder1,
 				"singleItemSelectors");
@@ -361,4 +355,5 @@ class ComponentFlowTests extends AbstractShellTests {
 		assertThat(selectItems11).hasSize(2);
 		assertThat(selectItems21).hasSize(2);
 	}
+
 }
