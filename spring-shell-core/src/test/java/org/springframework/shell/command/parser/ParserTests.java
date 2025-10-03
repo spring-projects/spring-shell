@@ -51,16 +51,13 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT1);
 			ParseResult result = parse("root1", "arg1", "arg2");
 
-			assertThat(result.argumentResults()).satisfiesExactly(
-				ar -> {
-					assertThat(ar.value()).isEqualTo("arg1");
-					assertThat(ar.position()).isEqualTo(0);
-				},
-				ar -> {
-					assertThat(ar.value()).isEqualTo("arg2");
-					assertThat(ar.position()).isEqualTo(1);
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(ar -> {
+				assertThat(ar.value()).isEqualTo("arg1");
+				assertThat(ar.position()).isEqualTo(0);
+			}, ar -> {
+				assertThat(ar.value()).isEqualTo("arg2");
+				assertThat(ar.position()).isEqualTo(1);
+			});
 		}
 
 		@Test
@@ -68,17 +65,15 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT3);
 			ParseResult result = parse("root3", "--arg1", "value1", "--", "arg1", "arg2");
 
-			assertThat(result.argumentResults()).satisfiesExactly(
-				ar -> {
-					assertThat(ar.value()).isEqualTo("arg1");
-					assertThat(ar.position()).isEqualTo(0);
-				},
-				ar -> {
-					assertThat(ar.value()).isEqualTo("arg2");
-					assertThat(ar.position()).isEqualTo(1);
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(ar -> {
+				assertThat(ar.value()).isEqualTo("arg1");
+				assertThat(ar.position()).isEqualTo(0);
+			}, ar -> {
+				assertThat(ar.value()).isEqualTo("arg2");
+				assertThat(ar.position()).isEqualTo(1);
+			});
 		}
+
 	}
 
 	@Nested
@@ -116,7 +111,8 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.optionResults().get(0).value()).isEqualTo("x");
 			assertThat(result.messageResults()).isNotEmpty();
 			assertThat(result.messageResults()).satisfiesExactly(ms -> {
-				// "2002E:(pos 0): Illegal option value 'x', reason 'Failed to convert from type [java.lang.String] to type [int] for value 'x''"
+				// "2002E:(pos 0): Illegal option value 'x', reason 'Failed to convert
+				// from type [java.lang.String] to type [int] for value 'x''"
 				assertThat(ms.getMessage()).contains("Failed to convert");
 			});
 		}
@@ -155,26 +151,20 @@ class ParserTests extends AbstractParsingTests {
 			ParseResult result = parse("root4", "--arg1", "--arg2");
 			assertThat(result).isNotNull();
 
-			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2000).hasType(ParserMessage.Type.ERROR);
-				},
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
-				}
-			);
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(message -> {
+				ParserAssertions.assertThat(message.parserMessage()).hasCode(2000).hasType(ParserMessage.Type.ERROR);
+			}, message -> {
+				ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
+			});
 		}
 
 		static Stream<RegAndArgs> shouldHaveErrorForUnrecognisedOption() {
-			return Stream.of(
-				RegAndArgs.of(ROOT1, "root1", "--arg1"),
-				RegAndArgs.of(ROOT3, "root3", "--arg2", "--arg1"),
-				RegAndArgs.of(ROOT3, "root3", "--arg1", "--arg2"),
-				RegAndArgs.of(ROOT3, "root3", "--arg2", "fake1", "--arg1"),
-				RegAndArgs.of(ROOT3, "root3", "--arg1", "--arg2", "fake1"),
-				RegAndArgs.of(ROOT3, "root3", "--arg2", "fake1", "--arg1", "fake2"),
-				RegAndArgs.of(ROOT3, "root3", "--arg1", "fake2", "--arg2", "fake1")
-				);
+			return Stream.of(RegAndArgs.of(ROOT1, "root1", "--arg1"), RegAndArgs.of(ROOT3, "root3", "--arg2", "--arg1"),
+					RegAndArgs.of(ROOT3, "root3", "--arg1", "--arg2"),
+					RegAndArgs.of(ROOT3, "root3", "--arg2", "fake1", "--arg1"),
+					RegAndArgs.of(ROOT3, "root3", "--arg1", "--arg2", "fake1"),
+					RegAndArgs.of(ROOT3, "root3", "--arg2", "fake1", "--arg1", "fake2"),
+					RegAndArgs.of(ROOT3, "root3", "--arg1", "fake2", "--arg2", "fake1"));
 		}
 
 		@ParameterizedTest
@@ -182,19 +172,19 @@ class ParserTests extends AbstractParsingTests {
 		void shouldHaveErrorForUnrecognisedOption(RegAndArgs regAndArgs) {
 			register(regAndArgs.reg());
 			ParseResult result = parse(regAndArgs.args());
-			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
-				}
-			);
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(message -> {
+				ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
+			});
 
 		}
 
 		@Test
 		void lexerMessageShouldGetPropagated() {
 			ParseResult parse = parse("--");
-			assertThat(parse.messageResults()).extracting(ms -> ms.parserMessage().getCode()).containsExactly(1000, 1000);
+			assertThat(parse.messageResults()).extracting(ms -> ms.parserMessage().getCode())
+				.containsExactly(1000, 1000);
 		}
+
 	}
 
 	@Nested
@@ -232,17 +222,16 @@ class ParserTests extends AbstractParsingTests {
 			ParserConfig config = new ParserConfig().enable(Feature.ALLOW_DIRECTIVES);
 
 			ParseResult result = parse(lexer(config), "[foo][bar:value]", "root3");
-			assertThat(result.directiveResults()).satisfiesExactly(
-				d -> {
-					assertThat(d.name()).isEqualTo("foo");
-					assertThat(d.value()).isNull();
-				},
-				d -> {
-					assertThat(d.name()).isEqualTo("bar");
-					assertThat(d.value()).isEqualTo("value");
-				});
+			assertThat(result.directiveResults()).satisfiesExactly(d -> {
+				assertThat(d.name()).isEqualTo("foo");
+				assertThat(d.value()).isNull();
+			}, d -> {
+				assertThat(d.name()).isEqualTo("bar");
+				assertThat(d.value()).isEqualTo("value");
+			});
 			assertThat(result.messageResults()).isEmpty();
 		}
+
 	}
 
 	@Nested
@@ -285,11 +274,9 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
-			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("value1");
-				}
-			);
+			assertThat(result.optionResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("value1");
+			});
 			assertThat(result.messageResults()).isEmpty();
 		}
 
@@ -300,18 +287,16 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
-			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("value1");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
-					assertThat(r.value()).isEqualTo("value2");
-				}
-			);
+			assertThat(result.optionResults()).satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("value1");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+				assertThat(r.value()).isEqualTo("value2");
+			});
 			assertThat(result.messageResults()).isEmpty();
 		}
+
 	}
 
 	@Nested
@@ -324,12 +309,10 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
-			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
-					assertThat(r.value()).isNull();
-				}
-			);
+			assertThat(result.optionResults()).satisfiesExactly(r -> {
+				assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+				assertThat(r.value()).isNull();
+			});
 			assertThat(result.messageResults()).isEmpty();
 		}
 
@@ -340,12 +323,10 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
-			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
-					assertThat(r.value()).isEqualTo("aaa");
-				}
-			);
+			assertThat(result.optionResults()).satisfiesExactly(r -> {
+				assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+				assertThat(r.value()).isEqualTo("aaa");
+			});
 			assertThat(result.messageResults()).isEmpty();
 		}
 
@@ -356,16 +337,13 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
-			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
-					assertThat(r.value()).isEqualTo("aaa");
-				},
-				r -> {
-					assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'b' });
-					assertThat(r.value()).isEqualTo("bbb");
-				}
-			);
+			assertThat(result.optionResults()).satisfiesExactly(r -> {
+				assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'a' });
+				assertThat(r.value()).isEqualTo("aaa");
+			}, r -> {
+				assertThat(r.option().getShortNames()).isEqualTo(new Character[] { 'b' });
+				assertThat(r.value()).isEqualTo("bbb");
+			});
 			assertThat(result.messageResults()).isEmpty();
 		}
 
@@ -387,9 +365,8 @@ class ParserTests extends AbstractParsingTests {
 		@Test
 		void shouldFindRegistrationRegUpperCommandLower() {
 			register(ROOT1_UP);
-			ParserConfig config = new ParserConfig()
-					.disable(Feature.CASE_SENSITIVE_COMMANDS)
-					.disable(Feature.CASE_SENSITIVE_OPTIONS);
+			ParserConfig config = new ParserConfig().disable(Feature.CASE_SENSITIVE_COMMANDS)
+				.disable(Feature.CASE_SENSITIVE_OPTIONS);
 			ParseResult result = parse(config, "root1");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
@@ -399,9 +376,8 @@ class ParserTests extends AbstractParsingTests {
 		@Test
 		void shouldFindRegistrationRegUpperCommandUpper() {
 			register(ROOT1_UP);
-			ParserConfig config = new ParserConfig()
-					.disable(Feature.CASE_SENSITIVE_COMMANDS)
-					.disable(Feature.CASE_SENSITIVE_OPTIONS);
+			ParserConfig config = new ParserConfig().disable(Feature.CASE_SENSITIVE_COMMANDS)
+				.disable(Feature.CASE_SENSITIVE_OPTIONS);
 			ParseResult result = parse(config, "Root1");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
@@ -411,9 +387,8 @@ class ParserTests extends AbstractParsingTests {
 		@Test
 		void shouldFindRegistrationRegLowerCommandUpper() {
 			register(ROOT1);
-			ParserConfig config = new ParserConfig()
-					.disable(Feature.CASE_SENSITIVE_COMMANDS)
-					.disable(Feature.CASE_SENSITIVE_OPTIONS);
+			ParserConfig config = new ParserConfig().disable(Feature.CASE_SENSITIVE_COMMANDS)
+				.disable(Feature.CASE_SENSITIVE_OPTIONS);
 			ParseResult result = parse(config, "Root1");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
@@ -423,19 +398,15 @@ class ParserTests extends AbstractParsingTests {
 		@Test
 		void shouldFindLongOptionRegLowerCommandUpper() {
 			register(ROOT3);
-			ParserConfig config = new ParserConfig()
-					.disable(Feature.CASE_SENSITIVE_COMMANDS)
-					.disable(Feature.CASE_SENSITIVE_OPTIONS)
-					;
+			ParserConfig config = new ParserConfig().disable(Feature.CASE_SENSITIVE_COMMANDS)
+				.disable(Feature.CASE_SENSITIVE_OPTIONS);
 			ParseResult result = parse(config, "root3", "--Arg1", "value1");
 			assertThat(result).isNotNull();
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
-			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("value1");
-				}
-			);
+			assertThat(result.optionResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("value1");
+			});
 			assertThat(result.messageResults()).isEmpty();
 		}
 
@@ -448,12 +419,11 @@ class ParserTests extends AbstractParsingTests {
 		void shouldAddOptionIfItHasDefaultValue() {
 			register(ROOT6_OPTION_DEFAULT_VALUE);
 			ParseResult result = parse("root6");
-			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("defaultvalue");
-				}
-			);
+			assertThat(result.optionResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("defaultvalue");
+			});
 		}
+
 	}
 
 	@Nested
@@ -463,28 +433,23 @@ class ParserTests extends AbstractParsingTests {
 		void shouldGetPositionalArgWhenOneAsString() {
 			register(ROOT7_POSITIONAL_ONE_ARG_STRING);
 			ParseResult result = parse("root7", "a");
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("a");
+				assertThat(r.position()).isEqualTo(0);
+			});
 		}
 
 		@Test
 		void shouldGetPositionalArgWhenTwoAsString() {
 			register(ROOT7_POSITIONAL_TWO_ARG_STRING);
 			ParseResult result = parse("root7", "a", "b");
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
-				},
-				r -> {
-					assertThat(r.value()).isEqualTo("b");
-					assertThat(r.position()).isEqualTo(1);
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("a");
+				assertThat(r.position()).isEqualTo(0);
+			}, r -> {
+				assertThat(r.value()).isEqualTo("b");
+				assertThat(r.position()).isEqualTo(1);
+			});
 		}
 
 		@Test
@@ -493,12 +458,10 @@ class ParserTests extends AbstractParsingTests {
 			ParseResult result = parse("root7");
 			assertThat(result.messageResults()).isEmpty();
 			assertThat(result.argumentResults()).isEmpty();
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("arg1default");
-				}
-			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("arg1default");
+			});
 		}
 
 		@Test
@@ -506,18 +469,14 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT7_POSITIONAL_ONE_ARG_STRING_DEFAULT);
 			ParseResult result = parse("root7", "a");
 			assertThat(result.messageResults()).isEmpty();
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
-				}
-			);
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("a");
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("a");
+				assertThat(r.position()).isEqualTo(0);
+			});
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("a");
+			});
 		}
 
 		@Test
@@ -526,16 +485,13 @@ class ParserTests extends AbstractParsingTests {
 			ParseResult result = parse("root7");
 			assertThat(result.messageResults()).isEmpty();
 			assertThat(result.argumentResults()).isEmpty();
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("arg1default");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
-					assertThat(r.value()).isEqualTo("arg2default");
-				}
-			);
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("arg1default");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+				assertThat(r.value()).isEqualTo("arg2default");
+			});
 		}
 
 		@Test
@@ -543,22 +499,17 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
 			ParseResult result = parse("root7", "a");
 			assertThat(result.messageResults()).isEmpty();
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
-				}
-			);
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("a");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
-					assertThat(r.value()).isEqualTo("arg2default");
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("a");
+				assertThat(r.position()).isEqualTo(0);
+			});
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("a");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+				assertThat(r.value()).isEqualTo("arg2default");
+			});
 		}
 
 		@Test
@@ -566,26 +517,20 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
 			ParseResult result = parse("root7", "a", "b");
 			assertThat(result.messageResults()).isEmpty();
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
-				},
-				r -> {
-					assertThat(r.value()).isEqualTo("b");
-					assertThat(r.position()).isEqualTo(1);
-				}
-			);
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("a");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
-					assertThat(r.value()).isEqualTo("b");
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("a");
+				assertThat(r.position()).isEqualTo(0);
+			}, r -> {
+				assertThat(r.value()).isEqualTo("b");
+				assertThat(r.position()).isEqualTo(1);
+			});
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("a");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+				assertThat(r.value()).isEqualTo("b");
+			});
 		}
 
 		@Test
@@ -593,22 +538,17 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT7_POSITIONAL_TWO_ARG_STRING_DEFAULT);
 			ParseResult result = parse("root7", "--arg1", "a", "b");
 			assertThat(result.messageResults()).isEmpty();
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("b");
-					assertThat(r.position()).isEqualTo(0);
-				}
-			);
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("a");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
-					assertThat(r.value()).isEqualTo("b");
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("b");
+				assertThat(r.position()).isEqualTo(0);
+			});
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("a");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+				assertThat(r.value()).isEqualTo("b");
+			});
 		}
 
 		@Test
@@ -618,26 +558,20 @@ class ParserTests extends AbstractParsingTests {
 
 			result = parse("root7", "--arg1", "a", "--arg2", "b", "c");
 			assertThat(result.messageResults()).isEmpty();
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("c");
-					assertThat(r.position()).isEqualTo(0);
-				}
-			);
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("a");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
-					assertThat(r.value()).isEqualTo("b");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg3" });
-					assertThat(r.value()).isEqualTo("c");
-				}
-			);
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("c");
+				assertThat(r.position()).isEqualTo(0);
+			});
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("a");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+				assertThat(r.value()).isEqualTo("b");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg3" });
+				assertThat(r.value()).isEqualTo("c");
+			});
 		}
 
 		@Test
@@ -646,48 +580,38 @@ class ParserTests extends AbstractParsingTests {
 			ParseResult result;
 
 			result = parse("root7", "--arg1", "a", "b", "--arg2", "c", "d");
-			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2004).hasType(ParserMessage.Type.ERROR);
-				}
-			);
-			assertThat(result.argumentResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("b");
-					assertThat(r.position()).isEqualTo(0);
-				},
-				r -> {
-					assertThat(r.value()).isEqualTo("d");
-					assertThat(r.position()).isEqualTo(0);
-				}
-			);
-			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
-					assertThat(r.value()).isEqualTo("a");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
-					assertThat(r.value()).isEqualTo("c");
-				},
-				r -> {
-					assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg3" });
-					assertThat(r.value()).isEqualTo("b");
-				}
-			);
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(message -> {
+				ParserAssertions.assertThat(message.parserMessage()).hasCode(2004).hasType(ParserMessage.Type.ERROR);
+			});
+			assertThat(result.argumentResults()).satisfiesExactly(r -> {
+				assertThat(r.value()).isEqualTo("b");
+				assertThat(r.position()).isEqualTo(0);
+			}, r -> {
+				assertThat(r.value()).isEqualTo("d");
+				assertThat(r.position()).isEqualTo(0);
+			});
+			assertThat(result.optionResults()).isNotNull().satisfiesExactly(r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg1" });
+				assertThat(r.value()).isEqualTo("a");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg2" });
+				assertThat(r.value()).isEqualTo("c");
+			}, r -> {
+				assertThat(r.option().getLongNames()).isEqualTo(new String[] { "arg3" });
+				assertThat(r.value()).isEqualTo("b");
+			});
 		}
 
 		@Test
 		void notEnoughOptionArgumentsShouldHaveCorrectCount() {
 			register(ROOT8_ONE_ARG_ARITYEONE_STRING);
 			ParseResult result = parse("root8", "--arg1");
-			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2003).hasType(ParserMessage.Type.ERROR);
-					ParserAssertions.assertThat(message).hasPosition(0).hasInserts("arg1", 1);
-				}
-			);
+			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(message -> {
+				ParserAssertions.assertThat(message.parserMessage()).hasCode(2003).hasType(ParserMessage.Type.ERROR);
+				ParserAssertions.assertThat(message).hasPosition(0).hasInserts("arg1", 1);
+			});
 		}
 
 	}
+
 }

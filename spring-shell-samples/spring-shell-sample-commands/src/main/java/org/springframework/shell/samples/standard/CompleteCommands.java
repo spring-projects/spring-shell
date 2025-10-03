@@ -39,27 +39,27 @@ public class CompleteCommands {
 			.description("complete sample1")
 			.group("Complete Commands")
 			.withOption()
-				.longNames("arg1")
-				.completion(ctx -> {
-					CompletionProposal p1 = new CompletionProposal("arg1hi1");
-					CompletionProposal p2 = new CompletionProposal("arg1hi2");
-					return Arrays.asList(p1, p2);
-				})
-				.and()
+			.longNames("arg1")
+			.completion(ctx -> {
+				CompletionProposal p1 = new CompletionProposal("arg1hi1");
+				CompletionProposal p2 = new CompletionProposal("arg1hi2");
+				return Arrays.asList(p1, p2);
+			})
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.completion(ctx -> {
-					CompletionProposal p1 = new CompletionProposal("arg2hi1");
-					CompletionProposal p2 = new CompletionProposal("arg2hi2");
-					return Arrays.asList(p1, p2);
-				})
-				.and()
+			.longNames("arg2")
+			.completion(ctx -> {
+				CompletionProposal p1 = new CompletionProposal("arg2hi1");
+				CompletionProposal p2 = new CompletionProposal("arg2hi2");
+				return Arrays.asList(p1, p2);
+			})
+			.and()
 			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return String.format("hi, arg1 value is '%s'", arg1);
-				})
-				.and()
+			.function(ctx -> {
+				String arg1 = ctx.getOptionValue("arg1");
+				return String.format("hi, arg1 value is '%s'", arg1);
+			})
+			.and()
 			.build();
 	}
 
@@ -75,16 +75,14 @@ public class CompleteCommands {
 
 	static class FunnyValuesProvider implements ValueProvider {
 
-		private final static String[] VALUES = new String[] {
-			"hello world",
-			"I am quoting \"The Daily Mail\"",
-			"10 \\ 3 = 3"
-		};
+		private final static String[] VALUES = new String[] { "hello world", "I am quoting \"The Daily Mail\"",
+				"10 \\ 3 = 3" };
 
 		@Override
 		public List<CompletionProposal> complete(CompletionContext completionContext) {
 			return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
 		}
+
 	}
 
 	@Bean
@@ -94,21 +92,21 @@ public class CompleteCommands {
 			.description("complete sample3")
 			.group("Complete Commands")
 			.withOption()
-				.longNames("arg1")
-				.type(MyEnums.class)
-				.completion(ctx -> {
-					CompletionProposal p1 = new CompletionProposal(MyEnums.E1.toString());
-					CompletionProposal p2 = new CompletionProposal(MyEnums.E2.toString());
-					CompletionProposal p3 = new CompletionProposal(MyEnums.E3.toString());
-					return Arrays.asList(p1, p2, p3);
-				})
-				.and()
+			.longNames("arg1")
+			.type(MyEnums.class)
+			.completion(ctx -> {
+				CompletionProposal p1 = new CompletionProposal(MyEnums.E1.toString());
+				CompletionProposal p2 = new CompletionProposal(MyEnums.E2.toString());
+				CompletionProposal p3 = new CompletionProposal(MyEnums.E3.toString());
+				return Arrays.asList(p1, p2, p3);
+			})
+			.and()
 			.withTarget()
-				.function(ctx -> {
-					String arg1 = ctx.getOptionValue("arg1");
-					return String.format("You said '%s'", arg1);
-				})
-				.and()
+			.function(ctx -> {
+				String arg1 = ctx.getOptionValue("arg1");
+				return String.format("You said '%s'", arg1);
+			})
+			.and()
 			.build();
 	}
 
@@ -118,6 +116,9 @@ public class CompleteCommands {
 	}
 
 	static enum MyEnums {
+
 		E1, E2, E3
+
 	}
+
 }

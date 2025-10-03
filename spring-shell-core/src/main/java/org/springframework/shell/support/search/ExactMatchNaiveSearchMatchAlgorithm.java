@@ -101,4 +101,5 @@ class ExactMatchNaiveSearchMatchAlgorithm extends AbstractSearchMatchAlgorithm {
 		}
 		return SearchMatchResult.ofMinus();
 	}
+
 }

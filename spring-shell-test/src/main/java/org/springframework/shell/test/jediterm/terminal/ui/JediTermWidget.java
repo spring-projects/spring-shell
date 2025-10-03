@@ -37,11 +37,17 @@ import org.springframework.shell.test.jediterm.terminal.model.TerminalTextBuffer
 public class JediTermWidget implements TerminalSession, TerminalWidget {
 
 	private static final Logger log = LoggerFactory.getLogger(JediTermWidget.class);
+
 	private final TerminalPanel terminalPanel;
+
 	private final JediTerminal terminal;
+
 	private final AtomicBoolean sessionRunning = new AtomicBoolean();
+
 	private TtyConnector ttyConnector;
+
 	private TerminalStarter terminalStarter;
+
 	private Thread emuThread;
 
 	public JediTermWidget() {
@@ -101,7 +107,8 @@ public class JediTermWidget implements TerminalSession, TerminalWidget {
 	public String getSessionName() {
 		if (ttyConnector != null) {
 			return ttyConnector.getName();
-		} else {
+		}
+		else {
 			return "Session";
 		}
 	}
@@ -110,7 +117,8 @@ public class JediTermWidget implements TerminalSession, TerminalWidget {
 		if (!sessionRunning.get()) {
 			emuThread = new Thread(new EmulatorTask());
 			emuThread.start();
-		} else {
+		}
+		else {
 			log.error("Should not try to start session again at this point... ");
 		}
 	}
@@ -160,6 +168,7 @@ public class JediTermWidget implements TerminalSession, TerminalWidget {
 	}
 
 	class EmulatorTask implements Runnable {
+
 		public void run() {
 			try {
 				sessionRunning.set(true);
@@ -167,20 +176,25 @@ public class JediTermWidget implements TerminalSession, TerminalWidget {
 				if (ttyConnector.init()) {
 					terminalStarter.start();
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				log.error("Exception running terminal", e);
-			} finally {
+			}
+			finally {
 				try {
 					ttyConnector.close();
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 				}
 				sessionRunning.set(false);
 			}
 		}
+
 	}
 
 	@Override
 	public TerminalStarter getTerminalStarter() {
 		return terminalStarter;
 	}
+
 }

@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 class CommandRegistrationBeanRegistrarTests {
 
 	private final BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
+
 	private final CommandRegistrationBeanRegistrar registrar = new CommandRegistrationBeanRegistrar(registry);
 
 	@Test
@@ -41,9 +42,8 @@ class CommandRegistrationBeanRegistrarTests {
 
 	@Test
 	void registerWhenNoAnnotationThrowsException() {
-		assertThatIllegalStateException()
-				.isThrownBy(() -> this.registrar.register(NoAnnotationCommand.class))
-				.withMessageContaining("No Command annotation found");
+		assertThatIllegalStateException().isThrownBy(() -> this.registrar.register(NoAnnotationCommand.class))
+			.withMessageContaining("No Command annotation found");
 	}
 
 	@Test
@@ -59,6 +59,7 @@ class CommandRegistrationBeanRegistrarTests {
 
 	@Command
 	static class BeanCommand {
+
 	}
 
 	@Command
@@ -67,8 +68,11 @@ class CommandRegistrationBeanRegistrarTests {
 		@Command
 		void method() {
 		}
+
 	}
 
 	static class NoAnnotationCommand {
+
 	}
+
 }

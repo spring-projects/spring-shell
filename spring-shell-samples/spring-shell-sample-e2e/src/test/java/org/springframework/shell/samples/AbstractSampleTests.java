@@ -69,4 +69,5 @@ public class AbstractSampleTests {
 			return session;
 		}
 	}
+
 }

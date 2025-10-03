@@ -25,4 +25,5 @@ public class HelloCommand {
 	public String hello() {
 		return "hello";
 	}
+
 }

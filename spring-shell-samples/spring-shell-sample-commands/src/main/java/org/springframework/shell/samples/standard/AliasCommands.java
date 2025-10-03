@@ -37,14 +37,14 @@ public class AliasCommands {
 			.group("Alias Commands")
 			.description(DESCRIPTION)
 			.withAlias()
-				.command("alias", "reg", "main2")
-				.group("Alias Commands")
-				.and()
+			.command("alias", "reg", "main2")
+			.group("Alias Commands")
+			.and()
 			.withTarget()
-				.function(ctx -> {
-					return "Hello regMain1";
-				})
-				.and()
+			.function(ctx -> {
+				return "Hello regMain1";
+			})
+			.and()
 			.build();
 	}
 

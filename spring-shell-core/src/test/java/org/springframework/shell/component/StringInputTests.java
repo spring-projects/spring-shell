@@ -38,9 +38,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StringInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
+
 	private CountDownLatch latch1;
+
 	private CountDownLatch latch2;
+
 	private AtomicReference<StringInputContext> result1;
+
 	private AtomicReference<StringInputContext> result2;
 
 	@BeforeEach
@@ -242,4 +246,5 @@ public class StringInputTests extends AbstractShellTests {
 		assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
 		assertThat(run2Context.getResultValue()).isEqualTo("component1ResultValue");
 	}
+
 }

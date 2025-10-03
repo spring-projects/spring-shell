@@ -23,4 +23,5 @@ import org.springframework.boot.ApplicationRunner;
  * @author Janne Valkealahti
  */
 public interface ShellApplicationRunner extends ApplicationRunner {
+
 }

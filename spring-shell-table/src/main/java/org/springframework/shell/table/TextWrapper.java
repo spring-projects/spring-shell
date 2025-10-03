@@ -24,12 +24,13 @@ package org.springframework.shell.table;
 public interface TextWrapper {
 
 	/**
-	 * @return a list of lines where each line length MUST be equal to {@code columnWidth} (padding with spaces if
-	 * appropriate). There is no constraint on the number of lines returned however (typically, will be greater than
-	 * the input number if wrapping occurred).
-	 *
+	 * @return a list of lines where each line length MUST be equal to {@code columnWidth}
+	 * (padding with spaces if appropriate). There is no constraint on the number of lines
+	 * returned however (typically, will be greater than the input number if wrapping
+	 * occurred).
 	 * @param original the text in its original form
 	 * @param columnWidth the width to conform to
 	 */
 	String[] wrap(String[] original, int columnWidth);
+
 }

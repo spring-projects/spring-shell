@@ -36,68 +36,52 @@ public class DefaultValueCommands {
 	public static class LegacyAnnotation extends BaseE2ECommands {
 
 		@ShellMethod(key = LEGACY_ANNO + "default-value", group = GROUP)
-		public String testDefaultValue(
-			@ShellOption(defaultValue = "hi") String arg1
-		) {
+		public String testDefaultValue(@ShellOption(defaultValue = "hi") String arg1) {
 			return "Hello " + arg1;
 		}
 
 		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean1", group = GROUP)
-		public String testDefaultValueBoolean1(
-			@ShellOption(defaultValue = "false") boolean arg1
-		) {
+		public String testDefaultValueBoolean1(@ShellOption(defaultValue = "false") boolean arg1) {
 			return "Hello " + arg1;
 		}
 
 		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean2", group = GROUP)
-		public String testDefaultValueBoolean2(
-			@ShellOption(defaultValue = "true") boolean arg1
-		) {
+		public String testDefaultValueBoolean2(@ShellOption(defaultValue = "true") boolean arg1) {
 			return "Hello " + arg1;
 		}
 
 		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean3", group = GROUP)
-		public String testDefaultValueBoolean3(
-			@ShellOption boolean arg1
-		) {
+		public String testDefaultValueBoolean3(@ShellOption boolean arg1) {
 			return "Hello " + arg1;
 		}
+
 	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "default-value")
-		public String testDefaultValueAnnotation(
-				@Option(longNames = "arg1", defaultValue = "hi")
-				String arg1
-		) {
-				return "Hello " + arg1;
+		public String testDefaultValueAnnotation(@Option(longNames = "arg1", defaultValue = "hi") String arg1) {
+			return "Hello " + arg1;
 		}
 
 		@Command(command = "default-value-boolean1")
 		public String testDefaultValueBoolean1Annotation(
-				@Option(longNames = "arg1", defaultValue = "false")
-				boolean arg1
-		) {
-				return "Hello " + arg1;
+				@Option(longNames = "arg1", defaultValue = "false") boolean arg1) {
+			return "Hello " + arg1;
 		}
 
 		@Command(command = "default-value-boolean2")
 		public String testDefaultValueBoolean2Annotation(
-				@Option(longNames = "arg1", defaultValue = "true")
-				boolean arg1
-		) {
-				return "Hello " + arg1;
+				@Option(longNames = "arg1", defaultValue = "true") boolean arg1) {
+			return "Hello " + arg1;
 		}
 
 		@Command(command = "default-value-boolean3")
-		public String testDefaultValueBoolean3Annotation(
-				@Option(longNames = "arg1")
-				boolean arg1
-		) {
-				return "Hello " + arg1;
+		public String testDefaultValueBoolean3Annotation(@Option(longNames = "arg1") boolean arg1) {
+			return "Hello " + arg1;
 		}
+
 	}
 
 	@Component
@@ -105,78 +89,76 @@ public class DefaultValueCommands {
 
 		@Bean
 		public CommandRegistration testDefaultValueRegistration() {
-			return getBuilder()
-				.command(REG, "default-value")
+			return getBuilder().command(REG, "default-value")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.defaultValue("hi")
-					.and()
+				.longNames("arg1")
+				.defaultValue("hi")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration testDefaultValueBoolean1Registration() {
-			return getBuilder()
-				.command(REG, "default-value-boolean1")
+			return getBuilder().command(REG, "default-value-boolean1")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.defaultValue("false")
-					.type(boolean.class)
-					.and()
+				.longNames("arg1")
+				.defaultValue("false")
+				.type(boolean.class)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						boolean arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					boolean arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration testDefaultValueBoolean2Registration() {
-			return getBuilder()
-				.command(REG, "default-value-boolean2")
+			return getBuilder().command(REG, "default-value-boolean2")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.defaultValue("true")
-					.type(boolean.class)
-					.and()
+				.longNames("arg1")
+				.defaultValue("true")
+				.type(boolean.class)
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						boolean arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					boolean arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
 		public CommandRegistration testDefaultValueBoolean3Registration() {
-			return getBuilder()
-				.command(REG, "default-value-boolean3")
+			return getBuilder().command(REG, "default-value-boolean3")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.required(false)
-					.type(boolean.class)
-					.defaultValue("false")
-					.and()
+				.longNames("arg1")
+				.required(false)
+				.type(boolean.class)
+				.defaultValue("false")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						boolean arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					boolean arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

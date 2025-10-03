@@ -21,11 +21,14 @@ import java.util.concurrent.CompletableFuture;
 import org.springframework.shell.test.jediterm.terminal.model.StyleState;
 
 /**
- * Executes terminal commands interpreted by {@link org.springframework.shell.test.jediterm.terminal.emulator.Emulator}, receives text
+ * Executes terminal commands interpreted by
+ * {@link org.springframework.shell.test.jediterm.terminal.emulator.Emulator}, receives
+ * text
  *
  * @author jediterm authors
  */
 public interface Terminal {
+
 	void resize(int width, int height, RequestOrigin origin);
 
 	void resize(int width, int height, RequestOrigin origin, CompletableFuture<?> promptUpdated);
@@ -167,4 +170,5 @@ public interface Terminal {
 	// TerminalColor getWindowForeground();
 
 	// TerminalColor getWindowBackground();
+
 }

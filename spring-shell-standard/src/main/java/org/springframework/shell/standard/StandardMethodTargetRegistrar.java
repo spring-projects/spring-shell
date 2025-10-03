@@ -68,11 +68,13 @@ import org.springframework.util.StringUtils;
 public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 
 	private final Logger log = LoggerFactory.getLogger(StandardMethodTargetRegistrar.class);
+
 	private ApplicationContext applicationContext;
+
 	private CommandRegistration.BuilderSupplier commandRegistrationBuilderSupplier;
 
 	public StandardMethodTargetRegistrar(ApplicationContext applicationContext,
-	CommandRegistration.BuilderSupplier commandRegistrationBuilderSupplier) {
+			CommandRegistration.BuilderSupplier commandRegistrationBuilderSupplier) {
 		this.applicationContext = applicationContext;
 		this.commandRegistrationBuilderSupplier = commandRegistrationBuilderSupplier;
 	}
@@ -140,7 +142,8 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 							String longName = mp.getParameterName();
 							Class<?> parameterType = mp.getParameterType();
 							if (longName != null) {
-								log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
+								log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName,
+										parameterType);
 								longNames.add(longName);
 							}
 						}
@@ -180,7 +183,8 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 							}
 							if (!ClassUtils.isAssignable(NoValueProvider.class, so.valueProvider())) {
 								CompletionResolver completionResolver = ctx -> {
-									ValueProvider valueProviderBean = this.applicationContext.getBean(so.valueProvider());
+									ValueProvider valueProviderBean = this.applicationContext
+										.getBean(so.valueProvider());
 									List<CompletionProposal> complete = valueProviderBean.complete(ctx);
 									return complete;
 								};
@@ -217,8 +221,10 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 				builder.withTarget().method(bean, method);
 
 				ObjectProvider<Terminal> terminal = this.applicationContext.getBeanProvider(Terminal.class);
-				// TODO: feels a bit fishy to return null terminal but for now it's mostly to pass tests as it should not fail
-				MethodCommandExceptionResolver resolver = new MethodCommandExceptionResolver(bean, terminal.getIfAvailable(() -> null));
+				// TODO: feels a bit fishy to return null terminal but for now it's mostly
+				// to pass tests as it should not fail
+				MethodCommandExceptionResolver resolver = new MethodCommandExceptionResolver(bean,
+						terminal.getIfAvailable(() -> null));
 				builder.withErrorHandling().resolver(resolver);
 
 				CommandRegistration registration = builder.build();
@@ -228,11 +234,12 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 	}
 
 	/**
-	 * Gets the group from the following places, in order:<ul>
-	 *     <li>explicit annotation at the method level</li>
-	 *     <li>explicit annotation at the class level</li>
-	 *     <li>explicit annotation at the package level</li>
-	 *     <li>implicit from the class name</li>
+	 * Gets the group from the following places, in order:
+	 * <ul>
+	 * <li>explicit annotation at the method level</li>
+	 * <li>explicit annotation at the class level</li>
+	 * <li>explicit annotation at the package level</li>
+	 * <li>implicit from the class name</li>
 	 * </ul>
 	 */
 	private String getOrInferGroup(Method method) {
@@ -249,66 +256,74 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 		if (packageAnn != null && !packageAnn.value().equals(ShellCommandGroup.INHERIT_AND_INFER)) {
 			return packageAnn.value();
 		}
-		// Shameful copy/paste from https://stackoverflow.com/questions/7593969/regex-to-split-camelcase-or-titlecase-advanced
-		return StringUtils.arrayToDelimitedString(clazz.getSimpleName().split("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])"), " ");
+		// Shameful copy/paste from
+		// https://stackoverflow.com/questions/7593969/regex-to-split-camelcase-or-titlecase-advanced
+		return StringUtils
+			.arrayToDelimitedString(clazz.getSimpleName().split("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])"), " ");
 	}
 
 	/**
 	 * Tries to locate an availability indicator (a no-arg method that returns
-	 * {@link Availability}) for the given command method. The following are tried in order
-	 * for method {@literal m}:
+	 * {@link Availability}) for the given command method. The following are tried in
+	 * order for method {@literal m}:
 	 * <ol>
-	 * <li>If {@literal m} bears the {@literal @}{@link ShellMethodAvailability} annotation,
-	 * its value should be the method name to look up</li>
+	 * <li>If {@literal m} bears the {@literal @}{@link ShellMethodAvailability}
+	 * annotation, its value should be the method name to look up</li>
 	 * <li>a method named {@literal "<m>Availability"} is looked up.</li>
-	 * <li>otherwise, if some method {@literal ai} that returns {@link Availability} and takes
-	 * no argument exists, that is annotated with {@literal @}{@link ShellMethodAvailability}
-	 * and whose annotation value contains one of the {@literal commandKeys}, then it is
-	 * selected</li>
+	 * <li>otherwise, if some method {@literal ai} that returns {@link Availability} and
+	 * takes no argument exists, that is annotated with
+	 * {@literal @}{@link ShellMethodAvailability} and whose annotation value contains one
+	 * of the {@literal commandKeys}, then it is selected</li>
 	 * </ol>
 	 */
 	private Supplier<Availability> findAvailabilityIndicator(String[] commandKeys, Object bean, Method method) {
 		ShellMethodAvailability explicit = method.getAnnotation(ShellMethodAvailability.class);
 		final Method indicator;
 		if (explicit != null) {
-			Assert.isTrue(explicit.value().length == 1, "When set on a @" +
-					ShellMethod.class.getSimpleName() + " method, the value of the @"
-					+ ShellMethodAvailability.class.getSimpleName() +
-					" should be a single element, the name of a method that returns "
-					+ Availability.class.getSimpleName() +
-					". Found " + Arrays.asList(explicit.value()) + " for " + method);
+			Assert.isTrue(explicit.value().length == 1,
+					"When set on a @" + ShellMethod.class.getSimpleName() + " method, the value of the @"
+							+ ShellMethodAvailability.class.getSimpleName()
+							+ " should be a single element, the name of a method that returns "
+							+ Availability.class.getSimpleName() + ". Found " + Arrays.asList(explicit.value())
+							+ " for " + method);
 			indicator = ReflectionUtils.findMethod(bean.getClass(), explicit.value()[0]);
 		} // Try "<method>Availability"
 		else {
 			Method implicit = ReflectionUtils.findMethod(bean.getClass(), method.getName() + "Availability");
 			if (implicit != null) {
 				indicator = implicit;
-			} else {
+			}
+			else {
 				Map<Method, Collection<String>> candidates = new HashMap<>();
 				ReflectionUtils.doWithMethods(bean.getClass(), candidate -> {
-					List<String> matchKeys = new ArrayList<>(Arrays.asList(candidate.getAnnotation(ShellMethodAvailability.class).value()));
+					List<String> matchKeys = new ArrayList<>(
+							Arrays.asList(candidate.getAnnotation(ShellMethodAvailability.class).value()));
 					if (matchKeys.contains("*")) {
-						Assert.isTrue(matchKeys.size() == 1, "When using '*' as a wildcard for " +
-								ShellMethodAvailability.class.getSimpleName() + ", this can be the only value. Found " +
-								matchKeys + " on method " + candidate);
+						Assert.isTrue(matchKeys.size() == 1,
+								"When using '*' as a wildcard for " + ShellMethodAvailability.class.getSimpleName()
+										+ ", this can be the only value. Found " + matchKeys + " on method "
+										+ candidate);
 						candidates.put(candidate, matchKeys);
-					} else {
+					}
+					else {
 						matchKeys.retainAll(Arrays.asList(commandKeys));
 						if (!matchKeys.isEmpty()) {
 							candidates.put(candidate, matchKeys);
 						}
 					}
-				}, m -> m.getAnnotation(ShellMethodAvailability.class) != null && m.getAnnotation(ShellMethod.class) == null);
+				}, m -> m.getAnnotation(ShellMethodAvailability.class) != null
+						&& m.getAnnotation(ShellMethod.class) == null);
 
 				// Make sure wildcard approach has less precedence than explicit name
-				Set<Method> notUsingWildcard = candidates.entrySet().stream()
-						.filter(e -> !e.getValue().contains("*"))
-						.map(Map.Entry::getKey)
-						.collect(Collectors.toSet());
+				Set<Method> notUsingWildcard = candidates.entrySet()
+					.stream()
+					.filter(e -> !e.getValue().contains("*"))
+					.map(Map.Entry::getKey)
+					.collect(Collectors.toSet());
 
 				Assert.isTrue(notUsingWildcard.size() <= 1,
-						"Found several @" + ShellMethodAvailability.class.getSimpleName() +
-								" annotated methods that could apply for " + method + ". Offending candidates are "
+						"Found several @" + ShellMethodAvailability.class.getSimpleName()
+								+ " annotated methods that could apply for " + method + ". Offending candidates are "
 								+ notUsingWildcard);
 
 				if (notUsingWildcard.size() == 1) {
@@ -316,7 +331,8 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 				} // Wildcard was available
 				else if (candidates.size() == 1) {
 					indicator = candidates.keySet().iterator().next();
-				} else {
+				}
+				else {
 					indicator = null;
 				}
 			}
@@ -333,4 +349,5 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 			return null;
 		}
 	}
+
 }

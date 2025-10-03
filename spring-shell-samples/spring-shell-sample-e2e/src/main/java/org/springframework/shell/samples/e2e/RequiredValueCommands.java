@@ -35,11 +35,10 @@ public class RequiredValueCommands {
 	public static class LegacyAnnotation extends BaseE2ECommands {
 
 		@ShellMethod(key = LEGACY_ANNO + "required-value", group = GROUP)
-		public String testRequiredValueAnnotation(
-			@ShellOption(help = "Desc arg1") String arg1
-		) {
+		public String testRequiredValueAnnotation(@ShellOption(help = "Desc arg1") String arg1) {
 			return "Hello " + arg1;
 		}
+
 	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
@@ -47,11 +46,10 @@ public class RequiredValueCommands {
 
 		@Command(command = "required-value")
 		public String testRequiredValueAnnotation(
-				@Option(longNames = "arg1", required = true, description = "Desc arg1")
-				String arg1
-		) {
-				return "Hello " + arg1;
+				@Option(longNames = "arg1", required = true, description = "Desc arg1") String arg1) {
+			return "Hello " + arg1;
 		}
+
 	}
 
 	@Component
@@ -59,21 +57,22 @@ public class RequiredValueCommands {
 
 		@Bean
 		public CommandRegistration testRequiredValueRegistration() {
-			return getBuilder()
-				.command(REG, "required-value")
+			return getBuilder().command(REG, "required-value")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.description("Desc arg1")
-					.required()
-					.and()
+				.longNames("arg1")
+				.description("Desc arg1")
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

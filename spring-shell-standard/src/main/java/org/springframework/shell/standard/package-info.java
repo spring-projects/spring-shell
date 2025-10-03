@@ -15,7 +15,8 @@
  */
 
 /**
- * Contains infrastructure for describing commands with the "new" preferred Spring Shell programming model.
+ * Contains infrastructure for describing commands with the "new" preferred Spring Shell
+ * programming model.
  *
  * @author Eric Bottard
  */

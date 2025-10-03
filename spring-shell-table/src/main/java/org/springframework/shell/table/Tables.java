@@ -26,17 +26,19 @@ import java.util.Map;
 public class Tables {
 
 	/**
-	 * Install all the necessary formatters, aligners, etc for key-value rendering of Maps.
-	 *
+	 * Install all the necessary formatters, aligners, etc for key-value rendering of
+	 * Maps.
 	 * @param builder the builder to configure
 	 * @param delimiter the delimiter to apply between keys and values
 	 * @return buider for method chaining
 	 */
 	public static TableBuilder configureKeyValueRendering(TableBuilder builder, String delimiter) {
 		return builder.on(CellMatchers.ofType(Map.class))
-				.addFormatter(new MapFormatter(delimiter))
-				.addAligner(new KeyValueHorizontalAligner(delimiter.trim()))
-				.addSizer(new KeyValueSizeConstraints(delimiter))
-				.addWrapper(new KeyValueTextWrapper(delimiter)).and();
+			.addFormatter(new MapFormatter(delimiter))
+			.addAligner(new KeyValueHorizontalAligner(delimiter.trim()))
+			.addSizer(new KeyValueSizeConstraints(delimiter))
+			.addWrapper(new KeyValueTextWrapper(delimiter))
+			.and();
 	}
+
 }

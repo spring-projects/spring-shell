@@ -30,10 +30,10 @@ import org.springframework.shell.command.parser.Parser.ParseResult;
 import org.springframework.shell.command.parser.ParserConfig;
 
 /**
- * Interface parsing arguments for a {@link CommandRegistration}. A command is
- * always identified by a set of words like
- * {@code command subcommand1 subcommand2} and remaining part of it are options
- * which this interface intercepts and translates into format we can understand.
+ * Interface parsing arguments for a {@link CommandRegistration}. A command is always
+ * identified by a set of words like {@code command subcommand1 subcommand2} and remaining
+ * part of it are options which this interface intercepts and translates into format we
+ * can understand.
  *
  * @author Janne Valkealahti
  */
@@ -46,21 +46,18 @@ public interface CommandParser {
 
 		/**
 		 * Gets the {@link CommandOption}.
-		 *
 		 * @return the command option
 		 */
 		CommandOption option();
 
 		/**
 		 * Gets the value.
-		 *
 		 * @return the value
 		 */
 		Object value();
 
 		/**
 		 * Gets an instance of a default {@link CommandParserResult}.
-		 *
 		 * @param option the command option
 		 * @param value the value
 		 * @return a result
@@ -68,44 +65,41 @@ public interface CommandParser {
 		static CommandParserResult of(CommandOption option, Object value) {
 			return new DefaultCommandParserResult(option, value);
 		}
+
 	}
 
 	/**
-	 * Results of a {@link CommandParser}. Basically contains a list of {@link CommandParserResult}s.
+	 * Results of a {@link CommandParser}. Basically contains a list of
+	 * {@link CommandParserResult}s.
 	 */
 	interface CommandParserResults {
 
 		/**
 		 * Gets the registration.
-		 *
 		 * @return the registration
 		 */
 		CommandRegistration registration();
 
 		/**
 		 * Gets the results.
-		 *
 		 * @return the results
 		 */
 		List<CommandParserResult> results();
 
 		/**
 		 * Gets the unmapped positional arguments.
-		 *
 		 * @return the unmapped positional arguments
 		 */
 		List<String> positional();
 
 		/**
 		 * Gets parsing errors.
-		 *
 		 * @return the parsing errors
 		 */
 		List<CommandParserException> errors();
 
 		/**
 		 * Gets an instance of a default {@link CommandParserResults}.
-		 *
 		 * @param registration the registration
 		 * @param results the results
 		 * @param positional the list of positional arguments
@@ -116,14 +110,14 @@ public interface CommandParser {
 				List<String> positional, List<CommandParserException> errors) {
 			return new DefaultCommandParserResults(registration, results, positional, errors);
 		}
+
 	}
 
 	/**
 	 * Parse options with a given arguments.
 	 *
-	 * May throw various runtime exceptions depending how parser is configure.
-	 * For example if required option is missing an exception is thrown.
-	 *
+	 * May throw various runtime exceptions depending how parser is configure. For example
+	 * if required option is missing an exception is thrown.
 	 * @param args the arguments
 	 * @return parsed results
 	 */
@@ -131,7 +125,6 @@ public interface CommandParser {
 
 	/**
 	 * Gets an instance of a default command parser.
-	 *
 	 * @param conversionService the conversion service
 	 * @param registrations the command registrations
 	 * @param config the parser config
@@ -148,8 +141,11 @@ public interface CommandParser {
 	static class DefaultCommandParserResults implements CommandParserResults {
 
 		private CommandRegistration registration;
+
 		private List<CommandParserResult> results;
+
 		private List<String> positional;
+
 		private List<CommandParserException> errors;
 
 		DefaultCommandParserResults(CommandRegistration registration, List<CommandParserResult> results,
@@ -179,6 +175,7 @@ public interface CommandParser {
 		public List<CommandParserException> errors() {
 			return errors;
 		}
+
 	}
 
 	/**
@@ -187,6 +184,7 @@ public interface CommandParser {
 	static class DefaultCommandParserResult implements CommandParserResult {
 
 		private CommandOption option;
+
 		private Object value;
 
 		DefaultCommandParserResult(CommandOption option, Object value) {
@@ -203,6 +201,7 @@ public interface CommandParser {
 		public Object value() {
 			return value;
 		}
+
 	}
 
 	/**
@@ -211,7 +210,9 @@ public interface CommandParser {
 	static class AstCommandParser implements CommandParser {
 
 		private final Map<String, CommandRegistration> registrations;
+
 		private final ParserConfig configuration;
+
 		private final ConversionService conversionService;
 
 		public AstCommandParser(Map<String, CommandRegistration> registrations, ParserConfig configuration,
@@ -248,6 +249,7 @@ public interface CommandParser {
 
 			return new DefaultCommandParserResults(result.commandRegistration(), results, positional, errors);
 		}
+
 	}
 
 	public static class CommandParserException extends RuntimeException {
@@ -263,5 +265,7 @@ public interface CommandParser {
 		public static CommandParserException of(String message) {
 			return new CommandParserException(message);
 		}
+
 	}
+
 }

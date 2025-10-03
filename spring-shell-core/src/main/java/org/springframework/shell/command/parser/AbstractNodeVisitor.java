@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.shell.command.parser.Parser.ParseResult;
 
 /**
- * Base abstract {@link NodeVisitor} which visits all nodes allowing user to
- * implement callback methods.
+ * Base abstract {@link NodeVisitor} which visits all nodes allowing user to implement
+ * callback methods.
  *
  * @author Janne Valkealahti
  */
@@ -33,8 +33,7 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 	private final static Logger log = LoggerFactory.getLogger(AbstractNodeVisitor.class);
 
 	@Override
-	public final ParseResult visit(List<NonterminalAstNode> nonterminalNodes,
-			List<TerminalAstNode> terminalNodes) {
+	public final ParseResult visit(List<NonterminalAstNode> nonterminalNodes, List<TerminalAstNode> terminalNodes) {
 		for (NonterminalAstNode ntn : nonterminalNodes) {
 			log.debug("visit {}", ntn);
 			if (ntn instanceof CommandNode node) {
@@ -56,15 +55,13 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 
 	/**
 	 * Called after all nodes has been visited to build results.
-	 *
 	 * @return the results from this visit operation
 	 */
 	protected abstract ParseResult buildResult();
 
 	/**
-	 * Called when {@link CommandNode} for root is entered. When node is fully
-	 * visited, {@link #onExitRootCommandNode(CommandNode)} is called.
-	 *
+	 * Called when {@link CommandNode} for root is entered. When node is fully visited,
+	 * {@link #onExitRootCommandNode(CommandNode)} is called.
 	 * @param node the command node
 	 * @see #onExitRootCommandNode(CommandNode)
 	 */
@@ -72,7 +69,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 
 	/**
 	 * Called when {@link CommandNode} for root is exited.
-	 *
 	 * @param node the command node
 	 * @see #onEnterRootCommandNode(CommandNode)
 	 */
@@ -81,7 +77,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 	/**
 	 * Called when {@link CommandNode} is entered. When node is fully visited,
 	 * {@link #onExitCommandNode(CommandNode)} is called.
-	 *
 	 * @param node the command node
 	 * @see #onExitCommandNode(CommandNode)
 	 */
@@ -89,7 +84,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 
 	/**
 	 * Called when {@link CommandNode} is exited.
-	 *
 	 * @param node the command node
 	 * @see #onEnterCommandNode(CommandNode)
 	 */
@@ -98,7 +92,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 	/**
 	 * Called when {@link OptionNode} is entered. When node is fully visited,
 	 * {@link #onExitOptionNode(OptionNode)} is called.
-	 *
 	 * @param node the option node
 	 * @see #onExitOptionNode(OptionNode)
 	 */
@@ -106,7 +99,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 
 	/**
 	 * Called when {@link OptionNode} is exited.
-	 *
 	 * @param node the option node
 	 * @see #onEnterOptionNode(OptionNode)
 	 */
@@ -115,7 +107,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 	/**
 	 * Called when {@link CommandArgumentNode} is entered. When node is fully visited,
 	 * {@link #onExitCommandArgumentNode(CommandArgumentNode)} is called.
-	 *
 	 * @param node the command argument node
 	 * @see #onExitCommandArgumentNode(CommandArgumentNode)
 	 */
@@ -123,7 +114,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 
 	/**
 	 * Called when {@link CommandArgumentNode} is exited.
-	 *
 	 * @param node the command argument node
 	 * @see #onEnterCommandArgumentNode(CommandArgumentNode)
 	 */
@@ -132,7 +122,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 	/**
 	 * Called when {@link OptionArgumentNode} is entered. When node is fully visited,
 	 * {@link #onExitOptionArgumentNode(OptionArgumentNode)} is called.
-	 *
 	 * @param node the option argument node
 	 * @see #onExitOptionArgumentNode(OptionArgumentNode)
 	 */
@@ -140,7 +129,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 
 	/**
 	 * Called when {@link OptionArgumentNode} is exited.
-	 *
 	 * @param node the command argument node
 	 * @see #onEnterOptionArgumentNode(OptionArgumentNode)
 	 */
@@ -149,7 +137,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 	/**
 	 * Called when {@link DirectiveNode} is entered. When node is fully visited,
 	 * {@link #onExitDirectiveNode(DirectiveNode)} is called.
-	 *
 	 * @param node the option node
 	 * @see #onExitDirectiveNode(DirectiveNode)
 	 */
@@ -157,7 +144,6 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 
 	/**
 	 * Called when {@link DirectiveNode} is exited.
-	 *
 	 * @param node the option node
 	 * @see #onEnterDirectiveNode(DirectiveNode)
 	 */
@@ -241,4 +227,5 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 			exitOptionArgumentNode(n);
 		}
 	}
+
 }

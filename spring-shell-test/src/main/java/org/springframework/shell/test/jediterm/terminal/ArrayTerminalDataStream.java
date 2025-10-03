@@ -27,7 +27,9 @@ import org.springframework.shell.test.jediterm.terminal.util.CharUtils;
 public class ArrayTerminalDataStream implements TerminalDataStream {
 
 	protected char[] buf;
+
 	protected int offset;
+
 	protected int length;
 
 	public ArrayTerminalDataStream(char[] buf, int offset, int length) {
@@ -93,4 +95,5 @@ public class ArrayTerminalDataStream implements TerminalDataStream {
 	public boolean isEmpty() {
 		return this.length == 0;
 	}
+
 }

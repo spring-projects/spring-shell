@@ -84,11 +84,11 @@ public class BashCompletionsTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("testmethod1")
 			.withTarget()
-				.method(pojo1, "method1")
-				.and()
+			.method(pojo1, "method1")
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.build();
 		commandCatalog.register(registration);
 	}
@@ -101,17 +101,20 @@ public class BashCompletionsTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command(command)
 			.withTarget()
-				.function(function)
-				.and()
+			.function(function)
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.and()
+			.longNames("arg1")
+			.and()
 			.build();
 		commandCatalog.register(registration);
 	}
 
 	protected static class Pojo1 {
 
-		void method1() {}
+		void method1() {
+		}
+
 	}
+
 }

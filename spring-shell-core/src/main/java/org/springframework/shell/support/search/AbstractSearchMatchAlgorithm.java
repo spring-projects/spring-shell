@@ -22,8 +22,7 @@ import java.util.List;
 import org.springframework.util.StringUtils;
 
 /**
- * Base class for common search algorithms mostly based on {@code fzf}
- * algorithms.
+ * Base class for common search algorithms mostly based on {@code fzf} algorithms.
  *
  * @author Janne Valkealahti
  */
@@ -31,37 +30,46 @@ abstract class AbstractSearchMatchAlgorithm implements SearchMatchAlgorithm {
 
 	// points given to matches
 	public static final int SCORE_MATCH = 16;
+
 	public static final int SCORE_GAP_START = -3;
+
 	public static final int SCORE_GAP_EXTENSION = -1;
+
 	public static final int BONUS_BOUNDARY = SCORE_MATCH / 2;
+
 	public static final int BONUS_NON_WORD = SCORE_MATCH / 2;
+
 	public static final int BONUS_CAMEL123 = BONUS_BOUNDARY + SCORE_GAP_EXTENSION;
+
 	public static final int BONUS_CONSECUTIVE = -(SCORE_GAP_START + SCORE_GAP_EXTENSION);
+
 	public static final int BONUS_FIRST_CHAR_MULTIPLIER = 2;
+
 	public static final int BONUS_BOUNDARY_WHITE = BONUS_BOUNDARY + 2; // default +2
-	public static final int BONUS_BOUNDARY_DELIMITER = BONUS_BOUNDARY + 1 + 1; // default +1
+
+	public static final int BONUS_BOUNDARY_DELIMITER = BONUS_BOUNDARY + 1 + 1; // default
+																				// +1
 
 	/**
 	 * Enumeration of matched characters.
 	 */
 	static enum CharClass {
-		WHITE,
-		NONWORD,
-		DELIMITER,
-		LOWER,
-		UPPER,
-		LETTER,
-		NUMBER
+
+		WHITE, NONWORD, DELIMITER, LOWER, UPPER, LETTER, NUMBER
+
 	}
 
 	static class CalculateScore {
+
 		int score;
+
 		int pos[];
 
 		CalculateScore(int score, int[] pos) {
 			this.score = score;
 			this.pos = pos;
 		}
+
 	}
 
 	static int indexAt(int index, int max, boolean forward) {
@@ -126,8 +134,8 @@ abstract class AbstractSearchMatchAlgorithm implements SearchMatchAlgorithm {
 				return BONUS_BOUNDARY;
 			}
 		}
-		if (prevClass == CharClass.LOWER && clazz == CharClass.UPPER ||
-				prevClass != CharClass.NUMBER && clazz == CharClass.NUMBER) {
+		if (prevClass == CharClass.LOWER && clazz == CharClass.UPPER
+				|| prevClass != CharClass.NUMBER && clazz == CharClass.NUMBER) {
 			return BONUS_CAMEL123;
 		}
 		else if (clazz == CharClass.NONWORD) {
@@ -275,4 +283,5 @@ abstract class AbstractSearchMatchAlgorithm implements SearchMatchAlgorithm {
 		}
 		return r;
 	}
+
 }

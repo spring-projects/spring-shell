@@ -13,10 +13,10 @@ import org.springframework.util.StringUtils;
 
 /**
  * {@link ResultHandler} for {@link CommandNotFound} using
- * {@link CommandNotFoundMessageProvider} to provide an error message.
- * Default internal provider simply provides message from a {@link CommandNotFound}
- * with a red color. Provider can be defined by providing a custom
- * {@link CommandNotFoundMessageProvider} bean.
+ * {@link CommandNotFoundMessageProvider} to provide an error message. Default internal
+ * provider simply provides message from a {@link CommandNotFound} with a red color.
+ * Provider can be defined by providing a custom {@link CommandNotFoundMessageProvider}
+ * bean.
  *
  * @author Janne Valkealahti
  */
@@ -45,8 +45,11 @@ public final class CommandNotFoundResultHandler extends TerminalAwareResultHandl
 		@Override
 		public String apply(ProviderContext context) {
 			String message = new AttributedString(context.error().getMessage(),
-					AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi();
+					AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+				.toAnsi();
 			return message;
 		}
+
 	}
+
 }

@@ -32,21 +32,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FileInputProviderTests {
 
 	private final ExtendedDefaultParser springParser = new ExtendedDefaultParser();
+
 	private final DefaultParser jlineParser = new DefaultParser();
+
 	private FileInputProvider fileInputProvider;
 
 	static Stream<Arguments> regularLinesUnclosedQuotes() {
-		return Stream.of(
-				Arguments.of("Regular line with unclosed 'quote"),
-				Arguments.of("Regular line with unclosed \"quote")
-		);
+		return Stream.of(Arguments.of("Regular line with unclosed 'quote"),
+				Arguments.of("Regular line with unclosed \"quote"));
 	}
 
 	static Stream<Arguments> commentsUnclosedQuotes() {
-		return Stream.of(
-				Arguments.of("//Commented line with unclosed 'quote"),
-				Arguments.of("//Commented line with unclosed \"quote")
-		);
+		return Stream.of(Arguments.of("//Commented line with unclosed 'quote"),
+				Arguments.of("//Commented line with unclosed \"quote"));
 	}
 
 	@ParameterizedTest
@@ -98,4 +96,5 @@ class FileInputProviderTests {
 			fileInputProvider.readInput();
 		});
 	}
+
 }

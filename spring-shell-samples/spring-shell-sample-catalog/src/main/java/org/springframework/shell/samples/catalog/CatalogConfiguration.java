@@ -34,6 +34,7 @@ class CatalogConfiguration {
 			public String getName() {
 				return "custom";
 			}
+
 			@Override
 			public ThemeSettings getSettings() {
 				return new CustomThemeSettings();
@@ -42,9 +43,11 @@ class CatalogConfiguration {
 	}
 
 	static class CustomThemeSettings extends ThemeSettings {
+
 		CustomThemeSettings() {
 			super(new CustomStyleSettings(), FigureSettings.defaults());
 		}
+
 	}
 
 	static class CustomStyleSettings extends StyleSettings {

@@ -33,7 +33,8 @@ public class GenericResultHandlerServiceTests {
 		resultHandlerService.addResultHandler(integerResultHandler);
 		resultHandlerService.handle("string");
 		assertThat(stringResultHandler.result).isEqualTo("string");
-		assertThat(integerResultHandler.result).isNull();;
+		assertThat(integerResultHandler.result).isNull();
+		;
 		resultHandlerService.handle(0);
 		assertThat(integerResultHandler.result).isEqualTo(0);
 	}
@@ -55,6 +56,7 @@ public class GenericResultHandlerServiceTests {
 		public void handleResult(String result) {
 			this.result = result;
 		}
+
 	}
 
 	private static class IntegerResultHandler implements ResultHandler<Integer> {
@@ -65,6 +67,7 @@ public class GenericResultHandlerServiceTests {
 		public void handleResult(Integer result) {
 			this.result = result;
 		}
+
 	}
 
 	private static class ObjectResultHandler implements ResultHandler<Object> {
@@ -75,5 +78,7 @@ public class GenericResultHandlerServiceTests {
 		public void handleResult(Object result) {
 			this.result = result;
 		}
+
 	}
+
 }

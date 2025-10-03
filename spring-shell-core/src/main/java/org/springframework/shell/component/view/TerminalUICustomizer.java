@@ -26,7 +26,6 @@ public interface TerminalUICustomizer {
 
 	/**
 	 * Callback to customize a {@link TerminalUI} instance.
-	 *
 	 * @param terminalUI the terminal ui to customize
 	 */
 	void customize(TerminalUI terminalUI);

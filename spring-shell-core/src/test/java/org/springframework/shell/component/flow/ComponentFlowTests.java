@@ -44,28 +44,28 @@ public class ComponentFlowTests extends AbstractShellTests {
 		List<SelectItem> multi1SelectItems = Arrays.asList(SelectItem.of("key1", "value1"),
 				SelectItem.of("key2", "value2"), SelectItem.of("key3", "value3"));
 		ComponentFlow wizard = ComponentFlow.builder()
-				.terminal(getTerminal())
-				.resourceLoader(getResourceLoader())
-				.templateExecutor(getTemplateExecutor())
-				.withStringInput("field1")
-					.name("Field1")
-					.defaultValue("defaultField1Value")
-					.and()
-				.withStringInput("field2")
-					.name("Field2")
-					.and()
-				.withPathInput("path1")
-					.name("Path1")
-					.and()
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.and()
-				.withMultiItemSelector("multi1")
-					.name("Multi1")
-					.selectItems(multi1SelectItems)
-					.and()
-				.build();
+			.terminal(getTerminal())
+			.resourceLoader(getResourceLoader())
+			.templateExecutor(getTemplateExecutor())
+			.withStringInput("field1")
+			.name("Field1")
+			.defaultValue("defaultField1Value")
+			.and()
+			.withStringInput("field2")
+			.name("Field2")
+			.and()
+			.withPathInput("path1")
+			.name("Path1")
+			.and()
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.and()
+			.withMultiItemSelector("multi1")
+			.name("Multi1")
+			.selectItems(multi1SelectItems)
+			.and()
+			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
 		CountDownLatch latch = new CountDownLatch(1);
@@ -113,54 +113,54 @@ public class ComponentFlowTests extends AbstractShellTests {
 		ComponentFlow wizard = ComponentFlow.builder()
 			.terminal(getTerminal())
 			.withStringInput("id1")
-				.name("name")
-				.resultValue("value1")
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.name("name")
+			.resultValue("value1")
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withPathInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withSingleItemSelector("id3")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withMultiItemSelector("id4")
-				.resultValues(Arrays.asList("value4"))
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.resultValues(Arrays.asList("value4"))
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.withConfirmationInput("id5")
-				.resultValue(false)
-				.resultMode(ResultMode.ACCEPT)
-				.and()
+			.resultValue(false)
+			.resultMode(ResultMode.ACCEPT)
+			.and()
 			.build();
 
-			ExecutorService service = Executors.newFixedThreadPool(1);
-			CountDownLatch latch = new CountDownLatch(1);
-			AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		CountDownLatch latch = new CountDownLatch(1);
+		AtomicReference<ComponentFlowResult> result = new AtomicReference<>();
 
-			service.execute(() -> {
-				result.set(wizard.run());
-				latch.countDown();
-			});
+		service.execute(() -> {
+			result.set(wizard.run());
+			latch.countDown();
+		});
 
-			latch.await(4, TimeUnit.SECONDS);
-			ComponentFlowResult inputWizardResult = result.get();
-			assertThat(inputWizardResult).isNotNull();
+		latch.await(4, TimeUnit.SECONDS);
+		ComponentFlowResult inputWizardResult = result.get();
+		assertThat(inputWizardResult).isNotNull();
 
-			String id1 = inputWizardResult.getContext().get("id1");
-			Path id2 = inputWizardResult.getContext().get("id2");
-			String id3 = inputWizardResult.getContext().get("id3");
-			List<String> id4 = inputWizardResult.getContext().get("id4");
-			Boolean id5 = inputWizardResult.getContext().get("id5");
+		String id1 = inputWizardResult.getContext().get("id1");
+		Path id2 = inputWizardResult.getContext().get("id2");
+		String id3 = inputWizardResult.getContext().get("id3");
+		List<String> id4 = inputWizardResult.getContext().get("id4");
+		Boolean id5 = inputWizardResult.getContext().get("id5");
 
-			assertThat(id1).isEqualTo("value1");
-			assertThat(id2.toString()).contains("value2");
-			assertThat(id3).isEqualTo("value3");
-			assertThat(id4).containsExactlyInAnyOrder("value4");
-			assertThat(id5).isFalse();
-		}
+		assertThat(id1).isEqualTo("value1");
+		assertThat(id2.toString()).contains("value2");
+		assertThat(id3).isEqualTo("value3");
+		assertThat(id4).containsExactlyInAnyOrder("value4");
+		assertThat(id5).isFalse();
+	}
 
 	@Test
 	public void testChoosesDynamicallyShouldJumpOverAndStop() throws InterruptedException {
@@ -169,21 +169,21 @@ public class ComponentFlowTests extends AbstractShellTests {
 			.resourceLoader(getResourceLoader())
 			.templateExecutor(getTemplateExecutor())
 			.withStringInput("id1")
-				.name("name")
-				.next(ctx -> ctx.get("id1"))
-				.and()
+			.name("name")
+			.next(ctx -> ctx.get("id1"))
+			.and()
 			.withStringInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.withStringInput("id3")
-				.name("name")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
@@ -217,21 +217,21 @@ public class ComponentFlowTests extends AbstractShellTests {
 			.resourceLoader(getResourceLoader())
 			.templateExecutor(getTemplateExecutor())
 			.withStringInput("id1")
-				.name("name")
-				.next(ctx -> ctx.get("id1"))
-				.and()
+			.name("name")
+			.next(ctx -> ctx.get("id1"))
+			.and()
 			.withStringInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.withStringInput("id3")
-				.name("name")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
@@ -265,21 +265,21 @@ public class ComponentFlowTests extends AbstractShellTests {
 			.resourceLoader(getResourceLoader())
 			.templateExecutor(getTemplateExecutor())
 			.withStringInput("id1")
-				.name("name")
-				.next(ctx -> ctx.get("id1"))
-				.and()
+			.name("name")
+			.next(ctx -> ctx.get("id1"))
+			.and()
 			.withStringInput("id2")
-				.name("name")
-				.resultValue("value2")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value2")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.withStringInput("id3")
-				.name("name")
-				.resultValue("value3")
-				.resultMode(ResultMode.ACCEPT)
-				.next(ctx -> null)
-				.and()
+			.name("name")
+			.resultValue("value3")
+			.resultMode(ResultMode.ACCEPT)
+			.next(ctx -> null)
+			.and()
 			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
@@ -312,15 +312,15 @@ public class ComponentFlowTests extends AbstractShellTests {
 		single1SelectItems.put("key1", "value1");
 		single1SelectItems.put("key2", "value2");
 		ComponentFlow wizard = ComponentFlow.builder()
-				.terminal(getTerminal())
-				.resourceLoader(getResourceLoader())
-				.templateExecutor(getTemplateExecutor())
-				.withSingleItemSelector("single1")
-					.name("Single1")
-					.selectItems(single1SelectItems)
-					.defaultSelect("key2")
-					.and()
-				.build();
+			.terminal(getTerminal())
+			.resourceLoader(getResourceLoader())
+			.templateExecutor(getTemplateExecutor())
+			.withSingleItemSelector("single1")
+			.name("Single1")
+			.selectItems(single1SelectItems)
+			.defaultSelect("key2")
+			.and()
+			.build();
 
 		ExecutorService service = Executors.newFixedThreadPool(1);
 		CountDownLatch latch = new CountDownLatch(1);
@@ -350,14 +350,8 @@ public class ComponentFlowTests extends AbstractShellTests {
 		selectItems2.put("key2", "value2");
 		selectItems2.put("key3", "value3");
 
-		Builder builder1 = ComponentFlow.builder()
-			.withSingleItemSelector("field1")
-				.selectItems(selectItems1)
-				.and();
-		Builder builder2 = ComponentFlow.builder()
-			.withSingleItemSelector("field2")
-				.selectItems(selectItems2)
-				.and();
+		Builder builder1 = ComponentFlow.builder().withSingleItemSelector("field1").selectItems(selectItems1).and();
+		Builder builder2 = ComponentFlow.builder().withSingleItemSelector("field2").selectItems(selectItems2).and();
 
 		List<BaseSingleItemSelector> field1 = (List<BaseSingleItemSelector>) ReflectionTestUtils.getField(builder1,
 				"singleItemSelectors");
@@ -371,4 +365,5 @@ public class ComponentFlowTests extends AbstractShellTests {
 		assertThat(selectItems11).hasSize(2);
 		assertThat(selectItems21).hasSize(2);
 	}
+
 }

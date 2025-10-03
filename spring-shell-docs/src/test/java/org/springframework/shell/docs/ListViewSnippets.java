@@ -41,6 +41,7 @@ public class ListViewSnippets {
 			ListView<String> view = new ListView<>(ItemStyle.CHECKED);
 			// end::snippet2[]
 		}
+
 	}
 
 	// tag::listcell[]
@@ -60,6 +61,7 @@ public class ListViewSnippets {
 			writer.text(getItem().name(), rect.x(), rect.y());
 			writer.background(rect, getBackgroundColor());
 		}
+
 	}
 	// end::listcell[]
 
@@ -71,6 +73,7 @@ public class ListViewSnippets {
 			view.setCellFactory((list, item) -> new ExampleListCell(item));
 			// end::uselistcell[]
 		}
+
 	}
 
 }

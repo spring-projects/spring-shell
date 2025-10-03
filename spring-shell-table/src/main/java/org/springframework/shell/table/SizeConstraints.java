@@ -27,7 +27,8 @@ public interface SizeConstraints {
 
 	/**
 	 * @return the minimum and maximum width of the cell, given its raw content.
-	 * @param raw the raw String representation of the cell contents (may be reformatted later, eg wrapped)
+	 * @param raw the raw String representation of the cell contents (may be reformatted
+	 * later, eg wrapped)
 	 * @param tableWidth the whole available width for the table
 	 * @param nbColumns the number of columns in the table
 	 */
@@ -50,5 +51,7 @@ public interface SizeConstraints {
 			this.min = min;
 			this.max = max;
 		}
+
 	}
+
 }

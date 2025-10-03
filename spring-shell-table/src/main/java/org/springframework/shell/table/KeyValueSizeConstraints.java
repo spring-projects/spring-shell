@@ -17,8 +17,8 @@
 package org.springframework.shell.table;
 
 /**
- * A SizeConstraints implementation that is tailored to rendering a series
- * of {@literal key = value} pairs. Computes extents so that equal signs (or any other
+ * A SizeConstraints implementation that is tailored to rendering a series of
+ * {@literal key = value} pairs. Computes extents so that equal signs (or any other
  * configurable delimiter) line up vertically.
  *
  * @author Eric Bottard
@@ -52,7 +52,7 @@ public class KeyValueSizeConstraints implements SizeConstraints {
 	public Extent width(String[] raw, int tableWidth, int nbColumns) {
 
 		// We need to make sure we take care of the case where we have
-		//        k = long-value
+		// k = long-value
 		// long-key = v
 		// as the real maximal extent is size(long-key) + size( = ) + size(long-value)
 
@@ -66,7 +66,8 @@ public class KeyValueSizeConstraints implements SizeConstraints {
 			int offset = lineToConsider.indexOf(delimiter);
 
 			if (offset != -1) {
-				// Compute minimal case (line can be split, decide where to put the delimiter)
+				// Compute minimal case (line can be split, decide where to put the
+				// delimiter)
 				String minimalLeftPart = lineToConsider.substring(0, offset).trim();
 				String minimalRightPart = lineToConsider.substring(offset + delimiter.length()).trim();
 				int left = minimalLeftPart.length();
@@ -89,4 +90,5 @@ public class KeyValueSizeConstraints implements SizeConstraints {
 
 		return new Extent(min, maxLeft + delimiter.length() + maxRight);
 	}
+
 }

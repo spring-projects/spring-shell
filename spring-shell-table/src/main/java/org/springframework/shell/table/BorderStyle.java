@@ -21,19 +21,21 @@ import java.util.Map;
 /**
  * Provides support for different styles of borders, using simple or fancy ascii art.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Box-drawing_character">https://en.wikipedia.org/wiki/Box-drawing_character</a>
- *
+ * @see <a href=
+ * "https://en.wikipedia.org/wiki/Box-drawing_character">https://en.wikipedia.org/wiki/Box-drawing_character</a>
  * @author Eric Bottard
  */
 public enum BorderStyle {
 
 	/**
-	 * A simplistic style, using characters that ought to always be available in all systems (pipe and minus).
+	 * A simplistic style, using characters that ought to always be available in all
+	 * systems (pipe and minus).
 	 */
 	oldschool('|', '-'),
 
 	/**
-	 * A border style that uses dedicated light box drawing characters from the unicode set.
+	 * A border style that uses dedicated light box drawing characters from the unicode
+	 * set.
 	 */
 	fancy_light('│', '─'),
 
@@ -43,7 +45,8 @@ public enum BorderStyle {
 	fancy_heavy('┃', '━'),
 
 	/**
-	 * A border style that uses dedicated double-light box drawing characters from the unicode set.
+	 * A border style that uses dedicated double-light box drawing characters from the
+	 * unicode set.
 	 */
 	fancy_double('║', '═'),
 
@@ -53,32 +56,38 @@ public enum BorderStyle {
 	air(' ', ' '),
 
 	/**
-	 * A border style that uses dedicated double dash light box drawing characters from the unicode set.
+	 * A border style that uses dedicated double dash light box drawing characters from
+	 * the unicode set.
 	 */
 	fancy_light_double_dash('╎', '╌'),
 
 	/**
-	 * A border style that uses dedicated double dash light box drawing characters from the unicode set.
+	 * A border style that uses dedicated double dash light box drawing characters from
+	 * the unicode set.
 	 */
 	fancy_light_triple_dash('┆', '┄'),
 
 	/**
-	 * A border style that uses dedicated double dash light box drawing characters from the unicode set.
+	 * A border style that uses dedicated double dash light box drawing characters from
+	 * the unicode set.
 	 */
 	fancy_light_quadruple_dash('┊', '┈'),
 
 	/**
-	 * A border style that uses dedicated double dash heavy box drawing characters from the unicode set.
+	 * A border style that uses dedicated double dash heavy box drawing characters from
+	 * the unicode set.
 	 */
 	fancy_heavy_double_dash('╏', '╍'),
 
 	/**
-	 * A border style that uses dedicated double dash heavy box drawing characters from the unicode set.
+	 * A border style that uses dedicated double dash heavy box drawing characters from
+	 * the unicode set.
 	 */
 	fancy_heavy_triple_dash('┇', '┅'),
 
 	/**
-	 * A border style that uses dedicated double dash heavy box drawing characters from the unicode set.
+	 * A border style that uses dedicated double dash heavy box drawing characters from
+	 * the unicode set.
 	 */
 	fancy_heavy_quadruple_dash('┋', '┉'),
 
@@ -165,7 +174,6 @@ public enum BorderStyle {
 		registerSameCorners(fancy_heavy_triple_dash, fancy_heavy);
 		registerSameCorners(fancy_heavy_quadruple_dash, fancy_heavy);
 
-
 		// Air-style glyphs are easy to combine with others. Register some combinations
 		registerMixedWithAirCombinations(oldschool.vertical, oldschool.horizontal);
 		registerMixedWithAirCombinations(fancy_light.vertical, fancy_light.horizontal);
@@ -199,7 +207,8 @@ public enum BorderStyle {
 	}
 
 	/**
-	 * Register corner glyphs for a given set, not taking care of mixed style intersections.
+	 * Register corner glyphs for a given set, not taking care of mixed style
+	 * intersections.
 	 */
 	private static void registerCorners(String list) {
 		char horizontal = list.charAt(0);

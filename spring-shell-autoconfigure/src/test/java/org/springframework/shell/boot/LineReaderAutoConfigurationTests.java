@@ -39,41 +39,37 @@ import static org.mockito.Mockito.when;
 public class LineReaderAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(LineReaderAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(LineReaderAutoConfiguration.class));
 
 	@Test
 	public void testLineReaderCreated() {
-		this.contextRunner
-				.withUserConfiguration(MockConfiguration.class)
-				.run(context -> {
-					assertThat(context).hasSingleBean(LineReader.class);
-					LineReader lineReader = context.getBean(LineReader.class);
-					assertThat(lineReader.getVariable(LineReader.HISTORY_FILE)).asString().contains("spring-shell.log");
-				});
+		this.contextRunner.withUserConfiguration(MockConfiguration.class).run(context -> {
+			assertThat(context).hasSingleBean(LineReader.class);
+			LineReader lineReader = context.getBean(LineReader.class);
+			assertThat(lineReader.getVariable(LineReader.HISTORY_FILE)).asString().contains("spring-shell.log");
+		});
 	}
 
 	@Test
 	public void testLineReaderCreatedNoHistoryFile() {
-		this.contextRunner
-				.withUserConfiguration(MockConfiguration.class)
-				.withPropertyValues("spring.shell.history.enabled=false")
-				.run(context -> {
-					assertThat(context).hasSingleBean(LineReader.class);
-					LineReader lineReader = context.getBean(LineReader.class);
-					assertThat(lineReader.getVariable(LineReader.HISTORY_FILE)).isNull();
-				});
+		this.contextRunner.withUserConfiguration(MockConfiguration.class)
+			.withPropertyValues("spring.shell.history.enabled=false")
+			.run(context -> {
+				assertThat(context).hasSingleBean(LineReader.class);
+				LineReader lineReader = context.getBean(LineReader.class);
+				assertThat(lineReader.getVariable(LineReader.HISTORY_FILE)).isNull();
+			});
 	}
 
 	@Test
 	public void testLineReaderCreatedCustomHistoryFile() {
-		this.contextRunner
-				.withUserConfiguration(MockConfiguration.class)
-				.withPropertyValues("spring.shell.history.name=fakehistory.txt")
-				.run(context -> {
-					assertThat(context).hasSingleBean(LineReader.class);
-					LineReader lineReader = context.getBean(LineReader.class);
-					assertThat(lineReader.getVariable(LineReader.HISTORY_FILE)).asString().contains("fakehistory.txt");
-				});
+		this.contextRunner.withUserConfiguration(MockConfiguration.class)
+			.withPropertyValues("spring.shell.history.name=fakehistory.txt")
+			.run(context -> {
+				assertThat(context).hasSingleBean(LineReader.class);
+				LineReader lineReader = context.getBean(LineReader.class);
+				assertThat(lineReader.getVariable(LineReader.HISTORY_FILE)).asString().contains("fakehistory.txt");
+			});
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -110,5 +106,7 @@ public class LineReaderAutoConfigurationTests {
 		UserConfigPathProvider mockUserConfigPathProvider() {
 			return () -> Paths.get("mockpath");
 		}
+
 	}
+
 }

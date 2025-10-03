@@ -28,4 +28,5 @@ import org.springframework.shell.CompletionProposal;
  */
 @FunctionalInterface
 public interface CompletionProvider extends Function<CompletionContext, List<CompletionProposal>> {
+
 }

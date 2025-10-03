@@ -25,33 +25,21 @@ public class CommandInfoModelTests {
 
 	@Test
 	void hasGivenName() {
-		CommandRegistration r1 = CommandRegistration.builder()
-			.command("main1")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
+		CommandRegistration r1 = CommandRegistration.builder().command("main1").withTarget().consumer(ctx -> {
+		}).and().build();
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getName()).isEqualTo("main1");
 	}
 
 	@Test
 	void hasGivenNames() {
-		CommandRegistration r1 = CommandRegistration.builder()
-			.command("main1")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
+		CommandRegistration r1 = CommandRegistration.builder().command("main1").withTarget().consumer(ctx -> {
+		}).and().build();
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getNames()).containsExactly("main1");
 
-		r1 = CommandRegistration.builder()
-			.command("main1 sub1")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
+		r1 = CommandRegistration.builder().command("main1 sub1").withTarget().consumer(ctx -> {
+		}).and().build();
 
 		cim = CommandInfoModel.of("main1 sub1", r1);
 		assertThat(cim.getNames()).containsExactly("main1", "sub1");
@@ -63,8 +51,9 @@ public class CommandInfoModelTests {
 			.command("main1")
 			.description("desc1")
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getDescription()).isEqualTo("desc1");
@@ -72,24 +61,16 @@ public class CommandInfoModelTests {
 
 	@Test
 	void hasNoParameters() {
-		CommandRegistration r1 = CommandRegistration.builder()
-			.command("main1")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
+		CommandRegistration r1 = CommandRegistration.builder().command("main1").withTarget().consumer(ctx -> {
+		}).and().build();
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getParameters()).isEmpty();
 	}
 
 	@Test
 	void hasExpectedDefaultAvailability() {
-		CommandRegistration r1 = CommandRegistration.builder()
-			.command("main1")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
+		CommandRegistration r1 = CommandRegistration.builder().command("main1").withTarget().consumer(ctx -> {
+		}).and().build();
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getAvailability()).isNotNull();
 		assertThat(cim.getAvailability().getAvailable()).isTrue();
@@ -98,12 +79,8 @@ public class CommandInfoModelTests {
 
 	@Test
 	void hasNoAliases() {
-		CommandRegistration r1 = CommandRegistration.builder()
-			.command("main1")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
+		CommandRegistration r1 = CommandRegistration.builder().command("main1").withTarget().consumer(ctx -> {
+		}).and().build();
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getAliases()).isEmpty();
 	}
@@ -113,11 +90,12 @@ public class CommandInfoModelTests {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("main1")
 			.withAlias()
-				.command("alias1")
-				.and()
+			.command("alias1")
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		CommandInfoModel cim = CommandInfoModel.of("main1", r1);
 		assertThat(cim.getAliases()).containsExactly("alias1");
@@ -128,12 +106,13 @@ public class CommandInfoModelTests {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("main1")
 			.withOption()
-				.longNames("arg1")
-				.type(void.class)
-				.and()
+			.longNames("arg1")
+			.type(void.class)
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		CommandInfoModel cim1 = CommandInfoModel.of("main1", r1);
 		assertThat(cim1.getParameters()).hasSize(1);
@@ -143,16 +122,18 @@ public class CommandInfoModelTests {
 		CommandRegistration r2 = CommandRegistration.builder()
 			.command("main1")
 			.withOption()
-				.longNames("arg1")
-				.type(Void.class)
-				.and()
+			.longNames("arg1")
+			.type(Void.class)
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		CommandInfoModel cim2 = CommandInfoModel.of("main1", r2);
 		assertThat(cim2.getParameters()).hasSize(1);
 		assertThat(cim2.getParameters().get(0).getArguments()).containsExactly("--arg1");
 		assertThat(cim2.getParameters().get(0).getType()).isEmpty();
 	}
+
 }

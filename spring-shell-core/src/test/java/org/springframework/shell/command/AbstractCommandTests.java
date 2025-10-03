@@ -42,29 +42,53 @@ public abstract class AbstractCommandTests {
 	protected static class Pojo1 {
 
 		public int method1Count;
+
 		public CommandContext method1Ctx;
+
 		public int method1Mixed1Count;
+
 		public String method1Mixed1Arg1;
+
 		public CommandContext method1Mixed1Ctx;
+
 		public String method1Mixed1Arg2;
+
 		public int method2Count;
+
 		public int method3Count;
+
 		public int method4Count;
+
 		public String method4Arg1;
+
 		public Boolean method5ArgA;
+
 		public Boolean method5ArgB;
+
 		public Boolean method5ArgC;
+
 		public int method6Count;
+
 		public String method6Arg1;
+
 		public String method6Arg2;
+
 		public String method6Arg3;
+
 		public int method7Count;
+
 		public int method7Arg1;
+
 		public int method7Arg2;
+
 		public int method7Arg3;
+
 		public int method8Count;
+
 		public float[] method8Arg1;
+
 		public int method9Count;
+
 		public String[] method9Arg1;
 
 		public void method1(CommandContext ctx) {
@@ -125,5 +149,7 @@ public abstract class AbstractCommandTests {
 			method9Arg1 = arg1;
 			method9Count++;
 		}
+
 	}
+
 }

@@ -37,7 +37,9 @@ import org.springframework.shell.geom.Rectangle;
 public class InputView extends BoxView {
 
 	private final Logger log = LoggerFactory.getLogger(InputView.class);
+
 	private final ArrayList<String> text = new ArrayList<>();
+
 	private int cursorIndex = 0;
 
 	@Override
@@ -64,7 +66,7 @@ public class InputView extends BoxView {
 			if (event.isKey()) {
 				consumed = true;
 				int plainKey = event.getPlainKey();
-				add(new String(new char[]{(char)plainKey}));
+				add(new String(new char[] { (char) plainKey }));
 			}
 			else if (event.isKey(KeyEvent.Key.Unicode)) {
 				add(event.data());
@@ -89,7 +91,6 @@ public class InputView extends BoxView {
 
 	/**
 	 * Get a current known input text.
-	 *
 	 * @return current input text
 	 */
 	public String getInputText() {

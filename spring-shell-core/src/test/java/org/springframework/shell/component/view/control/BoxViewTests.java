@@ -97,4 +97,5 @@ class BoxViewTests extends AbstractViewTests {
 			assertThat(r.capture()).isEqualTo(view);
 		});
 	}
+
 }

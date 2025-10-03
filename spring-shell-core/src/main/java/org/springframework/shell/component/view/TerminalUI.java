@@ -52,34 +52,46 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link TerminalUI} is a main component orchestrating terminal, eventloop,
- * key/mouse events and view structure to work together. In many ways it can
- * be think of being a "main application" when terminal ui is shown in
- * a screen.
+ * {@link TerminalUI} is a main component orchestrating terminal, eventloop, key/mouse
+ * events and view structure to work together. In many ways it can be think of being a
+ * "main application" when terminal ui is shown in a screen.
  *
  * @author Janne Valkealahti
  */
 public class TerminalUI implements ViewService {
 
 	private final static Logger log = LoggerFactory.getLogger(TerminalUI.class);
+
 	private final Terminal terminal;
+
 	private final BindingReader bindingReader;
+
 	private final KeyMap<Integer> keyMap = new KeyMap<>();
+
 	private final DefaultScreen virtualDisplay = new DefaultScreen();
+
 	private Display display;
+
 	private Size size;
+
 	private View rootView;
+
 	private View modalView;
+
 	private boolean fullScreen;
+
 	private final KeyBinder keyBinder;
+
 	private DefaultEventLoop eventLoop = new DefaultEventLoop();
+
 	private View focus = null;
+
 	private ThemeResolver themeResolver;
+
 	private String themeName = "default";
 
 	/**
 	 * Constructs a handler with a given terminal.
-	 *
 	 * @param terminal the terminal
 	 */
 	public TerminalUI(Terminal terminal) {
@@ -101,7 +113,6 @@ public class TerminalUI implements ViewService {
 
 	/**
 	 * Sets a root view.
-	 *
 	 * @param root the root view
 	 * @param fullScreen if root view should request full screen
 	 */
@@ -123,7 +134,6 @@ public class TerminalUI implements ViewService {
 
 	/**
 	 * Gets an {@link EventLoop}.
-	 *
 	 * @return an event loop
 	 */
 	public EventLoop getEventLoop() {
@@ -131,8 +141,8 @@ public class TerminalUI implements ViewService {
 	}
 
 	/**
-	 * Redraw a whole screen. Essentially a message is dispatched to an event loop
-	 * which is handled as soon as possible.
+	 * Redraw a whole screen. Essentially a message is dispatched to an event loop which
+	 * is handled as soon as possible.
 	 */
 	public void redraw() {
 		getEventLoop().dispatch(ShellMessageBuilder.ofRedraw());
@@ -140,7 +150,6 @@ public class TerminalUI implements ViewService {
 
 	/**
 	 * Sets a {@link ThemeResolver}.
-	 *
 	 * @param themeResolver the theme resolver
 	 */
 	public void setThemeResolver(ThemeResolver themeResolver) {
@@ -149,7 +158,6 @@ public class TerminalUI implements ViewService {
 
 	/**
 	 * Sets a {@link ThemeResolver}.
-	 *
 	 * @return a theme resolver
 	 */
 	public ThemeResolver getThemeResolver() {
@@ -158,7 +166,6 @@ public class TerminalUI implements ViewService {
 
 	/**
 	 * Sets a {@code theme name}.
-	 *
 	 * @param themeName the theme name
 	 */
 	public void setThemeName(String themeName) {
@@ -167,7 +174,6 @@ public class TerminalUI implements ViewService {
 
 	/**
 	 * Gets a {@code theme name}.
-	 *
 	 * @return a theme name
 	 */
 	public String getThemeName() {
@@ -176,7 +182,6 @@ public class TerminalUI implements ViewService {
 
 	/**
 	 * Gets a {@link ViewService}.
-	 *
 	 * @return a view service
 	 */
 	public ViewService getViewService() {
@@ -184,9 +189,8 @@ public class TerminalUI implements ViewService {
 	}
 
 	/**
-	 * Configure view for {@link EventLoop}, {@link ThemeResolver},
-	 * {@code theme name} and {@link ViewService}.
-	 *
+	 * Configure view for {@link EventLoop}, {@link ThemeResolver}, {@code theme name} and
+	 * {@link ViewService}.
 	 * @param view the view to configure
 	 */
 	public void configure(View view) {
@@ -235,9 +239,8 @@ public class TerminalUI implements ViewService {
 	};
 
 	/**
-	 * Sets a view rect function for full screen mode. Default behaviour uses {@link Rectangle}
-	 * area equal to terminal size.
-	 *
+	 * Sets a view rect function for full screen mode. Default behaviour uses
+	 * {@link Rectangle} area equal to terminal size.
 	 * @param fullScreenViewRect the view rect function
 	 */
 	public void setFullScreenViewRect(BiFunction<Terminal, View, Rectangle> fullScreenViewRect) {
@@ -246,10 +249,9 @@ public class TerminalUI implements ViewService {
 	}
 
 	/**
-	 * Sets a view rect function for full screen mode. Default behaviour uses {@link Rectangle}
-	 * from {@code rootView} if it's not empty, otherwise uses zero based area with
-	 * width matching terminal columns and height matching 5.
-	 *
+	 * Sets a view rect function for full screen mode. Default behaviour uses
+	 * {@link Rectangle} from {@code rootView} if it's not empty, otherwise uses zero
+	 * based area with width matching terminal columns and height matching 5.
 	 * @param nonfullScreenViewRect the view rect function
 	 */
 	public void setNonfullScreenViewRect(BiFunction<Terminal, View, Rectangle> nonfullScreenViewRect) {
@@ -284,7 +286,8 @@ public class TerminalUI implements ViewService {
 		int targetCursorPos = 0;
 		if (virtualDisplay.isShowCursor()) {
 			terminal.puts(Capability.cursor_normal);
-			targetCursorPos = size.cursorPos(virtualDisplay.getCursorPosition().y(), virtualDisplay.getCursorPosition().x());
+			targetCursorPos = size.cursorPos(virtualDisplay.getCursorPosition().y(),
+					virtualDisplay.getCursorPosition().x());
 			log.debug("Display targetCursorPos {}", targetCursorPos);
 		}
 		else {
@@ -299,32 +302,26 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void registerEventHandling() {
-		eventLoop.onDestroy(eventLoop.signalEvents()
-			.subscribe(event -> {
+		eventLoop.onDestroy(eventLoop.signalEvents().subscribe(event -> {
+			display();
+		}));
+
+		eventLoop.onDestroy(eventLoop.systemEvents().subscribe(event -> {
+			if ("redraw".equals(event)) {
 				display();
-			}));
+			}
+			else if ("int".equals(event)) {
+				this.terminal.raise(Signal.INT);
+			}
+		}));
 
-		eventLoop.onDestroy(eventLoop.systemEvents()
-			.subscribe(event -> {
-				if ("redraw".equals(event)) {
-					display();
-				}
-				else if ("int".equals(event)) {
-					this.terminal.raise(Signal.INT);
-				}
-			}));
+		eventLoop.onDestroy(eventLoop.keyEvents().doOnNext(m -> {
+			handleKeyEvent(m);
+		}).subscribe());
 
-		eventLoop.onDestroy(eventLoop.keyEvents()
-			.doOnNext(m -> {
-				handleKeyEvent(m);
-			})
-			.subscribe());
-
-		eventLoop.onDestroy(eventLoop.mouseEvents()
-			.doOnNext(m -> {
-				handleMouseEvent(m);
-			})
-			.subscribe());
+		eventLoop.onDestroy(eventLoop.mouseEvents().doOnNext(m -> {
+			handleMouseEvent(m);
+		}).subscribe());
 	}
 
 	private void handleKeyEvent(KeyEvent event) {
@@ -422,7 +419,7 @@ public class TerminalUI implements ViewService {
 	}
 
 	private boolean read(BindingReader bindingReader, KeyMap<Integer> keyMap) {
-        Thread readThread = Thread.currentThread();
+		Thread readThread = Thread.currentThread();
 		terminal.handle(Signal.INT, signal -> {
 			log.debug("Handling signal {}", signal);
 			readThread.interrupt();
@@ -432,8 +429,9 @@ public class TerminalUI implements ViewService {
 		try {
 			operation = bindingReader.readBinding(keyMap);
 			log.debug("Read got operation {}", operation);
-        } catch (IOError e) {
-            // Ignore Ctrl+C interrupts and just exit the loop
+		}
+		catch (IOError e) {
+			// Ignore Ctrl+C interrupts and just exit the loop
 			log.trace("Read binding error {}", e);
 		}
 		if (operation == null) {
@@ -472,7 +470,8 @@ public class TerminalUI implements ViewService {
 		eventLoop.dispatch(ShellMessageBuilder.ofMouseEvent(event));
 	}
 
-    private void mouseEvent() {
+	private void mouseEvent() {
 		dispatchMouse(MouseEvent.of(terminal.readMouseEvent()));
-    }
+	}
+
 }

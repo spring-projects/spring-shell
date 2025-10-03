@@ -32,10 +32,9 @@ public class ProgressViewSnippets {
 
 		void dump2() {
 			// tag::allmixedalignandsize[]
-			ProgressView view = new ProgressView(
-				ProgressViewItem.ofText(10, HorizontalAlign.LEFT),
-				ProgressViewItem.ofSpinner(3, HorizontalAlign.LEFT),
-				ProgressViewItem.ofPercent(0, HorizontalAlign.RIGHT));
+			ProgressView view = new ProgressView(ProgressViewItem.ofText(10, HorizontalAlign.LEFT),
+					ProgressViewItem.ofSpinner(3, HorizontalAlign.LEFT),
+					ProgressViewItem.ofPercent(0, HorizontalAlign.RIGHT));
 			view.start();
 			// end::allmixedalignandsize[]
 		}

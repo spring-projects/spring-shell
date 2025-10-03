@@ -19,10 +19,9 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 /**
- * Interface to be implemented by objects that can resolve exceptions thrown
- * during command processing, in the typical case error response. Implementors
- * are typically registered as beans in the application context or directly
- * with command.
+ * Interface to be implemented by objects that can resolve exceptions thrown during
+ * command processing, in the typical case error response. Implementors are typically
+ * registered as beans in the application context or directly with command.
  *
  * @author Janne Valkealahti
  */
@@ -35,10 +34,10 @@ public interface CommandExceptionResolver {
 
 	/**
 	 * Try to resolve the given exception that got thrown during command processing.
-	 *
 	 * @param ex the exception
-	 * @return a corresponding {@code HandlingResult} framework to handle, or
-	 *         {@code null} for default processing in the resolution chain
+	 * @return a corresponding {@code HandlingResult} framework to handle, or {@code null}
+	 * for default processing in the resolution chain
 	 */
 	CommandHandlingResult resolve(Exception ex);
+
 }

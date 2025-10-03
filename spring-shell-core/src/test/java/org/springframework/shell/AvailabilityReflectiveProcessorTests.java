@@ -32,17 +32,17 @@ class AvailabilityReflectiveProcessorTests {
 
 	@Test
 	void registerReflectiveHintsForMethod() throws NoSuchMethodException {
-			processor.registerReflectionHints(hints, SampleBean.class);
-			assertThat(hints.typeHints()).singleElement().satisfies(typeHint -> {
-					assertThat(typeHint.getType()).isEqualTo(TypeReference.of(SampleBean.class));
-					assertThat(typeHint.getMemberCategories()).isEmpty();
-					assertThat(typeHint.constructors()).isEmpty();
-					assertThat(typeHint.fields()).isEmpty();
-					assertThat(typeHint.methods()).singleElement().satisfies(methodHint -> {
-							assertThat(methodHint.getName()).isEqualTo("test");
-							assertThat(methodHint.getMode()).isEqualTo(ExecutableMode.INVOKE);
-					});
+		processor.registerReflectionHints(hints, SampleBean.class);
+		assertThat(hints.typeHints()).singleElement().satisfies(typeHint -> {
+			assertThat(typeHint.getType()).isEqualTo(TypeReference.of(SampleBean.class));
+			assertThat(typeHint.getMemberCategories()).isEmpty();
+			assertThat(typeHint.constructors()).isEmpty();
+			assertThat(typeHint.fields()).isEmpty();
+			assertThat(typeHint.methods()).singleElement().satisfies(methodHint -> {
+				assertThat(methodHint.getName()).isEqualTo("test");
+				assertThat(methodHint.getMode()).isEqualTo(ExecutableMode.INVOKE);
 			});
+		});
 	}
 
 	@Reflective(AvailabilityReflectiveProcessor.class)
@@ -51,5 +51,7 @@ class AvailabilityReflectiveProcessorTests {
 		public Availability test() {
 			return null;
 		}
+
 	}
+
 }

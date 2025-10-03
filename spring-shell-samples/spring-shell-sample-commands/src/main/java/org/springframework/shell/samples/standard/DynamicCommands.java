@@ -62,4 +62,5 @@ public class DynamicCommands {
 		return connected && authenticated ? Availability.available()
 				: Availability.unavailable("you failed to authenticate. Try 'sesame'.");
 	}
+
 }

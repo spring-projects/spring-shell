@@ -30,9 +30,9 @@ class ExceptionResolverMethodResolverTests {
 		ExceptionResolverMethodResolver resolver = new ExceptionResolverMethodResolver(InAnnotation.class);
 		assertThat(resolver.hasExceptionMappings()).isTrue();
 		assertThat(resolver.resolveMethod(new RuntimeException()))
-				.isSameAs(ReflectionUtils.findMethod(InAnnotation.class, "errorHandler"));
+			.isSameAs(ReflectionUtils.findMethod(InAnnotation.class, "errorHandler"));
 		assertThat(resolver.resolveMethod(new IOException()))
-				.isSameAs(ReflectionUtils.findMethod(InAnnotation.class, "errorHandler"));
+			.isSameAs(ReflectionUtils.findMethod(InAnnotation.class, "errorHandler"));
 	}
 
 	private static class InAnnotation {
@@ -40,6 +40,7 @@ class ExceptionResolverMethodResolverTests {
 		@ExceptionResolver({ RuntimeException.class, IOException.class })
 		void errorHandler() {
 		}
+
 	}
 
 	@Test
@@ -47,9 +48,9 @@ class ExceptionResolverMethodResolverTests {
 		ExceptionResolverMethodResolver resolver = new ExceptionResolverMethodResolver(InMethodParameter.class);
 		assertThat(resolver.hasExceptionMappings()).isTrue();
 		assertThat(resolver.resolveMethod(new RuntimeException())).isSameAs(ReflectionUtils
-				.findMethod(InMethodParameter.class, "errorHandler", RuntimeException.class, IOException.class));
+			.findMethod(InMethodParameter.class, "errorHandler", RuntimeException.class, IOException.class));
 		assertThat(resolver.resolveMethod(new IOException())).isSameAs(ReflectionUtils
-				.findMethod(InMethodParameter.class, "errorHandler", RuntimeException.class, IOException.class));
+			.findMethod(InMethodParameter.class, "errorHandler", RuntimeException.class, IOException.class));
 	}
 
 	private static class InMethodParameter {
@@ -57,6 +58,7 @@ class ExceptionResolverMethodResolverTests {
 		@ExceptionResolver
 		void errorHandler(RuntimeException e1, IOException e2) {
 		}
+
 	}
 
 }

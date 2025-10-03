@@ -17,8 +17,8 @@
 package org.springframework.shell.table;
 
 /**
- * A SizeConstraints implementation that splits lines at space boundaries
- * and returns an extent with minimal and maximal width requirements.
+ * A SizeConstraints implementation that splits lines at space boundaries and returns an
+ * extent with minimal and maximal width requirements.
  *
  * @author Eric Bottard
  */
@@ -37,4 +37,5 @@ public class AutoSizeConstraints implements SizeConstraints {
 		}
 		return new Extent(min, max);
 	}
+
 }

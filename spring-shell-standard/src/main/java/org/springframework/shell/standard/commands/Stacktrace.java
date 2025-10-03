@@ -32,17 +32,25 @@ import org.springframework.shell.standard.ShellMethod;
 public class Stacktrace extends AbstractShellComponent {
 
 	/**
-	 * Marker interface for beans providing {@literal stacktrace} functionality to the shell.
+	 * Marker interface for beans providing {@literal stacktrace} functionality to the
+	 * shell.
 	 *
-	 * <p>To override the stacktrace command, simply register your own bean implementing that interface
-	 * and the standard implementation will back off.</p>
+	 * <p>
+	 * To override the stacktrace command, simply register your own bean implementing that
+	 * interface and the standard implementation will back off.
+	 * </p>
 	 *
-	 * <p>To disable the {@literal stacktrace} command entirely, set the {@literal spring.shell.command.stacktrace.enabled=false}
-	 * property in the environment.</p>
+	 * <p>
+	 * To disable the {@literal stacktrace} command entirely, set the
+	 * {@literal spring.shell.command.stacktrace.enabled=false} property in the
+	 * environment.
+	 * </p>
 	 *
 	 * @author Eric Bottard
 	 */
-	public interface Command {}
+	public interface Command {
+
+	}
 
 	private ObjectProvider<ThrowableResultHandler> throwableResultHandler;
 
@@ -51,8 +59,7 @@ public class Stacktrace extends AbstractShellComponent {
 	}
 
 	@ShellMethod(key = ThrowableResultHandler.DETAILS_COMMAND_NAME,
-			value = "Display the full stacktrace of the last error.",
-			interactionMode = InteractionMode.INTERACTIVE)
+			value = "Display the full stacktrace of the last error.", interactionMode = InteractionMode.INTERACTIVE)
 	public void stacktrace() {
 		ThrowableResultHandler handler = throwableResultHandler.getIfAvailable();
 		if (handler != null) {
@@ -61,4 +68,5 @@ public class Stacktrace extends AbstractShellComponent {
 			}
 		}
 	}
+
 }

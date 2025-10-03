@@ -49,13 +49,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ListViewTests extends AbstractViewTests {
 
-	private final static ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF
-		= new ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>>() {};
+	private final static ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF = new ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>>() {
+	};
 
 	private static final String SELECTED_FIELD = "selected";
+
 	private static final String START_FIELD = "start";
+
 	private static final String POSITION_FIELD = "pos";
+
 	private static final String SCROLL_METHOD = "scrollIndex";
+
 	ListView<String> view;
 
 	ThemeResolver themeResolver;
@@ -89,7 +93,6 @@ class ListViewTests extends AbstractViewTests {
 		themeResolver = new ThemeResolver(themeRegistry, "default");
 	}
 
-
 	@Nested
 	class Events {
 
@@ -100,12 +103,8 @@ class ListViewTests extends AbstractViewTests {
 			view.setRect(0, 0, 80, 24);
 			view.setItems(Arrays.asList("item1", "item2"));
 
-			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop
-					.viewEvents(LISTVIEW_STRING_TYPEREF);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop.viewEvents(LISTVIEW_STRING_TYPEREF);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			KeyEvent eventDown = KeyEvent.of(Key.CursorDown);
 			KeyHandlerResult result = view.getKeyHandler().handle(KeyHandler.argsOf(eventDown));
@@ -125,12 +124,8 @@ class ListViewTests extends AbstractViewTests {
 			view.setRect(0, 0, 80, 24);
 			view.setItems(Arrays.asList("item1", "item2"));
 
-			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop
-					.viewEvents(LISTVIEW_STRING_TYPEREF);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop.viewEvents(LISTVIEW_STRING_TYPEREF);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			MouseEvent eventDown = mouseWheelDown(0, 0);
 			MouseHandlerResult result = view.getMouseHandler().handle(MouseHandler.argsOf(eventDown));
@@ -150,12 +145,8 @@ class ListViewTests extends AbstractViewTests {
 			view.setRect(0, 0, 80, 24);
 			view.setItems(Arrays.asList("item1", "item2"));
 
-			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop
-					.viewEvents(LISTVIEW_STRING_TYPEREF);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop.viewEvents(LISTVIEW_STRING_TYPEREF);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			MouseEvent event01 = mouseClick(0, 1);
 			view.getMouseHandler().handle(MouseHandler.argsOf(event01));
@@ -535,6 +526,7 @@ class ListViewTests extends AbstractViewTests {
 				writer.text(String.format("pre-%s-post", getItem()), rect.x(), rect.y());
 				writer.background(rect, getBackgroundColor());
 			}
+
 		}
 
 	}

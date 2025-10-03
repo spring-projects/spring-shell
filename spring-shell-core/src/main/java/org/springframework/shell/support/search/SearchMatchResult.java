@@ -24,42 +24,36 @@ public interface SearchMatchResult {
 
 	/**
 	 * Get start of a match.
-	 *
 	 * @return a start of a match
 	 */
 	int getStart();
 
 	/**
 	 * Get end of a match.
-	 *
 	 * @return a end of a matchh
 	 */
 	int getEnd();
 
 	/**
 	 * Get score of a match.
-	 *
 	 * @return a score of a match
 	 */
 	int getScore();
 
 	/**
 	 * Get positions of a match.
-	 *
 	 * @return a positions of a match
 	 */
 	int[] getPositions();
 
 	/**
 	 * Get {@link SearchMatchAlgorithm} handling a search.
-	 *
 	 * @return {@link SearchMatchAlgorithm} handling a search
 	 */
 	SearchMatchAlgorithm getAlgorithm();
 
 	/**
 	 * Construct {@link SearchMatchResult} with given parameters.
-	 *
 	 * @param start the start
 	 * @param end the end
 	 * @param score the score
@@ -81,9 +75,13 @@ public interface SearchMatchResult {
 	static class DefaultResult implements SearchMatchResult {
 
 		int start;
+
 		int end;
+
 		int score;
+
 		int[] positions;
+
 		SearchMatchAlgorithm algo;
 
 		DefaultResult(int start, int end, int score, int[] positions, SearchMatchAlgorithm algo) {
@@ -118,5 +116,7 @@ public interface SearchMatchResult {
 		public SearchMatchAlgorithm getAlgorithm() {
 			return algo;
 		}
+
 	}
+
 }

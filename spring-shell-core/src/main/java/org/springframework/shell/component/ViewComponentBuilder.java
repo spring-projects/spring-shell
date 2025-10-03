@@ -28,7 +28,9 @@ import org.springframework.shell.component.view.control.View;
 public class ViewComponentBuilder {
 
 	private final TerminalUIBuilder terminalUIBuilder;
+
 	private final ViewComponentExecutor viewComponentExecutor;
+
 	private final Terminal terminal;
 
 	public ViewComponentBuilder(TerminalUIBuilder terminalUIBuilder, ViewComponentExecutor viewComponentExecutor,
@@ -40,7 +42,6 @@ public class ViewComponentBuilder {
 
 	/**
 	 * Build a new {@link ViewComponent} instance and configure it using this builder.
-	 *
 	 * @param view the view to use with view component
 	 * @return a configured {@link ViewComponent} instance.
 	 */

@@ -87,6 +87,7 @@ public class ErrorHandlingCommands {
 			writer.println(String.format("Hi, handled custom exception %s", e));
 			writer.flush();
 		}
+
 	}
 
 	@Component
@@ -94,46 +95,47 @@ public class ErrorHandlingCommands {
 
 		@Bean
 		CommandRegistration testErrorHandlingRegistration() {
-			return getBuilder()
-				.command(REG, "error-handling")
+			return getBuilder().command(REG, "error-handling")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.required()
-					.and()
+				.longNames("arg1")
+				.required()
+				.and()
 				.withErrorHandling()
-					.resolver(new CustomExceptionResolver())
-					.and()
+				.resolver(new CustomExceptionResolver())
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						if ("throw1".equals(arg1)) {
-							throw new CustomException1();
-						}
-						if ("throw2".equals(arg1)) {
-							throw new CustomException2(11);
-						}
-						if ("throw3".equals(arg1)) {
-							throw new RuntimeException();
-						}
-						if ("throw4".equals(arg1)) {
-							throw new IllegalArgumentException();
-						}
-						if ("throw5".equals(arg1)) {
-							throw new CustomException3();
-						}
-						if ("throw6".equals(arg1)) {
-							throw new CustomException4();
-						}
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					if ("throw1".equals(arg1)) {
+						throw new CustomException1();
+					}
+					if ("throw2".equals(arg1)) {
+						throw new CustomException2(11);
+					}
+					if ("throw3".equals(arg1)) {
+						throw new RuntimeException();
+					}
+					if ("throw4".equals(arg1)) {
+						throw new IllegalArgumentException();
+					}
+					if ("throw5".equals(arg1)) {
+						throw new CustomException3();
+					}
+					if ("throw6".equals(arg1)) {
+						throw new CustomException4();
+					}
 
-						return "Hello " + arg1;
-					})
-					.and()
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
 
 	private static class CustomException1 extends RuntimeException {
+
 	}
 
 	private static class CustomException2 extends RuntimeException implements ExitCodeGenerator {
@@ -148,12 +150,15 @@ public class ErrorHandlingCommands {
 		public int getExitCode() {
 			return code;
 		}
+
 	}
 
 	private static class CustomException3 extends RuntimeException {
+
 	}
 
 	private static class CustomException4 extends RuntimeException {
+
 	}
 
 	private static class CustomExceptionResolver implements CommandExceptionResolver {
@@ -175,5 +180,7 @@ public class ErrorHandlingCommands {
 			}
 			return null;
 		}
+
 	}
+
 }

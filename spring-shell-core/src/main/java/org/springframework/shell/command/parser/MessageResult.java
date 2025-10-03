@@ -24,7 +24,6 @@ public record MessageResult(ParserMessage parserMessage, int position, Object[] 
 
 	/**
 	 * Constructs {@code MessageResult} with parser message, position and inserts.
-	 *
 	 * @param parserMessage the parser message
 	 * @param position the position
 	 * @param inserts the inserts
@@ -36,7 +35,6 @@ public record MessageResult(ParserMessage parserMessage, int position, Object[] 
 
 	/**
 	 * Gets a formatted message using position and inserts.
-	 *
 	 * @return a formatted message
 	 */
 	public String getMessage() {

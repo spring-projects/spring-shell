@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MouseHandlerTests {
 
 	private static final MouseEvent EVENT = MouseEvent.of(0, 0, 0);
+
 	private static final MouseHandlerArgs ARGS = MouseHandler.argsOf(EVENT);
 
 	@Test
@@ -59,6 +60,7 @@ class MouseHandlerTests {
 	private static class TestMouseHandler implements MouseHandler {
 
 		boolean willConsume;
+
 		int calls;
 
 		TestMouseHandler(boolean willConsume) {

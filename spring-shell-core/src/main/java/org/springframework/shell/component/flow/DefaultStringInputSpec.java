@@ -27,4 +27,5 @@ public class DefaultStringInputSpec extends BaseStringInput {
 	public DefaultStringInputSpec(BaseBuilder builder, String id) {
 		super(builder, id);
 	}
+
 }

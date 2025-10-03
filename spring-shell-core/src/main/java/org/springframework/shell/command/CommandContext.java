@@ -35,14 +35,12 @@ public interface CommandContext {
 
 	/**
 	 * Gets a raw args passed into a currently executing command.
-	 *
 	 * @return raw command arguments
 	 */
 	String[] getRawArgs();
 
 	/**
 	 * Gets if option has been mapped.
-	 *
 	 * @param name the option name
 	 * @return true if option has been mapped, false otherwise
 	 */
@@ -50,21 +48,18 @@ public interface CommandContext {
 
 	/**
 	 * Gets a command option parser results.
-	 *
 	 * @return the command option parser results
 	 */
 	CommandParserResults getParserResults();
 
 	/**
 	 * Gets a command registration.
-	 *
 	 * @return the command registration
 	 */
 	CommandRegistration getCommandRegistration();
 
 	/**
 	 * Gets an mapped option value.
-	 *
 	 * @param <T> the type to map to
 	 * @param name the option name
 	 * @return mapped value
@@ -73,21 +68,18 @@ public interface CommandContext {
 
 	/**
 	 * Gets a terminal.
-	 *
 	 * @return a terminal
 	 */
 	Terminal getTerminal();
 
 	/**
 	 * Gets a {@link ShellContext} associated with {@link CommandContext}.
-	 *
 	 * @return a shell context
 	 */
 	ShellContext getShellContext();
 
 	/**
 	 * Gets an instance of a default {@link CommandContext}.
-	 *
 	 * @param args the arguments
 	 * @param results the results
 	 * @param terminal the terminal
@@ -105,9 +97,13 @@ public interface CommandContext {
 	static class DefaultCommandContext implements CommandContext {
 
 		private final String[] args;
+
 		private final CommandParserResults results;
+
 		private final Terminal terminal;
+
 		private final CommandRegistration commandRegistration;
+
 		private final ShellContext shellContext;
 
 		DefaultCommandContext(String[] args, CommandParserResults results, Terminal terminal,
@@ -160,17 +156,17 @@ public interface CommandContext {
 		}
 
 		private Optional<CommandParserResult> find(String name) {
-			return results.results().stream()
-				.filter(r -> {
-					Stream<String> l = Arrays.asList(r.option().getLongNames()).stream();
-					Stream<String> lm = Arrays.asList(r.option().getLongNamesModified()).stream();
-					Stream<String> s = Arrays.asList(r.option().getShortNames()).stream().map(n -> Character.toString(n));
-					return Stream.concat(Stream.concat(l, lm), s)
-						.filter(o -> ObjectUtils.nullSafeEquals(o, name))
-						.findFirst()
-						.isPresent();
-				})
-				.findFirst();
+			return results.results().stream().filter(r -> {
+				Stream<String> l = Arrays.asList(r.option().getLongNames()).stream();
+				Stream<String> lm = Arrays.asList(r.option().getLongNamesModified()).stream();
+				Stream<String> s = Arrays.asList(r.option().getShortNames()).stream().map(n -> Character.toString(n));
+				return Stream.concat(Stream.concat(l, lm), s)
+					.filter(o -> ObjectUtils.nullSafeEquals(o, name))
+					.findFirst()
+					.isPresent();
+			}).findFirst();
 		}
+
 	}
+
 }

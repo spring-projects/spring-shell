@@ -19,14 +19,16 @@ package org.springframework.shell.test.jediterm.terminal.emulator.charset;
  * @author jediterm authors
  */
 public class GraphicSetState {
+
 	private final GraphicSet[] myGraphicSets;
 
-	//in-use table graphic left (GL)
+	// in-use table graphic left (GL)
 	private GraphicSet myGL;
-	//in-use table graphic right (GR)
+
+	// in-use table graphic right (GR)
 	private GraphicSet myGR;
 
-	//Override for next char (used by shift-in and shift-out)
+	// Override for next char (used by shift-in and shift-out)
 	private GraphicSet myGlOverride;
 
 	public GraphicSetState() {
@@ -40,14 +42,12 @@ public class GraphicSetState {
 
 	/**
 	 * Designates the given graphic set to the character set designator.
-	 *
 	 * @param graphicSet the graphic set to designate;
 	 * @param designator the designator of the character set.
 	 */
-	public void designateGraphicSet( GraphicSet graphicSet, char designator) {
+	public void designateGraphicSet(GraphicSet graphicSet, char designator) {
 		graphicSet.setDesignation(CharacterSet.valueOf(designator));
 	}
-
 
 	public void designateGraphicSet(int num, CharacterSet characterSet) {
 		getGraphicSet(num).setDesignation(characterSet);
@@ -76,7 +76,6 @@ public class GraphicSetState {
 
 	/**
 	 * Returns the current graphic set (one of four).
-	 *
 	 * @param index the index of the graphic set, 0..3.
 	 */
 
@@ -86,7 +85,6 @@ public class GraphicSetState {
 
 	/**
 	 * Returns the mapping for the given character.
-	 *
 	 * @param ch the character to map.
 	 * @return the mapped character.
 	 */
@@ -96,7 +94,6 @@ public class GraphicSetState {
 
 	/**
 	 * Overrides the GL graphic set for the next written character.
-	 *
 	 * @param index the graphic set index, {@literal >= 0 && < 3}.
 	 */
 	public void overrideGL(int index) {
@@ -117,7 +114,6 @@ public class GraphicSetState {
 
 	/**
 	 * Selects the graphic set for GL.
-	 *
 	 * @param index the graphic set index, {@literal >= 0 && <= 3}.
 	 */
 	public void setGL(int index) {
@@ -126,15 +122,14 @@ public class GraphicSetState {
 
 	/**
 	 * Selects the graphic set for GR.
-	 *
 	 * @param index the graphic set index, {@literal >= 0 && <= 3}.
 	 */
 	public void setGR(int index) {
 		myGR = getGraphicSet(index);
 	}
 
-
 	public int getGLOverrideIndex() {
 		return myGlOverride != null ? myGlOverride.getIndex() : -1;
 	}
+
 }

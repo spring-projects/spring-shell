@@ -61,10 +61,10 @@ public class PartsTextRenderer implements AttributeRenderer<PartsText> {
 					text = text.substring(0, text.length() - 1) + "..";
 				}
 				else if (diff == 0) {
-					text = String.format(locale, "%1." + (text.length() - 2) + "s.." , text);
+					text = String.format(locale, "%1." + (text.length() - 2) + "s..", text);
 				}
 				else {
-					text = String.format(locale, "%1." + (l - dots) + "s.." , text);
+					text = String.format(locale, "%1." + (l - dots) + "s..", text);
 				}
 				doBreak = true;
 			}
@@ -78,7 +78,7 @@ public class PartsTextRenderer implements AttributeRenderer<PartsText> {
 					text = "..";
 				}
 				else {
-					text = String.format(locale, "%1." + l + "s.." , text);
+					text = String.format(locale, "%1." + l + "s..", text);
 				}
 				doBreak = true;
 			}
@@ -95,46 +95,53 @@ public class PartsTextRenderer implements AttributeRenderer<PartsText> {
 	}
 
 	private static class Values {
+
 		Integer width;
+
 		Integer prefix;
+
 		String textStyle;
+
 		String matchStyle;
 
 		public void setWidth(Integer width) {
 			this.width = width;
 		}
+
 		public void setPrefix(Integer prefix) {
 			this.prefix = prefix;
 		}
+
 		public void setTextStyle(String textStyle) {
 			this.textStyle = textStyle;
 		}
+
 		public void setMatchStyle(String matchStyle) {
 			this.matchStyle = matchStyle;
 		}
+
 	}
 
 	private static Values mapValues(String expression) {
 		Values values = new Values();
-		Stream.of(expression.split(","))
-			.map(String::trim)
-			.forEach(v -> {
-				String[] split = v.split(":", 2);
-				if (split.length == 2) {
-					if ("width".equals(split[0])) {
-						values.setWidth(Integer.parseInt(split[1]));
-					}
-					else if ("prefix".equals(split[0])) {
-						values.setPrefix(Integer.parseInt(split[1]));
-					}
-					else if ("textStyle".equals(split[0])) {
-						values.setTextStyle(split[1]);
-					}
-					else if ("matchStyle".equals(split[0])) {
-						values.setMatchStyle(split[1]);
-					}
+		Stream.of(expression.split(",")).map(String::trim).forEach(v -> {
+			String[] split = v.split(":", 2);
+			if (split.length == 2) {
+				if ("width".equals(split[0])) {
+					values.setWidth(Integer.parseInt(split[1]));
 				}
-			});
+				else if ("prefix".equals(split[0])) {
+					values.setPrefix(Integer.parseInt(split[1]));
+				}
+				else if ("textStyle".equals(split[0])) {
+					values.setTextStyle(split[1]);
+				}
+				else if ("matchStyle".equals(split[0])) {
+					values.setMatchStyle(split[1]);
+				}
+			}
+		});
 		return values;
 	}
+
 }

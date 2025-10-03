@@ -40,78 +40,79 @@ import org.springframework.shell.style.ThemeResolver;
  */
 public abstract class AbstractShellComponent implements ApplicationContextAware, InitializingBean, ResourceLoaderAware {
 
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-    private ResourceLoader resourceLoader;
+	private ResourceLoader resourceLoader;
 
-    private ObjectProvider<Shell> shellProvider;
+	private ObjectProvider<Shell> shellProvider;
 
-    private ObjectProvider<Terminal> terminalProvider;
+	private ObjectProvider<Terminal> terminalProvider;
 
-    private ObjectProvider<CommandCatalog> commandCatalogProvider;
+	private ObjectProvider<CommandCatalog> commandCatalogProvider;
 
-    private ObjectProvider<CompletionResolver> completionResolverProvider;
+	private ObjectProvider<CompletionResolver> completionResolverProvider;
 
-    private ObjectProvider<TemplateExecutor> templateExecutorProvider;
+	private ObjectProvider<TemplateExecutor> templateExecutorProvider;
 
-    private ObjectProvider<ThemeResolver> themeResolverProvider;
+	private ObjectProvider<ThemeResolver> themeResolverProvider;
 
-    private ObjectProvider<ViewComponentBuilder> viewComponentBuilderProvider;
+	private ObjectProvider<ViewComponentBuilder> viewComponentBuilderProvider;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
-    @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        shellProvider = applicationContext.getBeanProvider(Shell.class);
-        terminalProvider = applicationContext.getBeanProvider(Terminal.class);
-        commandCatalogProvider = applicationContext.getBeanProvider(CommandCatalog.class);
-        completionResolverProvider = applicationContext.getBeanProvider(CompletionResolver.class);
-        templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
-        themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
-        viewComponentBuilderProvider = applicationContext.getBeanProvider(ViewComponentBuilder.class);
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		shellProvider = applicationContext.getBeanProvider(Shell.class);
+		terminalProvider = applicationContext.getBeanProvider(Terminal.class);
+		commandCatalogProvider = applicationContext.getBeanProvider(CommandCatalog.class);
+		completionResolverProvider = applicationContext.getBeanProvider(CompletionResolver.class);
+		templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
+		themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
+		viewComponentBuilderProvider = applicationContext.getBeanProvider(ViewComponentBuilder.class);
+	}
 
-    protected ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
+	protected ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
 
-    protected ResourceLoader getResourceLoader() {
-        return resourceLoader;
-    }
+	protected ResourceLoader getResourceLoader() {
+		return resourceLoader;
+	}
 
-    protected Shell getShell() {
-        return shellProvider.getObject();
-    }
+	protected Shell getShell() {
+		return shellProvider.getObject();
+	}
 
-    protected Terminal getTerminal() {
-        return terminalProvider.getObject();
-    }
+	protected Terminal getTerminal() {
+		return terminalProvider.getObject();
+	}
 
-    protected CommandCatalog getCommandCatalog() {
-        return commandCatalogProvider.getObject();
-    }
+	protected CommandCatalog getCommandCatalog() {
+		return commandCatalogProvider.getObject();
+	}
 
-    protected Stream<CompletionResolver> getCompletionResolver() {
-        return completionResolverProvider.orderedStream();
-    }
+	protected Stream<CompletionResolver> getCompletionResolver() {
+		return completionResolverProvider.orderedStream();
+	}
 
-    protected TemplateExecutor getTemplateExecutor() {
-        return templateExecutorProvider.getObject();
-    }
+	protected TemplateExecutor getTemplateExecutor() {
+		return templateExecutorProvider.getObject();
+	}
 
-    protected ThemeResolver getThemeResolver() {
-        return themeResolverProvider.getObject();
-    }
+	protected ThemeResolver getThemeResolver() {
+		return themeResolverProvider.getObject();
+	}
 
-    protected ViewComponentBuilder getViewComponentBuilder() {
-        return viewComponentBuilderProvider.getObject();
-    }
+	protected ViewComponentBuilder getViewComponentBuilder() {
+		return viewComponentBuilderProvider.getObject();
+	}
+
 }

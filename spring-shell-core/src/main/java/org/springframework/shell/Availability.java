@@ -26,26 +26,27 @@ import org.springframework.util.Assert;
  */
 public class Availability {
 
-    private final String reason;
+	private final String reason;
 
-    private Availability(String reason) {
-        this.reason = reason;
-    }
+	private Availability(String reason) {
+		this.reason = reason;
+	}
 
-    public static Availability available() {
-        return new Availability(null);
-    }
+	public static Availability available() {
+		return new Availability(null);
+	}
 
-    public static Availability unavailable(String reason) {
-        Assert.notNull(reason, "Reason for not being available must be provided");
-        return new Availability(reason);
-    }
+	public static Availability unavailable(String reason) {
+		Assert.notNull(reason, "Reason for not being available must be provided");
+		return new Availability(reason);
+	}
 
-    public boolean isAvailable() {
-        return reason == null;
-    }
+	public boolean isAvailable() {
+		return reason == null;
+	}
 
-    public String getReason() {
-        return reason;
-    }
+	public String getReason() {
+		return reason;
+	}
+
 }

@@ -26,7 +26,9 @@ import org.springframework.shell.component.flow.ComponentFlow.BaseBuilder;
 public abstract class BaseInput<T extends BaseInputSpec<T>> implements Ordered, BaseInputSpec<T> {
 
 	private final BaseBuilder builder;
+
 	private final String id;
+
 	private int order;
 
 	BaseInput(BaseBuilder builder, String id) {
@@ -56,4 +58,5 @@ public abstract class BaseInput<T extends BaseInputSpec<T>> implements Ordered, 
 	public String getId() {
 		return id;
 	}
+
 }

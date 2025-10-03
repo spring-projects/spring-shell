@@ -36,4 +36,5 @@ class ShellTestTerminalDimensionsIntegrationTests {
 		assertThat(session.getTerminal().getTerminalWidth()).isEqualTo(81);
 		assertThat(session.getTerminal().getTerminalHeight()).isEqualTo(25);
 	}
+
 }

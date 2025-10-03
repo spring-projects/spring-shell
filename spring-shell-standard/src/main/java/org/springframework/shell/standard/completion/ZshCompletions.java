@@ -31,11 +31,11 @@ public class ZshCompletions extends AbstractCompletions {
 
 	public String generate(String rootCommand) {
 		CommandModel model = generateCommandModel();
-		return builder()
-				.attribute("name", rootCommand)
-				.attribute("model", model)
-				.group("classpath:completion/zsh.stg")
-				.appendGroup("main")
-				.build();
+		return builder().attribute("name", rootCommand)
+			.attribute("model", model)
+			.group("classpath:completion/zsh.stg")
+			.appendGroup("main")
+			.build();
 	}
+
 }

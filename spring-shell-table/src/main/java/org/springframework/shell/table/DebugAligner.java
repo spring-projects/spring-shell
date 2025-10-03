@@ -39,9 +39,10 @@ public class DebugAligner implements Aligner {
 		Assert.isTrue(result.length == cellHeight, String.format("%s had the wrong number of lines (%d), expected %d",
 				Arrays.asList(result), result.length, cellHeight));
 		for (String s : result) {
-			Assert.isTrue(s.length() == cellWidth, String.format("'%s' had wrong length (%d), expected %d", s, s.length(),
-					cellWidth));
+			Assert.isTrue(s.length() == cellWidth,
+					String.format("'%s' had wrong length (%d), expected %d", s, s.length(), cellWidth));
 		}
 		return result;
 	}
+
 }

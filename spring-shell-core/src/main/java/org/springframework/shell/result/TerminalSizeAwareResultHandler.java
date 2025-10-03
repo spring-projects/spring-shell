@@ -21,7 +21,8 @@ import org.jline.terminal.Terminal;
 import org.springframework.shell.TerminalSizeAware;
 
 /**
- * A ResultHandler that prints {@link TerminalSizeAware} according to the {@link org.jline.terminal.Terminal} size.
+ * A ResultHandler that prints {@link TerminalSizeAware} according to the
+ * {@link org.jline.terminal.Terminal} size.
  *
  * @author Eric Bottard
  */
@@ -36,4 +37,5 @@ public class TerminalSizeAwareResultHandler extends TerminalAwareResultHandler<T
 		CharSequence toPrint = result.render(terminal.getWidth());
 		terminal.writer().println(toPrint);
 	}
+
 }

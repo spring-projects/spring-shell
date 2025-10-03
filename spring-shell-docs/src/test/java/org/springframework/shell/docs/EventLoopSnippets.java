@@ -43,11 +43,9 @@ class EventLoopSnippets {
 			// tag::keyevents[]
 			TerminalUI ui = new TerminalUI(terminal);
 			EventLoop eventLoop = ui.getEventLoop();
-			eventLoop.keyEvents()
-				.doOnNext(event -> {
-					// do something with key event
-				})
-				.subscribe();
+			eventLoop.keyEvents().doOnNext(event -> {
+				// do something with key event
+			}).subscribe();
 			// end::keyevents[]
 		}
 
@@ -58,6 +56,7 @@ class EventLoopSnippets {
 			eventLoop.onDestroy(eventLoop.events().subscribe());
 			// end::ondestroy[]
 		}
+
 	}
 
 }

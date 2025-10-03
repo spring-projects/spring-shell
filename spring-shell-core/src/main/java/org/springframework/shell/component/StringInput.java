@@ -41,8 +41,11 @@ import org.springframework.util.StringUtils;
 public class StringInput extends AbstractTextComponent<String, StringInputContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(StringInput.class);
+
 	private final String defaultValue;
+
 	private StringInputContext currentContext;
+
 	private Character maskCharacter;
 
 	public StringInput(Terminal terminal) {
@@ -63,7 +66,6 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 	/**
 	 * Sets a mask character for input and result value.
-	 *
 	 * @param maskCharacter a mask character
 	 */
 	public void setMaskCharacter(Character maskCharacter) {
@@ -131,56 +133,48 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 		/**
 		 * Gets a default value.
-		 *
 		 * @return a default value
 		 */
 		String getDefaultValue();
 
 		/**
 		 * Sets a default value.
-		 *
 		 * @param defaultValue the default value
 		 */
 		void setDefaultValue(String defaultValue);
 
 		/**
 		 * Sets a mask character.
-		 *
 		 * @param maskCharacter the mask character
 		 */
 		void setMaskCharacter(Character maskCharacter);
 
 		/**
 		 * Gets a masked input.
-		 *
 		 * @return a masked input
 		 */
 		String getMaskedInput();
 
 		/**
 		 * Gets a masked result value.
-		 *
 		 * @return masked result value
 		 */
 		String getMaskedResultValue();
 
 		/**
 		 * Returns flag if there is a mask character defined.
-		 *
 		 * @return true if mask character defined, false otherwise
 		 */
 		boolean hasMaskCharacter();
 
 		/**
 		 * Gets a mask character.
-		 *
 		 * @return a mask character.
 		 */
 		Character getMaskCharacter();
 
 		/**
 		 * Gets an empty {@link StringInputContext}.
-		 *
 		 * @return empty path input context
 		 */
 		public static StringInputContext empty() {
@@ -189,18 +183,19 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 
 		/**
 		 * Gets an {@link StringInputContext}.
-		 *
 		 * @return path input context
 		 */
 		public static StringInputContext of(String defaultValue, Character maskCharacter) {
 			return new DefaultStringInputContext(defaultValue, maskCharacter);
 		}
+
 	}
 
 	private static class DefaultStringInputContext extends BaseTextComponentContext<String, StringInputContext>
 			implements StringInputContext {
 
 		private String defaultValue;
+
 		private Character maskCharacter;
 
 		public DefaultStringInputContext(String defaultValue, Character maskCharacter) {
@@ -264,6 +259,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 				return str;
 			}
 		}
+
 	}
 
 	private class DefaultRenderer implements Function<StringInputContext, List<AttributedString>> {
@@ -272,5 +268,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		public List<AttributedString> apply(StringInputContext context) {
 			return renderTemplateResource(context.toTemplateModel());
 		}
+
 	}
+
 }

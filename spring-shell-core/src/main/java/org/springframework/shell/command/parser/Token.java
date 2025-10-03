@@ -18,8 +18,11 @@ package org.springframework.shell.command.parser;
 public class Token {
 
 	private final static int IMPLICIT_POSITION = -1;
+
 	private final String value;
+
 	private final TokenType type;
+
 	private final int position;
 
 	public Token(String value, TokenType type) {
@@ -56,4 +59,5 @@ public class Token {
 	public String toString() {
 		return "Token [type=" + type + ", position=" + position + ", value=" + value + "]";
 	}
+
 }

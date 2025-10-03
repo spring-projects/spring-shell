@@ -27,8 +27,7 @@ import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.EventLoop.EventLoopProcessor;
 
 /**
- * {@link EventLoopProcessor} converting incoming message into animation tick
- * messages.
+ * {@link EventLoopProcessor} converting incoming message into animation tick messages.
  *
  * @author Janne Valkealahti
  */
@@ -46,16 +45,14 @@ public class AnimationEventLoopProcessor implements EventLoopProcessor {
 
 	@Override
 	public Flux<? extends Message<?>> process(Message<?> message) {
-		return Flux.range(0, 40)
-			.delayElements(Duration.ofMillis(100))
-			.map(i -> {
-				return MessageBuilder
-					.withPayload(i)
-					.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.SYSTEM)
-					.setHeader("animationtick", true)
-					.setHeader("animationfrom", 0)
-					.setHeader("animationto", 9)
-					.build();
-			});
+		return Flux.range(0, 40).delayElements(Duration.ofMillis(100)).map(i -> {
+			return MessageBuilder.withPayload(i)
+				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.SYSTEM)
+				.setHeader("animationtick", true)
+				.setHeader("animationfrom", 0)
+				.setHeader("animationto", 9)
+				.build();
+		});
 	}
+
 }

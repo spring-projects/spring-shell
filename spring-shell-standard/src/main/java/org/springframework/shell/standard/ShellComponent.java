@@ -27,11 +27,12 @@ import org.springframework.shell.AvailabilityReflectiveProcessor;
 import org.springframework.stereotype.Component;
 
 /**
- * Indicates that an annotated class may contain shell methods (themselves annotated with {@link ShellMethod}) that
- * is,
- * methods that may be invoked reflectively by the shell.
+ * Indicates that an annotated class may contain shell methods (themselves annotated with
+ * {@link ShellMethod}) that is, methods that may be invoked reflectively by the shell.
  *
- * <p>This annotation is a specialization of {@link Component}.</p>
+ * <p>
+ * This annotation is a specialization of {@link Component}.
+ * </p>
  *
  * @author Eric Bottard
  * @see Component
@@ -48,4 +49,5 @@ public @interface ShellComponent {
 	 * @return the suggested component name, if any
 	 */
 	String value() default "";
+
 }

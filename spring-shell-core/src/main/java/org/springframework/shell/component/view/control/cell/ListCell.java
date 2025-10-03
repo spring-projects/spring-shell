@@ -26,21 +26,18 @@ public interface ListCell<T> extends Cell<T> {
 
 	/**
 	 * Set {@link ItemStyle}.
-	 *
 	 * @param itemStyle the item style
 	 */
 	void setItemStyle(ItemStyle itemStyle);
 
 	/**
 	 * Set selection state.
-	 *
 	 * @param selected the selection state
 	 */
 	void setSelected(boolean selected);
 
 	/**
 	 * Helper method to build a {@code ListCell}.
-	 *
 	 * @param item the item
 	 * @param itemStyle the item style
 	 * @return a default list cell
@@ -56,4 +53,5 @@ public interface ListCell<T> extends Cell<T> {
 		}
 
 	}
+
 }

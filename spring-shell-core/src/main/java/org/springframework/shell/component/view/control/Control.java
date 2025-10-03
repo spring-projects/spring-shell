@@ -22,8 +22,8 @@ import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.style.ThemeResolver;
 
 /**
- * Base interface for all controls. {@link Control} is able to define a
- * {@link Rectangle} it is bound to and draw into a {@link Screen}.
+ * Base interface for all controls. {@link Control} is able to define a {@link Rectangle}
+ * it is bound to and draw into a {@link Screen}.
  *
  * @author Janne Valkealahti
  * @see View
@@ -33,21 +33,18 @@ public interface Control {
 
 	/**
 	 * Draw {@link Control} into a {@link Screen}.
-	 *
 	 * @param screen the screen
 	 */
 	void draw(Screen screen);
 
 	/**
 	 * Gets rectanle of a bounded box for this {@link View}.
-	 *
 	 * @return the rectanle of a bounded box
 	 */
 	Rectangle getRect();
 
 	/**
 	 * Sets bounds where this {@link Control} should operate.
-	 *
 	 * @param x a x coord of a bounded box
 	 * @param y an y coord of a bounded box
 	 * @param width a width of a bounded box
@@ -57,14 +54,12 @@ public interface Control {
 
 	/**
 	 * Sets a {@link ThemeResolver}.
-	 *
 	 * @param themeResolver the theme resolver
 	 */
 	void setThemeResolver(@Nullable ThemeResolver themeResolver);
 
 	/**
 	 * Sets a theme name to use.
-	 *
 	 * @param themeName the theme name
 	 */
 	void setThemeName(@Nullable String themeName);

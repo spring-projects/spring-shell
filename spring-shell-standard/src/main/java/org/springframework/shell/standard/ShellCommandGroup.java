@@ -23,27 +23,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to indicate the default group of shell commands, either at the package or class level.
+ * Used to indicate the default group of shell commands, either at the package or class
+ * level.
  *
  * @author Eric Bottard
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PACKAGE, ElementType.TYPE})
+@Target({ ElementType.PACKAGE, ElementType.TYPE })
 @Documented
 public @interface ShellCommandGroup {
 
 	/**
-	 * The default value for the group label, which when set<ul>
-	 *     <li>on a class, will mean to look at the package level</li>
-	 *     <li>on a package, to go back at the class level and infer a name from the class name.</li>
+	 * The default value for the group label, which when set
+	 * <ul>
+	 * <li>on a class, will mean to look at the package level</li>
+	 * <li>on a package, to go back at the class level and infer a name from the class
+	 * name.</li>
 	 * </ul>
 	 */
 	String INHERIT_AND_INFER = "";
 
 	/**
-	 * @return
-	 * An explicit value for the group, which will apply to all commands in the owning class or package, depending
-	 * on where this annotation is set.
+	 * @return An explicit value for the group, which will apply to all commands in the
+	 * owning class or package, depending on where this annotation is set.
 	 */
 	String value() default INHERIT_AND_INFER;
 

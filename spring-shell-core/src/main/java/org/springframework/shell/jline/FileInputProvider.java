@@ -28,54 +28,61 @@ import java.io.Reader;
 
 /**
  * An {@link InputProvider} that reads input from file-like sources.
- * <p>Still uses a {@link org.jline.reader.Parser} to interpret word boundaries. Supports backslashes at end
- * of line to signal line continuation.</p>
+ * <p>
+ * Still uses a {@link org.jline.reader.Parser} to interpret word boundaries. Supports
+ * backslashes at end of line to signal line continuation.
+ * </p>
  *
  * @author Eric Bottard
  */
 public class FileInputProvider implements InputProvider, Closeable {
 
-    private  static final String BACKSLASH_AT_EOL_REGEX = "(.*)\\\\\\s*$";
-    private final BufferedReader reader;
+	private static final String BACKSLASH_AT_EOL_REGEX = "(.*)\\\\\\s*$";
 
-    private final Parser parser;
+	private final BufferedReader reader;
 
-    public FileInputProvider(Reader reader, Parser parser) {
-        this.reader = new BufferedReader(reader);
-        this.parser = parser;
-    }
+	private final Parser parser;
 
-    @Override
-    public Input readInput() {
-        StringBuilder sb = new StringBuilder();
-        boolean continued = false;
-        String line;
-        try {
-            do {
-                line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                continued = line.matches(BACKSLASH_AT_EOL_REGEX);
-                sb.append(line.replaceFirst(BACKSLASH_AT_EOL_REGEX, "$1 "));
-            } while (continued);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        if (line == null || isComment(line)) {
-            return null;
-        } else {
+	public FileInputProvider(Reader reader, Parser parser) {
+		this.reader = new BufferedReader(reader);
+		this.parser = parser;
+	}
+
+	@Override
+	public Input readInput() {
+		StringBuilder sb = new StringBuilder();
+		boolean continued = false;
+		String line;
+		try {
+			do {
+				line = reader.readLine();
+				if (line == null) {
+					break;
+				}
+				continued = line.matches(BACKSLASH_AT_EOL_REGEX);
+				sb.append(line.replaceFirst(BACKSLASH_AT_EOL_REGEX, "$1 "));
+			}
+			while (continued);
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		if (line == null || isComment(line)) {
+			return null;
+		}
+		else {
 			ParsedLine parsedLine = parser.parse(sb.toString(), sb.toString().length());
 			return new ParsedLineInput(parsedLine);
-        }
-    }
+		}
+	}
 
-    @Override
-    public void close() throws IOException {
-        reader.close();
-    }
+	@Override
+	public void close() throws IOException {
+		reader.close();
+	}
 
 	private boolean isComment(String line) {
 		return line.matches("\\s*//.*");
 	}
+
 }

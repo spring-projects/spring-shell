@@ -26,9 +26,13 @@ public class OnCompletionCommandCondition extends AllNestedConditions {
 
 	@ConditionalOnProperty(prefix = "spring.shell.command.completion", value = "root-command")
 	static class RootNameCondition {
+
 	}
 
-	@ConditionalOnProperty(prefix = "spring.shell.command.completion", value = "enabled", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "spring.shell.command.completion", value = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	static class EnabledCondition {
+
 	}
+
 }

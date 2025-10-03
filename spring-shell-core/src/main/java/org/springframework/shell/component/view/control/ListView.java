@@ -38,7 +38,8 @@ import org.springframework.util.Assert;
 /**
  * {@code ListView} is a {@link View} showing items in a vertical list.
  *
- * <p>Supported view commands:
+ * <p>
+ * Supported view commands:
  * <ul>
  * <li>{@link ViewCommand#LINE_UP} - Move active line upwards.
  * <li>{@link ViewCommand#LINE_DOWN} - Move active line downwards.
@@ -49,11 +50,17 @@ import org.springframework.util.Assert;
 public class ListView<T> extends BoxView {
 
 	private final List<T> items = new ArrayList<>();
+
 	private final List<ListCell<T>> cells = new ArrayList<>();
+
 	private final ItemStyle itemStyle;
+
 	private int start = 0;
+
 	private int pos = 0;
+
 	private final Set<Integer> selected = new HashSet<>();
+
 	private BiFunction<ListView<T>, T, ListCell<T>> factory = (listView, item) -> ListCell.of(item,
 			listView.getItemStyle());
 
@@ -76,6 +83,7 @@ public class ListView<T> extends BoxView {
 		 * The item is part of a radio group and will indicate selected state.
 		 */
 		RADIO
+
 	}
 
 	public ListView() {
@@ -94,7 +102,7 @@ public class ListView<T> extends BoxView {
 
 	public ListView(@Nullable List<T> items, ItemStyle itemStyle) {
 		Assert.notNull(itemStyle, "item style must be set");
-		this.itemStyle =  itemStyle;
+		this.itemStyle = itemStyle;
 		setItems(items);
 	}
 

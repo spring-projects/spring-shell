@@ -46,6 +46,7 @@ import org.springframework.util.StringUtils;
 public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 
 	private final Environment environment;
+
 	private final ResourceLoader resourceLoader;
 
 	CommandScanRegistrar(Environment environment, ResourceLoader resourceLoader) {
@@ -61,7 +62,7 @@ public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 
 	private Set<String> getPackagesToScan(AnnotationMetadata metadata) {
 		AnnotationAttributes attributes = AnnotationAttributes
-				.fromMap(metadata.getAnnotationAttributes(CommandScan.class.getName()));
+			.fromMap(metadata.getAnnotationAttributes(CommandScan.class.getName()));
 		String[] basePackages = attributes.getStringArray("basePackages");
 		Class<?>[] basePackageClasses = attributes.getClassArray("basePackageClasses");
 		Set<String> packagesToScan = new LinkedHashSet<>(Arrays.asList(basePackages));
@@ -116,4 +117,5 @@ public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 	private boolean isComponent(Class<?> type) {
 		return MergedAnnotations.from(type, SearchStrategy.TYPE_HIERARCHY).isPresent(Component.class);
 	}
+
 }

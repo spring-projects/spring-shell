@@ -31,22 +31,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ParameterResolverAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(ParameterResolverAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(ParameterResolverAutoConfiguration.class));
 
 	@Test
 	void defaultCompletionResolverExists() {
-		this.contextRunner.withUserConfiguration(CustomShellConversionServiceConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(CompletionResolver.class);
-				});
+		this.contextRunner.withUserConfiguration(CustomShellConversionServiceConfiguration.class).run((context) -> {
+			assertThat(context).hasSingleBean(CompletionResolver.class);
+		});
 	}
 
 	@Test
 	void defaultCommandExecutionHandlerMethodArgumentResolversExists() {
-		this.contextRunner.withUserConfiguration(CustomShellConversionServiceConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(CommandExecutionHandlerMethodArgumentResolvers.class);
-				});
+		this.contextRunner.withUserConfiguration(CustomShellConversionServiceConfiguration.class).run((context) -> {
+			assertThat(context).hasSingleBean(CommandExecutionHandlerMethodArgumentResolvers.class);
+		});
 	}
 
 	@Configuration
@@ -56,5 +54,7 @@ public class ParameterResolverAutoConfigurationTests {
 		ShellConversionServiceSupplier shellConversionServiceSupplier() {
 			return () -> new DefaultConversionService();
 		}
+
 	}
+
 }

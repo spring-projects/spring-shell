@@ -21,28 +21,30 @@ import java.lang.annotation.*;
 /**
  * Used to customize the name of the method used to indicate availability of a command.
  *
- * In the absence of this annotation, the dynamic availability of a command method named {@literal foo}
- * is discovered via method {@literal fooAvailability}.
+ * In the absence of this annotation, the dynamic availability of a command method named
+ * {@literal foo} is discovered via method {@literal fooAvailability}.
  * <ul>
- * <li>If this annotation is added to the {@literal foo}
- * method, then its {@link #value()} should be the name of an availability method (in place of
- * {@literal fooAvailability()}) that returns {@link org.springframework.shell.Availability}.</li>
- * <li>If placed on a method that returns {@link org.springframework.shell.Availability} and takes no argument,
- * then the {@link #value()} of this annotation should be the <em>command names</em> (or aliases) of the
- * commands this availability indicator is for. The special value of {@literal "*"} (the default) matches
- * all commands implemented in the current class.</li>
+ * <li>If this annotation is added to the {@literal foo} method, then its {@link #value()}
+ * should be the name of an availability method (in place of {@literal fooAvailability()})
+ * that returns {@link org.springframework.shell.Availability}.</li>
+ * <li>If placed on a method that returns {@link org.springframework.shell.Availability}
+ * and takes no argument, then the {@link #value()} of this annotation should be the
+ * <em>command names</em> (or aliases) of the commands this availability indicator is for.
+ * The special value of {@literal "*"} (the default) matches all commands implemented in
+ * the current class.</li>
  * </ul>
  *
  * @author Eric Bottard
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target({ ElementType.METHOD })
 @Documented
 public @interface ShellMethodAvailability {
 
-    /**
-     * @return  the name of the availability method for this command method, or if placed on an availability method, the names of
-     * the commands it is for.
-     */
-    String[] value() default "*";
+	/**
+	 * @return the name of the availability method for this command method, or if placed
+	 * on an availability method, the names of the commands it is for.
+	 */
+	String[] value() default "*";
+
 }

@@ -89,14 +89,12 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 
 		/**
 		 * Gets a values.
-		 *
 		 * @return a values
 		 */
 		List<String> getValues();
 
 		/**
 		 * Creates an empty {@link MultiItemSelectorContext}.
-		 *
 		 * @return empty context
 		 */
 		static <T, I extends Nameable & Matchable & Itemable<T>> MultiItemSelectorContext<T, I> empty() {
@@ -105,16 +103,18 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 
 		/**
 		 * Creates an {@link MultiItemSelectorContext}.
-		 *
 		 * @return context
 		 */
-		static <T, I extends Nameable & Matchable & Itemable<T>> MultiItemSelectorContext<T, I> empty(Function<T, String> itemMapper) {
+		static <T, I extends Nameable & Matchable & Itemable<T>> MultiItemSelectorContext<T, I> empty(
+				Function<T, String> itemMapper) {
 			return new DefaultMultiItemSelectorContext<>(itemMapper);
 		}
+
 	}
 
-	private static class DefaultMultiItemSelectorContext<T, I extends Nameable & Matchable & Itemable<T>> extends
-			BaseSelectorComponentContext<T, I, MultiItemSelectorContext<T, I>> implements MultiItemSelectorContext<T, I> {
+	private static class DefaultMultiItemSelectorContext<T, I extends Nameable & Matchable & Itemable<T>>
+			extends BaseSelectorComponentContext<T, I, MultiItemSelectorContext<T, I>>
+			implements MultiItemSelectorContext<T, I> {
 
 		private Function<T, String> itemMapper = item -> item.toString();
 
@@ -131,25 +131,23 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 				return Collections.emptyList();
 			}
 			return getResultItems().stream()
-					.map(i -> i.getItem())
-					.map(i -> itemMapper.apply(i))
-					.collect(Collectors.toList());
+				.map(i -> i.getItem())
+				.map(i -> itemMapper.apply(i))
+				.collect(Collectors.toList());
 		}
 
 		@Override
 		public Map<String, Object> toTemplateModel() {
 			Map<String, Object> attributes = super.toTemplateModel();
 			attributes.put("values", getValues());
-			List<Map<String, Object>> rows = getItemStateView().stream()
-				.map(is -> {
-					Map<String, Object> map = new HashMap<>();
-					map.put("name", is.getName());
-					map.put("selected", is.isSelected());
-					map.put("onrow", getCursorRow().intValue() == is.getIndex());
-					map.put("enabled", is.isEnabled());
-					return map;
-				})
-				.collect(Collectors.toList());
+			List<Map<String, Object>> rows = getItemStateView().stream().map(is -> {
+				Map<String, Object> map = new HashMap<>();
+				map.put("name", is.getName());
+				map.put("selected", is.isSelected());
+				map.put("onrow", getCursorRow().intValue() == is.getIndex());
+				map.put("enabled", is.isEnabled());
+				return map;
+			}).collect(Collectors.toList());
 			attributes.put("rows", rows);
 			// finally wrap it into 'model' as that's what
 			// we expect in stg template.
@@ -157,6 +155,7 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 			model.put("model", attributes);
 			return model;
 		}
+
 	}
 
 	private class DefaultRenderer implements Function<MultiItemSelectorContext<T, I>, List<AttributedString>> {
@@ -165,5 +164,7 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 		public List<AttributedString> apply(MultiItemSelectorContext<T, I> context) {
 			return renderTemplateResource(context.toTemplateModel());
 		}
+
 	}
+
 }

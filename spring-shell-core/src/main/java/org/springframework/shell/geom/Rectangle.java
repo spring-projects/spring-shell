@@ -16,8 +16,8 @@
 package org.springframework.shell.geom;
 
 /**
- * Record representing coordinates {@code x}, {@code y} and its {@code width}
- * and {@code height}.
+ * Record representing coordinates {@code x}, {@code y} and its {@code width} and
+ * {@code height}.
  */
 public record Rectangle(int x, int y, int width, int height) {
 
@@ -38,11 +38,9 @@ public record Rectangle(int x, int y, int width, int height) {
 	}
 
 	/**
-	 * Determines whether the {@code Rectangle} is empty. When the {@code Rectangle}
-	 * is empty, it encloses no area.
-	 *
-	 * @return {@code true} if the {@code Rectangle} is empty; {@code false}
-	 *         otherwise.
+	 * Determines whether the {@code Rectangle} is empty. When the {@code Rectangle} is
+	 * empty, it encloses no area.
+	 * @return {@code true} if the {@code Rectangle} is empty; {@code false} otherwise.
 	 */
 	public boolean isEmpty() {
 		return width <= 0 || height <= 0;

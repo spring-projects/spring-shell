@@ -20,13 +20,15 @@ import java.io.IOException;
 import org.springframework.shell.test.jediterm.terminal.util.CharUtils;
 
 /**
- * Takes data from and sends it back to TTY input and output streams via {@link TtyConnector}
+ * Takes data from and sends it back to TTY input and output streams via
+ * {@link TtyConnector}
  *
  * @author jediterm authors
  */
 public class TtyBasedArrayDataStream extends ArrayTerminalDataStream {
 
 	private final TtyConnector ttyConnector;
+
 	private final Runnable myOnBeforeBlockingWait;
 
 	public TtyBasedArrayDataStream(final TtyConnector ttyConnector, final Runnable onBeforeBlockingWait) {
@@ -76,4 +78,5 @@ public class TtyBasedArrayDataStream extends ArrayTerminalDataStream {
 			throw new EOF();
 		}
 	}
+
 }

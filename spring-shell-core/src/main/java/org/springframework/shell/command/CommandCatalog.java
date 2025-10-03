@@ -35,36 +35,31 @@ public interface CommandCatalog {
 
 	/**
 	 * Register a {@link CommandRegistration}.
-	 *
 	 * @param registration the command registration
 	 */
 	void register(CommandRegistration... registration);
 
 	/**
 	 * Unregister a {@link CommandRegistration}.
-	 *
 	 * @param registration the command registration
 	 */
 	void unregister(CommandRegistration... registration);
 
 	/**
 	 * Unregister a {@link CommandRegistration} by its command name.
-	 *
 	 * @param commandName the command name
 	 */
 	void unregister(String... commandName);
 
 	/**
-	 * Gets all {@link CommandRegistration}s mapped with their names.
-	 * Returned map is a copy and cannot be used to register new commands.
-	 *
+	 * Gets all {@link CommandRegistration}s mapped with their names. Returned map is a
+	 * copy and cannot be used to register new commands.
 	 * @return all command registrations
 	 */
 	Map<String, CommandRegistration> getRegistrations();
 
 	/**
 	 * Gets an instance of a default {@link CommandCatalog}.
-	 *
 	 * @return default command catalog
 	 */
 	static CommandCatalog of() {
@@ -73,7 +68,6 @@ public interface CommandCatalog {
 
 	/**
 	 * Gets an instance of a default {@link CommandCatalog}.
-	 *
 	 * @param resolvers the command resolvers
 	 * @param shellContext the shell context
 	 * @return default command catalog
@@ -88,7 +82,9 @@ public interface CommandCatalog {
 	static class DefaultCommandCatalog implements CommandCatalog {
 
 		private final Map<String, CommandRegistration> commandRegistrations = new HashMap<>();
+
 		private final Collection<CommandResolver> resolvers = new ArrayList<>();
+
 		private final ShellContext shellContext;
 
 		DefaultCommandCatalog(Collection<CommandResolver> resolvers, ShellContext shellContext) {
@@ -136,7 +132,8 @@ public interface CommandCatalog {
 					regs.put(r.getCommand(), r);
 				});
 			}
-			return regs.entrySet().stream()
+			return regs.entrySet()
+				.stream()
 				.filter(filterByInteractionMode(shellContext))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		}
@@ -146,7 +143,8 @@ public interface CommandCatalog {
 		 * effectively disables filtering as as we only care if mode is set to interactive
 		 * or non-interactive.
 		 */
-		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(ShellContext shellContext) {
+		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(
+				ShellContext shellContext) {
 			return e -> {
 				InteractionMode mim = e.getValue().getInteractionMode();
 				InteractionMode cim = shellContext != null ? shellContext.getInteractionMode() : InteractionMode.ALL;
@@ -162,5 +160,7 @@ public interface CommandCatalog {
 				return true;
 			};
 		}
+
 	}
+
 }

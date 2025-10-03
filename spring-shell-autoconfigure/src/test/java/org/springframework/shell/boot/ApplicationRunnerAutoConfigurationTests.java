@@ -25,18 +25,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApplicationRunnerAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(ApplicationRunnerAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(ApplicationRunnerAutoConfiguration.class));
 
 	@Test
 	void contextCloseDisabledByDefault() {
 		contextRunner.run(context -> assertThat(context)
-				.doesNotHaveBean(ApplicationRunnerAutoConfiguration.ApplicationReadyEventListener.class));
+			.doesNotHaveBean(ApplicationRunnerAutoConfiguration.ApplicationReadyEventListener.class));
 	}
 
 	@Test
 	void contextCloseEnabled() {
 		contextRunner.withPropertyValues("spring.shell.context.close:true")
-				.run(context -> assertThat(context)
+			.run(context -> assertThat(context)
 				.hasSingleBean(ApplicationRunnerAutoConfiguration.ApplicationReadyEventListener.class));
 	}
 

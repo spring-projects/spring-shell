@@ -29,4 +29,5 @@ class StandardResourcesRuntimeHints implements RuntimeHintsRegistrar {
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
 		hints.resources().registerPattern("org/springframework/shell/component/*.stg");
 	}
+
 }

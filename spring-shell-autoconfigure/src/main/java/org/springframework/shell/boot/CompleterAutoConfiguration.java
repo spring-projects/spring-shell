@@ -52,19 +52,13 @@ public class CompleterAutoConfiguration {
 		public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
 			CompletingParsedLine cpl = (line instanceof CompletingParsedLine) ? ((CompletingParsedLine) line) : t -> t;
 
-			CompletionContext context = new CompletionContext(sanitizeInput(line.words()), line.wordIndex(), line.wordCursor(), null, null);
+			CompletionContext context = new CompletionContext(sanitizeInput(line.words()), line.wordIndex(),
+					line.wordCursor(), null, null);
 
 			List<CompletionProposal> proposals = shell.complete(context);
 			proposals.stream()
-				.map(p -> new Candidate(
-					p.dontQuote() ? p.value() : cpl.emit(p.value()).toString(),
-					p.displayText(),
-					p.category(),
-					p.description(),
-					null,
-					null,
-					p.complete())
-				)
+				.map(p -> new Candidate(p.dontQuote() ? p.value() : cpl.emit(p.value()).toString(), p.displayText(),
+						p.category(), p.description(), null, null, p.complete()))
 				.forEach(candidates::add);
 		}
 
@@ -74,11 +68,15 @@ public class CompleterAutoConfiguration {
 
 		static List<String> sanitizeInput(List<String> words) {
 			words = words.stream()
-				.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
-				.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
+				.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line
+															// introduced by backslash
+															// continuation
+				.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by
+														// return inside a quoted string
 				.collect(Collectors.toList());
 			return words;
 		}
+
 	}
 
 }

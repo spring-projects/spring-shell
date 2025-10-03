@@ -19,23 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interface to generate abstract syntax tree from tokens. Generic language
- * parser usually contains lexing and parsing where this {@code Ast} represents
- * the latter parsing side.
+ * Interface to generate abstract syntax tree from tokens. Generic language parser usually
+ * contains lexing and parsing where this {@code Ast} represents the latter parsing side.
  *
- * Parsing looks tokens and combines those together into nodes and we get
- * closer to understand commands, its options and arguments whether those
- * belong to command or option. Parser don't look if for example option
- * arguments makes sense which happen later when ast tree is visited.
+ * Parsing looks tokens and combines those together into nodes and we get closer to
+ * understand commands, its options and arguments whether those belong to command or
+ * option. Parser don't look if for example option arguments makes sense which happen
+ * later when ast tree is visited.
  *
  * @author Janne Valkealahti
  */
 public interface Ast {
 
 	/**
-	 * Generate ast result from a tokens. {@link AstResult} contains info about
-	 * token to ast tree generation.
-	 *
+	 * Generate ast result from a tokens. {@link AstResult} contains info about token to
+	 * ast tree generation.
 	 * @param tokens the tokens
 	 * @return a result containing further syntax info
 	 */
@@ -86,7 +84,8 @@ public interface Ast {
 						break;
 					case ARGUMENT:
 						if (optionNode != null) {
-							OptionArgumentNode optionArgumentNode = new OptionArgumentNode(token, optionNode, token.getValue());
+							OptionArgumentNode optionArgumentNode = new OptionArgumentNode(token, optionNode,
+									token.getValue());
 							optionNode.addChildNode(optionArgumentNode);
 						}
 						else {
@@ -114,5 +113,7 @@ public interface Ast {
 
 			return new AstResult(nonterminalNodes, terminalNodes);
 		}
+
 	}
+
 }

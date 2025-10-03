@@ -27,4 +27,5 @@ public class DefaultMultiInputSpec extends BaseMultiItemSelector {
 	public DefaultMultiInputSpec(BaseBuilder builder, String id) {
 		super(builder, id);
 	}
+
 }

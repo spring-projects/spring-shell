@@ -30,7 +30,8 @@ import org.springframework.shell.result.CommandNotFoundMessageProvider.ProviderC
 @FunctionalInterface
 public interface CommandNotFoundMessageProvider extends Function<ProviderContext, String> {
 
-	static ProviderContext contextOf(Throwable error, List<String> commands, Map<String, CommandRegistration> registrations, String text) {
+	static ProviderContext contextOf(Throwable error, List<String> commands,
+			Map<String, CommandRegistration> registrations, String text) {
 		return new ProviderContext() {
 
 			@Override
@@ -62,31 +63,28 @@ public interface CommandNotFoundMessageProvider extends Function<ProviderContext
 
 		/**
 		 * Gets an actual error.
-		 *
 		 * @return actual error
 		 */
 		Throwable error();
 
 		/**
 		 * Gets a list of commands parsed.
-		 *
 		 * @return list of commands parsed
 		 */
 		List<String> commands();
 
 		/**
 		 * Gets a command registrations.
-		 *
 		 * @return a command registrations
 		 */
 		Map<String, CommandRegistration> registrations();
 
 		/**
 		 * Gets a raw input text.
-		 *
 		 * @return a raw input text
 		 */
 		String text();
+
 	}
 
 }

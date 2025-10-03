@@ -35,32 +35,37 @@ import org.springframework.shell.standard.ShellMethod;
 @ShellComponent
 public class Script extends AbstractShellComponent {
 
-    private final Parser parser;
+	private final Parser parser;
 
-    public Script(Parser parser) {
-        this.parser = parser;
-    }
+	public Script(Parser parser) {
+		this.parser = parser;
+	}
 
-    /**
-     * Marker interface for beans providing {@literal script} functionality to the shell.
-     * <p>
-     * <p>To override the script command, simply register your own bean implementing that interface
-     * and the standard implementation will back off.</p>
-     * <p>
-     * <p>To disable the {@literal script} command entirely, set the {@literal spring.shell.command.script.enabled=false}
-     * property in the environment.</p>
-     *
-     * @author Eric Bottard
-     */
-    public interface Command {
-    }
+	/**
+	 * Marker interface for beans providing {@literal script} functionality to the shell.
+	 * <p>
+	 * <p>
+	 * To override the script command, simply register your own bean implementing that
+	 * interface and the standard implementation will back off.
+	 * </p>
+	 * <p>
+	 * <p>
+	 * To disable the {@literal script} command entirely, set the
+	 * {@literal spring.shell.command.script.enabled=false} property in the environment.
+	 * </p>
+	 *
+	 * @author Eric Bottard
+	 */
+	public interface Command {
 
-    @ShellMethod(value = "Read and execute commands from a file.")
-    public void script(File file) throws Exception {
-        Reader reader = new FileReader(file);
-        try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-            getShell().run(inputProvider);
-        }
-    }
+	}
+
+	@ShellMethod(value = "Read and execute commands from a file.")
+	public void script(File file) throws Exception {
+		Reader reader = new FileReader(file);
+		try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
+			getShell().run(inputProvider);
+		}
+	}
 
 }

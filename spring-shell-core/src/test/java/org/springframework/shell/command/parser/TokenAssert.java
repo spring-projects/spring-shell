@@ -42,4 +42,5 @@ public class TokenAssert extends AbstractAssert<TokenAssert, Token> {
 		assertThat(actual.getValue()).isEqualTo(value);
 		return this;
 	}
+
 }

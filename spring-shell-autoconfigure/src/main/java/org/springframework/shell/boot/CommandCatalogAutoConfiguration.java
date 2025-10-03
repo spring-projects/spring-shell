@@ -44,8 +44,7 @@ public class CommandCatalogAutoConfiguration {
 	@ConditionalOnMissingBean(CommandCatalog.class)
 	public CommandCatalog commandCatalog(ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
 			ObjectProvider<CommandResolver> commandResolvers,
-			ObjectProvider<CommandCatalogCustomizer> commandCatalogCustomizers,
-			ShellContext shellContext) {
+			ObjectProvider<CommandCatalogCustomizer> commandCatalogCustomizers, ShellContext shellContext) {
 		List<CommandResolver> resolvers = commandResolvers.orderedStream().collect(Collectors.toList());
 		CommandCatalog catalog = CommandCatalog.of(resolvers, shellContext);
 		methodTargetRegistrars.orderedStream().forEach(resolver -> {
@@ -58,7 +57,8 @@ public class CommandCatalogAutoConfiguration {
 	}
 
 	@Bean
-	public CommandCatalogCustomizer defaultCommandCatalogCustomizer(ObjectProvider<CommandRegistration> commandRegistrations) {
+	public CommandCatalogCustomizer defaultCommandCatalogCustomizer(
+			ObjectProvider<CommandRegistration> commandRegistrations) {
 		return catalog -> {
 			commandRegistrations.orderedStream().forEach(registration -> {
 				catalog.register(registration);
@@ -82,7 +82,8 @@ public class CommandCatalogAutoConfiguration {
 
 	@Bean
 	@ConditionalOnBean(OptionNameModifier.class)
-	public CommandRegistrationCustomizer customOptionNameModifierCommandRegistrationCustomizer(OptionNameModifier modifier) {
+	public CommandRegistrationCustomizer customOptionNameModifierCommandRegistrationCustomizer(
+			OptionNameModifier modifier) {
 		return builder -> {
 			builder.defaultOptionNameModifier(modifier);
 		};
@@ -91,7 +92,8 @@ public class CommandCatalogAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(OptionNameModifier.class)
 	@ConditionalOnProperty(prefix = "spring.shell.option.naming", name = "case-type")
-	public CommandRegistrationCustomizer defaultOptionNameModifierCommandRegistrationCustomizer(SpringShellProperties properties) {
+	public CommandRegistrationCustomizer defaultOptionNameModifierCommandRegistrationCustomizer(
+			SpringShellProperties properties) {
 		return builder -> {
 			switch (properties.getOption().getNaming().getCaseType()) {
 				case NOOP:
@@ -124,4 +126,5 @@ public class CommandCatalogAutoConfiguration {
 			return builder;
 		};
 	}
+
 }

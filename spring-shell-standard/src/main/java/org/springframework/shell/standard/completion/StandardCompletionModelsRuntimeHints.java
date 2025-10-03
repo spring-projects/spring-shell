@@ -47,4 +47,5 @@ class StandardCompletionModelsRuntimeHints implements RuntimeHintsRegistrar {
 	private Iterable<TypeReference> typeReferences(Class<?>... classes) {
 		return Stream.of(classes).map(TypeReference::of).collect(Collectors.toList());
 	}
+
 }

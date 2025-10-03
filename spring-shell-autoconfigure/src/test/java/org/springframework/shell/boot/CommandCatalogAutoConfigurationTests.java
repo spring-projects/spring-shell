@@ -36,8 +36,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommandCatalogAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(CommandCatalogAutoConfiguration.class,
-					JLineShellAutoConfiguration.class, ShellContextAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(CommandCatalogAutoConfiguration.class,
+				JLineShellAutoConfiguration.class, ShellContextAutoConfiguration.class));
 
 	@Test
 	void defaultCommandCatalog() {
@@ -46,96 +46,83 @@ public class CommandCatalogAutoConfigurationTests {
 
 	@Test
 	void testCommandResolvers() {
-		this.contextRunner.withUserConfiguration(CustomCommandResolverConfiguration.class)
-				.run((context) -> {
-					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
-					assertThat(commandCatalog).extracting("resolvers").asInstanceOf(InstanceOfAssertFactories.LIST)
-							.hasSize(1);
-				});
+		this.contextRunner.withUserConfiguration(CustomCommandResolverConfiguration.class).run((context) -> {
+			CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
+			assertThat(commandCatalog).extracting("resolvers").asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(1);
+		});
 	}
 
 	@Test
 	void customCommandCatalog() {
-		this.contextRunner.withUserConfiguration(CustomCommandCatalogConfiguration.class)
-				.run((context) -> {
-					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
-					assertThat(commandCatalog).isSameAs(CustomCommandCatalogConfiguration.testCommandCatalog);
-				});
+		this.contextRunner.withUserConfiguration(CustomCommandCatalogConfiguration.class).run((context) -> {
+			CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
+			assertThat(commandCatalog).isSameAs(CustomCommandCatalogConfiguration.testCommandCatalog);
+		});
 	}
 
 	@Test
 	void registerCommandRegistration() {
-		this.contextRunner.withUserConfiguration(CustomCommandRegistrationConfiguration.class)
-				.run((context) -> {
-					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
-					assertThat(commandCatalog.getRegistrations().get("customcommand")).isNotNull();
-				});
+		this.contextRunner.withUserConfiguration(CustomCommandRegistrationConfiguration.class).run((context) -> {
+			CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
+			assertThat(commandCatalog.getRegistrations().get("customcommand")).isNotNull();
+		});
 	}
 
 	@Test
 	void builderSupplierIsCreated() {
-		this.contextRunner
-				.run(context -> {
-					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
-					assertThat(builderSupplier).isNotNull();
-				});
+		this.contextRunner.run(context -> {
+			BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+			assertThat(builderSupplier).isNotNull();
+		});
 	}
 
 	@Test
 	void defaultOptionNameModifierIsNull() {
-		this.contextRunner
-				.run(context -> {
-					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
-					Builder builder = builderSupplier.get();
-					assertThat(builder).extracting("defaultOptionNameModifier").isNull();
-				});
+		this.contextRunner.run(context -> {
+			BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+			Builder builder = builderSupplier.get();
+			assertThat(builder).extracting("defaultOptionNameModifier").isNull();
+		});
 	}
 
 	@Test
 	void defaultOptionNameModifierIsSet() {
-		this.contextRunner
-				.withUserConfiguration(CustomOptionNameModifierConfiguration.class)
-				.run(context -> {
-					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
-					Builder builder = builderSupplier.get();
-					assertThat(builder).extracting("defaultOptionNameModifier").isNotNull();
-				});
+		this.contextRunner.withUserConfiguration(CustomOptionNameModifierConfiguration.class).run(context -> {
+			BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+			Builder builder = builderSupplier.get();
+			assertThat(builder).extracting("defaultOptionNameModifier").isNotNull();
+		});
 	}
 
 	@Test
 	void defaultOptionNameModifierIsSetFromProperties() {
-		this.contextRunner
-				.withPropertyValues("spring.shell.option.naming.case-type=kebab")
-				.run(context -> {
-					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
-					Builder builder = builderSupplier.get();
-					assertThat(builder).extracting("defaultOptionNameModifier").isNotNull();
-				});
+		this.contextRunner.withPropertyValues("spring.shell.option.naming.case-type=kebab").run(context -> {
+			BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+			Builder builder = builderSupplier.get();
+			assertThat(builder).extracting("defaultOptionNameModifier").isNotNull();
+		});
 	}
 
 	@Test
 	void defaultOptionNameModifierNoopNotSetFromProperties() {
-		this.contextRunner
-				.withPropertyValues("spring.shell.option.naming.case-type=noop")
-				.run(context -> {
-					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
-					Builder builder = builderSupplier.get();
-					assertThat(builder).extracting("defaultOptionNameModifier").isNull();
-					// there is customizer but it doesn't do anything
-					assertThat(context).hasBean("defaultOptionNameModifierCommandRegistrationCustomizer");
-				});
+		this.contextRunner.withPropertyValues("spring.shell.option.naming.case-type=noop").run(context -> {
+			BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+			Builder builder = builderSupplier.get();
+			assertThat(builder).extracting("defaultOptionNameModifier").isNull();
+			// there is customizer but it doesn't do anything
+			assertThat(context).hasBean("defaultOptionNameModifierCommandRegistrationCustomizer");
+		});
 	}
 
 	@Test
 	void noCustomizerIfPropertyIsNotSet() {
-		this.contextRunner
-				.run(context -> {
-					BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
-					Builder builder = builderSupplier.get();
-					assertThat(builder).extracting("defaultOptionNameModifier").isNull();
-					// no customizer added without property
-					assertThat(context).doesNotHaveBean("defaultOptionNameModifierCommandRegistrationCustomizer");
-				});
+		this.contextRunner.run(context -> {
+			BuilderSupplier builderSupplier = context.getBean(BuilderSupplier.class);
+			Builder builder = builderSupplier.get();
+			assertThat(builder).extracting("defaultOptionNameModifier").isNull();
+			// no customizer added without property
+			assertThat(context).doesNotHaveBean("defaultOptionNameModifierCommandRegistrationCustomizer");
+		});
 	}
 
 	// defaultOptionNameModifierCommandRegistrationCustomizer
@@ -146,6 +133,7 @@ public class CommandCatalogAutoConfigurationTests {
 		OptionNameModifier customOptionNameModifier() {
 			return name -> name;
 		}
+
 	}
 
 	@Configuration
@@ -155,6 +143,7 @@ public class CommandCatalogAutoConfigurationTests {
 		CommandResolver customCommandResolver() {
 			return () -> Collections.emptyList();
 		}
+
 	}
 
 	@Configuration
@@ -166,6 +155,7 @@ public class CommandCatalogAutoConfigurationTests {
 		CommandCatalog customCommandCatalog() {
 			return testCommandCatalog;
 		}
+
 	}
 
 	@Configuration
@@ -173,14 +163,11 @@ public class CommandCatalogAutoConfigurationTests {
 
 		@Bean
 		CommandRegistration commandRegistration() {
-			return CommandRegistration.builder()
-				.command("customcommand")
-				.withTarget()
-					.function(ctx -> {
-						return null;
-					})
-					.and()
-				.build();
+			return CommandRegistration.builder().command("customcommand").withTarget().function(ctx -> {
+				return null;
+			}).and().build();
 		}
+
 	}
+
 }

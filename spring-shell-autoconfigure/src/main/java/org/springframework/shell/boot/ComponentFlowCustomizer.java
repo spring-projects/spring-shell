@@ -30,4 +30,5 @@ public interface ComponentFlowCustomizer {
 	 * @param componentFlowBuilder the component flow builder to customize
 	 */
 	void customize(ComponentFlow.Builder componentFlowBuilder);
+
 }

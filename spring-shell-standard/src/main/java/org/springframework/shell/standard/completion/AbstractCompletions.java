@@ -44,14 +44,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 /**
- * Base class for completion script commands providing functionality for
- * resource handling and templating with {@code antrl stringtemplate}.
+ * Base class for completion script commands providing functionality for resource handling
+ * and templating with {@code antrl stringtemplate}.
  *
  * @author Janne Valkealahti
  */
 public abstract class AbstractCompletions {
 
 	private final ResourceLoader resourceLoader;
+
 	private final CommandCatalog commandCatalog;
 
 	public AbstractCompletions(ResourceLoader resourceLoader, CommandCatalog commandCatalog) {
@@ -64,88 +65,85 @@ public abstract class AbstractCompletions {
 	}
 
 	/**
-	 * Generates a model for a recursive command model starting from root
-	 * level going down with all sub commands with options. Essentially providing
-	 * all needed to build completions structure.
+	 * Generates a model for a recursive command model starting from root level going down
+	 * with all sub commands with options. Essentially providing all needed to build
+	 * completions structure.
 	 */
 	protected CommandModel generateCommandModel() {
 		Collection<CommandRegistration> commandsByName = Utils.removeHiddenCommands(commandCatalog.getRegistrations())
-				.values();
+			.values();
 		HashMap<String, DefaultCommandModelCommand> commands = new HashMap<>();
 		HashSet<CommandModelCommand> topCommands = new HashSet<>();
-		commandsByName.stream()
-			.forEach(registration -> {
-				String key = registration.getCommand();
-				String[] splitKeys = key.split(" ");
-				String commandKey = "";
-				for (int i = 0; i < splitKeys.length; i++) {
-					DefaultCommandModelCommand parent = null;
-					String main = splitKeys[i];
-					if (i > 0) {
-						parent = commands.get(commandKey);
-						commandKey = commandKey + " " + splitKeys[i];
-					}
-					else {
-						commandKey = splitKeys[i];
-					}
-					String desc = i + 1 < splitKeys.length ? null : registration.getDescription();
-					DefaultCommandModelCommand command = commands.computeIfAbsent(commandKey,
-							(fullCommand) -> new DefaultCommandModelCommand(fullCommand, main, desc));
-
-					// TODO long vs short
-					List<CommandModelOption> options = registration.getOptions().stream()
-						.flatMap(co -> Arrays.stream(co.getLongNames()))
-						.map(lo -> CommandModelOption.of("--", lo))
-						.collect(Collectors.toList());
-
-					if (i == splitKeys.length - 1) {
-						command.addOptions(options);
-					}
-					if (parent != null) {
-						parent.addCommand(command);
-					}
-					if (i == 0) {
-						topCommands.add(command);
-					}
+		commandsByName.stream().forEach(registration -> {
+			String key = registration.getCommand();
+			String[] splitKeys = key.split(" ");
+			String commandKey = "";
+			for (int i = 0; i < splitKeys.length; i++) {
+				DefaultCommandModelCommand parent = null;
+				String main = splitKeys[i];
+				if (i > 0) {
+					parent = commands.get(commandKey);
+					commandKey = commandKey + " " + splitKeys[i];
 				}
-			});
+				else {
+					commandKey = splitKeys[i];
+				}
+				String desc = i + 1 < splitKeys.length ? null : registration.getDescription();
+				DefaultCommandModelCommand command = commands.computeIfAbsent(commandKey,
+						(fullCommand) -> new DefaultCommandModelCommand(fullCommand, main, desc));
+
+				// TODO long vs short
+				List<CommandModelOption> options = registration.getOptions()
+					.stream()
+					.flatMap(co -> Arrays.stream(co.getLongNames()))
+					.map(lo -> CommandModelOption.of("--", lo))
+					.collect(Collectors.toList());
+
+				if (i == splitKeys.length - 1) {
+					command.addOptions(options);
+				}
+				if (parent != null) {
+					parent.addCommand(command);
+				}
+				if (i == 0) {
+					topCommands.add(command);
+				}
+			}
+		});
 		return new DefaultCommandModel(new ArrayList<>(topCommands));
 	}
 
 	/**
-	 * Interface for a command model structure. Is also used as entry model
-	 * for ST4 templates which is a reason it has utility methods for easier usage
-	 * of a templates.
+	 * Interface for a command model structure. Is also used as entry model for ST4
+	 * templates which is a reason it has utility methods for easier usage of a templates.
 	 */
 	interface CommandModel {
 
 		/**
 		 * Gets root level commands where sub-commands can be found.
-		 *
 		 * @return root level commands
 		 */
 		List<CommandModelCommand> getCommands();
 
 		/**
 		 * Gets all commands as a flattened structure.
-		 *
 		 * @return all commands
 		 */
 		List<CommandModelCommand> getAllCommands();
 
 		/**
 		 * Gets root commands.
-		 *
 		 * @return root commands
 		 */
 		List<String> getRootCommands();
+
 	}
 
 	/**
-	 * Interface for a command in a model. Also contains methods which makes it
-	 * easier to work with ST4 templates.
+	 * Interface for a command in a model. Also contains methods which makes it easier to
+	 * work with ST4 templates.
 	 */
-	interface CommandModelCommand  {
+	interface CommandModelCommand {
 
 		/**
 		 * Gets a description of a command.
@@ -161,53 +159,50 @@ public abstract class AbstractCompletions {
 
 		/**
 		 * Gets options known to this command
-		 *
 		 * @return known options
 		 */
 		List<CommandModelOption> getOptions();
 
 		/**
 		 * Gets command flags.
-		 *
 		 * @return command flags
 		 */
 		List<String> getFlags();
 
 		/**
 		 * Gets sub commands.
-		 *
 		 * @return sub commands
 		 */
 		List<String> getSubCommands();
 
 		/**
 		 * Gets command parts. Essentially full command split into parts.
-		 *
 		 * @return command parts
 		 */
 		List<String> getCommandParts();
 
 		/**
 		 * Gets a main command
-		 *
 		 * @return the main command
 		 */
 		String getMainCommand();
 
 		/**
 		 * Gets a last command part.
-		 *
 		 * @return the last command part
 		 */
 		String getLastCommandPart();
+
 	}
 
 	interface CommandModelOption {
+
 		String option();
 
 		static CommandModelOption of(String prefix, String name) {
 			return new DefaultCommandModelOption(String.format("%s%s", prefix, name));
 		}
+
 	}
 
 	class DefaultCommandModel implements CommandModel {
@@ -225,29 +220,30 @@ public abstract class AbstractCompletions {
 
 		@Override
 		public List<CommandModelCommand> getAllCommands() {
-			return getCommands().stream()
-					.flatMap(c -> flatten(c))
-					.collect(Collectors.toList());
+			return getCommands().stream().flatMap(c -> flatten(c)).collect(Collectors.toList());
 		}
 
 		@Override
 		public List<String> getRootCommands() {
-			return getCommands().stream()
-					.map(c -> c.getLastCommandPart())
-					.collect(Collectors.toList());
+			return getCommands().stream().map(c -> c.getLastCommandPart()).collect(Collectors.toList());
 		}
 
 		private Stream<CommandModelCommand> flatten(CommandModelCommand command) {
 			return Stream.concat(Stream.of(command), command.getCommands().stream().flatMap(c -> flatten(c)));
 		}
+
 	}
 
 	class DefaultCommandModelCommand implements CommandModelCommand {
 
 		private String fullCommand;
+
 		private String mainCommand;
+
 		private String description;
+
 		private List<CommandModelCommand> commands = new ArrayList<>();
+
 		private List<CommandModelOption> options = new ArrayList<>();
 
 		DefaultCommandModelCommand(String fullCommand, String mainCommand, String description) {
@@ -279,16 +275,12 @@ public abstract class AbstractCompletions {
 
 		@Override
 		public List<String> getSubCommands() {
-			return this.commands.stream()
-					.map(c -> c.getMainCommand())
-					.collect(Collectors.toList());
+			return this.commands.stream().map(c -> c.getMainCommand()).collect(Collectors.toList());
 		}
 
 		@Override
 		public List<String> getFlags() {
-			return this.options.stream()
-					.map(o -> o.option())
-					.collect(Collectors.toList());
+			return this.options.stream().map(o -> o.option()).collect(Collectors.toList());
 		}
 
 		@Override
@@ -340,7 +332,8 @@ public abstract class AbstractCompletions {
 				if (other.fullCommand != null) {
 					return false;
 				}
-			} else if (!fullCommand.equals(other.fullCommand)) {
+			}
+			else if (!fullCommand.equals(other.fullCommand)) {
 				return false;
 			}
 			return true;
@@ -349,6 +342,7 @@ public abstract class AbstractCompletions {
 		private AbstractCompletions getEnclosingInstance() {
 			return AbstractCompletions.this;
 		}
+
 	}
 
 	static class DefaultCommandModelOption implements CommandModelOption {
@@ -363,12 +357,14 @@ public abstract class AbstractCompletions {
 		public String option() {
 			return option;
 		}
+
 	}
 
 	private static String resourceAsString(Resource resource) {
 		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
 			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
@@ -376,15 +372,21 @@ public abstract class AbstractCompletions {
 	interface Builder {
 
 		Builder attribute(String name, Object value);
+
 		Builder group(String resource);
+
 		Builder appendGroup(String instance);
+
 		String build();
+
 	}
 
 	class DefaultBuilder implements Builder {
 
 		private final MultiValueMap<String, Object> defaultAttributes = new LinkedMultiValueMap<>();
+
 		private final List<Supplier<String>> operations = new ArrayList<>();
+
 		private String groupResource;
 
 		@Override
@@ -427,5 +429,7 @@ public abstract class AbstractCompletions {
 			});
 			return buf.toString();
 		}
+
 	}
+
 }

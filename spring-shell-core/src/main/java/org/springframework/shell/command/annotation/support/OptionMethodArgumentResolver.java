@@ -80,5 +80,7 @@ public class OptionMethodArgumentResolver extends AbstractArgumentMethodArgument
 		private HeaderNamedValueInfo(Option annotation, List<String> names) {
 			super(names, false, null);
 		}
+
 	}
+
 }

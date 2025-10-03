@@ -51,8 +51,8 @@ public class Help extends AbstractShellComponent {
 	 * Marker interface for beans providing {@literal help} functionality to the shell.
 	 *
 	 * <p>
-	 * To override the help command, simply register your own bean implementing that interface
-	 * and the standard implementation will back off.
+	 * To override the help command, simply register your own bean implementing that
+	 * interface and the standard implementation will back off.
 	 * </p>
 	 *
 	 * <p>
@@ -63,37 +63,36 @@ public class Help extends AbstractShellComponent {
 	 * @author Eric Bottard
 	 */
 	public interface Command {
+
 	}
 
 	private boolean showGroups = true;
-	private TemplateExecutor templateExecutor;
-	private String commandTemplate;
-	private String commandsTemplate;
 
+	private TemplateExecutor templateExecutor;
+
+	private String commandTemplate;
+
+	private String commandsTemplate;
 
 	public Help(TemplateExecutor templateExecutor) {
 		this.templateExecutor = templateExecutor;
 	}
 
 	@ShellMethod(value = "Display help about available commands")
-	public AttributedString help(
-			@ShellOption(defaultValue = ShellOption.NULL, valueProvider = CommandValueProvider.class, value = { "-C",
-					"--command" }, help = "The command to obtain help for.", arity = Integer.MAX_VALUE) String[] command)
-			throws IOException {
+	public AttributedString help(@ShellOption(defaultValue = ShellOption.NULL,
+			valueProvider = CommandValueProvider.class, value = { "-C", "--command" },
+			help = "The command to obtain help for.", arity = Integer.MAX_VALUE) String[] command) throws IOException {
 		if (command == null) {
 			return renderCommands();
 		}
 		else {
-			String commandStr = Stream.of(command)
-				.map(c -> c.trim())
-				.collect(Collectors.joining(" "));
+			String commandStr = Stream.of(command).map(c -> c.trim()).collect(Collectors.joining(" "));
 			return renderCommand(commandStr);
 		}
 	}
 
 	/**
 	 * Sets a location for a template rendering command help.
-	 *
 	 * @param commandTemplate the command template location
 	 */
 	public void setCommandTemplate(String commandTemplate) {
@@ -102,7 +101,6 @@ public class Help extends AbstractShellComponent {
 
 	/**
 	 * Sets a location for a template rendering commands help.
-	 *
 	 * @param commandsTemplate the commands template location
 	 */
 	public void setCommandsTemplate(String commandsTemplate) {
@@ -110,9 +108,8 @@ public class Help extends AbstractShellComponent {
 	}
 
 	/**
-	 * Sets if groups should be shown in a listing, defaults to true. If not enabled
-	 * a simple list is shown without groups.
-	 *
+	 * Sets if groups should be shown in a listing, defaults to true. If not enabled a
+	 * simple list is shown without groups.
 	 * @param showGroups the flag to show groups
 	 */
 	public void setShowGroups(boolean showGroups) {
@@ -121,7 +118,7 @@ public class Help extends AbstractShellComponent {
 
 	private AttributedString renderCommands() {
 		Map<String, CommandRegistration> registrations = Utils
-				.removeHiddenCommands(getCommandCatalog().getRegistrations());
+			.removeHiddenCommands(getCommandCatalog().getRegistrations());
 
 		boolean isStg = this.commandTemplate.endsWith(".stg");
 
@@ -135,7 +132,7 @@ public class Help extends AbstractShellComponent {
 
 	private AttributedString renderCommand(String command) {
 		Map<String, CommandRegistration> registrations = Utils
-				.removeHiddenCommands(getCommandCatalog().getRegistrations());
+			.removeHiddenCommands(getCommandCatalog().getRegistrations());
 		CommandRegistration registration = registrations.get(command);
 		if (registration == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
@@ -154,8 +151,10 @@ public class Help extends AbstractShellComponent {
 	private static String resourceAsString(Resource resource) {
 		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
 			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
+
 }

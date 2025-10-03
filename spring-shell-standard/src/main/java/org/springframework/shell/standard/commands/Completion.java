@@ -34,9 +34,11 @@ public class Completion extends AbstractShellComponent {
 	 * Marker interface used in auto-config.
 	 */
 	public interface Command {
+
 	}
 
 	private ResourceLoader resourceLoader;
+
 	private String rootCommand;
 
 	public Completion(String rootCommand) {
@@ -59,4 +61,5 @@ public class Completion extends AbstractShellComponent {
 		ZshCompletions zshCompletions = new ZshCompletions(resourceLoader, getCommandCatalog());
 		return zshCompletions.generate(rootCommand);
 	}
+
 }

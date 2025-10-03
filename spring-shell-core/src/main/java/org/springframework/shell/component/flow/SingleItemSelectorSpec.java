@@ -37,7 +37,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Sets a name.
-	 *
 	 * @param name the name
 	 * @return a builder
 	 */
@@ -45,7 +44,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Sets a result value.
-	 *
 	 * @param resultValue the result value
 	 * @return a builder
 	 */
@@ -53,7 +51,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Sets a result mode.
-	 *
 	 * @param resultMode the result mode
 	 * @return a builder
 	 */
@@ -61,7 +58,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Adds a select item.
-	 *
 	 * @param name the name
 	 * @param item the item
 	 * @return a builder
@@ -71,7 +67,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Adds a map of select items.
-	 *
 	 * @param selectItems the select items
 	 * @return a builder
 	 * @see #selectItems(List)
@@ -80,7 +75,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Adds a list of select items.
-	 *
 	 * @param selectItems the select items
 	 * @return a builder
 	 */
@@ -88,7 +82,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Automatically selects and exposes a given item.
-	 *
 	 * @param name the name
 	 * @return a builder
 	 */
@@ -96,7 +89,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Sets a {@link Comparator} for sorting items.
-	 *
 	 * @param comparator the item comparator
 	 * @return a builder
 	 */
@@ -104,15 +96,14 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Sets a renderer function.
-	 *
 	 * @param renderer the renderer
 	 * @return a builder
 	 */
-	SingleItemSelectorSpec renderer(Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer);
+	SingleItemSelectorSpec renderer(
+			Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer);
 
 	/**
 	 * Sets a default renderer template location.
-	 *
 	 * @param location the template location
 	 * @return a builder
 	 */
@@ -120,7 +111,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Sets a maximum number of items in a selector list;
-	 *
 	 * @param max the maximum number of items
 	 * @return a builder
 	 */
@@ -128,7 +118,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Adds a pre-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -136,7 +125,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Adds a post-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -145,7 +133,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 	/**
 	 * Automatically stores result from a {@link SingleItemSelectorContext} into
 	 * {@link ComponentContext} with key given to builder. Defaults to {@code true}.
-	 *
 	 * @param store the flag if storing result
 	 * @return a builder
 	 */
@@ -154,7 +141,6 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 	/**
 	 * Define a function which may return id of a next component to go. Returning a
 	 * {@code null} or non existent id indicates that flow should stop.
-	 *
 	 * @param next next component function
 	 * @return a builder
 	 */
@@ -162,8 +148,8 @@ public interface SingleItemSelectorSpec extends BaseInputSpec<SingleItemSelector
 
 	/**
 	 * Build and return parent builder.
-	 *
 	 * @return the parent builder
 	 */
 	Builder and();
+
 }

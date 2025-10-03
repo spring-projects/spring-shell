@@ -45,4 +45,5 @@ public class ComponentContextTests {
 			context.get("foo", Integer.class);
 		}).isInstanceOf(IllegalArgumentException.class);
 	}
+
 }

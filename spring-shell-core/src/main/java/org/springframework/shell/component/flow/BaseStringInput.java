@@ -34,15 +34,25 @@ import org.springframework.shell.component.flow.ComponentFlow.Builder;
 public abstract class BaseStringInput extends BaseInput<StringInputSpec> implements StringInputSpec {
 
 	private String name;
+
 	private String resultValue;
+
 	private ResultMode resultMode;
+
 	private String defaultValue;
+
 	private Character maskCharacter;
+
 	private Function<StringInputContext, List<AttributedString>> renderer;
+
 	private List<Consumer<StringInputContext>> preHandlers = new ArrayList<>();
+
 	private List<Consumer<StringInputContext>> postHandlers = new ArrayList<>();
+
 	private boolean storeResult = true;
+
 	private String templateLocation;
+
 	private Function<StringInputContext, String> next;
 
 	public BaseStringInput(BaseBuilder builder, String id) {
@@ -169,4 +179,5 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 	public Function<StringInputContext, String> getNext() {
 		return next;
 	}
+
 }

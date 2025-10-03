@@ -52,8 +52,8 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 	 */
 	public static final String EVENT_TYPE = "eventType";
 
-	private static final BiFunction<String, String, String> TYPE_VERIFY_MESSAGE_FUNCTION =
-			(name, trailer) -> "The '" + name + trailer;
+	private static final BiFunction<String, String, String> TYPE_VERIFY_MESSAGE_FUNCTION = (name, trailer) -> "The '"
+			+ name + trailer;
 
 	private Set<String> readOnlyHeaders = new HashSet<>();
 
@@ -64,7 +64,6 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 	/**
 	 * Specify a list of headers which should be considered as read only and prohibited
 	 * from being populated in the message.
-	 *
 	 * @param readOnlyHeaders the list of headers for {@code readOnly} mode. Defaults to
 	 * {@link org.springframework.messaging.MessageHeaders#ID} and
 	 * {@link org.springframework.messaging.MessageHeaders#TIMESTAMP}.
@@ -91,7 +90,6 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 
 	/**
 	 * Get a {@link ContextView} header if present.
-	 *
 	 * @return the {@link ContextView} header if present.
 	 */
 	@Nullable
@@ -101,7 +99,6 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 
 	/**
 	 * Get a {@link EventLoop.Type} header if present.
-	 *
 	 * @return the {@link EventLoop.Type} header if present.
 	 */
 	@Nullable
@@ -152,4 +149,5 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 			return headers;
 		}
 	}
+
 }

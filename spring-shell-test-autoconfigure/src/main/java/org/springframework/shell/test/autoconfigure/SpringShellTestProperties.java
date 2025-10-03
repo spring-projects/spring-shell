@@ -50,4 +50,5 @@ public class SpringShellTestProperties {
 	public void setTerminalHeight(int terminalHeight) {
 		this.terminalHeight = terminalHeight;
 	}
+
 }

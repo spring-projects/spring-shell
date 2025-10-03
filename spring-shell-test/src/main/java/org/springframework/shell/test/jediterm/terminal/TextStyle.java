@@ -21,10 +21,10 @@ import java.util.Objects;
 import java.util.WeakHashMap;
 
 /**
- *
  * @author jediterm authors
  */
 public class TextStyle {
+
 	private static final EnumSet<Option> NO_OPTIONS = EnumSet.noneOf(Option.class);
 
 	public static final TextStyle EMPTY = new TextStyle();
@@ -41,13 +41,14 @@ public class TextStyle {
 	}
 
 	// public TextStyle(TerminalColor foreground, TerminalColor background) {
-	// 	this(foreground, background, NO_OPTIONS);
+	// this(foreground, background, NO_OPTIONS);
 	// }
 
-	// public TextStyle(TerminalColor foreground, TerminalColor background, EnumSet<Option> options) {
-	// 	myForeground = foreground;
-	// 	myBackground = background;
-	// 	myOptions = options.clone();
+	// public TextStyle(TerminalColor foreground, TerminalColor background,
+	// EnumSet<Option> options) {
+	// myForeground = foreground;
+	// myBackground = background;
+	// myOptions = options.clone();
 	// }
 
 	public TextStyle(EnumSet<Option> options) {
@@ -67,11 +68,11 @@ public class TextStyle {
 	}
 
 	// public TerminalColor getForeground() {
-	// 	return myForeground;
+	// return myForeground;
 	// }
 
 	// public TerminalColor getBackground() {
-	// 	return myBackground;
+	// return myBackground;
 	// }
 
 	public TextStyle createEmptyWithColors() {
@@ -89,13 +90,15 @@ public class TextStyle {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 		TextStyle textStyle = (TextStyle) o;
 		return
-			// Objects.equals(myForeground, textStyle.myForeground) &&
-			// Objects.equals(myBackground, textStyle.myBackground) &&
-			myOptions.equals(textStyle.myOptions);
+		// Objects.equals(myForeground, textStyle.myForeground) &&
+		// Objects.equals(myBackground, textStyle.myBackground) &&
+		myOptions.equals(textStyle.myOptions);
 	}
 
 	@Override
@@ -105,11 +108,11 @@ public class TextStyle {
 	}
 
 	// public TerminalColor getBackgroundForRun() {
-	// 	return myOptions.contains(Option.INVERSE) ? myForeground : myBackground;
+	// return myOptions.contains(Option.INVERSE) ? myForeground : myBackground;
 	// }
 
 	// public TerminalColor getForegroundForRun() {
-	// 	return myOptions.contains(Option.INVERSE) ? myBackground : myForeground;
+	// return myOptions.contains(Option.INVERSE) ? myBackground : myForeground;
 	// }
 
 	public Builder toBuilder() {
@@ -117,13 +120,8 @@ public class TextStyle {
 	}
 
 	public enum Option {
-		BOLD,
-		ITALIC,
-		BLINK,
-		DIM,
-		INVERSE,
-		UNDERLINED,
-		HIDDEN;
+
+		BOLD, ITALIC, BLINK, DIM, INVERSE, UNDERLINED, HIDDEN;
 
 		private void set(EnumSet<Option> options, boolean val) {
 			if (val) {
@@ -133,9 +131,11 @@ public class TextStyle {
 				options.remove(this);
 			}
 		}
+
 	}
 
 	public static class Builder {
+
 		// private TerminalColor myForeground;
 		// private TerminalColor myBackground;
 		private EnumSet<Option> myOptions;
@@ -153,13 +153,13 @@ public class TextStyle {
 		}
 
 		// public Builder setForeground(TerminalColor foreground) {
-		// 	myForeground = foreground;
-		// 	return this;
+		// myForeground = foreground;
+		// return this;
 		// }
 
 		// public Builder setBackground(TerminalColor background) {
-		// 	myBackground = background;
-		// 	return this;
+		// myBackground = background;
+		// return this;
 		// }
 
 		public Builder setOption(Option option, boolean val) {
@@ -171,5 +171,7 @@ public class TextStyle {
 			// return new TextStyle(myForeground, myBackground, myOptions);
 			return new TextStyle(myOptions);
 		}
+
 	}
+
 }

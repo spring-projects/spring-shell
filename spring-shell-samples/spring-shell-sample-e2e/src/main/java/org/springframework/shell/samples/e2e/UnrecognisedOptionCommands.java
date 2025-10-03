@@ -28,17 +28,15 @@ public class UnrecognisedOptionCommands {
 	public static class LegacyAnnotation extends BaseE2ECommands {
 
 		@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-noother", group = GROUP)
-		public String testUnrecognisedOptionNoOtherAnnotation(
-		) {
+		public String testUnrecognisedOptionNoOtherAnnotation() {
 			return "Hi";
 		}
 
 		@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-withrequired", group = GROUP)
-		public String testUnrecognisedOptionWithRequiredAnnotation(
-			@ShellOption(help = "Desc arg1") String arg1
-		) {
+		public String testUnrecognisedOptionWithRequiredAnnotation(@ShellOption(help = "Desc arg1") String arg1) {
 			return "Hello " + arg1;
 		}
+
 	}
 
 	@Component
@@ -46,34 +44,29 @@ public class UnrecognisedOptionCommands {
 
 		@Bean
 		public CommandRegistration testUnrecognisedOptionNoOtherRegistration() {
-			return getBuilder()
-				.command(REG, "unrecognised-option-noother")
-				.group(GROUP)
-				.withTarget()
-					.function(ctx -> {
-						return "Hi";
-					})
-					.and()
-				.build();
+			return getBuilder().command(REG, "unrecognised-option-noother").group(GROUP).withTarget().function(ctx -> {
+				return "Hi";
+			}).and().build();
 		}
 
 		@Bean
 		public CommandRegistration testUnrecognisedOptionWithRequiredRegistration() {
-			return getBuilder()
-				.command(REG, "unrecognised-option-withrequired")
+			return getBuilder().command(REG, "unrecognised-option-withrequired")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.description("Desc arg1")
-					.required()
-					.and()
+				.longNames("arg1")
+				.description("Desc arg1")
+				.required()
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

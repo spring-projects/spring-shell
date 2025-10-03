@@ -31,7 +31,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PartsTextRendererTests {
 
 	private static Locale LOCALE = Locale.getDefault();
+
 	private static PartsTextRenderer renderer;
+
 	private static ThemeResolver themeResolver;
 
 	@BeforeAll
@@ -53,185 +55,81 @@ class PartsTextRendererTests {
 	}
 
 	static PartsText of() {
-		return PartsText.of(
-			PartText.of("012", false),
-			PartText.of("3456", true),
-			PartText.of("789", false)
-		);
+		return PartsText.of(PartText.of("012", false), PartText.of("3456", true), PartText.of("789", false));
 	}
 
 	static Stream<Arguments> test() {
 		return Stream.of(
-			Arguments.of(
-				"width:10,prefix:2,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("01234567", false)
-				),
-				"01234567"),
-			Arguments.of(
-				"width:10,prefix:2,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("0123456789", false)
-				),
-				"012345.."),
-			Arguments.of(
-				"width:10,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("01234", false),
-					PartText.of("56789", true)
-				),
-				"0123456789"),
-			Arguments.of(
-				"width:10,prefix:2,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("012", false),
-					PartText.of("3456", true),
-					PartText.of("789", false)
-				),
-				"012345.."),
-			Arguments.of(
-				"width:12,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abcdefghijkl"),
-			Arguments.of(
-				"width:11,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abcdefghi.."),
-			Arguments.of(
-				"width:10,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abcdefgh.."),
-			Arguments.of(
-				"width:9,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abcdefg.."),
-			Arguments.of(
-				"width:8,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abcdef.."),
-			Arguments.of(
-				"width:7,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abcde.."),
-			Arguments.of(
-				"width:6,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abcd.."),
-			Arguments.of(
-				"width:5,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"abc.."),
-			Arguments.of(
-				"width:4,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"ab.."),
-			Arguments.of(
-				"width:3,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("a", false),
-					PartText.of("b", true),
-					PartText.of("cd", false),
-					PartText.of("efg", true),
-					PartText.of("h", false),
-					PartText.of("i", true),
-					PartText.of("jkl", true)
-				),
-				"a.."),
-			Arguments.of(
-				"width:3,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("abcdefg", false),
-					PartText.of("hijklmn", true)
-				),
-				"a.."),
-			Arguments.of(
-				"width:126,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
-				PartsText.of(
-					PartText.of("e2e/spring-shell-e2e-tests/node_modules/@babel/plugin-syntax-types", false),
-					PartText.of("c", true),
-					PartText.of("ript/test/fixtures/disa", false),
-					PartText.of("l", true),
-					PartText.of("low-jsx-ambiguity/type-parameter-un", false),
-					PartText.of("a", true),
-					PartText.of("mbiguou", false),
-					PartText.of("s", true),
-					PartText.of("/output.j", false),
-					PartText.of("s", true)
-				),
-				"e2e/spring-shell-e2e-tests/node_modules/@babel/plugin-syntax-typescript/test/fixtures/disallow-jsx-ambiguity/type-parameter-..")
-		);
+				Arguments.of("width:10,prefix:2,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("01234567", false)), "01234567"),
+				Arguments.of("width:10,prefix:2,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("0123456789", false)), "012345.."),
+				Arguments.of("width:10,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("01234", false), PartText.of("56789", true)), "0123456789"),
+				Arguments.of("width:10,prefix:2,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("012", false), PartText.of("3456", true), PartText.of("789", false)),
+						"012345.."),
+				Arguments.of("width:12,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abcdefghijkl"),
+				Arguments.of("width:11,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abcdefghi.."),
+				Arguments.of("width:10,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abcdefgh.."),
+				Arguments.of("width:9,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abcdefg.."),
+				Arguments.of("width:8,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abcdef.."),
+				Arguments.of("width:7,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abcde.."),
+				Arguments.of("width:6,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abcd.."),
+				Arguments.of("width:5,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"abc.."),
+				Arguments.of("width:4,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"ab.."),
+				Arguments.of("width:3,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("a", false), PartText.of("b", true), PartText.of("cd", false),
+								PartText.of("efg", true), PartText.of("h", false), PartText.of("i", true),
+								PartText.of("jkl", true)),
+						"a.."),
+				Arguments.of("width:3,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(PartText.of("abcdefg", false), PartText.of("hijklmn", true)), "a.."),
+				Arguments.of("width:126,prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn",
+						PartsText.of(
+								PartText.of("e2e/spring-shell-e2e-tests/node_modules/@babel/plugin-syntax-types",
+										false),
+								PartText.of("c", true), PartText.of("ript/test/fixtures/disa", false),
+								PartText.of("l", true), PartText.of("low-jsx-ambiguity/type-parameter-un", false),
+								PartText.of("a", true), PartText.of("mbiguou", false), PartText.of("s", true),
+								PartText.of("/output.j", false), PartText.of("s", true)),
+						"e2e/spring-shell-e2e-tests/node_modules/@babel/plugin-syntax-typescript/test/fixtures/disallow-jsx-ambiguity/type-parameter-.."));
 	}
 
 	@ParameterizedTest

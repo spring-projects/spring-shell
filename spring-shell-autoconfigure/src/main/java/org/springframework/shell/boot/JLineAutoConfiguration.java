@@ -33,5 +33,7 @@ public class JLineAutoConfiguration {
 		public org.jline.reader.History history() {
 			return new DefaultHistory();
 		}
+
 	}
+
 }

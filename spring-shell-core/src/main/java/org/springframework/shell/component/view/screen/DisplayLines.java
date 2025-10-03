@@ -30,8 +30,8 @@ public interface DisplayLines {
 
 	/**
 	 * Gets a list of screen lines.
-	 *
 	 * @return list of screen lines
 	 */
 	List<AttributedString> getScreenLines();
+
 }

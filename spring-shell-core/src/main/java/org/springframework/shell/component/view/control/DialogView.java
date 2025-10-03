@@ -30,14 +30,15 @@ import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.style.StyleSettings;
 
 /**
- * {@code DialogView} is a {@link View} with border, number of buttons and area
- * for a generic content.
+ * {@code DialogView} is a {@link View} with border, number of buttons and area for a
+ * generic content.
  *
  * @author Janne Valkealahti
  */
 public class DialogView extends WindowView {
 
 	private View content;
+
 	private List<ButtonView> buttons;
 
 	public DialogView() {
@@ -76,14 +77,13 @@ public class DialogView extends WindowView {
 
 	private void hookButtonEvents() {
 		buttons.forEach(b -> {
-			onDestroy(getEventLoop().viewEvents(ButtonViewSelectEvent.class, b)
-				.subscribe(event -> {
-					dispatch();
-					ViewService viewService = getViewService();
-					if (viewService != null) {
-						viewService.setModal(null);
-					}
-				}));
+			onDestroy(getEventLoop().viewEvents(ButtonViewSelectEvent.class, b).subscribe(event -> {
+				dispatch();
+				ViewService viewService = getViewService();
+				if (viewService != null) {
+					viewService.setModal(null);
+				}
+			}));
 		});
 	}
 

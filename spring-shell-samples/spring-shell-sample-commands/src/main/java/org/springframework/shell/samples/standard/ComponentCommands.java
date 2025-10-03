@@ -70,13 +70,11 @@ public class ComponentCommands extends AbstractShellComponent {
 	}
 
 	@ShellMethod(key = "component path search", value = "Path search", group = "Components")
-	public String pathSearch(
-		@ShellOption(defaultValue = ShellOption.NULL) Integer maxPathsShow,
-		@ShellOption(defaultValue = ShellOption.NULL) Integer maxPathsSearch,
-		@ShellOption(defaultValue = "true") boolean searchForward,
-		@ShellOption(defaultValue = "false") boolean searchCaseSensitive,
-		@ShellOption(defaultValue = "false") boolean searchNormalize
-	) {
+	public String pathSearch(@ShellOption(defaultValue = ShellOption.NULL) Integer maxPathsShow,
+			@ShellOption(defaultValue = ShellOption.NULL) Integer maxPathsSearch,
+			@ShellOption(defaultValue = "true") boolean searchForward,
+			@ShellOption(defaultValue = "false") boolean searchCaseSensitive,
+			@ShellOption(defaultValue = "false") boolean searchNormalize) {
 		PathSearchConfig config = new PathSearch.PathSearchConfig();
 		if (maxPathsShow != null) {
 			config.setMaxPathsShow(maxPathsShow);
@@ -104,9 +102,7 @@ public class ComponentCommands extends AbstractShellComponent {
 	}
 
 	@ShellMethod(key = "component single", value = "Single selector", group = "Components")
-	public String singleSelector(
-		@ShellOption(defaultValue = ShellOption.NULL) Boolean longKeys
-	) {
+	public String singleSelector(@ShellOption(defaultValue = ShellOption.NULL) Boolean longKeys) {
 		List<SelectorItem<String>> items = new ArrayList<>();
 		items.add(SelectorItem.of("key1", "value1"));
 		items.add(SelectorItem.of("key2", "value2"));
@@ -114,20 +110,18 @@ public class ComponentCommands extends AbstractShellComponent {
 			items.add(SelectorItem.of("key3 long long long long long", "value3"));
 			items.add(SelectorItem.of("key4 long long long long long long long long long long", "value4"));
 		}
-		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-				items, "testSimple", null);
+		SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(), items,
+				"testSimple", null);
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
 		SingleItemSelectorContext<String, SelectorItem<String>> context = component
-				.run(SingleItemSelectorContext.empty());
+			.run(SingleItemSelectorContext.empty());
 		String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
 		return "Got value " + result;
 	}
 
 	@ShellMethod(key = "component multi", value = "Multi selector", group = "Components")
-	public String multiSelector(
-		@ShellOption(defaultValue = ShellOption.NULL) Boolean longKeys
-	) {
+	public String multiSelector(@ShellOption(defaultValue = ShellOption.NULL) Boolean longKeys) {
 		List<SelectorItem<String>> items = new ArrayList<>();
 		items.add(SelectorItem.of("key1", "value1"));
 		items.add(SelectorItem.of("key2", "value2", false, true));
@@ -136,15 +130,13 @@ public class ComponentCommands extends AbstractShellComponent {
 			items.add(SelectorItem.of("key4 long long long long long", "value4", false, true));
 			items.add(SelectorItem.of("key5 long long long long long long long long long long", "value5"));
 		}
-		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
-				items, "testSimple", null);
+		MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(), items,
+				"testSimple", null);
 		component.setResourceLoader(getResourceLoader());
 		component.setTemplateExecutor(getTemplateExecutor());
 		MultiItemSelectorContext<String, SelectorItem<String>> context = component
-				.run(MultiItemSelectorContext.empty());
-		String result = context.getResultItems().stream()
-				.map(si -> si.getItem())
-				.collect(Collectors.joining(","));
+			.run(MultiItemSelectorContext.empty());
+		String result = context.getResultItems().stream().map(si -> si.getItem()).collect(Collectors.joining(","));
 		return "Got value " + result;
 	}
 
@@ -172,7 +164,7 @@ public class ComponentCommands extends AbstractShellComponent {
 			if (context.getResultValue() != null) {
 				builder.append(context.getResultValue());
 			}
-			else  {
+			else {
 				String input = context.getInput();
 				if (StringUtils.hasText(input)) {
 					builder.append(input);
@@ -184,5 +176,7 @@ public class ComponentCommands extends AbstractShellComponent {
 
 			return Arrays.asList(builder.toAttributedString());
 		}
+
 	}
+
 }

@@ -18,4 +18,5 @@ package org.springframework.shell.component.support;
 public interface Itemable<T> {
 
 	T getItem();
+
 }

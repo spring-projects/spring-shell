@@ -47,17 +47,15 @@ public interface Parser {
 
 	/**
 	 * Parse given arguments into a {@link ParseResult}.
-	 *
 	 * @param arguments the command line arguments
 	 * @return a parsed results
 	 */
 	ParseResult parse(List<String> arguments);
 
-
 	/**
 	 * Results from a {@link Parser} containing needed information like resolved
-	 * {@link CommandRegistration}, list of {@link CommandOption} instances, errors
-	 * and directive.
+	 * {@link CommandRegistration}, list of {@link CommandOption} instances, errors and
+	 * directive.
 	 *
 	 * @param commandRegistration command registration
 	 * @param optionResults option results
@@ -85,15 +83,18 @@ public interface Parser {
 	}
 
 	/**
-	 * Default implementation of a {@link Parser}. Uses {@link Lexer} and
-	 * {@link Ast}.
+	 * Default implementation of a {@link Parser}. Uses {@link Lexer} and {@link Ast}.
 	 */
 	public class DefaultParser implements Parser {
 
 		private final ParserConfig config;
+
 		private final CommandModel commandModel;
+
 		private final Lexer lexer;
+
 		private final Ast ast;
+
 		private ConversionService conversionService;
 
 		public DefaultParser(CommandModel commandModel, Lexer lexer, Ast ast) {
@@ -120,17 +121,18 @@ public interface Parser {
 			List<Token> tokens = lexerResult.tokens();
 
 			// 2. generate syntax tree results from tokens
-			//    result from it is then feed into node visitor
+			// result from it is then feed into node visitor
 			AstResult astResult = ast.generate(tokens);
 
 			// 3. visit nodes
-			//    whoever uses this parser can then do further
-			//    things with final parsing results
+			// whoever uses this parser can then do further
+			// things with final parsing results
 			NodeVisitor visitor = new DefaultNodeVisitor(commandModel, conversionService, config);
 			ParseResult parseResult = visitor.visit(astResult.nonterminalNodes(), astResult.terminalNodes());
 			parseResult.messageResults().addAll(lexerResult.messageResults());
 			return parseResult;
 		}
+
 	}
 
 	/**
@@ -139,17 +141,29 @@ public interface Parser {
 	class DefaultNodeVisitor extends AbstractNodeVisitor {
 
 		private final CommandModel commandModel;
+
 		private final ConversionService conversionService;
+
 		private final ParserConfig config;
+
 		private final List<MessageResult> commonMessageResults = new ArrayList<>();
+
 		private List<String> resolvedCommmand = new ArrayList<>();
+
 		private List<OptionResult> optionResults = new ArrayList<>();
+
 		private List<String> currentOptionArgument = new ArrayList<>();
+
 		private List<DirectiveResult> directiveResults = new ArrayList<>();
+
 		private List<OptionNode> invalidOptionNodes = new ArrayList<>();
+
 		private List<ArgumentResult> argumentResults = new ArrayList<>();
+
 		private int commandArgumentPos = 0;
+
 		private int optionPos = -1;
+
 		private long expectedOptionCount;
 
 		DefaultNodeVisitor(CommandModel commandModel, ConversionService conversionService, ParserConfig config) {
@@ -176,7 +190,8 @@ public interface Parser {
 					.collect(Collectors.toSet());
 
 				// get sorted list by position as we later match by order
-				List<CommandOption> optionsForArguments = registration.getOptions().stream()
+				List<CommandOption> optionsForArguments = registration.getOptions()
+					.stream()
 					.filter(o -> !resolvedOptions.contains(o))
 					.filter(o -> o.getPosition() > -1)
 					.sorted(Comparator.comparingInt(o -> o.getPosition()))
@@ -221,7 +236,8 @@ public interface Parser {
 				}
 
 				// possibly fill in from default values
-				registration.getOptions().stream()
+				registration.getOptions()
+					.stream()
 					.filter(o -> o.getDefaultValue() != null)
 					.filter(o -> !resolvedOptions.contains(o))
 					.forEach(o -> {
@@ -279,7 +295,8 @@ public interface Parser {
 			String name = node.getName();
 			if (name.startsWith("--")) {
 				info.registration.getOptions().forEach(option -> {
-					Set<String> longNames = Arrays.asList(option.getLongNames()).stream()
+					Set<String> longNames = Arrays.asList(option.getLongNames())
+						.stream()
 						.map(n -> "--" + n)
 						.collect(Collectors.toSet());
 					String nameToMatch = config.isEnabled(Feature.CASE_SENSITIVE_OPTIONS) ? name : name.toLowerCase();
@@ -292,9 +309,10 @@ public interface Parser {
 			else if (name.startsWith("-")) {
 				if (name.length() == 2) {
 					info.registration.getOptions().forEach(option -> {
-						Set<String> shortNames = Arrays.asList(option.getShortNames()).stream()
-								.map(n -> "-" + Character.toString(n))
-								.collect(Collectors.toSet());
+						Set<String> shortNames = Arrays.asList(option.getShortNames())
+							.stream()
+							.map(n -> "-" + Character.toString(n))
+							.collect(Collectors.toSet());
 						boolean match = shortNames.contains(name);
 						if (match) {
 							currentOptions.add(option);
@@ -303,9 +321,10 @@ public interface Parser {
 				}
 				else if (name.length() > 2) {
 					info.registration.getOptions().forEach(option -> {
-						Set<String> shortNames = Arrays.asList(option.getShortNames()).stream()
-								.map(n -> "-" + Character.toString(n))
-								.collect(Collectors.toSet());
+						Set<String> shortNames = Arrays.asList(option.getShortNames())
+							.stream()
+							.map(n -> "-" + Character.toString(n))
+							.collect(Collectors.toSet());
 						for (int i = 1; i < name.length(); i++) {
 							boolean match = shortNames.contains("-" + name.charAt(i));
 							if (match) {
@@ -336,12 +355,14 @@ public interface Parser {
 					// because number of argument to eat dependes on arity
 					// and rest would go back to positional args.
 					if (optionPos + 1 < expectedOptionCount) {
-						if (currentOption.getArityMin() > -1 && currentOptionArgument.size() < currentOption.getArityMin()) {
+						if (currentOption.getArityMin() > -1
+								&& currentOptionArgument.size() < currentOption.getArityMin()) {
 							String arg = currentOption.getLongNames()[0];
 							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
 									currentOptionArgument.size()));
 						}
-						else if (currentOption.getArityMax() > -1 && currentOptionArgument.size() > currentOption.getArityMax()) {
+						else if (currentOption.getArityMax() > -1
+								&& currentOptionArgument.size() > currentOption.getArityMax()) {
 							String arg = currentOption.getLongNames()[0];
 							commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
 									currentOption.getArityMax()));
@@ -370,8 +391,10 @@ public interface Parser {
 
 					try {
 						value = convertOptionType(currentOption, value);
-					} catch (Exception e) {
-						commonMessageResults.add(MessageResult.of(ParserMessage.ILLEGAL_OPTION_VALUE, 0, value, e.getMessage()));
+					}
+					catch (Exception e) {
+						commonMessageResults
+							.add(MessageResult.of(ParserMessage.ILLEGAL_OPTION_VALUE, 0, value, e.getMessage()));
 					}
 					optionResults.add(new OptionResult(currentOption, value));
 				}
@@ -416,52 +439,46 @@ public interface Parser {
 		}
 
 		private List<MessageResult> validateOptionNotMissing(CommandRegistration registration) {
-			HashSet<CommandOption> requiredOptions = registration.getOptions().stream()
+			HashSet<CommandOption> requiredOptions = registration.getOptions()
+				.stream()
 				.filter(o -> o.isRequired())
 				.collect(Collectors.toCollection(() -> new HashSet<>()));
 
-			List<String> argumentResultValues = argumentResults.stream().map(ar -> ar.value).collect(Collectors.toList());
-			optionResults.stream()
-				.filter(or -> or.value() != null)
-				.map(or -> or.option())
-				.forEach(o -> {
-					requiredOptions.remove(o);
-				});
-			Set<CommandOption> requiredOptions2 = requiredOptions.stream()
-				.filter(o -> {
-					if (argumentResultValues.isEmpty()) {
-						return true;
-					}
-					List<String> longNames = Arrays.asList(o.getLongNames());
-					return !Collections.disjoint(argumentResultValues, longNames);
-				})
-				.collect(Collectors.toSet());
-
-			return requiredOptions2.stream()
-				.map(o -> {
-					String ins0 = "";
-					if (o.getLongNames().length > 0) {
-						ins0 = "--" + o.getLongNames()[0];
-					}
-					else if (o.getShortNames().length > 0) {
-						ins0 = "-" + o.getShortNames()[0];
-					}
-
-					String ins1 = "";
-					if (StringUtils.hasText(o.getDescription())) {
-						ins1 = ", " + o.getDescription();
-					}
-					return MessageResult.of(ParserMessage.MANDATORY_OPTION_MISSING, 0, ins0, ins1);
-				})
+			List<String> argumentResultValues = argumentResults.stream()
+				.map(ar -> ar.value)
 				.collect(Collectors.toList());
+			optionResults.stream().filter(or -> or.value() != null).map(or -> or.option()).forEach(o -> {
+				requiredOptions.remove(o);
+			});
+			Set<CommandOption> requiredOptions2 = requiredOptions.stream().filter(o -> {
+				if (argumentResultValues.isEmpty()) {
+					return true;
+				}
+				List<String> longNames = Arrays.asList(o.getLongNames());
+				return !Collections.disjoint(argumentResultValues, longNames);
+			}).collect(Collectors.toSet());
+
+			return requiredOptions2.stream().map(o -> {
+				String ins0 = "";
+				if (o.getLongNames().length > 0) {
+					ins0 = "--" + o.getLongNames()[0];
+				}
+				else if (o.getShortNames().length > 0) {
+					ins0 = "-" + o.getShortNames()[0];
+				}
+
+				String ins1 = "";
+				if (StringUtils.hasText(o.getDescription())) {
+					ins1 = ", " + o.getDescription();
+				}
+				return MessageResult.of(ParserMessage.MANDATORY_OPTION_MISSING, 0, ins0, ins1);
+			}).collect(Collectors.toList());
 		}
 
 		private List<MessageResult> validateOptionIsValid(CommandRegistration registration) {
-			return invalidOptionNodes.stream()
-				.map(on -> {
-					return MessageResult.of(ParserMessage.UNRECOGNISED_OPTION, 0, on.getName());
-				})
-				.collect(Collectors.toList());
+			return invalidOptionNodes.stream().map(on -> {
+				return MessageResult.of(ParserMessage.UNRECOGNISED_OPTION, 0, on.getName());
+			}).collect(Collectors.toList());
 		}
 
 		private static long optionCountInCommand(CommandNode node) {
@@ -470,5 +487,7 @@ public interface Parser {
 			}
 			return node.getChildren().stream().filter(n -> n instanceof OptionNode).count();
 		}
+
 	}
+
 }

@@ -47,9 +47,7 @@ class StatusBarViewTests extends AbstractViewTests {
 			view = new StatusBarView();
 			assertThat(view.getItems()).hasSize(0);
 
-			view = new StatusBarView(new StatusItem[] {
-				new StatusItem("item1")
-			});
+			view = new StatusBarView(new StatusItem[] { new StatusItem("item1") });
 			assertThat(view.getItems()).hasSize(1);
 
 			view = new StatusBarView(Arrays.asList(new StatusItem("item1")));
@@ -75,20 +73,19 @@ class StatusBarViewTests extends AbstractViewTests {
 			item = StatusItem.of("title").setHotKey(Key.f);
 			assertThat(item.getHotKey()).isEqualTo(Key.f);
 		}
+
 	}
 
 	@Nested
 	class Internal {
 
 		StatusBarView view;
+
 		StatusItem item;
 
 		@Test
 		void itemPosition() {
-			view = new StatusBarView(new StatusItem[] {
-				new StatusItem("item1"),
-				new StatusItem("item2")
-			});
+			view = new StatusBarView(new StatusItem[] { new StatusItem("item1"), new StatusItem("item2") });
 			view.setRect(0, 0, 10, 1);
 
 			item = (StatusItem) ReflectionTestUtils.invokeMethod(view, "itemAt", 0, 0);
@@ -106,13 +103,21 @@ class StatusBarViewTests extends AbstractViewTests {
 	class Sorting {
 
 		StatusItem p_0_1;
+
 		StatusItem p_0_2;
+
 		StatusItem p_0_3;
+
 		StatusItem p_1_1;
+
 		StatusItem p_2_1;
+
 		StatusItem n_0_1;
+
 		StatusItem n_0_2;
+
 		StatusItem n_0_3;
+
 		StatusBarView view;
 
 		@BeforeEach
@@ -284,9 +289,7 @@ class StatusBarViewTests extends AbstractViewTests {
 
 		@BeforeEach
 		void setup() {
-			view = new StatusBarView(new StatusItem[] {
-				new StatusItem("item1")
-			});
+			view = new StatusBarView(new StatusItem[] { new StatusItem("item1") });
 			configure(view);
 			view.setRect(0, 0, 20, 1);
 		}
@@ -296,11 +299,8 @@ class StatusBarViewTests extends AbstractViewTests {
 			MouseEvent click = mouseClick(1, 0);
 
 			Flux<StatusBarViewOpenSelectedItemEvent> actions = eventLoop
-					.viewEvents(StatusBarViewOpenSelectedItemEvent.class);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+				.viewEvents(StatusBarViewOpenSelectedItemEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			MouseHandlerResult result = handleMouseClick(view, click);
 
@@ -312,7 +312,6 @@ class StatusBarViewTests extends AbstractViewTests {
 			});
 			verifier.verify(Duration.ofSeconds(1));
 		}
-
 
 	}
 

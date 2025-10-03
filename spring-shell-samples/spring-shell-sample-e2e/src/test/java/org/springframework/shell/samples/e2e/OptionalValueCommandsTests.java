@@ -35,4 +35,5 @@ class OptionalValueCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession(command, interactive);
 		assertScreenContainsText(session, "Hello null");
 	}
+
 }

@@ -43,18 +43,10 @@ public class GroupsInfoModelTests {
 
 	@Test
 	void simpleCommandsAreSeparated() {
-		CommandRegistration r1 = CommandRegistration.builder()
-			.command("main1")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
-		CommandRegistration r2 = CommandRegistration.builder()
-			.command("main2")
-			.withTarget()
-				.consumer(ctx -> {})
-				.and()
-			.build();
+		CommandRegistration r1 = CommandRegistration.builder().command("main1").withTarget().consumer(ctx -> {
+		}).and().build();
+		CommandRegistration r2 = CommandRegistration.builder().command("main2").withTarget().consumer(ctx -> {
+		}).and().build();
 		this.commandCatalog.register(r1, r2);
 		GroupsInfoModel gim = buildGIM();
 
@@ -67,11 +59,12 @@ public class GroupsInfoModelTests {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("main1")
 			.withAlias()
-				.command("alias1")
-				.and()
+			.command("alias1")
+			.and()
 			.withTarget()
-				.consumer(ctx -> {})
-				.and()
+			.consumer(ctx -> {
+			})
+			.and()
 			.build();
 		this.commandCatalog.register(r1);
 		GroupsInfoModel gim = buildGIM();
@@ -86,4 +79,5 @@ public class GroupsInfoModelTests {
 	private GroupsInfoModel buildGIM() {
 		return buildGIM(true);
 	}
+
 }

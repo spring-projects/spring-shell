@@ -33,6 +33,7 @@ import static java.util.Calendar.SUNDAY;
 class CommandAvailabilitySnippets {
 
 	class Dump1 {
+
 		// tag::availability-method-in-shellcomponent[]
 		@ShellComponent
 		public class MyCommands {
@@ -51,15 +52,16 @@ class CommandAvailabilitySnippets {
 			}
 
 			public Availability downloadAvailability() {
-				return connected
-					? Availability.available()
-					: Availability.unavailable("you are not connected");
+				return connected ? Availability.available() : Availability.unavailable("you are not connected");
 			}
+
 		}
 		// end::availability-method-in-shellcomponent[]
+
 	}
 
 	class Dump2 {
+
 		boolean connected;
 
 		// tag::availability-method-name-in-shellcomponent[]
@@ -69,15 +71,16 @@ class CommandAvailabilitySnippets {
 		}
 
 		public Availability availabilityCheck() { // <1>
-			return connected
-				? Availability.available()
-				: Availability.unavailable("you are not connected");
+			return connected ? Availability.available() : Availability.unavailable("you are not connected");
 		}
 		// end::availability-method-name-in-shellcomponent[]
+
 	}
 
 	class Dump3 {
+
 		boolean connected;
+
 		// tag::availability-method-name-multi-in-shellcomponent[]
 		@ShellMethod("Download the nuclear codes.")
 		public void download() {
@@ -87,14 +90,13 @@ class CommandAvailabilitySnippets {
 		public void disconnect() {
 		}
 
-		@ShellMethodAvailability({"download", "disconnect"})
+		@ShellMethodAvailability({ "download", "disconnect" })
 		public Availability availabilityCheck() {
-			return connected
-				? Availability.available()
-				: Availability.unavailable("you are not connected");
+			return connected ? Availability.available() : Availability.unavailable("you are not connected");
 		}
 
 		// end::availability-method-name-multi-in-shellcomponent[]
+
 	}
 
 	// tag::availability-method-default-value-in-shellcomponent[]
@@ -103,50 +105,50 @@ class CommandAvailabilitySnippets {
 
 		@ShellMethodAvailability
 		public Availability availabilityOnWeekdays() {
-			return Calendar.getInstance().get(DAY_OF_WEEK) == SUNDAY
-				? Availability.available()
-				: Availability.unavailable("today is not Sunday");
+			return Calendar.getInstance().get(DAY_OF_WEEK) == SUNDAY ? Availability.available()
+					: Availability.unavailable("today is not Sunday");
 		}
 
 		@ShellMethod
-		public void foo() {}
+		public void foo() {
+		}
 
 		@ShellMethod
-		public void bar() {}
+		public void bar() {
+		}
+
 	}
 	// end::availability-method-default-value-in-shellcomponent[]
 
 	class Dump4 {
-	// tag::availability-method-annotation[]
-	@Command
-	class MyCommands {
 
-		private boolean connected;
+		// tag::availability-method-annotation[]
+		@Command
+		class MyCommands {
 
-		@Command(command = "connect")
-		public void connect(String user, String password) {
-			connected = true;
+			private boolean connected;
+
+			@Command(command = "connect")
+			public void connect(String user, String password) {
+				connected = true;
+			}
+
+			@Command(command = "download")
+			@CommandAvailability(provider = "downloadAvailability")
+			public void download() {
+				// do something
+			}
+
+			@Bean
+			public AvailabilityProvider downloadAvailability() {
+				return () -> connected ? Availability.available() : Availability.unavailable("you are not connected");
+			}
+
 		}
 
+		// end::availability-method-annotation[]
 
-		@Command(command = "download")
-		@CommandAvailability(provider = "downloadAvailability")
-		public void download(
-		) {
-			// do something
-		}
-
-		@Bean
-		public AvailabilityProvider downloadAvailability() {
-			return () -> connected
-				? Availability.available()
-				: Availability.unavailable("you are not connected");
-		}
 	}
-
-	// end::availability-method-annotation[]
-	}
-
 
 	class Dump5 {
 
@@ -154,40 +156,30 @@ class CommandAvailabilitySnippets {
 		private boolean connected;
 
 		@Bean
-		public CommandRegistration connect(
-				CommandRegistration.BuilderSupplier builder) {
+		public CommandRegistration connect(CommandRegistration.BuilderSupplier builder) {
 			return builder.get()
 				.command("connect")
 				.withOption()
-					.longNames("connected")
-					.required()
-					.type(boolean.class)
-					.and()
+				.longNames("connected")
+				.required()
+				.type(boolean.class)
+				.and()
 				.withTarget()
-					.consumer(ctx -> {
-						boolean connected = ctx.getOptionValue("connected");
-						this.connected = connected;
-					})
-					.and()
+				.consumer(ctx -> {
+					boolean connected = ctx.getOptionValue("connected");
+					this.connected = connected;
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
-		public CommandRegistration download(
-				CommandRegistration.BuilderSupplier builder) {
-			return builder.get()
-				.command("download")
-				.availability(() -> {
-					return connected
-						? Availability.available()
-						: Availability.unavailable("you are not connected");
-				})
-				.withTarget()
-					.consumer(ctx -> {
-						// do something
-					})
-					.and()
-				.build();
+		public CommandRegistration download(CommandRegistration.BuilderSupplier builder) {
+			return builder.get().command("download").availability(() -> {
+				return connected ? Availability.available() : Availability.unavailable("you are not connected");
+			}).withTarget().consumer(ctx -> {
+				// do something
+			}).and().build();
 		}
 		// end::availability-method-programmatic[]
 

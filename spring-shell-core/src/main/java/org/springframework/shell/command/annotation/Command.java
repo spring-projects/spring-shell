@@ -36,8 +36,8 @@ import org.springframework.shell.context.InteractionMode;
 public @interface Command {
 
 	/**
-	 * Define command as an array. Given that command should be
-	 * {@code command1 sub1} it can be defined as:
+	 * Define command as an array. Given that command should be {@code command1 sub1} it
+	 * can be defined as:
 	 *
 	 * <pre class="code">
 	 * command = { "command1", "sub1" }
@@ -47,9 +47,9 @@ public @interface Command {
 	 * Values are split and trimmed meaning spaces doesn't matter.
 	 *
 	 * <p>
-	 * <b>Supported at the type level as well as at the method level!</b>
-	 * When used at the type level, all method-level mappings inherit this primary
-	 * command to use it as a prefix.
+	 * <b>Supported at the type level as well as at the method level!</b> When used at the
+	 * type level, all method-level mappings inherit this primary command to use it as a
+	 * prefix.
 	 *
 	 * <pre class="code">
 	 * &#64;Command(command = "command1")
@@ -59,14 +59,13 @@ public @interface Command {
 	 *   void sub1(){}
 	 * }
 	 * </pre>
-	 *
 	 * @return the command as an array
 	 */
 	String[] command() default {};
 
 	/**
-	 * Define alias as an array. Given that alias should be
-	 * {@code alias1 sub1} it can be defined as:
+	 * Define alias as an array. Given that alias should be {@code alias1 sub1} it can be
+	 * defined as:
 	 *
 	 * <pre class="code">
 	 * alias = { "alias1", "sub1" }
@@ -76,9 +75,9 @@ public @interface Command {
 	 * Values are split and trimmed meaning spaces doesn't matter.
 	 *
 	 * <p>
-	 * <b>Supported at the type level as well as at the method level!</b>
-	 * When used at the type level, all method-level mappings inherit this primary
-	 * alias to use it as a prefix.
+	 * <b>Supported at the type level as well as at the method level!</b> When used at the
+	 * type level, all method-level mappings inherit this primary alias to use it as a
+	 * prefix.
 	 *
 	 * <pre class="code">
 	 * &#64;Command(alias = "alias1")
@@ -88,7 +87,6 @@ public @interface Command {
 	 *   void sub1(){}
 	 * }
 	 * </pre>
-	 *
 	 * @return the aliases as an array
 	 */
 	String[] alias() default {};
@@ -97,10 +95,9 @@ public @interface Command {
 	 * Define a command group.
 	 *
 	 * <p>
-	 * <b>Supported at the type level as well as at the method level!</b>
-	 * When used at the type level, all method-level group inherit this primary
-	 * group. Can be overridden on method-level.
-	 *
+	 * <b>Supported at the type level as well as at the method level!</b> When used at the
+	 * type level, all method-level group inherit this primary group. Can be overridden on
+	 * method-level.
 	 * @return the command group
 	 */
 	String group() default "";
@@ -109,10 +106,9 @@ public @interface Command {
 	 * Define a command description.
 	 *
 	 * <p>
-	 * <b>Supported at the type level as well as at the method level!</b>
-	 * When used at the type level, all method-level descriptions inherit this primary
-	 * field. Can be overridden on method-level.
-	 *
+	 * <b>Supported at the type level as well as at the method level!</b> When used at the
+	 * type level, all method-level descriptions inherit this primary field. Can be
+	 * overridden on method-level.
 	 * @return the command description
 	 */
 	String description() default "";
@@ -121,9 +117,8 @@ public @interface Command {
 	 * Define command to be hidden.
 	 *
 	 * <p>
-	 * <b>Supported at the type level as well as at the method level!</b>
-	 * When used at the type level, all method-level mappings inherit this primary
-	 * hidden field.
+	 * <b>Supported at the type level as well as at the method level!</b> When used at the
+	 * type level, all method-level mappings inherit this primary hidden field.
 	 *
 	 * <pre class="code">
 	 * &#64;Command(hidden = true)
@@ -135,23 +130,20 @@ public @interface Command {
 	 *   }
 	 * }
 	 * </pre>
-	 *
 	 * @return true if command should be hidden
 	 */
 	boolean hidden() default false;
 
 	/**
-	 * Define interaction mode for a command as a hint when command should be
-	 * available. For example presense of some commands doesn't make sense if shell
-	 * is running as non-interactive mode and vice versa.
+	 * Define interaction mode for a command as a hint when command should be available.
+	 * For example presense of some commands doesn't make sense if shell is running as
+	 * non-interactive mode and vice versa.
 	 *
 	 * <p>
-	 * <b>Supported at the type level as well as at the method level!</b>
-	 * When used at the type level, all method-level mappings inherit this primary
-	 * field.
+	 * <b>Supported at the type level as well as at the method level!</b> When used at the
+	 * type level, all method-level mappings inherit this primary field.
 	 *
 	 * Type is an array to be able to indicate that default don't have anyting defined.
-	 *
 	 * @return interaction modes
 	 */
 	InteractionMode[] interactionMode() default {};

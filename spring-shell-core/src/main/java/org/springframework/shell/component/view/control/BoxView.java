@@ -26,30 +26,46 @@ import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.StringUtils;
 
 /**
- * {@code BoxView} is a {@link View} with an empty background and optional
- * border and title. All "boxed" views can use this as their base
- * implementation by either subclassing or wrapping.
+ * {@code BoxView} is a {@link View} with an empty background and optional border and
+ * title. All "boxed" views can use this as their base implementation by either
+ * subclassing or wrapping.
  *
  * @author Janne Valkealahti
  */
 public class BoxView extends AbstractView {
 
 	private final static Logger log = LoggerFactory.getLogger(BoxView.class);
+
 	private String title = null;
+
 	private boolean showBorder = false;
+
 	private int innerX = -1;
+
 	private int innerY;
+
 	private int innerWidth;
+
 	private int innerHeight;
+
 	private int paddingTop;
+
 	private int paddingBottom;
+
 	private int paddingLeft;
+
 	private int paddingRight;
+
 	private int backgroundColor = -1;
+
 	private int titleColor = -1;
+
 	private int titleStyle = -1;
+
 	private int focusedTitleColor = -1;
+
 	private int focusedTitleStyle = -1;
+
 	private HorizontalAlign titleAlign;
 
 	@Override
@@ -60,7 +76,6 @@ public class BoxView extends AbstractView {
 
 	/**
 	 * Sets a paddings for this view.
-	 *
 	 * @param paddingTop the top padding
 	 * @param paddingBottom the bottom padding
 	 * @param paddingLeft the left padding
@@ -77,7 +92,6 @@ public class BoxView extends AbstractView {
 
 	/**
 	 * Defines if border is shown.
-	 *
 	 * @param showBorder the flag showing border
 	 */
 	public void setShowBorder(boolean showBorder) {
@@ -86,7 +100,6 @@ public class BoxView extends AbstractView {
 
 	/**
 	 * Returns if border is shown.
-	 *
 	 * @return true if border is shown
 	 */
 	public boolean isShowBorder() {
@@ -94,9 +107,8 @@ public class BoxView extends AbstractView {
 	}
 
 	/**
-	 * Sets a title. {@code title} is shown within a top-level border boundary and
-	 * will not be visible if border itself is not visible.
-	 *
+	 * Sets a title. {@code title} is shown within a top-level border boundary and will
+	 * not be visible if border itself is not visible.
 	 * @param title the border title
 	 */
 	public void setTitle(String title) {
@@ -107,7 +119,6 @@ public class BoxView extends AbstractView {
 	 * Sets a background color. If color is set to {@code null} it indicates that
 	 * background should be set to be {@code empty} causing possible layer to be
 	 * non-transparent.
-	 *
 	 * @param backgroundColor the background color
 	 */
 	public void setBackgroundColor(int backgroundColor) {
@@ -116,7 +127,6 @@ public class BoxView extends AbstractView {
 
 	/**
 	 * Sets a title color.
-	 *
 	 * @param titleColor the title color
 	 */
 	public void setTitleColor(int titleColor) {
@@ -125,7 +135,6 @@ public class BoxView extends AbstractView {
 
 	/**
 	 * Sets a title style.
-	 *
 	 * @param titleStyle the title style
 	 */
 	public void setTitleStyle(int titleStyle) {
@@ -133,9 +142,7 @@ public class BoxView extends AbstractView {
 	}
 
 	/**
-	 * Sets a focused title color. Takes precedence set from
-	 * {@link #setTitleColor(int)}.
-	 *
+	 * Sets a focused title color. Takes precedence set from {@link #setTitleColor(int)}.
 	 * @param focusedTitleColor the title color
 	 */
 	public void setFocusedTitleColor(int focusedTitleColor) {
@@ -143,9 +150,7 @@ public class BoxView extends AbstractView {
 	}
 
 	/**
-	 * Sets a focused title style. Takes precedence set from
-	 * {@link #setTitleStyle(int)}.
-	 *
+	 * Sets a focused title style. Takes precedence set from {@link #setTitleStyle(int)}.
 	 * @param focusedTitleStyle the title style
 	 */
 	public void setFocusedTitleStyle(int focusedTitleStyle) {
@@ -154,7 +159,6 @@ public class BoxView extends AbstractView {
 
 	/**
 	 * Sets a title align.
-	 *
 	 * @param titleAlign the title align
 	 */
 	public void setTitleAlign(HorizontalAlign titleAlign) {
@@ -173,9 +177,8 @@ public class BoxView extends AbstractView {
 	}
 
 	/**
-	 * Possibly draws a box around this view and title in a box top boundary. Also
-	 * calls a {@code draw function} if defined.
-	 *
+	 * Possibly draws a box around this view and title in a box top boundary. Also calls a
+	 * {@code draw function} if defined.
 	 * @param screen the screen
 	 */
 	protected void drawInternal(Screen screen) {
@@ -202,8 +205,12 @@ public class BoxView extends AbstractView {
 					style = titleStyle;
 				}
 
-				screen.writerBuilder().layer(getLayer()).color(color).style(style).build().text(title, r, titleAlign,
-						VerticalAlign.TOP);
+				screen.writerBuilder()
+					.layer(getLayer())
+					.color(color)
+					.style(style)
+					.build()
+					.text(title, r, titleAlign, VerticalAlign.TOP);
 			}
 		}
 		if (getDrawFunction() != null) {
@@ -224,7 +231,6 @@ public class BoxView extends AbstractView {
 
 	/**
 	 * Gets an inner rectangle of this view.
-	 *
 	 * @return an inner rectangle of this view
 	 */
 	protected Rectangle getInnerRect() {
@@ -254,4 +260,5 @@ public class BoxView extends AbstractView {
 		}
 		return new Rectangle(x, y, width, height);
 	}
+
 }

@@ -25,7 +25,6 @@ public interface SearchMatchAlgorithm {
 
 	/**
 	 * Match given text with pattern as a result.
-	 *
 	 * @param caseSensitive the caseSensitive
 	 * @param normalize the normalize
 	 * @param forward the forward
@@ -34,4 +33,5 @@ public interface SearchMatchAlgorithm {
 	 * @return a search match result
 	 */
 	SearchMatchResult match(boolean caseSensitive, boolean normalize, boolean forward, String text, String pattern);
+
 }

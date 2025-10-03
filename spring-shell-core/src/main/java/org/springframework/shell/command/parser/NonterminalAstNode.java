@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code Nonterminal} node means that it can have children and doesn't
- * necessarily terminal {@code ast tree branch}.
+ * {@code Nonterminal} node means that it can have children and doesn't necessarily
+ * terminal {@code ast tree branch}.
  *
  * @author Janne Valkealahti
  */
@@ -39,4 +39,5 @@ public abstract sealed class NonterminalAstNode extends AstNode permits CommandN
 	void addChildNode(AstNode node) {
 		this.children.add(node);
 	}
+
 }

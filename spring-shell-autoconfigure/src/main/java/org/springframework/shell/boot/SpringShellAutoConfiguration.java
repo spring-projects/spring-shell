@@ -71,4 +71,5 @@ public class SpringShellAutoConfiguration {
 		shell.setConversionService(shellConversionServiceSupplier.get());
 		return shell;
 	}
+
 }

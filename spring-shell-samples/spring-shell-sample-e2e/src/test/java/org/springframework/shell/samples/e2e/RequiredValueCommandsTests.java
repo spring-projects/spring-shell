@@ -35,4 +35,5 @@ class RequiredValueCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession(command, interactive);
 		assertScreenContainsText(session, "Missing mandatory option");
 	}
+
 }

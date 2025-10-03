@@ -23,46 +23,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OptionNameModifierSupportTests {
 
 	@ParameterizedTest
-	@CsvSource({
-		"camel case,camelCase",
-		"camel_case,camelCase",
-		"camel-case,camelCase",
-		"camelCase,camelCase",
-		"CamelCase,camelCase"
-	})
+	@CsvSource({ "camel case,camelCase", "camel_case,camelCase", "camel-case,camelCase", "camelCase,camelCase",
+			"CamelCase,camelCase" })
 	void testCamel(String name, String expected) {
 		assertThat(camel(name)).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-		"pascal-case,PascalCase",
-		"pascal_case,PascalCase",
-		"pascalCase,PascalCase",
-		"PascalCase,PascalCase"
-	})
+	@CsvSource({ "pascal-case,PascalCase", "pascal_case,PascalCase", "pascalCase,PascalCase", "PascalCase,PascalCase" })
 	void testPascal(String name, String expected) {
 		assertThat(pascal(name)).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-		"kebabCase,kebab-case",
-		"kebab_case,kebab-case",
-		"kebab_Case,kebab-case",
-		"Kebab_case,kebab-case"
-	})
+	@CsvSource({ "kebabCase,kebab-case", "kebab_case,kebab-case", "kebab_Case,kebab-case", "Kebab_case,kebab-case" })
 	void testKebab(String name, String expected) {
 		assertThat(kebab(name)).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-		"snakeCase,snake_case",
-		"snake_case,snake_case",
-		"snake_Case,snake_case",
-		"Snake_case,snake_case"
-	})
+	@CsvSource({ "snakeCase,snake_case", "snake_case,snake_case", "snake_Case,snake_case", "Snake_case,snake_case" })
 	void testSnake(String name, String expected) {
 		assertThat(snake(name)).isEqualTo(expected);
 	}
@@ -82,4 +62,5 @@ class OptionNameModifierSupportTests {
 	private String pascal(String name) {
 		return OptionNameModifierSupport.toPascalCase(name);
 	}
+
 }
