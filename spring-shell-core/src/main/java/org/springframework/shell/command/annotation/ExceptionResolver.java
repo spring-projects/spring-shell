@@ -34,8 +34,8 @@ public @interface ExceptionResolver {
 	/**
 	 * Exceptions handled by the annotated method. If empty, will default to any
 	 * exceptions listed in the method argument list.
-	 *
 	 * @return Exceptions handled by annotated method
 	 */
 	Class<? extends Throwable>[] value() default {};
+
 }

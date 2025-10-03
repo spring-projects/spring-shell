@@ -43,10 +43,15 @@ public class UserConfigAutoConfiguration {
 	static class LocationResolver {
 
 		private final static String XDG_CONFIG_HOME = "XDG_CONFIG_HOME";
+
 		private final static String APP_DATA = "APP_DATA";
+
 		private static final String USERCONFIG_PLACEHOLDER = "{userconfig}";
+
 		private Function<String, Path> pathProvider = (path) -> Paths.get(path);
+
 		private final String configDirEnv;
+
 		private final String configDirLocation;
 
 		LocationResolver(String configDirEnv, String configDirLocation) {
@@ -93,5 +98,7 @@ public class UserConfigAutoConfiguration {
 			String os = System.getProperty("os.name");
 			return os.startsWith("Windows");
 		}
+
 	}
+
 }

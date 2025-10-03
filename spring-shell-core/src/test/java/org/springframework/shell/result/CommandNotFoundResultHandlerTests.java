@@ -93,4 +93,5 @@ class CommandNotFoundResultHandlerTests {
 		String string = out.toString();
 		assertThat(string).contains("hitrueonetwotruetext");
 	}
+
 }

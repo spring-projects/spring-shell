@@ -25,8 +25,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * A {@link ReflectiveProcessor} implementation that registers methods of a
- * return type {@link Availability} from a target which is a class.
+ * A {@link ReflectiveProcessor} implementation that registers methods of a return type
+ * {@link Availability} from a target which is a class.
  *
  * @author Janne Valkealahti
  */
@@ -46,11 +46,11 @@ public final class AvailabilityReflectiveProcessor implements ReflectiveProcesso
 
 	/**
 	 * Register {@link ReflectionHints} against the specified {@link Method}.
-	 *
 	 * @param hints the reflection hints instance to use
 	 * @param method the method to process
 	 */
 	protected void registerMethodHint(ReflectionHints hints, Method method) {
 		hints.registerMethod(method, ExecutableMode.INVOKE);
 	}
+
 }

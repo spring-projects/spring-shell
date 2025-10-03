@@ -23,12 +23,15 @@ import java.util.stream.Collectors;
 import org.springframework.shell.command.CommandRegistration;
 
 /**
- * A result to be handled by the {@link ResultHandler} when no command could be mapped to user input
+ * A result to be handled by the {@link ResultHandler} when no command could be mapped to
+ * user input
  */
 public class CommandNotFound extends RuntimeException {
 
 	private final List<String> words;
+
 	private final Map<String, CommandRegistration> registrations;
+
 	private final String text;
 
 	public CommandNotFound(List<String> words) {
@@ -48,16 +51,14 @@ public class CommandNotFound extends RuntimeException {
 
 	/**
 	 * Gets a {@code words} in this exception.
-	 *
 	 * @return a words
 	 */
-	public List<String> getWords(){
+	public List<String> getWords() {
 		return new ArrayList<>(words);
 	}
 
 	/**
 	 * Gets command registrations known when this error was created.
-	 *
 	 * @return known command registrations
 	 */
 	public Map<String, CommandRegistration> getRegistrations() {
@@ -66,10 +67,10 @@ public class CommandNotFound extends RuntimeException {
 
 	/**
 	 * Gets a raw text input.
-	 *
 	 * @return raw text input
 	 */
 	public String getText() {
 		return text;
 	}
+
 }

@@ -33,16 +33,26 @@ public class TerminalPanel implements TerminalDisplay {
 	public static final double SCROLL_SPEED = 0.05;
 
 	protected int myCharSizeWidth = 0;
+
 	protected int myCharSizeHeight = 0;
+
 	protected int myTermSizeWidth = 80;
+
 	protected int myTermSizeHeight = 24;
+
 	private TerminalStarter myTerminalStarter = null;
+
 	// private TerminalSelection mySelection = null;
 	private TerminalPanelListener myTerminalPanelListener;
+
 	private final TerminalTextBuffer myTerminalTextBuffer;
+
 	protected int myClientScrollOrigin;
+
 	private String myWindowTitle = "Terminal";
+
 	private AtomicInteger scrollDy = new AtomicInteger(0);
+
 	private TerminalCoordinates myCoordsAccessor;
 
 	public TerminalPanel(TerminalTextBuffer terminalTextBuffer, StyleState styleState) {
@@ -92,9 +102,10 @@ public class TerminalPanel implements TerminalDisplay {
 	}
 
 	public enum TerminalCursorState {
-		SHOWING, HIDDEN, NO_FOCUS;
-	}
 
+		SHOWING, HIDDEN, NO_FOCUS;
+
+	}
 
 	// Called in a background thread with myTerminalTextBuffer.lock() acquired
 	public void scrollArea(final int scrollRegionTop, final int scrollRegionSize, int dy) {
@@ -104,7 +115,7 @@ public class TerminalPanel implements TerminalDisplay {
 
 	public void beep() {
 		// if (mySettingsProvider.audibleBell()) {
-		// 	Toolkit.getDefaultToolkit().beep();
+		// Toolkit.getDefaultToolkit().beep();
 		// }
 	}
 
@@ -113,7 +124,7 @@ public class TerminalPanel implements TerminalDisplay {
 	}
 
 	// public TerminalSelection getSelection() {
-	// 	return mySelection;
+	// return mySelection;
 	// }
 
 	@Override
@@ -147,8 +158,8 @@ public class TerminalPanel implements TerminalDisplay {
 	}
 
 	/**
-	 * @param keepLastLine true to keep last line (e.g. to keep terminal prompt)
-	 *                     false to clear entire terminal panel (relevant for terminal console)
+	 * @param keepLastLine true to keep last line (e.g. to keep terminal prompt) false to
+	 * clear entire terminal panel (relevant for terminal console)
 	 */
 	protected void clearBuffer(boolean keepLastLine) {
 		if (!myTerminalTextBuffer.isUsingAlternateBuffer()) {
@@ -182,4 +193,5 @@ public class TerminalPanel implements TerminalDisplay {
 
 	public void dispose() {
 	}
+
 }

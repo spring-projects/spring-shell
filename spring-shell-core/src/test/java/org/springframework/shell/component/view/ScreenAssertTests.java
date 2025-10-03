@@ -54,7 +54,8 @@ class ScreenAssertTests {
 		screen.writerBuilder().color(Color.RED).build().text("test", 0, 0);
 		assertThatExceptionOfType(AssertionError.class)
 			.isThrownBy(() -> assertThat(forScreen(screen)).hasForegroundColor(0, 0, Color.BLUE))
-			.withMessageContaining("Expecting a Screen to have foreground color <255> position <0,0> but was <16711680>");
+			.withMessageContaining(
+					"Expecting a Screen to have foreground color <255> position <0,0> but was <16711680>");
 	}
 
 	@Test
@@ -151,12 +152,13 @@ class ScreenAssertTests {
 
 	// @Test
 	// void xxx() {
-	// 	Screen screen = new Screen(5, 5);
-	// 	screen.printBorder(0, 0, 5, 5);
-	// 	assertThat(forScreen(screen)).hasBorder(0, 0, 5, 4);
+	// Screen screen = new Screen(5, 5);
+	// screen.printBorder(0, 0, 5, 5);
+	// assertThat(forScreen(screen)).hasBorder(0, 0, 5, 4);
 	// }
 
 	private AssertProvider<ScreenAssert> forScreen(Screen screen) {
 		return () -> new ScreenAssert(screen);
 	}
+
 }

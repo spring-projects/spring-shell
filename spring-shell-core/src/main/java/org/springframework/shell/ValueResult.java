@@ -57,22 +57,24 @@ public class ValueResult {
 	}
 
 	/**
-	 * Represents the resolved value for the {@link MethodParameter} associated with this result.
+	 * Represents the resolved value for the {@link MethodParameter} associated with this
+	 * result.
 	 */
 	public Object resolvedValue() {
 		return resolvedValue;
 	}
 
 	/**
-	 * Represents the full set of words used to resolve the {@link MethodParameter}. This includes
-	 * any tags/keys consumed from the input.
+	 * Represents the full set of words used to resolve the {@link MethodParameter}. This
+	 * includes any tags/keys consumed from the input.
 	 */
 	public BitSet wordsUsed() {
 		return wordsUsed;
 	}
 
 	/**
-	 * Represents the full set of words used to resolve the value of this {@link MethodParameter}.
+	 * Represents the full set of words used to resolve the value of this
+	 * {@link MethodParameter}.
 	 */
 	public BitSet wordsUsedForValue() {
 		return wordsUsedForValue;

@@ -36,16 +36,27 @@ import org.springframework.shell.component.support.SelectorItem;
 public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorSpec> implements MultiItemSelectorSpec {
 
 	private String name;
+
 	private List<String> resultValues = new ArrayList<>();
+
 	private ResultMode resultMode;
+
 	private List<SelectItem> selectItems = new ArrayList<>();
+
 	private Comparator<SelectorItem<String>> comparator;
+
 	private Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
+
 	private Integer maxItems;
+
 	private List<Consumer<MultiItemSelectorContext<String, SelectorItem<String>>>> preHandlers = new ArrayList<>();
+
 	private List<Consumer<MultiItemSelectorContext<String, SelectorItem<String>>>> postHandlers = new ArrayList<>();
+
 	private boolean storeResult = true;
+
 	private String templateLocation;
+
 	private Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> next;
 
 	public BaseMultiItemSelector(BaseBuilder builder, String id) {
@@ -83,7 +94,8 @@ public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorS
 	}
 
 	@Override
-	public MultiItemSelectorSpec renderer(Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer) {
+	public MultiItemSelectorSpec renderer(
+			Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer) {
 		this.renderer = renderer;
 		return this;
 	}
@@ -119,8 +131,7 @@ public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorS
 	}
 
 	@Override
-	public MultiItemSelectorSpec next(
-			Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> next) {
+	public MultiItemSelectorSpec next(Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> next) {
 		this.next = next;
 		return this;
 	}
@@ -183,4 +194,5 @@ public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorS
 	public Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> getNext() {
 		return next;
 	}
+
 }

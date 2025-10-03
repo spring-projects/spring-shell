@@ -31,9 +31,10 @@ final class SystemCommandSequence {
 	private static final char ST = 0x9c;
 
 	private final List<Object> myArgs = new ArrayList<>();
+
 	private final StringBuilder mySequence = new StringBuilder();
 
-	public SystemCommandSequence( TerminalDataStream stream) throws IOException {
+	public SystemCommandSequence(TerminalDataStream stream) throws IOException {
 		StringBuilder argBuilder = new StringBuilder();
 		boolean end = false;
 		while (!end) {
@@ -53,7 +54,7 @@ final class SystemCommandSequence {
 		}
 	}
 
-	private  Object parseArg( String arg) {
+	private Object parseArg(String arg) {
 		if (arg.length() > 0 && Character.isDigit(arg.charAt(arg.length() - 1))) {
 			// check isDigit to reduce amount of expensive NumberFormatException
 			try {
@@ -79,12 +80,12 @@ final class SystemCommandSequence {
 		return len > 1 && mySequence.charAt(len - 2) == Ascii.ESC && mySequence.charAt(len - 1) == '\\';
 	}
 
-	public  String getStringAt(int i) {
-		if (i>=myArgs.size()) {
+	public String getStringAt(int i) {
+		if (i >= myArgs.size()) {
 			return null;
 		}
 		Object val = myArgs.get(i);
-		return val instanceof String ? (String)val : null;
+		return val instanceof String ? (String) val : null;
 	}
 
 	public int getIntAt(int position, int defaultValue) {
@@ -97,8 +98,8 @@ final class SystemCommandSequence {
 		return defaultValue;
 	}
 
-	public  String format( String body) {
-		return (char)Ascii.ESC + "]" + body + getTerminator();
+	public String format(String body) {
+		return (char) Ascii.ESC + "]" + body + getTerminator();
 	}
 
 	@Override
@@ -107,16 +108,16 @@ final class SystemCommandSequence {
 	}
 
 	/**
-	 * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">
-	 * XTerm accepts either BEL or ST for terminating OSC
-	 * sequences, and when returning information, uses the same
-	 * terminator used in a query. </a>
+	 * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html"> XTerm accepts
+	 * either BEL or ST for terminating OSC sequences, and when returning information,
+	 * uses the same terminator used in a query. </a>
 	 */
-	private  String getTerminator() {
+	private String getTerminator() {
 		int len = mySequence.length();
 		if (isTwoBytesEnd()) {
 			return mySequence.substring(len - 2);
 		}
 		return mySequence.substring(len - 1);
 	}
+
 }

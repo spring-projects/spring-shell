@@ -46,4 +46,5 @@ public class ArrayTableModel extends TableModel {
 	public Object getValue(int row, int column) {
 		return data[row][column];
 	}
+
 }

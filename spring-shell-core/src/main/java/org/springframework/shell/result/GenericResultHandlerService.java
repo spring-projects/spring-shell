@@ -36,8 +36,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Base {@link ResultHandlerService} implementation suitable for use in most
- * environments.
+ * Base {@link ResultHandlerService} implementation suitable for use in most environments.
  *
  * @author Janne Valkealahti
  */
@@ -65,21 +64,19 @@ public class GenericResultHandlerService implements ResultHandlerService {
 
 	/**
 	 * Add a plain result handler to this registry.
-	 *
 	 * @param resultHandler the result handler
 	 */
 	public void addResultHandler(ResultHandler<?> resultHandler) {
 		ResolvableType[] typeInfo = getRequiredTypeInfo(resultHandler.getClass(), ResultHandler.class);
 		if (typeInfo == null) {
-			throw new IllegalArgumentException("Unable to determine result type <T> for your " +
-					"ResultHandler [" + resultHandler.getClass().getName() + "]; does the class parameterize those types?");
+			throw new IllegalArgumentException("Unable to determine result type <T> for your " + "ResultHandler ["
+					+ resultHandler.getClass().getName() + "]; does the class parameterize those types?");
 		}
 		addResultHandler(new ResultHandlerAdapter(resultHandler, typeInfo[0]));
 	}
 
 	/**
 	 * Add a plain result handler to this registry.
-	 *
 	 * @param <T> the type of result handler
 	 * @param resultType the class of a result type
 	 * @param resultHandler the result handler
@@ -90,7 +87,6 @@ public class GenericResultHandlerService implements ResultHandlerService {
 
 	/**
 	 * Add a generic result handler this this registry.
-	 *
 	 * @param handler the generic result handler
 	 */
 	public void addResultHandler(GenericResultHandler handler) {
@@ -102,8 +98,7 @@ public class GenericResultHandlerService implements ResultHandlerService {
 	}
 
 	@Nullable
-	private Object handleResultHandlerNotFound(
-			@Nullable Object source, @Nullable TypeDescriptor sourceType) {
+	private Object handleResultHandlerNotFound(@Nullable Object source, @Nullable TypeDescriptor sourceType) {
 		if (source == null) {
 			return null;
 		}
@@ -131,6 +126,7 @@ public class GenericResultHandlerService implements ResultHandlerService {
 	private final static class ResultHandlerAdapter implements GenericResultHandler {
 
 		ResultHandler<Object> handler;
+
 		Class<?> result;
 
 		public ResultHandlerAdapter(ResultHandler<?> handler, ResolvableType resultType) {
@@ -153,6 +149,7 @@ public class GenericResultHandlerService implements ResultHandlerService {
 			// always true until we create conditional handlers
 			return true;
 		}
+
 	}
 
 	/**
@@ -180,11 +177,13 @@ public class GenericResultHandlerService implements ResultHandlerService {
 		public String toString() {
 			return StringUtils.collectionToCommaDelimitedString(this.handlers);
 		}
+
 	}
 
 	private static class ResultHandlers {
 
 		private final Set<GenericResultHandler> globalHandlers = new CopyOnWriteArraySet<>();
+
 		private final Map<Class<?>, ResultHandlersForType> handlers = new ConcurrentHashMap<>(16);
 
 		public void add(GenericResultHandler handler) {
@@ -260,15 +259,15 @@ public class GenericResultHandlerService implements ResultHandlerService {
 			return hierarchy;
 		}
 
-		private void addInterfacesToClassHierarchy(Class<?> type, boolean asArray,
-				List<Class<?>> hierarchy, Set<Class<?>> visited) {
+		private void addInterfacesToClassHierarchy(Class<?> type, boolean asArray, List<Class<?>> hierarchy,
+				Set<Class<?>> visited) {
 			for (Class<?> implementedInterface : type.getInterfaces()) {
 				addToClassHierarchy(hierarchy.size(), implementedInterface, asArray, hierarchy, visited);
 			}
 		}
 
-		private void addToClassHierarchy(int index, Class<?> type, boolean asArray,
-				List<Class<?>> hierarchy, Set<Class<?>> visited) {
+		private void addToClassHierarchy(int index, Class<?> type, boolean asArray, List<Class<?>> hierarchy,
+				Set<Class<?>> visited) {
 			if (asArray) {
 				type = Array.newInstance(type, 0).getClass();
 			}
@@ -276,9 +275,12 @@ public class GenericResultHandlerService implements ResultHandlerService {
 				hierarchy.add(index, type);
 			}
 		}
+
 	}
 
 	private static void invokeHandler(GenericResultHandler handler, Object result, TypeDescriptor resultType) {
-		handler.handle(result, resultType);;
+		handler.handle(result, resultType);
+		;
 	}
+
 }

@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class KeyHandlerTests {
 
 	private static final KeyEvent EVENT = KeyEvent.of(Key.x);
+
 	private static final KeyHandlerArgs ARGS = KeyHandler.argsOf(EVENT);
 
 	@Test
@@ -60,6 +61,7 @@ class KeyHandlerTests {
 	private static class TestKeyHandler implements KeyHandler {
 
 		boolean willConsume;
+
 		int calls;
 
 		TestKeyHandler(boolean willConsume) {
@@ -73,4 +75,5 @@ class KeyHandlerTests {
 		}
 
 	}
+
 }

@@ -26,10 +26,10 @@ public class HiddenCommands {
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "hidden-1", hidden = true)
-		public String testHidden1Annotation(
-		) {
-				return "Hello from hidden command";
+		public String testHidden1Annotation() {
+			return "Hello from hidden command";
 		}
+
 	}
 
 	@Component
@@ -37,16 +37,11 @@ public class HiddenCommands {
 
 		@Bean
 		public CommandRegistration testHidden1Registration() {
-			return getBuilder()
-				.command(REG, "hidden-1")
-				.group(GROUP)
-				.hidden()
-				.withTarget()
-					.function(ctx -> {
-						return "Hello from hidden command";
-					})
-					.and()
-				.build();
+			return getBuilder().command(REG, "hidden-1").group(GROUP).hidden().withTarget().function(ctx -> {
+				return "Hello from hidden command";
+			}).and().build();
 		}
+
 	}
+
 }

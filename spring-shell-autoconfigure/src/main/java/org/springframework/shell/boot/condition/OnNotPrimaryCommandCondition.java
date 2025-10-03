@@ -26,6 +26,7 @@ public class OnNotPrimaryCommandCondition extends NoneNestedConditions {
 
 	@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "primary-command", matchIfMissing = false)
 	static class NotPrimaryCommandCondition {
+
 	}
 
 }

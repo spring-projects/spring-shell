@@ -40,10 +40,7 @@ public class ShellAutoConfiguration {
 	@Bean
 	TerminalCustomizer terminalStreamsTerminalCustomizer(TerminalStreams terminalStreams) {
 		return builder -> {
-			builder.streams(terminalStreams.input, terminalStreams.output)
-				.jansi(false)
-				.jna(false)
-				.jni(false);
+			builder.streams(terminalStreams.input, terminalStreams.output).jansi(false).jna(false).jni(false);
 		};
 	}
 
@@ -65,9 +62,13 @@ public class ShellAutoConfiguration {
 	}
 
 	public static class TerminalStreams {
+
 		PipedInputStream input;
+
 		PipedOutputStream output;
+
 		InputStreamReader myReader;
+
 		OutputStreamWriter myWriter;
 
 		public TerminalStreams() {
@@ -76,16 +77,20 @@ public class ShellAutoConfiguration {
 			try {
 				myReader = new InputStreamReader(new PipedInputStream(this.output));
 				myWriter = new OutputStreamWriter(new PipedOutputStream(this.input));
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 			}
 
 		}
+
 	}
 
 	private static class TestTtyConnector implements TtyConnector {
 
 		private final static Logger log = LoggerFactory.getLogger(TestTtyConnector.class);
+
 		InputStreamReader myReader;
+
 		OutputStreamWriter myWriter;
 
 		TestTtyConnector(InputStreamReader myReader, OutputStreamWriter myWriter) {
@@ -145,6 +150,7 @@ public class ShellAutoConfiguration {
 			log.trace("ready2 {}", ready);
 			return ready;
 		}
+
 	}
 
 }

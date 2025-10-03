@@ -36,6 +36,7 @@ import org.springframework.shell.style.StyleSettings;
 public class ButtonView extends BoxView {
 
 	private String text;
+
 	private Runnable action;
 
 	public ButtonView() {

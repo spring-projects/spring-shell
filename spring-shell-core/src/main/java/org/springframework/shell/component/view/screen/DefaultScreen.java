@@ -42,9 +42,13 @@ import org.springframework.util.Assert;
 public class DefaultScreen implements Screen, DisplayLines {
 
 	private final static Logger log = LoggerFactory.getLogger(DefaultScreen.class);
+
 	private boolean showCursor;
+
 	private Position cursorPosition = new Position(0, 0);
+
 	private int rows = 0;
+
 	private int columns = 0;
 
 	public DefaultScreen() {
@@ -145,7 +149,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 							s = s.crossedOut();
 						}
 					}
-					if (item.getContent() != null){
+					if (item.getContent() != null) {
 						builder.append(item.getContent(), s);
 					}
 					else if (item.getBorder() > 0) {
@@ -170,9 +174,13 @@ public class DefaultScreen implements Screen, DisplayLines {
 	private static class DefaultScreenItem implements ScreenItem {
 
 		CharSequence content;
+
 		int foreground = -1;
+
 		int background = -1;
+
 		int style = -1;
+
 		int border;
 
 		@Override
@@ -208,7 +216,9 @@ public class DefaultScreen implements Screen, DisplayLines {
 	private class DefaultWriterBuilder implements WriterBuilder {
 
 		int layer;
+
 		int color = -1;
+
 		int style = -1;
 
 		@Override
@@ -233,6 +243,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 			this.style = style;
 			return this;
 		}
+
 	}
 
 	private void reset() {
@@ -240,6 +251,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 	}
 
 	private class Layer {
+
 		DefaultScreenItem[][] items = new DefaultScreenItem[rows][columns];
 
 		DefaultScreenItem getScreenItem(int x, int y) {
@@ -253,6 +265,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 				return null;
 			}
 		}
+
 	}
 
 	private Map<Integer, Layer> layers = new TreeMap<>();
@@ -287,7 +300,9 @@ public class DefaultScreen implements Screen, DisplayLines {
 	private class DefaultWriter implements Writer {
 
 		int index;
+
 		int color = -1;
+
 		int style = -1;
 
 		DefaultWriter(int index, int color, int style) {
@@ -419,6 +434,6 @@ public class DefaultScreen implements Screen, DisplayLines {
 			}
 		}
 
-
 	}
+
 }

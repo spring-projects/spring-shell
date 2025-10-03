@@ -25,7 +25,9 @@ import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.command.CommandOption;
 
 /**
- * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed parameters.
+ * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed
+ * parameters.
+ *
  * @author Eric Bottard
  */
 public class EnumValueProvider implements ValueProvider {
@@ -57,4 +59,5 @@ public class EnumValueProvider implements ValueProvider {
 		}
 		return result;
 	}
+
 }

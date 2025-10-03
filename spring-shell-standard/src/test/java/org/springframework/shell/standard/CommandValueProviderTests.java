@@ -62,7 +62,7 @@ public class CommandValueProviderTests {
 		when(catalog.getRegistrations()).thenReturn(registrations);
 		List<CompletionProposal> proposals = valueProvider.complete(completionContext);
 
-		assertThat(proposals).extracting("value", String.class)
-			.contains("me", "meow", "yourself");
+		assertThat(proposals).extracting("value", String.class).contains("me", "meow", "yourself");
 	}
+
 }

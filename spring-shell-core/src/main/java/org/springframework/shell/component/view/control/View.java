@@ -23,8 +23,8 @@ import org.springframework.shell.component.view.event.KeyHandler;
 import org.springframework.shell.component.view.event.MouseHandler;
 
 /**
- * Base interface for all views. Represents a visible element that can render
- * itself and contains zero or more nested {@code Views}.
+ * Base interface for all views. Represents a visible element that can render itself and
+ * contains zero or more nested {@code Views}.
  *
  * @author Janne Valkealahti
  */
@@ -34,14 +34,12 @@ public interface View extends Control {
 
 	/**
 	 * Sets a layer index this {@code View} operates on.
-	 *
 	 * @param index the layer index
 	 */
 	void setLayer(int index);
 
 	/**
 	 * Called when {@code View} gets or loses a focus.
-	 *
 	 * @param view the view receiving focus
 	 * @param focus flag if focus is received
 	 */
@@ -49,15 +47,13 @@ public interface View extends Control {
 
 	/**
 	 * Gets if this {@code View} has a focus.
-	 *
 	 * @return true if view has a focus
 	 */
 	boolean hasFocus();
 
 	/**
-	 * Gets a {@link View} mouse {@link MouseHandler}. Can be {@code null} which
-	 * indicates view will not handle any mouse events.
-	 *
+	 * Gets a {@link View} mouse {@link MouseHandler}. Can be {@code null} which indicates
+	 * view will not handle any mouse events.
 	 * @return a view mouse handler
 	 * @see MouseHandler
 	 */
@@ -65,9 +61,8 @@ public interface View extends Control {
 	MouseHandler getMouseHandler();
 
 	/**
-	 * Gets a {@link View} key {@link KeyHandler}. Can be {@code null} which
-	 * indicates view will not handle any key events.
-	 *
+	 * Gets a {@link View} key {@link KeyHandler}. Can be {@code null} which indicates
+	 * view will not handle any key events.
 	 * @return a view key handler
 	 * @see KeyHandler
 	 */
@@ -75,9 +70,8 @@ public interface View extends Control {
 	KeyHandler getKeyHandler();
 
 	/**
-	 * Gets a {@link View} hotkey {@link KeyHandler}. Can be {@code null} which
-	 * indicates view will not handle any key events.
-	 *
+	 * Gets a {@link View} hotkey {@link KeyHandler}. Can be {@code null} which indicates
+	 * view will not handle any key events.
 	 * @return a view hotkey handler
 	 * @see KeyHandler
 	 */
@@ -86,21 +80,18 @@ public interface View extends Control {
 
 	/**
 	 * Sets an {@link EventLoop}.
-	 *
 	 * @param eventLoop the event loop
 	 */
 	void setEventLoop(@Nullable EventLoop eventLoop);
 
 	/**
 	 * Sets a {@link ViewService}.
-	 *
 	 * @param viewService the view service
 	 */
 	void setViewService(ViewService viewService);
 
 	/**
 	 * Get supported commands.
-	 *
 	 * @return supported commands
 	 * @see ViewCommand
 	 */
@@ -108,10 +99,10 @@ public interface View extends Control {
 
 	/**
 	 * Run command.
-	 *
 	 * @param command the command to run
 	 * @return true if command was succesfully dispatched
 	 * @see ViewCommand
 	 */
 	boolean runViewCommand(String command);
+
 }

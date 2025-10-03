@@ -44,9 +44,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class StandardMethodTargetRegistrarTests {
 
 	private StandardMethodTargetRegistrar registrar;
+
 	private AnnotationConfigApplicationContext applicationContext;
+
 	private CommandCatalog catalog;
+
 	private DefaultShellContext shellContext;
+
 	private CommandRegistration.BuilderSupplier builder = () -> CommandRegistration.builder();
 
 	@BeforeEach
@@ -93,10 +97,11 @@ public class StandardMethodTargetRegistrarTests {
 			return "hello " + what;
 		}
 
-		@ShellMethod(value = "method with alias", key = {"hi", "alias"})
+		@ShellMethod(value = "method with alias", key = { "hi", "alias" })
 		public String greet(String what) {
 			return "hi " + what;
 		}
+
 	}
 
 	@Test
@@ -119,6 +124,7 @@ public class StandardMethodTargetRegistrarTests {
 		public String sayHello(@ShellOption String what) {
 			return "hello " + what;
 		}
+
 	}
 
 	@Test
@@ -139,9 +145,10 @@ public class StandardMethodTargetRegistrarTests {
 	public static class Sample3 {
 
 		@ShellMethod("some command")
-		public String sayHello(@ShellOption( defaultValue = ShellOption.NULL) String what) {
+		public String sayHello(@ShellOption(defaultValue = ShellOption.NULL) String what) {
 			return "hello " + what;
 		}
+
 	}
 
 	@Test
@@ -170,7 +177,8 @@ public class StandardMethodTargetRegistrarTests {
 		assertThat(registrations.get("bonjour").getAvailability().isAvailable()).isTrue();
 		sample.available = false;
 		assertThat(registrations.get("bonjour").getAvailability().isAvailable()).isFalse();
-		assertThat(registrations.get("bonjour").getAvailability().getReason()).isEqualTo("availabilityForSeveralCommands");
+		assertThat(registrations.get("bonjour").getAvailability().getReason())
+			.isEqualTo("availabilityForSeveralCommands");
 		sample.available = true;
 	}
 
@@ -183,26 +191,27 @@ public class StandardMethodTargetRegistrarTests {
 		public void sayHello() {
 
 		}
+
 		public Availability sayHelloAvailability() {
 			return available ? Availability.available() : Availability.unavailable("sayHelloAvailability");
 		}
-
 
 		@ShellMethodAvailability("customAvailabilityMethod")
 		@ShellMethod("some method with an explicit availability indicator")
 		public void hi() {
 
 		}
+
 		public Availability customAvailabilityMethod() {
 			return available ? Availability.available() : Availability.unavailable("customAvailabilityMethod");
 		}
 
-		@ShellMethod(value = "some method with an explicit availability indicator", key = {"bonjour", "salut"})
+		@ShellMethod(value = "some method with an explicit availability indicator", key = { "bonjour", "salut" })
 		public void bonjour() {
 
 		}
 
-		@ShellMethodAvailability({"salut", "other"})
+		@ShellMethodAvailability({ "salut", "other" })
 		public Availability availabilityForSeveralCommands() {
 			return available ? Availability.available() : Availability.unavailable("availabilityForSeveralCommands");
 		}
@@ -216,6 +225,7 @@ public class StandardMethodTargetRegistrarTests {
 		private Availability availabilityFromWildcard() {
 			return available ? Availability.available() : Availability.unavailable("availabilityFromWildcard");
 		}
+
 	}
 
 	@Test
@@ -226,18 +236,20 @@ public class StandardMethodTargetRegistrarTests {
 		assertThatThrownBy(() -> {
 			registrar.register(catalog);
 		}).isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("When set on a @ShellMethod method, the value of the @ShellMethodAvailability should be a single element")
-				.hasMessageContaining("Found [one, two]")
-				.hasMessageContaining("wrong()");
+			.hasMessageContaining(
+					"When set on a @ShellMethod method, the value of the @ShellMethodAvailability should be a single element")
+			.hasMessageContaining("Found [one, two]")
+			.hasMessageContaining("wrong()");
 	}
 
 	@ShellComponent
 	public static class WrongAvailabilityIndicatorOnShellMethod {
 
-		@ShellMethodAvailability({"one", "two"})
+		@ShellMethodAvailability({ "one", "two" })
 		@ShellMethod("foo")
 		public void wrong() {
 		}
+
 	}
 
 	@Test
@@ -248,14 +260,15 @@ public class StandardMethodTargetRegistrarTests {
 		assertThatThrownBy(() -> {
 			registrar.register(catalog);
 		}).isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("When using '*' as a wildcard for ShellMethodAvailability, this can be the only value. Found [one, *]")
-				.hasMessageContaining("availability()");
+			.hasMessageContaining(
+					"When using '*' as a wildcard for ShellMethodAvailability, this can be the only value. Found [one, *]")
+			.hasMessageContaining("availability()");
 	}
 
 	@ShellComponent
 	public static class WrongAvailabilityIndicatorWildcardNotAlone {
 
-		@ShellMethodAvailability({"one", "*"})
+		@ShellMethodAvailability({ "one", "*" })
 		public Availability availability() {
 			return Availability.available();
 		}
@@ -264,6 +277,7 @@ public class StandardMethodTargetRegistrarTests {
 		public void wrong() {
 
 		}
+
 	}
 
 	@Test
@@ -274,21 +288,21 @@ public class StandardMethodTargetRegistrarTests {
 		assertThatThrownBy(() -> {
 			registrar.register(catalog);
 		}).isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("Found several @ShellMethodAvailability")
-				.hasMessageContaining("wrong()")
-				.hasMessageContaining("availability()")
-				.hasMessageContaining("otherAvailability()");
+			.hasMessageContaining("Found several @ShellMethodAvailability")
+			.hasMessageContaining("wrong()")
+			.hasMessageContaining("availability()")
+			.hasMessageContaining("otherAvailability()");
 	}
 
 	@ShellComponent
 	public static class WrongAvailabilityIndicatorAmbiguous {
 
-		@ShellMethodAvailability({"one", "wrong"})
+		@ShellMethodAvailability({ "one", "wrong" })
 		public Availability availability() {
 			return Availability.available();
 		}
 
-		@ShellMethodAvailability({"bar", "wrong"})
+		@ShellMethodAvailability({ "bar", "wrong" })
 		public Availability otherAvailability() {
 			return Availability.available();
 		}
@@ -297,12 +311,13 @@ public class StandardMethodTargetRegistrarTests {
 		public void wrong() {
 
 		}
+
 	}
 
 	@Test
 	public void testGrouping() {
-		applicationContext = new AnnotationConfigApplicationContext(GroupOneCommands.class,
-				GroupTwoCommands.class, GroupThreeCommands.class);
+		applicationContext = new AnnotationConfigApplicationContext(GroupOneCommands.class, GroupTwoCommands.class,
+				GroupThreeCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 		registrar.register(catalog);
 
@@ -334,10 +349,10 @@ public class StandardMethodTargetRegistrarTests {
 
 	@Test
 	public void testInteractionModeInteractive() {
-	    shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
+		shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
 		applicationContext = new AnnotationConfigApplicationContext(InteractionModeCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
-	    registrar.register(catalog);
+		registrar.register(catalog);
 
 		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo2")).isNull();
@@ -346,10 +361,10 @@ public class StandardMethodTargetRegistrarTests {
 
 	@Test
 	public void testInteractionModeNonInteractive() {
-	    shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
+		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		applicationContext = new AnnotationConfigApplicationContext(InteractionModeCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
-	    registrar.register(catalog);
+		registrar.register(catalog);
 
 		assertThat(catalog.getRegistrations().get("foo1")).isNull();
 		assertThat(catalog.getRegistrations().get("foo2")).isNotNull();
@@ -370,14 +385,15 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "foo3")
 		public void foo3() {
 		}
+
 	}
 
 	@Test
 	public void testOptionUseDefaultValue() {
-	    shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
+		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		applicationContext = new AnnotationConfigApplicationContext(DefaultValuesCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
-	    registrar.register(catalog);
+		registrar.register(catalog);
 
 		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
@@ -406,6 +422,7 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "foo")
 		public void foo3(@ShellOption(defaultValue = ShellOption.NULL) String arg1) {
 		}
+
 	}
 
 	@Test
@@ -461,6 +478,7 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "foo4")
 		public void foo4(boolean arg1) {
 		}
+
 	}
 
 	@Test
@@ -481,6 +499,7 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "foo1")
 		public void foo1(@ShellOption("xxx") boolean arg1) {
 		}
+
 	}
 
 	@Test
@@ -501,6 +520,7 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "foo1", prefix = "-")
 		public void foo1(@ShellOption("x") boolean arg1) {
 		}
+
 	}
 
 	@Test
@@ -524,9 +544,11 @@ public class StandardMethodTargetRegistrarTests {
 		@ShellMethod(value = "foo1", prefix = "-")
 		public void foo1(@ShellOption Set<Pojo> arg1) {
 		}
+
 	}
 
 	public static class Pojo {
 
 	}
+
 }

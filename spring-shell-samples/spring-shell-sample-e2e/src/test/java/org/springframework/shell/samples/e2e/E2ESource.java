@@ -41,4 +41,5 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 	boolean annox() default true;
 
 	boolean reg() default true;
+
 }

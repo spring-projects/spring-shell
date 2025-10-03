@@ -29,9 +29,9 @@ public class AbsoluteWidthSizeConstraints implements SizeConstraints {
 		this.width = width;
 	}
 
-
 	@Override
 	public Extent width(String[] raw, int previous, int tableWidth) {
 		return new Extent(width, width);
 	}
+
 }

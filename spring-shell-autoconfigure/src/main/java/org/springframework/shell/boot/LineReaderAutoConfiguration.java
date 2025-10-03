@@ -62,6 +62,7 @@ public class LineReaderAutoConfiguration {
 	private String fallbackHistoryFileName;
 
 	private SpringShellProperties springShellProperties;
+
 	private UserConfigPathProvider userConfigPathProvider;
 
 	public LineReaderAutoConfiguration(Terminal terminal, Completer completer, Parser parser,
@@ -84,39 +85,41 @@ public class LineReaderAutoConfiguration {
 	@Bean
 	public LineReader lineReader() {
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
-				.terminal(terminal)
-				.appName("Spring Shell")
-				.completer(completer)
-				.history(jLineHistory)
-				.highlighter(new Highlighter() {
+			.terminal(terminal)
+			.appName("Spring Shell")
+			.completer(completer)
+			.history(jLineHistory)
+			.highlighter(new Highlighter() {
 
-					@Override
-					public AttributedString highlight(LineReader reader, String buffer) {
-						int l = 0;
-						String best = null;
-						for (String command : commandRegistry.getRegistrations().keySet()) {
-							if (buffer.startsWith(command) && command.length() > l) {
-								l = command.length();
-								best = command;
-							}
-						}
-						if (best != null) {
-							return new AttributedStringBuilder(buffer.length()).append(best, AttributedStyle.BOLD).append(buffer.substring(l)).toAttributedString();
-						}
-						else {
-							return new AttributedString(buffer, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
+				@Override
+				public AttributedString highlight(LineReader reader, String buffer) {
+					int l = 0;
+					String best = null;
+					for (String command : commandRegistry.getRegistrations().keySet()) {
+						if (buffer.startsWith(command) && command.length() > l) {
+							l = command.length();
+							best = command;
 						}
 					}
-
-					@Override
-					public void setErrorPattern(Pattern errorPattern) {
+					if (best != null) {
+						return new AttributedStringBuilder(buffer.length()).append(best, AttributedStyle.BOLD)
+							.append(buffer.substring(l))
+							.toAttributedString();
 					}
-
-					@Override
-					public void setErrorIndex(int errorIndex) {
+					else {
+						return new AttributedString(buffer, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
 					}
-				})
-				.parser(parser);
+				}
+
+				@Override
+				public void setErrorPattern(Pattern errorPattern) {
+				}
+
+				@Override
+				public void setErrorIndex(int errorIndex) {
+				}
+			})
+			.parser(parser);
 
 		LineReader lineReader = lineReaderBuilder.build();
 		if (this.springShellProperties.getHistory().isEnabled()) {
@@ -133,7 +136,9 @@ public class LineReaderAutoConfiguration {
 			// set history file
 			lineReader.setVariable(LineReader.HISTORY_FILE, Paths.get(historyPath));
 		}
-		lineReader.unsetOpt(LineReader.Option.INSERT_TAB); // This allows completion on an empty buffer, rather than inserting a tab
+		lineReader.unsetOpt(LineReader.Option.INSERT_TAB); // This allows completion on an
+															// empty buffer, rather than
+															// inserting a tab
 		jLineHistory.attach(lineReader);
 		return lineReader;
 	}

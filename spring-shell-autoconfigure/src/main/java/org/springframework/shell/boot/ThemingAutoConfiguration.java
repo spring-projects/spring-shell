@@ -69,4 +69,5 @@ public class ThemingAutoConfiguration {
 	public TemplateExecutor templateExecutor(ThemeResolver themeResolver) {
 		return new TemplateExecutor(themeResolver);
 	}
+
 }

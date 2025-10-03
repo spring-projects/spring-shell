@@ -31,17 +31,20 @@ public interface TtyConnector {
 	default void resize(int width, int height) {
 		// support old implementations not overriding this method
 		resize(width, height);
-		// StackOverflowError is only possible if both resize(Dimension) and resize(Dimension,Dimension) are not overridden.
+		// StackOverflowError is only possible if both resize(Dimension) and
+		// resize(Dimension,Dimension) are not overridden.
 	}
 
 	// /**
-	//  * @deprecated use {@link #resize(Dimension)} instead
-	//  */
+	// * @deprecated use {@link #resize(Dimension)} instead
+	// */
 	// @SuppressWarnings("unused")
 	// @Deprecated
-	// default void resize(int width, int height, int pixelSizeWidth, int pixelSizeHeight) {
-	// 	// support old code that calls this method on new implementations (not overriding this deprecated method)
-	// 	resize(width, height);
+	// default void resize(int width, int height, int pixelSizeWidth, int pixelSizeHeight)
+	// {
+	// // support old code that calls this method on new implementations (not overriding
+	// this deprecated method)
+	// resize(width, height);
 	// }
 
 	String getName();
@@ -57,4 +60,5 @@ public interface TtyConnector {
 	int waitFor() throws InterruptedException;
 
 	boolean ready() throws IOException;
+
 }

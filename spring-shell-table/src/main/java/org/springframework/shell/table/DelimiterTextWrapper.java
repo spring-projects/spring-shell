@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Text wrapper that wraps at "word" boundaries. The default delimiter is the space character.
+ * A Text wrapper that wraps at "word" boundaries. The default delimiter is the space
+ * character.
  *
  * @author Eric Bottard
  */
@@ -47,9 +48,11 @@ public class DelimiterTextWrapper implements TextWrapper {
 				line = line.substring(split == -1 ? columnWidth : split + 1);
 			}
 			if (columnWidth > 0) {
-				result.add(String.format("%-" + columnWidth + "s", line)); // right pad if necessary
+				result.add(String.format("%-" + columnWidth + "s", line)); // right pad if
+																			// necessary
 			}
 		}
 		return result.toArray(new String[result.size()]);
 	}
+
 }

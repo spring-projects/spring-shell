@@ -29,8 +29,8 @@ public interface TerminalCustomizer {
 
 	/**
 	 * Callback to customize a {@link TerminalBuilder} instance.
-	 *
 	 * @param builder the terminal builder
 	 */
 	void customize(TerminalBuilder builder);
+
 }

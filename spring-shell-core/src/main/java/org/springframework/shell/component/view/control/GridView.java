@@ -35,59 +35,70 @@ import org.springframework.util.Assert;
 /**
  * {@code GridView} is a layout container with no initial {@link View views}.
  *
- * Loosely based on ideas from other grid layouts having features like rows and
- * columns, column and row spanning, dynamic layouts based on container size
- * using "CSS media queries" type of structure.
+ * Loosely based on ideas from other grid layouts having features like rows and columns,
+ * column and row spanning, dynamic layouts based on container size using "CSS media
+ * queries" type of structure.
  *
  * @author Janne Valkealahti
  */
 public class GridView extends BoxView {
 
 	private final static Logger log = LoggerFactory.getLogger(GridView.class);
+
 	private List<GridItem> gridItems = new ArrayList<>();
+
 	private int[] columnSize;
+
 	private int[] rowSize;
+
 	private int minWidth;
+
 	private int minHeight;
+
 	private int gapRows;
+
 	private int gapColumns;
+
 	private int rowOffset;
+
 	private int columnOffset;
+
 	private boolean showBorders;
 
 	/**
-	 * Defines how the columns of the grid are distributed. Each value defines the
-	 * size of one column, starting with the leftmost column. Values greater 0
-	 * represent absolute column widths (gaps not included). Values less or equal 0
-	 * represent proportional column widths or fractions of the remaining free
-	 * space, where 0 is treated the same as -1. That is, a column with a value
-	 * of -3 will have three times the width of a column with a value of -1 (or 0).
-	 * The minimum width set with {@link #setMinSize(int, int)} is always observed.
+	 * Defines how the columns of the grid are distributed. Each value defines the size of
+	 * one column, starting with the leftmost column. Values greater 0 represent absolute
+	 * column widths (gaps not included). Values less or equal 0 represent proportional
+	 * column widths or fractions of the remaining free space, where 0 is treated the same
+	 * as -1. That is, a column with a value of -3 will have three times the width of a
+	 * column with a value of -1 (or 0). The minimum width set with
+	 * {@link #setMinSize(int, int)} is always observed.
 	 *
-	 * <p>Views may extend beyond the columns defined explicitly with this function. A
-	 * value of 0 is assumed for any undefined column. In fact, if you never call
-	 * this function, all columns occupied by Views will have the same width. On the
-	 * other hand, unoccupied columns defined with this function will always take
-	 * their place.
+	 * <p>
+	 * Views may extend beyond the columns defined explicitly with this function. A value
+	 * of 0 is assumed for any undefined column. In fact, if you never call this function,
+	 * all columns occupied by Views will have the same width. On the other hand,
+	 * unoccupied columns defined with this function will always take their place.
 	 *
-	 * <p>Assuming a total width of the grid of 100 cells and a minimum width of 0, the
-	 * following call will result in columns with widths of 30, 10, 15, 15, and 30
-	 * cells:
+	 * <p>
+	 * Assuming a total width of the grid of 100 cells and a minimum width of 0, the
+	 * following call will result in columns with widths of 30, 10, 15, 15, and 30 cells:
 	 * <p>
 	 *
 	 * grid.setColumnSize(30, 10, -1, -1, -2)
 	 *
-	 * <p>If a {@link View} were then placed in the 6th and 7th column, the resulting
-	 * widths would be: 30, 10, 10, 10, 20, 10, and 10 cells.
+	 * <p>
+	 * If a {@link View} were then placed in the 6th and 7th column, the resulting widths
+	 * would be: 30, 10, 10, 10, 20, 10, and 10 cells.
 	 *
 	 * If you then called setMinSize() as follows:
 	 * <p>
 	 *
 	 * grid.setMinSize(15, 20)
 	 *
-	 * <p>The resulting widths would be: 30, 15, 15, 15, 20, 15, and 15 cells, a total
-	 * of 125 cells, 25 cells wider than the available grid width.
-	 *
+	 * <p>
+	 * The resulting widths would be: 30, 15, 15, 15, 20, 15, and 15 cells, a total of 125
+	 * cells, 25 cells wider than the available grid width.
 	 * @param columns the column sizes
 	 * @return a grid view for chaining
 	 * @see #setRowSize(int...)
@@ -99,7 +110,6 @@ public class GridView extends BoxView {
 
 	/**
 	 * For documentation see {@link #setColumnSize(int...)} as it's equivalent for rows.
-	 *
 	 * @param rows the row sizes
 	 * @return a grid view for chaining
 	 * @see #setColumnSize(int...)
@@ -110,9 +120,8 @@ public class GridView extends BoxView {
 	}
 
 	/**
-	 * Sets an absolute minimum width for rows and an absolute minimum height for
-	 * columns. Negative values cannot be used.
-	 *
+	 * Sets an absolute minimum width for rows and an absolute minimum height for columns.
+	 * Negative values cannot be used.
 	 * @param minWidth the rows minimum width
 	 * @param minHeight the columns minimum height
 	 * @return a grid view for chaining
@@ -126,9 +135,9 @@ public class GridView extends BoxView {
 
 	/**
 	 * Adds a {@link View} and its position to the grid. The top-left corner of the
-	 * {@link View} will be located in the top-left corner of the grid cell at
-	 * the given row and column and will span "rowSpan" rows and "colSpan" columns.
-	 * For example, for a primitive to occupy rows 2, 3, and 4 and columns 5 and 6:
+	 * {@link View} will be located in the top-left corner of the grid cell at the given
+	 * row and column and will span "rowSpan" rows and "colSpan" columns. For example, for
+	 * a primitive to occupy rows 2, 3, and 4 and columns 5 and 6:
 	 *
 	 * <p>
 	 * grid.addItem(view, 2, 5, 3, 2, 0, 0)
@@ -136,27 +145,26 @@ public class GridView extends BoxView {
 	 * If {@code rowSpan} or colSpan is 0, the {@link View} will not be drawn.
 	 *
 	 * <p>
-	 * You can add the same {@link View} multiple times with different grid
-	 * positions. The {@code minGridWidth} and {@code minGridHeight} values will
-	 * then determine which of those positions will be used. These minimum values
-	 * refer to the overall size of the grid. If multiple items for the same
-	 * primitive apply, the one that has at least one highest minimum value will
-	 * be used, or the {@link View} added last if those values are the same. Example:
+	 * You can add the same {@link View} multiple times with different grid positions. The
+	 * {@code minGridWidth} and {@code minGridHeight} values will then determine which of
+	 * those positions will be used. These minimum values refer to the overall size of the
+	 * grid. If multiple items for the same primitive apply, the one that has at least one
+	 * highest minimum value will be used, or the {@link View} added last if those values
+	 * are the same. Example:
 	 *
 	 * <p>
-	 * AddItem(view, 0, 0, 0, 0, 0, 0). // Hide in small grids.
-	 * AddItem(view, 0, 0, 1, 2, 100, 0). // One-column layout for medium grids.
-	 * AddItem(view, 1, 1, 3, 2, 300, 0) // Multi-column layout for large grids.
+	 * AddItem(view, 0, 0, 0, 0, 0, 0). // Hide in small grids. AddItem(view, 0, 0, 1, 2,
+	 * 100, 0). // One-column layout for medium grids. AddItem(view, 1, 1, 3, 2, 300, 0)
+	 * // Multi-column layout for large grids.
 	 *
 	 * <p>
-	 * To use the same grid layout for all sizes, simply set {@code minGridWidth}
-	 * and {@code minGridHeight} to 0.
+	 * To use the same grid layout for all sizes, simply set {@code minGridWidth} and
+	 * {@code minGridHeight} to 0.
 	 *
 	 * <p>
-	 * If the item's focus is set to true, it will receive focus when the grid
-	 * receives focus. If there are multiple items with a true focus flag, the
-	 * last visible one that was added will receive focus.
-	 *
+	 * If the item's focus is set to true, it will receive focus when the grid receives
+	 * focus. If there are multiple items with a true focus flag, the last visible one
+	 * that was added will receive focus.
 	 * @param view the view to add
 	 * @param row the row
 	 * @param column the column
@@ -168,8 +176,7 @@ public class GridView extends BoxView {
 	 */
 	public GridView addItem(View view, int row, int column, int rowSpan, int colSpan, int minGridHeight,
 			int minGridWidth) {
-		GridItem gridItem = new GridItem(view, row, column, colSpan, rowSpan, minGridHeight,
-				minGridWidth, false);
+		GridItem gridItem = new GridItem(view, row, column, colSpan, rowSpan, minGridHeight, minGridWidth, false);
 		gridItems.add(gridItem);
 		return this;
 	}
@@ -183,7 +190,6 @@ public class GridView extends BoxView {
 
 	/**
 	 * Defines if borders is shown.
-	 *
 	 * @param showBorders the flag showing borders
 	 */
 	public void setShowBorders(boolean showBorders) {
@@ -192,7 +198,6 @@ public class GridView extends BoxView {
 
 	/**
 	 * Returns if borders is shown.
-	 *
 	 * @return true if borders is shown
 	 */
 	public boolean isShowBorders() {
@@ -274,8 +279,8 @@ public class GridView extends BoxView {
 			}
 			// handler = i.view.getHotKeyHandler();
 			// if (i.view.hasFocus()) {
-			// 	handler = i.view.getHotKeyHandler();
-			// 	break;
+			// handler = i.view.getHotKeyHandler();
+			// break;
 			// }
 		}
 		if (handler != null) {
@@ -345,7 +350,6 @@ public class GridView extends BoxView {
 		int remainingHeight = height;
 		int proportionalWidth = 0;
 		int proportionalHeight = 0;
-
 
 		for (int index = 0; index < rowSize.length; index++) {
 			int row = rowSize[index];
@@ -544,7 +548,7 @@ public class GridView extends BoxView {
 		// Adjust row/column offsets based on this value.
 		int from = 0;
 		int to = 0;
-		for (int index = 0; index < rowPos.length; index ++) {
+		for (int index = 0; index < rowPos.length; index++) {
 			int pos = rowPos[index];
 			if (pos - offsetY < 0) {
 				from = index + 1;
@@ -562,7 +566,7 @@ public class GridView extends BoxView {
 
 		from = 0;
 		to = 0;
-		for (int index = 0; index < columnPos.length; index ++) {
+		for (int index = 0; index < columnPos.length; index++) {
 			int pos = columnPos[index];
 			if (pos - offsetX < 0) {
 				from = index + 1;
@@ -628,14 +632,23 @@ public class GridView extends BoxView {
 	}
 
 	private static class GridItem {
+
 		View view;
+
 		int row;
+
 		int column;
+
 		int width;
+
 		int height;
+
 		int minGridHeight;
+
 		int minGridWidth;
+
 		boolean visible;
+
 		// The last position of the item relative to the top-left
 		// corner of the grid. Undefined if visible is false.
 		int x, y, w, h;
@@ -651,5 +664,7 @@ public class GridView extends BoxView {
 			this.minGridWidth = minGridWidth;
 			this.visible = visible;
 		}
+
 	}
+
 }

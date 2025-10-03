@@ -30,14 +30,12 @@ import org.springframework.shell.command.parser.CommandModel.CommandInfo;
 import org.springframework.shell.command.parser.ParserConfig.Feature;
 
 /**
- * Interface to tokenize arguments into tokens. Generic language parser usually
- * contains lexing and parsing where this {@code Lexer} represents the former
- * lexing side.
+ * Interface to tokenize arguments into tokens. Generic language parser usually contains
+ * lexing and parsing where this {@code Lexer} represents the former lexing side.
  *
- * Lexing takes a first step to analyse basic construct of elements out from
- * given arguments. We get rough idea what each argument represents but don't
- * look deeper if any of it is correct which happens later when tokens go
- * through parsing operation.
+ * Lexing takes a first step to analyse basic construct of elements out from given
+ * arguments. We get rough idea what each argument represents but don't look deeper if any
+ * of it is correct which happens later when tokens go through parsing operation.
  *
  * @author Janne Valkealahti
  */
@@ -45,7 +43,6 @@ public interface Lexer {
 
 	/**
 	 * Tokenize given command line arguments into a list of tokens.
-	 *
 	 * @param arguments the command line arguments
 	 * @return lexer result having tokens and operation messages
 	 */
@@ -66,7 +63,9 @@ public interface Lexer {
 	public class DefaultLexer implements Lexer {
 
 		private final static Logger log = LoggerFactory.getLogger(DefaultLexer.class);
+
 		private final CommandModel commandModel;
+
 		private final ParserConfig config;
 
 		public DefaultLexer(CommandModel commandModel, ParserConfig config) {
@@ -149,7 +148,8 @@ public interface Lexer {
 			}
 			else {
 				if (!config.isEnabled(Feature.IGNORE_DIRECTIVES) && beforeArguments.size() > 0) {
-					errorResults.add(MessageResult.of(ParserMessage.ILLEGAL_CONTENT_BEFORE_COMMANDS, 0, beforeArguments));
+					errorResults
+						.add(MessageResult.of(ParserMessage.ILLEGAL_CONTENT_BEFORE_COMMANDS, 0, beforeArguments));
 				}
 			}
 
@@ -162,7 +162,7 @@ public interface Lexer {
 			int i2 = i1;
 			for (String argument : afterArguments) {
 				// if (!configuration.isEnabled(Feature.CASE_SENSITIVE_COMMANDS)) {
-				// 	argument = argument.toLowerCase();
+				// argument = argument.toLowerCase();
 				// }
 				i2++;
 
@@ -173,9 +173,9 @@ public interface Lexer {
 					continue;
 				}
 				if (!foundDoubleDash && "--".equals(argument)) {
-						tokenList.add(Token.of(argument, TokenType.DOUBLEDASH, i2));
-						foundDoubleDash = true;
-						continue;
+					tokenList.add(Token.of(argument, TokenType.DOUBLEDASH, i2));
+					foundDoubleDash = true;
+					continue;
 				}
 
 				String argumentToCheck = argument;
@@ -188,7 +188,8 @@ public interface Lexer {
 					Token token = validTokens.get(argumentToCheck);
 					switch (token.getType()) {
 						case COMMAND:
-							currentCommand = currentCommand == null ? commandModel.getRootCommands().get(argumentToCheck)
+							currentCommand = currentCommand == null
+									? commandModel.getRootCommands().get(argumentToCheck)
 									: currentCommand.getChildren(argument);
 							tokenList.add(Token.of(argument, TokenType.COMMAND, i2));
 							validTokens = currentCommand.getValidTokens();
@@ -277,5 +278,7 @@ public interface Lexer {
 			}
 			return ret;
 		}
+
 	}
+
 }

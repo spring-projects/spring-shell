@@ -180,24 +180,13 @@ public abstract class FigureSettings {
 	}
 
 	public static String[] tags() {
-		return new String[] {
-				TAG_TICK,
-				TAG_INFO,
-				TAG_WARNING,
-				TAG_ERROR,
-				TAG_CHECKBOX_OFF,
-				TAG_CHECKBOX_ON,
-				TAG_LEFTWARDS_ARROR,
-				TAG_UPWARDS_ARROR,
-				TAG_RIGHTWARDS_ARROR,
-				TAG_DOWNWARDS_ARROR,
-				TAG_LEFT_POINTING_QUOTATION,
-				TAG_RIGHT_POINTING_QUOTATION,
-				TAG_QUESTION_MARK
-		};
+		return new String[] { TAG_TICK, TAG_INFO, TAG_WARNING, TAG_ERROR, TAG_CHECKBOX_OFF, TAG_CHECKBOX_ON,
+				TAG_LEFTWARDS_ARROR, TAG_UPWARDS_ARROR, TAG_RIGHTWARDS_ARROR, TAG_DOWNWARDS_ARROR,
+				TAG_LEFT_POINTING_QUOTATION, TAG_RIGHT_POINTING_QUOTATION, TAG_QUESTION_MARK };
 	}
 
 	private static class DefaultFigureSettings extends FigureSettings {
+
 	}
 
 	private static class DumpFigureSettings extends FigureSettings {
@@ -253,5 +242,7 @@ public abstract class FigureSettings {
 		public String rightPointingQuotation() {
 			return ">";
 		}
+
 	}
+
 }

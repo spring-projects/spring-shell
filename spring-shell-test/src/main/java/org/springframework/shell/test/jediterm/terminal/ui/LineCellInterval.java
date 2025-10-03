@@ -19,8 +19,11 @@ package org.springframework.shell.test.jediterm.terminal.ui;
  * @author jediterm authors
  */
 final class LineCellInterval {
+
 	private final int myLine;
+
 	private final int myStartColumn;
+
 	private final int myEndColumn;
 
 	public LineCellInterval(int line, int startColumn, int endColumn) {
@@ -44,4 +47,5 @@ final class LineCellInterval {
 	public int getCellCount() {
 		return myEndColumn - myStartColumn + 1;
 	}
+
 }

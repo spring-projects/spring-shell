@@ -19,7 +19,9 @@ package org.springframework.shell.table;
 /**
  * This is used to specify where some components of a Table may be applied.
  *
- * <p>Some commonly used matchers can be created <i>via</i> {@link CellMatchers}.</p>
+ * <p>
+ * Some commonly used matchers can be created <i>via</i> {@link CellMatchers}.
+ * </p>
  *
  * @author Eric Bottard
  */
@@ -32,4 +34,5 @@ public interface CellMatcher {
 	 * @param model the data model of the table
 	 */
 	public boolean matches(int row, int column, TableModel model);
+
 }

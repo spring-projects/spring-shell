@@ -18,10 +18,12 @@ public class JnaRuntimeHintsTests {
 
 	@Test
 	void test() {
-		String[] classNames = Arrays.asList("com.sun.jna.CallbackReference", "com.sun.jna.Native",
-				"com.sun.jna.NativeLong", "com.sun.jna.Pointer", "com.sun.jna.Structure",
-				"com.sun.jna.ptr.IntByReference", "com.sun.jna.ptr.PointerByReference", "com.sun.jna.Klass",
-				"com.sun.jna.Structure$FFIType", "com.sun.jna.Structure$FFIType$size_t").toArray(new String[0]);
+		String[] classNames = Arrays
+			.asList("com.sun.jna.CallbackReference", "com.sun.jna.Native", "com.sun.jna.NativeLong",
+					"com.sun.jna.Pointer", "com.sun.jna.Structure", "com.sun.jna.ptr.IntByReference",
+					"com.sun.jna.ptr.PointerByReference", "com.sun.jna.Klass", "com.sun.jna.Structure$FFIType",
+					"com.sun.jna.Structure$FFIType$size_t")
+			.toArray(new String[0]);
 		ReflectionHints hints = registerHints();
 		typeReferences(classNames).forEach(typeReference -> {
 			TypeHint typeHint = hints.getTypeHint(typeReference);
@@ -42,4 +44,5 @@ public class JnaRuntimeHintsTests {
 	private Stream<TypeReference> typeReferences(String... classNames) {
 		return Stream.of(classNames).map(TypeReference::of);
 	}
+
 }

@@ -34,4 +34,5 @@ public class ShellContextAutoConfiguration {
 		}
 		return new DefaultShellContext(pty);
 	}
+
 }

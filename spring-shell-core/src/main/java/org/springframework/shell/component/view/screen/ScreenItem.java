@@ -16,20 +16,18 @@
 package org.springframework.shell.component.view.screen;
 
 /**
- *
- *
  * @author Janne Valkealahti
  */
 public interface ScreenItem {
 
-    static final int STYLE_BOLD = 1;
-    static final int STYLE_FAINT = STYLE_BOLD << 1;
-    static final int STYLE_ITALIC = STYLE_BOLD << 2;
-    static final int STYLE_UNDERLINE = STYLE_BOLD << 3;
-    static final int STYLE_BLINK = STYLE_BOLD << 4;
-    static final int STYLE_INVERSE = STYLE_BOLD << 5;
-    static final int STYLE_CONCEAL = STYLE_BOLD << 6;
-    static final int STYLE_CROSSEDOUT = STYLE_BOLD << 7;
+	static final int STYLE_BOLD = 1;
+	static final int STYLE_FAINT = STYLE_BOLD << 1;
+	static final int STYLE_ITALIC = STYLE_BOLD << 2;
+	static final int STYLE_UNDERLINE = STYLE_BOLD << 3;
+	static final int STYLE_BLINK = STYLE_BOLD << 4;
+	static final int STYLE_INVERSE = STYLE_BOLD << 5;
+	static final int STYLE_CONCEAL = STYLE_BOLD << 6;
+	static final int STYLE_CROSSEDOUT = STYLE_BOLD << 7;
 
 	static final int BORDER_LEFT = 1;
 	static final int BORDER_TOP = BORDER_LEFT << 1;

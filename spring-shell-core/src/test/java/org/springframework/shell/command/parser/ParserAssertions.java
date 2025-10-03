@@ -28,4 +28,5 @@ public class ParserAssertions {
 	public static MessageResultAssert assertThat(MessageResult result) {
 		return new MessageResultAssert(result);
 	}
+
 }

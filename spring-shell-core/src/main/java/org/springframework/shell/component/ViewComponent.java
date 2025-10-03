@@ -36,16 +36,21 @@ import org.springframework.util.Assert;
 public class ViewComponent {
 
 	private final static Logger log = LoggerFactory.getLogger(ViewComponent.class);
+
 	private final Terminal terminal;
+
 	private final View view;
+
 	private EventLoop eventLoop;
+
 	private TerminalUI terminalUI;
+
 	private boolean useTerminalWidth = true;
+
 	private ViewComponentExecutor viewComponentExecutor;
 
 	/**
 	 * Construct view component with a given {@link Terminal} and {@link View}.
-	 *
 	 * @param terminal the terminal
 	 * @param view the main view
 	 */
@@ -63,9 +68,8 @@ public class ViewComponent {
 	}
 
 	/**
-	 * Run a component asyncronously. Returned state can be used to wait, cancel or
-	 * see its completion status.
-	 *
+	 * Run a component asyncronously. Returned state can be used to wait, cancel or see
+	 * its completion status.
 	 * @return run state
 	 */
 	public ViewComponentRun runAsync() {
@@ -80,11 +84,9 @@ public class ViewComponent {
 	 */
 	public void runBlocking() {
 		log.debug("Start run()");
-		eventLoop.onDestroy(eventLoop.viewEvents(ViewDoneEvent.class, view)
-			.subscribe(event -> {
-					exit();
-				}
-			));
+		eventLoop.onDestroy(eventLoop.viewEvents(ViewDoneEvent.class, view).subscribe(event -> {
+			exit();
+		}));
 		view.setEventLoop(eventLoop);
 		Size terminalSize = terminal.getSize();
 		Rectangle rect = view.getRect();
@@ -98,7 +100,6 @@ public class ViewComponent {
 
 	/**
 	 * Sets if full terminal width should be used for a view. Defaults to {@code true}.
-	 *
 	 * @param useTerminalWidth the use terminal width flag
 	 */
 	public void setUseTerminalWidth(boolean useTerminalWidth) {
@@ -107,7 +108,6 @@ public class ViewComponent {
 
 	/**
 	 * Gets an {@link EventLoop} associated with this view component.
-	 *
 	 * @return event loop with this view component
 	 */
 	public EventLoop getEventLoop() {
@@ -137,9 +137,8 @@ public class ViewComponent {
 		void cancel();
 
 		/**
-	     * Returns {@code true} if component run has completed.
-		 *
-	     * @return {@code true} if component run has completed
+		 * Returns {@code true} if component run has completed.
+		 * @return {@code true} if component run has completed
 		 */
 		boolean isDone();
 

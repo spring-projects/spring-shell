@@ -50,7 +50,6 @@ class KeyEventTests {
 		assertThat(KeyEvent.of(Key.A).isKey()).isTrue();
 		assertThat(KeyEvent.of(Key.Backspace).isKey()).isFalse();
 
-
 	}
 
 }

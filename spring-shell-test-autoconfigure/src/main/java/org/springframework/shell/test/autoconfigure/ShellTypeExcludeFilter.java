@@ -46,4 +46,5 @@ public class ShellTypeExcludeFilter extends StandardAnnotationCustomizableTypeEx
 	protected Set<Class<?>> getDefaultIncludes() {
 		return DEFAULT_INCLUDES;
 	}
+
 }

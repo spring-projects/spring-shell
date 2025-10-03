@@ -35,8 +35,8 @@ import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 
-@ScenarioComponent(name = "Simple progressview", description = "ProgressView sample", category = {
-		Scenario.CATEGORY_PROGRESSVIEW })
+@ScenarioComponent(name = "Simple progressview", description = "ProgressView sample",
+		category = { Scenario.CATEGORY_PROGRESSVIEW })
 public class SimpleProgressViewScenario extends AbstractScenario {
 
 	@Override
@@ -71,8 +71,7 @@ public class SimpleProgressViewScenario extends AbstractScenario {
 		EventLoop eventLoop = getEventloop();
 
 		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(500)).take(100).map(l -> {
-			Message<Long> message = MessageBuilder
-				.withPayload(l)
+			Message<Long> message = MessageBuilder.withPayload(l)
 				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
 				.setHeader("SimpleProgressViewScenario", "")
 				.build();

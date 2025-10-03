@@ -108,6 +108,7 @@ class AppViewTests extends AbstractViewTests {
 			verify(smain).getKeyHandler();
 			verify(smenu, never()).getKeyHandler();
 		}
+
 	}
 
 	@Nested
@@ -180,6 +181,7 @@ class AppViewTests extends AbstractViewTests {
 			verify(main).setRect(0, 0, 80, 23);
 			verify(status).setRect(0, 23, 80, 1);
 		}
+
 	}
 
 }

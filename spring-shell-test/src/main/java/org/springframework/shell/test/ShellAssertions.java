@@ -27,16 +27,16 @@ public class ShellAssertions {
 	/**
 	 * Instance of a assert factory for {@link ShellScreen}.
 	 */
-	public static final InstanceOfAssertFactory<ShellScreen, ShellScreenAssert> SHELLSCREEN = new InstanceOfAssertFactory<>(ShellScreen.class,
-			ShellAssertions::assertThat);
+	public static final InstanceOfAssertFactory<ShellScreen, ShellScreenAssert> SHELLSCREEN = new InstanceOfAssertFactory<>(
+			ShellScreen.class, ShellAssertions::assertThat);
 
 	/**
 	 * Creates an instance of {@link ShellScreenAssert}.
-	 *
 	 * @param actual the actual value
 	 * @return the created assertion object
 	 */
 	public static ShellScreenAssert assertThat(ShellScreen actual) {
 		return new ShellScreenAssert(actual);
 	}
+
 }

@@ -15,7 +15,8 @@
  */
 
 /**
- * Contains core classes for Spring Shell, irrespective of the way commands are actually implemented.
+ * Contains core classes for Spring Shell, irrespective of the way commands are actually
+ * implemented.
  *
  * @author Eric Bottard
  */

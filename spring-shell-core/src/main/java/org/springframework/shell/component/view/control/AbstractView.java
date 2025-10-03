@@ -42,29 +42,39 @@ import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.geom.Rectangle;
 
 /**
- * Base implementation of a {@link View} and its parent interface
- * {@link Control} providing some common functionality for implementations.
+ * Base implementation of a {@link View} and its parent interface {@link Control}
+ * providing some common functionality for implementations.
  *
  * @author Janne Valkealahti
  */
 public abstract class AbstractView extends AbstractControl implements View {
 
 	private final static Logger log = LoggerFactory.getLogger(AbstractView.class);
+
 	private final Disposable.Composite disposables = Disposables.composite();
+
 	private BiFunction<Screen, Rectangle, Rectangle> drawFunction;
+
 	private boolean hasFocus;
+
 	private int layer;
+
 	private EventLoop eventLoop;
+
 	private ViewService viewService;
+
 	private final Map<String, Runnable> commands = new HashMap<>();
+
 	private Map<Integer, KeyBindingValue> keyBindings = new HashMap<>();
+
 	private Map<Integer, KeyBindingValue> hotKeyBindings = new HashMap<>();
+
 	private Map<Integer, MouseBindingValue> mouseBindings = new HashMap<>();
+
 	private boolean init = false;
 
 	/**
 	 * Register {@link Disposable} to get disposed when view terminates.
-	 *
 	 * @param disposable a disposable to dispose
 	 */
 	protected void onDestroy(Disposable disposable) {
@@ -95,15 +105,17 @@ public abstract class AbstractView extends AbstractControl implements View {
 	}
 
 	private Integer shortcutKey;
+
 	private Runnable shortcutAction;
+
 	public void shortcut(Integer key, Runnable runnable) {
 		this.shortcutKey = key;
 		this.shortcutAction = runnable;
 	}
 
 	/**
-	 * Internal init method called from {@link #init()}. Override to do something
-	 * usefull. Typically key and mousebindings are registered from this method.
+	 * Internal init method called from {@link #init()}. Override to do something usefull.
+	 * Typically key and mousebindings are registered from this method.
 	 */
 	protected void initInternal() {
 		if (shortcutKey != null && shortcutAction != null) {
@@ -121,10 +133,10 @@ public abstract class AbstractView extends AbstractControl implements View {
 	}
 
 	/**
-	 * Calls drawing logic in two stages. First a background is drawn and then an
-	 * actual content. This logic allows to separate how child implementation
-	 * can use drawing logic from its parent as usually background should get
-	 * overridden in child but actual content should get overridden in a parent.
+	 * Calls drawing logic in two stages. First a background is drawn and then an actual
+	 * content. This logic allows to separate how child implementation can use drawing
+	 * logic from its parent as usually background should get overridden in child but
+	 * actual content should get overridden in a parent.
 	 */
 	@Override
 	public final void draw(Screen screen) {
@@ -133,16 +145,14 @@ public abstract class AbstractView extends AbstractControl implements View {
 	}
 
 	/**
-	 * Component internal drawing method. Implementing classes needs to define this
-	 * method to draw something into a {@link Screen}.
-	 *
+	 * Component internal drawing method. Implementing classes needs to define this method
+	 * to draw something into a {@link Screen}.
 	 * @param screen the screen
 	 */
 	protected abstract void drawInternal(Screen screen);
 
 	/**
 	 * Internal drawing method for background.
-	 *
 	 * @param screen the screen
 	 */
 	protected void drawBackground(Screen screen) {
@@ -238,9 +248,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	}
 
 	/**
-	 * Sets a callback function which is invoked after a {@link View} has been
-	 * drawn.
-	 *
+	 * Sets a callback function which is invoked after a {@link View} has been drawn.
 	 * @param drawFunction the draw function
 	 */
 	public void setDrawFunction(BiFunction<Screen, Rectangle, Rectangle> drawFunction) {
@@ -249,7 +257,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Gets a draw function.
-	 *
 	 * @return null if function is not set
 	 * @see #setDrawFunction(BiFunction)
 	 */
@@ -259,7 +266,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Set an {@link EventLoop}.
-	 *
 	 * @param eventLoop the event loop
 	 */
 	public void setEventLoop(@Nullable EventLoop eventLoop) {
@@ -268,7 +274,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Get an {@link EventLoop}.
-	 *
 	 * @return event loop
 	 */
 	protected EventLoop getEventLoop() {
@@ -277,7 +282,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Set a {@link ViewService}
-	 *
 	 * @param viewService the view service
 	 */
 	@Override
@@ -287,7 +291,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Get a {@link ViewService}
-	 *
 	 * @return view service
 	 */
 	protected ViewService getViewService() {
@@ -315,7 +318,8 @@ public abstract class AbstractView extends AbstractControl implements View {
 		registerKeyBinding(keyType, null, null, keyRunnable);
 	}
 
-	private void registerKeyBinding(Integer keyType, String keyCommand, KeyBindingConsumer keyConsumer, Runnable keyRunnable) {
+	private void registerKeyBinding(Integer keyType, String keyCommand, KeyBindingConsumer keyConsumer,
+			Runnable keyRunnable) {
 		keyBindings.compute(keyType, (key, old) -> {
 			return KeyBindingValue.of(old, keyCommand, keyConsumer, keyRunnable);
 		});
@@ -333,7 +337,8 @@ public abstract class AbstractView extends AbstractControl implements View {
 		registerHotKeyBinding(keyType, null, null, keyRunnable);
 	}
 
-	private void registerHotKeyBinding(Integer keyType, String keyCommand, KeyBindingConsumer keyConsumer, Runnable keyRunnable) {
+	private void registerHotKeyBinding(Integer keyType, String keyCommand, KeyBindingConsumer keyConsumer,
+			Runnable keyRunnable) {
 		hotKeyBindings.compute(keyType, (key, old) -> {
 			return KeyBindingValue.of(old, keyCommand, keyConsumer, keyRunnable);
 		});
@@ -353,7 +358,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Get key bindings.
-	 *
 	 * @return key bindings
 	 */
 	protected Map<Integer, KeyBindingValue> getKeyBindings() {
@@ -362,7 +366,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Get hotkey bindings.
-	 *
 	 * @return hotkey bindings
 	 */
 	protected Map<Integer, KeyBindingValue> getHotKeyBindings() {
@@ -385,7 +388,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Get mouse bindings.
-	 *
 	 * @return mouse bindings
 	 */
 	protected Map<Integer, MouseBindingValue> getMouseBindings() {
@@ -404,7 +406,8 @@ public abstract class AbstractView extends AbstractControl implements View {
 		registerMouseBinding(keyType, null, null, mouseRunnable);
 	}
 
-	private void registerMouseBinding(Integer mouseType, String mouseCommand, MouseBindingConsumer mouseConsumer, Runnable mouseRunnable) {
+	private void registerMouseBinding(Integer mouseType, String mouseCommand, MouseBindingConsumer mouseConsumer,
+			Runnable mouseRunnable) {
 		Predicate<MouseEvent> mousePredicate = event -> {
 			int x = event.x();
 			int y = event.y();
@@ -417,7 +420,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	/**
 	 * Dispatch a {@link Message} into an event loop.
-	 *
 	 * @param message the message to dispatch
 	 */
 	protected void dispatch(Message<?> message) {
@@ -433,10 +435,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 		if (eventLoop == null) {
 			return false;
 		}
-		Message<Runnable> message = ShellMessageBuilder
-			.withPayload(runnable)
-			.setEventType(EventLoop.Type.TASK)
-			.build();
+		Message<Runnable> message = ShellMessageBuilder.withPayload(runnable).setEventType(EventLoop.Type.TASK).build();
 		dispatch(message);
 		return true;
 	}
@@ -449,8 +448,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 		if (command != null) {
 			Runnable runnable = commands.get(command);
 			if (runnable != null) {
-				Message<Runnable> message = ShellMessageBuilder
-					.withPayload(runnable)
+				Message<Runnable> message = ShellMessageBuilder.withPayload(runnable)
 					.setEventType(EventLoop.Type.TASK)
 					.build();
 				dispatch(message);
@@ -470,8 +468,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 		}
 		Runnable keyRunnable = keyBindingValue.keyRunnable();
 		if (keyRunnable != null) {
-			Message<Runnable> message = ShellMessageBuilder
-				.withPayload(keyRunnable)
+			Message<Runnable> message = ShellMessageBuilder.withPayload(keyRunnable)
 				.setEventType(EventLoop.Type.TASK)
 				.build();
 			dispatch(message);
@@ -499,8 +496,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 		}
 		Runnable mouseRunnable = mouseBindingValue.mouseRunnable();
 		if (mouseRunnable != null) {
-			Message<Runnable> message = ShellMessageBuilder
-				.withPayload(mouseRunnable)
+			Message<Runnable> message = ShellMessageBuilder.withPayload(mouseRunnable)
 				.setEventType(EventLoop.Type.TASK)
 				.build();
 			dispatch(message);
@@ -517,4 +513,5 @@ public abstract class AbstractView extends AbstractControl implements View {
 		}
 		return false;
 	}
+
 }

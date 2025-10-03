@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.shell.table.BorderStyle.fancy_double;
 
-
 /**
  * Tests for convenience borders factory.
  *
@@ -62,4 +61,5 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 		String result = table.render(80);
 		assertThat(result).isEqualTo(sample());
 	}
+
 }

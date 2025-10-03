@@ -25,8 +25,8 @@ public interface CommandCatalogCustomizer {
 
 	/**
 	 * Customize a command catalog.
-	 *
 	 * @param commandCatalog a command catalog
 	 */
 	void customize(CommandCatalog commandCatalog);
+
 }

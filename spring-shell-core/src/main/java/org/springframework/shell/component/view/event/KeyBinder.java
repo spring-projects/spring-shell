@@ -60,7 +60,6 @@ public class KeyBinder {
 		keyMap.bind(KeyEvent.Key.Tab, "\t");
 		keyMap.bind(KeyEvent.Key.Backtab, key(terminal, Capability.key_btab));
 
-
 		keyMap.bind(KeyEvent.Key.CursorLeft, key(terminal, Capability.key_left));
 		keyMap.bind(KeyEvent.Key.CursorRight, key(terminal, Capability.key_right));
 		keyMap.bind(KeyEvent.Key.CursorUp, key(terminal, Capability.key_up));

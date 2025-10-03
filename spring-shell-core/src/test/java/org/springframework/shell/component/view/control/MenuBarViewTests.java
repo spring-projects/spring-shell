@@ -34,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MenuBarViewTests extends AbstractViewTests {
 
 	private static final String SELECTED_FIELD = "activeItemIndex";
+
 	private static final String MENUVIEW_FIELD = "currentMenuView";
 
 	@Nested
@@ -59,6 +60,7 @@ class MenuBarViewTests extends AbstractViewTests {
 			item = MenuBarItem.of("title").setHotKey(Key.f);
 			assertThat(item.getHotKey()).isEqualTo(Key.f);
 		}
+
 	}
 
 	@Nested
@@ -117,7 +119,7 @@ class MenuBarViewTests extends AbstractViewTests {
 
 	// @Nested
 	// class Selection {
-	// 		MenuBarView view;
+	// MenuBarView view;
 
 	// }
 
@@ -236,14 +238,9 @@ class MenuBarViewTests extends AbstractViewTests {
 
 		@Test
 		void menuHasPositionRelativeToHeader() {
-			MenuBarView view = new MenuBarView(new MenuBarItem[] {
-				new MenuBarItem("menu1", new MenuItem[] {
-					new MenuItem("sub11")
-				}),
-				new MenuBarItem("menu2", new MenuItem[] {
-					new MenuItem("sub21")
-				})
-			});
+			MenuBarView view = new MenuBarView(
+					new MenuBarItem[] { new MenuBarItem("menu1", new MenuItem[] { new MenuItem("sub11") }),
+							new MenuBarItem("menu2", new MenuItem[] { new MenuItem("sub21") }) });
 			configure(view);
 			view.setRect(0, 0, 20, 1);
 

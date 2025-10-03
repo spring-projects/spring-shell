@@ -37,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DefaultEventLoopTests {
 
 	private final static Logger log = LoggerFactory.getLogger(DefaultEventLoopTests.class);
+
 	private DefaultEventLoop loop;
 
 	@AfterEach
@@ -45,7 +46,8 @@ class DefaultEventLoopTests {
 			// TODO: gh898
 			try {
 				loop.destroy();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				log.error("Error calling loop destroy", e);
 			}
 		}
@@ -61,10 +63,7 @@ class DefaultEventLoopTests {
 		initDefault();
 		Message<String> message = MessageBuilder.withPayload("TEST").build();
 
-		StepVerifier verifier1 = StepVerifier.create(loop.events())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(message);
 		verifier1.verify(Duration.ofSeconds(1));
@@ -75,15 +74,9 @@ class DefaultEventLoopTests {
 		initDefault();
 		Message<String> message = MessageBuilder.withPayload("TEST").build();
 
-		StepVerifier verifier1 = StepVerifier.create(loop.events())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
-		StepVerifier verifier2 = StepVerifier.create(loop.events())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier2 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(message);
 		verifier1.verify(Duration.ofSeconds(1));
@@ -96,10 +89,7 @@ class DefaultEventLoopTests {
 		Message<String> message = MessageBuilder.withPayload("TEST").build();
 		Flux<Message<String>> flux = Flux.just(message);
 
-		StepVerifier verifier1 = StepVerifier.create(loop.events())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(flux);
 		verifier1.verify(Duration.ofSeconds(1));
@@ -111,15 +101,11 @@ class DefaultEventLoopTests {
 		Message<String> message = MessageBuilder.withPayload("TEST").build();
 		Mono<Message<String>> mono = Mono.just(message);
 
-		StepVerifier verifier1 = StepVerifier.create(loop.events())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(mono);
 		verifier1.verify(Duration.ofSeconds(1));
 	}
-
 
 	@Test
 	void dispatchNoSubscribersDoesNotError() {
@@ -132,9 +118,7 @@ class DefaultEventLoopTests {
 	@Test
 	void subsribtionCompletesWhenLoopDestroyed() {
 		initDefault();
-		StepVerifier verifier1 = StepVerifier.create(loop.events())
-			.expectComplete()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectComplete().verifyLater();
 
 		loop.destroy();
 		verifier1.verify(Duration.ofSeconds(1));
@@ -151,11 +135,10 @@ class DefaultEventLoopTests {
 
 		@Override
 		public Flux<? extends Message<?>> process(Message<?> message) {
-			Message<?> m = MessageBuilder.fromMessage(message)
-				.setHeader("count", count++)
-				.build();
+			Message<?> m = MessageBuilder.fromMessage(message).setHeader("count", count++).build();
 			return Flux.just(m);
 		}
+
 	}
 
 	@Test
@@ -163,21 +146,15 @@ class DefaultEventLoopTests {
 		TestEventLoopProcessor processor = new TestEventLoopProcessor();
 		loop = new DefaultEventLoop(Arrays.asList(processor));
 
-		StepVerifier verifier1 = StepVerifier.create(loop.events())
-			.assertNext(m -> {
-				Integer count = m.getHeaders().get("count", Integer.class);
-				assertThat(count).isEqualTo(0);
-			})
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.events()).assertNext(m -> {
+			Integer count = m.getHeaders().get("count", Integer.class);
+			assertThat(count).isEqualTo(0);
+		}).thenCancel().verifyLater();
 
-		StepVerifier verifier2 = StepVerifier.create(loop.events())
-			.assertNext(m -> {
-				Integer count = m.getHeaders().get("count", Integer.class);
-				assertThat(count).isEqualTo(0);
-			})
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier2 = StepVerifier.create(loop.events()).assertNext(m -> {
+			Integer count = m.getHeaders().get("count", Integer.class);
+			assertThat(count).isEqualTo(0);
+		}).thenCancel().verifyLater();
 
 		Message<String> message = MessageBuilder.withPayload("TEST").build();
 		loop.dispatch(message);
@@ -190,22 +167,21 @@ class DefaultEventLoopTests {
 		initDefault();
 		TestRunnable task = new TestRunnable();
 		Message<TestRunnable> message = ShellMessageBuilder.withPayload(task).setEventType(EventLoop.Type.TASK).build();
-		StepVerifier verifier1 = StepVerifier.create(loop.events())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 		loop.dispatch(message);
 		verifier1.verify(Duration.ofSeconds(1));
 		assertThat(task.count).isEqualTo(1);
 	}
 
 	static class TestRunnable implements Runnable {
+
 		int count = 0;
 
 		@Override
 		public void run() {
 			count++;
 		}
+
 	}
 
 	@Test
@@ -215,10 +191,7 @@ class DefaultEventLoopTests {
 		KeyEvent event = KeyEvent.of(KeyEvent.Key.a);
 		Message<KeyEvent> message = ShellMessageBuilder.ofKeyEvent(event);
 
-		StepVerifier verifier1 = StepVerifier.create(loop.keyEvents())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.keyEvents()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(message);
 		verifier1.verify(Duration.ofSeconds(1));
@@ -229,16 +202,12 @@ class DefaultEventLoopTests {
 		initDefault();
 
 		org.jline.terminal.MouseEvent jlineMouseEvent = new org.jline.terminal.MouseEvent(
-				org.jline.terminal.MouseEvent.Type.Released,
-				org.jline.terminal.MouseEvent.Button.Button1,
+				org.jline.terminal.MouseEvent.Type.Released, org.jline.terminal.MouseEvent.Button.Button1,
 				EnumSet.noneOf(org.jline.terminal.MouseEvent.Modifier.class), 0, 0);
 		MouseEvent event = MouseEvent.of(jlineMouseEvent);
 		Message<MouseEvent> message = ShellMessageBuilder.ofMouseEvent(event);
 
-		StepVerifier verifier1 = StepVerifier.create(loop.mouseEvents())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.mouseEvents()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(message);
 		verifier1.verify(Duration.ofSeconds(1));
@@ -250,10 +219,7 @@ class DefaultEventLoopTests {
 
 		Message<String> message = ShellMessageBuilder.ofRedraw();
 
-		StepVerifier verifier1 = StepVerifier.create(loop.systemEvents())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.systemEvents()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(message);
 		verifier1.verify(Duration.ofSeconds(1));
@@ -265,10 +231,7 @@ class DefaultEventLoopTests {
 
 		Message<String> message = ShellMessageBuilder.ofSignal("WINCH");
 
-		StepVerifier verifier1 = StepVerifier.create(loop.signalEvents())
-			.expectNextCount(1)
-			.thenCancel()
-			.verifyLater();
+		StepVerifier verifier1 = StepVerifier.create(loop.signalEvents()).expectNextCount(1).thenCancel().verifyLater();
 
 		loop.dispatch(message);
 		verifier1.verify(Duration.ofSeconds(1));

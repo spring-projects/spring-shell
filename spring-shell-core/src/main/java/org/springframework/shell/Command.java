@@ -36,8 +36,8 @@ public interface Command {
 		private final String group;
 
 		/**
-		 * A required, short one sentence description of the command. Should start with a capital and end with a dot
-		 * for consistency.
+		 * A required, short one sentence description of the command. Should start with a
+		 * capital and end with a dot for consistency.
 		 */
 		private final String description;
 
@@ -61,17 +61,19 @@ public interface Command {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
 			Help help = (Help) o;
-			return Objects.equals(group, help.group) &&
-					Objects.equals(description, help.description);
+			return Objects.equals(group, help.group) && Objects.equals(description, help.description);
 		}
 
 		@Override
 		public int hashCode() {
 			return Objects.hash(group, description);
 		}
+
 	}
 
 }

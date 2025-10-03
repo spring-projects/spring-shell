@@ -45,7 +45,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MenuViewTests extends AbstractViewTests {
 
 	private static final String SELECTED_FIELD = "activeItemIndex";
+
 	private static final String RADIO_ACTIVE_FIELD = "radioActive";
+
 	private static final String CHECKED_ACTIVE_FIELD = "checkedActive";
 
 	ThemeResolver themeResolver;
@@ -87,43 +89,29 @@ class MenuViewTests extends AbstractViewTests {
 		void constructView() {
 			MenuView view;
 
-			view = new MenuView(new MenuItem[] {
-				MenuItem.of("sub1"),
-				MenuItem.of("sub2")
-			});
+			view = new MenuView(new MenuItem[] { MenuItem.of("sub1"), MenuItem.of("sub2") });
 			assertThat(view.getItems()).hasSize(2);
 
-			view = new MenuView(new MenuItem[] {
-				new MenuItem("sub1"),
-				new MenuItem("sub2")
-			});
+			view = new MenuView(new MenuItem[] { new MenuItem("sub1"), new MenuItem("sub2") });
 			assertThat(view.getItems()).hasSize(2);
 
-			view = new MenuView(new MenuItem[] {
-				MenuItem.of("sub1", MenuItemCheckStyle.RADIO),
-				MenuItem.of("sub2", MenuItemCheckStyle.RADIO)
-			});
+			view = new MenuView(new MenuItem[] { MenuItem.of("sub1", MenuItemCheckStyle.RADIO),
+					MenuItem.of("sub2", MenuItemCheckStyle.RADIO) });
 			assertThat(view.getItems()).hasSize(2);
 
-			view = new MenuView(new MenuItem[] {
-				new MenuItem("sub1", MenuItemCheckStyle.RADIO),
-				new MenuItem("sub2", MenuItemCheckStyle.RADIO)
-			});
+			view = new MenuView(new MenuItem[] { new MenuItem("sub1", MenuItemCheckStyle.RADIO),
+					new MenuItem("sub2", MenuItemCheckStyle.RADIO) });
 			assertThat(view.getItems()).hasSize(2);
 
-			view = new MenuView(new MenuItem[] {
-				new MenuItem("sub1", MenuItemCheckStyle.RADIO, null, true),
-				new MenuItem("sub2", MenuItemCheckStyle.RADIO, null, false)
-			});
+			view = new MenuView(new MenuItem[] { new MenuItem("sub1", MenuItemCheckStyle.RADIO, null, true),
+					new MenuItem("sub2", MenuItemCheckStyle.RADIO, null, false) });
 			assertThat(view.getItems()).hasSize(2);
 			MenuItem radioActive = (MenuItem) ReflectionTestUtils.getField(view, RADIO_ACTIVE_FIELD);
 			assertThat(radioActive).isNotNull();
 			assertThat(radioActive.getTitle()).isEqualTo("sub1");
 
-			view = new MenuView(new MenuItem[] {
-				new MenuItem("sub1", MenuItemCheckStyle.CHECKED, null, true),
-				new MenuItem("sub2", MenuItemCheckStyle.CHECKED, null, true)
-			});
+			view = new MenuView(new MenuItem[] { new MenuItem("sub1", MenuItemCheckStyle.CHECKED, null, true),
+					new MenuItem("sub2", MenuItemCheckStyle.CHECKED, null, true) });
 			assertThat(view.getItems()).hasSize(2);
 			Set<MenuItem> checkedActive = (Set<MenuItem>) ReflectionTestUtils.getField(view, CHECKED_ACTIVE_FIELD);
 			assertThat(checkedActive).isNotNull();
@@ -133,7 +121,8 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void constructItem() {
 			MenuItem item;
-			Runnable runnable = () -> {};
+			Runnable runnable = () -> {
+			};
 
 			item = new MenuItem("title", MenuItemCheckStyle.RADIO, runnable, true);
 			assertThat(item.getTitle()).isEqualTo("title");
@@ -152,10 +141,9 @@ class MenuViewTests extends AbstractViewTests {
 		void constructUsingRunnable() {
 			MenuView view;
 
-			view = new MenuView(new MenuItem[] {
-				MenuItem.of("sub1", MenuItemCheckStyle.RADIO, () -> {}),
-				MenuItem.of("sub2", MenuItemCheckStyle.RADIO, () -> {})
-			});
+			view = new MenuView(new MenuItem[] { MenuItem.of("sub1", MenuItemCheckStyle.RADIO, () -> {
+			}), MenuItem.of("sub2", MenuItemCheckStyle.RADIO, () -> {
+			}) });
 			assertThat(view.getItems()).hasSize(2);
 		}
 
@@ -220,10 +208,7 @@ class MenuViewTests extends AbstractViewTests {
 
 		@BeforeEach
 		void setup() {
-			view = new MenuView(new MenuItem[] {
-				MenuItem.of("sub1"),
-				MenuItem.of("sub2")
-			});
+			view = new MenuView(new MenuItem[] { MenuItem.of("sub1"), MenuItem.of("sub2") });
 			configure(view);
 			view.setRect(0, 0, 10, 10);
 		}
@@ -290,17 +275,24 @@ class MenuViewTests extends AbstractViewTests {
 		void canSelectManually() {
 
 		}
+
 	}
 
 	@Nested
 	class Checked {
 
 		MenuItem sub1;
+
 		MenuItem sub2;
+
 		MenuItem sub3;
+
 		MenuItem sub4;
+
 		MenuItem sub5;
+
 		MenuItem sub6;
+
 		MenuView view;
 
 		@BeforeEach
@@ -382,10 +374,7 @@ class MenuViewTests extends AbstractViewTests {
 
 		@BeforeEach
 		void setup() {
-			view = new MenuView(new MenuItem[] {
-				MenuItem.of("sub1"),
-				MenuItem.of("sub2")
-			});
+			view = new MenuView(new MenuItem[] { MenuItem.of("sub1"), MenuItem.of("sub2") });
 			configure(view);
 			view.setRect(0, 0, 10, 10);
 		}
@@ -395,11 +384,8 @@ class MenuViewTests extends AbstractViewTests {
 			MouseEvent click = mouseClick(0, 2);
 
 			Flux<MenuViewSelectedItemChangedEvent> actions = eventLoop
-					.viewEvents(MenuViewSelectedItemChangedEvent.class);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+				.viewEvents(MenuViewSelectedItemChangedEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			MouseHandlerResult result = handleMouseClick(view, click);
 
@@ -414,12 +400,8 @@ class MenuViewTests extends AbstractViewTests {
 
 		@Test
 		void keySelectSendsEvent() {
-			Flux<MenuViewOpenSelectedItemEvent> actions = eventLoop
-					.viewEvents(MenuViewOpenSelectedItemEvent.class);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			Flux<MenuViewOpenSelectedItemEvent> actions = eventLoop.viewEvents(MenuViewOpenSelectedItemEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			handleKey(view, Key.Enter);
 			verifier.verify(Duration.ofSeconds(1));
@@ -428,11 +410,8 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void selectionChangedSendsEvent() {
 			Flux<MenuViewSelectedItemChangedEvent> actions = eventLoop
-					.viewEvents(MenuViewSelectedItemChangedEvent.class);
-			StepVerifier verifier = StepVerifier.create(actions)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+				.viewEvents(MenuViewSelectedItemChangedEvent.class);
+			StepVerifier verifier = StepVerifier.create(actions).expectNextCount(1).thenCancel().verifyLater();
 
 			handleKey(view, Key.CursorDown);
 			verifier.verify(Duration.ofSeconds(1));
@@ -442,14 +421,12 @@ class MenuViewTests extends AbstractViewTests {
 
 	@Nested
 	class Visual {
+
 		MenuView view;
 
 		@BeforeEach
 		void setup() {
-			view = new MenuView(new MenuItem[] {
-				MenuItem.of("sub1"),
-				MenuItem.of("sub2")
-			});
+			view = new MenuView(new MenuItem[] { MenuItem.of("sub1"), MenuItem.of("sub2") });
 			configure(view);
 			view.setRect(0, 0, 10, 10);
 		}
@@ -463,6 +440,7 @@ class MenuViewTests extends AbstractViewTests {
 			view.draw(screen24x80);
 			assertThat(forScreen(screen24x80)).hasHorizontalText("sub1", 0, 1, 5);
 		}
+
 	}
 
 }

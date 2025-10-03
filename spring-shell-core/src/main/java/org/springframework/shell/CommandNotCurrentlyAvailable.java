@@ -23,6 +23,7 @@ package org.springframework.shell;
 public class CommandNotCurrentlyAvailable extends RuntimeException {
 
 	private final String command;
+
 	private final Availability availability;
 
 	public CommandNotCurrentlyAvailable(String command, Availability availability) {
@@ -39,4 +40,5 @@ public class CommandNotCurrentlyAvailable extends RuntimeException {
 	public Availability getAvailability() {
 		return availability;
 	}
+
 }

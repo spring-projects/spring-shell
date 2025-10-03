@@ -62,14 +62,12 @@ public interface ComponentFlow {
 
 	/**
 	 * Run a wizard and returns a result from it.
-	 *
 	 * @return the input wizard result
 	 */
 	ComponentFlowResult run();
 
 	/**
 	 * Gets a new instance of an input wizard builder.
-	 *
 	 * @return the input wizard builder
 	 */
 	public static Builder builder() {
@@ -83,10 +81,10 @@ public interface ComponentFlow {
 
 		/**
 		 * Gets a context.
-		 *
 		 * @return a context
 		 */
 		ComponentContext<?> getContext();
+
 	}
 
 	/**
@@ -96,7 +94,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Gets a builder for string input.
-		 *
 		 * @param id the identifier
 		 * @return builder for string input
 		 */
@@ -104,7 +101,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Gets a builder for path input.
-		 *
 		 * @param id the identifier
 		 * @return builder for text input
 		 */
@@ -112,7 +108,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Gets a builder for confirmation input.
-		 *
 		 * @param id the identifier
 		 * @return builder for text input
 		 */
@@ -120,7 +115,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Gets a builder for single item selector.
-		 *
 		 * @param id the identifier
 		 * @return builder for single item selector
 		 */
@@ -128,7 +122,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Gets a builder for multi item selector.
-		 *
 		 * @param id the identifier
 		 * @return builder for multi item selector
 		 */
@@ -136,7 +129,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Sets a {@link Terminal}.
-		 *
 		 * @param terminal the terminal
 		 * @return a builder
 		 */
@@ -144,7 +136,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Sets a {@link ResourceLoader}.
-		 *
 		 * @param resourceLoader the resource loader
 		 * @return a builder
 		 */
@@ -152,7 +143,6 @@ public interface ComponentFlow {
 
 		/**
 		 * Sets a {@link TemplateExecutor}.
-		 *
 		 * @param templateExecutor the template executor
 		 * @return a builder
 		 */
@@ -160,37 +150,44 @@ public interface ComponentFlow {
 
 		/**
 		 * Clones existing builder.
-		 *
 		 * @return a builder
 		 */
 		Builder clone();
 
 		/**
 		 * Resets existing builder.
-		 *
 		 * @return a builder
 		 */
 		Builder reset();
 
 		/**
 		 * Builds instance of input wizard.
-		 *
 		 * @return instance of input wizard
 		 */
 		ComponentFlow build();
+
 	}
 
 	static abstract class BaseBuilder implements Builder {
 
 		private final List<BaseStringInput> stringInputs = new ArrayList<>();
+
 		private final List<BasePathInput> pathInputs = new ArrayList<>();
+
 		private final List<BaseConfirmationInput> confirmationInputs = new ArrayList<>();
+
 		private final List<BaseSingleItemSelector> singleItemSelectors = new ArrayList<>();
+
 		private final List<BaseMultiItemSelector> multiItemSelectors = new ArrayList<>();
+
 		private final AtomicInteger order = new AtomicInteger();
+
 		private final HashSet<String> uniqueIds = new HashSet<>();
+
 		private Terminal terminal;
+
 		private ResourceLoader resourceLoader;
+
 		private TemplateExecutor templateExecutor;
 
 		BaseBuilder() {
@@ -310,6 +307,7 @@ public interface ComponentFlow {
 			}
 			uniqueIds.add(id);
 		}
+
 	}
 
 	static class DefaultBuilder extends BaseBuilder {
@@ -323,6 +321,7 @@ public interface ComponentFlow {
 			resourceLoader(other.getResourceLoader());
 			templateExecutor(other.getTemplateExecutor());
 		}
+
 	}
 
 	static class DefaultComponentFlowResult implements ComponentFlowResult {
@@ -336,23 +335,33 @@ public interface ComponentFlow {
 		public ComponentContext<?> getContext() {
 			return context;
 		}
+
 	}
 
 	static class DefaultComponentFlow implements ComponentFlow {
 
 		private static final Logger log = LoggerFactory.getLogger(DefaultComponentFlow.class);
+
 		private final Terminal terminal;
+
 		private final List<BaseStringInput> stringInputs;
+
 		private final List<BasePathInput> pathInputs;
+
 		private final List<BaseConfirmationInput> confirmationInputs;
+
 		private final List<BaseSingleItemSelector> singleInputs;
+
 		private final List<BaseMultiItemSelector> multiInputs;
+
 		private final ResourceLoader resourceLoader;
+
 		private final TemplateExecutor templateExecutor;
 
 		DefaultComponentFlow(Terminal terminal, ResourceLoader resourceLoader, TemplateExecutor templateExecutor,
-				List<BaseStringInput> stringInputs, List<BasePathInput> pathInputs, List<BaseConfirmationInput> confirmationInputs,
-				List<BaseSingleItemSelector> singleInputs, List<BaseMultiItemSelector> multiInputs) {
+				List<BaseStringInput> stringInputs, List<BasePathInput> pathInputs,
+				List<BaseConfirmationInput> confirmationInputs, List<BaseSingleItemSelector> singleInputs,
+				List<BaseMultiItemSelector> multiInputs) {
 			this.terminal = terminal;
 			this.resourceLoader = resourceLoader;
 			this.templateExecutor = templateExecutor;
@@ -371,6 +380,7 @@ public interface ComponentFlow {
 		private static class OrderedInputOperationList {
 
 			private final Map<String, Node> map = new HashMap<>();
+
 			private Node first;
 
 			OrderedInputOperationList(List<OrderedInputOperation> values) {
@@ -397,18 +407,23 @@ public interface ComponentFlow {
 			}
 
 			static class Node {
+
 				OrderedInputOperation data;
+
 				Node next;
+
 				Node(OrderedInputOperation data) {
 					this.data = data;
 				}
+
 			}
+
 		}
 
 		private DefaultComponentFlowResult runGetResults() {
 			List<OrderedInputOperation> oios = Stream
-				.of(stringInputsStream(), pathInputsStream(), confirmationInputsStream(),
-						singleItemSelectorsStream(), multiItemSelectorsStream())
+				.of(stringInputsStream(), pathInputsStream(), confirmationInputsStream(), singleItemSelectorsStream(),
+						multiItemSelectorsStream())
 				.flatMap(oio -> oio)
 				.sorted(OrderComparator.INSTANCE)
 				.collect(Collectors.toList());
@@ -447,42 +462,41 @@ public interface ComponentFlow {
 			return stringInputs.stream().map(input -> {
 				StringInput selector = new StringInput(terminal, input.getName(), input.getDefaultValue());
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
-						if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
-								&& StringUtils.hasText(input.getResultValue())) {
-							context.put(input.getId(), input.getResultValue());
-							return context;
-						}
-						selector.setResourceLoader(resourceLoader);
-						selector.setTemplateExecutor(templateExecutor);
-						selector.setMaskCharacter(input.getMaskCharacter());
-						if (StringUtils.hasText(input.getTemplateLocation())) {
-							selector.setTemplateLocation(input.getTemplateLocation());
-						}
-						if (input.getRenderer() != null) {
-							selector.setRenderer(input.getRenderer());
-						}
-						if (input.isStoreResult()) {
-							if (input.getResultMode() == ResultMode.VERIFY && StringUtils.hasText(input.getResultValue())) {
-								selector.addPreRunHandler(c -> {
-									c.setDefaultValue(input.getResultValue());
-								});
-							}
-							selector.addPostRunHandler(c -> {
-								c.put(input.getId(), c.getResultValue());
+					if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
+							&& StringUtils.hasText(input.getResultValue())) {
+						context.put(input.getId(), input.getResultValue());
+						return context;
+					}
+					selector.setResourceLoader(resourceLoader);
+					selector.setTemplateExecutor(templateExecutor);
+					selector.setMaskCharacter(input.getMaskCharacter());
+					if (StringUtils.hasText(input.getTemplateLocation())) {
+						selector.setTemplateLocation(input.getTemplateLocation());
+					}
+					if (input.getRenderer() != null) {
+						selector.setRenderer(input.getRenderer());
+					}
+					if (input.isStoreResult()) {
+						if (input.getResultMode() == ResultMode.VERIFY && StringUtils.hasText(input.getResultValue())) {
+							selector.addPreRunHandler(c -> {
+								c.setDefaultValue(input.getResultValue());
 							});
 						}
-						for (Consumer<StringInputContext> handler : input.getPreHandlers()) {
-							selector.addPreRunHandler(handler);
-						}
-						for (Consumer<StringInputContext> handler : input.getPostHandlers()) {
-							selector.addPostRunHandler(handler);
-						}
-						return selector.run(context);
+						selector.addPostRunHandler(c -> {
+							c.put(input.getId(), c.getResultValue());
+						});
+					}
+					for (Consumer<StringInputContext> handler : input.getPreHandlers()) {
+						selector.addPreRunHandler(handler);
+					}
+					for (Consumer<StringInputContext> handler : input.getPostHandlers()) {
+						selector.addPostRunHandler(handler);
+					}
+					return selector.run(context);
 				};
 				Function<StringInputContext, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
-						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: null;
+						? Optional.ofNullable(f1.apply(selector.getThisContext(context))) : null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
@@ -491,36 +505,35 @@ public interface ComponentFlow {
 			return pathInputs.stream().map(input -> {
 				PathInput selector = new PathInput(terminal, input.getName());
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
-						if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
-								&& StringUtils.hasText(input.getResultValue())) {
-							context.put(input.getId(), Paths.get(input.getResultValue()));
-							return context;
-						}
-						selector.setResourceLoader(resourceLoader);
-						selector.setTemplateExecutor(templateExecutor);
-						if (StringUtils.hasText(input.getTemplateLocation())) {
-							selector.setTemplateLocation(input.getTemplateLocation());
-						}
-						if (input.getRenderer() != null) {
-							selector.setRenderer(input.getRenderer());
-						}
-						if (input.isStoreResult()) {
-							selector.addPostRunHandler(c -> {
-								c.put(input.getId(), c.getResultValue());
-							});
-						}
-						for (Consumer<PathInputContext> handler : input.getPreHandlers()) {
-							selector.addPreRunHandler(handler);
-						}
-						for (Consumer<PathInputContext> handler : input.getPostHandlers()) {
-							selector.addPostRunHandler(handler);
-						}
-						return selector.run(context);
+					if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
+							&& StringUtils.hasText(input.getResultValue())) {
+						context.put(input.getId(), Paths.get(input.getResultValue()));
+						return context;
+					}
+					selector.setResourceLoader(resourceLoader);
+					selector.setTemplateExecutor(templateExecutor);
+					if (StringUtils.hasText(input.getTemplateLocation())) {
+						selector.setTemplateLocation(input.getTemplateLocation());
+					}
+					if (input.getRenderer() != null) {
+						selector.setRenderer(input.getRenderer());
+					}
+					if (input.isStoreResult()) {
+						selector.addPostRunHandler(c -> {
+							c.put(input.getId(), c.getResultValue());
+						});
+					}
+					for (Consumer<PathInputContext> handler : input.getPreHandlers()) {
+						selector.addPreRunHandler(handler);
+					}
+					for (Consumer<PathInputContext> handler : input.getPostHandlers()) {
+						selector.addPostRunHandler(handler);
+					}
+					return selector.run(context);
 				};
 				Function<PathInputContext, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
-						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: null;
+						? Optional.ofNullable(f1.apply(selector.getThisContext(context))) : null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
@@ -529,51 +542,50 @@ public interface ComponentFlow {
 			return confirmationInputs.stream().map(input -> {
 				ConfirmationInput selector = new ConfirmationInput(terminal, input.getName(), input.getDefaultValue());
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
-						if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
-								&& input.getResultValue() != null) {
-							context.put(input.getId(), input.getResultValue());
-							return context;
-						}
-						selector.setResourceLoader(resourceLoader);
-						selector.setTemplateExecutor(templateExecutor);
-						if (StringUtils.hasText(input.getTemplateLocation())) {
-							selector.setTemplateLocation(input.getTemplateLocation());
-						}
-						if (input.getRenderer() != null) {
-							selector.setRenderer(input.getRenderer());
-						}
-						if (input.isStoreResult()) {
-							selector.addPostRunHandler(c -> {
-								c.put(input.getId(), c.getResultValue());
-							});
-						}
-						for (Consumer<ConfirmationInputContext> handler : input.getPreHandlers()) {
-							selector.addPreRunHandler(handler);
-						}
-						for (Consumer<ConfirmationInputContext> handler : input.getPostHandlers()) {
-							selector.addPostRunHandler(handler);
-						}
-						return selector.run(context);
+					if (input.getResultMode() == ResultMode.ACCEPT && input.isStoreResult()
+							&& input.getResultValue() != null) {
+						context.put(input.getId(), input.getResultValue());
+						return context;
+					}
+					selector.setResourceLoader(resourceLoader);
+					selector.setTemplateExecutor(templateExecutor);
+					if (StringUtils.hasText(input.getTemplateLocation())) {
+						selector.setTemplateLocation(input.getTemplateLocation());
+					}
+					if (input.getRenderer() != null) {
+						selector.setRenderer(input.getRenderer());
+					}
+					if (input.isStoreResult()) {
+						selector.addPostRunHandler(c -> {
+							c.put(input.getId(), c.getResultValue());
+						});
+					}
+					for (Consumer<ConfirmationInputContext> handler : input.getPreHandlers()) {
+						selector.addPreRunHandler(handler);
+					}
+					for (Consumer<ConfirmationInputContext> handler : input.getPostHandlers()) {
+						selector.addPostRunHandler(handler);
+					}
+					return selector.run(context);
 				};
 				Function<ConfirmationInputContext, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
-						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: null;
+						? Optional.ofNullable(f1.apply(selector.getThisContext(context))) : null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
 
 		private Stream<OrderedInputOperation> singleItemSelectorsStream() {
 			return singleInputs.stream().map(input -> {
-				List<SelectorItem<String>> selectorItems = input.getSelectItems().stream()
-						.map(si -> SelectorItem.of(si.name(), si.item()))
-						.collect(Collectors.toList());
+				List<SelectorItem<String>> selectorItems = input.getSelectItems()
+					.stream()
+					.map(si -> SelectorItem.of(si.name(), si.item()))
+					.collect(Collectors.toList());
 
 				// setup possible item for initial expose
 				String defaultSelect = input.getDefaultSelect();
 				Stream<SelectorItem<String>> defaultCheckStream = StringUtils.hasText(defaultSelect)
-						? selectorItems.stream()
-						: Stream.empty();
+						? selectorItems.stream() : Stream.empty();
 				SelectorItem<String> defaultExpose = defaultCheckStream
 					.filter(si -> ObjectUtils.nullSafeEquals(defaultSelect, si.getName()))
 					.findFirst()
@@ -606,27 +618,29 @@ public interface ComponentFlow {
 							});
 						});
 					}
-					for (Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler : input.getPreHandlers()) {
+					for (Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler : input
+						.getPreHandlers()) {
 						selector.addPreRunHandler(handler);
 					}
-					for (Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler : input.getPostHandlers()) {
+					for (Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler : input
+						.getPostHandlers()) {
 						selector.addPostRunHandler(handler);
 					}
 					return selector.run(context);
 				};
 				Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
-						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: null;
+						? Optional.ofNullable(f1.apply(selector.getThisContext(context))) : null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
 
 		private Stream<OrderedInputOperation> multiItemSelectorsStream() {
 			return multiInputs.stream().map(input -> {
-				List<SelectorItem<String>> selectorItems = input.getSelectItems().stream()
-						.map(si -> SelectorItem.of(si.name(), si.item(), si.enabled(), si.selected()))
-						.collect(Collectors.toList());
+				List<SelectorItem<String>> selectorItems = input.getSelectItems()
+					.stream()
+					.map(si -> SelectorItem.of(si.name(), si.item(), si.enabled(), si.selected()))
+					.collect(Collectors.toList());
 				MultiItemSelector<String, SelectorItem<String>> selector = new MultiItemSelector<>(terminal,
 						selectorItems, input.getName(), input.getComparator());
 				Function<ComponentContext<?>, ComponentContext<?>> operation = (context) -> {
@@ -651,28 +665,33 @@ public interface ComponentFlow {
 							c.put(input.getId(), c.getValues());
 						});
 					}
-					for (Consumer<MultiItemSelectorContext<String, SelectorItem<String>>> handler : input.getPreHandlers()) {
+					for (Consumer<MultiItemSelectorContext<String, SelectorItem<String>>> handler : input
+						.getPreHandlers()) {
 						selector.addPreRunHandler(handler);
 					}
-					for (Consumer<MultiItemSelectorContext<String, SelectorItem<String>>> handler : input.getPostHandlers()) {
+					for (Consumer<MultiItemSelectorContext<String, SelectorItem<String>>> handler : input
+						.getPostHandlers()) {
 						selector.addPostRunHandler(handler);
 					}
 					return selector.run(context);
 				};
 				Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> f1 = input.getNext();
 				Function<ComponentContext<?>, Optional<String>> f2 = context -> f1 != null
-						? Optional.ofNullable(f1.apply(selector.getThisContext(context)))
-						: null;
+						? Optional.ofNullable(f1.apply(selector.getThisContext(context))) : null;
 				return OrderedInputOperation.of(input.getId(), input.getOrder(), operation, f2);
 			});
 		}
+
 	}
 
 	static class OrderedInputOperation implements Ordered {
 
 		private String id;
+
 		private int order;
+
 		private Function<ComponentContext<?>, ComponentContext<?>> operation;
+
 		private Function<ComponentContext<?>, Optional<String>> next;
 
 		@Override
@@ -702,5 +721,7 @@ public interface ComponentFlow {
 			oio.next = next;
 			return oio;
 		}
+
 	}
+
 }

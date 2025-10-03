@@ -39,8 +39,9 @@ import org.springframework.util.StringUtils;
 /**
  * A {@link ShellRunner} that executes commands without entering interactive shell mode.
  *
- * <p>Has higher precedence than {@link InteractiveShellRunner} which gives it an opportunity to handle the shell
- * in non-interactive fashion.
+ * <p>
+ * Has higher precedence than {@link InteractiveShellRunner} which gives it an opportunity
+ * to handle the shell in non-interactive fashion.
  *
  * @author Janne Valkealahti
  * @author Chris Bono
@@ -49,8 +50,9 @@ import org.springframework.util.StringUtils;
 public class NonInteractiveShellRunner implements ShellRunner {
 
 	/**
-	 * The precedence at which this runner is ordered by the DefaultApplicationRunner - which also controls
-	 * the order it is consulted on the ability to handle the current shell.
+	 * The precedence at which this runner is ordered by the DefaultApplicationRunner -
+	 * which also controls the order it is consulted on the ability to handle the current
+	 * shell.
 	 */
 	public static final int PRECEDENCE = InteractiveShellRunner.PRECEDENCE - 50;
 
@@ -62,8 +64,9 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private String primaryCommand;
 
-    private static final String SINGLE_QUOTE = "\'";
-    private static final String DOUBLE_QUOTE = "\"";
+	private static final String SINGLE_QUOTE = "\'";
+
+	private static final String DOUBLE_QUOTE = "\"";
 
 	private Function<String[], List<String>> commandsFromArgs = args -> {
 		if (ObjectUtils.isEmpty(args)) {
@@ -75,14 +78,12 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			}
 		}
 		// re-quote if needed having whitespace
-		String raw = Arrays.stream(args)
-			.map(a -> {
-				if (!isQuoted(a) && StringUtils.containsWhitespace(a)) {
-					return "\"" + a + "\"";
-				}
-				return a;
-			})
-			.collect(Collectors.joining(" "));
+		String raw = Arrays.stream(args).map(a -> {
+			if (!isQuoted(a) && StringUtils.containsWhitespace(a)) {
+				return "\"" + a + "\"";
+			}
+			return a;
+		}).collect(Collectors.joining(" "));
 		if (StringUtils.hasText(primaryCommand)) {
 			return Collections.singletonList(primaryCommand + " " + raw);
 		}
@@ -111,11 +112,11 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	}
 
 	/**
-	 * Sets the function that creates the command() to run from the input application arguments.
-	 *
-	 * @param commandsFromArgs function that takes input application arguments and creates zero or more commands
-	 *                                 where each command is a string that specifies the command and options
-	 *                                 (eg. 'history --file myHistory.txt')
+	 * Sets the function that creates the command() to run from the input application
+	 * arguments.
+	 * @param commandsFromArgs function that takes input application arguments and creates
+	 * zero or more commands where each command is a string that specifies the command and
+	 * options (eg. 'history --file myHistory.txt')
 	 */
 	public void setCommandsFromArgs(Function<String[], List<String>> commandsFromArgs) {
 		this.commandsFromArgs = commandsFromArgs;
@@ -123,7 +124,6 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	/**
 	 * Sets the line parser used to parse commands.
-	 *
 	 * @param lineParser the line parser used to parse commands
 	 */
 	public void setLineParser(Parser lineParser) {
@@ -137,8 +137,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			return false;
 		}
 		List<ParsedLine> parsedLines = commands.stream()
-				.map(rawCommandLine -> lineParser.parse(rawCommandLine, rawCommandLine.length() + 1))
-				.collect(Collectors.toList());
+			.map(rawCommandLine -> lineParser.parse(rawCommandLine, rawCommandLine.length() + 1))
+			.collect(Collectors.toList());
 		MultiParsedLineInputProvider inputProvider = new MultiParsedLineInputProvider(parsedLines);
 		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		shell.run(inputProvider);
@@ -146,17 +146,17 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	}
 
 	/**
-	 * An {@link InputProvider} that returns an input for each entry in a list of {@link ParsedLine parsed lines}.
+	 * An {@link InputProvider} that returns an input for each entry in a list of
+	 * {@link ParsedLine parsed lines}.
 	 */
 	static class MultiParsedLineInputProvider implements InputProvider {
 
 		private final List<ParsedLineInput> parsedLineInputs;
+
 		private int inputIdx;
 
 		MultiParsedLineInputProvider(List<ParsedLine> parsedLines) {
-			this.parsedLineInputs = parsedLines.stream()
-					.map(ParsedLineInput::new)
-					.collect(Collectors.toList());
+			this.parsedLineInputs = parsedLines.stream().map(ParsedLineInput::new).collect(Collectors.toList());
 		}
 
 		@Override
@@ -184,6 +184,9 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			public List<String> words() {
 				return Utils.sanitizeInput(parsedLine.words());
 			}
+
 		}
+
 	}
+
 }

@@ -36,4 +36,5 @@ public class DefaultResultHandler extends TerminalAwareResultHandler<Object> {
 	protected void doHandleResult(Object result) {
 		terminal.writer().println(String.valueOf(result));
 	}
+
 }

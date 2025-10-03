@@ -37,9 +37,9 @@ import org.springframework.shell.jline.PromptProvider;
 import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
 
 /**
- * Client for terminal session which can be used as a programmatic way
- * to interact with a shell application. In a typical test it is required
- * to write into a shell and read what is visible in a shell.
+ * Client for terminal session which can be used as a programmatic way to interact with a
+ * shell application. In a typical test it is required to write into a shell and read what
+ * is visible in a shell.
  *
  * @author Janne Valkealahti
  */
@@ -47,14 +47,12 @@ public interface ShellTestClient extends Closeable {
 
 	/**
 	 * Run interactive shell session.
-	 *
 	 * @return session for chaining
 	 */
 	InteractiveShellSession interactive();
 
 	/**
 	 * Run non-interactive command session.
-	 *
 	 * @param args the command arguments
 	 * @return session for chaining
 	 */
@@ -62,14 +60,12 @@ public interface ShellTestClient extends Closeable {
 
 	/**
 	 * Read the screen.
-	 *
 	 * @return the screen
 	 */
 	ShellScreen screen();
 
 	/**
 	 * Get an instance of a builder.
-	 *
 	 * @param terminalSession the terminal session
 	 * @param shell the shell
 	 * @param promptProvider the prompt provider
@@ -89,31 +85,28 @@ public interface ShellTestClient extends Closeable {
 
 		/**
 		 * Build a shell client.
-		 *
 		 * @return a shell client
 		 */
 		ShellTestClient build();
+
 	}
 
-	interface BaseShellSession<T extends BaseShellSession<T>>  {
+	interface BaseShellSession<T extends BaseShellSession<T>> {
 
 		/**
 		 * Get a write sequencer.
-		 *
 		 * @return a write sequencer
 		 */
 		ShellWriteSequence writeSequence();
 
 		/**
 		 * Read the screen.
-		 *
 		 * @return the screen
 		 */
 		ShellScreen screen();
 
 		/**
 		 * Write plain text into a shell.
-		 *
 		 * @param text the text
 		 * @return client for chaining
 		 */
@@ -121,26 +114,32 @@ public interface ShellTestClient extends Closeable {
 
 		/**
 		 * Run a session.
-		 *
 		 * @return client for chaining
 		 */
 		T run();
 
 		boolean isComplete();
+
 	}
 
 	interface InteractiveShellSession extends BaseShellSession<InteractiveShellSession> {
+
 	}
 
 	interface NonInteractiveShellSession extends BaseShellSession<NonInteractiveShellSession> {
+
 	}
 
 	static class DefaultBuilder implements Builder {
 
 		private TerminalSession terminalSession;
+
 		private Shell shell;
+
 		private PromptProvider promptProvider;
+
 		private LineReader lineReader;
+
 		private Terminal terminal;
 
 		DefaultBuilder(TerminalSession terminalSession, Shell shell, PromptProvider promptProvider,
@@ -156,17 +155,25 @@ public interface ShellTestClient extends Closeable {
 		public ShellTestClient build() {
 			return new DefaultShellClient(terminalSession, shell, promptProvider, lineReader, terminal);
 		}
+
 	}
 
 	static class DefaultShellClient implements ShellTestClient {
 
 		private final static Logger log = LoggerFactory.getLogger(DefaultShellClient.class);
+
 		private TerminalSession terminalSession;
+
 		private Shell shell;
+
 		private PromptProvider promptProvider;
+
 		private LineReader lineReader;
+
 		private Thread runnerThread;
+
 		private Terminal terminal;
+
 		private final BlockingQueue<ShellRunnerTaskData> blockingQueue = new LinkedBlockingDeque<>(10);
 
 		DefaultShellClient(TerminalSession terminalSession, Shell shell, PromptProvider promptProvider,
@@ -185,7 +192,8 @@ public interface ShellTestClient extends Closeable {
 				runnerThread = new Thread(new ShellRunnerTask(this.blockingQueue));
 				runnerThread.start();
 			}
-			return new DefaultInteractiveShellSession(shell, promptProvider, lineReader, blockingQueue, terminalSession, terminal);
+			return new DefaultInteractiveShellSession(shell, promptProvider, lineReader, blockingQueue, terminalSession,
+					terminal);
 		}
 
 		@Override
@@ -212,16 +220,23 @@ public interface ShellTestClient extends Closeable {
 			runnerThread = null;
 			terminalSession.close();
 		}
+
 	}
 
 	static class DefaultInteractiveShellSession implements InteractiveShellSession {
 
 		private Shell shell;
+
 		private PromptProvider promptProvider;
+
 		private LineReader lineReader;
+
 		private BlockingQueue<ShellRunnerTaskData> blockingQueue;
+
 		private TerminalSession terminalSession;
+
 		private Terminal terminal;
+
 		private final AtomicInteger state = new AtomicInteger(-2);
 
 		public DefaultInteractiveShellSession(Shell shell, PromptProvider promptProvider, LineReader lineReader,
@@ -252,7 +267,8 @@ public interface ShellTestClient extends Closeable {
 
 		@Override
 		public InteractiveShellSession run() {
-			ShellRunner runner = new InteractiveShellRunner(lineReader, promptProvider, shell, new DefaultShellContext());
+			ShellRunner runner = new InteractiveShellRunner(lineReader, promptProvider, shell,
+					new DefaultShellContext());
 			ApplicationArguments appArgs = new DefaultApplicationArguments();
 			this.blockingQueue.add(new ShellRunnerTaskData(runner, appArgs, state));
 			return this;
@@ -262,15 +278,21 @@ public interface ShellTestClient extends Closeable {
 		public boolean isComplete() {
 			return state.get() >= 0;
 		}
+
 	}
 
 	static class DefaultNonInteractiveShellSession implements NonInteractiveShellSession {
 
 		private Shell shell;
+
 		private String[] args;
+
 		private BlockingQueue<ShellRunnerTaskData> blockingQueue;
+
 		private TerminalSession terminalSession;
+
 		private Terminal terminal;
+
 		private final AtomicInteger state = new AtomicInteger(-2);
 
 		public DefaultNonInteractiveShellSession(Shell shell, String[] args,
@@ -310,17 +332,16 @@ public interface ShellTestClient extends Closeable {
 		public boolean isComplete() {
 			return state.get() >= 0;
 		}
+
 	}
 
-	static record ShellRunnerTaskData(
-		ShellRunner runner,
-		ApplicationArguments args,
-		AtomicInteger state
-	) {}
+	static record ShellRunnerTaskData(ShellRunner runner, ApplicationArguments args, AtomicInteger state) {
+	}
 
 	static class ShellRunnerTask implements Runnable {
 
 		private final static Logger log = LoggerFactory.getLogger(ShellRunnerTask.class);
+
 		private BlockingQueue<ShellRunnerTaskData> blockingQueue;
 
 		ShellRunnerTask(BlockingQueue<ShellRunnerTaskData> blockingQueue) {
@@ -348,15 +369,19 @@ public interface ShellTestClient extends Closeable {
 						}
 						data.state().set(0);
 						log.trace("Running done {}", data.runner());
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						data.state().set(1);
 						log.trace("ShellRunnerThread ex", e);
 					}
 				}
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
 			log.trace("ShellRunnerTask end");
 		}
+
 	}
+
 }

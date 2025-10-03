@@ -36,20 +36,33 @@ import org.springframework.shell.component.support.SelectorItem;
  *
  * @author Janne Valkealahti
  */
-public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelectorSpec> implements SingleItemSelectorSpec {
+public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelectorSpec>
+		implements SingleItemSelectorSpec {
 
 	private String name;
+
 	private String resultValue;
+
 	private ResultMode resultMode;
+
 	private List<SelectItem> selectItems = new ArrayList<>();
+
 	private String defaultSelect;
+
 	private Comparator<SelectorItem<String>> comparator;
+
 	private Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
+
 	private Integer maxItems;
+
 	private List<Consumer<SingleItemSelectorContext<String, SelectorItem<String>>>> preHandlers = new ArrayList<>();
+
 	private List<Consumer<SingleItemSelectorContext<String, SelectorItem<String>>>> postHandlers = new ArrayList<>();
+
 	private boolean storeResult = true;
+
 	private String templateLocation;
+
 	private Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> next;
 
 	public BaseSingleItemSelector(BaseBuilder builder, String id) {
@@ -83,10 +96,11 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	@Override
 	public SingleItemSelectorSpec selectItems(Map<String, String> selectItems) {
 		// TODO: we changed to keep items as SelectItem's, to try to keep old sorting
-		//       behaviour we go via HashMap gh-946. Later we should remove this step.
+		// behaviour we go via HashMap gh-946. Later we should remove this step.
 		Map<String, String> selectItemsMap = new HashMap<>();
 		selectItemsMap.putAll(selectItems);
-		List<SelectItem> items = selectItemsMap.entrySet().stream()
+		List<SelectItem> items = selectItemsMap.entrySet()
+			.stream()
 			.map(e -> SelectItem.of(e.getKey(), e.getValue()))
 			.collect(Collectors.toList());
 		selectItems(items);
@@ -112,7 +126,8 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	}
 
 	@Override
-	public SingleItemSelectorSpec renderer(Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer) {
+	public SingleItemSelectorSpec renderer(
+			Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer) {
 		this.renderer = renderer;
 		return this;
 	}
@@ -130,13 +145,15 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	}
 
 	@Override
-	public SingleItemSelectorSpec preHandler(Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler) {
+	public SingleItemSelectorSpec preHandler(
+			Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler) {
 		this.preHandlers.add(handler);
 		return this;
 	}
 
 	@Override
-	public SingleItemSelectorSpec postHandler(Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler) {
+	public SingleItemSelectorSpec postHandler(
+			Consumer<SingleItemSelectorContext<String, SelectorItem<String>>> handler) {
 		this.postHandlers.add(handler);
 		return this;
 	}
@@ -148,8 +165,7 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	}
 
 	@Override
-	public SingleItemSelectorSpec next(
-			Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> next) {
+	public SingleItemSelectorSpec next(Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> next) {
 		this.next = next;
 		return this;
 	}
@@ -216,4 +232,5 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 	public Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> getNext() {
 		return next;
 	}
+
 }

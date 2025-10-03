@@ -21,9 +21,11 @@ import java.io.IOException;
  * @author jediterm authors
  */
 public interface Emulator {
+
 	boolean hasNext();
 
 	void next() throws IOException;
 
 	void resetEof();
+
 }

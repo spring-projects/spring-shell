@@ -27,7 +27,6 @@ public interface CommandOption {
 
 	/**
 	 * Gets a long names of an option.
-	 *
 	 * @return long names of an option
 	 */
 	String[] getLongNames();
@@ -35,84 +34,72 @@ public interface CommandOption {
 	/**
 	 * Gets a modified long names of an option. Set within a command registration if
 	 * option name modifier were used to have an info about original names.
-	 *
 	 * @return modified long names of an option
 	 */
 	String[] getLongNamesModified();
 
 	/**
 	 * Gets a short names of an option.
-	 *
 	 * @return short names of an option
 	 */
 	Character[] getShortNames();
 
 	/**
 	 * Gets a description of an option.
-	 *
 	 * @return description of an option
 	 */
 	String getDescription();
 
 	/**
 	 * Gets a {@link ResolvableType} of an option.
-	 *
 	 * @return type of an option
 	 */
 	ResolvableType getType();
 
 	/**
 	 * Gets a flag if option is required.
-	 *
 	 * @return the required flag
 	 */
 	boolean isRequired();
 
 	/**
 	 * Gets a default value of an option.
-	 *
 	 * @return the default value
 	 */
 	String getDefaultValue();
 
 	/**
 	 * Gets a positional value.
-	 *
 	 * @return the positional value
 	 */
 	int getPosition();
 
 	/**
 	 * Gets a minimum arity.
-	 *
 	 * @return the minimum arity
 	 */
 	int getArityMin();
 
 	/**
 	 * Gets a maximum arity.
-	 *
 	 * @return the maximum arity
 	 */
 	int getArityMax();
 
 	/**
 	 * Gets a label.
-	 *
 	 * @return the label
 	 */
 	String getLabel();
 
 	/**
 	 * Gets a completion function.
-	 *
 	 * @return the completion function
 	 */
 	CompletionResolver getCompletion();
 
 	/**
 	 * Gets an instance of a default {@link CommandOption}.
-	 *
 	 * @param longNames the long names
 	 * @param shortNames the short names
 	 * @param description the description
@@ -124,7 +111,6 @@ public interface CommandOption {
 
 	/**
 	 * Gets an instance of a default {@link CommandOption}.
-	 *
 	 * @param longNames the long names
 	 * @param shortNames the short names
 	 * @param description the description
@@ -138,7 +124,6 @@ public interface CommandOption {
 
 	/**
 	 * Gets an instance of a default {@link CommandOption}.
-	 *
 	 * @param longNames the long names
 	 * @param longNamesModified the modified long names
 	 * @param shortNames the short names
@@ -153,11 +138,11 @@ public interface CommandOption {
 	 * @param completion the completion
 	 * @return default command option
 	 */
-	public static CommandOption of(String[] longNames, String[] longNamesModified, Character[] shortNames, String description,
-			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin,
-			Integer arityMax, String label, CompletionResolver completion) {
-		return new DefaultCommandOption(longNames, longNamesModified, shortNames, description, type, required, defaultValue, position,
-				arityMin, arityMax, label, completion);
+	public static CommandOption of(String[] longNames, String[] longNamesModified, Character[] shortNames,
+			String description, ResolvableType type, boolean required, String defaultValue, Integer position,
+			Integer arityMin, Integer arityMax, String label, CompletionResolver completion) {
+		return new DefaultCommandOption(longNames, longNamesModified, shortNames, description, type, required,
+				defaultValue, position, arityMin, arityMax, label, completion);
 	}
 
 	/**
@@ -166,22 +151,32 @@ public interface CommandOption {
 	public static class DefaultCommandOption implements CommandOption {
 
 		private String[] longNames;
+
 		private String[] longNamesModified;
+
 		private Character[] shortNames;
+
 		private String description;
+
 		private ResolvableType type;
+
 		private boolean required;
+
 		private String defaultValue;
+
 		private int position;
+
 		private int arityMin;
+
 		private int arityMax;
+
 		private String label;
+
 		private CompletionResolver completion;
 
-		public DefaultCommandOption(String[] longNames, String[] longNamesModified, Character[] shortNames, String description,
-				ResolvableType type, boolean required, String defaultValue, Integer position,
-				Integer arityMin, Integer arityMax, String label,
-				CompletionResolver completion) {
+		public DefaultCommandOption(String[] longNames, String[] longNamesModified, Character[] shortNames,
+				String description, ResolvableType type, boolean required, String defaultValue, Integer position,
+				Integer arityMin, Integer arityMax, String label, CompletionResolver completion) {
 			this.longNames = longNames != null ? longNames : new String[0];
 			this.longNamesModified = longNamesModified != null ? longNamesModified : new String[0];
 			this.shortNames = shortNames != null ? shortNames : new Character[0];
@@ -189,7 +184,7 @@ public interface CommandOption {
 			this.type = type;
 			this.required = required;
 			this.defaultValue = defaultValue;
-			this.position = position != null && position > -1 ? position : -1 ;
+			this.position = position != null && position > -1 ? position : -1;
 			this.arityMin = arityMin != null ? arityMin : -1;
 			this.arityMax = arityMax != null ? arityMax : -1;
 			this.label = label;
@@ -255,5 +250,7 @@ public interface CommandOption {
 		public CompletionResolver getCompletion() {
 			return completion;
 		}
+
 	}
+
 }

@@ -62,10 +62,10 @@ public class ParserConfig {
 		/**
 		 * Defines if options are parsed using case-sensitivity, enabled on default.
 		 */
-		CASE_SENSITIVE_OPTIONS(true)
-		;
+		CASE_SENSITIVE_OPTIONS(true);
 
 		private final boolean defaultState;
+
 		private final long mask;
 
 		private Feature(boolean defaultState) {
@@ -94,5 +94,7 @@ public class ParserConfig {
 		public long getMask() {
 			return mask;
 		}
+
 	}
+
 }

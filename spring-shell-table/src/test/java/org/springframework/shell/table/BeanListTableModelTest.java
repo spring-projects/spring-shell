@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 /**
  * Test for BeanListTableModel.
  *
@@ -76,6 +75,7 @@ public class BeanListTableModelTest extends AbstractTestWithSample {
 	}
 
 	public static class Person {
+
 		private int age;
 
 		private String firstName;
@@ -99,5 +99,7 @@ public class BeanListTableModelTest extends AbstractTestWithSample {
 		public String getLastName() {
 			return lastName;
 		}
+
 	}
+
 }

@@ -27,8 +27,8 @@ public interface CommandRegistrationCustomizer {
 
 	/**
 	 * Callback to customize a {@link CommandRegistration.Builder} instance.
-	 *
 	 * @param commandRegistrationBuilder the command registration builder to customize
 	 */
 	void customize(CommandRegistration.Builder commandRegistrationBuilder);
+
 }

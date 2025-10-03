@@ -42,14 +42,15 @@ import static org.mockito.Mockito.verify;
 class ShellRunnerAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(ShellRunnerAutoConfiguration.class))
-			.withBean(Shell.class, () -> mock(Shell.class))
-			.withBean(PromptProvider.class, () -> mock(PromptProvider.class))
-			.withBean(LineReader.class, () -> mock(LineReader.class))
-			.withBean(Parser.class, () -> mock(Parser.class))
-			.withBean(ShellContext.class, () -> mock(ShellContext.class))
-			.withBean(CompletionResolver.class, () -> mock(CompletionResolver.class))
-			.withBean(CommandExecutionHandlerMethodArgumentResolvers.class, () -> mock(CommandExecutionHandlerMethodArgumentResolvers.class));
+		.withConfiguration(AutoConfigurations.of(ShellRunnerAutoConfiguration.class))
+		.withBean(Shell.class, () -> mock(Shell.class))
+		.withBean(PromptProvider.class, () -> mock(PromptProvider.class))
+		.withBean(LineReader.class, () -> mock(LineReader.class))
+		.withBean(Parser.class, () -> mock(Parser.class))
+		.withBean(ShellContext.class, () -> mock(ShellContext.class))
+		.withBean(CompletionResolver.class, () -> mock(CompletionResolver.class))
+		.withBean(CommandExecutionHandlerMethodArgumentResolvers.class,
+				() -> mock(CommandExecutionHandlerMethodArgumentResolvers.class));
 
 	@Nested
 	class Interactive {
@@ -62,8 +63,9 @@ class ShellRunnerAutoConfigurationTests {
 		@Test
 		void disabledWhenPropertySet() {
 			contextRunner.withPropertyValues("spring.shell.interactive.enabled:false")
-					.run(context -> assertThat(context).doesNotHaveBean(InteractiveShellRunner.class));
+				.run(context -> assertThat(context).doesNotHaveBean(InteractiveShellRunner.class));
 		}
+
 	}
 
 	@Nested
@@ -87,18 +89,18 @@ class ShellRunnerAutoConfigurationTests {
 		@Test
 		void disabledWhenPropertySet() {
 			contextRunner.withPropertyValues("spring.shell.noninteractive.enabled:false")
-					.run(context -> assertThat(context).doesNotHaveBean(NonInteractiveShellRunner.class));
+				.run(context -> assertThat(context).doesNotHaveBean(NonInteractiveShellRunner.class));
 		}
 
 		@Test
 		void canBeCustomized() {
 			NonInteractiveShellRunnerCustomizer customizer = mock(NonInteractiveShellRunnerCustomizer.class);
-			contextRunner.withBean(NonInteractiveShellRunnerCustomizer.class, () -> customizer)
-					.run(context -> {
-						NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
-						verify(customizer).customize(runner);
-					});
+			contextRunner.withBean(NonInteractiveShellRunnerCustomizer.class, () -> customizer).run(context -> {
+				NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
+				verify(customizer).customize(runner);
+			});
 		}
+
 	}
 
 	@Nested
@@ -112,8 +114,9 @@ class ShellRunnerAutoConfigurationTests {
 		@Test
 		void disabledWhenPropertySet() {
 			contextRunner.withPropertyValues("spring.shell.script.enabled:false")
-					.run(context -> assertThat(context).doesNotHaveBean(ScriptShellRunner.class));
+				.run(context -> assertThat(context).doesNotHaveBean(ScriptShellRunner.class));
 		}
+
 	}
 
 	@Nested
@@ -121,16 +124,16 @@ class ShellRunnerAutoConfigurationTests {
 
 		@Test
 		void primaryCommandDisablesOtherRunners() {
-			contextRunner.withPropertyValues("spring.shell.noninteractive.primary-command:fake")
-					.run(context -> {
-						assertThat(context).doesNotHaveBean(InteractiveShellRunner.class);
-						assertThat(context).doesNotHaveBean(ScriptShellRunner.class);
-						assertThat(context).hasSingleBean(NonInteractiveShellRunner.class);
-						NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
-						String command = (String) ReflectionTestUtils.getField(runner, "primaryCommand");
-						assertThat(command).isEqualTo("fake");
-					});
+			contextRunner.withPropertyValues("spring.shell.noninteractive.primary-command:fake").run(context -> {
+				assertThat(context).doesNotHaveBean(InteractiveShellRunner.class);
+				assertThat(context).doesNotHaveBean(ScriptShellRunner.class);
+				assertThat(context).hasSingleBean(NonInteractiveShellRunner.class);
+				NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
+				String command = (String) ReflectionTestUtils.getField(runner, "primaryCommand");
+				assertThat(command).isEqualTo("fake");
+			});
 		}
 
 	}
+
 }

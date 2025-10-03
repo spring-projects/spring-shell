@@ -34,52 +34,45 @@ import org.springframework.shell.command.CommandRegistration.OptionArity;
 public @interface Option {
 
 	/**
-	 * Long names of an option. There can be multiple names where first is primary
-	 * one and other are aliases.
-	 *
+	 * Long names of an option. There can be multiple names where first is primary one and
+	 * other are aliases.
 	 * @return Option long names, defaults to empty.
 	 */
 	String[] longNames() default {};
 
 	/**
-	 * Short names of an option. There can be multiple names where first is primary
-	 * one and other are aliases.
-	 *
+	 * Short names of an option. There can be multiple names where first is primary one
+	 * and other are aliases.
 	 * @return Option short names, defaults to empty.
 	 */
 	char[] shortNames() default {};
 
 	/**
 	 * Mark option required.
-	 *
 	 * @return true if option is required, defaults to false.
 	 */
 	boolean required() default false;
 
 	/**
 	 * Define option default value.
-	 *
 	 * @return default value
 	 */
 	String defaultValue() default "";
 
 	/**
 	 * Return a short description of the option.
-	 *
 	 * @return description of the option
 	 */
 	String description() default "";
 
 	/**
 	 * Return a label of the option.
-	 *
 	 * @return label of the option
 	 */
 	String label() default "";
 
 	/**
 	 * Define option arity.
-	 *
 	 * @return option arity
 	 * @see #arityMin()
 	 * @see #arityMax()
@@ -88,9 +81,8 @@ public @interface Option {
 
 	/**
 	 * Define option arity min. If Defined non-negative will be used instead of
-	 * {@link #arity()}. If {@code arityMax} is not set non-negative it is set to
-	 * same as this.
-	 *
+	 * {@link #arity()}. If {@code arityMax} is not set non-negative it is set to same as
+	 * this.
 	 * @return option arity min
 	 * @see #arity()
 	 */
@@ -98,11 +90,10 @@ public @interface Option {
 
 	/**
 	 * Define option arity max. If Defined non-negative will be used instead of
-	 * {@link #arity()}. If {@code arityMin} is not set non-negative it is set to
-	 * zero.
-	 *
+	 * {@link #arity()}. If {@code arityMin} is not set non-negative it is set to zero.
 	 * @return option arity max
 	 * @see #arity()
 	 */
 	int arityMax() default -1;
+
 }
