@@ -33,13 +33,6 @@ jobs:
           ./mvnw versions:set -DgenerateBackupPoms=false -DnewVersion=$RELEASE_VERSION
           sed -i "s/version: $PROJECT_VERSION/version: $RELEASE_VERSION/" spring-shell-docs/antora.yml
 
-      - name: Generate Java docs
-        run: ./mvnw --no-transfer-progress javadoc:aggregate
-
-      - name: Generate Reference docs
-        working-directory: spring-shell-docs
-        run: ../mvnw --no-transfer-progress resources:resources antora
-
       - name: Setup SSH key
         env:
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
@@ -50,7 +43,10 @@ jobs:
           chmod 600 "$HOME/.ssh/key"
           echo "$DOCS_SSH_HOST_KEY" > "$HOME/.ssh/known_hosts"
 
-      - name: Deploy docs
+      - name: Generate Java docs
+        run: ./mvnw --no-transfer-progress javadoc:aggregate
+
+      - name: Deploy Java docs
         env:
           DOCS_HOST: ${{ secrets.DOCS_HOST }}
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
@@ -58,7 +54,17 @@ jobs:
         run: |
           ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/docs && mkdir -p $RELEASE_VERSION"
           scp -i $HOME/.ssh/key -r target/reports/apidocs $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/docs/$RELEASE_VERSION/api
-          
+
+      - name: Generate Reference docs
+        working-directory: spring-shell-docs
+        run: ../mvnw --no-transfer-progress resources:resources antora
+
+      - name: Deploy Reference docs
+        env:
+          DOCS_HOST: ${{ secrets.DOCS_HOST }}
+          DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
+          DOCS_PATH: /opt/www/domains/spring.io/docs/htdocs/spring-shell
+        run: |
           ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/reference && mkdir -p $RELEASE_VERSION"
           scp -i $HOME/.ssh/key -r spring-shell-docs/target/site/shell/$RELEASE_VERSION $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/reference/$RELEASE_VERSION
 
