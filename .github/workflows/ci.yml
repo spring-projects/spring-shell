@@ -70,13 +70,13 @@ jobs:
         run: ../mvnw --no-transfer-progress resources:resources antora
 
       - name: Deploy Reference docs
-        env:
-          DOCS_HOST: ${{ secrets.DOCS_HOST }}
-          DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
-          DOCS_PATH: /opt/www/domains/spring.io/docs/htdocs/spring-shell
-        run: |
-          ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/reference && mkdir -p $PROJECT_VERSION"
-          scp -i $HOME/.ssh/key -r spring-shell-docs/target/site/shell/$PROJECT_VERSION $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/reference/$PROJECT_VERSION
+        uses: spring-io/spring-doc-actions/rsync-antora-reference@v0.0.20
+        with:
+          docs-username: ${{ secrets.DOCS_USERNAME }}
+          docs-host: ${{ secrets.DOCS_HOST }}
+          docs-ssh-key: ${{ secrets.DOCS_SSH_KEY }}
+          docs-ssh-host-key: ${{ secrets.DOCS_SSH_HOST_KEY }}
+          site-path: spring-shell-docs/target/site/shell
 
       - name: Bust Cloudflare Cache
         uses: spring-io/spring-doc-actions/bust-cloudflare-antora-cache@v0.0.20
