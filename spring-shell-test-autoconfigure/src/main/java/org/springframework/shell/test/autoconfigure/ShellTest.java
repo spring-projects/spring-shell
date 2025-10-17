@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.OverrideAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.filter.TypeExcludeFilters;
-import org.springframework.boot.test.autoconfigure.properties.PropertyMapping;
-import org.springframework.boot.test.autoconfigure.properties.SkipPropertyMapping;
+import org.springframework.boot.test.context.filter.annotation.TypeExcludeFilters;
+import org.springframework.boot.test.context.PropertyMapping;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.core.env.Environment;
@@ -68,7 +67,7 @@ public @interface ShellTest {
 	 *
 	 * @return emulated terminal width
 	 */
-	@PropertyMapping(value = "spring.shell.test.terminal-width", skip = SkipPropertyMapping.ON_DEFAULT_VALUE)
+	@PropertyMapping(value = "spring.shell.test.terminal-width", skip = PropertyMapping.Skip.ON_DEFAULT_VALUE)
 	int terminalWidth() default 80;
 
 	/**
@@ -76,7 +75,7 @@ public @interface ShellTest {
 	 *
 	 * @return emulated terminal height
 	 */
-	@PropertyMapping(value = "spring.shell.test.terminal-height", skip = SkipPropertyMapping.ON_DEFAULT_VALUE)
+	@PropertyMapping(value = "spring.shell.test.terminal-height", skip = PropertyMapping.Skip.ON_DEFAULT_VALUE)
 	int terminalHeight() default 24;
 
 	/**
