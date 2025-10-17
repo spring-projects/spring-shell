@@ -40,13 +40,6 @@ jobs:
           signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
           signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Generate Java docs
-        run: ./mvnw --no-transfer-progress javadoc:aggregate
-
-      - name: Generate Reference docs
-        working-directory: spring-shell-docs
-        run: ../mvnw --no-transfer-progress resources:resources antora
-
       - name: Setup SSH key
         env:
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
@@ -60,7 +53,10 @@ jobs:
       - name: Capture project version
         run: echo PROJECT_VERSION=$(./mvnw help:evaluate -Dexpression=project.version --quiet -DforceStdout) >> $GITHUB_ENV
 
-      - name: Deploy docs
+      - name: Generate Java docs
+        run: ./mvnw --no-transfer-progress javadoc:aggregate
+
+      - name: Deploy Javadocs
         env:
           DOCS_HOST: ${{ secrets.DOCS_HOST }}
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
@@ -69,6 +65,16 @@ jobs:
           ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/docs && mkdir -p $PROJECT_VERSION"
           scp -i $HOME/.ssh/key -r target/reports/apidocs $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/docs/$PROJECT_VERSION/api
           
+      - name: Generate Reference docs
+        working-directory: spring-shell-docs
+        run: ../mvnw --no-transfer-progress resources:resources antora
+
+      - name: Deploy Reference docs
+        env:
+          DOCS_HOST: ${{ secrets.DOCS_HOST }}
+          DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
+          DOCS_PATH: /opt/www/domains/spring.io/docs/htdocs/spring-shell
+        run: |
           ssh -i $HOME/.ssh/key $DOCS_USERNAME@$DOCS_HOST "cd $DOCS_PATH/reference && mkdir -p $PROJECT_VERSION"
           scp -i $HOME/.ssh/key -r spring-shell-docs/target/site/shell/$PROJECT_VERSION $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/reference/$PROJECT_VERSION
 
