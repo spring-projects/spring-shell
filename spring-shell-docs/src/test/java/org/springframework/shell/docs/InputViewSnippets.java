@@ -28,6 +28,7 @@ class InputViewSnippets {
 			String text = input.getInputText();
 			// end::sample[]
 		}
+
 	}
 
 }

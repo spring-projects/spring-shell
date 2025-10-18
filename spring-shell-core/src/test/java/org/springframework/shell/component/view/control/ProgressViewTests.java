@@ -146,14 +146,8 @@ public class ProgressViewTests extends AbstractViewTests {
 			Flux<ProgressViewStartEvent> startEvents = eventLoop.viewEvents(ProgressViewStartEvent.class);
 			Flux<ProgressViewEndEvent> endEvents = eventLoop.viewEvents(ProgressViewEndEvent.class);
 
-			StepVerifier startVerifier = StepVerifier.create(startEvents)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
-			StepVerifier endVerifier = StepVerifier.create(endEvents)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			StepVerifier startVerifier = StepVerifier.create(startEvents).expectNextCount(1).thenCancel().verifyLater();
+			StepVerifier endVerifier = StepVerifier.create(endEvents).expectNextCount(1).thenCancel().verifyLater();
 
 			view.start();
 			view.stop();
@@ -164,10 +158,7 @@ public class ProgressViewTests extends AbstractViewTests {
 		@Test
 		void stateChangeWithTickValue() {
 			Flux<ProgressViewStateChangeEvent> changeEvents = eventLoop.viewEvents(ProgressViewStateChangeEvent.class);
-			StepVerifier verifier = StepVerifier.create(changeEvents)
-				.expectNextCount(1)
-				.thenCancel()
-				.verifyLater();
+			StepVerifier verifier = StepVerifier.create(changeEvents).expectNextCount(1).thenCancel().verifyLater();
 
 			view.setTickValue(1);
 			verifier.verify(Duration.ofSeconds(1));
@@ -196,4 +187,5 @@ public class ProgressViewTests extends AbstractViewTests {
 		List<ProgressViewItem> items = (List<ProgressViewItem>) ReflectionTestUtils.getField(view, "items");
 		return items;
 	}
+
 }

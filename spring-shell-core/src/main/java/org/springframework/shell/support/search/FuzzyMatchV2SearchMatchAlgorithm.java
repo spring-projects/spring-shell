@@ -86,8 +86,10 @@ class FuzzyMatchV2SearchMatchAlgorithm extends AbstractSearchMatchAlgorithm {
 				}
 			}
 
-			// TODO: potential speed increase as go can directly modify underlying array/slice
-			//       by access via for loop variables and so on. we create a lot of garbage here.
+			// TODO: potential speed increase as go can directly modify underlying
+			// array/slice
+			// by access via for loop variables and so on. we create a lot of garbage
+			// here.
 			Tsub = Tsub.substring(0, off) + c + Tsub.substring(off + 1);
 			int bonus = bonusFor(prevClass, clazz);
 			Bsub.set(off, bonus);
@@ -218,7 +220,7 @@ class FuzzyMatchV2SearchMatchAlgorithm extends AbstractSearchMatchAlgorithm {
 		j = maxScorePos;
 		boolean preferMatch = true;
 		int posidx = pos.length - 1;
-		for(;;) {
+		for (;;) {
 			int I = i * width;
 			int j0 = j - f0;
 			int s = H.get(I + j0);
@@ -262,4 +264,5 @@ class FuzzyMatchV2SearchMatchAlgorithm extends AbstractSearchMatchAlgorithm {
 		}
 		return list;
 	}
+
 }

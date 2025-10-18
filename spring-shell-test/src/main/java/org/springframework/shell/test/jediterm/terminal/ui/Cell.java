@@ -19,7 +19,9 @@ package org.springframework.shell.test.jediterm.terminal.ui;
  * @author jediterm authors
  */
 final class Cell {
+
 	private final int myLine;
+
 	private final int myColumn;
 
 	public Cell(int line, int column) {
@@ -34,4 +36,5 @@ final class Cell {
 	public int getColumn() {
 		return myColumn;
 	}
+
 }

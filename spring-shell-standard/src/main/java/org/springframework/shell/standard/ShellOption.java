@@ -34,13 +34,14 @@ import java.lang.annotation.Target;
 public @interface ShellOption {
 
 	/**
-	 * Used to indicate that the default value is the value {@literal null}, which is different from the fact that
-	 * there is no default value.
+	 * Used to indicate that the default value is the value {@literal null}, which is
+	 * different from the fact that there is no default value.
 	 */
 	String NULL = "__NULL__";
 
 	/**
-	 * Used to indicate that there is no default value (<em>i.e.</em> parameter is mandatory).
+	 * Used to indicate that there is no default value (<em>i.e.</em> parameter is
+	 * mandatory).
 	 */
 	String NONE = "__NONE__";
 
@@ -50,22 +51,23 @@ public @interface ShellOption {
 	int ARITY_USE_HEURISTICS = -1;
 
 	/**
-	 * The key(s) by which this parameter can be referenced
-	 * when using named parameters. If none is specified, the actual method parameter name will be used, prefixed by the
-	 * method {@link ShellMethod#prefix()}.
+	 * The key(s) by which this parameter can be referenced when using named parameters.
+	 * If none is specified, the actual method parameter name will be used, prefixed by
+	 * the method {@link ShellMethod#prefix()}.
 	 * @return explicit key(s) to use to pass a value for this parameter
 	 */
 	String[] value() default {};
 
 	/**
-	 * Return the number of input "words" this parameter consumes. Default is 1, except when parameter type is boolean,
-	 * in which case it is 0.
+	 * Return the number of input "words" this parameter consumes. Default is 1, except
+	 * when parameter type is boolean, in which case it is 0.
 	 * @return the number of words to map to this parameter
 	 */
 	int arity() default ARITY_USE_HEURISTICS;
 
 	/**
-	 * The textual (pre-conversion) value to assign to this parameter if no value is provided by the user.
+	 * The textual (pre-conversion) value to assign to this parameter if no value is
+	 * provided by the user.
 	 * @return the default value for this parameter
 	 */
 	String defaultValue() default NONE;
@@ -79,16 +81,18 @@ public @interface ShellOption {
 	Class<? extends ValueProvider> valueProvider() default NoValueProvider.class;
 
 	/**
-	 * Used to indicate to the framework that the given parameter should NOT be resolved by
-	 * {@code StandardParameterResolver}. This is useful if several implementations of
-	 * {@code org.springframework.shell.ParameterResolver} are present, given that the standard one can work with no
-	 * annotation at all.
-	 * Note that this is not used anymore!
-	 * @return true to indicate that the {@code StandardParameterResolver} should not be used for this parameter
+	 * Used to indicate to the framework that the given parameter should NOT be resolved
+	 * by {@code StandardParameterResolver}. This is useful if several implementations of
+	 * {@code org.springframework.shell.ParameterResolver} are present, given that the
+	 * standard one can work with no annotation at all. Note that this is not used
+	 * anymore!
+	 * @return true to indicate that the {@code StandardParameterResolver} should not be
+	 * used for this parameter
 	 */
 	boolean optOut() default false;
 
 	interface NoValueProvider extends ValueProvider {
 
 	}
+
 }

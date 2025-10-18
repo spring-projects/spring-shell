@@ -48,6 +48,7 @@ public class UiComponentSnippets {
 
 	// tag::snippet1[]
 	class StringInputCustomRenderer implements Function<StringInputContext, List<AttributedString>> {
+
 		@Override
 		public List<AttributedString> apply(StringInputContext context) {
 			AttributedStringBuilder builder = new AttributedStringBuilder();
@@ -56,7 +57,7 @@ public class UiComponentSnippets {
 			if (context.getResultValue() != null) {
 				builder.append(context.getResultValue());
 			}
-			else  {
+			else {
 				String input = context.getInput();
 				if (StringUtils.hasText(input)) {
 					builder.append(input);
@@ -67,10 +68,12 @@ public class UiComponentSnippets {
 			}
 			return Arrays.asList(builder.toAttributedString());
 		}
+
 	}
 	// end::snippet1[]
 
 	class Dump1 extends AbstractShellComponent {
+
 		// tag::snippet2[]
 		@ShellMethod(key = "component stringcustom", value = "String input", group = "Components")
 		public String stringInputCustom(boolean mask) {
@@ -85,9 +88,11 @@ public class UiComponentSnippets {
 			return "Got value " + context.getResultValue();
 		}
 		// end::snippet2[]
+
 	}
 
 	class Dump2 {
+
 		// tag::snippet3[]
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
@@ -103,11 +108,14 @@ public class UiComponentSnippets {
 				StringInputContext context = component.run(StringInputContext.empty());
 				return "Got value " + context.getResultValue();
 			}
+
 		}
 		// end::snippet3[]
+
 	}
 
 	class Dump3 {
+
 		// tag::snippet4[]
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
@@ -120,11 +128,14 @@ public class UiComponentSnippets {
 				PathInputContext context = component.run(PathInputContext.empty());
 				return "Got value " + context.getResultValue();
 			}
+
 		}
 		// end::snippet4[]
+
 	}
 
 	class Dump4 {
+
 		// tag::snippet5[]
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
@@ -137,11 +148,14 @@ public class UiComponentSnippets {
 				ConfirmationInputContext context = component.run(ConfirmationInputContext.empty());
 				return "Got value " + context.getResultValue();
 			}
+
 		}
 		// end::snippet5[]
+
 	}
 
 	class Dump5 {
+
 		// tag::snippet6[]
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
@@ -156,15 +170,18 @@ public class UiComponentSnippets {
 				component.setResourceLoader(getResourceLoader());
 				component.setTemplateExecutor(getTemplateExecutor());
 				SingleItemSelectorContext<String, SelectorItem<String>> context = component
-						.run(SingleItemSelectorContext.empty());
+					.run(SingleItemSelectorContext.empty());
 				String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
 				return "Got value " + result;
 			}
+
 		}
 		// end::snippet6[]
+
 	}
 
 	class Dump6 {
+
 		// tag::snippet7[]
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
@@ -180,17 +197,21 @@ public class UiComponentSnippets {
 				component.setResourceLoader(getResourceLoader());
 				component.setTemplateExecutor(getTemplateExecutor());
 				MultiItemSelectorContext<String, SelectorItem<String>> context = component
-						.run(MultiItemSelectorContext.empty());
-				String result = context.getResultItems().stream()
-						.map(si -> si.getItem())
-						.collect(Collectors.joining(","));
+					.run(MultiItemSelectorContext.empty());
+				String result = context.getResultItems()
+					.stream()
+					.map(si -> si.getItem())
+					.collect(Collectors.joining(","));
 				return "Got value " + result;
 			}
+
 		}
 		// end::snippet7[]
+
 	}
 
 	class Dump7 {
+
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
 
@@ -207,14 +228,17 @@ public class UiComponentSnippets {
 				component.setResourceLoader(getResourceLoader());
 				component.setTemplateExecutor(getTemplateExecutor());
 				SingleItemSelectorContext<String, SelectorItem<String>> context = component
-						.run(SingleItemSelectorContext.empty());
+					.run(SingleItemSelectorContext.empty());
 				String result = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
 				return "Got value " + result;
 			}
+
 		}
+
 	}
 
 	class Dump8 {
+
 		@ShellComponent
 		public class ComponentCommands extends AbstractShellComponent {
 
@@ -236,6 +260,9 @@ public class UiComponentSnippets {
 				return "Got value " + context.getResultValue();
 				// end::snippet9[]
 			}
+
 		}
+
 	}
+
 }

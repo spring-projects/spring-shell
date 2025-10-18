@@ -18,9 +18,9 @@ package org.springframework.shell.style;
 /**
  * Contract representing a theme with its name and settings.
  *
- * {@link Theme} is a concept where you can request a {@code style} by using a theme {@code tag}.
- * At this point an actual style is not known as it's going to get resolved from an
- * enable {@code theme}.
+ * {@link Theme} is a concept where you can request a {@code style} by using a theme
+ * {@code tag}. At this point an actual style is not known as it's going to get resolved
+ * from an enable {@code theme}.
  *
  * @author Janne Valkealahti
  */
@@ -28,21 +28,18 @@ public interface Theme {
 
 	/**
 	 * Gets a theme name.
-	 *
 	 * @return a theme name.
 	 */
 	String getName();
 
 	/**
 	 * Gets a theme settings.
-	 *
 	 * @return a theme settings
 	 */
 	ThemeSettings getSettings();
 
 	/**
 	 * Create a {@link Theme}.
-	 *
 	 * @param name the theme name
 	 * @param themeSettings the theme settings
 	 * @return a theme
@@ -61,4 +58,5 @@ public interface Theme {
 			}
 		};
 	}
+
 }

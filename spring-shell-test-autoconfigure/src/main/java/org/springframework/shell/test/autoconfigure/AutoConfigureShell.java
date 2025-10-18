@@ -38,4 +38,5 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 @Inherited
 @ImportAutoConfiguration
 public @interface AutoConfigureShell {
+
 }

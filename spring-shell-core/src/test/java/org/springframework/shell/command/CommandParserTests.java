@@ -35,12 +35,12 @@ public class CommandParserTests extends AbstractCommandTests {
 			.command("command1")
 			.description("help")
 			.withOption()
-				.longNames("arg1")
-				.description("some arg1")
-				.and()
+			.longNames("arg1")
+			.description("some arg1")
+			.and()
 			.withTarget()
-				.method(pojo1, "method3", String.class)
-				.and()
+			.method(pojo1, "method3", String.class)
+			.and()
 			.build();
 
 		ConversionService conversionService = new DefaultConversionService();
@@ -51,4 +51,5 @@ public class CommandParserTests extends AbstractCommandTests {
 		assertThat(results.results()).hasSize(1);
 		assertThat(results.results().get(0).value()).isEqualTo("myarg1value");
 	}
+
 }

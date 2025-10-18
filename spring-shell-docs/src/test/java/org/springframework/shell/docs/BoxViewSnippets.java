@@ -25,12 +25,12 @@ class BoxViewSnippets {
 			// tag::sample[]
 			BoxView view = new BoxView();
 			view.setDrawFunction((screen, rect) -> {
-				screen.writerBuilder().build()
-					.text("hi", 0, 0);
+				screen.writerBuilder().build().text("hi", 0, 0);
 				return rect;
 			});
 			// end::sample[]
 		}
+
 	}
 
 }

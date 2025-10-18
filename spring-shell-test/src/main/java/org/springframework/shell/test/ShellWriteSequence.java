@@ -28,21 +28,18 @@ public interface ShellWriteSequence {
 
 	/**
 	 * Sequence terminal clear screen.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence clearScreen();
 
 	/**
 	 * Sequence terminal carriage return.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence carriageReturn();
 
 	/**
 	 * Sequence from command with expected {@code carriage return}.
-	 *
 	 * @param command the command
 	 * @return a sequence for chaining
 	 */
@@ -50,7 +47,6 @@ public interface ShellWriteSequence {
 
 	/**
 	 * Sequence terminal carriage return. Alias for {@link #carriageReturn}
-	 *
 	 * @return a sequence for chaining
 	 * @see #carriageReturn()
 	 */
@@ -58,7 +54,6 @@ public interface ShellWriteSequence {
 
 	/**
 	 * Sequence text.
-	 *
 	 * @param text the text
 	 * @return a sequence for chaining
 	 */
@@ -66,56 +61,48 @@ public interface ShellWriteSequence {
 
 	/**
 	 * Sequence terminal key down.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence keyDown();
 
 	/**
 	 * Sequence terminal key left.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence keyLeft();
 
 	/**
 	 * Sequence terminal key right.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence keyRight();
 
 	/**
 	 * Sequence terminal key up.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence keyUp();
 
 	/**
 	 * Sequence terminal space.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence space();
 
 	/**
 	 * Sequence terminal ctrl.
-	 *
 	 * @return a sequence for chaining
 	 */
 	ShellWriteSequence ctrl(char c);
 
 	/**
 	 * Build the result.
-	 *
 	 * @return the result
 	 */
 	String build();
 
 	/**
 	 * Get a new instance of a {@code ShellWriteSequence}.
-	 *
 	 * @param terminal the terminal
 	 * @return instance of a write sequence
 	 */
@@ -126,6 +113,7 @@ public interface ShellWriteSequence {
 	static class DefaultShellWriteSequence implements ShellWriteSequence {
 
 		private final Terminal terminal;
+
 		private StringBuilder buf = new StringBuilder();
 
 		DefaultShellWriteSequence(Terminal terminal) {
@@ -202,5 +190,7 @@ public interface ShellWriteSequence {
 		public String build() {
 			return buf.toString();
 		}
+
 	}
+
 }

@@ -41,4 +41,5 @@ public class AliasCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession(command, interactive);
 		assertScreenContainsText(session, "Hello from alias command");
 	}
+
 }

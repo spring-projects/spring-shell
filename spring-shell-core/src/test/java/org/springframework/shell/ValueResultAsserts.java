@@ -20,7 +20,7 @@ import org.assertj.core.api.Assertions;
 
 /**
  * Assertions for {@link ValueResult}.
- * 
+ *
  * @author Camilo Gonzalez
  */
 public class ValueResultAsserts extends AbstractAssert<ValueResultAsserts, ValueResult> {
@@ -66,4 +66,5 @@ public class ValueResultAsserts extends AbstractAssert<ValueResultAsserts, Value
 	public static ValueResultAsserts assertThat(ValueResult valueResult) {
 		return new ValueResultAsserts(valueResult);
 	}
+
 }

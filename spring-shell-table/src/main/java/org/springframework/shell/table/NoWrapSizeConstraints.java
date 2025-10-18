@@ -31,4 +31,5 @@ public class NoWrapSizeConstraints implements SizeConstraints {
 		}
 		return new Extent(max, max);
 	}
+
 }

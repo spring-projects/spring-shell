@@ -30,6 +30,7 @@ class ButtonViewSnippets {
 			});
 			// end::sample[]
 		}
+
 	}
 
 }

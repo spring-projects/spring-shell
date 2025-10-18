@@ -24,28 +24,24 @@ public interface SelectItem {
 
 	/**
 	 * Gets a name.
-	 *
 	 * @return a name
 	 */
 	String name();
 
 	/**
 	 * Gets an item
-	 *
 	 * @return an item
 	 */
 	String item();
 
 	/**
 	 * Returns if item is enabled.
-	 *
 	 * @return if item is enabled
 	 */
 	boolean enabled();
 
 	/**
 	 * Return if the item is selected.
-	 * 
 	 * @return if item is selected
 	 */
 	boolean selected();
@@ -57,4 +53,5 @@ public interface SelectItem {
 	public static SelectItem of(String name, String item, boolean enabled, boolean selected) {
 		return new DefaultSelectItem(name, item, enabled, selected);
 	}
+
 }

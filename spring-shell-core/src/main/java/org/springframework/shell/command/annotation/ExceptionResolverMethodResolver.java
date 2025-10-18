@@ -31,21 +31,23 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ReflectionUtils.MethodFilter;
 
 /**
- *
  * @author Janne Valkealahti
  */
 public class ExceptionResolverMethodResolver {
 
-	private static final MethodFilter EXCEPTION_HANDLER_METHODS = method ->
-			AnnotatedElementUtils.hasAnnotation(method, ExceptionResolver.class);
+	private static final MethodFilter EXCEPTION_HANDLER_METHODS = method -> AnnotatedElementUtils.hasAnnotation(method,
+			ExceptionResolver.class);
+
 	private static final Method NO_MATCHING_EXCEPTION_HANDLER_METHOD;
+
 	private final Map<Class<? extends Throwable>, Method> mappedMethods = new HashMap<>(16);
+
 	private final Map<Class<? extends Throwable>, Method> exceptionLookupCache = new ConcurrentReferenceHashMap<>(16);
 
 	static {
 		try {
-			NO_MATCHING_EXCEPTION_HANDLER_METHOD =
-					ExceptionResolverMethodResolver.class.getDeclaredMethod("noMatchingExceptionHandler");
+			NO_MATCHING_EXCEPTION_HANDLER_METHOD = ExceptionResolverMethodResolver.class
+				.getDeclaredMethod("noMatchingExceptionHandler");
 		}
 		catch (NoSuchMethodException ex) {
 			throw new IllegalStateException("Expected method not found: " + ex);
@@ -54,7 +56,6 @@ public class ExceptionResolverMethodResolver {
 
 	/**
 	 * A constructor that finds {@link ExceptionResolver} methods in the given type.
-	 *
 	 * @param handlerType the type to introspect
 	 */
 	public ExceptionResolverMethodResolver(Class<?> handlerType) {
@@ -95,8 +96,8 @@ public class ExceptionResolverMethodResolver {
 	private void addExceptionMapping(Class<? extends Throwable> exceptionType, Method method) {
 		Method oldMethod = this.mappedMethods.put(exceptionType, method);
 		if (oldMethod != null && !oldMethod.equals(method)) {
-			throw new IllegalStateException("Ambiguous @ExceptionResolver method mapped for [" +
-					exceptionType + "]: {" + oldMethod + ", " + method + "}");
+			throw new IllegalStateException("Ambiguous @ExceptionResolver method mapped for [" + exceptionType + "]: {"
+					+ oldMethod + ", " + method + "}");
 		}
 	}
 
@@ -109,7 +110,8 @@ public class ExceptionResolverMethodResolver {
 
 	/**
 	 * Find a {@link Method} to handle the given exception.
-	 * <p>Uses {@link ExceptionDepthComparator} if more than one match is found.
+	 * <p>
+	 * Uses {@link ExceptionDepthComparator} if more than one match is found.
 	 * @param exception the exception
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
@@ -120,8 +122,8 @@ public class ExceptionResolverMethodResolver {
 
 	/**
 	 * Find a {@link Method} to handle the given Throwable.
-	 * <p>Uses {@link ExceptionDepthComparator} if more than one match is found.
-	 *
+	 * <p>
+	 * Uses {@link ExceptionDepthComparator} if more than one match is found.
 	 * @param exception the exception
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
@@ -138,10 +140,10 @@ public class ExceptionResolverMethodResolver {
 	}
 
 	/**
-	 * Find a {@link Method} to handle the given exception type. This can be
-	 * useful if an {@link Exception} instance is not available (e.g. for tools).
-	 * <p>Uses {@link ExceptionDepthComparator} if more than one match is found.
-	 *
+	 * Find a {@link Method} to handle the given exception type. This can be useful if an
+	 * {@link Exception} instance is not available (e.g. for tools).
+	 * <p>
+	 * Uses {@link ExceptionDepthComparator} if more than one match is found.
 	 * @param exceptionType the exception type
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
@@ -179,8 +181,9 @@ public class ExceptionResolverMethodResolver {
 
 	/**
 	 * For the {@link #NO_MATCHING_EXCEPTION_HANDLER_METHOD} constant.
- 	 */
+	 */
 	@SuppressWarnings("unused")
 	private void noMatchingExceptionHandler() {
 	}
+
 }

@@ -42,4 +42,5 @@ class ParserConfigTests {
 		config.enable(Feature.ALLOW_DIRECTIVES);
 		assertThat(config.isEnabled(Feature.ALLOW_DIRECTIVES)).isTrue();
 	}
+
 }

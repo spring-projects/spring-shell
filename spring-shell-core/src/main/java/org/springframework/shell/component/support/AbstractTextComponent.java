@@ -76,7 +76,6 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 
 	/**
 	 * Gets a name.
-	 *
 	 * @return a name
 	 */
 	protected String getName() {
@@ -87,63 +86,54 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 
 		/**
 		 * Gets a name.
-		 *
 		 * @return a name
 		 */
 		String getName();
 
 		/**
 		 * Sets a name.
-		 *
 		 * @param name the name
 		 */
 		void setName(String name);
 
 		/**
 		 * Gets an input.
-		 *
 		 * @return an input
 		 */
 		String getInput();
 
 		/**
 		 * Sets an input.
-		 *
 		 * @param input the input
 		 */
 		void setInput(String input);
 
 		/**
 		 * Sets a result value.
-		 *
 		 * @return a result value
 		 */
 		T getResultValue();
 
 		/**
 		 * Sets a result value.
-		 *
 		 * @param resultValue the result value
 		 */
 		void setResultValue(T resultValue);
 
 		/**
 		 * Sets a message.
-		 *
 		 * @return a message
 		 */
 		String getMessage();
 
 		/**
 		 * Sets a message.
-		 *
 		 * @param message the message
 		 */
 		void setMessage(String message);
 
 		/**
 		 * Sets a message with level.
-		 *
 		 * @param message the message
 		 * @param level the message level
 		 */
@@ -151,14 +141,12 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 
 		/**
 		 * Gets a {@link MessageLevel}.
-		 *
 		 * @return a message level
 		 */
 		MessageLevel getMessageLevel();
 
 		/**
 		 * Sets a {@link MessageLevel}.
-		 *
 		 * @param level the message level
 		 */
 		void setMessageLevel(MessageLevel level);
@@ -167,19 +155,24 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		 * Message levels which can be used to alter how message is shown.
 		 */
 		public enum MessageLevel {
-			INFO,
-			WARN,
-			ERROR
+
+			INFO, WARN, ERROR
+
 		}
+
 	}
 
-	public static class BaseTextComponentContext<T, C extends TextComponentContext<T, C>> extends BaseComponentContext<C>
-			implements TextComponentContext<T, C> {
+	public static class BaseTextComponentContext<T, C extends TextComponentContext<T, C>>
+			extends BaseComponentContext<C> implements TextComponentContext<T, C> {
 
 		private String name;
+
 		private String input;
+
 		private T resultValue;
+
 		private String message;
+
 		private MessageLevel messageLevel = MessageLevel.INFO;
 
 		@Override
@@ -251,5 +244,7 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 			attributes.put("input", getInput());
 			return attributes;
 		}
+
 	}
+
 }

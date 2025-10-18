@@ -28,14 +28,12 @@ public interface CommandExitCode {
 
 	/**
 	 * Gets a function mappings from exceptions to exit codes.
-	 *
 	 * @return function mappings
 	 */
 	List<Function<Throwable, Integer>> getMappingFunctions();
 
 	/**
 	 * Gets an instance of a default {@link CommandExitCode}.
-	 *
 	 * @return a command exit code
 	 */
 	public static CommandExitCode of() {
@@ -44,7 +42,6 @@ public interface CommandExitCode {
 
 	/**
 	 * Gets an instance of a default {@link CommandExitCode}.
-	 *
 	 * @param functions the function mappings
 	 * @return a command exit code
 	 */
@@ -56,7 +53,7 @@ public interface CommandExitCode {
 
 		private final List<Function<Throwable, Integer>> functions;
 
-		DefaultCommandExitCode(	List<Function<Throwable, Integer>> functions) {
+		DefaultCommandExitCode(List<Function<Throwable, Integer>> functions) {
 			this.functions = functions;
 		}
 
@@ -64,5 +61,7 @@ public interface CommandExitCode {
 		public List<Function<Throwable, Integer>> getMappingFunctions() {
 			return functions;
 		}
+
 	}
+
 }

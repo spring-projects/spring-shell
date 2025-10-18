@@ -26,4 +26,5 @@ import org.springframework.shell.test.autoconfigure.ShellTest;
  */
 @SpringBootApplication
 public class ExampleShellApplication {
+
 }

@@ -27,7 +27,6 @@ import org.springframework.shell.test.ShellTestClient;
 import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
 
 /**
- *
  * @author Janne Valkealahti
  */
 @AutoConfiguration
@@ -39,4 +38,5 @@ public class ShellTestClientAutoConfiguration {
 			LineReader lineReader, Terminal terminal) {
 		return ShellTestClient.builder(widget, shell, promptProvider, lineReader, terminal).build();
 	}
+
 }

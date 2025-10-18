@@ -41,4 +41,5 @@ class HiddenCommandsTests extends AbstractSampleTests {
 		BaseShellSession<?> session = createSession("help", interactive);
 		assertScreenNotContainsText(session, "help", "hidden-1");
 	}
+
 }

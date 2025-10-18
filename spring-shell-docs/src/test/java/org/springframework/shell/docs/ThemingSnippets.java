@@ -36,6 +36,7 @@ public class ThemingSnippets {
 		public String highlight() {
 			return super.highlight();
 		}
+
 	}
 	// end::custom-style-class[]
 
@@ -46,6 +47,7 @@ public class ThemingSnippets {
 		public String error() {
 			return super.error();
 		}
+
 	}
 	// end::custom-figure-class[]
 
@@ -61,6 +63,7 @@ public class ThemingSnippets {
 		public FigureSettings figures() {
 			return new MyFigureSettings();
 		}
+
 	}
 	// end::custom-theme-class[]
 
@@ -82,6 +85,7 @@ public class ThemingSnippets {
 				}
 			};
 		}
+
 	}
 	// end::custom-theme-config[]
 
@@ -102,6 +106,7 @@ public class ThemingSnippets {
 			// character i.e. U+2716 Heavy Multiplication X Emoji, cross
 		}
 		// end::using-theme-resolver[]
+
 	}
 
 }

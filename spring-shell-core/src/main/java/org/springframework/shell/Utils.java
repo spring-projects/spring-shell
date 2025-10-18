@@ -74,6 +74,7 @@ public class Utils {
 		}
 		throw new AssertionError("Can't happen");
 	}
+
 	/**
 	 * Return a properly initialized MethodParameter for the given executable and index.
 	 */
@@ -81,9 +82,11 @@ public class Utils {
 		MethodParameter methodParameter;
 		if (executable instanceof Method) {
 			methodParameter = new MethodParameter((Method) executable, i);
-		} else if (executable instanceof Constructor){
+		}
+		else if (executable instanceof Constructor) {
 			methodParameter = new MethodParameter((Constructor<?>) executable, i);
-		} else {
+		}
+		else {
 			throw new IllegalArgumentException("Unsupported Executable: " + executable);
 		}
 		methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
@@ -94,24 +97,26 @@ public class Utils {
 	 * Return MethodParameters for each parameter of the given method/constructor.
 	 */
 	public static Stream<MethodParameter> createMethodParameters(Executable executable) {
-		return IntStream.range(0, executable.getParameterCount())
-			.mapToObj(i -> createMethodParameter(executable, i));
+		return IntStream.range(0, executable.getParameterCount()).mapToObj(i -> createMethodParameter(executable, i));
 	}
 
 	/**
-	 * Sanitize the buffer input given the customizations applied to the JLine
-	 * parser (<em>e.g.</em> support for
-	 * line continuations, <em>etc.</em>)
+	 * Sanitize the buffer input given the customizations applied to the JLine parser
+	 * (<em>e.g.</em> support for line continuations, <em>etc.</em>)
 	 */
 	public static List<String> sanitizeInput(List<String> words) {
 		words = words.stream()
-			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
-			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
+			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line
+														// introduced by backslash
+														// continuation
+			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by
+													// return inside a quoted string
 			.collect(Collectors.toList());
 		return words;
 	}
 
 	private final static ValidatorFactory DEFAULT_VALIDATOR_FACTORY;
+
 	private final static Validator DEFAULT_VALIDATOR;
 
 	static {
@@ -121,7 +126,6 @@ public class Utils {
 
 	/**
 	 * Gets a default shared validation factory.
-	 *
 	 * @return default validation factory
 	 */
 	public static ValidatorFactory defaultValidatorFactory() {
@@ -130,7 +134,6 @@ public class Utils {
 
 	/**
 	 * Gets a default shared validator.
-	 *
 	 * @return default validator
 	 */
 	public static Validator defaultValidator() {
@@ -139,7 +142,6 @@ public class Utils {
 
 	/**
 	 * Split array into list of lists by predicate
-	 *
 	 * @param array the array
 	 * @param predicate the predicate
 	 * @return the list of lists
@@ -172,11 +174,11 @@ public class Utils {
 
 	/**
 	 * Takes a map of command registrations and removes hidden commands from it.
-	 *
 	 * @param registrations a command registrations
 	 * @return same map with removed hidden commands
 	 */
-	public static Map<String, CommandRegistration> removeHiddenCommands(Map<String, CommandRegistration> registrations) {
+	public static Map<String, CommandRegistration> removeHiddenCommands(
+			Map<String, CommandRegistration> registrations) {
 		Iterator<Map.Entry<String, CommandRegistration>> iter = registrations.entrySet().iterator();
 		while (iter.hasNext()) {
 			Map.Entry<String, CommandRegistration> entry = iter.next();
@@ -186,4 +188,5 @@ public class Utils {
 		}
 		return registrations;
 	}
+
 }

@@ -24,7 +24,7 @@ package org.springframework.shell.table;
 public class DefaultFormatter implements Formatter {
 
 	public String[] format(Object value) {
-		return value == null ? new String[] {""} : value.toString().split("\n");
+		return value == null ? new String[] { "" } : value.toString().split("\n");
 	}
 
 }

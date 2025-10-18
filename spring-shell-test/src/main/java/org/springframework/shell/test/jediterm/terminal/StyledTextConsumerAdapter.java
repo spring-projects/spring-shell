@@ -18,7 +18,6 @@ package org.springframework.shell.test.jediterm.terminal;
 import org.springframework.shell.test.jediterm.terminal.model.CharBuffer;
 
 /**
- *
  * @author jediterm authors
  */
 public class StyledTextConsumerAdapter implements StyledTextConsumer {

@@ -25,15 +25,17 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.shell.component.ViewComponent.ViewComponentRun;
 
 /**
- * Executor for {@code ViewComponent}. Purpose of this executor is to run
- * component in a thread so that it doesn't need to block from a command.
+ * Executor for {@code ViewComponent}. Purpose of this executor is to run component in a
+ * thread so that it doesn't need to block from a command.
  *
  * @author Janne Valkealahti
  */
 public class ViewComponentExecutor implements AutoCloseable {
 
 	private final Logger log = LoggerFactory.getLogger(ViewComponentExecutor.class);
+
 	private final SimpleAsyncTaskExecutor executor;
+
 	private Future<?> future;
 
 	public ViewComponentExecutor() {
@@ -57,8 +59,10 @@ public class ViewComponentExecutor implements AutoCloseable {
 		public void await() {
 			try {
 				this.future.get();
-			} catch (InterruptedException e) {
-			} catch (ExecutionException e) {
+			}
+			catch (InterruptedException e) {
+			}
+			catch (ExecutionException e) {
 			}
 		}
 
@@ -76,7 +80,6 @@ public class ViewComponentExecutor implements AutoCloseable {
 
 	/**
 	 * Execute runnable and return state which can be used for further operations.
-	 *
 	 * @param runnable the runnable
 	 * @return run state
 	 */
@@ -93,8 +96,7 @@ public class ViewComponentExecutor implements AutoCloseable {
 	}
 
 	/**
-	 * Stop a {@code ViewComponent} which has been previously started with this
-	 * executor.
+	 * Stop a {@code ViewComponent} which has been previously started with this executor.
 	 */
 	public void stop() {
 		if (future != null) {

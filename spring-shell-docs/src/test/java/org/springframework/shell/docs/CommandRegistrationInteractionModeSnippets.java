@@ -42,6 +42,7 @@ public class CommandRegistrationInteractionModeSnippets {
 		public void mycommand() {
 		}
 		// end::snippet2[]
+
 	}
 
 }

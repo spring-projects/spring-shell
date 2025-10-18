@@ -11,6 +11,7 @@ import org.springframework.shell.jline.NonInteractiveShellRunner;
  */
 @FunctionalInterface
 public interface NonInteractiveShellRunnerCustomizer {
+
 	/**
 	 * Customize the {@link NonInteractiveShellRunner}.
 	 * @param shellRunner the non-interactive shell runner to customize

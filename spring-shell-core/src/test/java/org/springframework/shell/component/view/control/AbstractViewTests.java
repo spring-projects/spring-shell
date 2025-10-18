@@ -36,10 +36,15 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class AbstractViewTests {
 
 	protected Screen screen24x80;
+
 	protected Screen screen1x80;
+
 	protected Screen screen7x10;
+
 	protected Screen screen10x10;
+
 	protected Screen screen0x0;
+
 	protected DefaultEventLoop eventLoop;
 
 	@BeforeEach
@@ -74,16 +79,12 @@ public class AbstractViewTests {
 			if (view instanceof AbstractView v) {
 				v.setEventLoop(eventLoop);
 			}
-			eventLoop.onDestroy(eventLoop.mouseEvents()
-				.doOnNext(m -> {
-					view.getMouseHandler().handle(MouseHandler.argsOf(m));
-				})
-				.subscribe());
-			eventLoop.onDestroy(eventLoop.keyEvents()
-				.doOnNext(m -> {
-					view.getKeyHandler().handle(KeyHandler.argsOf(m));
-				})
-				.subscribe());
+			eventLoop.onDestroy(eventLoop.mouseEvents().doOnNext(m -> {
+				view.getMouseHandler().handle(MouseHandler.argsOf(m));
+			}).subscribe());
+			eventLoop.onDestroy(eventLoop.keyEvents().doOnNext(m -> {
+				view.getKeyHandler().handle(KeyHandler.argsOf(m));
+			}).subscribe());
 		}
 	}
 

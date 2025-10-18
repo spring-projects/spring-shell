@@ -16,8 +16,8 @@
 package org.springframework.shell.context;
 
 /**
- * Interface defining a contract for a context which allows to loosely connect
- * different components together and keep things alive between commands.
+ * Interface defining a contract for a context which allows to loosely connect different
+ * components together and keep things alive between commands.
  *
  * @author Janne Valkealahti
  */
@@ -25,24 +25,22 @@ public interface ShellContext {
 
 	/**
 	 * Gets an interaction mode.
-	 *
 	 * @return a current interaction mode
 	 */
 	InteractionMode getInteractionMode();
 
 	/**
 	 * Sets an interaction mode.
-	 *
 	 * @param interactionMode the interaction mode
 	 */
 	void setInteractionMode(InteractionMode interactionMode);
 
 	/**
-	 * Gets if shell has a proper {@code pty} terminal. Terminal don't have
-	 * {@code pty} in cases where output is piped into a file or terminal is run in
-	 * an ci system where there is no real user interaction.
-	 *
+	 * Gets if shell has a proper {@code pty} terminal. Terminal don't have {@code pty} in
+	 * cases where output is piped into a file or terminal is run in an ci system where
+	 * there is no real user interaction.
 	 * @return {@code true} if terminal has pty features
 	 */
 	boolean hasPty();
+
 }

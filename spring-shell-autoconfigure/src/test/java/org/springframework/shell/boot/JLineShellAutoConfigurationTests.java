@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 class JLineShellAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(JLineShellAutoConfiguration.class));
+		.withConfiguration(AutoConfigurations.of(JLineShellAutoConfiguration.class));
 
 	@Test
 	void canCreatePlainTerminal() {
@@ -42,9 +42,9 @@ class JLineShellAutoConfigurationTests {
 	@Test
 	void canCustomizeTerminalBuilder() {
 		TerminalCustomizer customizer = mock(TerminalCustomizer.class);
-		contextRunner.withBean(TerminalCustomizer.class, () -> customizer)
-				.run(context -> {
-					verify(customizer).customize(any(TerminalBuilder.class));
-				});
+		contextRunner.withBean(TerminalCustomizer.class, () -> customizer).run(context -> {
+			verify(customizer).customize(any(TerminalBuilder.class));
+		});
 	}
+
 }

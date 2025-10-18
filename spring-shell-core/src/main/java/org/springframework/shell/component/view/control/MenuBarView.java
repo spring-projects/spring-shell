@@ -40,8 +40,8 @@ import org.springframework.shell.style.StyleSettings;
 import org.springframework.shell.style.ThemeResolver;
 
 /**
- * {@link MenuBarView} shows {@link MenuBarItem items} horizontally and is
- * typically used in layouts which builds complete terminal UI's.
+ * {@link MenuBarView} shows {@link MenuBarItem items} horizontally and is typically used
+ * in layouts which builds complete terminal UI's.
  *
  * Internally {@link MenuView} is used to show the menus.
  *
@@ -50,8 +50,11 @@ import org.springframework.shell.style.ThemeResolver;
 public class MenuBarView extends BoxView {
 
 	private final Logger log = LoggerFactory.getLogger(MenuBarView.class);
+
 	private final List<MenuBarItem> items = new ArrayList<>();
+
 	private MenuView currentMenuView;
+
 	private int activeItemIndex = -1;
 
 	// Need to keep menuviews alive not to lose their states
@@ -59,7 +62,6 @@ public class MenuBarView extends BoxView {
 
 	/**
 	 * Construct menubar view with menubar items.
-	 *
 	 * @param items the menubar items
 	 */
 	public MenuBarView(MenuBarItem[] items) {
@@ -68,7 +70,6 @@ public class MenuBarView extends BoxView {
 
 	/**
 	 * Construct menubar view with menubar items.
-	 *
 	 * @param items the menubar items
 	 */
 	public static MenuBarView of(MenuBarItem... items) {
@@ -127,7 +128,6 @@ public class MenuBarView extends BoxView {
 
 	/**
 	 * Gets a menubar items.
-	 *
 	 * @return menubar items
 	 */
 	public List<MenuBarItem> getItems() {
@@ -137,7 +137,6 @@ public class MenuBarView extends BoxView {
 	/**
 	 * Sets a selected index. If given index is not within bounds of size of items,
 	 * selection is set to {@code -1} effectively un-selecting active item.
-	 *
 	 * @param index the new index
 	 */
 	public void setSelected(int index) {
@@ -258,17 +257,15 @@ public class MenuBarView extends BoxView {
 		int x = positionAtIndex(activeItemIndex);
 		Dimension dim = menuView.getPreferredDimension();
 		menuView.setRect(rect.x() + x, rect.y() + 1, dim.width(), dim.height());
-		menuView.onDestroy(getEventLoop().viewEvents(MenuViewOpenSelectedItemEvent.class, menuView)
-			.subscribe(event -> {
-				closeCurrentMenuView();
-			}));
+		menuView.onDestroy(getEventLoop().viewEvents(MenuViewOpenSelectedItemEvent.class, menuView).subscribe(event -> {
+			closeCurrentMenuView();
+		}));
 
 		return menuView;
 	}
 
 	/**
 	 * Sets items.
-	 *
 	 * @param items status items
 	 */
 	public void setItems(List<MenuBarItem> items) {
@@ -286,11 +283,9 @@ public class MenuBarView extends BoxView {
 	}
 
 	private void registerHotKeys() {
-		getItems().stream()
-			.filter(item -> item.getHotKey() != null)
-			.forEach(item -> {
-				registerHotKeyBinding(item.getHotKey(), () -> selectItem(item));
-			});
+		getItems().stream().filter(item -> item.getHotKey() != null).forEach(item -> {
+			registerHotKeyBinding(item.getHotKey(), () -> selectItem(item));
+		});
 	}
 
 	/**
@@ -299,7 +294,9 @@ public class MenuBarView extends BoxView {
 	public static class MenuBarItem {
 
 		private String title;
+
 		private List<MenuItem> items;
+
 		private Integer hotKey;
 
 		public MenuBarItem(String title) {
@@ -331,6 +328,7 @@ public class MenuBarView extends BoxView {
 			this.hotKey = hotKey;
 			return this;
 		}
+
 	}
 
 }

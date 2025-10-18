@@ -24,7 +24,6 @@ public interface ViewDoneEvent extends ViewEvent {
 
 	/**
 	 * Create a generic event with empty view args.
-	 *
 	 * @param view the view
 	 * @return a generic view done event
 	 */

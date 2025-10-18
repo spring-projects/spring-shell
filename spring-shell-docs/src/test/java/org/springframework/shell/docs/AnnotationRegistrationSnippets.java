@@ -27,6 +27,7 @@ public class AnnotationRegistrationSnippets {
 		@ShellMethod
 		public void mycommand() {
 		}
+
 	}
 	// end::snippet1[]
 
@@ -38,5 +39,7 @@ public class AnnotationRegistrationSnippets {
 			return a + b;
 		}
 		// end::snippet2[]
+
 	}
+
 }

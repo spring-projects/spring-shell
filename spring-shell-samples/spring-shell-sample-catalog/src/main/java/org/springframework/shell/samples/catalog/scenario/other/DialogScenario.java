@@ -25,8 +25,7 @@ import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 
-@ScenarioComponent(name = "Dialog", description = "Modal dialog", category = {
-		Scenario.CATEGORY_OTHER })
+@ScenarioComponent(name = "Dialog", description = "Modal dialog", category = { Scenario.CATEGORY_OTHER })
 public class DialogScenario extends AbstractScenario {
 
 	private Runnable dialogAction = () -> {
@@ -46,7 +45,10 @@ public class DialogScenario extends AbstractScenario {
 		configure(button);
 		BoxView content = new BoxView();
 		content.setDrawFunction((screen, rect) -> {
-			screen.writerBuilder().layer(1).build().text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+			screen.writerBuilder()
+				.layer(1)
+				.build()
+				.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
 			return rect;
 		});
 		DialogView dialog = new DialogView(content, button);

@@ -16,7 +16,6 @@
 package org.springframework.shell.test.jediterm.terminal;
 
 /**
- *
  * @author jediterm authors
  */
 public interface TerminalDisplay {
@@ -35,13 +34,15 @@ public interface TerminalDisplay {
 
 	boolean ambiguousCharsAreDoubleWidth();
 
-	default void setBracketedPasteMode(boolean enabled) {}
+	default void setBracketedPasteMode(boolean enabled) {
+	}
 
 	// default TerminalColor getWindowForeground() {
-	// 	return null;
+	// return null;
 	// }
 
 	// default TerminalColor getWindowBackground() {
-	// 	return null;
+	// return null;
 	// }
+
 }

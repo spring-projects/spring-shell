@@ -23,6 +23,7 @@ package org.springframework.shell.command.parser;
 public final class DirectiveNode extends TerminalAstNode {
 
 	private final String name;
+
 	private final String value;
 
 	public DirectiveNode(Token token, String name, String value) {

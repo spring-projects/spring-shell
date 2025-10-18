@@ -34,14 +34,23 @@ import org.springframework.shell.component.flow.ComponentFlow.Builder;
 public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputSpec> implements ConfirmationInputSpec {
 
 	private String name;
+
 	private Boolean defaultValue;
+
 	private Boolean resultValue;
+
 	private ResultMode resultMode;
+
 	private Function<ConfirmationInputContext, List<AttributedString>> renderer;
+
 	private List<Consumer<ConfirmationInputContext>> preHandlers = new ArrayList<>();
+
 	private List<Consumer<ConfirmationInputContext>> postHandlers = new ArrayList<>();
+
 	private boolean storeResult = true;
+
 	private String templateLocation;
+
 	private Function<ConfirmationInputContext, String> next;
 
 	public BaseConfirmationInput(BaseBuilder builder, String id) {
@@ -158,4 +167,5 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 	public Function<ConfirmationInputContext, String> getNext() {
 		return next;
 	}
+
 }

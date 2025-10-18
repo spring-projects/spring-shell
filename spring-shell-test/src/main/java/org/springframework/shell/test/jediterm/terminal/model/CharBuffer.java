@@ -29,10 +29,12 @@ public class CharBuffer implements Iterable<Character>, CharSequence {
 	public final static CharBuffer EMPTY = new CharBuffer(new char[0], 0, 0);
 
 	private final char[] myBuf;
+
 	private final int myStart;
+
 	private final int myLength;
 
-	public CharBuffer( char[] buf, int start, int length) {
+	public CharBuffer(char[] buf, int start, int length) {
 		if (start + length > buf.length) {
 			throw new IllegalArgumentException(String.format("Out ouf bounds %d+%d>%d", start, length, buf.length));
 		}
@@ -49,7 +51,8 @@ public class CharBuffer implements Iterable<Character>, CharSequence {
 		}
 
 		if (myStart + myLength > myBuf.length) {
-			throw new IllegalStateException(String.format("Interval is out of array bounds: %d+%d>%d", myStart, myLength, myBuf.length));
+			throw new IllegalStateException(
+					String.format("Interval is out of array bounds: %d+%d>%d", myStart, myLength, myBuf.length));
 		}
 	}
 
@@ -59,7 +62,7 @@ public class CharBuffer implements Iterable<Character>, CharSequence {
 		Arrays.fill(myBuf, c);
 	}
 
-	public CharBuffer( String str) {
+	public CharBuffer(String str) {
 		this(str.toCharArray(), 0, str.length());
 	}
 
@@ -134,4 +137,5 @@ public class CharBuffer implements Iterable<Character>, CharSequence {
 
 		return new CharBuffer(newBuf, 0, myLength);
 	}
+
 }

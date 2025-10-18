@@ -58,7 +58,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class HelpTests {
 
 	private static Locale previousLocale;
+
 	private String testName;
+
 	private CommandsPojo commandsPojo = new CommandsPojo();
 
 	@Autowired
@@ -96,29 +98,29 @@ public class HelpTests {
 			.command("first-command")
 			.description("A rather extensive description of some command.")
 			.withTarget()
-				.method(commandsPojo, "firstCommand")
-				.and()
+			.method(commandsPojo, "firstCommand")
+			.and()
 			.withOption()
-				.shortNames('r')
-				.description("Whether to delete recursively")
-				.type(boolean.class)
-				.and()
+			.shortNames('r')
+			.description("Whether to delete recursively")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('f')
-				.description("Do not ask for confirmation. YOLO")
-				.type(boolean.class)
-				.and()
+			.shortNames('f')
+			.description("Do not ask for confirmation. YOLO")
+			.type(boolean.class)
+			.and()
 			.withOption()
-				.shortNames('n')
-				.description("The answer to everything")
-				.defaultValue("42")
-				.type(int.class)
-				.and()
+			.shortNames('n')
+			.description("The answer to everything")
+			.defaultValue("42")
+			.type(int.class)
+			.and()
 			.withOption()
-				.shortNames('o')
-				.description("Some other parameters")
-				.type(float[].class)
-				.and()
+			.shortNames('o')
+			.description("Some other parameters")
+			.type(float[].class)
+			.and()
 			.build();
 		commandCatalog.register(registration);
 		String help = this.help.help(new String[] { "first-command" }).toString();
@@ -155,7 +157,9 @@ public class HelpTests {
 	}
 
 	private String sample() throws IOException {
-		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt", HelpTests.class).getInputStream();
+		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt",
+				HelpTests.class)
+			.getInputStream();
 		return removeNewLines(FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")));
 	}
 
@@ -164,14 +168,14 @@ public class HelpTests {
 			.command("first-command")
 			.description("A rather extensive description of some command.")
 			.withAlias()
-				.command("1st-command")
-				.and()
+			.command("1st-command")
+			.and()
 			.withTarget()
-				.method(commandsPojo, "firstCommand")
-				.and()
+			.method(commandsPojo, "firstCommand")
+			.and()
 			.withOption()
-				.shortNames('r')
-				.and()
+			.shortNames('r')
+			.and()
 			.build();
 		commandCatalog.register(registration1);
 
@@ -179,11 +183,11 @@ public class HelpTests {
 			.command("second-command")
 			.description("The second command. This one is known under several aliases as well.")
 			.withAlias()
-				.command("yet-another-command")
-				.and()
+			.command("yet-another-command")
+			.and()
 			.withTarget()
-				.method(commandsPojo, "secondCommand")
-				.and()
+			.method(commandsPojo, "secondCommand")
+			.and()
 			.build();
 		commandCatalog.register(registration2);
 
@@ -191,8 +195,8 @@ public class HelpTests {
 			.command("third-command")
 			.description("The last command.")
 			.withTarget()
-				.method(commandsPojo, "thirdCommand")
-				.and()
+			.method(commandsPojo, "thirdCommand")
+			.and()
 			.build();
 		commandCatalog.register(registration3);
 
@@ -201,8 +205,8 @@ public class HelpTests {
 			.description("The first command in a separate group.")
 			.group("Example Group")
 			.withTarget()
-				.method(commandsPojo, "firstCommandInGroup")
-				.and()
+			.method(commandsPojo, "firstCommandInGroup")
+			.and()
 			.build();
 		commandCatalog.register(registration4);
 
@@ -211,8 +215,8 @@ public class HelpTests {
 			.description("The second command in a separate group.")
 			.group("Example Group")
 			.withTarget()
-				.method(commandsPojo, "secondCommandInGroup")
-				.and()
+			.method(commandsPojo, "secondCommandInGroup")
+			.and()
 			.build();
 		commandCatalog.register(registration5);
 	}
@@ -236,6 +240,7 @@ public class HelpTests {
 			help.setCommandsTemplate("classpath:template/help-commands-default.stg");
 			return help;
 		}
+
 	}
 
 	@ShellComponent
@@ -246,13 +251,13 @@ public class HelpTests {
 				// Single key and arity = 0. Help displayed on same line
 				@ShellOption(help = "Whether to delete recursively", arity = 0, value = "-r") boolean r,
 				// Multiple keys and arity 0. Help displayed on next line
-				@ShellOption(help = "Do not ask for confirmation. YOLO", arity = 0, value = {"-f", "--force"}) boolean force,
+				@ShellOption(help = "Do not ask for confirmation. YOLO", arity = 0,
+						value = { "-f", "--force" }) boolean force,
 				// Single key, arity >= 1. Help displayed on next line. Optional
 				// Also, bears bean validation annotation
 				@ShellOption(help = "The answer to everything", defaultValue = "42", value = "-n") @Max(5) int n,
-		        // Single key, arity > 1.
-		        @ShellOption(help = "Some other parameters", arity = 3, value = "-o") float[] o
-		) {
+				// Single key, arity > 1.
+				@ShellOption(help = "Some other parameters", arity = 3, value = "-o") float[] o) {
 		}
 
 		@ShellMethod
@@ -270,5 +275,7 @@ public class HelpTests {
 		@ShellMethod
 		public void secondCommandInGroup() {
 		}
+
 	}
+
 }

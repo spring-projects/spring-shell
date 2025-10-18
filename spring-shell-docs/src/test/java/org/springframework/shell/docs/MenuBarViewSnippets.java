@@ -29,17 +29,17 @@ public class MenuBarViewSnippets {
 		@SuppressWarnings("unused")
 		void dump1() {
 			// tag::snippet1[]
-			Runnable quitAction = () -> {};
-			Runnable aboutAction = () -> {};
+			Runnable quitAction = () -> {
+			};
+			Runnable aboutAction = () -> {
+			};
 			MenuBarView menuBar = MenuBarView.of(
-				MenuBarItem.of("File",
-						MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction))
-					.setHotKey(Key.f | KeyMask.AltMask),
-				MenuBarItem.of("Help",
-						MenuItem.of("About", MenuItemCheckStyle.NOCHECK, aboutAction))
-			);
+					MenuBarItem.of("File", MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction))
+						.setHotKey(Key.f | KeyMask.AltMask),
+					MenuBarItem.of("Help", MenuItem.of("About", MenuItemCheckStyle.NOCHECK, aboutAction)));
 			// end::snippet1[]
 		}
 
 	}
+
 }

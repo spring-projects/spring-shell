@@ -94,11 +94,10 @@ public class ShellTestIntegrationTests {
 		Condition<String> helpCondition = new Condition<>(line -> line.contains("AVAILABLE COMMANDS"),
 				"Help has expected output");
 
-		Condition<String> helpHelpCondition = new Condition<>(line -> line.contains("help - Display help about available commands"),
-				"Help help has expected output");
+		Condition<String> helpHelpCondition = new Condition<>(
+				line -> line.contains("help - Display help about available commands"), "Help help has expected output");
 
-		Condition<String> emptyCondition = new Condition<>(line -> line.trim().length() == 0,
-				"Have only whitespace");
+		Condition<String> emptyCondition = new Condition<>(line -> line.trim().length() == 0, "Have only whitespace");
 
 		NonInteractiveShellSession session = client.nonInterative("help").run();
 
@@ -130,8 +129,7 @@ public class ShellTestIntegrationTests {
 
 	@Test
 	void testNonInteractive2() throws Exception {
-		Condition<String> helloCondition = new Condition<>(line -> line.contains("hello"),
-				"Hello has expected output");
+		Condition<String> helloCondition = new Condition<>(line -> line.contains("hello"), "Hello has expected output");
 
 		NonInteractiveShellSession session = client.nonInterative("hello").run();
 
@@ -140,4 +138,5 @@ public class ShellTestIntegrationTests {
 			assertThat(lines).areExactly(1, helloCondition);
 		});
 	}
+
 }

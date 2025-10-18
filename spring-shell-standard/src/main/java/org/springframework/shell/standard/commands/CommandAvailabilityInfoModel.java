@@ -23,6 +23,7 @@ package org.springframework.shell.standard.commands;
 class CommandAvailabilityInfoModel {
 
 	private boolean available;
+
 	private String reason;
 
 	CommandAvailabilityInfoModel(boolean available, String reason) {
@@ -32,7 +33,6 @@ class CommandAvailabilityInfoModel {
 
 	/**
 	 * Builds {@link CommandAvailabilityInfoModel}.
-	 *
 	 * @param available the available flag
 	 * @param reason the reason
 	 * @return a command parameter availability model
@@ -48,4 +48,5 @@ class CommandAvailabilityInfoModel {
 	public String getReason() {
 		return reason;
 	}
+
 }

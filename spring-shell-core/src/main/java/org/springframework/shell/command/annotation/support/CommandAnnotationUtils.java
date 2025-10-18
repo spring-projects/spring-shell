@@ -26,25 +26,29 @@ import org.springframework.shell.context.InteractionMode;
 import org.springframework.util.StringUtils;
 
 /**
- * Utilities to merge {@link Command} annotations using opinionated logic. In
- * this class {@code left} is meant for annotation on a class level and
- * {@code right} annotation on a method level. Class level is meant to provide
- * defaults and every field may have its own logic.
+ * Utilities to merge {@link Command} annotations using opinionated logic. In this class
+ * {@code left} is meant for annotation on a class level and {@code right} annotation on a
+ * method level. Class level is meant to provide defaults and every field may have its own
+ * logic.
  *
  * @author Janne Valkealahti
  */
 class CommandAnnotationUtils {
 
 	private final static String COMMAND = "command";
+
 	private final static String ALIAS = "alias";
+
 	private final static String HIDDEN = "hidden";
+
 	private final static String GROUP = "group";
+
 	private final static String DESCRIPTION = "description";
+
 	private final static String INTERACTION_MODE = "interactionMode";
 
 	/**
 	 * Deduce {@link Command#hidden()} from annotations.
-	 *
 	 * @param left the left side annotation
 	 * @param right the right side annotation
 	 * @return deduced boolean for hidden field
@@ -68,11 +72,10 @@ class CommandAnnotationUtils {
 	}
 
 	/**
-	 * Deduce {@link Command#command()} from annotations. Command array is supposed
-	 * to contain commands without leading or trailing white spaces, so strip, split
-	 * and assume that class level defines prefix for array.
-	 *
-	 * @param left  the left side annotation
+	 * Deduce {@link Command#command()} from annotations. Command array is supposed to
+	 * contain commands without leading or trailing white spaces, so strip, split and
+	 * assume that class level defines prefix for array.
+	 * @param left the left side annotation
 	 * @param right the right side annotation
 	 * @return deduced boolean for command field
 	 */
@@ -81,11 +84,10 @@ class CommandAnnotationUtils {
 	}
 
 	/**
-	 * Deduce {@link Command#alias()} from annotations. Alias array is supposed
-	 * to contain commands without leading or trailing white spaces, so strip, split
-	 * and assume that class level defines prefix for array.
-	 *
-	 * @param left  the left side annotation
+	 * Deduce {@link Command#alias()} from annotations. Alias array is supposed to contain
+	 * commands without leading or trailing white spaces, so strip, split and assume that
+	 * class level defines prefix for array.
+	 * @param left the left side annotation
 	 * @param right the right side annotation
 	 * @return deduced arrays for alias field
 	 */
@@ -94,10 +96,9 @@ class CommandAnnotationUtils {
 	}
 
 	/**
-	 * Deduce {@link Command#group()} from annotations. Right side overrides if it
-	 * has value.
-	 *
-	 * @param left  the left side annotation
+	 * Deduce {@link Command#group()} from annotations. Right side overrides if it has
+	 * value.
+	 * @param left the left side annotation
 	 * @param right the right side annotation
 	 * @return deduced String for group field
 	 */
@@ -108,8 +109,7 @@ class CommandAnnotationUtils {
 	/**
 	 * Deduce {@link Command#description()} from annotations. Right side overrides if it
 	 * has value.
-	 *
-	 * @param left  the left side annotation
+	 * @param left the left side annotation
 	 * @param right the right side annotation
 	 * @return deduced String for description field
 	 */
@@ -120,8 +120,7 @@ class CommandAnnotationUtils {
 	/**
 	 * Deduce {@link Command#interactionMode()} from annotations. Right side overrides if.
 	 * Returns {@code null} if nothing defined.
-	 *
-	 * @param left  the left side annotation
+	 * @param left the left side annotation
 	 * @param right the right side annotation
 	 * @return deduced InteractionMode for interaction mode field
 	 */
@@ -151,7 +150,8 @@ class CommandAnnotationUtils {
 		return mode;
 	}
 
-	private static String[][] deduceStringArrayLeftPrefixes(String field, MergedAnnotation<?> left, MergedAnnotation<?> right) {
+	private static String[][] deduceStringArrayLeftPrefixes(String field, MergedAnnotation<?> left,
+			MergedAnnotation<?> right) {
 		List<String> prefix = Stream.of(left.getStringArray(field))
 			.flatMap(command -> Stream.of(command.split(" ")))
 			.filter(command -> StringUtils.hasText(command))
@@ -160,9 +160,7 @@ class CommandAnnotationUtils {
 
 		return Stream.of(right.getStringArray(field))
 			.map(command -> command.strip())
-			.map(command -> Stream.concat(
-					prefix.stream(),
-					Stream.of(command).filter(c -> StringUtils.hasText(c)))
+			.map(command -> Stream.concat(prefix.stream(), Stream.of(command).filter(c -> StringUtils.hasText(c)))
 				.collect(Collectors.toList()))
 			.map(arr -> arr.toArray(String[]::new))
 			.toArray(String[][]::new);
@@ -170,14 +168,15 @@ class CommandAnnotationUtils {
 
 	private static String[] deduceStringArray(String field, MergedAnnotation<?> left, MergedAnnotation<?> right) {
 		return Stream.of(left.getStringArray(field), right.getStringArray(field))
-				.flatMap(commands -> Stream.of(commands))
-				.flatMap(command -> Stream.of(command.split(" ")))
-				.filter(command -> StringUtils.hasText(command))
-				.map(command -> command.strip())
-				.toArray(String[]::new);
+			.flatMap(commands -> Stream.of(commands))
+			.flatMap(command -> Stream.of(command.split(" ")))
+			.filter(command -> StringUtils.hasText(command))
+			.map(command -> command.strip())
+			.toArray(String[]::new);
 	}
 
-	private static String deduceStringRightOverrides(String field, MergedAnnotation<?> left, MergedAnnotation<?> right) {
+	private static String deduceStringRightOverrides(String field, MergedAnnotation<?> left,
+			MergedAnnotation<?> right) {
 		String r = right.getString(field);
 		if (StringUtils.hasText(r)) {
 			return r;

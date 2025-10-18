@@ -19,5 +19,7 @@ package org.springframework.shell.test.jediterm.terminal.model;
  * @author jediterm authors
  */
 public interface TerminalModelListener {
+
 	void modelChanged();
+
 }

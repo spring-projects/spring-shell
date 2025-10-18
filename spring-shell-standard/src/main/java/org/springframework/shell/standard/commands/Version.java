@@ -47,20 +47,33 @@ public class Version extends AbstractShellComponent {
 	 * Marker interface used in auto-config.
 	 */
 	public interface Command {
+
 	}
 
 	private BuildProperties buildProperties;
+
 	private GitProperties gitProperties;
+
 	private TemplateExecutor templateExecutor;
+
 	private String template;
+
 	private boolean showBuildGroup;
+
 	private boolean showBuildArtifact;
+
 	private boolean showBuildName;
+
 	private boolean showBuildVersion;
+
 	private boolean showBuildTime;
+
 	private boolean showGitBranch;
+
 	private boolean showGitCommitId;
+
 	private boolean showGitShortCommitId;
+
 	private boolean showGitCommitTime;
 
 	public Version(TemplateExecutor templateExecutor) {
@@ -177,8 +190,10 @@ public class Version extends AbstractShellComponent {
 	private static String resourceAsString(Resource resource) {
 		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
 			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
+
 }

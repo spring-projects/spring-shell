@@ -243,6 +243,7 @@ class SelectorListTests {
 	private static class TestItem implements Nameable {
 
 		String name;
+
 		TestItem(String name) {
 			this.name = name;
 		}
@@ -251,22 +252,22 @@ class SelectorListTests {
 		public String getName() {
 			return name;
 		}
+
 	}
 
 	List<TestItem> items(int count) {
-		return IntStream.range(0, count)
-			.mapToObj(i -> {
-				return new TestItem("name" + i);
-			})
-			.collect(Collectors.toList());
+		return IntStream.range(0, count).mapToObj(i -> {
+			return new TestItem("name" + i);
+		}).collect(Collectors.toList());
 	}
 
 	@SuppressWarnings("rawtypes")
 	InstanceOfAssertFactory<SelectorList, SelectorListAssert<TestItem>> SELECTOR_LIST = selectorList(TestItem.class);
 
 	@SuppressWarnings("rawtypes")
-	static <RESULT extends Nameable> InstanceOfAssertFactory<SelectorList, SelectorListAssert<RESULT>> selectorList(Class<RESULT> resultType) {
-		return new InstanceOfAssertFactory<>(SelectorList.class, SelectorListAssertions::<RESULT> assertThat);
+	static <RESULT extends Nameable> InstanceOfAssertFactory<SelectorList, SelectorListAssert<RESULT>> selectorList(
+			Class<RESULT> resultType) {
+		return new InstanceOfAssertFactory<>(SelectorList.class, SelectorListAssertions::<RESULT>assertThat);
 	}
 
 	static class SelectorListAssertions {
@@ -274,6 +275,7 @@ class SelectorListTests {
 		public static <T extends Nameable> SelectorListAssert<T> assertThat(SelectorList<T> actual) {
 			return new SelectorListAssert<>(actual);
 		}
+
 	}
 
 	static class SelectorListAssert<T extends Nameable> extends AbstractAssert<SelectorListAssert<T>, SelectorList<T>> {
@@ -284,7 +286,8 @@ class SelectorListTests {
 
 		public SelectorListAssert<T> namesContainsExactly(String... names) {
 			isNotNull();
-			List<String> actualNames = actual.getProjection().stream()
+			List<String> actualNames = actual.getProjection()
+				.stream()
 				.map(i -> i.getName())
 				.collect(Collectors.toList());
 			assertThat(actualNames).containsExactly(names);
@@ -293,7 +296,8 @@ class SelectorListTests {
 
 		public SelectorListAssert<T> selectedContainsExactly(Boolean... selected) {
 			isNotNull();
-			List<Boolean> actualSelected = actual.getProjection().stream()
+			List<Boolean> actualSelected = actual.getProjection()
+				.stream()
 				.map(i -> i.isSelected())
 				.collect(Collectors.toList());
 			assertThat(actualSelected).containsExactly(selected);
@@ -305,5 +309,7 @@ class SelectorListTests {
 			assertThat(actual.getProjection()).hasSize(size);
 			return this;
 		}
+
 	}
+
 }

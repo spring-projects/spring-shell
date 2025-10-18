@@ -41,6 +41,7 @@ public class PartsText {
 	public static class PartText {
 
 		private String text;
+
 		private boolean match;
 
 		public PartText(String text, boolean match) {
@@ -59,5 +60,7 @@ public class PartsText {
 		public boolean isMatch() {
 			return match;
 		}
+
 	}
+
 }

@@ -59,7 +59,8 @@ public class StandardAPIAutoConfiguration {
 	}
 
 	@Bean
-	public static LazyInitializationExcludeFilter valueProviderLazyInitializationExcludeFilter(){
+	public static LazyInitializationExcludeFilter valueProviderLazyInitializationExcludeFilter() {
 		return LazyInitializationExcludeFilter.forBeanTypes(ValueProvider.class);
 	}
+
 }

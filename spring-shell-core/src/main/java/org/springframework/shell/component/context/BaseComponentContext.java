@@ -45,8 +45,8 @@ public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedH
 	public <T> T get(Object key, Class<T> type) {
 		Object value = get(key);
 		if (!type.isAssignableFrom(value.getClass())) {
-			throw new IllegalArgumentException("Incorrect type specified for key '" +
-					key + "'. Expected [" + type + "] but actual type is [" + value.getClass() + "]");
+			throw new IllegalArgumentException("Incorrect type specified for key '" + key + "'. Expected [" + type
+					+ "] but actual type is [" + value.getClass() + "]");
 		}
 		return (T) value;
 	}
@@ -86,4 +86,5 @@ public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedH
 	public String toString() {
 		return "BaseComponentContext [terminalWidth=" + terminalWidth + "]";
 	}
+
 }

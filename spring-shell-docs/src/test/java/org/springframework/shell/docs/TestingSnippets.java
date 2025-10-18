@@ -42,21 +42,18 @@ class TestingSnippets {
 
 		@Test
 		void test() {
-			InteractiveShellSession session = client
-					.interactive()
-					.run();
+			InteractiveShellSession session = client.interactive().run();
 
 			await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-				ShellAssertions.assertThat(session.screen())
-					.containsText("shell");
+				ShellAssertions.assertThat(session.screen()).containsText("shell");
 			});
 
 			session.write(session.writeSequence().text("help").carriageReturn().build());
 			await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-				ShellAssertions.assertThat(session.screen())
-					.containsText("AVAILABLE COMMANDS");
+				ShellAssertions.assertThat(session.screen()).containsText("AVAILABLE COMMANDS");
 			});
 		}
+
 	}
 	// end::testing-shelltest-interactive[]
 
@@ -70,34 +67,36 @@ class TestingSnippets {
 
 		@Test
 		void test() {
-			NonInteractiveShellSession session = client
-				.nonInterative("help")
-				.run();
+			NonInteractiveShellSession session = client.nonInterative("help").run();
 
 			await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-				ShellAssertions.assertThat(session.screen())
-					.containsText("AVAILABLE COMMANDS");
+				ShellAssertions.assertThat(session.screen()).containsText("AVAILABLE COMMANDS");
 			});
 		}
+
 	}
 	// end::testing-shelltest-noninteractive[]
 
 	class Dump1 {
 
 		// tag::testing-shelltest-dimensions-props[]
-		@ShellTest(properties = {
-			"spring.shell.test.terminal-width=120",
-			"spring.shell.test.terminal-height=40"
-		})
-		class ShellSettingsSample {}
+		@ShellTest(properties = { "spring.shell.test.terminal-width=120", "spring.shell.test.terminal-height=40" })
+		class ShellSettingsSample {
+
+		}
 		// end::testing-shelltest-dimensions-props[]
+
 	}
+
 	class Dump2 {
 
 		// tag::testing-shelltest-dimensions-field[]
 		@ShellTest(terminalWidth = 120, terminalHeight = 40)
-		class ShellSettingsSample {}
+		class ShellSettingsSample {
+
+		}
 		// end::testing-shelltest-dimensions-field[]
+
 	}
 
 }

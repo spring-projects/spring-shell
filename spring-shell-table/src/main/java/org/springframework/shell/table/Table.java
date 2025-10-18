@@ -27,25 +27,30 @@ import org.springframework.shell.TerminalSizeAware;
 
 /**
  * This is the central API for table rendering. A Table object is constructed with a given
- * TableModel, which holds raw table contents. Its rendering logic is then altered by applying
- * various customizations, in a fashion very similar to what is used <i>e.g.</i> in a spreadsheet
- * program:<ol>
- * <li>{@link #formatters formatters} know how to derive character data out of raw data. For
- * example, numbers are
- * formatted according to a Locale, or Maps are emitted as a series of {@literal key=value} lines</li>
- * <li>{@link #sizeConstraints size constraints} are then applied, which decide how
- * much column real estate to allocate to cells</li>
- * <li>{@link #wrappers text wrapping policies} are applied once the column sizes
- * are known</li>
- * <li>finally, {@link #aligners alignment} strategies actually render
- * text as a series of space-padded strings that draw nicely on screen.</li>
+ * TableModel, which holds raw table contents. Its rendering logic is then altered by
+ * applying various customizations, in a fashion very similar to what is used <i>e.g.</i>
+ * in a spreadsheet program:
+ * <ol>
+ * <li>{@link #formatters formatters} know how to derive character data out of raw data.
+ * For example, numbers are formatted according to a Locale, or Maps are emitted as a
+ * series of {@literal key=value} lines</li>
+ * <li>{@link #sizeConstraints size constraints} are then applied, which decide how much
+ * column real estate to allocate to cells</li>
+ * <li>{@link #wrappers text wrapping policies} are applied once the column sizes are
+ * known</li>
+ * <li>finally, {@link #aligners alignment} strategies actually render text as a series of
+ * space-padded strings that draw nicely on screen.</li>
  * </ol>
- * All those customizations are applied selectively on the Table cells thanks to a {@link CellMatcher}: One can
- * decide to right pad column number 3, or to format in a certain way all instances of {@literal java.util.Map}.
+ * All those customizations are applied selectively on the Table cells thanks to a
+ * {@link CellMatcher}: One can decide to right pad column number 3, or to format in a
+ * certain way all instances of {@literal java.util.Map}.
  *
- * <p>Of course, all of those customizations often work hand in hand, and not all combinations make sense:
- * one needs to anticipate the fact that text will be split using the ' ' (space) character to properly
- * calculate column sizes.</p>
+ * <p>
+ * Of course, all of those customizations often work hand in hand, and not all
+ * combinations make sense: one needs to anticipate the fact that text will be split using
+ * the ' ' (space) character to properly calculate column sizes.
+ * </p>
+ *
  * @author Eric Bottard
  */
 public class Table implements TerminalSizeAware {
@@ -67,18 +72,16 @@ public class Table implements TerminalSizeAware {
 	private List<BorderSpecification> borderSpecifications = new ArrayList<BorderSpecification>();
 
 	/**
-	 * Construct a new Table with the given model and customizers.
-	 * The passed in LinkedHashMap should be in reverse-insertion order (<i>i.e.</i> the first CellMatcher
-	 * found in iteration order will "win").
+	 * Construct a new Table with the given model and customizers. The passed in
+	 * LinkedHashMap should be in reverse-insertion order (<i>i.e.</i> the first
+	 * CellMatcher found in iteration order will "win").
 	 *
 	 * @see TableBuilder#build()
 	 */
-	/*package*/ Table(TableModel model,
-	      LinkedHashMap<CellMatcher, Formatter> formatters,
-	      LinkedHashMap<CellMatcher, SizeConstraints> sizeConstraints,
-	      LinkedHashMap<CellMatcher, TextWrapper> wrappers,
-	      LinkedHashMap<CellMatcher, Aligner> aligners,
-	      List<BorderSpecification> borderSpecifications) {
+	/* package */ Table(TableModel model, LinkedHashMap<CellMatcher, Formatter> formatters,
+			LinkedHashMap<CellMatcher, SizeConstraints> sizeConstraints,
+			LinkedHashMap<CellMatcher, TextWrapper> wrappers, LinkedHashMap<CellMatcher, Aligner> aligners,
+			List<BorderSpecification> borderSpecifications) {
 		this.model = model;
 		this.formatters = formatters;
 		this.sizeConstraints = sizeConstraints;
@@ -114,14 +117,14 @@ public class Table implements TerminalSizeAware {
 				String[] lines = getFormatter(row, column).format(value);
 				subLines[row][column] = lines;
 
-				SizeConstraints.Extent extent = getSizeConstraints(row, column).width(lines, widthAvailableForContents, columns);
+				SizeConstraints.Extent extent = getSizeConstraints(row, column).width(lines, widthAvailableForContents,
+						columns);
 
 				minCellWidths[column] = Math.max(minCellWidths[column], extent.min);
 				maxCellWidths[column] = Math.max(maxCellWidths[column], extent.max);
 
 			}
 		}
-
 
 		cellWidths = computeColumnWidths(widthAvailableForContents, minCellWidths, maxCellWidths);
 		// Now that widths are known, apply wrapping & render
@@ -133,12 +136,12 @@ public class Table implements TerminalSizeAware {
 			for (int column = 0; column < columns; column++) {
 				for (Map.Entry<CellMatcher, Aligner> kv : aligners.entrySet()) {
 					if (kv.getKey().matches(row, column, model)) {
-						subLines[row][column] = kv.getValue().align(subLines[row][column], cellWidths[column], cellHeights[row]);
+						subLines[row][column] = kv.getValue()
+							.align(subLines[row][column], cellWidths[column], cellHeights[row]);
 					}
 				}
 			}
 		}
-
 
 		for (int row = 0; row < rows; row++) {
 
@@ -229,7 +232,7 @@ public class Table implements TerminalSizeAware {
 	private Formatter getFormatter(int row, int column) {
 		for (Map.Entry<CellMatcher, Formatter> kv : formatters.entrySet()) {
 			if (kv.getKey().matches(row, column, model)) {
-				return  kv.getValue();
+				return kv.getValue();
 			}
 		}
 		throw new AssertionError("Can't be reached thanks to the whole-table default");
@@ -238,8 +241,11 @@ public class Table implements TerminalSizeAware {
 	/**
 	 * An instance of this class knows where to paint border glyphs.
 	 *
-	 * <p>In all instance arrays, 'row' and 'column' are actually indices in-between
-	 * table rows and columns. Hence, sizes are larger by one.</p>
+	 * <p>
+	 * In all instance arrays, 'row' and 'column' are actually indices in-between table
+	 * rows and columns. Hence, sizes are larger by one.
+	 * </p>
+	 *
 	 * @author Eric Bottard
 	 */
 	private class Borders {
@@ -356,6 +362,7 @@ public class Table implements TerminalSizeAware {
 			}
 			return result;
 		}
+
 	}
 
 }

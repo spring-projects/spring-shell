@@ -80,5 +80,7 @@ public class ShellOptionMethodArgumentResolver extends AbstractArgumentMethodArg
 		private HeaderNamedValueInfo(ShellOption annotation, List<String> names) {
 			super(names, false, null);
 		}
+
 	}
+
 }

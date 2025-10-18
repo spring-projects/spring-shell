@@ -25,6 +25,7 @@ import org.springframework.util.Assert;
 public class DefaultShellContext implements ShellContext {
 
 	private InteractionMode interactionMode = InteractionMode.ALL;
+
 	private final boolean pty;
 
 	public DefaultShellContext() {
@@ -50,4 +51,5 @@ public class DefaultShellContext implements ShellContext {
 	public boolean hasPty() {
 		return this.pty;
 	}
+
 }
