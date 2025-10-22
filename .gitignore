@@ -11,3 +11,5 @@
 /*.iws
 !/.idea/checkstyle-idea.xml
 !/.idea/externalDependencies.xml
+node_modules/
+target/

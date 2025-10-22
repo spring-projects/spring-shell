@@ -11,7 +11,7 @@ git:
   ensure_git_suffix: false
 content:
   sources:
-  - url: https://github.com/spring-projects/spring-shell
+  - url: .
     # Refname matching:
     # https://docs.antora.org/antora/latest/playbook/content-refname-matching/
     branches: [ main,'({3..9}).+({0..9}).x', '!(3.0.x)', '!(3.1.x)' ]
