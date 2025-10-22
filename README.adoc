@@ -8,12 +8,14 @@ This README covers how to build the docs in a software branch as well as how to 
 
 == Building the Site
 
-You can build the entire site by invoking the following and then viewing the site at `build/site/index.html`
+To build the entire site invoke the following command:
 
 [source,bash]
 ----
-./gradlew antora
+./mvnw antora
 ----
+
+You will then be able to view the site at `target/site/index.html`
 
 == Building a Specific Branch
 
@@ -21,5 +23,17 @@ You can build a specific branch and then viewing the branch specific site at `bu
 
 [source,bash]
 ----
-./gradlew antora
+export BUILD_VERSION=4.0.0-SNAPSHOT
+export BUILD_REFNAME=main
+./mvnw antora
 ----
+
+You will then be able to see the site at `build/site/`
+
+[NOTE]
+====
+If you get the following error, then you must first build the full site and publish it so that a partial builds are supported.
+----
+FATAL (antora): https://docs.spring.io/spring-shell/reference/site-manifest.json returned response code 404 (Not Found)
+----
+====
