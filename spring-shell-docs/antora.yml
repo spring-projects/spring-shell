@@ -1,5 +1,12 @@
 name: shell
-version: 4.0.0-SNAPSHOT
+version: true
 title: Spring Shell
 nav:
   - modules/ROOT/nav.adoc
+ext:
+  collector:
+    run:
+      command: mvnw process-resources -pl spring-shell-docs
+      local: true
+    scan:
+      dir: ./target/classes/antora-resources

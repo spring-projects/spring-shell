@@ -97,5 +97,17 @@ Building and running tests:
 ./mvnw install
 ```
 
+== Building the Documentation
+
+The documentation is built using Antora and can be run using the Antora Maven plugin.
+
+```
+./mvnw antora -pl spring-shell-docs
+```
+
+After running the command, you can view the site for this branch in `spring-shell-docs/target/site`.
+
+
+
 == License
 Spring Shell is Open Source software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].

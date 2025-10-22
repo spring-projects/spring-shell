@@ -1,0 +1,40 @@
+antora:
+  extensions:
+    - require: '@springio/antora-extensions'
+      root_component_name: 'shell'
+    - require: '@springio/antora-extensions/asciinema-extension'
+site:
+  title: Spring Shell
+  url: https://docs.spring.io/spring-shell/reference
+  robots: allow
+git:
+  ensure_git_suffix: false
+content:
+  sources:
+    - url: ..
+      # Refname matching:
+      # https://docs.antora.org/antora/latest/playbook/content-refname-matching/
+      branches: [ main,'({3..9}).+({0..9}).x', '!(3.0.x)', '!(3.1.x)' ]
+      tags: [ 'v({3..9}).+({0..9}).+({0..19})?(-{RC,M}+({0..9}))', '!(v3.0.+({0..9})?(-{RC,M}+({0..9})))', '!(v3.1.0-{RC,M}+({0..9}))', '!(v3.1.({0..19}))' ]
+      start_path: spring-shell-docs
+asciidoc:
+  attributes:
+    page-stackoverflow-url: https://stackoverflow.com/tags/spring-shell
+    page-pagination: ''
+    hide-uri-scheme: '@'
+    tabs-sync-option: '@'
+  extensions:
+    - '@asciidoctor/tabs'
+    - '@springio/asciidoctor-extensions'
+    - '@springio/asciidoctor-extensions/javadoc-extension'
+urls:
+  latest_version_segment_strategy: redirect:to
+  latest_version_segment: ''
+  redirect_facility: httpd
+ui:
+  bundle:
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/latest/ui-bundle.zip
+    snapshot: true
+runtime:
+  log:
+    failure_level: warn
