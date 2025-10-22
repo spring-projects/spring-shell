@@ -45,33 +45,30 @@
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/antora</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>antora-playbook.yml</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.antora</groupId>
 				<artifactId>antora-maven-plugin</artifactId>
-				<version>${antora-maven-plugin.version}</version>
+				<version>1.0.0-alpha.5</version>
 				<extensions>true</extensions>
 				<configuration>
-					<nodeVersion>${nodejs.version}</nodeVersion>
-					<playbookFile>target/classes/antora-playbook.yml</playbookFile>
+					<environmentVariables>
+						<BUILD_REFNAME>HEAD</BUILD_REFNAME>
+						<BUILD_VERSION>${project.version}</BUILD_VERSION>
+					</environmentVariables>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>${maven-deploy-plugin.version}</version>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
+				<groupId>io.spring.maven.antora</groupId>
+				<artifactId>antora-component-version-maven-plugin</artifactId>
+				<version>0.0.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>antora-component-version</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
