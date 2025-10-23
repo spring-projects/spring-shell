@@ -34,6 +34,8 @@ jobs:
       - name: Run Antora
         run: |
           ./mvnw antora
+      - name: Copy the cache to be included in the site
+        run: cp -rf build/antora/inject-collector-cache-config-extension/.cache build/site/
       - name: Publish Docs
         uses: spring-io/spring-doc-actions/rsync-antora-reference@v0.0.20
         with:
