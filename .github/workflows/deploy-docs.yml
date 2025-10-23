@@ -8,8 +8,7 @@ on:
         required: false
   push:
     branches: docs-build
-permissions:
-  contents: write
+permissions: read-all
 jobs:
   build:
     if: github.repository_owner == 'spring-projects'
