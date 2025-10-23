@@ -8,8 +8,7 @@ on:
         required: false
   push:
     branches: docs-build
-permissions:
-  contents: write
+permissions: read-all
 jobs:
   build:
     if: github.repository_owner == 'spring-projects'
@@ -17,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 5
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -33,6 +34,8 @@ jobs:
       - name: Run Antora
         run: |
           ./mvnw antora
+      - name: Copy the cache to be included in the site
+        run: cp -rf build/antora/inject-collector-cache-config-extension/.cache build/site/
       - name: Publish Docs
         uses: spring-io/spring-doc-actions/rsync-antora-reference@v0.0.20
         with:
