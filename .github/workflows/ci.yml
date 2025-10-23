@@ -66,8 +66,7 @@ jobs:
           scp -i $HOME/.ssh/key -r target/reports/apidocs $DOCS_USERNAME@$DOCS_HOST:$DOCS_PATH/docs/$PROJECT_VERSION/api
           
       - name: Generate Reference docs
-        working-directory: spring-shell-docs
-        run: ../mvnw --no-transfer-progress resources:resources antora
+        run: ./mvnw antora -pl spring-shell-docs
 
       - name: Deploy Reference docs
         uses: spring-io/spring-doc-actions/rsync-antora-reference@v0.0.20
@@ -76,7 +75,7 @@ jobs:
           docs-host: ${{ secrets.DOCS_HOST }}
           docs-ssh-key: ${{ secrets.DOCS_SSH_KEY }}
           docs-ssh-host-key: ${{ secrets.DOCS_SSH_HOST_KEY }}
-          site-path: spring-shell-docs/target/site/shell
+          site-path: spring-shell-docs/target/site
 
       - name: Bust Cloudflare Cache
         uses: spring-io/spring-doc-actions/bust-cloudflare-antora-cache@v0.0.20
