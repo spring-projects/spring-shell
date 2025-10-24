@@ -1,4 +1,12 @@
 = Spring Shell image:https://github.com/spring-projects/spring-shell/actions/workflows/ci.yml/badge.svg["CI", link="https://github.com/spring-projects/spring-shell/actions/workflows/ci.yml"]
+
+== Latest news
+
+* October 24, 2025: https://spring.io/blog/2025/10/24/spring-shell-4-0-0-m1-released[Spring Shell 4.0.0-M1 is out!]
+* August 4, 2025: https://spring.io/blog/2025/08/04/spring-shell-3-4-1-available[Spring Shell 3.4.1 is now available]
+
+== About Spring Shell
+
 Spring Shell helps you create Spring-powered, production-grade applications targeting the
 _CLI_ space. It takes an opinionated view of the Spring platform so that new and existing
 users can quickly get the bits they need.
