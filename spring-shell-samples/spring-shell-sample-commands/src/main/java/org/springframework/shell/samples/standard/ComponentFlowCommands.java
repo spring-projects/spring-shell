@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.jline.terminal.impl.DumbTerminal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
@@ -62,6 +61,18 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 				.withStringInput("field2")
 					.name("Field2")
 					.and()
+				.withNumberInput("number1")
+					.name("Number1")
+					.and()
+				.withNumberInput("number2")
+					.name("Number2")
+					.defaultValue(20.5)
+					.numberClass(Double.class)
+					.and()
+				.withNumberInput("number3")
+					.name("Field3")
+					.required()
+					.and()
 				.withConfirmationInput("confirmation1")
 					.name("Confirmation1")
 					.and()
@@ -84,6 +95,8 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 	public String showcase2(
 		@ShellOption(help = "Field1 value", defaultValue = ShellOption.NULL) String field1,
 		@ShellOption(help = "Field2 value", defaultValue = ShellOption.NULL) String field2,
+		@ShellOption(help = "Number1 value", defaultValue = ShellOption.NULL) Integer number1,
+		@ShellOption(help = "Number2 value", defaultValue = ShellOption.NULL) Double number2,
 		@ShellOption(help = "Confirmation1 value", defaultValue = ShellOption.NULL) Boolean confirmation1,
 		@ShellOption(help = "Path1 value", defaultValue = ShellOption.NULL) String path1,
 		@ShellOption(help = "Single1 value", defaultValue = ShellOption.NULL) String single1,
@@ -105,6 +118,17 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 				.withStringInput("field2")
 					.name("Field2")
 					.resultValue(field2)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+				.withNumberInput("number1")
+					.name("Number1")
+					.resultValue(number1)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+				.withNumberInput("number2")
+					.name("Number2")
+					.resultValue(number2)
+					.numberClass(Double.class)
 					.resultMode(ResultMode.ACCEPT)
 					.and()
 				.withConfirmationInput("confirmation1")
@@ -153,6 +177,9 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 				.longNames("field2")
 				.and()
 			.withOption()
+				.longNames("number1")
+				.and()
+			.withOption()
 				.longNames("confirmation1")
 				.type(Boolean.class)
 				.and()
@@ -170,6 +197,7 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 
 					String field1 = ctx.getOptionValue("field1");
 					String field2 = ctx.getOptionValue("field2");
+					Integer number1 = ctx.getOptionValue("number1");
 					Boolean confirmation1 = ctx.getOptionValue("confirmation1");
 					String path1 = ctx.getOptionValue("path1");
 					String single1 = ctx.getOptionValue("single1");
@@ -194,6 +222,11 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 							.withStringInput("field2")
 								.name("Field2")
 								.resultValue(field2)
+								.resultMode(ResultMode.ACCEPT)
+								.and()
+							.withNumberInput("number1")
+								.name("Number1")
+								.resultValue(number1)
 								.resultMode(ResultMode.ACCEPT)
 								.and()
 							.withConfirmationInput("confirmation1")

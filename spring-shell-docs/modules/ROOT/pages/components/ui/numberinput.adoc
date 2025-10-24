@@ -1,0 +1,38 @@
+[[using-shell-components-ui-numberinput]]
+= Number Input
+
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
+
+The number input component asks a user for simple number input. It can be configured to use any implementation of Number.class. The following listing shows an example:
+
+[source, java, indent=0]
+----
+include::{snippets}/UiComponentSnippets.java[tag=snippet10]
+----
+
+The following image shows typical output from a number input component:
+
+[asciinema,rows=6]
+----
+include::example$component-number-input-1.cast[]
+----
+
+The context object is `NumberInputContext`. The following table lists its context variables:
+
+[[numberinputcontext-template-variables]]
+.NumberInputContext Template Variables
+|===
+|Key |Description
+
+|`defaultValue`
+|The default value, if set. Otherwise, null.
+
+|`defaultClass`
+|The default number class to use, if set. Otherwise, Integer.class.
+
+|`required`
+|`true` if the input is required. Otherwise, false.
+
+|`model`
+|The parent context variables (see xref:components/ui/render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
+|===
