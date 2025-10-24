@@ -18,6 +18,7 @@
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
 			<version>${project.parent.version}</version>
+			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>org.jline</groupId>
