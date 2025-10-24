@@ -32,10 +32,15 @@ import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 public abstract class AbstractControl implements Control {
 
 	private int x = 0;
+
 	private int y = 0;
+
 	private int width = 0;
+
 	private int height = 0;
+
 	private ThemeResolver themeResolver;
+
 	private String themeName;
 
 	@Override
@@ -53,7 +58,6 @@ public abstract class AbstractControl implements Control {
 
 	/**
 	 * Sets a {@link ThemeResolver}.
-	 *
 	 * @param themeResolver the theme resolver
 	 */
 	public void setThemeResolver(@Nullable ThemeResolver themeResolver) {
@@ -62,7 +66,6 @@ public abstract class AbstractControl implements Control {
 
 	/**
 	 * Gets a {@link ThemeResolver}.
-	 *
 	 * @return a theme resolver
 	 */
 	@Nullable
@@ -72,7 +75,6 @@ public abstract class AbstractControl implements Control {
 
 	/**
 	 * Sets a theme name to use.
-	 *
 	 * @param themeName the theme name
 	 */
 	public void setThemeName(@Nullable String themeName) {
@@ -81,7 +83,6 @@ public abstract class AbstractControl implements Control {
 
 	/**
 	 * Gets a theme name.
-	 *
 	 * @return a theme name
 	 */
 	@Nullable
@@ -100,9 +101,8 @@ public abstract class AbstractControl implements Control {
 	}
 
 	/**
-	 * Resolve style using existing {@link ThemeResolver} and {@code theme name}.
-	 * Use {@code defaultStyle} if resolving cannot happen.
-	 *
+	 * Resolve style using existing {@link ThemeResolver} and {@code theme name}. Use
+	 * {@code defaultStyle} if resolving cannot happen.
 	 * @param tag the style tag to use
 	 * @param defaultStyle the default style to use
 	 * @return resolved style
@@ -112,10 +112,9 @@ public abstract class AbstractControl implements Control {
 	}
 
 	/**
-	 * Resolve foreground color using existing {@link ThemeResolver} and {@code theme name}.
-	 * {@code defaultColor} is used if it's value is not negative. {@code fallbackColor} is
-	 * used if theme resolver cannot be used.
-	 *
+	 * Resolve foreground color using existing {@link ThemeResolver} and
+	 * {@code theme name}. {@code defaultColor} is used if it's value is not negative.
+	 * {@code fallbackColor} is used if theme resolver cannot be used.
 	 * @param tag the style tag to use
 	 * @param defaultColor the default foreground color to use
 	 * @param fallbackColor the fallback foreground color to use
@@ -129,10 +128,9 @@ public abstract class AbstractControl implements Control {
 	}
 
 	/**
-	 * Resolve background color using existing {@link ThemeResolver} and {@code theme name}.
-	 * {@code defaultColor} is used if it's value is not negative. {@code fallbackColor} is
-	 * used if theme resolver cannot be used.
-	 *
+	 * Resolve background color using existing {@link ThemeResolver} and
+	 * {@code theme name}. {@code defaultColor} is used if it's value is not negative.
+	 * {@code fallbackColor} is used if theme resolver cannot be used.
 	 * @param tag the style tag to use
 	 * @param defaultColor the default background color to use
 	 * @param fallbackColor the fallback background color to use
@@ -146,10 +144,9 @@ public abstract class AbstractControl implements Control {
 	}
 
 	/**
-	 * Resolve {@link Spinner} using existing {@link ThemeResolver} and {@code theme name}.
-	 * {@code defaultSpinner} is used if it's not {@code null}. {@code fallbackSpinner} is
-	 * used if theme resolver cannot be used.
-	 *
+	 * Resolve {@link Spinner} using existing {@link ThemeResolver} and
+	 * {@code theme name}. {@code defaultSpinner} is used if it's not {@code null}.
+	 * {@code fallbackSpinner} is used if theme resolver cannot be used.
 	 * @param tag the spinner tag to use
 	 * @param defaultSpinner the default spinner to use
 	 * @param fallbackSpinner the fallback spinner to use

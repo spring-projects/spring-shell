@@ -25,6 +25,7 @@ import org.springframework.shell.test.jediterm.terminal.emulator.Emulator;
 public abstract class DataStreamIteratingEmulator implements Emulator {
 
 	protected final TerminalDataStream myDataStream;
+
 	protected final Terminal myTerminal;
 
 	private boolean myEof = false;
@@ -56,4 +57,5 @@ public abstract class DataStreamIteratingEmulator implements Emulator {
 	}
 
 	protected abstract void processChar(char ch, Terminal terminal) throws IOException;
+
 }

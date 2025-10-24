@@ -55,8 +55,7 @@ public class ClockScenario extends AbstractScenario {
 		// dispatch dates as messages
 		Flux<Message<?>> dates = Flux.interval(Duration.ofSeconds(1)).map(l -> {
 			String date = new Date().toString();
-			Message<String> message = MessageBuilder
-				.withPayload(date)
+			Message<String> message = MessageBuilder.withPayload(date)
 				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
 				.build();
 			return message;
@@ -89,50 +88,50 @@ public class ClockScenario extends AbstractScenario {
 		AtomicReference<HorizontalAlign> hAlign = new AtomicReference<>(HorizontalAlign.CENTER);
 		AtomicReference<VerticalAlign> vAlign = new AtomicReference<>(VerticalAlign.CENTER);
 
-		getEventloop().onDestroy(getEventloop().keyEvents()
-			.subscribe(event -> {
-				switch (event.key()) {
-					case Key.CursorDown -> {
-						if (vAlign.get() == VerticalAlign.TOP) {
-							vAlign.set(VerticalAlign.CENTER);
-						}
-						else if (vAlign.get() == VerticalAlign.CENTER) {
-							vAlign.set(VerticalAlign.BOTTOM);
-						}
+		getEventloop().onDestroy(getEventloop().keyEvents().subscribe(event -> {
+			switch (event.key()) {
+				case Key.CursorDown -> {
+					if (vAlign.get() == VerticalAlign.TOP) {
+						vAlign.set(VerticalAlign.CENTER);
 					}
-					case Key.CursorUp -> {
-						if (vAlign.get() == VerticalAlign.BOTTOM) {
-							vAlign.set(VerticalAlign.CENTER);
-						}
-						else if (vAlign.get() == VerticalAlign.CENTER) {
-							vAlign.set(VerticalAlign.TOP);
-						}
+					else if (vAlign.get() == VerticalAlign.CENTER) {
+						vAlign.set(VerticalAlign.BOTTOM);
 					}
-					case Key.CursorLeft -> {
-						if (hAlign.get() == HorizontalAlign.RIGHT) {
-							hAlign.set(HorizontalAlign.CENTER);
-						}
-						else if (hAlign.get() == HorizontalAlign.CENTER) {
-							hAlign.set(HorizontalAlign.LEFT);
-						}
+				}
+				case Key.CursorUp -> {
+					if (vAlign.get() == VerticalAlign.BOTTOM) {
+						vAlign.set(VerticalAlign.CENTER);
 					}
-					case Key.CursorRight -> {
-						Message<String> animStart = MessageBuilder
-							.withPayload("")
-							.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.SYSTEM)
-							.setHeader("animationstart", true)
-							.build();
-						getEventloop().dispatch(animStart);
+					else if (vAlign.get() == VerticalAlign.CENTER) {
+						vAlign.set(VerticalAlign.TOP);
 					}
-				};
+				}
+				case Key.CursorLeft -> {
+					if (hAlign.get() == HorizontalAlign.RIGHT) {
+						hAlign.set(HorizontalAlign.CENTER);
+					}
+					else if (hAlign.get() == HorizontalAlign.CENTER) {
+						hAlign.set(HorizontalAlign.LEFT);
+					}
+				}
+				case Key.CursorRight -> {
+					Message<String> animStart = MessageBuilder.withPayload("")
+						.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.SYSTEM)
+						.setHeader("animationstart", true)
+						.build();
+					getEventloop().dispatch(animStart);
+				}
+			}
+			;
 
-			}));
+		}));
 
 		// draw current date
 		root.setDrawFunction((screen, rect) -> {
 			int a = animX.get();
 			Rectangle r = new Rectangle(rect.x() + 1 + a, rect.y() + 1, rect.width() - 2, rect.height() - 2);
-			// Rectangle r = new View.Rectangle(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2);
+			// Rectangle r = new View.Rectangle(rect.x() + 1, rect.y() + 1, rect.width() -
+			// 2, rect.height() - 2);
 			String s = ref.get();
 			if (s != null) {
 				screen.writerBuilder().build().text(s, r, hAlign.get(), vAlign.get());
@@ -141,4 +140,5 @@ public class ClockScenario extends AbstractScenario {
 		});
 		return root;
 	}
+
 }

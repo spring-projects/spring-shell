@@ -76,4 +76,5 @@ public class CommandHandlingResultTests {
 		assertThat(result.isPresent()).isTrue();
 		assertThat(result.isEmpty()).isFalse();
 	}
+
 }

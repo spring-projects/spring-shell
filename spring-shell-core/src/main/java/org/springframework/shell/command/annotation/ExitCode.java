@@ -37,7 +37,6 @@ public @interface ExitCode {
 
 	/**
 	 * Exit code value.
-	 *
 	 * @return exit code
 	 * @see #code()
 	 */
@@ -46,10 +45,10 @@ public @interface ExitCode {
 
 	/**
 	 * Exit code value.
-	 *
 	 * @return exit code
 	 * @see #value()
 	 */
 	@AliasFor("value")
 	int code() default 0;
+
 }

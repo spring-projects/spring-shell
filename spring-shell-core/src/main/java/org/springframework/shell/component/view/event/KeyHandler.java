@@ -31,18 +31,16 @@ public interface KeyHandler {
 
 	/**
 	 * Handle Key event wrapped in a {@link KeyHandlerArgs}.
-	 *
 	 * @param args the Key handler arguments
 	 * @return a handler result
 	 */
 	KeyHandlerResult handle(KeyHandlerArgs args);
 
 	/**
-	 * Returns a composed handler that first handles {@code this} handler and then
-	 * handles {@code other} handler if {@code predicate} against result from
-	 * {@code this} matches.
-	 *
-	 * @param other     the handler to handle after this handler
+	 * Returns a composed handler that first handles {@code this} handler and then handles
+	 * {@code other} handler if {@code predicate} against result from {@code this}
+	 * matches.
+	 * @param other the handler to handle after this handler
 	 * @param predicate the predicate test against results from this
 	 * @return a composed handler
 	 */
@@ -54,33 +52,30 @@ public interface KeyHandler {
 			}
 			return result;
 		};
-    }
+	}
 
 	/**
-	 * Returns a composed handler that first handles {@code this} handler and then
-	 * handles {@code other} if {@code this} consumed an event.
-	 *
+	 * Returns a composed handler that first handles {@code this} handler and then handles
+	 * {@code other} if {@code this} consumed an event.
 	 * @param other the handler to handle after this handler
 	 * @return a composed handler
 	 */
-    default KeyHandler thenIfConsumed(KeyHandler other) {
+	default KeyHandler thenIfConsumed(KeyHandler other) {
 		return thenConditionally(other, result -> result.consumed());
-    }
+	}
 
 	/**
-	 * Returns a composed handler that first handles {@code this} handler and then
-	 * handles {@code other} if {@code this} did not consume an event.
-	 *
+	 * Returns a composed handler that first handles {@code this} handler and then handles
+	 * {@code other} if {@code this} did not consume an event.
 	 * @param other the handler to handle after this handler
 	 * @return a composed handler
 	 */
-    default KeyHandler thenIfNotConsumed(KeyHandler other) {
+	default KeyHandler thenIfNotConsumed(KeyHandler other) {
 		return thenConditionally(other, result -> !result.consumed());
-    }
+	}
 
 	/**
-     * Returns a handler that always returns a non-consumed result.
-	 *
+	 * Returns a handler that always returns a non-consumed result.
 	 * @return a handler that always returns a non-consumed result
 	 */
 	static KeyHandler neverConsume() {
@@ -89,7 +84,6 @@ public interface KeyHandler {
 
 	/**
 	 * Construct {@link KeyHandlerArgs} from a {@link KeyEvent}.
-	 *
 	 * @param event the Key event
 	 * @return a Key handler args
 	 */
@@ -98,11 +92,9 @@ public interface KeyHandler {
 	}
 
 	/**
-	 * Construct {@link KeyHandlerResult} from a {@link KeyEvent} and a
-	 * {@link View}.
-	 *
+	 * Construct {@link KeyHandlerResult} from a {@link KeyEvent} and a {@link View}.
 	 * @param event the Key event
-	 * @param focus  the view
+	 * @param focus the view
 	 * @return a Key handler result
 	 */
 	static KeyHandlerResult resultOf(KeyEvent event, boolean consumed, View focus) {
@@ -125,7 +117,7 @@ public interface KeyHandler {
 	 * @param focus the view which consumed an event
 	 * @param capture the view which captured an event
 	 */
-	record KeyHandlerResult(@Nullable KeyEvent event, boolean consumed, @Nullable View focus,
-			@Nullable View capture) {
+	record KeyHandlerResult(@Nullable KeyEvent event, boolean consumed, @Nullable View focus, @Nullable View capture) {
 	}
+
 }

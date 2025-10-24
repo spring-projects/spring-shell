@@ -34,7 +34,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Sets a name.
-	 *
 	 * @param name the name
 	 * @return a builder
 	 */
@@ -42,7 +41,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Sets a result value.
-	 *
 	 * @param resultValue the result value
 	 * @return a builder
 	 */
@@ -50,7 +48,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Sets a result mode.
-	 *
 	 * @param resultMode the result mode
 	 * @return a builder
 	 */
@@ -58,7 +55,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Sets a default value.
-	 *
 	 * @param defaultValue the defult value
 	 * @return a builder
 	 */
@@ -66,7 +62,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Sets a mask character.
-	 *
 	 * @param maskCharacter the mask character
 	 * @return a builder
 	 */
@@ -74,7 +69,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Sets a renderer function.
-	 *
 	 * @param renderer the renderer
 	 * @return a builder
 	 */
@@ -82,7 +76,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Sets a default renderer template location.
-	 *
 	 * @param location the template location
 	 * @return a builder
 	 */
@@ -90,7 +83,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Adds a pre-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -98,7 +90,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Adds a post-run context handler.
-	 *
 	 * @param handler the context handler
 	 * @return a builder
 	 */
@@ -107,7 +98,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 	/**
 	 * Automatically stores result from a {@link StringInputContext} into
 	 * {@link ComponentContext} with key given to builder. Defaults to {@code true}.
-	 *
 	 * @param store the flag if storing result
 	 * @return a builder
 	 */
@@ -116,7 +106,6 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 	/**
 	 * Define a function which may return id of a next component to go. Returning a
 	 * {@code null} or non existent id indicates that flow should stop.
-	 *
 	 * @param next next component function
 	 * @return a builder
 	 */
@@ -124,8 +113,8 @@ public interface StringInputSpec extends BaseInputSpec<StringInputSpec> {
 
 	/**
 	 * Build and return parent builder.
-	 *
 	 * @return the parent builder
 	 */
 	Builder and();
+
 }

@@ -32,4 +32,5 @@ public final class CommandArgumentNode extends TerminalAstNode {
 	public CommandNode getParentCommandNode() {
 		return parent;
 	}
+
 }

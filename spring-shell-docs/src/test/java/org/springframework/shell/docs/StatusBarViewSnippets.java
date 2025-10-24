@@ -36,10 +36,12 @@ class StatusBarViewSnippets {
 		// tag::items[]
 		StatusItem item1 = StatusBarView.StatusItem.of("Item1");
 
-		Runnable action1 = () -> {};
+		Runnable action1 = () -> {
+		};
 		StatusItem item2 = StatusBarView.StatusItem.of("Item2", action1);
 
-		Runnable action2 = () -> {};
+		Runnable action2 = () -> {
+		};
 		StatusItem item3 = StatusBarView.StatusItem.of("Item3", action2, KeyEvent.Key.f10);
 
 		StatusBarView statusBar = new StatusBarView();
@@ -49,14 +51,9 @@ class StatusBarViewSnippets {
 
 	void viaArray() {
 		// tag::viaarray[]
-		new StatusBarView(new StatusItem[] {
-			StatusItem.of("Item1"),
-			StatusItem.of("Item2")
-				.setAction(() -> {}),
-			StatusItem.of("Item3")
-				.setAction(() -> {})
-				.setHotKey(Key.f10)
-		});
+		new StatusBarView(new StatusItem[] { StatusItem.of("Item1"), StatusItem.of("Item2").setAction(() -> {
+		}), StatusItem.of("Item3").setAction(() -> {
+		}).setHotKey(Key.f10) });
 		// end::viaarray[]
 	}
 

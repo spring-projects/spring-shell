@@ -21,12 +21,16 @@ import org.springframework.shell.test.jediterm.terminal.TextStyle;
  * @author jediterm authors
  */
 public abstract class TerminalLineIntervalHighlighting {
+
 	private final TerminalLine myLine;
+
 	private final int myStartOffset;
+
 	private final int myEndOffset;
+
 	private boolean myDisposed = false;
 
-	TerminalLineIntervalHighlighting( TerminalLine line, int startOffset, int length) {
+	TerminalLineIntervalHighlighting(TerminalLine line, int startOffset, int length) {
 		if (startOffset < 0) {
 			throw new IllegalArgumentException("Negative startOffset: " + startOffset);
 		}
@@ -38,7 +42,7 @@ public abstract class TerminalLineIntervalHighlighting {
 		myEndOffset = startOffset + length;
 	}
 
-	public  TerminalLine getLine() {
+	public TerminalLine getLine() {
 		return myLine;
 	}
 
@@ -69,22 +73,21 @@ public abstract class TerminalLineIntervalHighlighting {
 		return !(myEndOffset <= otherStartOffset || otherEndOffset <= myStartOffset);
 	}
 
-	public  TextStyle mergeWith( TextStyle style) {
+	public TextStyle mergeWith(TextStyle style) {
 		// TerminalColor foreground = myStyle.getForeground();
 		// if (foreground == null) {
-		//   foreground = style.getForeground();
+		// foreground = style.getForeground();
 		// }
 		// TerminalColor background = myStyle.getBackground();
 		// if (background == null) {
-		//   background = style.getBackground();
+		// background = style.getBackground();
 		// }
 		return new TextStyle();
 	}
 
 	@Override
 	public String toString() {
-		return "startOffset=" + myStartOffset +
-			", endOffset=" + myEndOffset +
-			", disposed=" + myDisposed;
+		return "startOffset=" + myStartOffset + ", endOffset=" + myEndOffset + ", disposed=" + myDisposed;
 	}
+
 }

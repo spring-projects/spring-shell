@@ -41,7 +41,7 @@ public class ParameterResolverAutoConfiguration {
 
 	@Bean
 	public CommandExecutionHandlerMethodArgumentResolvers commandExecutionHandlerMethodArgumentResolvers(
-		ShellConversionServiceSupplier shellConversionServiceSupplier) {
+			ShellConversionServiceSupplier shellConversionServiceSupplier) {
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
 		resolvers.add(new ArgumentHeaderMethodArgumentResolver(shellConversionServiceSupplier.get(), null));
 		resolvers.add(new HeadersMethodArgumentResolver());
@@ -50,4 +50,5 @@ public class ParameterResolverAutoConfiguration {
 		resolvers.add(new OptionMethodArgumentResolver(shellConversionServiceSupplier.get(), null));
 		return new CommandExecutionHandlerMethodArgumentResolvers(resolvers);
 	}
+
 }

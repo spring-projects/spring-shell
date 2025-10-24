@@ -41,4 +41,5 @@ class CommandParserExceptionResolverTests {
 		List<CommandParserException> parserExceptions = Arrays.asList(e);
 		return new CommandParserExceptionsException("msg", parserExceptions);
 	}
+
 }

@@ -23,8 +23,8 @@ import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 
-@ScenarioComponent(name = "Draw Function", description = "BoxView DrawFunction", category = {
-		Scenario.CATEGORY_BOXVIEW })
+@ScenarioComponent(name = "Draw Function", description = "BoxView DrawFunction",
+		category = { Scenario.CATEGORY_BOXVIEW })
 public class DrawFunctionScenario extends AbstractScenario {
 
 	@Override
@@ -36,4 +36,5 @@ public class DrawFunctionScenario extends AbstractScenario {
 		});
 		return view;
 	}
+
 }

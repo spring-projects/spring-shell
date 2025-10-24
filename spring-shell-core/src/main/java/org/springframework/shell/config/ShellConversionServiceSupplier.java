@@ -25,4 +25,5 @@ import org.springframework.core.convert.ConversionService;
  * @author Janne Valkealahti
  */
 public interface ShellConversionServiceSupplier extends Supplier<ConversionService> {
+
 }

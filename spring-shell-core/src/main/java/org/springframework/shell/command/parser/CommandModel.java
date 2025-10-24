@@ -26,14 +26,15 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.parser.ParserConfig.Feature;
 
 /**
- * Helper class to make it easier to work with command registrations and how
- * those are used with parser model.
+ * Helper class to make it easier to work with command registrations and how those are
+ * used with parser model.
  *
  * @author Janne Valkealahti
  */
 public class CommandModel {
 
 	private final Map<String, CommandInfo> rootCommands = new HashMap<>();
+
 	private final ParserConfig configuration;
 
 	public CommandModel(Map<String, CommandRegistration> registrations, ParserConfig configuration) {
@@ -50,13 +51,15 @@ public class CommandModel {
 		CommandInfo info = null;
 		boolean onRoot = true;
 		for (String commandx : commands) {
-			String command = configuration.isEnabled(Feature.CASE_SENSITIVE_COMMANDS) ? commandx : commandx.toLowerCase();
+			String command = configuration.isEnabled(Feature.CASE_SENSITIVE_COMMANDS) ? commandx
+					: commandx.toLowerCase();
 			if (onRoot) {
 				info = rootCommands.get(command);
 				onRoot = false;
 			}
 			else {
-				Optional<CommandInfo> nextInfo = info.getChildren().stream()
+				Optional<CommandInfo> nextInfo = info.getChildren()
+					.stream()
 					.filter(i -> i.command.equals(command))
 					.findFirst();
 				if (nextInfo.isEmpty()) {
@@ -82,13 +85,13 @@ public class CommandModel {
 		});
 
 		// rootCommands.entrySet().forEach(e -> {
-		// 	tokens.put(e.getKey(), new Token(e.getKey(), TokenType.COMMAND));
-		// 	if (e.getValue().registration != null) {
-		// 		e.getValue().registration.getAliases().forEach(alias -> {
-		// 			String[] commands = alias.getCommand().split(" ");
-		// 			tokens.put(commands[0], new Token(commands[0], TokenType.COMMAND));
-		// 		});
-		// 	}
+		// tokens.put(e.getKey(), new Token(e.getKey(), TokenType.COMMAND));
+		// if (e.getValue().registration != null) {
+		// e.getValue().registration.getAliases().forEach(alias -> {
+		// String[] commands = alias.getCommand().split(" ");
+		// tokens.put(commands[0], new Token(commands[0], TokenType.COMMAND));
+		// });
+		// }
 		// });
 		return tokens;
 	}
@@ -129,7 +132,8 @@ public class CommandModel {
 			}
 			parent = children;
 			ret = parent;
-			// CommandInfo asdf = new CommandInfo(key, i < commands.length - 1 ? null : registration, parent);
+			// CommandInfo asdf = new CommandInfo(key, i < commands.length - 1 ? null :
+			// registration, parent);
 			// parent.addChildred(command, asdf);
 			// parent = asdf;
 
@@ -149,18 +153,20 @@ public class CommandModel {
 			// String[] commands = e.getKey().split(" ");
 			// CommandInfo parent = null;
 			// for (int i = 0; i < commands.length; i++) {
-			// 	CommandRegistration registration = i + 1 == commands.length ? e.getValue() : null;
-			// 	String key = configuration.isCommandsCaseSensitive() ? commands[i] : commands[i].toLowerCase();
-			// 	if (parent == null) {
-			// 		CommandInfo info = new CommandInfo(commands[i], registration, parent);
-			// 		rootCommands.computeIfAbsent(key, command -> info);
-			// 		parent = info;
-			// 	}
-			// 	else {
-			// 		CommandInfo info = new CommandInfo(key, registration, parent);
-			// 		parent.children.add(info);
-			// 		parent = info;
-			// 	}
+			// CommandRegistration registration = i + 1 == commands.length ? e.getValue()
+			// : null;
+			// String key = configuration.isCommandsCaseSensitive() ? commands[i] :
+			// commands[i].toLowerCase();
+			// if (parent == null) {
+			// CommandInfo info = new CommandInfo(commands[i], registration, parent);
+			// rootCommands.computeIfAbsent(key, command -> info);
+			// parent = info;
+			// }
+			// else {
+			// CommandInfo info = new CommandInfo(key, registration, parent);
+			// parent.children.add(info);
+			// parent = info;
+			// }
 			// }
 		});
 	}
@@ -169,9 +175,13 @@ public class CommandModel {
 	 * Contains info about a command, its registration, its parent and childs.
 	 */
 	static class CommandInfo {
+
 		String command;
+
 		CommandRegistration registration;
+
 		CommandInfo parent;
+
 		// private List<CommandInfo> children = new ArrayList<>();
 		private Map<String, CommandInfo> children = new HashMap<>();
 
@@ -183,7 +193,6 @@ public class CommandModel {
 
 		/**
 		 * Get valid tokens for this {@code CommandInfo}.
-		 *
 		 * @return mapping from raw value to a token
 		 */
 		Map<String, Token> getValidTokens() {
@@ -215,10 +224,12 @@ public class CommandModel {
 		CommandInfo getChildren(String command) {
 			return children.get(command);
 			// return children.stream()
-			// 	.filter(c -> c.command.equals(command))
-			// 	.findFirst()
-			// 	.orElse(null)
-			// 	;
+			// .filter(c -> c.command.equals(command))
+			// .findFirst()
+			// .orElse(null)
+			// ;
 		}
+
 	}
+
 }

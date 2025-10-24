@@ -40,6 +40,7 @@ class CommandNotFoundSnippets {
 			String text = context.text();
 			return "My custom message";
 		}
+
 	}
 	// end::custom-provider[]
 
@@ -58,6 +59,7 @@ class CommandNotFoundSnippets {
 			return ctx -> "My custom message";
 		}
 		// end::provider-bean-2[]
+
 	}
 
 }

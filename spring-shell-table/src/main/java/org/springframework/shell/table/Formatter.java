@@ -19,13 +19,16 @@ package org.springframework.shell.table;
 /**
  * A Formatter is responsible for the initial rendering of a value to lines of text.
  *
- * <p>Note that this representation is likely to be altered later in the pipeline, for the
+ * <p>
+ * Note that this representation is likely to be altered later in the pipeline, for the
  * purpose of text wrapping and aligning. The role of a formatter is merely to give the
- * raw text representation (<i>e.g.</i> format numbers).</p>
+ * raw text representation (<i>e.g.</i> format numbers).
+ * </p>
  *
  * @author Eric Bottard
  */
 public interface Formatter {
 
 	public String[] format(Object value);
+
 }

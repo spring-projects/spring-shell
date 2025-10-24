@@ -73,7 +73,8 @@ public class ResultHandlerConfig {
 
 	@Bean
 	public CommandNotFoundResultHandler commandNotFoundResultHandler(Terminal terminal,
-		ObjectProvider<CommandNotFoundMessageProvider> provider) {
+			ObjectProvider<CommandNotFoundMessageProvider> provider) {
 		return new CommandNotFoundResultHandler(terminal, provider);
 	}
+
 }

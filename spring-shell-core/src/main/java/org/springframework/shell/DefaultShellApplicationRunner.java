@@ -27,8 +27,8 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.annotation.Order;
 
 /**
- * Default {@link ShellApplicationRunner} which dispatches to the first ordered {@link ShellRunner} able to handle
- * the shell.
+ * Default {@link ShellApplicationRunner} which dispatches to the first ordered
+ * {@link ShellRunner} able to handle the shell.
  *
  * @author Janne Valkealahti
  * @author Chris Bono
@@ -37,11 +37,13 @@ import org.springframework.core.annotation.Order;
 public class DefaultShellApplicationRunner implements ShellApplicationRunner {
 
 	/**
-	 * The precedence at which this runner is executed with respect to other ApplicationRunner beans
+	 * The precedence at which this runner is executed with respect to other
+	 * ApplicationRunner beans
 	 */
 	public static final int PRECEDENCE = 0;
 
 	private final static Logger log = LoggerFactory.getLogger(DefaultShellApplicationRunner.class);
+
 	private final List<ShellRunner> shellRunners;
 
 	public DefaultShellApplicationRunner(List<ShellRunner> shellRunners) {
@@ -75,13 +77,12 @@ public class DefaultShellApplicationRunner implements ShellApplicationRunner {
 		}
 
 		// Handle old deprecated ShellRunner api
-		Optional<ShellRunner> optional = shellRunners.stream()
-				.filter(sh -> sh.canRun(args))
-				.findFirst();
+		Optional<ShellRunner> optional = shellRunners.stream().filter(sh -> sh.canRun(args)).findFirst();
 		ShellRunner shellRunner = optional.orElse(null);
 		log.debug("Using shell runner {}", shellRunner);
 		if (shellRunner != null) {
 			shellRunner.run(args);
 		}
 	}
+
 }

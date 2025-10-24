@@ -38,4 +38,5 @@ public interface TerminalSession {
 	String getSessionName();
 
 	void close();
+
 }

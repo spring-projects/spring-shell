@@ -23,21 +23,13 @@ class SearchAlgorithmsSnippets {
 	@SuppressWarnings("unused")
 	void dump1() {
 		// tag::builder[]
-		SearchMatch searchMatch = SearchMatch.builder()
-			.caseSensitive(false)
-			.normalize(false)
-			.forward(true)
-			.build();
+		SearchMatch searchMatch = SearchMatch.builder().caseSensitive(false).normalize(false).forward(true).build();
 		// end::builder[]
 	}
 
 	void dump2() {
 		// tag::simple[]
-		SearchMatch searchMatch = SearchMatch.builder()
-			.caseSensitive(false)
-			.normalize(false)
-			.forward(true)
-			.build();
+		SearchMatch searchMatch = SearchMatch.builder().caseSensitive(false).normalize(false).forward(true).build();
 
 		SearchMatchResult result = searchMatch.match("foo bar baz", "fbb");
 

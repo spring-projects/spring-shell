@@ -31,8 +31,8 @@ import org.springframework.shell.CompletionProposal;
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 
 /**
- * A {@link ValueProvider} that can populate names of local {@link File}s, either absolute or relative to the
- * current working directory.
+ * A {@link ValueProvider} that can populate names of local {@link File}s, either absolute
+ * or relative to the current working directory.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
@@ -49,15 +49,17 @@ public class FileValueProvider implements ValueProvider {
 		try {
 			return Files
 				.find(dir, 1, (p, a) -> p.getFileName() != null && p.getFileName().toString().startsWith(prefix),
-					FOLLOW_LINKS)
+						FOLLOW_LINKS)
 				.map(p -> {
 					boolean directory = Files.isDirectory(p);
 					String value = p.toString() + (directory ? File.separatorChar : "");
 					return new CompletionProposal(value).complete(!directory);
 				})
 				.collect(Collectors.toList());
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
+
 }

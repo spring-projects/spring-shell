@@ -18,10 +18,11 @@ package org.springframework.shell.exit;
 import java.util.function.BiFunction;
 
 /**
- * Interface to provide exception for an exit code. Typically providing
- * exception implementing boot's {@code ExitCodeGenerator}.
+ * Interface to provide exception for an exit code. Typically providing exception
+ * implementing boot's {@code ExitCodeGenerator}.
  *
  * @author Janne Valkealahti
  */
 public interface ExitCodeExceptionProvider extends BiFunction<Exception, Integer, Exception> {
+
 }

@@ -16,5 +16,7 @@
 package org.springframework.shell.geom;
 
 public enum HorizontalAlign {
+
 	LEFT, CENTER, RIGHT,
+
 }

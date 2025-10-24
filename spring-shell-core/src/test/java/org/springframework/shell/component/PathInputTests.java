@@ -44,9 +44,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PathInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
+
 	private CountDownLatch latch1;
+
 	private AtomicReference<PathInputContext> result1;
+
 	private FileSystem fileSystem;
+
 	private Function<String, Path> pathProvider;
 
 	@BeforeEach
@@ -129,4 +133,5 @@ public class PathInputTests extends AbstractShellTests {
 		assertThat(run1Context.getResultValue()).isNotNull();
 		assertThat(run1Context.getResultValue().toString()).contains("tmp");
 	}
+
 }

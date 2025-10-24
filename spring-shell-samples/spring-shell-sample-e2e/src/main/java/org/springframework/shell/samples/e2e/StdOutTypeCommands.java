@@ -33,12 +33,11 @@ public class StdOutTypeCommands {
 		Terminal terminal;
 
 		@Command(command = "stdout")
-		public String testStdoutAnnotation(
-			CommandContext commandContext
-		) {
+		public String testStdoutAnnotation(CommandContext commandContext) {
 			boolean hasPty = commandContext.getShellContext().hasPty();
 			return String.format("hasPty='%s'", hasPty);
 		}
+
 	}
 
 	@Component
@@ -46,17 +45,12 @@ public class StdOutTypeCommands {
 
 		@Bean
 		public CommandRegistration testStdoutRegistration() {
-			return getBuilder()
-				.command(REG, "stdout")
-				.group(GROUP)
-				.withTarget()
-					.function(ctx -> {
-						boolean hasPty = ctx.getShellContext().hasPty();
-						return String.format("hasPty='%s'", hasPty);
-					})
-					.and()
-				.build();
+			return getBuilder().command(REG, "stdout").group(GROUP).withTarget().function(ctx -> {
+				boolean hasPty = ctx.getShellContext().hasPty();
+				return String.format("hasPty='%s'", hasPty);
+			}).and().build();
 		}
+
 	}
 
 }

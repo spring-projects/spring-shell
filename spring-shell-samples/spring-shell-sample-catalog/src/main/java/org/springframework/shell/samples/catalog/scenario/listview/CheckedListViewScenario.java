@@ -24,7 +24,8 @@ import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
 
-@ScenarioComponent(name = "Radio List", description = "Items with radio states", category = { Scenario.CATEGORY_LISTVIEW })
+@ScenarioComponent(name = "Radio List", description = "Items with radio states",
+		category = { Scenario.CATEGORY_LISTVIEW })
 public class CheckedListViewScenario extends AbstractScenario {
 
 	@Override

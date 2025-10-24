@@ -35,23 +35,20 @@ public class OptionalValueCommands {
 	public static class LegacyAnnotation extends BaseE2ECommands {
 
 		@ShellMethod(key = LEGACY_ANNO + "optional-value", group = GROUP)
-		public String testOptionalValue(
-			@ShellOption(defaultValue = ShellOption.NULL) String arg1
-		) {
+		public String testOptionalValue(@ShellOption(defaultValue = ShellOption.NULL) String arg1) {
 			return "Hello " + arg1;
 		}
+
 	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {
 
 		@Command(command = "optional-value")
-		public String testOptionalValueAnnotation(
-				@Option(longNames = "arg1")
-				String arg1
-		) {
-				return "Hello " + arg1;
+		public String testOptionalValueAnnotation(@Option(longNames = "arg1") String arg1) {
+			return "Hello " + arg1;
 		}
+
 	}
 
 	@Component
@@ -59,19 +56,20 @@ public class OptionalValueCommands {
 
 		@Bean
 		public CommandRegistration testOptionalValueRegistration() {
-			return getBuilder()
-				.command(REG, "optional-value")
+			return getBuilder().command(REG, "optional-value")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.and()
+				.longNames("arg1")
+				.and()
 				.withTarget()
-					.function(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						return "Hello " + arg1;
-					})
-					.and()
+				.function(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					return "Hello " + arg1;
+				})
+				.and()
 				.build();
 		}
+
 	}
+
 }

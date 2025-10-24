@@ -25,15 +25,15 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * {@code ST} {@link AttributeRenderer} which knows to use format string to
- * render strings into {@code jline} {@link StyleExpression} based on theming
- * settings.
+ * {@code ST} {@link AttributeRenderer} which knows to use format string to render strings
+ * into {@code jline} {@link StyleExpression} based on theming settings.
  *
  * @author Janne Valkealahti
  */
 public class StringToStyleExpressionRenderer implements AttributeRenderer<String> {
 
 	private final ThemeResolver themeResolver;
+
 	private final static String TRUNCATE = "truncate-";
 
 	public StringToStyleExpressionRenderer(ThemeResolver themeResolver) {
@@ -53,7 +53,7 @@ public class StringToStyleExpressionRenderer implements AttributeRenderer<String
 			String f = formatString.substring(TRUNCATE.length());
 			TruncateValues config = mapValues(f);
 			if (value.length() + config.prefix > config.width) {
-				return String.format(locale, "%1." + (config.width - config.prefix - 2) + "s.." , value);
+				return String.format(locale, "%1." + (config.width - config.prefix - 2) + "s..", value);
 			}
 			else {
 				return value;
@@ -65,32 +65,35 @@ public class StringToStyleExpressionRenderer implements AttributeRenderer<String
 	}
 
 	private static class TruncateValues {
+
 		Integer width;
+
 		Integer prefix;
 
 		public void setWidth(Integer width) {
 			this.width = width;
 		}
+
 		public void setPrefix(Integer prefix) {
 			this.prefix = prefix;
 		}
+
 	}
 
 	private static TruncateValues mapValues(String expression) {
 		TruncateValues values = new TruncateValues();
-		Stream.of(expression.split("-"))
-			.map(String::trim)
-			.forEach(v -> {
-				String[] split = v.split(":", 2);
-				if (split.length == 2) {
-					if ("width".equals(split[0])) {
-						values.setWidth(Integer.parseInt(split[1]));
-					}
-					else if ("prefix".equals(split[0])) {
-						values.setPrefix(Integer.parseInt(split[1]));
-					}
+		Stream.of(expression.split("-")).map(String::trim).forEach(v -> {
+			String[] split = v.split(":", 2);
+			if (split.length == 2) {
+				if ("width".equals(split[0])) {
+					values.setWidth(Integer.parseInt(split[1]));
 				}
-			});
+				else if ("prefix".equals(split[0])) {
+					values.setPrefix(Integer.parseInt(split[1]));
+				}
+			}
+		});
 		return values;
 	}
+
 }

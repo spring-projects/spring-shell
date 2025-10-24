@@ -65,7 +65,9 @@ public class ComponentFlowAutoConfiguration {
 	private static class CommonComponentFlowCustomizer implements ComponentFlowCustomizer {
 
 		private final ObjectProvider<Terminal> terminal;
+
 		private final ObjectProvider<ResourceLoader> resourceLoader;
+
 		private final ObjectProvider<TemplateExecutor> templateExecutor;
 
 		CommonComponentFlowCustomizer(ObjectProvider<Terminal> terminal, ObjectProvider<ResourceLoader> resourceLoader,
@@ -81,5 +83,7 @@ public class ComponentFlowAutoConfiguration {
 			resourceLoader.ifAvailable(dep -> componentFlowBuilder.resourceLoader(dep));
 			templateExecutor.ifAvailable(dep -> componentFlowBuilder.templateExecutor(dep));
 		}
+
 	}
+
 }

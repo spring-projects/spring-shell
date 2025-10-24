@@ -53,10 +53,7 @@ public abstract class SpinnerSettings {
 	}
 
 	public static String[] tags() {
-		return new String[] {
-				TAG_LINE,
-				TAG_DOT,
-		};
+		return new String[] { TAG_LINE, TAG_DOT, };
 	}
 
 	public static SpinnerSettings defaults() {
@@ -68,6 +65,7 @@ public abstract class SpinnerSettings {
 	}
 
 	private static class DefaultSpinnerSettings extends SpinnerSettings {
+
 	}
 
 	private static class DumpSpinnerSettings extends SpinnerSettings {
@@ -76,6 +74,7 @@ public abstract class SpinnerSettings {
 		public Spinner dot() {
 			return Spinner.of(Spinner.DOTS14, 200);
 		}
+
 	}
 
 }

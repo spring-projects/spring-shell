@@ -28,36 +28,37 @@ public class ExitCodeCommands {
 
 	@Component
 	public static class Registration extends BaseE2ECommands {
+
 		@Bean
 		public CommandRegistration testExitCodeRegistration() {
-			return getBuilder()
-				.command(REG, "exit-code")
+			return getBuilder().command(REG, "exit-code")
 				.group(GROUP)
 				.withOption()
-					.longNames("arg1")
-					.required()
-					.and()
+				.longNames("arg1")
+				.required()
+				.and()
 				.withTarget()
-					.consumer(ctx -> {
-						String arg1 = ctx.getOptionValue("arg1");
-						throw new MyException(arg1);
-					})
-					.and()
+				.consumer(ctx -> {
+					String arg1 = ctx.getOptionValue("arg1");
+					throw new MyException(arg1);
+				})
+				.and()
 				.withExitCode()
-					.map(MyException.class, 3)
-					.map(t -> {
-						String msg = t.getMessage();
-						if (msg != null && msg.contains("ok")) {
-							return 0;
-						}
-						else if (msg != null && msg.contains("fun")) {
-							return 4;
-						}
+				.map(MyException.class, 3)
+				.map(t -> {
+					String msg = t.getMessage();
+					if (msg != null && msg.contains("ok")) {
 						return 0;
-					})
-					.and()
+					}
+					else if (msg != null && msg.contains("fun")) {
+						return 4;
+					}
+					return 0;
+				})
+				.and()
 				.build();
 		}
+
 	}
 
 	static class MyException extends RuntimeException {
@@ -65,5 +66,7 @@ public class ExitCodeCommands {
 		MyException(String msg) {
 			super(msg);
 		}
+
 	}
+
 }

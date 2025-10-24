@@ -74,9 +74,8 @@ public class TemplateExecutorTests {
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put("foo", "bar");
 		AttributedString result = executor.render(template, attributes);
-		AttributedString equalTo = new AttributedStringBuilder()
-				.append("bar", AttributedStyle.DEFAULT.bold())
-				.toAttributedString();
+		AttributedString equalTo = new AttributedStringBuilder().append("bar", AttributedStyle.DEFAULT.bold())
+			.toAttributedString();
 		assertThat(result).isEqualTo(equalTo);
 	}
 
@@ -90,4 +89,5 @@ public class TemplateExecutorTests {
 		AttributedString equalTo = new AttributedStringBuilder().append("bar").toAttributedString();
 		assertThat(result).isEqualTo(equalTo);
 	}
+
 }

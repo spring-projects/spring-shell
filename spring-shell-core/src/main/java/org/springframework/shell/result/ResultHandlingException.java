@@ -21,7 +21,6 @@ public class ResultHandlingException extends NestedRuntimeException {
 
 	/**
 	 * Construct a new result handling exception.
-     *
 	 * @param message the exception message
 	 */
 	public ResultHandlingException(String message) {
@@ -30,11 +29,11 @@ public class ResultHandlingException extends NestedRuntimeException {
 
 	/**
 	 * Construct a new result handling exception.
-     *
 	 * @param message the exception message
 	 * @param cause the cause
 	 */
 	public ResultHandlingException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

@@ -27,9 +27,8 @@ public interface ShellRunner {
 	/**
 	 * Checks if a particular shell runner can execute.
 	 *
-	 * For {@link #canRun(ApplicationArguments)} and
-	 * {@link #run(ApplicationArguments)} prefer {@link #run(String[])}.
-	 *
+	 * For {@link #canRun(ApplicationArguments)} and {@link #run(ApplicationArguments)}
+	 * prefer {@link #run(String[])}.
 	 * @param args the application arguments
 	 * @return true if shell runner can execute
 	 */
@@ -41,9 +40,8 @@ public interface ShellRunner {
 	/**
 	 * Execute application.
 	 *
-	 * For {@link #canRun(ApplicationArguments)} and
-	 * {@link #run(ApplicationArguments)} prefer {@link #run(String[])}.
-	 *
+	 * For {@link #canRun(ApplicationArguments)} and {@link #run(ApplicationArguments)}
+	 * prefer {@link #run(String[])}.
 	 * @param args the application argumets
 	 * @throws Exception in errors
 	 */
@@ -55,7 +53,6 @@ public interface ShellRunner {
 	/**
 	 * Execute {@code ShellRunner} with given args. Return value indicates if run
 	 * operation happened and no further runners should be used.
-	 *
 	 * @param args the raw arguments
 	 * @return true if run execution happened
 	 * @throws Exception possible error during run

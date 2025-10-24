@@ -31,4 +31,5 @@ public class CommandAvailabilityInfoModelTests {
 		assertThat(caim.getAvailable()).isFalse();
 		assertThat(caim.getReason()).isEqualTo("fakereason");
 	}
+
 }

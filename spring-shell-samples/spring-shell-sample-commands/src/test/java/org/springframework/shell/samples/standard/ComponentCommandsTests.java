@@ -30,10 +30,7 @@ import static org.awaitility.Awaitility.await;
 public class ComponentCommandsTests extends AbstractSampleTests {
 
 	@ParameterizedTest
-	@CsvSource({
-		"component single,false",
-		"component single,true"
-	})
+	@CsvSource({ "component single,false", "component single,true" })
 	void componentSingle(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
 
@@ -57,10 +54,7 @@ public class ComponentCommandsTests extends AbstractSampleTests {
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-		"component multi,false",
-		"component multi,true"
-	})
+	@CsvSource({ "component multi,false", "component multi,true" })
 	void componentMulti(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
 
@@ -82,4 +76,5 @@ public class ComponentCommandsTests extends AbstractSampleTests {
 			ShellAssertions.assertThat(session.screen()).containsText("Got value value1,value2");
 		});
 	}
+
 }

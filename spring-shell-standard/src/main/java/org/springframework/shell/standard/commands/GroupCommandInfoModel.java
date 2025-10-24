@@ -26,6 +26,7 @@ import java.util.List;
 class GroupCommandInfoModel {
 
 	private String group = "";
+
 	private List<CommandInfoModel> commands = new ArrayList<>();
 
 	GroupCommandInfoModel(String group, List<CommandInfoModel> commands) {
@@ -35,7 +36,6 @@ class GroupCommandInfoModel {
 
 	/**
 	 * Builds {@link GroupCommandInfoModel}.
-	 *
 	 * @param group the group
 	 * @param commands the command info models
 	 * @return a group command info model
@@ -51,4 +51,5 @@ class GroupCommandInfoModel {
 	public List<CommandInfoModel> getCommands() {
 		return commands;
 	}
+
 }

@@ -26,12 +26,12 @@ class CommandRegistrationAliasSnippets {
 			.command("mycommand")
 			// define alias as myalias
 			.withAlias()
-				.command("myalias")
-				.and()
+			.command("myalias")
+			.and()
 			// define alias as myalias1 and myalias2
 			.withAlias()
-				.command("myalias1", "myalias2")
-				.and()
+			.command("myalias1", "myalias2")
+			.and()
 			.build();
 	}
 	// end::builder[]
@@ -45,8 +45,10 @@ class CommandRegistrationAliasSnippets {
 			@Command(command = "mycommand", alias = "myalias")
 			void myCommand() {
 			}
+
 		}
 		// end::command1[]
+
 	}
 
 	class Dump2 {
@@ -58,8 +60,10 @@ class CommandRegistrationAliasSnippets {
 			@Command(command = "mycommand", alias = { "myalias1", "myalias2" })
 			void myCommand() {
 			}
+
 		}
 		// end::command2[]
+
 	}
 
 	class Dump3 {
@@ -71,8 +75,10 @@ class CommandRegistrationAliasSnippets {
 			@Command(command = "mycommand")
 			void myCommand() {
 			}
+
 		}
 		// end::command3[]
+
 	}
 
 	class Dump4 {
@@ -84,8 +90,10 @@ class CommandRegistrationAliasSnippets {
 			@Command(command = "mycommand", alias = "myalias2")
 			void myCommand() {
 			}
+
 		}
 		// end::command4[]
+
 	}
 
 	class Dump5 {
@@ -101,7 +109,10 @@ class CommandRegistrationAliasSnippets {
 			@Command(command = "mysubcommand", alias = "mysubalias")
 			void mySubCommand() {
 			}
+
 		}
 		// end::command5[]
+
 	}
+
 }

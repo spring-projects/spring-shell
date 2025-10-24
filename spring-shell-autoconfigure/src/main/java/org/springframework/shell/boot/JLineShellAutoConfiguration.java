@@ -68,4 +68,5 @@ public class JLineShellAutoConfiguration {
 		parser.setEofOnEscapedNewLine(true);
 		return parser;
 	}
+
 }

@@ -194,7 +194,6 @@ public abstract class StyleSettings {
 
 	/**
 	 * Resolve a theme setting from a given tag.
-	 *
 	 * @param tag the tag
 	 * @return a theme setting
 	 */
@@ -242,7 +241,6 @@ public abstract class StyleSettings {
 
 	/**
 	 * Creates an instance of a default settings.
-	 *
 	 * @return a default theme settings
 	 */
 	public static StyleSettings defaults() {
@@ -255,33 +253,17 @@ public abstract class StyleSettings {
 
 	/**
 	 * Gets all tags.
-	 *
 	 * @return array of all tags
 	 */
 	public static String[] tags() {
-		return new String[] {
-				TAG_TITLE,
-				TAG_VALUE,
-				TAG_LIST_KEY,
-				TAG_LIST_VALUE,
-				TAG_LEVEL_INFO,
-				TAG_LEVEL_WARN,
-				TAG_LEVEL_ERROR,
-				TAG_ITEM_ENABLED,
-				TAG_ITEM_DISABLED,
-				TAG_ITEM_SELECTED,
-				TAG_ITEM_UNSELECTED,
-				TAG_ITEM_SELECTOR,
-				TAG_HIGHLIGHT,
-				TAG_BACKGROUND,
-				TAG_DIALOG_BACKGROUND,
-				TAG_BUTTON_BACKGROUND,
-				TAG_MENUBAR_BACKGROUND,
-				TAG_STATUSBAR_BACKGROUND
-		};
+		return new String[] { TAG_TITLE, TAG_VALUE, TAG_LIST_KEY, TAG_LIST_VALUE, TAG_LEVEL_INFO, TAG_LEVEL_WARN,
+				TAG_LEVEL_ERROR, TAG_ITEM_ENABLED, TAG_ITEM_DISABLED, TAG_ITEM_SELECTED, TAG_ITEM_UNSELECTED,
+				TAG_ITEM_SELECTOR, TAG_HIGHLIGHT, TAG_BACKGROUND, TAG_DIALOG_BACKGROUND, TAG_BUTTON_BACKGROUND,
+				TAG_MENUBAR_BACKGROUND, TAG_STATUSBAR_BACKGROUND };
 	}
 
 	private static class DefaultStyleSettings extends StyleSettings {
+
 	}
 
 	private static class DumpStyleSettings extends StyleSettings {
@@ -350,5 +332,7 @@ public abstract class StyleSettings {
 		public String highlight() {
 			return "default";
 		}
+
 	}
+
 }

@@ -31,6 +31,7 @@ import org.springframework.util.Assert;
 
 /**
  * A builder class to incrementally configure a Table.
+ *
  * @author Eric Bottard
  */
 public class TableBuilder {
@@ -52,15 +53,15 @@ public class TableBuilder {
 	private final int columns;
 
 	/**
-	 * Construct a table with the given model. The table will use the following
-	 * strategies for all cells, unless overridden:<ul>
+	 * Construct a table with the given model. The table will use the following strategies
+	 * for all cells, unless overridden:
+	 * <ul>
 	 * <li>{@link DefaultFormatter default formatting} using {@literal toString()}</li>
-	 * <li>{@link AutoSizeConstraints sizing strategy} trying to use the maximum space, resorting to splitting lines on
-	 * spaces</li>
+	 * <li>{@link AutoSizeConstraints sizing strategy} trying to use the maximum space,
+	 * resorting to splitting lines on spaces</li>
 	 * <li>{@link DelimiterTextWrapper wrapping text} on space characters</li>
 	 * <li>{@link SimpleHorizontalAligner left aligning} text.</li>
 	 * </ul>
-	 *
 	 * @param model the data model of the table to construct
 	 */
 
@@ -78,9 +79,12 @@ public class TableBuilder {
 
 	private TableBuilder addBorder(int top, int left, int bottom, int right, int match, BorderStyle style) {
 		Assert.isTrue(top >= 0 && top < rows, "top row must be positive and less than total number of rows");
-		Assert.isTrue(left >= 0 && left < columns, "left column must be positive and less than total number of columns");
-		Assert.isTrue(bottom > top && bottom <= rows, "bottom row must be greater than top and less than total number of rows");
-		Assert.isTrue(right >= left && right <= columns, "right column must be greater than left and less than total number of columns");
+		Assert.isTrue(left >= 0 && left < columns,
+				"left column must be positive and less than total number of columns");
+		Assert.isTrue(bottom > top && bottom <= rows,
+				"bottom row must be greater than top and less than total number of rows");
+		Assert.isTrue(right >= left && right <= columns,
+				"right column must be greater than left and less than total number of columns");
 		Assert.notNull(style, "style cannot be null");
 		borderSpecifications.add(new BorderSpecification(top, left, bottom, right, match, style));
 		return this;
@@ -95,11 +99,7 @@ public class TableBuilder {
 	}
 
 	public Table build() {
-		return new Table(model,
-				reverse(formatters),
-				reverse(sizeConstraints),
-				reverse(wrappers),
-				aligners,
+		return new Table(model, reverse(formatters), reverse(sizeConstraints), reverse(wrappers), aligners,
 				borderSpecifications);
 	}
 
@@ -131,7 +131,6 @@ public class TableBuilder {
 
 	/**
 	 * Set a border around each and every cell of the table.
-	 *
 	 * @param style the style to apply
 	 * @return this, for method chaining
 	 */
@@ -141,9 +140,8 @@ public class TableBuilder {
 	}
 
 	/**
-	 * Set a border on the outline of the whole table, around the first row and draw vertical lines
-	 * around each column.
-	 *
+	 * Set a border on the outline of the whole table, around the first row and draw
+	 * vertical lines around each column.
 	 * @param style the style to apply
 	 * @return this, for method chaining
 	 */
@@ -154,8 +152,8 @@ public class TableBuilder {
 	}
 
 	/**
-	 * Set a border on the inner verticals and horizontals of the table, but not on the outline.
-	 *
+	 * Set a border on the inner verticals and horizontals of the table, but not on the
+	 * outline.
 	 * @param style the style to apply
 	 * @return this, for method chaining
 	 */
@@ -213,6 +211,7 @@ public class TableBuilder {
 		public Table build() {
 			return TableBuilder.this.build();
 		}
+
 	}
 
 	public class BorderStub {
@@ -235,6 +234,7 @@ public class TableBuilder {
 		}
 
 		public class TopLeft {
+
 			private final int row;
 
 			private final int column;
@@ -245,13 +245,17 @@ public class TableBuilder {
 			}
 
 			public TableBuilder toRowColumn(int row, int column) {
-				TableBuilder.this.addBorder(TopLeft.this.row, TopLeft.this.column, row, column, BorderStub.this.match, BorderStub.this.style);
+				TableBuilder.this.addBorder(TopLeft.this.row, TopLeft.this.column, row, column, BorderStub.this.match,
+						BorderStub.this.style);
 				return TableBuilder.this;
 			}
 
 			public TableBuilder toBottomRight() {
 				return toRowColumn(model.getRowCount(), model.getColumnCount());
 			}
+
 		}
+
 	}
+
 }

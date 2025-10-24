@@ -28,10 +28,10 @@ public interface NodeVisitor {
 
 	/**
 	 * Visit lists of non terminal and terminal nodes.
-	 *
 	 * @param nonterminalNodes non terminal nodes
 	 * @param terminalNodes terminal nodes
 	 * @return parser result
 	 */
 	ParseResult visit(List<NonterminalAstNode> nonterminalNodes, List<TerminalAstNode> terminalNodes);
+
 }

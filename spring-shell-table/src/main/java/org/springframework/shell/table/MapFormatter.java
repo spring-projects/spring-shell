@@ -41,4 +41,5 @@ public class MapFormatter implements Formatter {
 		}
 		return result;
 	}
+
 }

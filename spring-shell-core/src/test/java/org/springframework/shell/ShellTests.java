@@ -74,8 +74,8 @@ public class ShellTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration);
@@ -100,8 +100,8 @@ public class ShellTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("bonjour")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration);
@@ -125,8 +125,8 @@ public class ShellTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration);
@@ -149,8 +149,8 @@ public class ShellTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration);
@@ -175,13 +175,12 @@ public class ShellTests {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("fail")
 			.withTarget()
-				.method(this, "failing")
-				.and()
+			.method(this, "failing")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("fail", registration);
 		when(commandRegistry.getRegistrations()).thenReturn(registrations);
-
 
 		try {
 			shell.run(inputProvider);
@@ -206,14 +205,14 @@ public class ShellTests {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.build();
 		CommandRegistration registration2 = CommandRegistration.builder()
 			.command("another command")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration1);
@@ -222,37 +221,53 @@ public class ShellTests {
 
 		// Invoke at very start
 		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList(""), 0, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactlyInAnyOrder("another command", "hello world");
 
 		// Invoke in middle of first word
 		proposals = shell.complete(new CompletionContext(Arrays.asList("hel"), 0, "hel".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactly("hello world");
 
 		// Invoke at end of first word (no space after yet)
 		proposals = shell.complete(new CompletionContext(Arrays.asList("hello"), 0, "hello".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactly("hello world");
 
 		// Invoke after first word / start of second word
 		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", ""), 1, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactly("world");
 
 		// Invoke in middle of second word
 		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "wo"), 1, "wo".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactly("world");
 
 		// Invoke at end of whole command (no space after yet)
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world"), 1, "world".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		proposals = shell
+			.complete(new CompletionContext(Arrays.asList("hello", "world"), 1, "world".length(), null, null))
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactly("world");
 
 		// Invoke in middle of second word
-		proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		proposals = shell
+			.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).isEmpty();
 	}
 
@@ -272,19 +287,22 @@ public class ShellTests {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.description("arg1 desc")
-				.and()
+			.longNames("arg1")
+			.description("arg1 desc")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration1);
 		when(commandRegistry.getRegistrations()).thenReturn(registrations);
 
-		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		List<String> proposals = shell
+			.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactlyInAnyOrder("--arg1");
 	}
 
@@ -293,21 +311,24 @@ public class ShellTests {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.function(ctx -> {
-					return null;
-				})
-				.and()
+			.function(ctx -> {
+				return null;
+			})
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.description("arg1 desc")
-				.and()
+			.longNames("arg1")
+			.description("arg1 desc")
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration1);
 		when(commandRegistry.getRegistrations()).thenReturn(registrations);
 
-		List<String> proposals = shell.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		List<String> proposals = shell
+			.complete(new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), null, null))
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals).containsExactlyInAnyOrder("--arg1");
 	}
 
@@ -316,38 +337,57 @@ public class ShellTests {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("hello world")
 			.withTarget()
-				.method(this, "helloWorld")
-				.and()
+			.method(this, "helloWorld")
+			.and()
 			.withOption()
-				.longNames("arg1")
-				.completion(ctx -> Arrays.asList("arg1Comp1").stream().map(CompletionProposal::new).collect(Collectors.toList()))
-				.and()
+			.longNames("arg1")
+			.completion(ctx -> Arrays.asList("arg1Comp1")
+				.stream()
+				.map(CompletionProposal::new)
+				.collect(Collectors.toList()))
+			.and()
 			.withOption()
-				.longNames("arg2")
-				.completion(ctx -> Arrays.asList("arg2Comp1").stream().map(CompletionProposal::new).collect(Collectors.toList()))
-				.and()
+			.longNames("arg2")
+			.completion(ctx -> Arrays.asList("arg2Comp1")
+				.stream()
+				.map(CompletionProposal::new)
+				.collect(Collectors.toList()))
+			.and()
 			.build();
 		Map<String, CommandRegistration> registrations = new HashMap<>();
 		registrations.put("hello world", registration1);
 		when(commandRegistry.getRegistrations()).thenReturn(registrations);
 
-		List<String> proposals1 = shell.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg1", ""), 3, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		List<String> proposals1 = shell
+			.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg1", ""), 3, "".length(), null, null))
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals1).containsExactlyInAnyOrder("--arg2", "arg1Comp1");
 
-		List<String> proposals2 = shell.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg1", "xxx", "--arg2", ""), 5, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		List<String> proposals2 = shell
+			.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg1", "xxx", "--arg2", ""), 5,
+					"".length(), null, null))
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals2).containsExactlyInAnyOrder("arg2Comp1");
 
-		List<String> proposals3 = shell.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg2", "xxx", "--arg1", ""), 5, "".length(), null, null))
-				.stream().map(CompletionProposal::value).collect(Collectors.toList());
+		List<String> proposals3 = shell
+			.complete(new CompletionContext(Arrays.asList("hello", "world", "--arg2", "xxx", "--arg1", ""), 5,
+					"".length(), null, null))
+			.stream()
+			.map(CompletionProposal::value)
+			.collect(Collectors.toList());
 		assertThat(proposals3).containsExactlyInAnyOrder("arg1Comp1");
 	}
 
 	private static class Exit extends RuntimeException {
+
 	}
 
 	private static class SomeException extends RuntimeException {
 
 	}
+
 }
