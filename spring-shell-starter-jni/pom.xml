@@ -4,25 +4,24 @@
 
 	<parent>
 		<groupId>org.springframework.shell</groupId>
-		<artifactId>spring-shell-starters</artifactId>
+		<artifactId>spring-shell</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>spring-shell-starter-jna</artifactId>
-	<name>Spring Shell Starter JNA</name>
+	<artifactId>spring-shell-starter-jni</artifactId>
+	<name>Spring Shell Starter JNI</name>
 	<packaging>pom</packaging>
-	<description>JNA Starter Dependency for Using Spring Shell</description>
+	<description>JNI Starter Dependency for Using Spring Shell</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
 			<version>${project.parent.version}</version>
-			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>org.jline</groupId>
-			<artifactId>jline-terminal-jna</artifactId>
+			<artifactId>jline-terminal-jni</artifactId>
 			<version>${jline.version}</version>
 		</dependency>
 	</dependencies>
