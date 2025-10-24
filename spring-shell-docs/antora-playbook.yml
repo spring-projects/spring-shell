@@ -23,6 +23,9 @@ asciidoc:
     page-pagination: ''
     hide-uri-scheme: '@'
     tabs-sync-option: '@'
+    chomp: 'all'
+    attribute-missing: 'warn'
+    sourcemap: true
   extensions:
     - '@asciidoctor/tabs'
     - '@springio/asciidoctor-extensions'
