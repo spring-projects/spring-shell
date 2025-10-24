@@ -10,7 +10,6 @@
 
 	<artifactId>spring-shell-starter-jni</artifactId>
 	<name>Spring Shell Starter JNI</name>
-	<packaging>pom</packaging>
 	<description>JNI Starter Dependency for Using Spring Shell</description>
 
 	<dependencies>
@@ -18,7 +17,6 @@
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
 			<version>${project.parent.version}</version>
-			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>org.jline</groupId>

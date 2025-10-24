@@ -10,7 +10,6 @@
 
 	<artifactId>spring-shell-starter</artifactId>
 	<name>Spring Shell Starter</name>
-	<packaging>pom</packaging>
 	<description>Starter Dependency for Using Spring Shell</description>
 
 	<dependencies>
