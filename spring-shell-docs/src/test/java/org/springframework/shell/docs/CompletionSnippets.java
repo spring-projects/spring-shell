@@ -22,10 +22,11 @@ import java.util.stream.Collectors;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.command.annotation.OptionValues;
+import org.springframework.shell.completion.CompletionProvider;
 import org.springframework.shell.completion.CompletionResolver;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.standard.ValueProvider;
 
 public class CompletionSnippets {
 
@@ -57,10 +58,10 @@ public class CompletionSnippets {
 	// end::resolver-1[]
 
 	// tag::provider-1[]
-	static class MyValuesProvider implements ValueProvider {
+	static class MyCompletionProvider implements CompletionProvider {
 
 		@Override
-		public List<CompletionProposal> complete(CompletionContext completionContext) {
+		public List<CompletionProposal> apply(CompletionContext completionContext) {
 			return Arrays.asList("val1", "val2").stream()
 				.map(CompletionProposal::new)
 				.collect(Collectors.toList());
@@ -70,9 +71,9 @@ public class CompletionSnippets {
 
 	static class Dump1 {
 		// tag::anno-method[]
-		@ShellMethod(value = "complete", key = "complete")
+		@Command(command = "complete", description = "complete")
 		public String complete(
-			@ShellOption(valueProvider = MyValuesProvider.class) String arg1)
+			@Option @OptionValues(provider = "myCompletionProvider") String arg1)
 		{
 			return "You said " + arg1;
 		}
