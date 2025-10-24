@@ -81,12 +81,7 @@
 		<module>spring-shell-docs</module>
 		<module>spring-shell-dependencies</module>
 		<module>spring-shell-samples</module>
-		<module>spring-shell-starter</module>
-		<module>spring-shell-starter-test</module>
-		<module>spring-shell-starter-jni</module>
-		<module>spring-shell-starter-jna</module>
-		<module>spring-shell-starter-jansi</module>
-		<module>spring-shell-starter-ffm</module>
+		<module>spring-shell-starters</module>
 	</modules>
 
 	<build>
