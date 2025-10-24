@@ -93,21 +93,42 @@ The `main` branch contains the work for the next major release `4.0.0`.
 
 Building and running tests:
 
-```
+[source,bash]
+----
 ./mvnw install
-```
+----
+
+If you want to build the project in a Docker container, you can proceed as follows:
+
+[source,bash]
+----
+docker run -it --mount type=bind,source="$(pwd)",target=/spring-shell maven:3-openjdk-17 bash
+cd spring-shell
+./mvnw install
+----
+
+This will mount the source code that you cloned previously on the host inside the container.
+If you want to work on a copy of the source code inside the container (no side effects on the host),
+you can proceed as follows:
+
+[source,bash]
+----
+docker run -it maven:3-openjdk-17 bash
+git clone https://github.com/spring-projects/spring-shell.git
+cd spring-shell
+./mvnw install
+----
 
 == Building the Documentation
 
 The documentation is built using Antora and can be run using the Antora Maven plugin.
 
-```
+[source,bash]
+----
 ./mvnw antora -pl spring-shell-docs
-```
+----
 
 After running the command, you can view the site for this branch in `spring-shell-docs/target/site`.
-
-
 
 == License
 Spring Shell is Open Source software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
