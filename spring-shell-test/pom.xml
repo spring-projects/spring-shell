@@ -12,6 +12,23 @@
 	<name>Spring Shell Test APIs</name>
 	<packaging>jar</packaging>
 	<description>APIs for testing Spring Shell applications</description>
+	<url>https://github.com/spring-projects/spring-shell</url>
+	<organization>
+		<name>Spring</name>
+		<url>https://spring.io</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>Spring</id>
+			<name>Spring</name>
+			<url>https://spring.io</url>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/spring-projects/spring-shell</url>
+		<connection>scm:git:git://github.com/spring-projects/spring-shell.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/spring-projects/spring-shell.git</developerConnection>
+	</scm>
 
 	<dependencies>
 		<dependency>

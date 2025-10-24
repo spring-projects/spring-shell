@@ -11,6 +11,23 @@
 	<artifactId>spring-shell-starter-ffm</artifactId>
 	<name>Spring Shell Starter FFM</name>
 	<description>FFM Starter Dependency for Using Spring Shell</description>
+	<url>https://github.com/spring-projects/spring-shell</url>
+	<organization>
+		<name>Spring</name>
+		<url>https://spring.io</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>Spring</id>
+			<name>Spring</name>
+			<url>https://spring.io</url>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/spring-projects/spring-shell</url>
+		<connection>scm:git:git://github.com/spring-projects/spring-shell.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/spring-projects/spring-shell.git</developerConnection>
+	</scm>
 
 	<dependencies>
 		<dependency>
