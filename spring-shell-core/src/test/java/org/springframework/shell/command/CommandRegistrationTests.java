@@ -411,15 +411,16 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.command("alias2")
 				.group("Alias Group")
 				.and()
+			.withAlias("alias3")
 			.withTarget()
 				.function(function1)
 				.and()
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getGroup()).isEqualTo("Test Group");
-		assertThat(registration.getAliases()).hasSize(2);
+		assertThat(registration.getAliases()).hasSize(3);
 		assertThat(registration.getAliases().stream().map(CommandAlias::getCommand)).containsExactlyInAnyOrder("alias1",
-				"alias2");
+				"alias2", "alias3");
 		assertThat(registration.getAliases().get(0).getGroup()).isEqualTo("Alias Group");
 		assertThat(registration.getAliases().get(1).getGroup()).isEqualTo("Alias Group");
 	}
