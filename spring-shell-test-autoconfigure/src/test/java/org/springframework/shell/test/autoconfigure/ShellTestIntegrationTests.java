@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,23 +37,19 @@ import static org.awaitility.Awaitility.await;
 @ContextConfiguration(classes = ExampleShellApplication.class)
 @ShellTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class ShellTestIntegrationTests {
+class ShellTestIntegrationTests {
 
 	@Autowired
 	ShellTestClient client;
 
 	@Test
-	void testInteractive1() throws Exception {
+	void testInteractive1() {
 		InteractiveShellSession session = client.interactive().run();
 
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			ShellAssertions.assertThat(session.screen()).containsText("shell");
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("shell"));
 
 		session.write(session.writeSequence().text("help").carriageReturn().build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			ShellAssertions.assertThat(session.screen()).containsText("AVAILABLE COMMANDS");
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("AVAILABLE COMMANDS"));
 
 		session.write(session.writeSequence().carriageReturn().build());
 		await().atMost(4, TimeUnit.SECONDS).untilAsserted(() -> {
@@ -70,34 +66,28 @@ public class ShellTestIntegrationTests {
 		});
 
 		session.write(session.writeSequence().ctrl('c').build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(session.isComplete()).isTrue();
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.isComplete()).isTrue());
 	}
 
 	@Test
-	void testInteractive2() throws Exception {
+	void testInteractive2() {
 		InteractiveShellSession session = client.interactive().run();
 
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			ShellAssertions.assertThat(session.screen()).containsText("shell:");
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("shell:"));
 
 		session.write(session.writeSequence().ctrl('c').build());
-		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(session.isComplete()).isTrue();
-		});
+		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.isComplete()).isTrue());
 	}
 
 	@Test
-	void testNonInteractive() throws Exception {
+	void testNonInteractive() {
 		Condition<String> helpCondition = new Condition<>(line -> line.contains("AVAILABLE COMMANDS"),
 				"Help has expected output");
 
 		Condition<String> helpHelpCondition = new Condition<>(line -> line.contains("help - Display help about available commands"),
 				"Help help has expected output");
 
-		Condition<String> emptyCondition = new Condition<>(line -> line.trim().length() == 0,
+		Condition<String> emptyCondition = new Condition<>(line -> line.trim().isEmpty(),
 				"Have only whitespace");
 
 		NonInteractiveShellSession session = client.nonInterative("help").run();
@@ -123,13 +113,11 @@ public class ShellTestIntegrationTests {
 		});
 
 		session.write(session.writeSequence().ctrl('c').build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(session.isComplete()).isTrue();
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.isComplete()).isTrue());
 	}
 
 	@Test
-	void testNonInteractive2() throws Exception {
+	void testNonInteractive2() {
 		Condition<String> helloCondition = new Condition<>(line -> line.contains("hello"),
 				"Hello has expected output");
 
