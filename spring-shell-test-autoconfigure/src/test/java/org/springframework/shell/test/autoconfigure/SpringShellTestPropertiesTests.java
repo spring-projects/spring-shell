@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ class SpringShellTestPropertiesTests {
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
 
 	@Test
-	public void defaultNoPropertiesSet() {
+	void defaultNoPropertiesSet() {
 		this.contextRunner
 				.withUserConfiguration(Config1.class)
-				.run((context) -> {
+				.run(context -> {
 					SpringShellTestProperties properties = context.getBean(SpringShellTestProperties.class);
 					assertThat(properties.getTerminalWidth()).isEqualTo(80);
 					assertThat(properties.getTerminalHeight()).isEqualTo(24);
@@ -38,12 +38,12 @@ class SpringShellTestPropertiesTests {
 	}
 
 	@Test
-	public void setProperties() {
+	void setProperties() {
 		this.contextRunner
 				.withPropertyValues("spring.shell.test.terminal-width=81")
 				.withPropertyValues("spring.shell.test.terminal-height=25")
 				.withUserConfiguration(Config1.class)
-				.run((context) -> {
+				.run(context -> {
 					SpringShellTestProperties properties = context.getBean(SpringShellTestProperties.class);
 					assertThat(properties.getTerminalWidth()).isEqualTo(81);
 					assertThat(properties.getTerminalHeight()).isEqualTo(25);
