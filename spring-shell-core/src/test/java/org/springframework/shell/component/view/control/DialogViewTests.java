@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.springframework.shell.component.view.control;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -43,7 +43,7 @@ class DialogViewTests extends AbstractViewTests {
 			view = new DialogView();
 
 			ButtonView button = new ButtonView("text");
-			view = new DialogView(new BoxView(), Arrays.asList(button));
+			view = new DialogView(new BoxView(), List.of(button));
 		}
 
 	}
@@ -79,9 +79,7 @@ class DialogViewTests extends AbstractViewTests {
 
 			MouseHandlerResult result = handleMouseClick(view, click);
 
-			assertThat(result).isNotNull().satisfies(r -> {
-				assertThat(r.consumed()).isTrue();
-			});
+			assertThat(result).isNotNull().satisfies(r -> assertThat(r.consumed()).isTrue());
 			verifier1.verify(Duration.ofSeconds(1));
 			verifier2.verify(Duration.ofSeconds(1));
 		}

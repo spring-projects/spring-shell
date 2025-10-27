@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,12 +43,10 @@ class LexerTests extends AbstractParsingTests {
 			List<Token> tokens = tokenize("root1");
 
 			assertThat(tokens).satisfiesExactly(
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.COMMAND)
-							.hasPosition(0)
-							.hasValue("root1");
-					});
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.COMMAND)
+						.hasPosition(0)
+						.hasValue("root1"));
 		}
 	}
 
@@ -65,12 +63,10 @@ class LexerTests extends AbstractParsingTests {
 			List<Token> tokens = tokenize(lexer(config), "root1");
 
 			assertThat(tokens).satisfiesExactly(
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.COMMAND)
-							.hasPosition(0)
-							.hasValue("root1");
-					});
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.COMMAND)
+						.hasPosition(0)
+						.hasValue("root1"));
 		}
 
 		@Test
@@ -82,32 +78,13 @@ class LexerTests extends AbstractParsingTests {
 			List<Token> tokens = tokenize(lexer(config), "Root1");
 
 			assertThat(tokens).satisfiesExactly(
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.COMMAND)
-							.hasPosition(0)
-							.hasValue("Root1");
-					});
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.COMMAND)
+						.hasPosition(0)
+						.hasValue("Root1"));
 		}
 
 	}
-
-
-	// @Test
-	// void commandWithCaseInsensitiveInArguments() {
-	// 	register(ROOT1);
-	// 	ParserConfig configuration = new ParserConfig()
-	// 			.setOptionsCaseSensitive(false);
-	// 	List<Token> tokens = tokenize(lexer(configuration), "ROOT1");
-
-	// 	assertThat(tokens).satisfiesExactly(
-	// 			token -> {
-	// 				ParserAssertions.assertThat(token)
-	// 					.isType(TokenType.COMMAND)
-	// 					.hasPosition(0)
-	// 					.hasValue("ROOT1");
-	// 			});
-	// }
 
 	@Test
 	void rootCommandWithChildGetsRootForRoot() {
@@ -116,12 +93,10 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root1");
 
 		assertThat(tokens).satisfiesExactly(
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(0)
-					.hasValue("root1");
-			});
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(0)
+				.hasValue("root1"));
 	}
 
 	@Test
@@ -130,18 +105,14 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root2", "sub1");
 
 		assertThat(tokens).satisfiesExactly(
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(0)
-					.hasValue("root2");
-			},
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(1)
-					.hasValue("sub1");
-			});
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(0)
+				.hasValue("root2"),
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(1)
+				.hasValue("sub1"));
 	}
 
 	@Test
@@ -150,24 +121,18 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root2", "sub1", "sub2");
 
 		assertThat(tokens).satisfiesExactly(
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(0)
-					.hasValue("root2");
-			},
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(1)
-					.hasValue("sub1");
-			},
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(2)
-					.hasValue("sub2");
-			});
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(0)
+				.hasValue("root2"),
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(1)
+				.hasValue("sub1"),
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(2)
+				.hasValue("sub2"));
 	}
 
 	@Test
@@ -176,36 +141,26 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root2", "sub1", "sub2", "--arg1", "xxx");
 
 		assertThat(tokens).satisfiesExactly(
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(0)
-					.hasValue("root2");
-			},
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(1)
-					.hasValue("sub1");
-			},
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.COMMAND)
-					.hasPosition(2)
-					.hasValue("sub2");
-			},
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.OPTION)
-					.hasPosition(3)
-					.hasValue("--arg1");
-			},
-			token -> {
-				ParserAssertions.assertThat(token)
-					.isType(TokenType.ARGUMENT)
-					.hasPosition(4)
-					.hasValue("xxx");
-			});
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(0)
+				.hasValue("root2"),
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(1)
+				.hasValue("sub1"),
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.COMMAND)
+				.hasPosition(2)
+				.hasValue("sub2"),
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.OPTION)
+				.hasPosition(3)
+				.hasValue("--arg1"),
+			token -> ParserAssertions.assertThat(token)
+				.isType(TokenType.ARGUMENT)
+				.hasPosition(4)
+				.hasValue("xxx"));
 	}
 
 	@Test
@@ -214,18 +169,14 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root3", "--arg1");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root3");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("--arg1");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root3"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("--arg1"));
 	}
 
 	@Test
@@ -234,18 +185,14 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root3", "--arg2");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root3");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("--arg2");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root3"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("--arg2"));
 	}
 
 	@Test
@@ -254,24 +201,18 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root3", "--arg1", "--arg2");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root3");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("--arg1");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(2)
-						.hasValue("--arg2");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root3"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("--arg1"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(2)
+					.hasValue("--arg2"));
 	}
 
 	@Test
@@ -280,30 +221,22 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root3", "--arg1", "value1", "--arg2");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root3");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("--arg1");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.ARGUMENT)
-						.hasPosition(2)
-						.hasValue("value1");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(3)
-						.hasValue("--arg2");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root3"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("--arg1"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.ARGUMENT)
+					.hasPosition(2)
+					.hasValue("value1"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(3)
+					.hasValue("--arg2"));
 	}
 
 	@Test
@@ -312,24 +245,18 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root5", "--arg1", "--arg2");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root5");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("--arg1");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(2)
-						.hasValue("--arg2");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root5"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("--arg1"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(2)
+					.hasValue("--arg2"));
 	}
 
 	@Test
@@ -338,36 +265,26 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root5", "--arg1", "value1", "--arg2", "value2");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root5");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("--arg1");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.ARGUMENT)
-						.hasPosition(2)
-						.hasValue("value1");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(3)
-						.hasValue("--arg2");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.ARGUMENT)
-						.hasPosition(4)
-						.hasValue("value2");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root5"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("--arg1"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.ARGUMENT)
+					.hasPosition(2)
+					.hasValue("value1"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(3)
+					.hasValue("--arg2"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.ARGUMENT)
+					.hasPosition(4)
+					.hasValue("value2"));
 	}
 
 	@Test
@@ -376,24 +293,18 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root3", "-a", "value1");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root3");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("-a");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.ARGUMENT)
-						.hasPosition(2)
-						.hasValue("value1");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root3"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("-a"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.ARGUMENT)
+					.hasPosition(2)
+					.hasValue("value1"));
 	}
 
 	@Test
@@ -402,36 +313,26 @@ class LexerTests extends AbstractParsingTests {
 		List<Token> tokens = tokenize("root3", "-a", "value1", "-b", "value2");
 
 		assertThat(tokens).satisfiesExactly(
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.COMMAND)
-						.hasPosition(0)
-						.hasValue("root3");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(1)
-						.hasValue("-a");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.ARGUMENT)
-						.hasPosition(2)
-						.hasValue("value1");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.OPTION)
-						.hasPosition(3)
-						.hasValue("-b");
-				},
-				token -> {
-					ParserAssertions.assertThat(token)
-						.isType(TokenType.ARGUMENT)
-						.hasPosition(4)
-						.hasValue("value2");
-				});
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.COMMAND)
+					.hasPosition(0)
+					.hasValue("root3"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(1)
+					.hasValue("-a"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.ARGUMENT)
+					.hasPosition(2)
+					.hasValue("value1"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.OPTION)
+					.hasPosition(3)
+					.hasValue("-b"),
+				token -> ParserAssertions.assertThat(token)
+					.isType(TokenType.ARGUMENT)
+					.hasPosition(4)
+					.hasValue("value2"));
 	}
 
 	@Test
@@ -511,18 +412,14 @@ class LexerTests extends AbstractParsingTests {
 			List<Token> tokens = tokenize(lexer(config), "[fake]", "root1");
 
 			assertThat(tokens).satisfiesExactly(
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.DIRECTIVE)
-							.hasPosition(0)
-							.hasValue("fake");
-					},
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.COMMAND)
-							.hasPosition(1)
-							.hasValue("root1");
-					});
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.DIRECTIVE)
+						.hasPosition(0)
+						.hasValue("fake"),
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.COMMAND)
+						.hasPosition(1)
+						.hasValue("root1"));
 		}
 
 		@Test
@@ -532,12 +429,10 @@ class LexerTests extends AbstractParsingTests {
 			List<Token> tokens = tokenize(lexer(config), "[fake]");
 
 			assertThat(tokens).satisfiesExactly(
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.DIRECTIVE)
-							.hasPosition(0)
-							.hasValue("fake");
-					});
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.DIRECTIVE)
+						.hasPosition(0)
+						.hasValue("fake"));
 		}
 
 		@Test
@@ -547,18 +442,14 @@ class LexerTests extends AbstractParsingTests {
 			List<Token> tokens = tokenize(lexer(config), "[fake1][fake2]");
 
 			assertThat(tokens).satisfiesExactly(
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.DIRECTIVE)
-							.hasPosition(0)
-							.hasValue("fake1");
-					},
-					token -> {
-						ParserAssertions.assertThat(token)
-							.isType(TokenType.DIRECTIVE)
-							.hasPosition(0)
-							.hasValue("fake2");
-					});
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.DIRECTIVE)
+						.hasPosition(0)
+						.hasValue("fake1"),
+					token -> ParserAssertions.assertThat(token)
+						.isType(TokenType.DIRECTIVE)
+						.hasPosition(0)
+						.hasValue("fake2"));
 		}
 
 		@Test
@@ -596,11 +487,11 @@ class LexerTests extends AbstractParsingTests {
 			assertThat(result.messageResults()).satisfiesExactly(
 					message -> {
 						assertThat(message.parserMessage().getCode()).isEqualTo(1000);
-						assertThat(message.position()).isEqualTo(0);
+						assertThat(message.position()).isZero();
 					},
 					message -> {
 						assertThat(message.parserMessage().getCode()).isEqualTo(1000);
-						assertThat(message.position()).isEqualTo(0);
+						assertThat(message.position()).isZero();
 					});
 		}
 	}

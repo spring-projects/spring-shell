@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PartsTextRendererTests {
 
-	private static Locale LOCALE = Locale.getDefault();
+	private static final Locale LOCALE = Locale.getDefault();
 	private static PartsTextRenderer renderer;
 	private static ThemeResolver themeResolver;
 
@@ -50,14 +50,6 @@ class PartsTextRendererTests {
 		});
 		themeResolver = new ThemeResolver(themeRegistry, "default");
 		renderer = new PartsTextRenderer(themeResolver);
-	}
-
-	static PartsText of() {
-		return PartsText.of(
-			PartText.of("012", false),
-			PartText.of("3456", true),
-			PartText.of("789", false)
-		);
 	}
 
 	static Stream<Arguments> test() {

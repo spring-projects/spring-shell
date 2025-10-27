@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,13 +148,6 @@ class ScreenAssertTests {
 		screen.writerBuilder().build().text("xxxx", 0, 0);
 		assertThat(forScreen(screen)).hasNoHorizontalText("test", 0, 0, 4);
 	}
-
-	// @Test
-	// void xxx() {
-	// 	Screen screen = new Screen(5, 5);
-	// 	screen.printBorder(0, 0, 5, 5);
-	// 	assertThat(forScreen(screen)).hasBorder(0, 0, 5, 4);
-	// }
 
 	private AssertProvider<ScreenAssert> forScreen(Screen screen) {
 		return () -> new ScreenAssert(screen);

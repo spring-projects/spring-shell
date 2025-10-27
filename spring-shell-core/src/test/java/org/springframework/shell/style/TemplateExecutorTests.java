@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TemplateExecutorTests {
+class TemplateExecutorTests {
 
 	private ThemeResolver themeResolver;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		ThemeRegistry themeRegistry = new ThemeRegistry();
 		themeRegistry.register(new Theme() {
 			@Override
@@ -48,7 +48,7 @@ public class TemplateExecutorTests {
 	}
 
 	@Test
-	public void testSimple() {
+	void testSimple() {
 		TemplateExecutor executor = new TemplateExecutor(themeResolver);
 		String template = "<(\"foo\")>";
 		AttributedString result = executor.render(template, null);
@@ -57,7 +57,7 @@ public class TemplateExecutorTests {
 	}
 
 	@Test
-	public void testWithExpression() {
+	void testWithExpression() {
 		TemplateExecutor executor = new TemplateExecutor(themeResolver);
 		String template = "<foo>";
 		Map<String, Object> attributes = new HashMap<>();
@@ -68,7 +68,7 @@ public class TemplateExecutorTests {
 	}
 
 	@Test
-	public void testWithTheme() {
+	void testWithTheme() {
 		TemplateExecutor executor = new TemplateExecutor(themeResolver);
 		String template = "<foo; format=\"style-title\">";
 		Map<String, Object> attributes = new HashMap<>();
@@ -81,7 +81,7 @@ public class TemplateExecutorTests {
 	}
 
 	@Test
-	public void testNullDontStyle() {
+	void testNullDontStyle() {
 		TemplateExecutor executor = new TemplateExecutor(themeResolver);
 		String template = "<foo; format=\"style-list-key\">";
 		Map<String, Object> attributes = new HashMap<>();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package org.springframework.shell.component.view.event;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class DefaultEventLoopTests {
 
-	private final static Logger log = LoggerFactory.getLogger(DefaultEventLoopTests.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultEventLoopTests.class);
 	private DefaultEventLoop loop;
 
 	@AfterEach
@@ -130,7 +130,7 @@ class DefaultEventLoopTests {
 	}
 
 	@Test
-	void subsribtionCompletesWhenLoopDestroyed() {
+	void subscriptionCompletesWhenLoopDestroyed() {
 		initDefault();
 		StepVerifier verifier1 = StepVerifier.create(loop.events())
 			.expectComplete()
@@ -161,12 +161,12 @@ class DefaultEventLoopTests {
 	@Test
 	void processorCreatesSameMessagesForAll() {
 		TestEventLoopProcessor processor = new TestEventLoopProcessor();
-		loop = new DefaultEventLoop(Arrays.asList(processor));
+		loop = new DefaultEventLoop(List.of(processor));
 
 		StepVerifier verifier1 = StepVerifier.create(loop.events())
 			.assertNext(m -> {
 				Integer count = m.getHeaders().get("count", Integer.class);
-				assertThat(count).isEqualTo(0);
+				assertThat(count).isZero();
 			})
 			.thenCancel()
 			.verifyLater();
@@ -174,7 +174,7 @@ class DefaultEventLoopTests {
 		StepVerifier verifier2 = StepVerifier.create(loop.events())
 			.assertNext(m -> {
 				Integer count = m.getHeaders().get("count", Integer.class);
-				assertThat(count).isEqualTo(0);
+				assertThat(count).isZero();
 			})
 			.thenCancel()
 			.verifyLater();

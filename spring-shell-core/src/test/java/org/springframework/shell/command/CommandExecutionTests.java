@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@ import org.springframework.shell.command.CommandRegistration.OptionArity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class CommandExecutionTests extends AbstractCommandTests {
+class CommandExecutionTests extends AbstractCommandTests {
 
 	private CommandExecution execution;
 	private CommandCatalog commandCatalog;
 
 	@BeforeEach
-	public void setupCommandExecutionTests() {
+	void setupCommandExecutionTests() {
 		commandCatalog = CommandCatalog.of();
 		ConversionService conversionService = new DefaultConversionService();
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
@@ -51,7 +51,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testFunctionExecution() {
+	void testFunctionExecution() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -69,7 +69,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodExecution1() {
+	void testMethodExecution1() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -88,7 +88,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodExecution2() {
+	void testMethodExecution2() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -107,7 +107,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMixedWithCtx1() {
+	void testMixedWithCtx1() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -132,7 +132,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMixedWithCtx2() {
+	void testMixedWithCtx2() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -157,7 +157,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMixedWithCtx3() {
+	void testMixedWithCtx3() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -182,7 +182,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodArgWithoutValue() {
+	void testMethodArgWithoutValue() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -202,7 +202,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodSinglePositionalArgs() {
+	void testMethodSinglePositionalArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -223,7 +223,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodSingleWithNamedArgs() {
+	void testMethodSingleWithNamedArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -242,7 +242,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodMultiPositionalArgs() {
+	void testMethodMultiPositionalArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -263,7 +263,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodMultiPositionalArgsAll() {
+	void testMethodMultiPositionalArgsAll() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -284,7 +284,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodMultiPositionalArgsAllToArray1() {
+	void testMethodMultiPositionalArgsAllToArray1() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -305,7 +305,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodMultiPositionalArgsAllToArray2() {
+	void testMethodMultiPositionalArgsAllToArray2() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -326,7 +326,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodMultipleArgs() {
+	void testMethodMultipleArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -358,7 +358,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 
 
 	@Test
-	public void testMethodMultipleIntArgs() {
+	void testMethodMultipleIntArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -388,7 +388,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodMultiplePositionalStringArgs() {
+	void testMethodMultiplePositionalStringArgs() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -430,7 +430,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 		"command1 --arg1 myarg1value myarg2value --arg3 myarg3value",
 		"command1 --arg1 myarg1value --arg2 myarg2value myarg3value"
 	})
-	public void testMethodMultiplePositionalStringArgsMixed(String arg) {
+	void testMethodMultiplePositionalStringArgsMixed(String arg) {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -466,7 +466,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testShortCombinedWithoutValue() {
+	void testShortCombinedWithoutValue() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -497,7 +497,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testShortCombinedSomeHavingValue() {
+	void testShortCombinedSomeHavingValue() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -528,7 +528,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testFloatArrayOne() {
+	void testFloatArrayOne() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -547,7 +547,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testFloatArrayTwo() {
+	void testFloatArrayTwo() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -566,7 +566,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testDefaultValueAsNull() {
+	void testDefaultValueAsNull() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
@@ -583,7 +583,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testDefaultValue() {
+	void testDefaultValue() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
@@ -603,7 +603,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testRequiredArg() {
+	void testRequiredArg() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
@@ -616,13 +616,11 @@ public class CommandExecutionTests extends AbstractCommandTests {
 			.build();
 
 		commandCatalog.register(r1);
-		assertThatThrownBy(() -> {
-			execution.evaluate(new String[] { "command1" });
-		}).isInstanceOf(CommandParserExceptionsException.class);
+		assertThatThrownBy(() -> execution.evaluate(new String[] { "command1" })).isInstanceOf(CommandParserExceptionsException.class);
 	}
 
 	@Test
-	public void testCommandNotAvailable() {
+	void testCommandNotAvailable() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -641,7 +639,7 @@ public class CommandExecutionTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testExecutionWithModifiedLongOption() {
+	void testExecutionWithModifiedLongOption() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.withOption()

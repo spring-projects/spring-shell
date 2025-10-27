@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ThemeSettingsTests {
+class ThemeSettingsTests {
 
 	@Test
-	public void testGeneratedStyle() {
+	void testGeneratedStyle() {
 		ThemeSettings themeSettings = ThemeSettings.defaults();
 		String resolveTag = themeSettings.styles().resolveTag(StyleSettings.TAG_TITLE);
 		assertThat(resolveTag).isEqualTo("bold");
@@ -55,7 +55,7 @@ public class ThemeSettingsTests {
 			StyleSettings.TAG_ITEM_SELECTOR,
 			StyleSettings.TAG_HIGHLIGHT,
 			StyleSettings.TAG_BACKGROUND })
-	public void testTags(String tag) {
+	void testTags(String tag) {
 		ThemeSettings themeSettings = ThemeSettings.defaults();
 		String resolveTag = themeSettings.styles().resolveTag(tag);
 		assertThat(resolveTag).isNotNull();

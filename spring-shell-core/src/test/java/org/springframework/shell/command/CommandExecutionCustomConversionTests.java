@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,13 +30,13 @@ import org.springframework.shell.command.CommandRegistration.OptionArity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandExecutionCustomConversionTests {
+class CommandExecutionCustomConversionTests {
 
 	private CommandExecution execution;
 	private CommandCatalog commandCatalog;
 
 	@BeforeEach
-	public void setupCommandExecutionTests() {
+	void setupCommandExecutionTests() {
 		commandCatalog = CommandCatalog.of();
 		DefaultConversionService conversionService = new DefaultConversionService();
 		conversionService.addConverter(new StringToMyPojo2Converter());
@@ -47,7 +47,7 @@ public class CommandExecutionCustomConversionTests {
 	}
 
 	@Test
-	public void testCustomPojo() {
+	void testCustomPojo() {
 		Pojo1 pojo1 = new Pojo1();
 
 		CommandRegistration r1 = CommandRegistration.builder()
@@ -66,7 +66,7 @@ public class CommandExecutionCustomConversionTests {
 	}
 
 	@Test
-	public void testCustomPojoArray() {
+	void testCustomPojoArray() {
 		Pojo1 pojo1 = new Pojo1();
 
 		CommandRegistration r1 = CommandRegistration.builder()
@@ -81,14 +81,13 @@ public class CommandExecutionCustomConversionTests {
 			.build();
 		commandCatalog.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
-		assertThat(pojo1.method2Pojo2).isNotNull();
-		assertThat(pojo1.method2Pojo2.length).isEqualTo(2);
+		assertThat(pojo1.method2Pojo2).hasSize(2);
 		assertThat(pojo1.method2Pojo2[0].arg).isEqualTo("a");
 		assertThat(pojo1.method2Pojo2[1].arg).isEqualTo("b");
 	}
 
 	@Test
-	public void testCustomPojoArrayPositional() {
+	void testCustomPojoArrayPositional() {
 		Pojo1 pojo1 = new Pojo1();
 
 		CommandRegistration r1 = CommandRegistration.builder()
@@ -105,14 +104,13 @@ public class CommandExecutionCustomConversionTests {
 			.build();
 		commandCatalog.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
-		assertThat(pojo1.method2Pojo2).isNotNull();
-		assertThat(pojo1.method2Pojo2.length).isEqualTo(2);
+		assertThat(pojo1.method2Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method2Pojo2[0].arg).isEqualTo("a");
 		assertThat(pojo1.method2Pojo2[1].arg).isEqualTo("b");
 	}
 
 	@Test
-	public void testCustomPojoList() {
+	void testCustomPojoList() {
 		Pojo1 pojo1 = new Pojo1();
 
 		ResolvableType type = ResolvableType.forClassWithGenerics(List.class, Pojo1.class);
@@ -130,15 +128,14 @@ public class CommandExecutionCustomConversionTests {
 			.build();
 		commandCatalog.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
-		assertThat(pojo1.method3Pojo2).isNotNull();
-		assertThat(pojo1.method3Pojo2.size()).isEqualTo(2);
+		assertThat(pojo1.method3Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method3Pojo2.get(0)).isInstanceOf(Pojo2.class);
 		assertThat(pojo1.method3Pojo2.get(0).arg).isEqualTo("a");
 		assertThat(pojo1.method3Pojo2.get(1).arg).isEqualTo("b");
 	}
 
 	@Test
-	public void testCustomPojoListPositional() {
+	void testCustomPojoListPositional() {
 		Pojo1 pojo1 = new Pojo1();
 
 		ResolvableType type = ResolvableType.forClassWithGenerics(List.class, Pojo1.class);
@@ -158,15 +155,14 @@ public class CommandExecutionCustomConversionTests {
 			.build();
 		commandCatalog.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
-		assertThat(pojo1.method3Pojo2).isNotNull();
-		assertThat(pojo1.method3Pojo2.size()).isEqualTo(2);
+		assertThat(pojo1.method3Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method3Pojo2.get(0)).isInstanceOf(Pojo2.class);
 		assertThat(pojo1.method3Pojo2.get(0).arg).isEqualTo("a");
 		assertThat(pojo1.method3Pojo2.get(1).arg).isEqualTo("b");
 	}
 
 	@Test
-	public void testCustomPojoSet() {
+	void testCustomPojoSet() {
 		Pojo1 pojo1 = new Pojo1();
 
 		CommandRegistration r1 = CommandRegistration.builder()
@@ -181,14 +177,13 @@ public class CommandExecutionCustomConversionTests {
 			.build();
 		commandCatalog.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
-		assertThat(pojo1.method4Pojo2).isNotNull();
-		assertThat(pojo1.method4Pojo2.size()).isEqualTo(2);
+		assertThat(pojo1.method4Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method4Pojo2.iterator().next()).isInstanceOf(Pojo2.class);
 		assertThat(pojo1.method4Pojo2.stream().map(pojo -> pojo.arg).toList()).containsExactly("a", "b");
 	}
 
 	@Test
-	public void testCustomPojoSetPositional() {
+	void testCustomPojoSetPositional() {
 		Pojo1 pojo1 = new Pojo1();
 
 		CommandRegistration r1 = CommandRegistration.builder()
@@ -205,8 +200,7 @@ public class CommandExecutionCustomConversionTests {
 			.build();
 		commandCatalog.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
-		assertThat(pojo1.method4Pojo2).isNotNull();
-		assertThat(pojo1.method4Pojo2.size()).isEqualTo(2);
+		assertThat(pojo1.method4Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method4Pojo2.iterator().next()).isInstanceOf(Pojo2.class);
 		assertThat(pojo1.method4Pojo2.stream().map(pojo -> pojo.arg).toList()).containsExactly("a", "b");
 	}

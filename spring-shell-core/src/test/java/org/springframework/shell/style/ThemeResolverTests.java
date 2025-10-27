@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ThemeResolverTests {
+class ThemeResolverTests {
 
 	private ThemeResolver themeResolver;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		ThemeRegistry themeRegistry = new ThemeRegistry();
 		themeRegistry.register(new Theme() {
 			@Override
@@ -48,7 +48,7 @@ public class ThemeResolverTests {
 	}
 
 	@Test
-	public void styleExpression() {
+	void styleExpression() {
 		assertThat(themeResolver.resolveStyleTag(StyleSettings.TAG_TITLE)).isEqualTo("bold");
 		assertThat(themeResolver.resolveStyle("bold")).isEqualTo(AttributedStyle.BOLD);
 		assertThat(themeResolver.evaluateExpression("@{bold foo}"))
@@ -56,41 +56,41 @@ public class ThemeResolverTests {
 	}
 
 	@Test
-	public void resolveValuesIndStyle() {
+	void resolveValuesIndStyle() {
 		AttributedStyle s = AttributedStyle.DEFAULT.background(AttributedStyle.BLUE).foreground(AttributedStyle.RED);
-		ResolvedValues resolvedValues = themeResolver.resolveValues(s);
+		ResolvedValues resolvedValues = ThemeResolver.resolveValues(s);
 		assertThat(resolvedValues.background()).isEqualTo(Colors.DEFAULT_COLORS_256[AttributedStyle.BLUE]);
 		assertThat(resolvedValues.foreground()).isEqualTo(Colors.DEFAULT_COLORS_256[AttributedStyle.RED]);
 	}
 
 	@Test
-	public void resolveValuesRgbStyle() {
+	void resolveValuesRgbStyle() {
 		AttributedStyle s = AttributedStyle.DEFAULT.backgroundRgb(Color.BLUE).foregroundRgb(Color.RED);
-		ResolvedValues resolvedValues = themeResolver.resolveValues(s);
+		ResolvedValues resolvedValues = ThemeResolver.resolveValues(s);
 		assertThat(resolvedValues.background()).isEqualTo(Color.BLUE);
 		assertThat(resolvedValues.foreground()).isEqualTo(Color.RED);
 	}
 
 	@Test
-	public void resolveValuesRgbExp() {
+	void resolveValuesRgbExp() {
 		AttributedStyle s = themeResolver.resolveStyle("bg-rgb:#0000FF,fg-rgb:#FF0000");
-		ResolvedValues resolvedValues = themeResolver.resolveValues(s);
+		ResolvedValues resolvedValues = ThemeResolver.resolveValues(s);
 		assertThat(resolvedValues.background()).isEqualTo(Color.BLUE);
 		assertThat(resolvedValues.foreground()).isEqualTo(Color.RED);
 	}
 
 	@Test
-	public void resolveValuesIndExp() {
+	void resolveValuesIndExp() {
 		AttributedStyle s = themeResolver.resolveStyle("bg:blue,fg:red");
-		ResolvedValues resolvedValues = themeResolver.resolveValues(s);
+		ResolvedValues resolvedValues = ThemeResolver.resolveValues(s);
 		assertThat(resolvedValues.background()).isEqualTo(Colors.DEFAULT_COLORS_256[AttributedStyle.BLUE]);
 		assertThat(resolvedValues.foreground()).isEqualTo(Colors.DEFAULT_COLORS_256[AttributedStyle.RED]);
 	}
 
 	@Test
-	public void resolveValuesNotDefinedExp() {
+	void resolveValuesNotDefinedExp() {
 		AttributedStyle s = themeResolver.resolveStyle("");
-		ResolvedValues resolvedValues = themeResolver.resolveValues(s);
+		ResolvedValues resolvedValues = ThemeResolver.resolveValues(s);
 		assertThat(resolvedValues.background()).isEqualTo(-1);
 		assertThat(resolvedValues.foreground()).isEqualTo(-1);
 	}
