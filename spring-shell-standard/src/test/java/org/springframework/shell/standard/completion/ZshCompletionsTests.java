@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,18 +28,18 @@ import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ZshCompletionsTests {
+class ZshCompletionsTests {
 
 	AnnotationConfigApplicationContext context;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		context = new AnnotationConfigApplicationContext();
 		context.refresh();
 	}
 
 	@AfterEach
-	public void clean() {
+	void clean() {
 		if (context != null) {
 			context.close();
 		}
@@ -47,7 +47,7 @@ public class ZshCompletionsTests {
 	}
 
 	@Test
-	public void testNoCommands() {
+	void testNoCommands() {
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		ZshCompletions completions = new ZshCompletions(context, commandCatalog);
 		String zsh = completions.generate("root-command");
@@ -55,27 +55,27 @@ public class ZshCompletionsTests {
 	}
 
 	@Test
-	public void testCommandFromMethod() {
+	void testCommandFromMethod() {
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		registerFromMethod(commandCatalog);
 		ZshCompletions completions = new ZshCompletions(context, commandCatalog);
 		String zsh = completions.generate("root-command");
-		assertThat(zsh).contains("root-command");
-		assertThat(zsh).contains("testmethod1)");
-		assertThat(zsh).contains("_root-command_testmethod1");
-		assertThat(zsh).contains("--arg1");
+		assertThat(zsh).contains("root-command")
+				.contains("testmethod1)")
+				.contains("_root-command_testmethod1")
+				.contains("--arg1");
 	}
 
 	@Test
-	public void testCommandFromFunction() {
+	void testCommandFromFunction() {
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		registerFromFunction(commandCatalog, "testmethod1");
 		ZshCompletions completions = new ZshCompletions(context, commandCatalog);
 		String zsh = completions.generate("root-command");
-		assertThat(zsh).contains("root-command");
-		assertThat(zsh).contains("testmethod1)");
-		assertThat(zsh).contains("_root-command_testmethod1");
-		assertThat(zsh).contains("--arg1");
+		assertThat(zsh).contains("root-command")
+				.contains("testmethod1)")
+				.contains("_root-command_testmethod1")
+				.contains("--arg1");
 	}
 
 	private void registerFromMethod(CommandCatalog commandCatalog) {

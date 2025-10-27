@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,22 +41,22 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  *
  * @author Eric Bottard
  */
-public class StandardMethodTargetRegistrarTests {
+class StandardMethodTargetRegistrarTests {
 
 	private StandardMethodTargetRegistrar registrar;
 	private AnnotationConfigApplicationContext applicationContext;
 	private CommandCatalog catalog;
 	private DefaultShellContext shellContext;
-	private CommandRegistration.BuilderSupplier builder = () -> CommandRegistration.builder();
+	private final CommandRegistration.BuilderSupplier builder = CommandRegistration::builder;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		shellContext = new DefaultShellContext();
 		catalog = CommandCatalog.of(null, shellContext);
 	}
 
 	@AfterEach
-	public void cleanup() {
+	void cleanup() {
 		if (applicationContext != null) {
 			applicationContext.close();
 		}
@@ -65,7 +65,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testRegistrations() {
+	void testRegistrations() {
 		applicationContext = new AnnotationConfigApplicationContext(Sample1.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 		registrar.register(catalog);
@@ -100,7 +100,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testOptionRequiredWithAnnotation() {
+	void testOptionRequiredWithAnnotation() {
 		applicationContext = new AnnotationConfigApplicationContext(Sample2.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 		registrar.register(catalog);
@@ -122,7 +122,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testOptionOptionalWithAnnotation() {
+	void testOptionOptionalWithAnnotation() {
 		applicationContext = new AnnotationConfigApplicationContext(Sample3.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 		registrar.register(catalog);
@@ -145,7 +145,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testAvailabilityIndicators() {
+	void testAvailabilityIndicators() {
 		applicationContext = new AnnotationConfigApplicationContext(SampleWithAvailability.class);
 		SampleWithAvailability sample = applicationContext.getBean(SampleWithAvailability.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
@@ -219,13 +219,11 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testAvailabilityIndicatorErrorMultipleExplicit() {
+	void testAvailabilityIndicatorErrorMultipleExplicit() {
 		applicationContext = new AnnotationConfigApplicationContext(WrongAvailabilityIndicatorOnShellMethod.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 
-		assertThatThrownBy(() -> {
-			registrar.register(catalog);
-		}).isInstanceOf(IllegalArgumentException.class)
+		assertThatThrownBy(() -> registrar.register(catalog)).isInstanceOf(IllegalArgumentException.class)
 				.hasMessageContaining("When set on a @ShellMethod method, the value of the @ShellMethodAvailability should be a single element")
 				.hasMessageContaining("Found [one, two]")
 				.hasMessageContaining("wrong()");
@@ -241,13 +239,11 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testAvailabilityIndicatorWildcardNotAlone() {
+	void testAvailabilityIndicatorWildcardNotAlone() {
 		applicationContext = new AnnotationConfigApplicationContext(WrongAvailabilityIndicatorWildcardNotAlone.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 
-		assertThatThrownBy(() -> {
-			registrar.register(catalog);
-		}).isInstanceOf(IllegalArgumentException.class)
+		assertThatThrownBy(() -> registrar.register(catalog)).isInstanceOf(IllegalArgumentException.class)
 				.hasMessageContaining("When using '*' as a wildcard for ShellMethodAvailability, this can be the only value. Found [one, *]")
 				.hasMessageContaining("availability()");
 	}
@@ -267,13 +263,11 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testAvailabilityIndicatorAmbiguous() {
+	void testAvailabilityIndicatorAmbiguous() {
 		applicationContext = new AnnotationConfigApplicationContext(WrongAvailabilityIndicatorAmbiguous.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 
-		assertThatThrownBy(() -> {
-			registrar.register(catalog);
-		}).isInstanceOf(IllegalArgumentException.class)
+		assertThatThrownBy(() -> registrar.register(catalog)).isInstanceOf(IllegalArgumentException.class)
 				.hasMessageContaining("Found several @ShellMethodAvailability")
 				.hasMessageContaining("wrong()")
 				.hasMessageContaining("availability()")
@@ -300,7 +294,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testGrouping() {
+	void testGrouping() {
 		applicationContext = new AnnotationConfigApplicationContext(GroupOneCommands.class,
 				GroupTwoCommands.class, GroupThreeCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
@@ -333,7 +327,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testInteractionModeInteractive() {
+	void testInteractionModeInteractive() {
 	    shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
 		applicationContext = new AnnotationConfigApplicationContext(InteractionModeCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
@@ -345,7 +339,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testInteractionModeNonInteractive() {
+	void testInteractionModeNonInteractive() {
 	    shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		applicationContext = new AnnotationConfigApplicationContext(InteractionModeCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
@@ -373,7 +367,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testOptionUseDefaultValue() {
+	void testOptionUseDefaultValue() {
 	    shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		applicationContext = new AnnotationConfigApplicationContext(DefaultValuesCommands.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
@@ -409,7 +403,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testOptionValuesWithBoolean() {
+	void testOptionValuesWithBoolean() {
 		applicationContext = new AnnotationConfigApplicationContext(ValuesWithBoolean.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 		registrar.register(catalog);
@@ -418,28 +412,28 @@ public class StandardMethodTargetRegistrarTests {
 		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getDefaultValue()).isEqualTo("false");
 		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).isRequired()).isFalse();
-		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getArityMin()).isZero();
 		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getArityMax()).isEqualTo(1);
 
 		assertThat(catalog.getRegistrations().get("foo2")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo2").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getDefaultValue()).isEqualTo("true");
 		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).isRequired()).isFalse();
-		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getArityMin()).isZero();
 		assertThat(catalog.getRegistrations().get("foo2").getOptions().get(0).getArityMax()).isEqualTo(1);
 
 		assertThat(catalog.getRegistrations().get("foo3")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo3").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).isRequired()).isFalse();
 		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getDefaultValue()).isEqualTo("false");
-		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getArityMin()).isZero();
 		assertThat(catalog.getRegistrations().get("foo3").getOptions().get(0).getArityMax()).isEqualTo(1);
 
 		assertThat(catalog.getRegistrations().get("foo4")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo4").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).isRequired()).isFalse();
 		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getDefaultValue()).isEqualTo("false");
-		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getArityMin()).isEqualTo(0);
+		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getArityMin()).isZero();
 		assertThat(catalog.getRegistrations().get("foo4").getOptions().get(0).getArityMax()).isEqualTo(1);
 	}
 
@@ -464,7 +458,7 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testOptionWithoutHyphenRegisterFromDefaultPrefix() {
+	void testOptionWithoutHyphenRegisterFromDefaultPrefix() {
 		applicationContext = new AnnotationConfigApplicationContext(OptionWithoutHyphenRegisterFromDefaultPrefix.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 		registrar.register(catalog);
@@ -472,7 +466,7 @@ public class StandardMethodTargetRegistrarTests {
 		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
 		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getLongNames()).hasSize(1);
-		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getShortNames()).hasSize(0);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getShortNames()).isEmpty();
 	}
 
 	@ShellComponent
@@ -484,14 +478,14 @@ public class StandardMethodTargetRegistrarTests {
 	}
 
 	@Test
-	public void testOptionWithoutHyphenRegisterFromChangedPrefix() {
+	void testOptionWithoutHyphenRegisterFromChangedPrefix() {
 		applicationContext = new AnnotationConfigApplicationContext(OptionWithoutHyphenRegisterFromChangedPrefix.class);
 		registrar = new StandardMethodTargetRegistrar(applicationContext, builder);
 		registrar.register(catalog);
 
 		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
 		assertThat(catalog.getRegistrations().get("foo1").getOptions()).hasSize(1);
-		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getLongNames()).hasSize(0);
+		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getLongNames()).isEmpty();
 		assertThat(catalog.getRegistrations().get("foo1").getOptions().get(0).getShortNames()).hasSize(1);
 	}
 
@@ -510,11 +504,9 @@ public class StandardMethodTargetRegistrarTests {
 		registrar.register(catalog);
 
 		assertThat(catalog.getRegistrations().get("foo1")).isNotNull();
-		assertThat(catalog.getRegistrations().get("foo1")).satisfies(reg -> {
-			assertThat(reg.getOptions().get(0)).satisfies(option -> {
-				assertThat(option.getType().getGeneric(0).getType()).isEqualTo(Pojo.class);
-			});
-		});
+		assertThat(catalog.getRegistrations().get("foo1")).satisfies(reg -> assertThat(reg.getOptions().get(0))
+				.satisfies(option -> assertThat(option.getType().getGeneric(0).getType())
+						.isEqualTo(Pojo.class)));
 
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,18 +38,18 @@ import static org.mockito.Mockito.when;
  *
  * @author Eric Bottard
  */
-public class CommandValueProviderTests {
+class CommandValueProviderTests {
 
 	@Mock
 	private CommandCatalog catalog;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 	}
 
 	@Test
-	public void testValues() {
+	void testValues() {
 		CommandValueProvider valueProvider = new CommandValueProvider(catalog);
 
 		CompletionContext completionContext = new CompletionContext(Arrays.asList("help", "m"), 0, 0, null, null);

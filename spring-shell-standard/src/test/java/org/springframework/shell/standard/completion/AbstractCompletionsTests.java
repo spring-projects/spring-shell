@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.springframework.shell.standard.completion.AbstractCompletions.Command
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AbstractCompletionsTests {
+class AbstractCompletionsTests {
 
 	private final TestCommands commands = new TestCommands();
 
@@ -116,7 +116,7 @@ public class AbstractCompletionsTests {
 		.build();
 
 	@Test
-	public void deepL3Commands() {
+	void deepL3Commands() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 		CommandCatalog commandCatalog = CommandCatalog.of();
 
@@ -130,30 +130,22 @@ public class AbstractCompletionsTests {
 		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
 			c3 -> {
 				assertThat(c3.getMainCommand()).isEqualTo("test3");
-				assertThat(c3.getOptions()).hasSize(0);
+				assertThat(c3.getOptions()).isEmpty();
 				assertThat(c3.getSubCommands()).hasSize(2);
 				assertThat(c3.getCommands()).hasSize(2);
 				assertThat(c3.getCommands()).satisfiesExactlyInAnyOrder(
 					c34 -> {
 						assertThat(c34.getMainCommand()).isEqualTo("test4");
 						assertThat(c34.getCommands()).satisfiesExactlyInAnyOrder(
-							c345 -> {
-								assertThat(c345.getMainCommand()).isEqualTo("test5");
-							},
-							c346 -> {
-								assertThat(c346.getMainCommand()).isEqualTo("test6");
-							}
+							c345 -> assertThat(c345.getMainCommand()).isEqualTo("test5"),
+							c346 -> assertThat(c346.getMainCommand()).isEqualTo("test6")
 						);
 					},
 					c35 -> {
 						assertThat(c35.getMainCommand()).isEqualTo("test5");
 						assertThat(c35.getCommands()).satisfiesExactlyInAnyOrder(
-							c355 -> {
-								assertThat(c355.getMainCommand()).isEqualTo("test5");
-							},
-							c356 -> {
-								assertThat(c356.getMainCommand()).isEqualTo("test6");
-							}
+							c355 -> assertThat(c355.getMainCommand()).isEqualTo("test5"),
+							c356 -> assertThat(c356.getMainCommand()).isEqualTo("test6")
 						);
 					}
 				);
@@ -162,7 +154,7 @@ public class AbstractCompletionsTests {
 	}
 
 	@Test
-	public void deepL2Commands() {
+	void deepL2Commands() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 		CommandCatalog commandCatalog = CommandCatalog.of();
 
@@ -174,7 +166,7 @@ public class AbstractCompletionsTests {
 		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
 			c3 -> {
 				assertThat(c3.getMainCommand()).isEqualTo("test3");
-				assertThat(c3.getOptions()).hasSize(0);
+				assertThat(c3.getOptions()).isEmpty();
 				assertThat(c3.getSubCommands()).hasSize(2);
 				assertThat(c3.getCommands()).hasSize(2);
 				assertThat(c3.getCommands()).satisfiesExactlyInAnyOrder(
@@ -182,18 +174,14 @@ public class AbstractCompletionsTests {
 						assertThat(c34.getMainCommand()).isEqualTo("test4");
 						assertThat(c34.getOptions()).hasSize(1);
 						assertThat(c34.getOptions()).satisfiesExactly(
-							o -> {
-								assertThat(o.option()).isEqualTo("--param4");
-							}
+							o -> assertThat(o.option()).isEqualTo("--param4")
 						);
 					},
 					c35 -> {
 						assertThat(c35.getMainCommand()).isEqualTo("test5");
 						assertThat(c35.getOptions()).hasSize(1);
 						assertThat(c35.getOptions()).satisfiesExactly(
-							o -> {
-								assertThat(o.option()).isEqualTo("--param4");
-							}
+							o -> assertThat(o.option()).isEqualTo("--param4")
 						);
 					}
 				);
@@ -202,7 +190,7 @@ public class AbstractCompletionsTests {
 	}
 
 	@Test
-	public void testBasicModelGeneration() {
+	void testBasicModelGeneration() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 		CommandCatalog commandCatalog = CommandCatalog.of();
 
@@ -216,22 +204,20 @@ public class AbstractCompletionsTests {
 		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
 			c1 -> {
 				assertThat(c1.getMainCommand()).isEqualTo("test1");
-				assertThat(c1.getSubCommands()).hasSize(0);
+				assertThat(c1.getSubCommands()).isEmpty();
 				assertThat(c1.getOptions()).hasSize(1);
 				assertThat(c1.getOptions()).satisfiesExactly(
-					o -> {
-						assertThat(o.option()).isEqualTo("--param1");
-					}
+					o -> assertThat(o.option()).isEqualTo("--param1")
 				);
 			},
 			c2 -> {
 				assertThat(c2.getMainCommand()).isEqualTo("test2");
-				assertThat(c2.getSubCommands()).hasSize(0);
-				assertThat(c2.getOptions()).hasSize(0);
+				assertThat(c2.getSubCommands()).isEmpty();
+				assertThat(c2.getOptions()).isEmpty();
 			},
 			c3 -> {
 				assertThat(c3.getMainCommand()).isEqualTo("test3");
-				assertThat(c3.getOptions()).hasSize(0);
+				assertThat(c3.getOptions()).isEmpty();
 				assertThat(c3.getSubCommands()).hasSize(1);
 				assertThat(c3.getCommands()).hasSize(1);
 				assertThat(c3.getCommands()).satisfiesExactly(
@@ -239,9 +225,7 @@ public class AbstractCompletionsTests {
 						assertThat(c34.getMainCommand()).isEqualTo("test4");
 						assertThat(c34.getOptions()).hasSize(1);
 						assertThat(c34.getOptions()).satisfiesExactly(
-							o -> {
-								assertThat(o.option()).isEqualTo("--param4");
-							}
+							o -> assertThat(o.option()).isEqualTo("--param4")
 						);
 					}
 				);
@@ -250,7 +234,7 @@ public class AbstractCompletionsTests {
 	}
 
 	@Test
-	public void testBuilder() {
+	void testBuilder() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
