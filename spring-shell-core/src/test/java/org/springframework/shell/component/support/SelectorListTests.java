@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -255,10 +255,8 @@ class SelectorListTests {
 
 	List<TestItem> items(int count) {
 		return IntStream.range(0, count)
-			.mapToObj(i -> {
-				return new TestItem("name" + i);
-			})
-			.collect(Collectors.toList());
+			.mapToObj(i -> new TestItem("name" + i))
+			.toList();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -285,8 +283,8 @@ class SelectorListTests {
 		public SelectorListAssert<T> namesContainsExactly(String... names) {
 			isNotNull();
 			List<String> actualNames = actual.getProjection().stream()
-				.map(i -> i.getName())
-				.collect(Collectors.toList());
+				.map(Nameable::getName)
+				.toList();
 			assertThat(actualNames).containsExactly(names);
 			return this;
 		}
@@ -294,8 +292,8 @@ class SelectorListTests {
 		public SelectorListAssert<T> selectedContainsExactly(Boolean... selected) {
 			isNotNull();
 			List<Boolean> actualSelected = actual.getProjection().stream()
-				.map(i -> i.isSelected())
-				.collect(Collectors.toList());
+				.map(Selectable::isSelected)
+				.toList();
 			assertThat(actualSelected).containsExactly(selected);
 			return this;
 		}

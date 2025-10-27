@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,9 +55,7 @@ class FileInputProviderTests {
 		jlineParser.setEofOnUnclosedQuote(true);
 		Reader reader = new StringReader(line);
 		fileInputProvider = new FileInputProvider(reader, jlineParser);
-		Exception exception = assertThrows(EOFError.class, () -> {
-			fileInputProvider.readInput();
-		});
+		Exception exception = assertThrows(EOFError.class, () -> fileInputProvider.readInput());
 		String expectedExceptionMessage = "Missing closing quote";
 		String actualExceptionMessage = exception.getMessage();
 		assertTrue(actualExceptionMessage.contains(expectedExceptionMessage));
@@ -69,9 +67,7 @@ class FileInputProviderTests {
 		springParser.setEofOnUnclosedQuote(true);
 		Reader reader = new StringReader(line);
 		fileInputProvider = new FileInputProvider(reader, springParser);
-		Exception exception = assertThrows(EOFError.class, () -> {
-			fileInputProvider.readInput();
-		});
+		Exception exception = assertThrows(EOFError.class, () -> fileInputProvider.readInput());
 		String expectedExceptionMessage = "Missing closing quote";
 		String actualExceptionMessage = exception.getMessage();
 		assertTrue(actualExceptionMessage.contains(expectedExceptionMessage));

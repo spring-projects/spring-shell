@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.CountDownLatch;
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
@@ -40,27 +39,25 @@ import org.springframework.shell.component.PathInput.PathInputContext;
 import org.springframework.shell.component.context.ComponentContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
-public class PathInputTests extends AbstractShellTests {
+class PathInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
-	private CountDownLatch latch1;
 	private AtomicReference<PathInputContext> result1;
 	private FileSystem fileSystem;
 	private Function<String, Path> pathProvider;
 
 	@BeforeEach
-	public void setupTests() {
+	void setupTests() {
 		service = Executors.newFixedThreadPool(1);
-		latch1 = new CountDownLatch(1);
 		result1 = new AtomicReference<>();
 		fileSystem = Jimfs.newFileSystem();
-		pathProvider = (path) -> fileSystem.getPath(path);
+		pathProvider = path -> fileSystem.getPath(path);
 	}
 
 	@AfterEach
-	public void cleanupTests() throws IOException {
-		latch1 = null;
+	void cleanupTests() throws IOException {
 		result1 = null;
 		if (service != null) {
 			service.shutdown();
@@ -90,21 +87,21 @@ public class PathInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			PathInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("tmp").cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		PathInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			PathInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNull();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNull();
+		});
 	}
 
 	@Test
-	public void testResultUserInput() throws InterruptedException, IOException {
+	void testResultUserInput() throws IOException {
 		Path path = fileSystem.getPath("tmp");
 		Files.createDirectories(path);
 		ComponentContext<?> empty = ComponentContext.empty();
@@ -116,17 +113,17 @@ public class PathInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			PathInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("tmp").cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		PathInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			PathInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNotNull();
-		assertThat(run1Context.getResultValue().toString()).contains("tmp");
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNotNull();
+			assertThat(run1Context.getResultValue().toString()).contains("tmp");
+		});
 	}
 }

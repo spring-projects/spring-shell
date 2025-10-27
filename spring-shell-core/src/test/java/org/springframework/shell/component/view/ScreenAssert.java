@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 	 *
 	 * @param x a x position in a screen
 	 * @param y a y position in a screen
-	 * @param color the style
+	 * @param style the style
 	 * @return this assertion object
 	 */
 	public ScreenAssert hasStyle(int x, int y, int style) {
@@ -252,7 +252,7 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 			}
 			else {
 				if (b != null) {
-					assertThat(b.getBorder()).isEqualTo(0);
+					assertThat(b.getBorder()).isZero();
 				}
 			}
 		});
@@ -263,7 +263,7 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 			}
 			else {
 				if (b != null) {
-					assertThat(b.getBorder()).isEqualTo(0);
+					assertThat(b.getBorder()).isZero();
 				}
 			}
 		});
@@ -274,20 +274,18 @@ public class ScreenAssert extends AbstractAssert<ScreenAssert, Screen> {
 			}
 			else {
 				if (b != null) {
-					assertThat(b.getBorder()).isEqualTo(0);
+					assertThat(b.getBorder()).isZero();
 				}
 			}
 		});
 		assertThat(leftBorder).withFailMessage(failMessage).allSatisfy(b -> {
 			if (border) {
 				assertThat(b).isNotNull();
-				// assertThat(b.getType()).isEqualTo(Screen.Type.BORDER);
 				assertThat(b.getBorder()).isGreaterThan(0);
 			}
 			else {
 				if (b != null) {
-					// assertThat(b.getType()).isNotEqualTo(Screen.Type.BORDER);
-					assertThat(b.getBorder()).isEqualTo(0);
+					assertThat(b.getBorder()).isZero();
 				}
 			}
 		});

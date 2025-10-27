@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,34 +42,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.shell.component.ShellAssertions.assertStringOrderThat;
 
-public class SingleItemSelectorTests extends AbstractShellTests {
+class SingleItemSelectorTests extends AbstractShellTests {
 
-	private static SimplePojo SIMPLE_POJO_1 = SimplePojo.of("data1");
-	private static SimplePojo SIMPLE_POJO_2 = SimplePojo.of("data2");
-	private static SimplePojo SIMPLE_POJO_3 = SimplePojo.of("data3");
-	private static SimplePojo SIMPLE_POJO_4 = SimplePojo.of("data4");
-	private static SimplePojo SIMPLE_POJO_5 = SimplePojo.of("data5");
-	private static SimplePojo SIMPLE_POJO_6 = SimplePojo.of("data6");
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_1 = SelectorItem.of("simplePojo1", SIMPLE_POJO_1);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_2 = SelectorItem.of("simplePojo2", SIMPLE_POJO_2);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_3 = SelectorItem.of("simplePojo3", SIMPLE_POJO_3);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_4 = SelectorItem.of("simplePojo4", SIMPLE_POJO_4);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_5 = SelectorItem.of("simplePojo5", SIMPLE_POJO_5);
-	private static SelectorItem<SimplePojo> SELECTOR_ITEM_6 = SelectorItem.of("simplePojo6", SIMPLE_POJO_6);
+	private static final SimplePojo SIMPLE_POJO_1 = SimplePojo.of("data1");
+	private static final SimplePojo SIMPLE_POJO_2 = SimplePojo.of("data2");
+	private static final SimplePojo SIMPLE_POJO_3 = SimplePojo.of("data3");
+	private static final SimplePojo SIMPLE_POJO_4 = SimplePojo.of("data4");
+	private static final SimplePojo SIMPLE_POJO_5 = SimplePojo.of("data5");
+	private static final SimplePojo SIMPLE_POJO_6 = SimplePojo.of("data6");
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_1 = SelectorItem.of("simplePojo1", SIMPLE_POJO_1);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_2 = SelectorItem.of("simplePojo2", SIMPLE_POJO_2);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_3 = SelectorItem.of("simplePojo3", SIMPLE_POJO_3);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_4 = SelectorItem.of("simplePojo4", SIMPLE_POJO_4);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_5 = SelectorItem.of("simplePojo5", SIMPLE_POJO_5);
+	private static final SelectorItem<SimplePojo> SELECTOR_ITEM_6 = SelectorItem.of("simplePojo6", SIMPLE_POJO_6);
 
 	private ExecutorService service;
 	private CountDownLatch latch;
 	private AtomicReference<Optional<SelectorItem<SimplePojo>>> result;
 
 	@BeforeEach
-	public void setupMulti() {
+	void setupMulti() {
 		service = Executors.newFixedThreadPool(1);
 		latch = new CountDownLatch(1);
 		result = new AtomicReference<>();
 	}
 
 	@AfterEach
-	public void cleanupMulti() {
+	void cleanupMulti() {
 		latch = null;
 		result = null;
 		if (service != null) {
@@ -79,17 +79,15 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 	}
 
 	@Test
-	public void testItemsShownFirstHovered() {
+	void testItemsShownFirstHovered() {
 		scheduleSelect();
 		await().atMost(Duration.ofSeconds(4))
-				.untilAsserted(() -> {
-					assertStringOrderThat(consoleOut()).containsInOrder("> simplePojo1", "simplePojo2", "simplePojo3", "simplePojo4");
-				});
+				.untilAsserted(() -> assertStringOrderThat(consoleOut()).containsInOrder("> simplePojo1", "simplePojo2", "simplePojo3", "simplePojo4"));
 
 	}
 
 	@Test
-	public void testMaxItems() {
+	void testMaxItems() {
 		scheduleSelect(Arrays.asList(SELECTOR_ITEM_1, SELECTOR_ITEM_2, SELECTOR_ITEM_3, SELECTOR_ITEM_4,
 				SELECTOR_ITEM_5, SELECTOR_ITEM_6), 6);
 		await().atMost(Duration.ofSeconds(4))
@@ -111,7 +109,7 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 	}
 
 	@Test
-	public void testSelectFirst() throws InterruptedException {
+	void testSelectFirst() throws InterruptedException {
 		scheduleSelect();
 
 		TestBuffer testBuffer = new TestBuffer().cr();
@@ -127,7 +125,7 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 	}
 
 	@Test
-	public void testSelectSecond() throws InterruptedException {
+	void testSelectSecond() throws InterruptedException {
 		scheduleSelect();
 
 		TestBuffer testBuffer = new TestBuffer().ctrlE().cr();
@@ -142,7 +140,7 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 	}
 
 	@Test
-	public void testSelectLastBackwards() throws InterruptedException {
+	void testSelectLastBackwards() throws InterruptedException {
 		scheduleSelect();
 
 		TestBuffer testBuffer = new TestBuffer().ctrlY().cr();
@@ -157,7 +155,7 @@ public class SingleItemSelectorTests extends AbstractShellTests {
 	}
 
 	@Test
-	public void testFilterShowsNoneThenSelect() throws InterruptedException {
+	void testFilterShowsNoneThenSelect() throws InterruptedException {
 		scheduleSelect();
 
 		TestBuffer testBuffer = new TestBuffer().append("xxx").cr();

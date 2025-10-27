@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,15 +37,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommandRegistrationFactoryBeanTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
-	private final static String BEAN = "commandBean";
-	private final static String FACTORYBEAN = "commandRegistrationFactoryBean";
-	private final static String FACTORYBEANREF = "&" + FACTORYBEAN;
+	private static final String BEAN = "commandBean";
+	private static final String FACTORY_BEAN = "commandRegistrationFactoryBean";
+	private static final String FACTORY_BEAN_REF = "&" + FACTORY_BEAN;
 
 	@Test
 	void hiddenOnClassLevel() {
 		configCommon(HiddenOnClassBean.class, new HiddenOnClassBean())
-				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+				.run(context -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -65,8 +65,8 @@ class CommandRegistrationFactoryBeanTests {
 	@Test
 	void commandCommonThings() {
 		configCommon(OnBothClassAndMethod.class, new OnBothClassAndMethod(), "command1", new Class[] { })
-				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+				.run(context -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -78,7 +78,7 @@ class CommandRegistrationFactoryBeanTests {
 				});
 		configCommon(OnBothClassAndMethod.class, new OnBothClassAndMethod(), "command2", new Class[] { })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -106,8 +106,8 @@ class CommandRegistrationFactoryBeanTests {
 	@Test
 	void setsRequiredOption() {
 		configCommon(RequiredOption.class, new RequiredOption(), "command1", new Class[] { String.class })
-				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+				.run(context -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -117,7 +117,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(RequiredOption.class, new RequiredOption(), "command2", new Class[] { String.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -142,8 +142,8 @@ class CommandRegistrationFactoryBeanTests {
 	@Test
 	void setsAvailabilitySupplier() {
 		configCommon(AvailabilityIndicator.class, new AvailabilityIndicator(), "command1", new Class[] { })
-				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+				.run(context -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -172,7 +172,7 @@ class CommandRegistrationFactoryBeanTests {
 	void setsOptionValuesWithBoolean() {
 		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command1", new Class[] { boolean.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -182,7 +182,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command2", new Class[] { Boolean.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -192,7 +192,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command3", new Class[] { Boolean.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -202,7 +202,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command4", new Class[] { Boolean.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -212,7 +212,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(OptionValuesWithBoolean.class, new OptionValuesWithBoolean(), "command5", new Class[] { boolean.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -251,8 +251,8 @@ class CommandRegistrationFactoryBeanTests {
 	@Test
 	void setsOptionWithCompletion() {
 		configCommon(OptionWithCompletion.class, new OptionWithCompletion(), "command1", new Class[] { String.class })
-				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+				.run(context -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -270,9 +270,7 @@ class CommandRegistrationFactoryBeanTests {
 
 		@Bean
 		CompletionProvider completionProvider() {
-			return ctx -> {
-				return Collections.emptyList();
-			};
+			return ctx -> Collections.emptyList();
 		}
 
 	}
@@ -280,8 +278,8 @@ class CommandRegistrationFactoryBeanTests {
 	@Test
 	void setsOptionWithArity() {
 		configCommon(OptionWithArity.class, new OptionWithArity(), "command1", new Class[] { String.class })
-				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+				.run(context -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -291,7 +289,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(OptionWithArity.class, new OptionWithArity(), "command2", new Class[] { String.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -301,7 +299,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(OptionWithArity.class, new OptionWithArity(), "command3", new Class[] { String.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -311,7 +309,7 @@ class CommandRegistrationFactoryBeanTests {
 		});
 		configCommon(OptionWithArity.class, new OptionWithArity(), "command4", new Class[] { String.class })
 				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -344,8 +342,8 @@ class CommandRegistrationFactoryBeanTests {
 	@Test
 	void setsOptionWithLabel() {
 		configCommon(OptionWithLabel.class, new OptionWithLabel(), "command1", new Class[] { String.class })
-				.run((context) -> {
-					CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+				.run(context -> {
+					CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 							CommandRegistrationFactoryBean.class);
 					assertThat(fb).isNotNull();
 					CommandRegistration registration = fb.getObject();
@@ -369,7 +367,7 @@ class CommandRegistrationFactoryBeanTests {
 	private <T> ApplicationContextRunner configCommon(Class<T> type, T bean, String method, Class<?>[] parameters) {
 		return this.contextRunner
 				.withBean(BEAN, type, () -> bean)
-				.withBean(FACTORYBEAN, CommandRegistrationFactoryBean.class, () -> new CommandRegistrationFactoryBean(), bd -> {
+				.withBean(FACTORY_BEAN, CommandRegistrationFactoryBean.class, CommandRegistrationFactoryBean::new, bd -> {
 					bd.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_BEAN_TYPE, type);
 					bd.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_BEAN_NAME, BEAN);
 					bd.getPropertyValues().add(CommandRegistrationFactoryBean.COMMAND_METHOD_NAME, method);
@@ -383,8 +381,8 @@ class CommandRegistrationFactoryBeanTests {
 		@Test
 		void aliasOnlyOnMethod() {
 			configCommon(AliasOnlyOnMethod.class, new AliasOnlyOnMethod(), "command1", new Class[] { })
-					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					.run(context -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();
@@ -406,8 +404,8 @@ class CommandRegistrationFactoryBeanTests {
 		@Test
 		void aliasOnlyOnClass() {
 			configCommon(AliasOnlyOnClass.class, new AliasOnlyOnClass(), "command1", new Class[] { })
-					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					.run(context -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();
@@ -428,8 +426,8 @@ class CommandRegistrationFactoryBeanTests {
 		@Test
 		void aliasOnlyOnMethodMultiCommandString() {
 			configCommon(AliasOnlyOnMethodMultiCommandString.class, new AliasOnlyOnMethodMultiCommandString(), "command1", new Class[] { })
-					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					.run(context -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();
@@ -452,7 +450,7 @@ class CommandRegistrationFactoryBeanTests {
 		void aliasOnlyOnMethodMultiCommandArray() {
 			configCommon(AliasOnlyOnMethodMultiCommandArray.class, new AliasOnlyOnMethodMultiCommandArray(), "command1", new Class[] { })
 					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();
@@ -475,8 +473,8 @@ class CommandRegistrationFactoryBeanTests {
 		@Test
 		void aliasOnBothMethodStringEmpty() {
 			configCommon(AliasOnBothMethodStringEmpty.class, new AliasOnBothMethodStringEmpty(), "command1", new Class[] { })
-					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					.run(context -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();
@@ -498,8 +496,8 @@ class CommandRegistrationFactoryBeanTests {
 		@Test
 		void aliasOnBoth() {
 			configCommon(AliasOnBoth.class, new AliasOnBoth(), "command1", new Class[] { })
-					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					.run(context -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();
@@ -521,8 +519,8 @@ class CommandRegistrationFactoryBeanTests {
 		@Test
 		void aliasWithCommandOnBothMethodStringEmpty() {
 			configCommon(AliasWithCommandOnBothMethodStringEmpty.class, new AliasWithCommandOnBothMethodStringEmpty(), "command1", new Class[] { })
-					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+					.run(context -> {
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();
@@ -533,7 +531,7 @@ class CommandRegistrationFactoryBeanTests {
 					});
 			configCommon(AliasWithCommandOnBothMethodStringEmpty.class, new AliasWithCommandOnBothMethodStringEmpty(), "command2", new Class[] { })
 					.run((context) -> {
-						CommandRegistrationFactoryBean fb = context.getBean(FACTORYBEANREF,
+						CommandRegistrationFactoryBean fb = context.getBean(FACTORY_BEAN_REF,
 								CommandRegistrationFactoryBean.class);
 						assertThat(fb).isNotNull();
 						CommandRegistration registration = fb.getObject();

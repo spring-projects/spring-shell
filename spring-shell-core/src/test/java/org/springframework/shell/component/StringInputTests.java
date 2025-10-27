@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package org.springframework.shell.component;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jline.terminal.impl.DumbTerminal;
@@ -34,28 +34,23 @@ import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.component.context.ComponentContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
-public class StringInputTests extends AbstractShellTests {
+class StringInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
-	private CountDownLatch latch1;
-	private CountDownLatch latch2;
 	private AtomicReference<StringInputContext> result1;
 	private AtomicReference<StringInputContext> result2;
 
 	@BeforeEach
-	public void setupTests() {
+	void setupTests() {
 		service = Executors.newFixedThreadPool(1);
-		latch1 = new CountDownLatch(1);
-		latch2 = new CountDownLatch(1);
 		result1 = new AtomicReference<>();
 		result2 = new AtomicReference<>();
 	}
 
 	@AfterEach
-	public void cleanupTests() {
-		latch1 = null;
-		latch2 = null;
+	void cleanupTests() {
 		result1 = null;
 		result2 = null;
 		if (service != null) {
@@ -79,21 +74,21 @@ public class StringInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			StringInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		StringInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			StringInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNull();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNull();
+		});
 	}
 
 	@Test
-	public void testResultBasic() throws InterruptedException {
+	void testResultBasic() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
 		component1.setPrintResults(true);
@@ -103,22 +98,22 @@ public class StringInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			StringInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		StringInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			StringInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
-		assertThat(consoleOut()).contains("component1 component1ResultValue");
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
+			assertThat(consoleOut()).contains("component1 component1ResultValue");
+		});
 	}
 
 	@Test
-	public void testResultBasicWithMask() throws InterruptedException {
+	void testResultBasicWithMask() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
 		component1.setPrintResults(true);
@@ -129,22 +124,22 @@ public class StringInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			StringInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		StringInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			StringInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
-		assertThat(consoleOut()).contains("component1 *********************");
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
+			assertThat(consoleOut()).contains("component1 *********************");
+		});
 	}
 
 	@Test
-	public void testResultUserInput() throws InterruptedException {
+	void testResultUserInput() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -153,21 +148,21 @@ public class StringInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			StringInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("test").cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		StringInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			StringInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isEqualTo("test");
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isEqualTo("test");
+		});
 	}
 
 	@Test
-	public void testResultUserInputUnicode() throws InterruptedException {
+	void testResultUserInputUnicode() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -176,21 +171,21 @@ public class StringInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			StringInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("😂").cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		StringInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			StringInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isEqualTo("😂");
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isEqualTo("😂");
+		});
 	}
 
 	@Test
-	public void testPassingViaContext() throws InterruptedException {
+	void testPassingViaContext() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
 		StringInput component2 = new StringInput(getTerminal(), "component2", "component2ResultValue");
@@ -199,9 +194,7 @@ public class StringInputTests extends AbstractShellTests {
 		component2.setResourceLoader(new DefaultResourceLoader());
 		component2.setTemplateExecutor(getTemplateExecutor());
 
-		component1.addPostRunHandler(context -> {
-			context.put("component1ResultValue", context.getResultValue());
-		});
+		component1.addPostRunHandler(context -> context.put("component1ResultValue", context.getResultValue()));
 
 		component2.addPreRunHandler(context -> {
 			String component1ResultValue = context.get("component1ResultValue");
@@ -213,33 +206,29 @@ public class StringInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			StringInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-
 		service.execute(() -> {
 			StringInputContext run1Context = result1.get();
 			StringInputContext run2Context = component2.run(run1Context);
 			result2.set(run2Context);
-			latch2.countDown();
 		});
 
 		write(testBuffer.getBytes());
 
-		latch2.await(2, TimeUnit.SECONDS);
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			StringInputContext run1Context = result1.get();
+			StringInputContext run2Context = result2.get();
 
-		StringInputContext run1Context = result1.get();
-		StringInputContext run2Context = result2.get();
+			assertThat(run1Context).isNotSameAs(run2Context);
 
-		assertThat(run1Context).isNotSameAs(run2Context);
-
-		assertThat(run1Context).isNotNull();
-		assertThat(run2Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
-		assertThat(run2Context.getResultValue()).isEqualTo("component1ResultValue");
+			assertThat(run1Context).isNotNull();
+			assertThat(run2Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isEqualTo("component1ResultValue");
+			assertThat(run2Context.getResultValue()).isEqualTo("component1ResultValue");
+		});
 	}
 }

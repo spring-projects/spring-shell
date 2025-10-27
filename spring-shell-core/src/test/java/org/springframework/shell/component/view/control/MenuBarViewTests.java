@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,12 +115,6 @@ class MenuBarViewTests extends AbstractViewTests {
 
 	}
 
-	// @Nested
-	// class Selection {
-	// 		MenuBarView view;
-
-	// }
-
 	@Nested
 	class Menus {
 
@@ -142,7 +136,7 @@ class MenuBarViewTests extends AbstractViewTests {
 			});
 
 			Integer selected = (Integer) ReflectionTestUtils.getField(view, SELECTED_FIELD);
-			assertThat(selected).isEqualTo(0);
+			assertThat(selected).isZero();
 
 			MenuView menuView1 = (MenuView) ReflectionTestUtils.getField(view, MENUVIEW_FIELD);
 			assertThat(menuView1).isNotNull();
@@ -180,7 +174,7 @@ class MenuBarViewTests extends AbstractViewTests {
 			});
 
 			Integer selected = (Integer) ReflectionTestUtils.getField(view, SELECTED_FIELD);
-			assertThat(selected).isEqualTo(0);
+			assertThat(selected).isZero();
 
 			MenuView menuView1 = (MenuView) ReflectionTestUtils.getField(view, MENUVIEW_FIELD);
 			assertThat(menuView1).isNotNull();
@@ -221,7 +215,7 @@ class MenuBarViewTests extends AbstractViewTests {
 			});
 
 			Integer selected = (Integer) ReflectionTestUtils.getField(view, SELECTED_FIELD);
-			assertThat(selected).isEqualTo(0);
+			assertThat(selected).isZero();
 
 			MenuView menuView1 = (MenuView) ReflectionTestUtils.getField(view, MENUVIEW_FIELD);
 			assertThat(menuView1).isNotNull();
@@ -257,11 +251,8 @@ class MenuBarViewTests extends AbstractViewTests {
 			});
 
 			MenuView menuView = (MenuView) ReflectionTestUtils.getField(view, MENUVIEW_FIELD);
-			assertThat(menuView).isNotNull().satisfies(m -> {
-				assertThat(m.getRect()).satisfies(r -> {
-					assertThat(r.x()).isEqualTo(7);
-				});
-			});
+			assertThat(menuView).isNotNull().satisfies(m -> assertThat(m.getRect())
+					.satisfies(r -> assertThat(r.x()).isEqualTo(7)));
 
 		}
 

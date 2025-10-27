@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import org.springframework.shell.command.parser.ParserConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandParserTests extends AbstractCommandTests {
+class CommandParserTests extends AbstractCommandTests {
 
 	@Test
-	public void testMethodExecution1() {
+	void testMethodExecution1() {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("command1")
 			.description("help")

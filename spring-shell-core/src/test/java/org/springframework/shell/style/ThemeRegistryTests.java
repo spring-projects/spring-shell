@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ThemeRegistryTests {
+class ThemeRegistryTests {
 
 	@Test
-	public void test() {
+	void test() {
 		ThemeRegistry registry = new ThemeRegistry();
 		Theme theme = Theme.of("name1", ThemeSettings.defaults());
 		registry.register(theme);

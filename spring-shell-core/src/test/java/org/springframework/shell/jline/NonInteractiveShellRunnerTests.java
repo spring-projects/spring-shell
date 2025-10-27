@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,24 +29,23 @@ import org.springframework.shell.InputProvider;
 import org.springframework.shell.Shell;
 import org.springframework.shell.context.DefaultShellContext;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class NonInteractiveShellRunnerTests {
+class NonInteractiveShellRunnerTests {
 
 	@Spy
 	@InjectMocks
 	private Shell shell;
 
 	@Test
-	public void testEmptyArgsDontRun() throws Exception {
+	void testEmptyArgsDontRun() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(null, null);
 		assertThat(runner.run(new String[0])).isFalse();
 	}
 
 	@Test
-	public void testNonEmptyArgsRun() throws Exception {
+	void testNonEmptyArgsRun() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
@@ -54,7 +53,7 @@ public class NonInteractiveShellRunnerTests {
 	}
 
 	@Test
-	public void shouldQuoteWithWhitespace() throws Exception {
+	void shouldQuoteWithWhitespace() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
@@ -64,7 +63,7 @@ public class NonInteractiveShellRunnerTests {
 	}
 
 	@Test
-	public void shouldNotQuoteIfQuoted() throws Exception {
+	void shouldNotQuoteIfQuoted() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
@@ -74,7 +73,7 @@ public class NonInteractiveShellRunnerTests {
 	}
 
 	@Test
-	public void shouldNotQuoteWithoutWhitespace() throws Exception {
+	void shouldNotQuoteWithoutWhitespace() throws Exception {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
@@ -92,9 +91,7 @@ public class NonInteractiveShellRunnerTests {
 	@Test
 	void oldApiRunThrows() {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, null);
-		assertThatThrownBy(() -> {
-			runner.run(ofApplicationArguments());
-		});
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> runner.run(ofApplicationArguments()));
 	}
 
 	private static ApplicationArguments ofApplicationArguments(String... args) {

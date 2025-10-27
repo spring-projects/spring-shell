@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CommandAnnotationUtilsTests {
 
-	private static MergedAnnotation<Command> hiddenTrue = MergedAnnotations.from(HiddenTrue.class).get(Command.class);
-	private static MergedAnnotation<Command> hiddenFalse = MergedAnnotations.from(HiddenFalse.class).get(Command.class);
-	private static MergedAnnotation<Command> hiddenDefault = MergedAnnotations.from(HiddenDefault.class)
+	private static final MergedAnnotation<Command> hiddenTrue = MergedAnnotations.from(HiddenTrue.class).get(Command.class);
+	private static final MergedAnnotation<Command> hiddenFalse = MergedAnnotations.from(HiddenFalse.class).get(Command.class);
+	private static final MergedAnnotation<Command> hiddenDefault = MergedAnnotations.from(HiddenDefault.class)
 			.get(Command.class);
 
 	@Command(hidden = true)
@@ -54,15 +54,15 @@ class CommandAnnotationUtilsTests {
 		assertThat(CommandAnnotationUtils.deduceHidden(hiddenFalse, hiddenTrue)).isTrue();
 	}
 
-	private static MergedAnnotation<Command> commandDefault = MergedAnnotations.from(CommandDefault.class)
+	private static final MergedAnnotation<Command> commandDefault = MergedAnnotations.from(CommandDefault.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> commandValues1 = MergedAnnotations.from(CommandValues1.class)
+	private static final MergedAnnotation<Command> commandValues1 = MergedAnnotations.from(CommandValues1.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> commandValues2 = MergedAnnotations.from(CommandValues2.class)
+	private static final MergedAnnotation<Command> commandValues2 = MergedAnnotations.from(CommandValues2.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> commandValues3 = MergedAnnotations.from(CommandValues3.class)
+	private static final MergedAnnotation<Command> commandValues3 = MergedAnnotations.from(CommandValues3.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> commandValues4 = MergedAnnotations.from(CommandValues4.class)
+	private static final MergedAnnotation<Command> commandValues4 = MergedAnnotations.from(CommandValues4.class)
 			.get(Command.class);
 
 	@Command
@@ -98,19 +98,19 @@ class CommandAnnotationUtilsTests {
 				.isEqualTo(new String[] { "eight", "nine" });
 	}
 
-	private static MergedAnnotation<Command> aliasDefault = MergedAnnotations.from(AliasDefault.class)
+	private static final MergedAnnotation<Command> aliasDefault = MergedAnnotations.from(AliasDefault.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> aliasValues1 = MergedAnnotations.from(AliasValues1.class)
+	private static final MergedAnnotation<Command> aliasValues1 = MergedAnnotations.from(AliasValues1.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> aliasValues2 = MergedAnnotations.from(AliasValues2.class)
+	private static final MergedAnnotation<Command> aliasValues2 = MergedAnnotations.from(AliasValues2.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> aliasValues3 = MergedAnnotations.from(AliasValues3.class)
+	private static final MergedAnnotation<Command> aliasValues3 = MergedAnnotations.from(AliasValues3.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> aliasValues4 = MergedAnnotations.from(AliasValues4.class)
+	private static final MergedAnnotation<Command> aliasValues4 = MergedAnnotations.from(AliasValues4.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> aliasValues5 = MergedAnnotations.from(AliasValues5.class)
+	private static final MergedAnnotation<Command> aliasValues5 = MergedAnnotations.from(AliasValues5.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> aliasValues6 = MergedAnnotations.from(AliasValues6.class)
+	private static final MergedAnnotation<Command> aliasValues6 = MergedAnnotations.from(AliasValues6.class)
 			.get(Command.class);
 
 	@Command
@@ -156,11 +156,11 @@ class CommandAnnotationUtilsTests {
 				.isEqualTo(new String[][] { { "one" } });
 	}
 
-	private static MergedAnnotation<Command> groupValue1 = MergedAnnotations.from(GroupValues1.class)
+	private static final MergedAnnotation<Command> groupValue1 = MergedAnnotations.from(GroupValues1.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> groupValue2 = MergedAnnotations.from(GroupValues2.class)
+	private static final MergedAnnotation<Command> groupValue2 = MergedAnnotations.from(GroupValues2.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> groupDefault = MergedAnnotations.from(GroupDefault.class)
+	private static final MergedAnnotation<Command> groupDefault = MergedAnnotations.from(GroupDefault.class)
 			.get(Command.class);
 
 	@Command(group = "group1")
@@ -177,17 +177,17 @@ class CommandAnnotationUtilsTests {
 
 	@Test
 	void testGroup() {
-		assertThat(CommandAnnotationUtils.deduceGroup(groupDefault, groupDefault)).isEqualTo("");
+		assertThat(CommandAnnotationUtils.deduceGroup(groupDefault, groupDefault)).isEmpty();
 		assertThat(CommandAnnotationUtils.deduceGroup(groupDefault, groupValue1)).isEqualTo("group1");
 		assertThat(CommandAnnotationUtils.deduceGroup(groupValue1, groupDefault)).isEqualTo("group1");
 		assertThat(CommandAnnotationUtils.deduceGroup(groupValue1, groupValue2)).isEqualTo("group2");
 	}
 
-	private static MergedAnnotation<Command> descriptionValue1 = MergedAnnotations.from(DescriptionValues1.class)
+	private static final MergedAnnotation<Command> descriptionValue1 = MergedAnnotations.from(DescriptionValues1.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> descriptionValue2 = MergedAnnotations.from(DescriptionValues2.class)
+	private static final MergedAnnotation<Command> descriptionValue2 = MergedAnnotations.from(DescriptionValues2.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> descriptionDefault = MergedAnnotations.from(DescriptionDefault.class)
+	private static final MergedAnnotation<Command> descriptionDefault = MergedAnnotations.from(DescriptionDefault.class)
 			.get(Command.class);
 
 	@Command(description = "description1")
@@ -204,7 +204,7 @@ class CommandAnnotationUtilsTests {
 
 	@Test
 	void testDescription() {
-		assertThat(CommandAnnotationUtils.deduceDescription(descriptionDefault, descriptionDefault)).isEqualTo("");
+		assertThat(CommandAnnotationUtils.deduceDescription(descriptionDefault, descriptionDefault)).isEmpty();
 		assertThat(CommandAnnotationUtils.deduceDescription(descriptionDefault, descriptionValue1))
 				.isEqualTo("description1");
 		assertThat(CommandAnnotationUtils.deduceDescription(descriptionValue1, descriptionDefault))
@@ -213,13 +213,13 @@ class CommandAnnotationUtilsTests {
 				.isEqualTo("description2");
 	}
 
-	private static MergedAnnotation<Command> interactionModeDefault = MergedAnnotations
+	private static final MergedAnnotation<Command> interactionModeDefault = MergedAnnotations
 			.from(InteractionModeDefault.class).get(Command.class);
-	private static MergedAnnotation<Command> interactionModeAll = MergedAnnotations.from(InteractionModeAll.class)
+	private static final MergedAnnotation<Command> interactionModeAll = MergedAnnotations.from(InteractionModeAll.class)
 			.get(Command.class);
-	private static MergedAnnotation<Command> interactionModeInteractive = MergedAnnotations
+	private static final MergedAnnotation<Command> interactionModeInteractive = MergedAnnotations
 			.from(InteractionModeInteractive.class).get(Command.class);
-	private static MergedAnnotation<Command> interactionModeNoninteractive = MergedAnnotations
+	private static final MergedAnnotation<Command> interactionModeNoninteractive = MergedAnnotations
 			.from(InteractionModeNoninteractive.class).get(Command.class);
 
 	@Command()

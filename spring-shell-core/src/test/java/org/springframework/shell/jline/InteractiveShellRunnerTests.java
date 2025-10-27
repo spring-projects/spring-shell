@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Disabled("Hands intermittently")
-public class InteractiveShellRunnerTests {
+class InteractiveShellRunnerTests {
 
     private PipedOutputStream outIn;
     private InteractiveShellRunner.JLineInputProvider jLineInputProvider;
@@ -67,7 +67,7 @@ public class InteractiveShellRunnerTests {
     }
 
     @Test
-    public void testClearWithCtrlC() throws Exception {
+    void testClearWithCtrlC() throws Exception {
 
         initForShortcutKeyTest();
 
@@ -97,7 +97,7 @@ public class InteractiveShellRunnerTests {
 
 
     @Test
-    public void testExitWithCtrlC() throws Exception {
+    void testExitWithCtrlC() throws Exception {
 
         initForShortcutKeyTest();
 
@@ -125,7 +125,7 @@ public class InteractiveShellRunnerTests {
     }
 
     @Test
-    public void testExitWithCtrlD() throws Exception {
+    void testExitWithCtrlD() throws Exception {
 
         initForShortcutKeyTest();
 
@@ -162,9 +162,7 @@ public class InteractiveShellRunnerTests {
 	@Test
 	void oldApiRunThrows() {
         InteractiveShellRunner runner = new InteractiveShellRunner(null, null, null, null);
-		assertThatThrownBy(() -> {
-			runner.run(ofApplicationArguments());
-		});
+		assertThatThrownBy(() -> runner.run(ofApplicationArguments()));
 	}
 
 	private static ApplicationArguments ofApplicationArguments(String... args) {

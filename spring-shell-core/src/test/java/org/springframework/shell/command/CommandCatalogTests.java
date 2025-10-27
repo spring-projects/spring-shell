@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 package org.springframework.shell.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandCatalogTests extends AbstractCommandTests {
+class CommandCatalogTests extends AbstractCommandTests {
 
 	@Test
-	public void testCommandCatalog () {
+	void testCommandCatalog () {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("group1 sub1")
 			.withTarget()
@@ -37,11 +36,11 @@ public class CommandCatalogTests extends AbstractCommandTests {
 		catalog.register(r1);
 		assertThat(catalog.getRegistrations()).hasSize(1);
 		catalog.unregister(r1);
-		assertThat(catalog.getRegistrations()).hasSize(0);
+		assertThat(catalog.getRegistrations()).isEmpty();
 	}
 
 	@Test
-	public void testCommandAliases () {
+	void testCommandAliases () {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("group1 sub1")
 			.withAlias()
@@ -57,14 +56,14 @@ public class CommandCatalogTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testResolver() {
+	void testResolver() {
 		// catalog itself would not have any registered command but
 		// this custom resolver adds one which may dymanically go away.
 		DynamicCommandResolver resolver = new DynamicCommandResolver();
-		CommandCatalog catalog = CommandCatalog.of(Arrays.asList(resolver), null);
+		CommandCatalog catalog = CommandCatalog.of(List.of(resolver), null);
 		assertThat(catalog.getRegistrations()).hasSize(1);
 		resolver.enabled = false;
-		assertThat(catalog.getRegistrations()).hasSize(0);
+		assertThat(catalog.getRegistrations()).isEmpty();
 	}
 
 	class DynamicCommandResolver implements CommandResolver {

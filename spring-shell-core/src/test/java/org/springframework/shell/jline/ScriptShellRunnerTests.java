@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2024-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,16 +28,15 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.shell.Shell;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ScriptShellRunnerTests {
+class ScriptShellRunnerTests {
 
 	@Mock
 	Shell shell;
 
-	private ScriptShellRunner runner = new ScriptShellRunner(null, null);
+	private final ScriptShellRunner runner = new ScriptShellRunner(null, null);
 
 	@Test
 	void shouldNotRunWhenNoArgs() throws Exception {
@@ -59,8 +58,8 @@ public class ScriptShellRunnerTests {
 		Path path = workingDir.resolve("test");
 		Path file = Files.createFile(path);
 		String pathStr = file.toAbsolutePath().toString();
-		ScriptShellRunner runner = new ScriptShellRunner(null, shell);
-		assertThat(runner.run(new String[]{"@" + pathStr})).isTrue();
+		ScriptShellRunner shellRunner = new ScriptShellRunner(null, shell);
+		assertThat(shellRunner.run(new String[]{"@" + pathStr})).isTrue();
 	}
 
 	@Test
@@ -70,9 +69,7 @@ public class ScriptShellRunnerTests {
 
 	@Test
 	void oldApiRunThrows() {
-		assertThatThrownBy(() -> {
-			runner.run(ofApplicationArguments());
-		});
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> runner.run(ofApplicationArguments()));
 	}
 
 	private static ApplicationArguments ofApplicationArguments(String... args) {

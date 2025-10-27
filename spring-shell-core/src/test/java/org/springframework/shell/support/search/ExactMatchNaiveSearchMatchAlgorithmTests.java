@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,9 +46,9 @@ class ExactMatchNaiveSearchMatchAlgorithmTests {
 			Arguments.of(false, false, true, "/.oh-my-zsh/cache", "zsh/c", false, 8, 13, new int[] { 8, 9, 10, 11, 12 },
 				SCORE_MATCH * 5 + BONUS_BOUNDARY * (BONUS_FIRST_CHAR_MULTIPLIER + 3) + BONUS_BOUNDARY_DELIMITER),
 			Arguments.of(false, false, true, "fooBarbaz", "o", false, 1, 2, new int[] { 1 },
-				SCORE_MATCH * 1),
+				SCORE_MATCH),
 			Arguments.of(false, false, true, "/tmp/test/11/file11.txt", "e", false, 6, 7, new int[] { 6 },
-				SCORE_MATCH * 1),
+				SCORE_MATCH),
 			Arguments.of(false, true, true, "Só Danço Samba", "So", false, 0, 2, new int[] { 0, 1 },
 				62),
 			Arguments.of(false, true, true, "Danço", "danco", false, 0, 5, new int[] { 0, 1, 2, 3, 4 },
