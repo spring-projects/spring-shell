@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.springframework.shell.config.ShellConversionServiceSupplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ParameterResolverAutoConfigurationTests {
+class ParameterResolverAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(ParameterResolverAutoConfiguration.class));
@@ -36,7 +36,7 @@ public class ParameterResolverAutoConfigurationTests {
 	@Test
 	void defaultCompletionResolverExists() {
 		this.contextRunner.withUserConfiguration(CustomShellConversionServiceConfiguration.class)
-				.run((context) -> {
+				.run(context -> {
 					assertThat(context).hasSingleBean(CompletionResolver.class);
 				});
 	}
@@ -44,9 +44,8 @@ public class ParameterResolverAutoConfigurationTests {
 	@Test
 	void defaultCommandExecutionHandlerMethodArgumentResolversExists() {
 		this.contextRunner.withUserConfiguration(CustomShellConversionServiceConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(CommandExecutionHandlerMethodArgumentResolvers.class);
-				});
+				.run(context -> assertThat(context)
+						.hasSingleBean(CommandExecutionHandlerMethodArgumentResolvers.class));
 	}
 
 	@Configuration
@@ -54,7 +53,7 @@ public class ParameterResolverAutoConfigurationTests {
 
 		@Bean
 		ShellConversionServiceSupplier shellConversionServiceSupplier() {
-			return () -> new DefaultConversionService();
+			return DefaultConversionService::new;
 		}
 	}
 }

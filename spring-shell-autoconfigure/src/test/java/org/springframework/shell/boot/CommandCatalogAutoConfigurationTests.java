@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandCatalogAutoConfigurationTests {
+class CommandCatalogAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(CommandCatalogAutoConfiguration.class,
@@ -66,7 +66,7 @@ public class CommandCatalogAutoConfigurationTests {
 	@Test
 	void registerCommandRegistration() {
 		this.contextRunner.withUserConfiguration(CustomCommandRegistrationConfiguration.class)
-				.run((context) -> {
+				.run(context -> {
 					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
 					assertThat(commandCatalog.getRegistrations().get("customcommand")).isNotNull();
 				});
@@ -153,7 +153,7 @@ public class CommandCatalogAutoConfigurationTests {
 
 		@Bean
 		CommandResolver customCommandResolver() {
-			return () -> Collections.emptyList();
+			return Collections::emptyList;
 		}
 	}
 
@@ -176,9 +176,7 @@ public class CommandCatalogAutoConfigurationTests {
 			return CommandRegistration.builder()
 				.command("customcommand")
 				.withTarget()
-					.function(ctx -> {
-						return null;
-					})
+					.function(ctx -> null)
 					.and()
 				.build();
 		}
