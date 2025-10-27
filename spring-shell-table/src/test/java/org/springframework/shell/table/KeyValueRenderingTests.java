@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Eric Bottard
  */
-public class KeyValueRenderingTests extends AbstractTestWithSample {
+class KeyValueRenderingTests extends AbstractTestWithSample {
 
 	@Test
-	public void testRenderConstrained() throws IOException {
-		Map<String, String> values = new LinkedHashMap<String, String>();
+	void testRenderConstrained() throws IOException {
+		Map<String, String> values = new LinkedHashMap<>();
 		values.put("a", "b");
 		values.put("long-key", "c");
 		values.put("d", "long-value");
@@ -47,8 +47,8 @@ public class KeyValueRenderingTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testRenderUnconstrained() throws IOException {
-		Map<String, String> values = new LinkedHashMap<String, String>();
+	void testRenderUnconstrained() throws IOException {
+		Map<String, String> values = new LinkedHashMap<>();
 		values.put("a", "b");
 		values.put("long-key", "c");
 		values.put("d", "long-value");

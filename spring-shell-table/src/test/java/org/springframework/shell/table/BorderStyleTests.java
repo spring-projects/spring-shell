@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,46 +22,45 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 /**
  * Tests for BorderStyle rendering and combinations.
  *
  * @author Eric Bottard
  */
-public class BorderStyleTests extends AbstractTestWithSample {
+class BorderStyleTests extends AbstractTestWithSample {
 
 	@Test
-	public void testOldSchool() throws IOException {
+	void testOldSchool() throws IOException {
 		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.oldschool).build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
-	public void testFancySimple() throws IOException {
+	void testFancySimple() throws IOException {
 		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.fancy_light).build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
-	public void testFancyHeavy() throws IOException {
+	void testFancyHeavy() throws IOException {
 		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.fancy_heavy).build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
-	public void testFancyDouble() throws IOException {
+	void testFancyDouble() throws IOException {
 		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.fancy_double).build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
-	public void testAir() throws IOException {
+	void testAir() throws IOException {
 		Table table = new TableBuilder(generate(2, 2)).addFullBorder(BorderStyle.air).build();
 		assertThat(table.render(10)).isEqualTo(sample());
 	}
 
 	@Test
-	public void testMixedOldSchoolWithAir() throws IOException {
+	void testMixedOldSchoolWithAir() throws IOException {
 		Table table = new TableBuilder(generate(2, 2))
 				.addFullBorder(BorderStyle.air)
 				.addOutlineBorder(BorderStyle.oldschool)
@@ -70,7 +69,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testMixedFancyLightAndHeavy() throws IOException {
+	void testMixedFancyLightAndHeavy() throws IOException {
 		Table table = new TableBuilder(generate(2, 2))
 				.addFullBorder(BorderStyle.fancy_heavy)
 				.addOutlineBorder(BorderStyle.fancy_light)
@@ -79,7 +78,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testMixedFancyHeavyAndLight() throws IOException {
+	void testMixedFancyHeavyAndLight() throws IOException {
 		Table table = new TableBuilder(generate(2, 2))
 				.addFullBorder(BorderStyle.fancy_light)
 				.addOutlineBorder(BorderStyle.fancy_heavy)
@@ -88,7 +87,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testMixedDoubleAndSingle() throws IOException {
+	void testMixedDoubleAndSingle() throws IOException {
 		Table table = new TableBuilder(generate(2, 2))
 				.addFullBorder(BorderStyle.fancy_light)
 				.addOutlineBorder(BorderStyle.fancy_double)
@@ -97,7 +96,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testMixedSingleAndDouble() throws IOException {
+	void testMixedSingleAndDouble() throws IOException {
 		Table table = new TableBuilder(generate(2, 2))
 				.addFullBorder(BorderStyle.fancy_double)
 				.addOutlineBorder(BorderStyle.fancy_light)
@@ -106,7 +105,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testMixedLightInternalAndHeavy() throws IOException {
+	void testMixedLightInternalAndHeavy() throws IOException {
 		Table table = new TableBuilder(generate(3, 3))
 				.addFullBorder(BorderStyle.fancy_heavy)
 				.paintBorder(BorderStyle.fancy_light, BorderSpecification.OUTLINE).fromRowColumn(1, 1).toRowColumn(2, 2)
@@ -115,7 +114,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testMixedHeavyInternalAndLight() throws IOException {
+	void testMixedHeavyInternalAndLight() throws IOException {
 		Table table = new TableBuilder(generate(3, 3))
 				.addFullBorder(BorderStyle.fancy_light)
 				.paintBorder(BorderStyle.fancy_heavy, BorderSpecification.OUTLINE).fromRowColumn(1, 1).toRowColumn(2, 2)
@@ -124,7 +123,7 @@ public class BorderStyleTests extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testHeavyOutlineAndHeader_LightVerticals_AirHorizontals() throws IOException {
+	void testHeavyOutlineAndHeader_LightVerticals_AirHorizontals() throws IOException {
 		Table table = new TableBuilder(generate(4, 4))
 				.addOutlineBorder(BorderStyle.fancy_heavy)
 				.paintBorder(BorderStyle.fancy_light, BorderSpecification.INNER_VERTICAL).fromTopLeft().toBottomRight()

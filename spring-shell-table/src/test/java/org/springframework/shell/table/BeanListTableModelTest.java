@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,50 +25,49 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 /**
  * Test for BeanListTableModel.
  *
  * @author Eric Bottard
  */
-public class BeanListTableModelTest extends AbstractTestWithSample {
+class BeanListTableModelTest extends AbstractTestWithSample {
 
 	@Test
-	public void testSimpleConstructor() throws IOException {
+	void testSimpleConstructor() throws IOException {
 
 		List<Person> data = data();
 
-		Table table = new TableBuilder(new BeanListTableModel<Person>(Person.class, data)).build();
+		Table table = new TableBuilder(new BeanListTableModel<>(Person.class, data)).build();
 		String result = table.render(80);
 		assertThat(result).isEqualTo(sample());
 	}
 
 	@Test
-	public void testExplicitPropertyNames() throws IOException {
+	void testExplicitPropertyNames() throws IOException {
 
 		List<Person> data = data();
 
-		Table table = new TableBuilder(new BeanListTableModel<Person>(data, "lastName", "firstName")).build();
+		Table table = new TableBuilder(new BeanListTableModel<>(data, "lastName", "firstName")).build();
 		String result = table.render(80);
 		assertThat(result).isEqualTo(sample());
 	}
 
 	@Test
-	public void testHeaderRow() throws IOException {
+	void testHeaderRow() throws IOException {
 
 		List<Person> data = data();
 
-		LinkedHashMap<String, Object> header = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> header = new LinkedHashMap<>();
 		header.put("lastName", "Last Name");
 		header.put("firstName", "First Name");
 
-		Table table = new TableBuilder(new BeanListTableModel<Person>(data, header)).build();
+		Table table = new TableBuilder(new BeanListTableModel<>(data, header)).build();
 		String result = table.render(80);
 		assertThat(result).isEqualTo(sample());
 	}
 
 	private List<Person> data() {
-		List<Person> data = new ArrayList<Person>();
+		List<Person> data = new ArrayList<>();
 		data.add(new Person("Alice", "Clark", 12));
 		data.add(new Person("Bob", "Smith", 42));
 		data.add(new Person("Sarah", "Connor", 38));
