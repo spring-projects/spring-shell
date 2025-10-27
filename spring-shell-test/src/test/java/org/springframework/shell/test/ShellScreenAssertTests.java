@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class ShellScreenAssertTests {
+class ShellScreenAssertTests {
 
-	List<String> LINES1 = Arrays.asList("line1", "line2");
+	public static final List<String> LINES1 = Arrays.asList("line1", "line2");
 
 	@Test
 	void assertContainsTextShouldContain() {

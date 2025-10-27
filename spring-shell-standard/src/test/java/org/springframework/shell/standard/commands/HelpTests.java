@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -55,11 +56,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = HelpTests.Config.class)
-public class HelpTests {
+class HelpTests {
 
 	private static Locale previousLocale;
 	private String testName;
-	private CommandsPojo commandsPojo = new CommandsPojo();
+	private final CommandsPojo commandsPojo = new CommandsPojo();
 
 	@Autowired
 	private CommandCatalog commandCatalog;
@@ -68,30 +69,26 @@ public class HelpTests {
 	private Help help;
 
 	@BeforeAll
-	public static void setAssumedLocale() {
+	static void setAssumedLocale() {
 		previousLocale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
 	}
 
 	@AfterAll
-	public static void restorePreviousLocale() {
+	static void restorePreviousLocale() {
 		Locale.setDefault(previousLocale);
 	}
 
 	@BeforeEach
-	public void setup(TestInfo testInfo) {
+	void setup(TestInfo testInfo) {
 		Optional<Method> testMethod = testInfo.getTestMethod();
-		if (testMethod.isPresent()) {
-			this.testName = testMethod.get().getName();
-		}
+		testMethod.ifPresent(method -> this.testName = method.getName());
 		Collection<CommandRegistration> regs = this.commandCatalog.getRegistrations().values();
-		regs.stream().forEach(r -> {
-			this.commandCatalog.unregister(r);
-		});
+		regs.forEach(r -> this.commandCatalog.unregister(r));
 	}
 
 	@Test
-	public void testCommandHelp() throws Exception {
+	void testCommandHelp() throws Exception {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("first-command")
 			.description("A rather extensive description of some command.")
@@ -127,7 +124,7 @@ public class HelpTests {
 	}
 
 	@Test
-	public void testCommandListDefault() throws Exception {
+	void testCommandListDefault() throws Exception {
 		registerCommandListCommands();
 		String list = this.help.help(null).toString();
 		list = removeNewLines(list);
@@ -135,7 +132,7 @@ public class HelpTests {
 	}
 
 	@Test
-	public void testCommandListFlat() throws Exception {
+	void testCommandListFlat() throws Exception {
 		registerCommandListCommands();
 		this.help.setShowGroups(false);
 		String list = this.help.help(null).toString();
@@ -144,10 +141,9 @@ public class HelpTests {
 	}
 
 	@Test
-	public void testUnknownCommand() throws Exception {
-		assertThatThrownBy(() -> {
-			this.help.help(new String[] { "some", "unknown", "command" });
-		}).isInstanceOf(IllegalArgumentException.class);
+	void testUnknownCommand() {
+		assertThatThrownBy(() -> this.help.help(new String[] { "some", "unknown", "command" }))
+				.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	private String removeNewLines(String str) {
@@ -156,10 +152,10 @@ public class HelpTests {
 
 	private String sample() throws IOException {
 		InputStream is = new ClassPathResource(HelpTests.class.getSimpleName() + "-" + testName + ".txt", HelpTests.class).getInputStream();
-		return removeNewLines(FileCopyUtils.copyToString(new InputStreamReader(is, "UTF-8")));
+		return removeNewLines(FileCopyUtils.copyToString(new InputStreamReader(is, StandardCharsets.UTF_8)));
 	}
 
-	private void registerCommandListCommands() throws Exception {
+	private void registerCommandListCommands() {
 		CommandRegistration registration1 = CommandRegistration.builder()
 			.command("first-command")
 			.description("A rather extensive description of some command.")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,10 @@ package org.springframework.shell.component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jline.terminal.impl.DumbTerminal;
@@ -38,22 +35,19 @@ import org.springframework.shell.component.context.ComponentContext;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-public class ConfirmationInputTests extends AbstractShellTests {
+class ConfirmationInputTests extends AbstractShellTests {
 
 	private ExecutorService service;
-	private CountDownLatch latch1;
 	private AtomicReference<ConfirmationInputContext> result1;
 
 	@BeforeEach
-	public void setupTests() {
+	void setupTests() {
 		service = Executors.newFixedThreadPool(1);
-		latch1 = new CountDownLatch(1);
 		result1 = new AtomicReference<>();
 	}
 
 	@AfterEach
-	public void cleanupTests() throws IOException {
-		latch1 = null;
+	void cleanupTests() {
 		result1 = null;
 		if (service != null) {
 			service.shutdown();
@@ -75,21 +69,21 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			ConfirmationInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		ConfirmationInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			ConfirmationInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNull();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNull();
+		});
 	}
 
 	@Test
-	public void testResultUserInputEnterDefaultYes() throws InterruptedException, IOException {
+	void testResultUserInputEnterDefaultYes() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1");
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -98,22 +92,22 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			ConfirmationInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		ConfirmationInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			ConfirmationInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNotNull();
-		assertThat(run1Context.getResultValue()).isTrue();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNotNull();
+			assertThat(run1Context.getResultValue()).isTrue();
+		});
 	}
 
 	@Test
-	public void testResultUserInputEnterDefaultNo() throws InterruptedException, IOException {
+	void testResultUserInputEnterDefaultNo() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1", false);
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -122,22 +116,22 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			ConfirmationInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		ConfirmationInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			ConfirmationInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNotNull();
-		assertThat(run1Context.getResultValue()).isFalse();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNotNull();
+			assertThat(run1Context.getResultValue()).isFalse();
+		});
 	}
 
 	@Test
-	public void testResultUserInputNo() throws InterruptedException, IOException {
+	void testResultUserInputNo() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1");
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -146,22 +140,22 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			ConfirmationInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("no").cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		ConfirmationInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			ConfirmationInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNotNull();
-		assertThat(run1Context.getResultValue()).isFalse();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNotNull();
+			assertThat(run1Context.getResultValue()).isFalse();
+		});
 	}
 
 	@Test
-	public void testUserInputShown() throws InterruptedException, IOException {
+	void testUserInputShown() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1");
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -170,7 +164,6 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			ConfirmationInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("N");
@@ -182,16 +175,17 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		testBuffer = new TestBuffer().cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		ConfirmationInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			ConfirmationInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNotNull();
-		assertThat(run1Context.getResultValue()).isFalse();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNotNull();
+			assertThat(run1Context.getResultValue()).isFalse();
+		});
 	}
 
 	@Test
-	public void testResultUserInputYes() throws InterruptedException, IOException {
+	void testResultUserInputYes() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1");
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -200,22 +194,22 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			ConfirmationInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("yes").cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
-		ConfirmationInputContext run1Context = result1.get();
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			ConfirmationInputContext run1Context = result1.get();
 
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNotNull();
-		assertThat(run1Context.getResultValue()).isTrue();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNotNull();
+			assertThat(run1Context.getResultValue()).isTrue();
+		});
 	}
 
 	@Test
-	public void testResultUserInputInvalidInput() throws InterruptedException, IOException {
+	void testResultUserInputInvalidInput() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		ConfirmationInput component1 = new ConfirmationInput(getTerminal(), "component1");
 		component1.setResourceLoader(new DefaultResourceLoader());
@@ -224,19 +218,17 @@ public class ConfirmationInputTests extends AbstractShellTests {
 		service.execute(() -> {
 			ConfirmationInputContext run1Context = component1.run(empty);
 			result1.set(run1Context);
-			latch1.countDown();
 		});
 
 		TestBuffer testBuffer = new TestBuffer().append("x").cr();
 		write(testBuffer.getBytes());
 
-		latch1.await(2, TimeUnit.SECONDS);
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			assertThat(consoleOut()).contains("input is invalid");
+			ConfirmationInputContext run1Context = result1.get();
 
-		assertThat(consoleOut()).contains("input is invalid");
-
-		ConfirmationInputContext run1Context = result1.get();
-
-		assertThat(run1Context).isNotNull();
-		assertThat(run1Context.getResultValue()).isNull();
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNull();
+		});
 	}
 }

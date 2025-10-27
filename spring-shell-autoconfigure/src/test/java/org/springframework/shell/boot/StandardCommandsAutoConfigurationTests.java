@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,31 +28,28 @@ import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StandardCommandsAutoConfigurationTests {
+class StandardCommandsAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(StandardCommandsAutoConfiguration.class));
 
 	@Test
-	public void testCompletionCommand() {
+	void testCompletionCommand() {
 		this.contextRunner
 				.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history"))
-				.run((context) -> {assertThat(context).doesNotHaveBean(Completion.class);
-		});
+				.run(context -> assertThat(context).doesNotHaveBean(Completion.class));
 		this.contextRunner
 				.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history", "completion"))
 				.withPropertyValues("spring.shell.command.completion.root-command=fake")
-				.run((context) -> {assertThat(context).doesNotHaveBean(Completion.class);
-		});
+				.run(context -> assertThat(context).doesNotHaveBean(Completion.class));
 		this.contextRunner
 				.with(disableCommands("help", "clear", "quit", "stacktrace", "script", "history"))
 				.withPropertyValues("spring.shell.command.completion.root-command=fake")
-				.run((context) -> {assertThat(context).hasSingleBean(Completion.class);
-		});
+				.run(context -> assertThat(context).hasSingleBean(Completion.class));
 	}
 
 	@Test
-	public void testHelpCommand() {
+	void testHelpCommand() {
 		this.contextRunner
 				.with(disableCommands("clear", "quit", "stacktrace", "script", "history", "completion"))
 				.withPropertyValues("spring.shell.command.help.grouping-mode=flat")
@@ -67,7 +64,7 @@ public class StandardCommandsAutoConfigurationTests {
 	}
 
 	private static Function<ApplicationContextRunner, ApplicationContextRunner> disableCommands(String... commands) {
-		return (cr) -> {
+		return cr -> {
 			for (String command : commands) {
 				cr = cr.withPropertyValues(String.format("spring.shell.command.%s.enabled=false", command));
 			}

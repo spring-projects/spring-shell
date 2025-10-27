@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.springframework.shell.component.view.control;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -49,8 +49,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ListViewTests extends AbstractViewTests {
 
-	private final static ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF
-		= new ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>>() {};
+	private static final ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF
+		= new ParameterizedTypeReference<>() {
+	};
 
 	private static final String SELECTED_FIELD = "selected";
 	private static final String START_FIELD = "start";
@@ -61,7 +62,7 @@ class ListViewTests extends AbstractViewTests {
 	ThemeResolver themeResolver;
 
 	@BeforeEach
-	public void setupListView() {
+	void setupListView() {
 		ThemeRegistry themeRegistry = new ThemeRegistry();
 		themeRegistry.register(new Theme() {
 			@Override
@@ -98,7 +99,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 
 			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop
 					.viewEvents(LISTVIEW_STRING_TYPEREF);
@@ -113,7 +114,7 @@ class ListViewTests extends AbstractViewTests {
 				assertThat(r.event()).isEqualTo(eventDown);
 				assertThat(r.consumed()).isTrue();
 			});
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 			verifier.verify(Duration.ofSeconds(1));
 		}
@@ -123,7 +124,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 
 			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop
 					.viewEvents(LISTVIEW_STRING_TYPEREF);
@@ -138,7 +139,7 @@ class ListViewTests extends AbstractViewTests {
 				assertThat(r.event()).isEqualTo(eventDown);
 				assertThat(r.capture()).isEqualTo(view);
 			});
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 			verifier.verify(Duration.ofSeconds(1));
 		}
@@ -148,7 +149,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 
 			Flux<ListViewSelectedItemChangedEvent<String>> actions = eventLoop
 					.viewEvents(LISTVIEW_STRING_TYPEREF);
@@ -159,7 +160,7 @@ class ListViewTests extends AbstractViewTests {
 
 			MouseEvent event01 = mouseClick(0, 1);
 			view.getMouseHandler().handle(MouseHandler.argsOf(event01));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 			verifier.verify(Duration.ofSeconds(1));
 		}
@@ -174,11 +175,11 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
-			view.setItems(Arrays.asList("item1", "item2"));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
+			view.setItems(List.of("item1", "item2"));
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 		}
 
 		@Test
@@ -186,12 +187,12 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 			view.getKeyHandler().handle(KeyHandler.argsOf(KeyEvent.of(Key.CursorUp)));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 		}
 
@@ -200,17 +201,17 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 			view.getKeyHandler().handle(KeyHandler.argsOf(KeyEvent.of(Key.CursorDown)));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 
 			view.getKeyHandler().handle(KeyHandler.argsOf(KeyEvent.of(Key.CursorDown)));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 		}
 
 	}
@@ -232,7 +233,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			view.setShowBorder(true);
 			view.setRect(0, 0, 10, 7);
-			view.setItems(Arrays.asList("item1", "item2", "item3"));
+			view.setItems(List.of("item1", "item2", "item3"));
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasStyle(1, 1, 1);
 			assertThat(forScreen(screen7x10)).hasForegroundColor(1, 1, -1);
@@ -246,7 +247,7 @@ class ListViewTests extends AbstractViewTests {
 			view.setThemeName("default");
 			view.setShowBorder(true);
 			view.setRect(0, 0, 10, 7);
-			view.setItems(Arrays.asList("item1", "item2", "item3"));
+			view.setItems(List.of("item1", "item2", "item3"));
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasStyle(1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasForegroundColor(1, 1, Color.RED);
@@ -258,7 +259,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			view.setShowBorder(true);
 			view.setRect(0, 0, 10, 7);
-			view.setItems(Arrays.asList("item1", "item2", "item3"));
+			view.setItems(List.of("item1", "item2", "item3"));
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item2", 1, 2, 5);
@@ -270,7 +271,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			view.setShowBorder(true);
 			view.setRect(0, 0, 10, 7);
-			view.setItems(Arrays.asList("item1", "item2", "item3", "item4", "item5", "item6", "item7"));
+			view.setItems(List.of("item1", "item2", "item3", "item4", "item5", "item6", "item7"));
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item2", 1, 2, 5);
@@ -285,10 +286,10 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			view.setShowBorder(true);
 			view.setRect(0, 0, 10, 7);
-			view.setItems(Arrays.asList("item1", "item2", "item3", "item4", "item5", "item6", "item7"));
+			view.setItems(List.of("item1", "item2", "item3", "item4", "item5", "item6", "item7"));
 
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item2", 1, 2, 5);
@@ -343,7 +344,7 @@ class ListViewTests extends AbstractViewTests {
 
 			callVoidIntMethod(view, SCROLL_METHOD, -1);
 			assertThat(getIntField(view, START_FIELD)).isEqualTo(2);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item3", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item4", 1, 2, 5);
@@ -354,7 +355,7 @@ class ListViewTests extends AbstractViewTests {
 
 			callVoidIntMethod(view, SCROLL_METHOD, -1);
 			assertThat(getIntField(view, START_FIELD)).isEqualTo(1);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item2", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item3", 1, 2, 5);
@@ -364,8 +365,8 @@ class ListViewTests extends AbstractViewTests {
 			clearScreens();
 
 			callVoidIntMethod(view, SCROLL_METHOD, -1);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item2", 1, 2, 5);
@@ -381,9 +382,9 @@ class ListViewTests extends AbstractViewTests {
 			view.setShowBorder(true);
 			view.setRect(0, 0, 10, 7);
 
-			view.setItems(Arrays.asList("item1", "item2", "item3", "item4", "item5", "item6", "item7"));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			view.setItems(List.of("item1", "item2", "item3", "item4", "item5", "item6", "item7"));
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item2", 1, 2, 5);
@@ -393,7 +394,7 @@ class ListViewTests extends AbstractViewTests {
 			clearScreens();
 
 			callVoidIntMethod(view, SCROLL_METHOD, 1);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
@@ -404,7 +405,7 @@ class ListViewTests extends AbstractViewTests {
 			clearScreens();
 
 			callVoidIntMethod(view, SCROLL_METHOD, 1);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(2);
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
@@ -415,7 +416,7 @@ class ListViewTests extends AbstractViewTests {
 			clearScreens();
 
 			callVoidIntMethod(view, SCROLL_METHOD, 1);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(3);
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
@@ -426,7 +427,7 @@ class ListViewTests extends AbstractViewTests {
 			clearScreens();
 
 			callVoidIntMethod(view, SCROLL_METHOD, 1);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(4);
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
@@ -459,8 +460,8 @@ class ListViewTests extends AbstractViewTests {
 			clearScreens();
 
 			callVoidIntMethod(view, SCROLL_METHOD, 1);
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
-			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
+			assertThat(getIntField(view, POSITION_FIELD)).isZero();
 			view.draw(screen7x10);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item1", 1, 1, 5);
 			assertThat(forScreen(screen7x10)).hasHorizontalText("item2", 1, 2, 5);
@@ -480,7 +481,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>(ItemStyle.RADIO);
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 			view.getKeyHandler().handle(KeyHandler.argsOf(KeyEvent.of(Key.Space)));
 			assertThat(getIntSetField(view, SELECTED_FIELD)).containsExactly(0);
 			view.getKeyHandler().handle(KeyHandler.argsOf(KeyEvent.of(Key.CursorDown)));
@@ -498,7 +499,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>(ItemStyle.CHECKED);
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 			view.getKeyHandler().handle(KeyHandler.argsOf(KeyEvent.of(Key.Space)));
 			assertThat(getIntSetField(view, SELECTED_FIELD)).containsExactly(0);
 			view.getKeyHandler().handle(KeyHandler.argsOf(KeyEvent.of(Key.CursorDown)));
@@ -517,7 +518,7 @@ class ListViewTests extends AbstractViewTests {
 			view.setShowBorder(true);
 			view.setCellFactory((list, item) -> new TestListCell(item));
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1"));
+			view.setItems(List.of("item1"));
 			view.draw(screen24x80);
 			assertThat(forScreen(screen24x80)).hasHorizontalText("pre-item1-post", 0, 1, 16);
 		}
@@ -547,7 +548,7 @@ class ListViewTests extends AbstractViewTests {
 			view = new ListView<>();
 			configure(view);
 			view.setRect(0, 0, 80, 24);
-			view.setItems(Arrays.asList("item1", "item2"));
+			view.setItems(List.of("item1", "item2"));
 		}
 
 		@Test
@@ -563,7 +564,7 @@ class ListViewTests extends AbstractViewTests {
 				.verifyLater();
 			view.runViewCommand(ViewCommand.LINE_DOWN);
 			verifier.verify(Duration.ofSeconds(1));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 		}
 
@@ -575,7 +576,7 @@ class ListViewTests extends AbstractViewTests {
 				.verifyLater();
 			view.runViewCommand(ViewCommand.LINE_UP);
 			verifier.verify(Duration.ofSeconds(1));
-			assertThat(getIntField(view, START_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, START_FIELD)).isZero();
 			assertThat(getIntField(view, POSITION_FIELD)).isEqualTo(1);
 		}
 

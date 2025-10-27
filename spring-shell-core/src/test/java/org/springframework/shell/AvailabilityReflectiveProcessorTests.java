@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class AvailabilityReflectiveProcessorTests {
 	private final ReflectionHints hints = new ReflectionHints();
 
 	@Test
-	void registerReflectiveHintsForMethod() throws NoSuchMethodException {
+	void registerReflectiveHintsForMethod() {
 			processor.registerReflectionHints(hints, SampleBean.class);
 			assertThat(hints.typeHints()).singleElement().satisfies(typeHint -> {
 					assertThat(typeHint.getType()).isEqualTo(TypeReference.of(SampleBean.class));

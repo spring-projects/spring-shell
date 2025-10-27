@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,17 +29,17 @@ import org.springframework.shell.context.InteractionMode;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class CommandRegistrationTests extends AbstractCommandTests {
+class CommandRegistrationTests extends AbstractCommandTests {
 
 	@Test
-	public void testCommandMustBeSet() {
-		assertThatThrownBy(() -> {
-			CommandRegistration.builder().build();
-		}).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("command cannot be empty");
+	void testCommandMustBeSet() {
+		assertThatThrownBy(() -> CommandRegistration.builder().build())
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("command cannot be empty");
 	}
 
 	@Test
-	public void testBasics() {
+	void testBasics() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
@@ -63,7 +63,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testCommandStructures() {
+	void testCommandStructures() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
@@ -98,7 +98,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testFunctionRegistration() {
+	void testFunctionRegistration() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
@@ -112,7 +112,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testConsumerRegistration() {
+	void testConsumerRegistration() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
@@ -127,7 +127,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testMethodRegistration() {
+	void testMethodRegistration() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
@@ -141,20 +141,18 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testCanUseOnlyOneTarget() {
-		assertThatThrownBy(() -> {
-			CommandRegistration.builder()
-				.command("command1")
-				.withTarget()
-					.method(pojo1, "method3", String.class)
-					.function(function1)
-					.and()
-				.build();
-		}).isInstanceOf(IllegalStateException.class).hasMessageContaining("only one target can exist");
+	void testCanUseOnlyOneTarget() {
+		assertThatThrownBy(() -> CommandRegistration.builder()
+			.command("command1")
+			.withTarget()
+				.method(pojo1, "method3", String.class)
+				.function(function1)
+				.and()
+			.build()).isInstanceOf(IllegalStateException.class).hasMessageContaining("only one target can exist");
 	}
 
 	@Test
-	public void testSimpleFullRegistrationWithFunction() {
+	void testSimpleFullRegistrationWithFunction() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -173,7 +171,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testSimpleFullRegistrationWithMethod() {
+	void testSimpleFullRegistrationWithMethod() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -191,7 +189,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testOptionWithType() {
+	void testOptionWithType() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -214,7 +212,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testOptionWithResolvableType() {
+	void testOptionWithResolvableType() {
 		ResolvableType rtype = ResolvableType.forClassWithGenerics(List.class, String.class);
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
@@ -228,13 +226,11 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 			.build();
 		assertThat(registration.getCommand()).isEqualTo("command1");
 		assertThat(registration.getOptions()).hasSize(1);
-		assertThat(registration.getOptions().get(0).getType()).satisfies(type -> {
-			assertThat(type).isEqualTo(rtype);
-		});
+		assertThat(registration.getOptions().get(0).getType()).satisfies(type -> assertThat(type).isEqualTo(rtype));
 	}
 
 	@Test
-	public void testOptionWithRequired() {
+	void testOptionWithRequired() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -306,7 +302,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testOptionWithDefaultValue() {
+	void testOptionWithDefaultValue() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.description("help")
@@ -327,7 +323,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testOptionWithPositionValue() {
+	void testOptionWithPositionValue() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
@@ -348,7 +344,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testArityViaInts() {
+	void testArityViaInts() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
@@ -360,12 +356,12 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 			assertThat(registration.getOptions()).hasSize(1);
-			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
-			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(0);
+			assertThat(registration.getOptions().get(0).getArityMin()).isZero();
+			assertThat(registration.getOptions().get(0).getArityMax()).isZero();
 	}
 
 	@Test
-	public void testArityViaEnum() {
+	void testArityViaEnum() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
@@ -377,12 +373,12 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 			assertThat(registration.getOptions()).hasSize(1);
-			assertThat(registration.getOptions().get(0).getArityMin()).isEqualTo(0);
-			assertThat(registration.getOptions().get(0).getArityMax()).isEqualTo(0);
+			assertThat(registration.getOptions().get(0).getArityMin()).isZero();
+			assertThat(registration.getOptions().get(0).getArityMax()).isZero();
 	}
 
 	@Test
-	public void testArityViaEnumSetNone() {
+	void testArityViaEnumSetNone() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
@@ -399,7 +395,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testAliases() {
+	void testAliases() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.group("Test Group")
@@ -425,7 +421,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testExitCodes() {
+	void testExitCodes() {
 		CommandRegistration registration;
 		registration = CommandRegistration.builder()
 			.command("command1")
@@ -434,7 +430,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.and()
 			.build();
 		assertThat(registration.getExitCode()).isNotNull();
-		assertThat(registration.getExitCode().getMappingFunctions()).hasSize(0);
+		assertThat(registration.getExitCode().getMappingFunctions()).isEmpty();
 
 		registration = CommandRegistration.builder()
 			.command("command1")
@@ -453,7 +449,7 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testAvailability() {
+	void testAvailability() {
 		CommandRegistration registration;
 		registration = CommandRegistration.builder()
 			.command("command1")
@@ -476,15 +472,13 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testOptionWithCompletion() {
+	void testOptionWithCompletion() {
 		CommandRegistration registration;
 		registration = CommandRegistration.builder()
 			.command("command1")
 			.withOption()
 				.longNames("arg1")
-				.completion(ctx -> {
-					return new ArrayList<>();
-				})
+				.completion(ctx -> new ArrayList<>())
 				.and()
 			.withTarget()
 				.function(function1)
@@ -495,13 +489,8 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testErrorHandling() {
-		CommandExceptionResolver er1 = new CommandExceptionResolver() {
-			@Override
-			public CommandHandlingResult resolve(Exception e) {
-				return CommandHandlingResult.empty();
-			}
-		};
+	void testErrorHandling() {
+		CommandExceptionResolver er1 = e -> CommandHandlingResult.empty();
 		CommandRegistration registration;
 		registration = CommandRegistration.builder()
 			.command("command1")
@@ -521,11 +510,11 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		assertThat(registration.getExceptionResolvers()).hasSize(0);
+		assertThat(registration.getExceptionResolvers()).isEmpty();
 	}
 
 	@Test
-	public void testHidden() {
+	void testHidden() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withTarget()
@@ -563,13 +552,13 @@ public class CommandRegistrationTests extends AbstractCommandTests {
 	}
 
 	@Test
-	public void testHelpOption() {
+	void testHelpOption() {
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("command1")
 			.withHelpOptions()
 				.enabled(true)
-				.longNames(new String[] { "help" })
-				.shortNames(new Character[] { 'h' })
+				.longNames("help")
+				.shortNames('h')
 				.command("help")
 				.and()
 			.withTarget()

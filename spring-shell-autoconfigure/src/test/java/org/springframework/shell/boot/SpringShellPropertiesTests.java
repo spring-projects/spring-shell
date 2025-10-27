@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,15 @@ import org.springframework.shell.boot.SpringShellProperties.HelpCommand.Grouping
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SpringShellPropertiesTests {
+class SpringShellPropertiesTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
 
 	@Test
-	public void defaultNoPropertiesSet() {
+	void defaultNoPropertiesSet() {
 		this.contextRunner
 				.withUserConfiguration(Config1.class)
-				.run((context) -> {
+				.run(context -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
 					assertThat(properties.getHistory().isEnabled()).isTrue();
 					assertThat(properties.getHistory().getName()).isNull();
@@ -75,7 +75,7 @@ public class SpringShellPropertiesTests {
 	}
 
 	@Test
-	public void setProperties() {
+	void setProperties() {
 		this.contextRunner
 				.withPropertyValues("spring.shell.history.enabled=false")
 				.withPropertyValues("spring.shell.history.name=fakename")
@@ -115,7 +115,7 @@ public class SpringShellPropertiesTests {
 				.withPropertyValues("spring.shell.option.naming.case-type=camel")
 				.withPropertyValues("spring.shell.context.close=true")
 				.withUserConfiguration(Config1.class)
-				.run((context) -> {
+				.run(context -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
 					assertThat(properties.getHistory().isEnabled()).isFalse();
 					assertThat(properties.getHistory().getName()).isEqualTo("fakename");
@@ -159,12 +159,12 @@ public class SpringShellPropertiesTests {
 
 
 	@Test
-	public void essentiallyUnset() {
+	void essentiallyUnset() {
 		this.contextRunner
 				.withPropertyValues("spring.shell.help.long-names=")
 				.withPropertyValues("spring.shell.help.short-names=")
 				.withUserConfiguration(Config1.class)
-				.run((context) -> {
+				.run(context -> {
 					SpringShellProperties properties = context.getBean(SpringShellProperties.class);
 					assertThat(properties.getHelp().getLongNames()).isEmpty();
 					assertThat(properties.getHelp().getShortNames()).isEmpty();

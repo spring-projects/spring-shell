@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,19 +126,19 @@ class InputViewTests extends AbstractViewTests {
 
 		@Test
 		void initialCursorPosition() {
-			assertThat(cursorIndex()).isEqualTo(0);
+			assertThat(cursorIndex()).isZero();
 		}
 
 		@Test
 		void shouldNotMoveOutOfBoundsIfMovingRight() {
 			handleKey(view, Key.CursorRight);
-			assertThat(cursorIndex()).isEqualTo(0);
+			assertThat(cursorIndex()).isZero();
 		}
 
 		@Test
 		void shouldNotMoveOutOfBoundsIfMovingLeft() {
 			handleKey(view, Key.CursorLeft);
-			assertThat(cursorIndex()).isEqualTo(0);
+			assertThat(cursorIndex()).isZero();
 		}
 
 		@Test
@@ -169,13 +169,13 @@ class InputViewTests extends AbstractViewTests {
 			handleKey(view, "😂");
 			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
 			handleKey(view, Key.Backspace);
-			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isZero();
 		}
 
 		@Test
 		void deleteFromLastPosition() {
 			handleKey(view, Key.Delete);
-			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isZero();
 			handleKey(view, Key.a);
 			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
 		}
@@ -193,14 +193,14 @@ class InputViewTests extends AbstractViewTests {
 
 		@Test
 		void shouldAddToCursorPosition() {
-			assertThat(callIntMethod(view, CURSOR_POSITION_METHOD)).isEqualTo(0);
+			assertThat(callIntMethod(view, CURSOR_POSITION_METHOD)).isZero();
 			handleKey(view, Key.a);
 			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
 			assertThat(view.getInputText()).isEqualTo("a");
 			assertThat(callIntMethod(view, CURSOR_POSITION_METHOD)).isEqualTo(1);
 
 			handleKey(view, Key.CursorLeft);
-			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(0);
+			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isZero();
 
 			handleKey(view, Key.b);
 			assertThat(getIntField(view, CURSOR_INDEX_FIELD)).isEqualTo(1);
@@ -230,9 +230,7 @@ class InputViewTests extends AbstractViewTests {
 
 			KeyHandlerResult result = handleKey(view, KeyEvent.Key.Enter);
 
-			assertThat(result).isNotNull().satisfies(r -> {
-				assertThat(r.consumed()).isTrue();
-			});
+			assertThat(result).isNotNull().satisfies(r -> assertThat(r.consumed()).isTrue());
 			verifier.verify(Duration.ofSeconds(1));
 		}
 

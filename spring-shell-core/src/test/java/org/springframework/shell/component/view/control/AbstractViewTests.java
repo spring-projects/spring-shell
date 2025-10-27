@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,14 +75,10 @@ public class AbstractViewTests {
 				v.setEventLoop(eventLoop);
 			}
 			eventLoop.onDestroy(eventLoop.mouseEvents()
-				.doOnNext(m -> {
-					view.getMouseHandler().handle(MouseHandler.argsOf(m));
-				})
+				.doOnNext(m -> view.getMouseHandler().handle(MouseHandler.argsOf(m)))
 				.subscribe());
 			eventLoop.onDestroy(eventLoop.keyEvents()
-				.doOnNext(m -> {
-					view.getKeyHandler().handle(KeyHandler.argsOf(m));
-				})
+				.doOnNext(m -> view.getKeyHandler().handle(KeyHandler.argsOf(m)))
 				.subscribe());
 		}
 	}

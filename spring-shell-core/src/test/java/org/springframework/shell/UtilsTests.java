@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.shell;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -28,10 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Eric Bottard
  */
-public class UtilsTests {
+class UtilsTests {
 
 	@Test
-	public void testUnCamelify() throws Exception {
+	void testUnCamelify() {
 		assertThat(Utils.unCamelify("HelloWorld")).isEqualTo("hello-world");
 		assertThat(Utils.unCamelify("helloWorld")).isEqualTo("hello-world");
 		assertThat(Utils.unCamelify("helloWorldHowAreYou")).isEqualTo("hello-world-how-are-you");
@@ -39,26 +38,26 @@ public class UtilsTests {
 	}
 
 	@Test
-	public void testSplit() {
+	void testSplit() {
 		Predicate<String> predicate = t -> t.startsWith("-");
-		List<List<String>> split = null;
+		List<List<String>> split;
 
 		split = Utils.split(new String[] { "-a1", "a1" }, predicate);
-		assertThat(split).containsExactly(Arrays.asList("-a1", "a1"));
+		assertThat(split).containsExactly(List.of("-a1", "a1"));
 
 		split = Utils.split(new String[] { "-a1", "a1", "-a2", "a2" }, predicate);
-		assertThat(split).containsExactly(Arrays.asList("-a1", "a1"), Arrays.asList("-a2", "a2"));
+		assertThat(split).containsExactly(List.of("-a1", "a1"), List.of("-a2", "a2"));
 
 		split = Utils.split(new String[] { "a0", "-a1", "a1" }, predicate);
-		assertThat(split).containsExactly(Arrays.asList("a0"), Arrays.asList("-a1", "a1"));
+		assertThat(split).containsExactly(List.of("a0"), List.of("-a1", "a1"));
 
 		split = Utils.split(new String[] { "-a1", "-a2" }, predicate);
-		assertThat(split).containsExactly(Arrays.asList("-a1"), Arrays.asList("-a2"));
+		assertThat(split).containsExactly(List.of("-a1"), List.of("-a2"));
 
 		split = Utils.split(new String[] { "a1", "a2" }, predicate);
-		assertThat(split).containsExactly(Arrays.asList("a1", "a2"));
+		assertThat(split).containsExactly(List.of("a1", "a2"));
 
 		split = Utils.split(new String[] { "-a1", "a1", "a2" }, predicate);
-		assertThat(split).containsExactly(Arrays.asList("-a1", "a1", "a2"));
+		assertThat(split).containsExactly(List.of("-a1", "a1", "a2"));
 	}
 }

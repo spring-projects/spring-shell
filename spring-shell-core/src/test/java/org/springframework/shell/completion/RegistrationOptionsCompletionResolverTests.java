@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.completion;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RegistrationOptionsCompletionResolverTests {
+class RegistrationOptionsCompletionResolverTests {
 
 	private final RegistrationOptionsCompletionResolver resolver = new RegistrationOptionsCompletionResolver();
 
@@ -44,10 +43,9 @@ public class RegistrationOptionsCompletionResolverTests {
 				.longNames("arg2")
 				.and()
 			.build();
-		CompletionContext ctx = new CompletionContext(Arrays.asList("hello", "world", ""), 2, "".length(), registration, null);
+		CompletionContext ctx = new CompletionContext(List.of("hello", "world", ""), 2, "".length(), registration, null);
 		List<CompletionProposal> proposals = resolver.apply(ctx);
-		assertThat(proposals).isNotNull();
-		assertThat(proposals).hasSize(2);
+		assertThat(proposals).isNotNull().hasSize(2);
 	}
 
 	@Test
@@ -64,10 +62,9 @@ public class RegistrationOptionsCompletionResolverTests {
 				.longNames("arg2")
 				.and()
 			.build();
-		CompletionContext ctx = new CompletionContext(Arrays.asList("hello", "world", "--arg1", ""), 2, "".length(), registration, null);
+		CompletionContext ctx = new CompletionContext(List.of("hello", "world", "--arg1", ""), 2, "".length(), registration, null);
 		List<CompletionProposal> proposals = resolver.apply(ctx);
-		assertThat(proposals).isNotNull();
-		assertThat(proposals).hasSize(1);
+		assertThat(proposals).isNotNull().hasSize(1);
 	}
 
 }

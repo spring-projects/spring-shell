@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.springframework.shell.component.view.control;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +51,7 @@ class MenuViewTests extends AbstractViewTests {
 	ThemeResolver themeResolver;
 
 	@BeforeEach
-	public void setupMenuView() {
+	void setupMenuView() {
 		ThemeRegistry themeRegistry = new ThemeRegistry();
 		themeRegistry.register(new Theme() {
 			@Override
@@ -126,8 +126,7 @@ class MenuViewTests extends AbstractViewTests {
 			});
 			assertThat(view.getItems()).hasSize(2);
 			Set<MenuItem> checkedActive = (Set<MenuItem>) ReflectionTestUtils.getField(view, CHECKED_ACTIVE_FIELD);
-			assertThat(checkedActive).isNotNull();
-			assertThat(checkedActive).hasSize(2);
+			assertThat(checkedActive).isNotNull().hasSize(2);
 		}
 
 		@Test
@@ -169,7 +168,7 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void hasBorder() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			view = new MenuView(Arrays.asList(menuItem));
+			view = new MenuView(List.of(menuItem));
 			view.setShowBorder(true);
 			view.setRect(0, 0, 80, 24);
 			view.draw(screen24x80);
@@ -179,7 +178,7 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void selectedHighlightNoTheme() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			view = new MenuView(Arrays.asList(menuItem));
+			view = new MenuView(List.of(menuItem));
 			view.setShowBorder(true);
 			view.setRect(0, 0, 10, 7);
 			view.draw(screen7x10);
@@ -191,7 +190,7 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void selectedHighlightThemeSet() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			view = new MenuView(Arrays.asList(menuItem));
+			view = new MenuView(List.of(menuItem));
 			view.setThemeResolver(themeResolver);
 			view.setThemeName("default");
 			view.setShowBorder(true);
@@ -205,10 +204,8 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void defaultItemCheckStyleIsNoCheck() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			view = new MenuView(Arrays.asList(menuItem));
-			assertThat(view.getItems()).allSatisfy(item -> {
-				assertThat(item.getCheckStyle()).isEqualTo(MenuItemCheckStyle.NOCHECK);
-			});
+			view = new MenuView(List.of(menuItem));
+			assertThat(view.getItems()).allSatisfy(item -> assertThat(item.getCheckStyle()).isEqualTo(MenuItemCheckStyle.NOCHECK));
 		}
 
 	}
@@ -231,9 +228,9 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void firstItemShouldAlwaysBeSelected() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			MenuView view = new MenuView(Arrays.asList(menuItem));
-			Integer selected = (Integer) ReflectionTestUtils.getField(view, SELECTED_FIELD);
-			assertThat(selected).isEqualTo(0);
+			MenuView menuView = new MenuView(List.of(menuItem));
+			Integer selected = (Integer) ReflectionTestUtils.getField(menuView, SELECTED_FIELD);
+			assertThat(selected).isZero();
 		}
 
 		@Test
@@ -271,7 +268,7 @@ class MenuViewTests extends AbstractViewTests {
 
 			handleMouseWheelUp(view, 0, 1);
 			selected = (Integer) ReflectionTestUtils.getField(view, SELECTED_FIELD);
-			assertThat(selected).isEqualTo(0);
+			assertThat(selected).isZero();
 		}
 
 		@Test
@@ -284,12 +281,9 @@ class MenuViewTests extends AbstractViewTests {
 
 			handleKey(view, Key.CursorDown);
 			selected = (Integer) ReflectionTestUtils.getField(view, SELECTED_FIELD);
-			assertThat(selected).isEqualTo(0);
+			assertThat(selected).isZero();
 		}
 
-		void canSelectManually() {
-
-		}
 	}
 
 	@Nested
@@ -457,10 +451,10 @@ class MenuViewTests extends AbstractViewTests {
 		@Test
 		void hasDefaultItemSelected() {
 			MenuItem menuItem = new MenuView.MenuItem("sub1");
-			MenuView view = new MenuView(Arrays.asList(menuItem));
-			view.setShowBorder(true);
-			view.setRect(0, 0, 80, 24);
-			view.draw(screen24x80);
+			MenuView menuView = new MenuView(List.of(menuItem));
+			menuView.setShowBorder(true);
+			menuView.setRect(0, 0, 80, 24);
+			menuView.draw(screen24x80);
 			assertThat(forScreen(screen24x80)).hasHorizontalText("sub1", 0, 1, 5);
 		}
 	}

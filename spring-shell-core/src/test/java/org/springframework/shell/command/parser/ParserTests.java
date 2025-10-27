@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				ar -> {
 					assertThat(ar.value()).isEqualTo("arg1");
-					assertThat(ar.position()).isEqualTo(0);
+					assertThat(ar.position()).isZero();
 				},
 				ar -> {
 					assertThat(ar.value()).isEqualTo("arg2");
@@ -71,7 +71,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				ar -> {
 					assertThat(ar.value()).isEqualTo("arg1");
-					assertThat(ar.position()).isEqualTo(0);
+					assertThat(ar.position()).isZero();
 				},
 				ar -> {
 					assertThat(ar.value()).isEqualTo("arg2");
@@ -142,9 +142,7 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT4);
 			ParseResult result = parse("root4");
 			assertThat(result).isNotNull();
-			assertThat(result.messageResults()).satisfiesExactly(message -> {
-				ParserAssertions.assertThat(message.parserMessage()).hasCode(2000).hasType(ParserMessage.Type.ERROR);
-			});
+			assertThat(result.messageResults()).satisfiesExactly(message -> ParserAssertions.assertThat(message.parserMessage()).hasCode(2000).hasType(ParserMessage.Type.ERROR));
 			// "100E:(pos 0): Missing option, longnames='arg1', shortnames=''"
 			assertThat(result.messageResults().get(0).getMessage()).contains("Missing mandatory option", "arg1");
 		}
@@ -156,12 +154,8 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result).isNotNull();
 
 			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2000).hasType(ParserMessage.Type.ERROR);
-				},
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
-				}
+				message -> ParserAssertions.assertThat(message.parserMessage()).hasCode(2000).hasType(ParserMessage.Type.ERROR),
+				message -> ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR)
 			);
 		}
 
@@ -183,9 +177,7 @@ class ParserTests extends AbstractParsingTests {
 			register(regAndArgs.reg());
 			ParseResult result = parse(regAndArgs.args());
 			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR);
-				}
+				message -> ParserAssertions.assertThat(message.parserMessage()).hasCode(2001).hasType(ParserMessage.Type.ERROR)
 			);
 
 		}
@@ -286,9 +278,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
 			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("value1");
-				}
+				r -> assertThat(r.value()).isEqualTo("value1")
 			);
 			assertThat(result.messageResults()).isEmpty();
 		}
@@ -432,9 +422,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.commandRegistration()).isNotNull();
 			assertThat(result.optionResults()).isNotEmpty();
 			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("value1");
-				}
+				r -> assertThat(r.value()).isEqualTo("value1")
 			);
 			assertThat(result.messageResults()).isEmpty();
 		}
@@ -449,9 +437,7 @@ class ParserTests extends AbstractParsingTests {
 			register(ROOT6_OPTION_DEFAULT_VALUE);
 			ParseResult result = parse("root6");
 			assertThat(result.optionResults()).satisfiesExactly(
-				r -> {
-					assertThat(r.value()).isEqualTo("defaultvalue");
-				}
+				r -> assertThat(r.value()).isEqualTo("defaultvalue")
 			);
 		}
 	}
@@ -466,7 +452,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				}
 			);
 		}
@@ -478,7 +464,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				},
 				r -> {
 					assertThat(r.value()).isEqualTo("b");
@@ -509,7 +495,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				}
 			);
 			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
@@ -546,7 +532,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				}
 			);
 			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
@@ -569,7 +555,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("a");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				},
 				r -> {
 					assertThat(r.value()).isEqualTo("b");
@@ -596,7 +582,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("b");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				}
 			);
 			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
@@ -621,7 +607,7 @@ class ParserTests extends AbstractParsingTests {
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("c");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				}
 			);
 			assertThat(result.optionResults()).isNotNull().satisfiesExactly(
@@ -647,18 +633,16 @@ class ParserTests extends AbstractParsingTests {
 
 			result = parse("root7", "--arg1", "a", "b", "--arg2", "c", "d");
 			assertThat(result.messageResults()).satisfiesExactlyInAnyOrder(
-				message -> {
-					ParserAssertions.assertThat(message.parserMessage()).hasCode(2004).hasType(ParserMessage.Type.ERROR);
-				}
+				message -> ParserAssertions.assertThat(message.parserMessage()).hasCode(2004).hasType(ParserMessage.Type.ERROR)
 			);
 			assertThat(result.argumentResults()).satisfiesExactly(
 				r -> {
 					assertThat(r.value()).isEqualTo("b");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				},
 				r -> {
 					assertThat(r.value()).isEqualTo("d");
-					assertThat(r.position()).isEqualTo(0);
+					assertThat(r.position()).isZero();
 				}
 			);
 			assertThat(result.optionResults()).isNotNull().satisfiesExactly(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,18 +28,18 @@ import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BashCompletionsTests {
+class BashCompletionsTests {
 
 	AnnotationConfigApplicationContext context;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		context = new AnnotationConfigApplicationContext();
 		context.refresh();
 	}
 
 	@AfterEach
-	public void clean() {
+	void clean() {
 		if (context != null) {
 			context.close();
 		}
@@ -47,7 +47,7 @@ public class BashCompletionsTests {
 	}
 
 	@Test
-	public void testNoCommands() {
+	void testNoCommands() {
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		BashCompletions completions = new BashCompletions(context, commandCatalog);
 		String bash = completions.generate("root-command");
@@ -55,28 +55,28 @@ public class BashCompletionsTests {
 	}
 
 	@Test
-	public void testCommandFromMethod() {
+	void testCommandFromMethod() {
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		registerFromMethod(commandCatalog);
 		BashCompletions completions = new BashCompletions(context, commandCatalog);
 		String bash = completions.generate("root-command");
 		System.out.println(bash);
-		assertThat(bash).contains("root-command");
-		assertThat(bash).contains("commands+=(\"testmethod1\")");
-		assertThat(bash).contains("_root-command_testmethod1()");
-		assertThat(bash).contains("two_word_flags+=(\"--arg1\")");
+		assertThat(bash).contains("root-command")
+				.contains("commands+=(\"testmethod1\")")
+				.contains("_root-command_testmethod1()")
+				.contains("two_word_flags+=(\"--arg1\")");
 	}
 
 	@Test
-	public void testCommandFromFunction() {
+	void testCommandFromFunction() {
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		registerFromFunction(commandCatalog, "testmethod1");
 		BashCompletions completions = new BashCompletions(context, commandCatalog);
 		String bash = completions.generate("root-command");
-		assertThat(bash).contains("root-command");
-		assertThat(bash).contains("commands+=(\"testmethod1\")");
-		assertThat(bash).contains("_root-command_testmethod1()");
-		assertThat(bash).contains("two_word_flags+=(\"--arg1\")");
+		assertThat(bash).contains("root-command")
+				.contains("commands+=(\"testmethod1\")")
+				.contains("_root-command_testmethod1()")
+				.contains("two_word_flags+=(\"--arg1\")");
 	}
 
 	private void registerFromMethod(CommandCatalog commandCatalog) {

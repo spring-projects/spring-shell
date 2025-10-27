@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import org.springframework.shell.result.GenericResultHandlerService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GenericResultHandlerServiceTests {
+class GenericResultHandlerServiceTests {
 
 	@Test
-	public void testSimpleHandling() {
+	void testSimpleHandling() {
 		StringResultHandler stringResultHandler = new StringResultHandler();
 		IntegerResultHandler integerResultHandler = new IntegerResultHandler();
 		GenericResultHandlerService resultHandlerService = new GenericResultHandlerService();
@@ -33,13 +33,13 @@ public class GenericResultHandlerServiceTests {
 		resultHandlerService.addResultHandler(integerResultHandler);
 		resultHandlerService.handle("string");
 		assertThat(stringResultHandler.result).isEqualTo("string");
-		assertThat(integerResultHandler.result).isNull();;
+		assertThat(integerResultHandler.result).isNull();
 		resultHandlerService.handle(0);
-		assertThat(integerResultHandler.result).isEqualTo(0);
+		assertThat(integerResultHandler.result).isZero();
 	}
 
 	@Test
-	public void testObjectHandling() {
+	void testObjectHandling() {
 		ObjectResultHandler resultHandler = new ObjectResultHandler();
 		GenericResultHandlerService resultHandlerService = new GenericResultHandlerService();
 		resultHandlerService.addResultHandler(resultHandler);

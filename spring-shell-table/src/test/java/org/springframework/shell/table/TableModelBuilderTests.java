@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,20 +26,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  *
  * @author Eric Bottard
  */
-public class TableModelBuilderTests {
+class TableModelBuilderTests {
 
 	@Test
-	public void emptyModel() {
-		TableModelBuilder<Number> builder = new TableModelBuilder<Number>();
+	void emptyModel() {
+		TableModelBuilder<Number> builder = new TableModelBuilder<>();
 		TableModel model = builder.build();
-		assertThat(model.getColumnCount()).isEqualTo(0);
-		assertThat(model.getColumnCount()).isEqualTo(0);
+		assertThat(model.getColumnCount()).isZero();
+		assertThat(model.getColumnCount()).isZero();
 	}
 
 	@Test
-	public void testFrozen() {
+	void testFrozen() {
 		assertThatThrownBy(() -> {
-			TableModelBuilder<Number> builder = new TableModelBuilder<Number>();
+			TableModelBuilder<Number> builder = new TableModelBuilder<>();
 			builder.addRow().addValue(5);
 			builder.build();
 			builder.addRow();
@@ -47,9 +47,9 @@ public class TableModelBuilderTests {
 	}
 
 	@Test
-	public void testAddingTooManyValues() {
+	void testAddingTooManyValues() {
 		assertThatThrownBy(() -> {
-			TableModelBuilder<Number> builder = new TableModelBuilder<Number>();
+			TableModelBuilder<Number> builder = new TableModelBuilder<>();
 			builder.addRow().addValue(5);
 			builder.addRow().addValue(1).addValue(2);
 			builder.build();
@@ -57,9 +57,9 @@ public class TableModelBuilderTests {
 	}
 
 	@Test
-	public void testAddingLessValues() {
+	void testAddingLessValues() {
 		assertThatThrownBy(() -> {
-			TableModelBuilder<Number> builder = new TableModelBuilder<Number>();
+			TableModelBuilder<Number> builder = new TableModelBuilder<>();
 			builder.addRow().addValue(1).addValue(2);
 			builder.addRow().addValue(5);
 			builder.addRow();
@@ -68,8 +68,8 @@ public class TableModelBuilderTests {
 	}
 
 	@Test
-	public void simpleBuild() {
-		TableModelBuilder<Number> builder = new TableModelBuilder<Number>();
+	void simpleBuild() {
+		TableModelBuilder<Number> builder = new TableModelBuilder<>();
 		builder
 			.addRow()
 			.addValue(7).addValue(2)

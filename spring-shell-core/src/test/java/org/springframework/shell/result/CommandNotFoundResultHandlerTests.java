@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,11 +81,9 @@ class CommandNotFoundResultHandlerTests {
 		List<String> commands = Arrays.asList("one", "two");
 		Map<String, CommandRegistration> registrations = Collections.emptyMap();
 		CommandNotFound e = new CommandNotFound(commands, registrations, "text");
-		given(provider.getIfAvailable()).willReturn(ctx -> {
-			return String.format("%s%s%s%s%s", "hi", ctx.error() == e ? "true" : "false",
-					ctx.commands().stream().collect(Collectors.joining()),
-					ctx.registrations() == registrations ? "true" : "false", ctx.text());
-		});
+		given(provider.getIfAvailable()).willReturn(ctx -> String.format("%s%s%s%s%s", "hi", ctx.error() == e ? "true" : "false",
+				String.join("", ctx.commands()),
+				ctx.registrations() == registrations ? "true" : "false", ctx.text()));
 		given(provider.getIfAvailable(any())).willCallRealMethod();
 		given(terminal.writer()).willReturn(writer);
 		CommandNotFoundResultHandler handler = new CommandNotFoundResultHandler(terminal, provider);

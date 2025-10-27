@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.springframework.shell.table;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -32,12 +33,12 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author Eric Bottard
  */
-public class AbstractTestWithSample {
+class AbstractTestWithSample {
 
 	private String testName;
 
 	@BeforeEach
-	public void setup(TestInfo testInfo) {
+	void setup(TestInfo testInfo) {
 		testName = testInfo.getDisplayName().replace("()", "");
 	}
 
@@ -46,7 +47,7 @@ public class AbstractTestWithSample {
 				this.getClass().getSimpleName(), testName);
 		InputStream stream = TableTest.class.getResourceAsStream(sampleName);
 		Assert.notNull(stream, "Can't find expected rendering result at " + sampleName);
-		return FileCopyUtils.copyToString(new InputStreamReader(stream, "UTF-8")).replace("&", "");
+		return FileCopyUtils.copyToString(new InputStreamReader(stream, StandardCharsets.UTF_8)).replace("&", "");
 	}
 
 	/**
