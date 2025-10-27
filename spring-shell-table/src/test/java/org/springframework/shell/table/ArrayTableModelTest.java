@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  *
  * @author Eric Bottard
  */
-public class ArrayTableModelTest {
+class ArrayTableModelTest {
 
 	@Test
-	public void testValid() {
+	void testValid() {
 		TableModel model = new ArrayTableModel(new String[][] {{"a", "b"}, {"c", "d"}});
 		assertThat(model.getColumnCount()).isEqualTo(2);
 		assertThat(model.getRowCount()).isEqualTo(2);
@@ -37,16 +37,15 @@ public class ArrayTableModelTest {
 	}
 
 	@Test
-	public void testEmpty() {
+	void testEmpty() {
 		TableModel model = new ArrayTableModel(new String[][] {});
-		assertThat(model.getColumnCount()).isEqualTo(0);
-		assertThat(model.getRowCount()).isEqualTo(0);
+		assertThat(model.getColumnCount()).isZero();
+		assertThat(model.getRowCount()).isZero();
 	}
 
 	@Test
-	public void testInvalidDimensions() {
-		assertThatThrownBy(() -> {
-			new ArrayTableModel(new String[][] {{"a", "b"}, {"c", "d", "e"}});
-		}).isInstanceOf(IllegalArgumentException.class);
+	void testInvalidDimensions() {
+		assertThatThrownBy(() -> new ArrayTableModel(new String[][] {{"a", "b"}, {"c", "d", "e"}}))
+				.isInstanceOf(IllegalArgumentException.class);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,19 +25,19 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Eric Bottard
  */
-public class DelimiterTextWrapperTest {
+class DelimiterTextWrapperTest {
 
-	private TextWrapper wrapper = new DelimiterTextWrapper();
+	private final TextWrapper wrapper = new DelimiterTextWrapper();
 
 	@Test
-	public void testNoWordSplit() {
+	void testNoWordSplit() {
 		String[] text = new String[] {"the quick brown fox jumps over the lazy dog."};
 		assertThat(wrapper.wrap(text, 10)).containsExactly("the quick ", "brown fox ", "jumps over", "the lazy  ",
 				"dog.      ");
 	}
 
 	@Test
-	public void testWordSplit() {
+	void testWordSplit() {
 		String[] text = new String[] {"the quick brown fox jumps over the lazy dog."};
 		assertThat(wrapper.wrap(text, 4)).containsExactly("the ", "quic", "k   ", "brow", "n   ", "fox ", "jump",
 				"s   ", "over", "the ", "lazy", "dog.");

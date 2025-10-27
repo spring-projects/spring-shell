@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,15 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.shell.table.BorderStyle.fancy_double;
 
-
 /**
  * Tests for convenience borders factory.
  *
  * @author Eric Bottard
  */
-public class BorderFactoryTest extends AbstractTestWithSample {
+class BorderFactoryTest extends AbstractTestWithSample {
 
 	@Test
-	public void testOutlineBorder() throws IOException {
+	void testOutlineBorder() throws IOException {
 		TableModel model = generate(3, 3);
 		Table table = new TableBuilder(model).addOutlineBorder(fancy_double).build();
 		String result = table.render(80);
@@ -40,7 +39,7 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testFullBorder() throws IOException {
+	void testFullBorder() throws IOException {
 		TableModel model = generate(3, 3);
 		Table table = new TableBuilder(model).addFullBorder(fancy_double).build();
 		String result = table.render(80);
@@ -48,7 +47,7 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testHeaderBorder() throws IOException {
+	void testHeaderBorder() throws IOException {
 		TableModel model = generate(3, 3);
 		Table table = new TableBuilder(model).addHeaderBorder(fancy_double).build();
 		String result = table.render(80);
@@ -56,7 +55,7 @@ public class BorderFactoryTest extends AbstractTestWithSample {
 	}
 
 	@Test
-	public void testHeaderAndVerticalsBorder() throws IOException {
+	void testHeaderAndVerticalsBorder() throws IOException {
 		TableModel model = generate(3, 3);
 		Table table = new TableBuilder(model).addHeaderAndVerticalsBorders(fancy_double).build();
 		String result = table.render(80);
