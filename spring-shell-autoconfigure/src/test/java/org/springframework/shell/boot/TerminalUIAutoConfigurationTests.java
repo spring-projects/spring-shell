@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,17 +43,15 @@ class TerminalUIAutoConfigurationTests {
 			.withConfiguration(AutoConfigurations.of(TerminalUIAutoConfiguration.class));
 
 	@Test
-	public void terminalUICreated() {
+	void terminalUICreated() {
 		this.contextRunner
 				.withUserConfiguration(MockConfiguration.class)
-				.run(context -> {
-					assertThat(context).hasSingleBean(TerminalUIBuilder.class);
-				});
+				.run(context -> assertThat(context).hasSingleBean(TerminalUIBuilder.class));
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void canCustomize() {
+	void canCustomize() {
 		this.contextRunner
 				.withUserConfiguration(TestConfiguration.class, MockConfiguration.class)
 				.run(context -> {
@@ -81,9 +79,7 @@ class TerminalUIAutoConfigurationTests {
 
 		@Bean
 		ThemeActive themeActive() {
-			return () -> {
-				return "default";
-			};
+			return () -> "default";
 		}
 
 	}

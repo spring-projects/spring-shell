@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,13 +36,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LineReaderAutoConfigurationTests {
+class LineReaderAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(LineReaderAutoConfiguration.class));
 
 	@Test
-	public void testLineReaderCreated() {
+	void testLineReaderCreated() {
 		this.contextRunner
 				.withUserConfiguration(MockConfiguration.class)
 				.run(context -> {
@@ -53,7 +53,7 @@ public class LineReaderAutoConfigurationTests {
 	}
 
 	@Test
-	public void testLineReaderCreatedNoHistoryFile() {
+	void testLineReaderCreatedNoHistoryFile() {
 		this.contextRunner
 				.withUserConfiguration(MockConfiguration.class)
 				.withPropertyValues("spring.shell.history.enabled=false")
@@ -65,7 +65,7 @@ public class LineReaderAutoConfigurationTests {
 	}
 
 	@Test
-	public void testLineReaderCreatedCustomHistoryFile() {
+	void testLineReaderCreatedCustomHistoryFile() {
 		this.contextRunner
 				.withUserConfiguration(MockConfiguration.class)
 				.withPropertyValues("spring.shell.history.name=fakehistory.txt")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ThemingAutoConfigurationTests {
+class ThemingAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(ThemingAutoConfiguration.class));
@@ -58,7 +58,7 @@ public class ThemingAutoConfigurationTests {
 	}
 
 	@Test
-	public void canRegisterCustomTheme() {
+	void canRegisterCustomTheme() {
 		this.contextRunner
 				.withUserConfiguration(CustomThemeConfig.class)
 				.run(context -> {
@@ -113,7 +113,7 @@ public class ThemingAutoConfigurationTests {
 
 		public ThemeAssert hasName(String... names) {
 			isNotNull();
-			boolean match = Stream.of(names).filter(n -> actual.getName().equals(n)).findFirst().isPresent();
+			boolean match = Stream.of(names).anyMatch(n -> actual.getName().equals(n));
 			if (!match) {
 				failWithMessage("Expected theme to have names %s but was %s",
 						StringUtils.arrayToCommaDelimitedString(names), actual.getName());
