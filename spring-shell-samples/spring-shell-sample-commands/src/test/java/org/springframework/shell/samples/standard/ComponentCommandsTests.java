@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,23 +37,15 @@ public class ComponentCommandsTests extends AbstractSampleTests {
 	void componentSingle(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
 
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(session.screen().lines()).anySatisfy(line -> {
-				assertThat(line).containsPattern("[>❯] key1");
-			});
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.screen().lines())
+				.anySatisfy(line -> assertThat(line).containsPattern("[>❯] key1")));
 
 		session.write(session.writeSequence().keyDown().build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(session.screen().lines()).anySatisfy(line -> {
-				assertThat(line).containsPattern("[>❯] key2");
-			});
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.screen().lines())
+				.anySatisfy(line -> assertThat(line).containsPattern("[>❯] key2")));
 
 		session.write(session.writeSequence().cr().build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			ShellAssertions.assertThat(session.screen()).containsText("Got value value2");
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("Got value value2"));
 	}
 
 	@ParameterizedTest
@@ -64,22 +56,14 @@ public class ComponentCommandsTests extends AbstractSampleTests {
 	void componentMulti(String command, boolean interactive) {
 		BaseShellSession<?> session = createSession(command, interactive);
 
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(session.screen().lines()).anySatisfy(line -> {
-				assertThat(line).containsPattern("[>❯] (☐|\\[ \\])  key1");
-			});
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.screen().lines())
+				.anySatisfy(line -> assertThat(line).containsPattern("[>❯] (☐|\\[ \\])  key1")));
 
 		session.write(session.writeSequence().space().build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(session.screen().lines()).anySatisfy(line -> {
-				assertThat(line).containsPattern("[>❯] (☒|\\[x\\])  key1");
-			});
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> assertThat(session.screen().lines())
+				.anySatisfy(line -> assertThat(line).containsPattern("[>❯] (☒|\\[x\\])  key1")));
 
 		session.write(session.writeSequence().cr().build());
-		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
-			ShellAssertions.assertThat(session.screen()).containsText("Got value value1,value2");
-		});
+		await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> ShellAssertions.assertThat(session.screen()).containsText("Got value value1,value2"));
 	}
 }
