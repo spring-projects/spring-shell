@@ -19,17 +19,19 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
 
 /**
  * Handles {@link CommandParserExceptionsException}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class CommandParserExceptionResolver implements CommandExceptionResolver {
 
 	@Override
-	public CommandHandlingResult resolve(Exception ex) {
+	public @Nullable CommandHandlingResult resolve(Exception ex) {
 		if (ex instanceof CommandParserExceptionsException cpee) {
 			AttributedStringBuilder builder = new AttributedStringBuilder();
 			cpee.getParserExceptions().stream().forEach(e -> {

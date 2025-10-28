@@ -15,17 +15,20 @@
  */
 package org.springframework.shell.command.parser;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Node representing
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public final class DirectiveNode extends TerminalAstNode {
 
 	private final String name;
-	private final String value;
+	private final @Nullable String value;
 
-	public DirectiveNode(Token token, String name, String value) {
+	public DirectiveNode(Token token, String name, @Nullable String value) {
 		super(token);
 		this.name = name;
 		this.value = value;
@@ -35,7 +38,7 @@ public final class DirectiveNode extends TerminalAstNode {
 		return name;
 	}
 
-	public String getValue() {
+	public @Nullable String getValue() {
 		return value;
 	}
 

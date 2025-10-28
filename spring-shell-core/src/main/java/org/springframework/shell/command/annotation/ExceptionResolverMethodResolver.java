@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.ExceptionDepthComparator;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ReflectionUtils.MethodFilter;
@@ -33,6 +33,7 @@ import org.springframework.util.ReflectionUtils.MethodFilter;
 /**
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ExceptionResolverMethodResolver {
 
@@ -113,8 +114,7 @@ public class ExceptionResolverMethodResolver {
 	 * @param exception the exception
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
-	@Nullable
-	public Method resolveMethod(Exception exception) {
+	public @Nullable Method resolveMethod(Exception exception) {
 		return resolveMethodByThrowable(exception);
 	}
 
@@ -125,8 +125,7 @@ public class ExceptionResolverMethodResolver {
 	 * @param exception the exception
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
-	@Nullable
-	public Method resolveMethodByThrowable(Throwable exception) {
+	public @Nullable Method resolveMethodByThrowable(Throwable exception) {
 		Method method = resolveMethodByExceptionType(exception.getClass());
 		if (method == null) {
 			Throwable cause = exception.getCause();
@@ -145,8 +144,7 @@ public class ExceptionResolverMethodResolver {
 	 * @param exceptionType the exception type
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
-	@Nullable
-	public Method resolveMethodByExceptionType(Class<? extends Throwable> exceptionType) {
+	public @Nullable Method resolveMethodByExceptionType(Class<? extends Throwable> exceptionType) {
 		Method method = this.exceptionLookupCache.get(exceptionType);
 		if (method == null) {
 			method = getMappedMethod(exceptionType);
@@ -159,7 +157,7 @@ public class ExceptionResolverMethodResolver {
 	 * Return the {@link Method} mapped to the given exception type, or
 	 * {@link #NO_MATCHING_EXCEPTION_HANDLER_METHOD} if none.
 	 */
-	private Method getMappedMethod(Class<? extends Throwable> exceptionType) {
+	private @Nullable Method getMappedMethod(Class<? extends Throwable> exceptionType) {
 		List<Class<? extends Throwable>> matches = new ArrayList<>();
 		for (Class<? extends Throwable> mappedException : this.mappedMethods.keySet()) {
 			if (mappedException.isAssignableFrom(exceptionType)) {

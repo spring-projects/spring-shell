@@ -23,9 +23,11 @@ import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
 import reactor.core.publisher.Flux;
@@ -50,6 +52,7 @@ import org.springframework.shell.tui.component.view.event.processor.TaskEventLoo
  * Default implementation of an {@link EventLoop}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class DefaultEventLoop implements EventLoop {
 
@@ -67,7 +70,7 @@ public class DefaultEventLoop implements EventLoop {
 		this(null);
 	}
 
-	public DefaultEventLoop(List<EventLoopProcessor> processors) {
+	public DefaultEventLoop(@Nullable List<EventLoopProcessor> processors) {
 		this.processors = new ArrayList<>();
 		if (processors != null) {
 			this.processors.addAll(processors);
@@ -127,10 +130,12 @@ public class DefaultEventLoop implements EventLoop {
 	@SuppressWarnings("unchecked")
 	public <T> Flux<T> events(Type type, ParameterizedTypeReference<T> typeRef) {
 		ResolvableType resolvableType = ResolvableType.forType(typeRef);
+		Class<?> rawClass = resolvableType.getRawClass();
+		Assert.state(rawClass != null, "'rawClass' must not be null");
 		return (Flux<T>) events()
 			.filter(m -> type.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
 			.map(m -> m.getPayload())
-			.ofType(resolvableType.getRawClass());
+			.ofType(rawClass);
 	}
 
 	@Override

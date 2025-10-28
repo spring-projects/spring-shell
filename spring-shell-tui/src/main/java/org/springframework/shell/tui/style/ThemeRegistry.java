@@ -19,12 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 /**
  * Registry which stores {@link Theme}'s with its name.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ThemeRegistry {
 
@@ -36,7 +38,7 @@ public class ThemeRegistry {
 	 * @param name the theme name
 	 * @return a theme
 	 */
-	public Theme get(String name) {
+	public @Nullable Theme get(String name) {
 		return themes.get(name);
 	}
 

@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.tui.component.message;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.shell.tui.component.view.control.View;
@@ -30,13 +30,13 @@ import org.springframework.util.Assert;
  * @param <T> the payload type.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public final class ShellMessageBuilder<T> {
 
 	private final T payload;
 	private final ShellMessageHeaderAccessor headerAccessor;
-	@Nullable
-	private final Message<T> originalMessage;
+	private final @Nullable Message<T> originalMessage;
 
 
 	private ShellMessageBuilder(T payload, @Nullable Message<T> originalMessage) {

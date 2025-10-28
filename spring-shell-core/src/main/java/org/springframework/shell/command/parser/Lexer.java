@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.shell.command.parser.CommandModel.CommandInfo;
 import org.springframework.shell.command.parser.ParserConfig.Feature;
+import org.springframework.util.Assert;
 
 /**
  * Interface to tokenize arguments into tokens. Generic language parser usually
@@ -40,6 +41,7 @@ import org.springframework.shell.command.parser.ParserConfig.Feature;
  * through parsing operation.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface Lexer {
 
@@ -191,6 +193,7 @@ public interface Lexer {
 							currentCommand = currentCommand == null ? commandModel.getRootCommands().get(argumentToCheck)
 									: currentCommand.getChildren(argument);
 							tokenList.add(Token.of(argument, TokenType.COMMAND, i2));
+							Assert.state(currentCommand != null, "'currentCommand' must not be null");
 							validTokens = currentCommand.getValidTokens();
 							break;
 						case OPTION:

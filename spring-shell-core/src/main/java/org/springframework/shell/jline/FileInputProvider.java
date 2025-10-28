@@ -18,6 +18,7 @@ package org.springframework.shell.jline;
 
 import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
 
@@ -32,6 +33,7 @@ import java.io.Reader;
  * of line to signal line continuation.</p>
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class FileInputProvider implements InputProvider, Closeable {
 
@@ -46,7 +48,7 @@ public class FileInputProvider implements InputProvider, Closeable {
     }
 
     @Override
-    public Input readInput() {
+    public @Nullable Input readInput() {
         StringBuilder sb = new StringBuilder();
         boolean continued = false;
         String line;

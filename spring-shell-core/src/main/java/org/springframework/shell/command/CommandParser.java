@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.command.parser.Ast;
 import org.springframework.shell.command.parser.Ast.DefaultAst;
@@ -36,6 +37,7 @@ import org.springframework.shell.command.parser.ParserConfig;
  * which this interface intercepts and translates into format we can understand.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandParser {
 
@@ -56,7 +58,7 @@ public interface CommandParser {
 		 *
 		 * @return the value
 		 */
-		Object value();
+		@Nullable Object value();
 
 		/**
 		 * Gets an instance of a default {@link CommandParserResult}.
@@ -65,7 +67,7 @@ public interface CommandParser {
 		 * @param value the value
 		 * @return a result
 		 */
-		static CommandParserResult of(CommandOption option, Object value) {
+		static CommandParserResult of(CommandOption option, @Nullable Object value) {
 			return new DefaultCommandParserResult(option, value);
 		}
 	}
@@ -80,7 +82,7 @@ public interface CommandParser {
 		 *
 		 * @return the registration
 		 */
-		CommandRegistration registration();
+		@Nullable CommandRegistration registration();
 
 		/**
 		 * Gets the results.
@@ -137,8 +139,8 @@ public interface CommandParser {
 	 * @param config the parser config
 	 * @return instance of a default command parser
 	 */
-	static CommandParser of(ConversionService conversionService, Map<String, CommandRegistration> registrations,
-			ParserConfig config) {
+	static CommandParser of(@Nullable ConversionService conversionService, Map<String, CommandRegistration> registrations,
+							ParserConfig config) {
 		return new AstCommandParser(registrations, config, conversionService);
 	}
 
@@ -147,12 +149,12 @@ public interface CommandParser {
 	 */
 	static class DefaultCommandParserResults implements CommandParserResults {
 
-		private CommandRegistration registration;
+		private @Nullable CommandRegistration registration;
 		private List<CommandParserResult> results;
 		private List<String> positional;
 		private List<CommandParserException> errors;
 
-		DefaultCommandParserResults(CommandRegistration registration, List<CommandParserResult> results,
+		DefaultCommandParserResults(@Nullable CommandRegistration registration, List<CommandParserResult> results,
 				List<String> positional, List<CommandParserException> errors) {
 			this.registration = registration;
 			this.results = results;
@@ -161,7 +163,7 @@ public interface CommandParser {
 		}
 
 		@Override
-		public CommandRegistration registration() {
+		public @Nullable CommandRegistration registration() {
 			return registration;
 		}
 
@@ -187,9 +189,9 @@ public interface CommandParser {
 	static class DefaultCommandParserResult implements CommandParserResult {
 
 		private CommandOption option;
-		private Object value;
+		private @Nullable Object value;
 
-		DefaultCommandParserResult(CommandOption option, Object value) {
+		DefaultCommandParserResult(CommandOption option, @Nullable Object value) {
 			this.option = option;
 			this.value = value;
 		}
@@ -200,7 +202,7 @@ public interface CommandParser {
 		}
 
 		@Override
-		public Object value() {
+		public @Nullable Object value() {
 			return value;
 		}
 	}
@@ -212,10 +214,10 @@ public interface CommandParser {
 
 		private final Map<String, CommandRegistration> registrations;
 		private final ParserConfig configuration;
-		private final ConversionService conversionService;
+		private final @Nullable ConversionService conversionService;
 
 		public AstCommandParser(Map<String, CommandRegistration> registrations, ParserConfig configuration,
-				ConversionService conversionService) {
+				@Nullable ConversionService conversionService) {
 			this.registrations = registrations;
 			this.configuration = configuration;
 			this.conversionService = conversionService;

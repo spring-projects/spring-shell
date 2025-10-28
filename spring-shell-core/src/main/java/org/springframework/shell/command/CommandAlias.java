@@ -15,10 +15,13 @@
  */
 package org.springframework.shell.command;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Interface representing an alias in a command.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandAlias {
 
@@ -34,7 +37,7 @@ public interface CommandAlias {
 	 *
 	 * @return the group
 	 */
-	String getGroup();
+	@Nullable String getGroup();
 
 	/**
 	 * Gets an instance of a default {@link CommandAlias}.
@@ -43,7 +46,7 @@ public interface CommandAlias {
 	 * @param group the group
 	 * @return default command alias
 	 */
-	public static CommandAlias of(String command, String group) {
+	public static CommandAlias of(String command, @Nullable String group) {
 		return new DefaultCommandAlias(command, group);
 	}
 
@@ -53,9 +56,9 @@ public interface CommandAlias {
 	public static class DefaultCommandAlias implements CommandAlias {
 
 		private final String command;
-		private final String group;
+		private final @Nullable String group;
 
-		public DefaultCommandAlias(String command, String group) {
+		public DefaultCommandAlias(String command, @Nullable String group) {
 			this.command = command;
 			this.group = group;
 		}
@@ -66,7 +69,7 @@ public interface CommandAlias {
 		}
 
 		@Override
-		public String getGroup() {
+		public @Nullable String getGroup() {
 			return group;
 		}
 	}

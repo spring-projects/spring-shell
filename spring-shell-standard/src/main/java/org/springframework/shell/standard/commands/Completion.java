@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.standard.commands;
 
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -26,6 +25,7 @@ import org.springframework.shell.standard.completion.ZshCompletions;
  * Command to create a shell completion files, i.e. for {@code bash}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 @ShellComponent
 public class Completion extends AbstractShellComponent {
@@ -36,27 +36,21 @@ public class Completion extends AbstractShellComponent {
 	public interface Command {
 	}
 
-	private ResourceLoader resourceLoader;
 	private String rootCommand;
 
 	public Completion(String rootCommand) {
 		this.rootCommand = rootCommand;
 	}
 
-	@Override
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
-	}
-
 	@ShellMethod(key = "completion bash", value = "Generate bash completion script")
 	public String bash() {
-		BashCompletions bashCompletions = new BashCompletions(resourceLoader, getCommandCatalog());
+		BashCompletions bashCompletions = new BashCompletions(getResourceLoader(), getCommandCatalog());
 		return bashCompletions.generate(rootCommand);
 	}
 
 	@ShellMethod(key = "completion zsh", value = "Generate zsh completion script")
 	public String zsh() {
-		ZshCompletions zshCompletions = new ZshCompletions(resourceLoader, getCommandCatalog());
+		ZshCompletions zshCompletions = new ZshCompletions(getResourceLoader(), getCommandCatalog());
 		return zshCompletions.generate(rootCommand);
 	}
 }

@@ -30,6 +30,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.util.Assert;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
@@ -48,6 +50,7 @@ import org.springframework.util.MultiValueMap;
  * resource handling and templating with {@code antrl stringtemplate}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractCompletions {
 
@@ -151,7 +154,7 @@ public abstract class AbstractCompletions {
 		 * Gets a description of a command.
 		 * @return command description
 		 */
-		String getDescription();
+		@Nullable String getDescription();
 
 		/**
 		 * Gets sub-commands known to this command.
@@ -246,18 +249,18 @@ public abstract class AbstractCompletions {
 
 		private String fullCommand;
 		private String mainCommand;
-		private String description;
+		private @Nullable String description;
 		private List<CommandModelCommand> commands = new ArrayList<>();
 		private List<CommandModelOption> options = new ArrayList<>();
 
-		DefaultCommandModelCommand(String fullCommand, String mainCommand, String description) {
+		DefaultCommandModelCommand(String fullCommand, String mainCommand, @Nullable String description) {
 			this.fullCommand = fullCommand;
 			this.mainCommand = mainCommand;
 			this.description = description;
 		}
 
 		@Override
-		public String getDescription() {
+		public @Nullable String getDescription() {
 			return description;
 		}
 
@@ -385,7 +388,7 @@ public abstract class AbstractCompletions {
 
 		private final MultiValueMap<String, Object> defaultAttributes = new LinkedMultiValueMap<>();
 		private final List<Supplier<String>> operations = new ArrayList<>();
-		private String groupResource;
+		private @Nullable String groupResource;
 
 		@Override
 		public Builder attribute(String name, Object value) {
@@ -403,6 +406,7 @@ public abstract class AbstractCompletions {
 		public Builder appendGroup(String instance) {
 			// delay so that we render with build
 			Supplier<String> operation = () -> {
+				Assert.notNull(groupResource, "'groupResource' must not be null");
 				String template = resourceAsString(resourceLoader.getResource(groupResource));
 				STGroup group = new STGroupString(template);
 				ST st = group.getInstanceOf(instance);

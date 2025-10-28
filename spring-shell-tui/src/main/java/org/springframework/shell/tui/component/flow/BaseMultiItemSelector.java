@@ -23,6 +23,7 @@ import java.util.function.Function;
 
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.MultiItemSelector.MultiItemSelectorContext;
 import org.springframework.shell.tui.component.flow.ComponentFlow.BaseBuilder;
 import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
@@ -32,21 +33,22 @@ import org.springframework.shell.tui.component.support.SelectorItem;
  * Base impl for {@link MultiItemSelectorSpec}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorSpec> implements MultiItemSelectorSpec {
 
-	private String name;
+	private @Nullable String name;
 	private List<String> resultValues = new ArrayList<>();
-	private ResultMode resultMode;
+	private @Nullable ResultMode resultMode;
 	private List<SelectItem> selectItems = new ArrayList<>();
-	private Comparator<SelectorItem<String>> comparator;
-	private Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
-	private Integer maxItems;
+	private @Nullable Comparator<SelectorItem<String>> comparator;
+	private @Nullable Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
+	private @Nullable Integer maxItems;
 	private List<Consumer<MultiItemSelectorContext<String, SelectorItem<String>>>> preHandlers = new ArrayList<>();
 	private List<Consumer<MultiItemSelectorContext<String, SelectorItem<String>>>> postHandlers = new ArrayList<>();
 	private boolean storeResult = true;
-	private String templateLocation;
-	private Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> next;
+	private @Nullable String templateLocation;
+	private @Nullable Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> next;
 
 	public BaseMultiItemSelector(BaseBuilder builder, String id) {
 		super(builder, id);
@@ -136,7 +138,7 @@ public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorS
 		return this;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return name;
 	}
 
@@ -144,7 +146,7 @@ public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorS
 		return resultValues;
 	}
 
-	public ResultMode getResultMode() {
+	public @Nullable ResultMode getResultMode() {
 		return resultMode;
 	}
 
@@ -152,19 +154,19 @@ public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorS
 		return selectItems;
 	}
 
-	public Comparator<SelectorItem<String>> getComparator() {
+	public @Nullable Comparator<SelectorItem<String>> getComparator() {
 		return comparator;
 	}
 
-	public Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> getRenderer() {
+	public @Nullable Function<MultiItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> getRenderer() {
 		return renderer;
 	}
 
-	public String getTemplateLocation() {
+	public @Nullable String getTemplateLocation() {
 		return templateLocation;
 	}
 
-	public Integer getMaxItems() {
+	public @Nullable Integer getMaxItems() {
 		return maxItems;
 	}
 
@@ -180,7 +182,7 @@ public abstract class BaseMultiItemSelector extends BaseInput<MultiItemSelectorS
 		return storeResult;
 	}
 
-	public Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> getNext() {
+	public @Nullable Function<MultiItemSelectorContext<String, SelectorItem<String>>, String> getNext() {
 		return next;
 	}
 }

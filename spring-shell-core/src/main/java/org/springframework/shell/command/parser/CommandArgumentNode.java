@@ -15,21 +15,24 @@
  */
 package org.springframework.shell.command.parser;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Node representing a command argument.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public final class CommandArgumentNode extends TerminalAstNode {
 
-	private final CommandNode parent;
+	private final @Nullable CommandNode parent;
 
-	public CommandArgumentNode(Token token, CommandNode parent) {
+	public CommandArgumentNode(Token token, @Nullable CommandNode parent) {
 		super(token);
 		this.parent = parent;
 	}
 
-	public CommandNode getParentCommandNode() {
+	public @Nullable CommandNode getParentCommandNode() {
 		return parent;
 	}
 }

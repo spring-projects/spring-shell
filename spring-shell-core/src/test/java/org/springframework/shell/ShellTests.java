@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.jline.terminal.Terminal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.completion.RegistrationOptionsCompletionResolver;
+import org.springframework.shell.context.ShellContext;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,6 +55,12 @@ class ShellTests {
 
 	@Mock
 	CommandCatalog commandRegistry;
+
+	@Mock
+	Terminal terminal;
+
+	@Mock
+	ShellContext shellContext;
 
 	@InjectMocks
 	private Shell shell;

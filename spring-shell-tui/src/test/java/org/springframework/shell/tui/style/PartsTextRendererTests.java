@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.jline.utils.AttributedString;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -27,6 +28,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.shell.tui.style.PartsText.PartText;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PartsTextRendererTests {
 
@@ -233,6 +235,76 @@ class PartsTextRendererTests {
 		AttributedString evaluated = themeResolver.evaluateExpression(rendered);
 		String raw = AttributedString.stripAnsi(evaluated.toAnsi());
 		assertThat(raw).isEqualTo(expected);
+	}
+
+	@Test
+	void handleMissingWidth() {
+		PartsText partsText = PartsText.of(
+				PartText.of("a", false),
+				PartText.of("b", true),
+				PartText.of("cd", false),
+				PartText.of("efg", true),
+				PartText.of("h", false),
+				PartText.of("i", true),
+				PartText.of("jkl", true)
+		);
+
+		String rendered = renderer.toString(partsText, "prefix:0,textStyle:style-item-selector,matchStyle:style-level-warn", LOCALE);
+		AttributedString evaluated = themeResolver.evaluateExpression(rendered);
+		String raw = AttributedString.stripAnsi(evaluated.toAnsi());
+		assertThat(raw).isEqualTo("abcdefghijkl");
+	}
+
+	@Test
+	void handleMissingPrefix() {
+		PartsText partsText = PartsText.of(
+				PartText.of("a", false),
+				PartText.of("b", true),
+				PartText.of("cd", false),
+				PartText.of("efg", true),
+				PartText.of("h", false),
+				PartText.of("i", true),
+				PartText.of("jkl", true)
+		);
+
+		String rendered = renderer.toString(partsText, "width:3,textStyle:style-item-selector,matchStyle:style-level-warn", LOCALE);
+		AttributedString evaluated = themeResolver.evaluateExpression(rendered);
+		String raw = AttributedString.stripAnsi(evaluated.toAnsi());
+		assertThat(raw).isEqualTo("a..");
+	}
+
+	@Test
+	void handleMissingTextStyle() {
+		PartsText partsText = PartsText.of(
+				PartText.of("a", false),
+				PartText.of("b", true),
+				PartText.of("cd", false),
+				PartText.of("efg", true),
+				PartText.of("h", false),
+				PartText.of("i", true),
+				PartText.of("jkl", true)
+		);
+
+		assertThatThrownBy(() -> renderer.toString(partsText, "width:3,prefix:0,matchStyle:style-level-warn", LOCALE))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Unknown tag 'null'");
+	}
+
+	@Test
+	void handleMissingMatchStyle() {
+		PartsText partsText = PartsText.of(
+				PartText.of("a", true),
+				PartText.of("b", true),
+				PartText.of("cd", false),
+				PartText.of("efg", true),
+				PartText.of("h", false),
+				PartText.of("i", true),
+				PartText.of("jkl", true)
+		);
+
+		assertThatThrownBy(() -> renderer.toString(partsText, "width:3,prefix:0,textStyle:style-item-selector", LOCALE))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Unknown tag 'null'");
 	}
 
 }

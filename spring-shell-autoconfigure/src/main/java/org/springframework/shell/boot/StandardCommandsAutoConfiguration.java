@@ -41,12 +41,14 @@ import org.springframework.shell.standard.commands.Script;
 import org.springframework.shell.standard.commands.Stacktrace;
 import org.springframework.shell.standard.commands.Version;
 import org.springframework.shell.tui.style.TemplateExecutor;
+import org.springframework.util.Assert;
 
 /**
  * Creates beans for standard commands.
  *
  * @author Eric Bottard
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 @AutoConfiguration
 @ConditionalOnClass({ Help.Command.class })
@@ -57,7 +59,9 @@ public class StandardCommandsAutoConfiguration {
 	@ConditionalOnMissingBean(Help.Command.class)
 	@ConditionalOnProperty(prefix = "spring.shell.command.help", value = "enabled", havingValue = "true", matchIfMissing = true)
 	public Help help(SpringShellProperties properties, ObjectProvider<TemplateExecutor> templateExecutor) {
-		Help help = new Help(templateExecutor.getIfAvailable());
+		TemplateExecutor executor = templateExecutor.getIfAvailable();
+		Assert.notNull(executor, "'executor' must not be null");
+		Help help = new Help(executor);
 		if (properties.getCommand().getHelp().getGroupingMode() == GroupingMode.FLAT) {
 			help.setShowGroups(false);
 		}
@@ -105,7 +109,9 @@ public class StandardCommandsAutoConfiguration {
 	@ConditionalOnMissingBean(Completion.Command.class)
 	@Conditional(OnCompletionCommandCondition.class)
 	public Completion completion(SpringShellProperties properties) {
-		return new Completion(properties.getCommand().getCompletion().getRootCommand());
+		String rootCommand = properties.getCommand().getCompletion().getRootCommand();
+		Assert.hasText(rootCommand, "'rootCommand' must be specified");
+		return new Completion(rootCommand);
 	}
 
 	@Bean
@@ -113,7 +119,9 @@ public class StandardCommandsAutoConfiguration {
 	@ConditionalOnProperty(prefix = "spring.shell.command.version", value = "enabled", havingValue = "true", matchIfMissing = true)
 	public Version version(SpringShellProperties properties, ObjectProvider<BuildProperties> buildProperties,
 			ObjectProvider<GitProperties> gitProperties, ObjectProvider<TemplateExecutor> templateExecutor) {
-		Version version = new Version(templateExecutor.getIfAvailable());
+		TemplateExecutor executor = templateExecutor.getIfAvailable();
+		Assert.notNull(executor, "'executor' must not be null");
+		Version version = new Version(executor);
 		VersionCommand versionProperties = properties.getCommand().getVersion();
 		version.setTemplate(versionProperties.getTemplate());
 		return version;

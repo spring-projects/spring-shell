@@ -15,8 +15,12 @@
  */
 package org.springframework.shell.tui.component.support;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
+/**
+ * @author Piotr Olaszewski
+ */
 public interface SelectorItem<T> extends Nameable, Matchable, Enableable, Selectable, Itemable<T> {
 
 	static <T> SelectorItem<T> of(String name, T item) {
@@ -50,7 +54,7 @@ public interface SelectorItem<T> extends Nameable, Matchable, Enableable, Select
 		}
 
 		@Override
-		public boolean matches(String match) {
+		public boolean matches(@Nullable String match) {
 			if (!StringUtils.hasText(match)) {
 				return true;
 			}

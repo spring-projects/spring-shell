@@ -16,6 +16,7 @@
 
 package org.springframework.shell;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -23,12 +24,13 @@ import org.springframework.util.Assert;
  * a reason.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class Availability {
 
-    private final String reason;
+    private final @Nullable String reason;
 
-    private Availability(String reason) {
+    private Availability(@Nullable String reason) {
         this.reason = reason;
     }
 
@@ -45,7 +47,7 @@ public class Availability {
         return reason == null;
     }
 
-    public String getReason() {
+    public @Nullable String getReason() {
         return reason;
     }
 }

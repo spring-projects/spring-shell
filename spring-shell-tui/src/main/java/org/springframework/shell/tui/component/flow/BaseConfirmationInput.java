@@ -22,6 +22,7 @@ import java.util.function.Function;
 
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.ConfirmationInput.ConfirmationInputContext;
 import org.springframework.shell.tui.component.flow.ComponentFlow.BaseBuilder;
 import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
@@ -30,19 +31,20 @@ import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
  * Base impl for {@link ConfirmationInputSpec}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputSpec> implements ConfirmationInputSpec {
 
-	private String name;
-	private Boolean defaultValue;
-	private Boolean resultValue;
-	private ResultMode resultMode;
-	private Function<ConfirmationInputContext, List<AttributedString>> renderer;
+	private @Nullable String name;
+	private @Nullable Boolean defaultValue;
+	private @Nullable Boolean resultValue;
+	private @Nullable ResultMode resultMode;
+	private @Nullable Function<ConfirmationInputContext, List<AttributedString>> renderer;
 	private List<Consumer<ConfirmationInputContext>> preHandlers = new ArrayList<>();
 	private List<Consumer<ConfirmationInputContext>> postHandlers = new ArrayList<>();
 	private boolean storeResult = true;
-	private String templateLocation;
-	private Function<ConfirmationInputContext, String> next;
+	private @Nullable String templateLocation;
+	private @Nullable Function<ConfirmationInputContext, String> next;
 
 	public BaseConfirmationInput(BaseBuilder builder, String id) {
 		super(builder, id);
@@ -119,7 +121,7 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 		return this;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return name;
 	}
 
@@ -127,19 +129,19 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 		return defaultValue != null ? defaultValue : true;
 	}
 
-	public Boolean getResultValue() {
+	public @Nullable Boolean getResultValue() {
 		return resultValue;
 	}
 
-	public ResultMode getResultMode() {
+	public @Nullable ResultMode getResultMode() {
 		return resultMode;
 	}
 
-	public Function<ConfirmationInputContext, List<AttributedString>> getRenderer() {
+	public @Nullable Function<ConfirmationInputContext, List<AttributedString>> getRenderer() {
 		return renderer;
 	}
 
-	public String getTemplateLocation() {
+	public @Nullable String getTemplateLocation() {
 		return templateLocation;
 	}
 
@@ -155,7 +157,7 @@ public abstract class BaseConfirmationInput extends BaseInput<ConfirmationInputS
 		return storeResult;
 	}
 
-	public Function<ConfirmationInputContext, String> getNext() {
+	public @Nullable Function<ConfirmationInputContext, String> getNext() {
 		return next;
 	}
 }

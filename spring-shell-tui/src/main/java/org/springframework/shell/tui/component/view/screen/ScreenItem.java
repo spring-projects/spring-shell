@@ -15,10 +15,13 @@
  */
 package org.springframework.shell.tui.component.view.screen;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  *
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface ScreenItem {
 
@@ -36,7 +39,7 @@ public interface ScreenItem {
 	static final int BORDER_RIGHT = BORDER_LEFT << 2;
 	static final int BORDER_BOTTOM = BORDER_LEFT << 3;
 
-	CharSequence getContent();
+	@Nullable CharSequence getContent();
 
 	int getBorder();
 

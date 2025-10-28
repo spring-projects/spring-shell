@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandRegistration;
@@ -36,6 +37,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.tui.style.TemplateExecutor;
+import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 /**
@@ -43,6 +45,7 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 @ShellComponent
 public class Help extends AbstractShellComponent {
@@ -67,8 +70,8 @@ public class Help extends AbstractShellComponent {
 
 	private boolean showGroups = true;
 	private TemplateExecutor templateExecutor;
-	private String commandTemplate;
-	private String commandsTemplate;
+	private @Nullable String commandTemplate;
+	private @Nullable String commandsTemplate;
 
 
 	public Help(TemplateExecutor templateExecutor) {
@@ -78,7 +81,7 @@ public class Help extends AbstractShellComponent {
 	@ShellMethod(value = "Display help about available commands")
 	public AttributedString help(
 			@ShellOption(defaultValue = ShellOption.NULL, valueProvider = CommandValueProvider.class, value = { "-C",
-					"--command" }, help = "The command to obtain help for.", arity = Integer.MAX_VALUE) String[] command)
+					"--command" }, help = "The command to obtain help for.", arity = Integer.MAX_VALUE) String @Nullable [] command)
 			throws IOException {
 		if (command == null) {
 			return renderCommands();
@@ -123,12 +126,13 @@ public class Help extends AbstractShellComponent {
 		Map<String, CommandRegistration> registrations = Utils
 				.removeHiddenCommands(getCommandCatalog().getRegistrations());
 
-		boolean isStg = this.commandTemplate.endsWith(".stg");
+		boolean isStg = commandTemplate != null && commandTemplate.endsWith(".stg");
 
 		Map<String, Object> model = new HashMap<>();
 		model.put("model", GroupsInfoModel.of(this.showGroups, registrations));
 
-		String templateResource = resourceAsString(getResourceLoader().getResource(this.commandsTemplate));
+		Assert.notNull(commandsTemplate, "'commandsTemplate' must not be null");
+		String templateResource = resourceAsString(getResourceLoader().getResource(commandsTemplate));
 		return isStg ? this.templateExecutor.renderGroup(templateResource, model)
 				: this.templateExecutor.render(templateResource, model);
 	}
@@ -141,12 +145,13 @@ public class Help extends AbstractShellComponent {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");
 		}
 
-		boolean isStg = this.commandTemplate.endsWith(".stg");
+		boolean isStg = commandTemplate != null && commandTemplate.endsWith(".stg");
 
 		Map<String, Object> model = new HashMap<>();
 		model.put("model", CommandInfoModel.of(command, registration));
 
-		String templateResource = resourceAsString(getResourceLoader().getResource(this.commandTemplate));
+		Assert.notNull(commandTemplate, "'commandsTemplate' must not be null");
+		String templateResource = resourceAsString(getResourceLoader().getResource(commandTemplate));
 		return isStg ? this.templateExecutor.renderGroup(templateResource, model)
 				: this.templateExecutor.render(templateResource, model);
 	}

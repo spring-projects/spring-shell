@@ -27,6 +27,7 @@ import java.util.stream.IntStream;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,6 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.SynthesizingMethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.shell.ParameterValidationException;
@@ -62,6 +62,7 @@ import org.springframework.util.StringUtils;
  * through the associated {@link BeanFactory}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class InvocableShellMethod {
 
@@ -72,8 +73,7 @@ public class InvocableShellMethod {
 
 	private final Object bean;
 
-	@Nullable
-	private final BeanFactory beanFactory;
+	private final @Nullable BeanFactory beanFactory;
 
 	private final Class<?> beanType;
 
@@ -83,21 +83,20 @@ public class InvocableShellMethod {
 
 	private final MethodParameter[] parameters;
 
-	@Nullable
-	private InvocableShellMethod resolvedFromHandlerMethod;
+	private @Nullable InvocableShellMethod resolvedFromHandlerMethod;
 
 	private ShellMethodArgumentResolverComposite resolvers = new ShellMethodArgumentResolverComposite();
 
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
-	private Validator validator;
+	private @Nullable Validator validator;
 
 	private ConversionService conversionService = new DefaultConversionService();
 
 	/**
 	 * Create an instance from a bean instance and a method.
 	 */
-	public InvocableShellMethod(Object bean, Method method) {
+	public InvocableShellMethod(@Nullable Object bean, @Nullable Method method) {
 		Assert.notNull(bean, "Bean is required");
 		Assert.notNull(method, "Method is required");
 		this.bean = bean;
@@ -152,7 +151,7 @@ public class InvocableShellMethod {
 	 *
 	 * @param conversionService the conversion service
 	 */
-	public void setConversionService(ConversionService conversionService) {
+	public void setConversionService(@Nullable ConversionService conversionService) {
 		if (conversionService != null) {
 			this.conversionService = conversionService;
 		}
@@ -187,7 +186,7 @@ public class InvocableShellMethod {
 		this.resolvedFromHandlerMethod = handlerMethod;
 	}
 
-	public void setValidator(Validator validator) {
+	public void setValidator(@Nullable Validator validator) {
 		this.validator = validator;
 	}
 
@@ -223,8 +222,7 @@ public class InvocableShellMethod {
 	 * @see #getMethodArgumentValues
 	 * @see #doInvoke
 	 */
-	@Nullable
-	public Object invoke(Message<?> message, Object... providedArgs) throws Exception {
+	public @Nullable Object invoke(@Nullable Message<?> message, Object @Nullable... providedArgs) throws Exception {
 		Object[] args = getMethodArgumentValues(message, providedArgs);
 		if (log.isTraceEnabled()) {
 			log.trace("Arguments: " + Arrays.toString(args));
@@ -237,7 +235,7 @@ public class InvocableShellMethod {
 	 * argument values and falling back to the configured argument resolvers.
 	 * <p>The resulting array will be passed into {@link #doInvoke}.
 	 */
-	protected Object[] getMethodArgumentValues(Message<?> message, Object... providedArgs) throws Exception {
+	protected Object[] getMethodArgumentValues(@Nullable Message<?> message, Object @Nullable... providedArgs) throws Exception {
 		MethodParameter[] parameters = getMethodParameters();
 		if (ObjectUtils.isEmpty(parameters)) {
 			return EMPTY_ARGS;
@@ -251,7 +249,7 @@ public class InvocableShellMethod {
 			parameter.initParameterNameDiscovery(this.parameterNameDiscoverer);
 			boolean supports = this.resolvers.supportsParameter(parameter);
 			Object arg = null;
-			if (supports) {
+			if (supports && message != null) {
 				arg = this.resolvers.resolveArgument(parameter, message);
 			}
 			else {
@@ -280,9 +278,9 @@ public class InvocableShellMethod {
 	private static class ResolvedHolder {
 		boolean resolved;
 		MethodParameter parameter;
-		Object arg;
+		@Nullable Object arg;
 
-		public ResolvedHolder(boolean resolved, MethodParameter parameter, Object arg) {
+		public ResolvedHolder(boolean resolved, MethodParameter parameter, @Nullable Object arg) {
 			this.resolved = resolved;
 			this.parameter = parameter;
 			this.arg = arg;
@@ -292,8 +290,7 @@ public class InvocableShellMethod {
 	/**
 	 * Invoke the handler method with the given argument values.
 	 */
-	@Nullable
-	protected Object doInvoke(Object... args) throws Exception {
+	protected @Nullable Object doInvoke(Object... args) throws Exception {
 		try {
 			if (validator != null) {
 				Method bridgedMethod = getBridgedMethod();
@@ -410,8 +407,7 @@ public class InvocableShellMethod {
 	 * @return the annotation, or {@code null} if none found
 	 * @see AnnotatedElementUtils#findMergedAnnotation
 	 */
-	@Nullable
-	public <A extends Annotation> A getMethodAnnotation(Class<A> annotationType) {
+	public @Nullable <A extends Annotation> A getMethodAnnotation(Class<A> annotationType) {
 		return AnnotatedElementUtils.findMergedAnnotation(this.method, annotationType);
 	}
 
@@ -428,8 +424,7 @@ public class InvocableShellMethod {
 	 * Return the HandlerMethod from which this HandlerMethod instance was
 	 * resolved via {@link #createWithResolvedBean()}.
 	 */
-	@Nullable
-	public InvocableShellMethod getResolvedFromHandlerMethod() {
+	public @Nullable InvocableShellMethod getResolvedFromHandlerMethod() {
 		return this.resolvedFromHandlerMethod;
 	}
 
@@ -482,8 +477,7 @@ public class InvocableShellMethod {
 
 	// Support methods for use in "InvocableHandlerMethod" sub-class variants..
 
-	@Nullable
-	protected static Object findProvidedArgument(MethodParameter parameter, @Nullable Object... providedArgs) {
+	protected static @Nullable Object findProvidedArgument(MethodParameter parameter, @Nullable Object... providedArgs) {
 		if (!ObjectUtils.isEmpty(providedArgs)) {
 			for (Object providedArg : providedArgs) {
 				if (parameter.getParameterType().isInstance(providedArg)) {
@@ -552,7 +546,7 @@ public class InvocableShellMethod {
 		}
 
 		@Override
-		public <T extends Annotation> T getMethodAnnotation(Class<T> annotationType) {
+		public @Nullable <T extends Annotation> T getMethodAnnotation(Class<T> annotationType) {
 			return InvocableShellMethod.this.getMethodAnnotation(annotationType);
 		}
 
@@ -573,8 +567,7 @@ public class InvocableShellMethod {
 	 */
 	private class ReturnValueMethodParameter extends HandlerMethodParameter {
 
-		@Nullable
-		private final Object returnValue;
+		private final @Nullable Object returnValue;
 
 		public ReturnValueMethodParameter(@Nullable Object returnValue) {
 			super(-1);
@@ -599,8 +592,7 @@ public class InvocableShellMethod {
 
 	private class AsyncResultMethodParameter extends HandlerMethodParameter {
 
-		@Nullable
-		private final Object returnValue;
+		private final @Nullable Object returnValue;
 
 		private final ResolvableType returnType;
 

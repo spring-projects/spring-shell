@@ -42,6 +42,9 @@ import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.config.UserConfigPathProvider;
 import org.springframework.util.StringUtils;
 
+/**
+ * @author Piotr Olaszewski
+ */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class LineReaderAutoConfiguration {
@@ -59,7 +62,7 @@ public class LineReaderAutoConfiguration {
 	private org.jline.reader.History jLineHistory;
 
 	@Value("${spring.application.name:spring-shell}.log")
-	private String fallbackHistoryFileName;
+	private String fallbackHistoryFileName = "spring-shell.log";
 
 	private SpringShellProperties springShellProperties;
 	private UserConfigPathProvider userConfigPathProvider;

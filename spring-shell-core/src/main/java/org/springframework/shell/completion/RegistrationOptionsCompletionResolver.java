@@ -22,27 +22,30 @@ import java.util.stream.Stream;
 
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.command.CommandRegistration;
 
 /**
  * Default implementation of a {@link CompletionResolver}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class RegistrationOptionsCompletionResolver implements CompletionResolver {
 
 	@Override
 	public List<CompletionProposal> apply(CompletionContext context) {
-		if (context.getCommandRegistration() == null) {
+		CommandRegistration commandRegistration = context.getCommandRegistration();
+		if (commandRegistration == null) {
 			return Collections.emptyList();
 		}
 		List<CompletionProposal> candidates = new ArrayList<>();
-		context.getCommandRegistration().getOptions().stream()
+		commandRegistration.getOptions().stream()
 			.flatMap(o -> Stream.of(o.getLongNames()))
 			.map(ln -> "--" + ln)
 			.filter(ln -> !context.getWords().contains(ln))
 			.map(CompletionProposal::new)
 			.forEach(candidates::add);
-		context.getCommandRegistration().getOptions().stream()
+		commandRegistration.getOptions().stream()
 			.flatMap(o -> Stream.of(o.getShortNames()))
 			.map(ln -> "-" + ln)
 			.filter(ln -> !context.getWords().contains(ln))

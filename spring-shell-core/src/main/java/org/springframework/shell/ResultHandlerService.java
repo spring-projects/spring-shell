@@ -15,13 +15,14 @@
  */
 package org.springframework.shell;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.lang.Nullable;
 
 /**
  * A service interface for result handling.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface ResultHandlerService {
 

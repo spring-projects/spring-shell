@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -33,6 +35,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.CommandScan;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -41,6 +44,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 
@@ -61,6 +65,7 @@ public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 	private Set<String> getPackagesToScan(AnnotationMetadata metadata) {
 		AnnotationAttributes attributes = AnnotationAttributes
 				.fromMap(metadata.getAnnotationAttributes(CommandScan.class.getName()));
+		Assert.state(attributes != null, "'attributes' must not be null");
 		String[] basePackages = attributes.getStringArray("basePackages");
 		Class<?>[] basePackageClasses = attributes.getClassArray("basePackageClasses");
 		Set<String> packagesToScan = new LinkedHashSet<>(Arrays.asList(basePackages));
@@ -93,9 +98,11 @@ public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 		return scanner;
 	}
 
-	private void register(CommandRegistrationBeanRegistrar registrar, String className) throws LinkageError {
+	private void register(CommandRegistrationBeanRegistrar registrar, @Nullable String className) throws LinkageError {
 		try {
-			register(registrar, ClassUtils.forName(className, null));
+			if (StringUtils.hasText(className)) {
+				register(registrar, ClassUtils.forName(className, null));
+			}
 		}
 		catch (ClassNotFoundException ex) {
 			// Ignore

@@ -21,12 +21,12 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
 
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.event.EventLoop;
@@ -46,16 +46,17 @@ import org.springframework.shell.tui.geom.Rectangle;
  * {@link Control} providing some common functionality for implementations.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractView extends AbstractControl implements View {
 
 	private final static Logger log = LoggerFactory.getLogger(AbstractView.class);
 	private final Disposable.Composite disposables = Disposables.composite();
-	private BiFunction<Screen, Rectangle, Rectangle> drawFunction;
+	private @Nullable BiFunction<Screen, Rectangle, Rectangle> drawFunction;
 	private boolean hasFocus;
 	private int layer;
-	private EventLoop eventLoop;
-	private ViewService viewService;
+	private @Nullable EventLoop eventLoop;
+	private @Nullable ViewService viewService;
 	private final Map<String, Runnable> commands = new HashMap<>();
 	private Map<Integer, KeyBindingValue> keyBindings = new HashMap<>();
 	private Map<Integer, KeyBindingValue> hotKeyBindings = new HashMap<>();
@@ -94,8 +95,8 @@ public abstract class AbstractView extends AbstractControl implements View {
 		init = true;
 	}
 
-	private Integer shortcutKey;
-	private Runnable shortcutAction;
+	private @Nullable Integer shortcutKey;
+	private @Nullable Runnable shortcutAction;
 	public void shortcut(Integer key, Runnable runnable) {
 		this.shortcutKey = key;
 		this.shortcutAction = runnable;
@@ -171,7 +172,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	@Override
 	public MouseHandler getMouseHandler() {
 		log.trace("getMouseHandler() {}", this);
-		MouseHandler handler = args -> {
+		return args -> {
 			MouseEvent event = args.event();
 			int mouse = event.mouse();
 			View view = null;
@@ -179,7 +180,8 @@ public abstract class AbstractView extends AbstractControl implements View {
 			// mouse binding may consume and focus
 			MouseBindingValue mouseBindingValue = getMouseBindings().get(mouse);
 			if (mouseBindingValue != null) {
-				if (mouseBindingValue.mousePredicate().test(event)) {
+				Predicate<MouseEvent> mouseEventPredicate = mouseBindingValue.mousePredicate();
+				if (mouseEventPredicate != null && mouseEventPredicate.test(event)) {
 					view = this;
 					consumed = dispatchMouseRunCommand(event, mouseBindingValue);
 				}
@@ -190,7 +192,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 			}
 			return MouseHandler.resultOf(args.event(), consumed, view, this);
 		};
-		return handler;
 	}
 
 	/**
@@ -219,7 +220,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	@Override
 	public KeyHandler getHotKeyHandler() {
 		log.trace("getHotKeyHandler() {}", this);
-		KeyHandler handler = args -> {
+		return args -> {
 			KeyEvent event = args.event();
 			View view = null;
 			boolean consumed = false;
@@ -234,7 +235,6 @@ public abstract class AbstractView extends AbstractControl implements View {
 			}
 			return KeyHandler.resultOf(event, consumed, view);
 		};
-		return handler;
 	}
 
 	/**
@@ -253,7 +253,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 * @return null if function is not set
 	 * @see #setDrawFunction(BiFunction)
 	 */
-	public BiFunction<Screen, Rectangle, Rectangle> getDrawFunction() {
+	public @Nullable BiFunction<Screen, Rectangle, Rectangle> getDrawFunction() {
 		return drawFunction;
 	}
 
@@ -271,7 +271,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 *
 	 * @return event loop
 	 */
-	protected EventLoop getEventLoop() {
+	protected @Nullable EventLoop getEventLoop() {
 		return eventLoop;
 	}
 
@@ -281,7 +281,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 * @param viewService the view service
 	 */
 	@Override
-	public void setViewService(ViewService viewService) {
+	public void setViewService(@Nullable ViewService viewService) {
 		this.viewService = viewService;
 	}
 
@@ -290,7 +290,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 *
 	 * @return view service
 	 */
-	protected ViewService getViewService() {
+	protected @Nullable ViewService getViewService() {
 		return viewService;
 	}
 
@@ -315,7 +315,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 		registerKeyBinding(keyType, null, null, keyRunnable);
 	}
 
-	private void registerKeyBinding(Integer keyType, String keyCommand, KeyBindingConsumer keyConsumer, Runnable keyRunnable) {
+	private void registerKeyBinding(Integer keyType, @Nullable String keyCommand, @Nullable KeyBindingConsumer keyConsumer, @Nullable Runnable keyRunnable) {
 		keyBindings.compute(keyType, (key, old) -> {
 			return KeyBindingValue.of(old, keyCommand, keyConsumer, keyRunnable);
 		});
@@ -333,15 +333,15 @@ public abstract class AbstractView extends AbstractControl implements View {
 		registerHotKeyBinding(keyType, null, null, keyRunnable);
 	}
 
-	private void registerHotKeyBinding(Integer keyType, String keyCommand, KeyBindingConsumer keyConsumer, Runnable keyRunnable) {
+	private void registerHotKeyBinding(Integer keyType, @Nullable String keyCommand, @Nullable KeyBindingConsumer keyConsumer, @Nullable Runnable keyRunnable) {
 		hotKeyBindings.compute(keyType, (key, old) -> {
 			return KeyBindingValue.of(old, keyCommand, keyConsumer, keyRunnable);
 		});
 	}
 
-	record KeyBindingValue(String keyCommand, KeyBindingConsumer keyConsumer, Runnable keyRunnable) {
-		static KeyBindingValue of(KeyBindingValue old, String keyCommand, KeyBindingConsumer keyConsumer,
-				Runnable keyRunnable) {
+	record KeyBindingValue(@Nullable String keyCommand, @Nullable KeyBindingConsumer keyConsumer, @Nullable Runnable keyRunnable) {
+		static KeyBindingValue of(@Nullable KeyBindingValue old, @Nullable String keyCommand, @Nullable KeyBindingConsumer keyConsumer,
+				@Nullable Runnable keyRunnable) {
 			if (old == null) {
 				return new KeyBindingValue(keyCommand, keyConsumer, keyRunnable);
 			}
@@ -369,10 +369,10 @@ public abstract class AbstractView extends AbstractControl implements View {
 		return hotKeyBindings;
 	}
 
-	record MouseBindingValue(String mouseCommand, MouseBindingConsumer mouseConsumer, Runnable mouseRunnable,
-			Predicate<MouseEvent> mousePredicate) {
-		static MouseBindingValue of(MouseBindingValue old, String mouseCommand, MouseBindingConsumer mouseConsumer,
-				Runnable mouseRunnable, Predicate<MouseEvent> mousePredicate) {
+	record MouseBindingValue(@Nullable String mouseCommand, @Nullable MouseBindingConsumer mouseConsumer, @Nullable Runnable mouseRunnable,
+			@Nullable Predicate<MouseEvent> mousePredicate) {
+		static MouseBindingValue of(@Nullable MouseBindingValue old, @Nullable String mouseCommand, @Nullable MouseBindingConsumer mouseConsumer,
+				@Nullable Runnable mouseRunnable, @Nullable Predicate<MouseEvent> mousePredicate) {
 			if (old == null) {
 				return new MouseBindingValue(mouseCommand, mouseConsumer, mouseRunnable, mousePredicate);
 			}
@@ -404,7 +404,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 		registerMouseBinding(keyType, null, null, mouseRunnable);
 	}
 
-	private void registerMouseBinding(Integer mouseType, String mouseCommand, MouseBindingConsumer mouseConsumer, Runnable mouseRunnable) {
+	private void registerMouseBinding(Integer mouseType, @Nullable String mouseCommand, @Nullable MouseBindingConsumer mouseConsumer,@Nullable Runnable mouseRunnable) {
 		Predicate<MouseEvent> mousePredicate = event -> {
 			int x = event.x();
 			int y = event.y();
@@ -442,7 +442,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	}
 
 	@Override
-	public boolean runViewCommand(String command) {
+	public boolean runViewCommand(@Nullable String command) {
 		if (eventLoop == null) {
 			return false;
 		}

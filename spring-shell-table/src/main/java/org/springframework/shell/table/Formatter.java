@@ -16,6 +16,8 @@
 
 package org.springframework.shell.table;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A Formatter is responsible for the initial rendering of a value to lines of text.
  *
@@ -24,8 +26,9 @@ package org.springframework.shell.table;
  * raw text representation (<i>e.g.</i> format numbers).</p>
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public interface Formatter {
 
-	public String[] format(Object value);
+	public String[] format(@Nullable Object value);
 }

@@ -29,10 +29,10 @@ import org.jline.terminal.Terminal.Signal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp.Capability;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.lang.Nullable;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.control.View;
 import org.springframework.shell.tui.component.view.control.ViewService;
@@ -51,6 +51,8 @@ import org.springframework.shell.tui.style.ThemeResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * {@link TerminalUI} is a main component orchestrating terminal, eventloop,
  * key/mouse events and view structure to work together. In many ways it can
@@ -58,6 +60,7 @@ import org.springframework.util.StringUtils;
  * a screen.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class TerminalUI implements ViewService {
 
@@ -66,15 +69,15 @@ public class TerminalUI implements ViewService {
 	private final BindingReader bindingReader;
 	private final KeyMap<Integer> keyMap = new KeyMap<>();
 	private final DefaultScreen virtualDisplay = new DefaultScreen();
-	private Display display;
-	private Size size;
-	private View rootView;
-	private View modalView;
+	private @Nullable Display display;
+	private @Nullable Size size;
+	private @Nullable View rootView;
+	private @Nullable View modalView;
 	private boolean fullScreen;
 	private final KeyBinder keyBinder;
 	private DefaultEventLoop eventLoop = new DefaultEventLoop();
-	private View focus = null;
-	private ThemeResolver themeResolver;
+	private @Nullable View focus = null;
+	private @Nullable ThemeResolver themeResolver;
 	private String themeName = "default";
 
 	/**
@@ -90,12 +93,12 @@ public class TerminalUI implements ViewService {
 	}
 
 	@Override
-	public View getModal() {
+	public @Nullable View getModal() {
 		return modalView;
 	}
 
 	@Override
-	public void setModal(View view) {
+	public void setModal(@Nullable View view) {
 		this.modalView = view;
 	}
 
@@ -152,7 +155,7 @@ public class TerminalUI implements ViewService {
 	 *
 	 * @return a theme resolver
 	 */
-	public ThemeResolver getThemeResolver() {
+	public @Nullable ThemeResolver getThemeResolver() {
 		return themeResolver;
 	}
 
@@ -220,16 +223,18 @@ public class TerminalUI implements ViewService {
 		}
 	}
 
-	private BiFunction<Terminal, View, Rectangle> fullScreenViewRect = (terminal, view) -> {
+	private BiFunction<Terminal, @Nullable View, Rectangle> fullScreenViewRect = (terminal, view) -> {
 		Size s = terminal.getSize();
 		return new Rectangle(0, 0, s.getColumns(), s.getRows());
 	};
 
-	private BiFunction<Terminal, View, Rectangle> nonfullScreenViewRect = (terminal, view) -> {
+	private BiFunction<Terminal, @Nullable View, Rectangle> nonfullScreenViewRect = (terminal, view) -> {
 		Size s = terminal.getSize();
-		Rectangle rect = view.getRect();
-		if (!rect.isEmpty()) {
-			return rect;
+		if (view != null) {
+			Rectangle rect = view.getRect();
+			if (!rect.isEmpty()) {
+				return rect;
+			}
 		}
 		return new Rectangle(0, 0, s.getColumns(), 5);
 	};
@@ -259,13 +264,18 @@ public class TerminalUI implements ViewService {
 
 	private synchronized void display() {
 		log.trace("display() start");
+		requireNonNull(display);
+		requireNonNull(size);
+
 		size.copy(terminal.getSize());
 		if (fullScreen) {
 			display.clear();
 			display.reset();
 			display.resize(size.getRows(), size.getColumns());
 			Rectangle rect = fullScreenViewRect.apply(terminal, rootView);
-			rootView.setRect(rect.x(), rect.y(), rect.width(), rect.height());
+			if (rootView != null) {
+				rootView.setRect(rect.x(), rect.y(), rect.width(), rect.height());
+			}
 			virtualDisplay.resize(size.getRows(), size.getColumns());
 			virtualDisplay.setShowCursor(false);
 			render(rect);
@@ -370,6 +380,9 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void loop() {
+		requireNonNull(display);
+		requireNonNull(size);
+
 		Attributes attr = terminal.enterRawMode();
 		registerEventHandling();
 

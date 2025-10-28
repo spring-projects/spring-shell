@@ -15,7 +15,12 @@
  */
 package org.springframework.shell.tui.component.support;
 
+import org.jspecify.annotations.Nullable;
+
+/**
+ * @author Piotr Olaszewski
+ */
 public interface Matchable {
 
-	boolean matches(String match);
+	boolean matches(@Nullable String match);
 }

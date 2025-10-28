@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.command.parser;
 
+import org.jspecify.annotations.Nullable;
+
 import java.text.MessageFormat;
 
 /**
@@ -35,6 +37,7 @@ import java.text.MessageFormat;
  * is beyond its control.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public enum ParserMessage {
 
@@ -70,7 +73,7 @@ public enum ParserMessage {
 	 * @param inserts the inserts
 	 * @return formatted message
 	 */
-	public String formatMessage(Object... inserts) {
+	public String formatMessage(Object @Nullable ... inserts) {
 		return formatMessage(false, -1, inserts);
 	}
 
@@ -84,7 +87,7 @@ public enum ParserMessage {
 	 * @param inserts the inserts
 	 * @return formatted message
 	 */
-	public String formatMessage(boolean useCode, int position, Object... inserts) {
+	public String formatMessage(boolean useCode, int position, Object @Nullable... inserts) {
 		StringBuilder msg = new StringBuilder();
 		if (useCode) {
 			msg.append(code);

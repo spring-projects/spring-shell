@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.tui.component.view.control.cell;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.view.control.ListView.ItemStyle;
 import org.springframework.shell.tui.component.view.screen.Screen;
 import org.springframework.shell.tui.component.view.screen.Screen.Writer;
@@ -26,10 +27,11 @@ import org.springframework.util.StringUtils;
  * Base implementation of a {@link ListCell}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractListCell<T> extends AbstractCell<T> implements ListCell<T> {
 
-	private ItemStyle itemStyle;
+	private @Nullable ItemStyle itemStyle;
 	private boolean selected;
 
 	public AbstractListCell(T item) {
@@ -45,7 +47,7 @@ public abstract class AbstractListCell<T> extends AbstractCell<T> implements Lis
 		return getItem().toString();
 	}
 
-	protected String getIndicator() {
+	protected @Nullable String getIndicator() {
 		if (getItemStyle() == ItemStyle.CHECKED || getItemStyle() == ItemStyle.RADIO) {
 			return selected ? "[x]" : "[ ]";
 		}
@@ -85,7 +87,7 @@ public abstract class AbstractListCell<T> extends AbstractCell<T> implements Lis
 		this.itemStyle = itemStyle;
 	}
 
-	public ItemStyle getItemStyle() {
+	public @Nullable ItemStyle getItemStyle() {
 		return itemStyle;
 	}
 

@@ -17,7 +17,7 @@ package org.springframework.shell.tui.component.view.control;
 
 import java.util.Set;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.view.event.EventLoop;
 import org.springframework.shell.tui.component.view.event.KeyHandler;
 import org.springframework.shell.tui.component.view.event.MouseHandler;
@@ -27,6 +27,7 @@ import org.springframework.shell.tui.component.view.event.MouseHandler;
  * itself and contains zero or more nested {@code Views}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface View extends Control {
 
@@ -61,7 +62,6 @@ public interface View extends Control {
 	 * @return a view mouse handler
 	 * @see MouseHandler
 	 */
-	@Nullable
 	MouseHandler getMouseHandler();
 
 	/**
@@ -71,7 +71,6 @@ public interface View extends Control {
 	 * @return a view key handler
 	 * @see KeyHandler
 	 */
-	@Nullable
 	KeyHandler getKeyHandler();
 
 	/**
@@ -81,7 +80,6 @@ public interface View extends Control {
 	 * @return a view hotkey handler
 	 * @see KeyHandler
 	 */
-	@Nullable
 	KeyHandler getHotKeyHandler();
 
 	/**

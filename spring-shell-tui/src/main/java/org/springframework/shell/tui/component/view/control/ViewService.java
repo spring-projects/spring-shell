@@ -15,12 +15,13 @@
  */
 package org.springframework.shell.tui.component.view.control;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides services for a {@link View} like handling modals.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface ViewService {
 
@@ -29,8 +30,7 @@ public interface ViewService {
 	 *
 	 * @return current modal view
 	 */
-	@Nullable
-	View getModal();
+	@Nullable View getModal();
 
 	/**
 	 * Sets a new modal view. Setting modal to {@code null} clears existing modal.

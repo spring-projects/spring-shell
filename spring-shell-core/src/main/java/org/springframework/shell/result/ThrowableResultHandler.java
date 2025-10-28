@@ -23,6 +23,7 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.command.CommandCatalog;
@@ -40,6 +41,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable> {
 
@@ -48,13 +50,13 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 	 */
 	public static final String DETAILS_COMMAND_NAME = "stacktrace";
 
-	private Throwable lastError;
+	private @Nullable Throwable lastError;
 
-	private CommandCatalog commandCatalog;
+	private final CommandCatalog commandCatalog;
 
-	private ObjectProvider<InteractiveShellRunner> interactiveRunner;
+	private final ObjectProvider<InteractiveShellRunner> interactiveRunner;
 
-	private ShellContext shellContext;
+	private final ShellContext shellContext;
 
 	public ThrowableResultHandler(Terminal terminal, CommandCatalog commandCatalog, ShellContext shellContext,
 			ObjectProvider<InteractiveShellRunner> interactiveRunner) {
@@ -109,7 +111,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 	/**
 	 * Return the last error that was dealt with by this result handler.
 	 */
-	public Throwable getLastError() {
+	public @Nullable Throwable getLastError() {
 		return lastError;
 	}
 

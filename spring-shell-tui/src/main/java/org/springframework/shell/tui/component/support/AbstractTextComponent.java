@@ -24,6 +24,7 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.InfoCmp.Capability;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.context.BaseComponentContext;
 import org.springframework.shell.tui.component.context.ComponentContext;
 import org.springframework.shell.tui.component.support.AbstractTextComponent.TextComponentContext;
@@ -35,20 +36,21 @@ import static org.jline.keymap.KeyMap.key;
  * Base class for components which work on a simple text input.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractTextComponent<T, C extends TextComponentContext<T, C>> extends AbstractComponent<C> {
 
-	private final String name;
+	private final @Nullable String name;
 
 	public AbstractTextComponent(Terminal terminal) {
 		this(terminal, null);
 	}
 
-	public AbstractTextComponent(Terminal terminal, String name) {
+	public AbstractTextComponent(Terminal terminal, @Nullable String name) {
 		this(terminal, name, null);
 	}
 
-	public AbstractTextComponent(Terminal terminal, String name, Function<C, List<AttributedString>> renderer) {
+	public AbstractTextComponent(Terminal terminal, @Nullable String name, @Nullable Function<C, List<AttributedString>> renderer) {
 		super(terminal);
 		this.name = name;
 		setRenderer(renderer);
@@ -79,7 +81,7 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 	 *
 	 * @return a name
 	 */
-	protected String getName() {
+	protected @Nullable String getName() {
 		return name;
 	}
 
@@ -90,56 +92,56 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		 *
 		 * @return a name
 		 */
-		String getName();
+		@Nullable String getName();
 
 		/**
 		 * Sets a name.
 		 *
 		 * @param name the name
 		 */
-		void setName(String name);
+		void setName(@Nullable String name);
 
 		/**
 		 * Gets an input.
 		 *
 		 * @return an input
 		 */
-		String getInput();
+		@Nullable String getInput();
 
 		/**
 		 * Sets an input.
 		 *
 		 * @param input the input
 		 */
-		void setInput(String input);
+		void setInput(@Nullable String input);
 
 		/**
 		 * Sets a result value.
 		 *
 		 * @return a result value
 		 */
-		T getResultValue();
+		@Nullable T getResultValue();
 
 		/**
 		 * Sets a result value.
 		 *
 		 * @param resultValue the result value
 		 */
-		void setResultValue(T resultValue);
+		void setResultValue(@Nullable T resultValue);
 
 		/**
 		 * Sets a message.
 		 *
 		 * @return a message
 		 */
-		String getMessage();
+		@Nullable String getMessage();
 
 		/**
 		 * Sets a message.
 		 *
 		 * @param message the message
 		 */
-		void setMessage(String message);
+		void setMessage(@Nullable String message);
 
 		/**
 		 * Sets a message with level.
@@ -176,49 +178,49 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 	public static class BaseTextComponentContext<T, C extends TextComponentContext<T, C>> extends BaseComponentContext<C>
 			implements TextComponentContext<T, C> {
 
-		private String name;
-		private String input;
-		private T resultValue;
-		private String message;
+		private @Nullable String name;
+		private @Nullable String input;
+		private @Nullable T resultValue;
+		private @Nullable String message;
 		private MessageLevel messageLevel = MessageLevel.INFO;
 
 		@Override
-		public String getName() {
+		public @Nullable String getName() {
 			return name;
 		}
 
 		@Override
-		public void setName(String name) {
+		public void setName(@Nullable String name) {
 			this.name = name;
 		}
 
 		@Override
-		public String getInput() {
+		public @Nullable String getInput() {
 			return input;
 		}
 
 		@Override
-		public void setInput(String input) {
+		public void setInput(@Nullable String input) {
 			this.input = input;
 		}
 
 		@Override
-		public T getResultValue() {
+		public @Nullable T getResultValue() {
 			return resultValue;
 		}
 
 		@Override
-		public void setResultValue(T resultValue) {
+		public void setResultValue(@Nullable T resultValue) {
 			this.resultValue = resultValue;
 		}
 
 		@Override
-		public String getMessage() {
+		public @Nullable String getMessage() {
 			return message;
 		}
 
 		@Override
-		public void setMessage(String message) {
+		public void setMessage(@Nullable String message) {
 			this.message = message;
 		}
 
@@ -239,9 +241,10 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		}
 
 		@Override
-		public Map<String, Object> toTemplateModel() {
-			Map<String, Object> attributes = super.toTemplateModel();
-			attributes.put("resultValue", getResultValue() != null ? getResultValue().toString() : null);
+		public Map<String, @Nullable Object> toTemplateModel() {
+			Map<String, @Nullable Object> attributes = super.toTemplateModel();
+			T value = getResultValue();
+			attributes.put("resultValue", value != null ? value.toString() : null);
 			attributes.put("name", getName());
 			attributes.put("message", getMessage());
 			attributes.put("messageLevel", getMessageLevel());

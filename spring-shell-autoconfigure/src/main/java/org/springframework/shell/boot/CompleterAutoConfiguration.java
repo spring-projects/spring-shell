@@ -31,6 +31,9 @@ import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.Shell;
 
+/**
+ * @author Piotr Olaszewski
+ */
 @AutoConfiguration
 public class CompleterAutoConfiguration {
 
@@ -39,14 +42,16 @@ public class CompleterAutoConfiguration {
 
 	@Bean
 	public CompleterAdapter completer() {
-		CompleterAdapter completerAdapter = new CompleterAdapter();
-		completerAdapter.setShell(shell);
-		return completerAdapter;
+		return new CompleterAdapter(shell);
 	}
 
 	public static class CompleterAdapter implements Completer {
 
 		private Shell shell;
+
+		public CompleterAdapter(Shell shell) {
+			this.shell = shell;
+		}
 
 		@Override
 		public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {

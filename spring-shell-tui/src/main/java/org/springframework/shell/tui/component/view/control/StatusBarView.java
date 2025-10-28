@@ -21,10 +21,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.lang.Nullable;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.event.MouseEvent;
 import org.springframework.shell.tui.component.view.event.MouseHandler;
@@ -44,12 +44,13 @@ import org.springframework.util.StringUtils;
  * is {@code 0}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class StatusBarView extends BoxView {
 
 	private final Logger log = LoggerFactory.getLogger(StatusBarView.class);
 	private final List<StatusItem> items = new ArrayList<>();
-	private String itemSeparator = " | ";
+	private @Nullable String itemSeparator = " | ";
 
 	public StatusBarView() {
 		this(new StatusItem[0]);
@@ -73,8 +74,7 @@ public class StatusBarView extends BoxView {
 	 *
 	 * @return a separator
 	 */
-	@Nullable
-	public String getItemSeparator() {
+	public @Nullable String getItemSeparator() {
 		return itemSeparator;
 	}
 
@@ -153,17 +153,21 @@ public class StatusBarView extends BoxView {
 		};
 	}
 
-	private StatusItem itemAt(int x, int y) {
+	private @Nullable StatusItem itemAt(int x, int y) {
 		Rectangle rect = getRect();
 		if (!rect.contains(x, y)) {
 			return null;
 		}
 		int ix = 0;
 		for (StatusItem item : items) {
-			if (x < ix + item.getTitle().length()) {
+			String title = item.getTitle();
+			if (!StringUtils.hasText(title)) {
+				continue;
+			}
+			if (x < ix + title.length()) {
 				return item;
 			}
-			ix += item.getTitle().length();
+			ix += title.length();
 		}
 		return null;
 	}
@@ -218,8 +222,8 @@ public class StatusBarView extends BoxView {
 	public static class StatusItem {
 
 		private String title;
-		private Runnable action;
-		private Integer hotKey;
+		private @Nullable Runnable action;
+		private @Nullable Integer hotKey;
 		private boolean primary = true;
 		private int priority = 0;
 
@@ -227,11 +231,11 @@ public class StatusBarView extends BoxView {
 			this(title, null);
 		}
 
-		public StatusItem(String title, Runnable action) {
+		public StatusItem(String title, @Nullable Runnable action) {
 			this(title, action, null);
 		}
 
-		public StatusItem(String title, Runnable action, Integer hotKey) {
+		public StatusItem(String title, @Nullable Runnable action, @Nullable Integer hotKey) {
 			this.title = title;
 			this.action = action;
 			this.hotKey = hotKey;
@@ -261,7 +265,7 @@ public class StatusBarView extends BoxView {
 			return new StatusItem(title, action, hotKey, primary, priority);
 		}
 
-		public String getTitle() {
+		public @Nullable String getTitle() {
 			return title;
 		}
 
@@ -269,7 +273,7 @@ public class StatusBarView extends BoxView {
 			this.title = title;
 		}
 
-		public Runnable getAction() {
+		public @Nullable Runnable getAction() {
 			return action;
 		}
 
@@ -278,7 +282,7 @@ public class StatusBarView extends BoxView {
 			return this;
 		}
 
-		public Integer getHotKey() {
+		public @Nullable Integer getHotKey() {
 			return hotKey;
 		}
 

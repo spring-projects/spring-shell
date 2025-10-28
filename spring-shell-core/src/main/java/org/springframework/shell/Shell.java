@@ -30,6 +30,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.jline.terminal.Terminal;
 import org.jline.utils.Signals;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,10 +59,11 @@ import org.springframework.util.StringUtils;
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class Shell {
 
-	private final static Logger log = LoggerFactory.getLogger(Shell.class);
+	private static final Logger log = LoggerFactory.getLogger(Shell.class);
 	private final ResultHandlerService resultHandlerService;
 
 	/**
@@ -73,12 +75,12 @@ public class Shell {
 	private final Terminal terminal;
 	private final CommandCatalog commandRegistry;
 	protected List<CompletionResolver> completionResolvers = new ArrayList<>();
-	private CommandExecutionHandlerMethodArgumentResolvers argumentResolvers;
+	private @Nullable CommandExecutionHandlerMethodArgumentResolvers argumentResolvers;
 	private ConversionService conversionService = new DefaultConversionService();
 	private final ShellContext shellContext;
 	private final ExitCodeMappings exitCodeMappings;
-	private Exception handlingResultNonInt = null;
-	private CommandHandlingResult processExceptionNonInt = null;
+	private @Nullable Exception handlingResultNonInt = null;
+	private @Nullable CommandHandlingResult processExceptionNonInt = null;
 
 	/**
 	 * Marker object to distinguish unresolved arguments from {@code null}, which is a valid
@@ -123,7 +125,7 @@ public class Shell {
 		this.exceptionResolvers = exceptionResolvers;
 	}
 
-	private ExitCodeExceptionProvider exitCodeExceptionProvider;
+	private @Nullable ExitCodeExceptionProvider exitCodeExceptionProvider;
 
 	@Autowired(required = false)
 	public void setExitCodeExceptionProvider(ExitCodeExceptionProvider exitCodeExceptionProvider) {
@@ -191,7 +193,7 @@ public class Shell {
 	 * result
 	 * </p>
 	 */
-	protected Object evaluate(Input input) {
+	protected @Nullable Object evaluate(Input input) {
 		if (noInput(input)) {
 			return NO_INPUT;
 		}
@@ -354,8 +356,10 @@ public class Shell {
 
 			// Try to complete arguments
 			List<CommandOption> matchedArgOptions = new ArrayList<>();
-			if (argsContext.getWords().size() > 0 && argsContext.getWordIndex() > 0 && argsContext.getWords().size() > argsContext.getWordIndex()) {
-				matchedArgOptions.addAll(matchOptions(registration.getOptions(), argsContext.getWords().get(argsContext.getWordIndex() - 1)));
+			if (!argsContext.getWords().isEmpty() && argsContext.getWordIndex() > 0 && argsContext.getWords().size() > argsContext.getWordIndex()) {
+				if (registration != null) {
+					matchedArgOptions.addAll(matchOptions(registration.getOptions(), argsContext.getWords().get(argsContext.getWordIndex() - 1)));
+				}
 			}
 
 			List<CompletionProposal> argProposals =	matchedArgOptions.stream()
@@ -448,7 +452,7 @@ public class Shell {
 	 *
 	 * @return a valid command name, or {@literal null} if none matched
 	 */
-	private String findLongestCommand(String prefix, boolean filterHidden) {
+	private @Nullable String findLongestCommand(String prefix, boolean filterHidden) {
 		Map<String, CommandRegistration> registrations = commandRegistry.getRegistrations();
 		if (filterHidden) {
 			registrations = Utils.removeHiddenCommands(registrations);

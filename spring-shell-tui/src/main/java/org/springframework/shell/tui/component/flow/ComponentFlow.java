@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.tui.component.flow;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jline.terminal.Terminal;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +50,7 @@ import org.springframework.shell.tui.component.StringInput.StringInputContext;
 import org.springframework.shell.tui.component.context.ComponentContext;
 import org.springframework.shell.tui.component.support.SelectorItem;
 import org.springframework.shell.tui.style.TemplateExecutor;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -57,6 +60,7 @@ import org.springframework.util.StringUtils;
  * multi-select.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface ComponentFlow {
 
@@ -140,7 +144,7 @@ public interface ComponentFlow {
 		 * @param terminal the terminal
 		 * @return a builder
 		 */
-		Builder terminal(Terminal terminal);
+		Builder terminal(@Nullable Terminal terminal);
 
 		/**
 		 * Sets a {@link ResourceLoader}.
@@ -148,7 +152,7 @@ public interface ComponentFlow {
 		 * @param resourceLoader the resource loader
 		 * @return a builder
 		 */
-		Builder resourceLoader(ResourceLoader resourceLoader);
+		Builder resourceLoader(@Nullable ResourceLoader resourceLoader);
 
 		/**
 		 * Sets a {@link TemplateExecutor}.
@@ -156,7 +160,7 @@ public interface ComponentFlow {
 		 * @param templateExecutor the template executor
 		 * @return a builder
 		 */
-		Builder templateExecutor(TemplateExecutor templateExecutor);
+		Builder templateExecutor(@Nullable TemplateExecutor templateExecutor);
 
 		/**
 		 * Clones existing builder.
@@ -189,9 +193,9 @@ public interface ComponentFlow {
 		private final List<BaseMultiItemSelector> multiItemSelectors = new ArrayList<>();
 		private final AtomicInteger order = new AtomicInteger();
 		private final HashSet<String> uniqueIds = new HashSet<>();
-		private Terminal terminal;
-		private ResourceLoader resourceLoader;
-		private TemplateExecutor templateExecutor;
+		private @Nullable Terminal terminal;
+		private @Nullable ResourceLoader resourceLoader;
+		private @Nullable TemplateExecutor templateExecutor;
 
 		BaseBuilder() {
 		}
@@ -228,19 +232,19 @@ public interface ComponentFlow {
 		}
 
 		@Override
-		public Builder terminal(Terminal terminal) {
+		public Builder terminal(@Nullable Terminal terminal) {
 			this.terminal = terminal;
 			return this;
 		}
 
 		@Override
-		public Builder resourceLoader(ResourceLoader resourceLoader) {
+		public Builder resourceLoader(@Nullable ResourceLoader resourceLoader) {
 			this.resourceLoader = resourceLoader;
 			return this;
 		}
 
 		@Override
-		public Builder templateExecutor(TemplateExecutor templateExecutor) {
+		public Builder templateExecutor(@Nullable TemplateExecutor templateExecutor) {
 			this.templateExecutor = templateExecutor;
 			return this;
 		}
@@ -292,15 +296,15 @@ public interface ComponentFlow {
 			multiItemSelectors.add(input);
 		}
 
-		Terminal getTerminal() {
+		@Nullable Terminal getTerminal() {
 			return terminal;
 		}
 
-		ResourceLoader getResourceLoader() {
+		@Nullable ResourceLoader getResourceLoader() {
 			return resourceLoader;
 		}
 
-		TemplateExecutor getTemplateExecutor() {
+		@Nullable TemplateExecutor getTemplateExecutor() {
 			return templateExecutor;
 		}
 
@@ -347,12 +351,13 @@ public interface ComponentFlow {
 		private final List<BaseConfirmationInput> confirmationInputs;
 		private final List<BaseSingleItemSelector> singleInputs;
 		private final List<BaseMultiItemSelector> multiInputs;
-		private final ResourceLoader resourceLoader;
-		private final TemplateExecutor templateExecutor;
+		private final @Nullable ResourceLoader resourceLoader;
+		private final @Nullable TemplateExecutor templateExecutor;
 
-		DefaultComponentFlow(Terminal terminal, ResourceLoader resourceLoader, TemplateExecutor templateExecutor,
+		DefaultComponentFlow(@Nullable Terminal terminal, @Nullable ResourceLoader resourceLoader, @Nullable TemplateExecutor templateExecutor,
 				List<BaseStringInput> stringInputs, List<BasePathInput> pathInputs, List<BaseConfirmationInput> confirmationInputs,
 				List<BaseSingleItemSelector> singleInputs, List<BaseMultiItemSelector> multiInputs) {
+			Assert.state(terminal != null, "'terminal' must not be null");
 			this.terminal = terminal;
 			this.resourceLoader = resourceLoader;
 			this.templateExecutor = templateExecutor;
@@ -371,7 +376,7 @@ public interface ComponentFlow {
 		private static class OrderedInputOperationList {
 
 			private final Map<String, Node> map = new HashMap<>();
-			private Node first;
+			private @Nullable Node first;
 
 			OrderedInputOperationList(List<OrderedInputOperation> values) {
 				Node ref = null;
@@ -388,17 +393,17 @@ public interface ComponentFlow {
 				}
 			}
 
-			Node get(String id) {
+			@Nullable Node get(String id) {
 				return map.get(id);
 			}
 
-			Node getFirst() {
+			@Nullable Node getFirst() {
 				return first;
 			}
 
 			static class Node {
 				OrderedInputOperation data;
-				Node next;
+				@Nullable Node next;
 				Node(OrderedInputOperation data) {
 					this.data = data;
 				}
@@ -418,7 +423,10 @@ public interface ComponentFlow {
 			OrderedInputOperationList.Node node = oiol.getFirst();
 			while (node != null) {
 				log.debug("Calling apply for {}", node.data.id);
-				context = node.data.getOperation().apply(context);
+				Function<ComponentContext<?>, ComponentContext<?>> operation = node.data.getOperation();
+				if (operation != null) {
+					context = operation.apply(context);
+				}
 				if (node.data.next != null) {
 					Optional<String> n = node.data.next.apply(context);
 					if (n == null) {
@@ -452,8 +460,12 @@ public interface ComponentFlow {
 							context.put(input.getId(), input.getResultValue());
 							return context;
 						}
-						selector.setResourceLoader(resourceLoader);
-						selector.setTemplateExecutor(templateExecutor);
+						if (resourceLoader != null) {
+							selector.setResourceLoader(resourceLoader);
+						}
+						if (templateExecutor != null) {
+							selector.setTemplateExecutor(templateExecutor);
+						}
 						selector.setMaskCharacter(input.getMaskCharacter());
 						if (StringUtils.hasText(input.getTemplateLocation())) {
 							selector.setTemplateLocation(input.getTemplateLocation());
@@ -468,7 +480,10 @@ public interface ComponentFlow {
 								});
 							}
 							selector.addPostRunHandler(c -> {
-								c.put(input.getId(), c.getResultValue());
+								String resultValue = c.getResultValue();
+								if (resultValue != null) {
+									c.put(input.getId(), resultValue);
+								}
 							});
 						}
 						for (Consumer<StringInputContext> handler : input.getPreHandlers()) {
@@ -496,8 +511,12 @@ public interface ComponentFlow {
 							context.put(input.getId(), Paths.get(input.getResultValue()));
 							return context;
 						}
-						selector.setResourceLoader(resourceLoader);
-						selector.setTemplateExecutor(templateExecutor);
+						if (resourceLoader != null) {
+							selector.setResourceLoader(resourceLoader);
+						}
+						if (templateExecutor != null) {
+							selector.setTemplateExecutor(templateExecutor);
+						}
 						if (StringUtils.hasText(input.getTemplateLocation())) {
 							selector.setTemplateLocation(input.getTemplateLocation());
 						}
@@ -506,7 +525,10 @@ public interface ComponentFlow {
 						}
 						if (input.isStoreResult()) {
 							selector.addPostRunHandler(c -> {
-								c.put(input.getId(), c.getResultValue());
+								Path resultValue = c.getResultValue();
+								if (resultValue != null) {
+									c.put(input.getId(), resultValue);
+								}
 							});
 						}
 						for (Consumer<PathInputContext> handler : input.getPreHandlers()) {
@@ -534,8 +556,12 @@ public interface ComponentFlow {
 							context.put(input.getId(), input.getResultValue());
 							return context;
 						}
-						selector.setResourceLoader(resourceLoader);
-						selector.setTemplateExecutor(templateExecutor);
+						if (resourceLoader != null) {
+							selector.setResourceLoader(resourceLoader);
+						}
+						if (templateExecutor != null) {
+							selector.setTemplateExecutor(templateExecutor);
+						}
 						if (StringUtils.hasText(input.getTemplateLocation())) {
 							selector.setTemplateLocation(input.getTemplateLocation());
 						}
@@ -544,7 +570,9 @@ public interface ComponentFlow {
 						}
 						if (input.isStoreResult()) {
 							selector.addPostRunHandler(c -> {
-								c.put(input.getId(), c.getResultValue());
+								if (c.getResultValue() != null) {
+									c.put(input.getId(), c.getResultValue());
+								}
 							});
 						}
 						for (Consumer<ConfirmationInputContext> handler : input.getPreHandlers()) {
@@ -588,8 +616,12 @@ public interface ComponentFlow {
 						context.put(input.getId(), input.getResultValue());
 						return context;
 					}
-					selector.setResourceLoader(resourceLoader);
-					selector.setTemplateExecutor(templateExecutor);
+					if (resourceLoader != null) {
+						selector.setResourceLoader(resourceLoader);
+					}
+					if (templateExecutor != null) {
+						selector.setTemplateExecutor(templateExecutor);
+					}
 					if (StringUtils.hasText(input.getTemplateLocation())) {
 						selector.setTemplateLocation(input.getTemplateLocation());
 					}
@@ -635,8 +667,12 @@ public interface ComponentFlow {
 						context.put(input.getId(), input.getResultValues());
 						return context;
 					}
-					selector.setResourceLoader(resourceLoader);
-					selector.setTemplateExecutor(templateExecutor);
+					if (resourceLoader != null) {
+						selector.setResourceLoader(resourceLoader);
+					}
+					if (templateExecutor != null) {
+						selector.setTemplateExecutor(templateExecutor);
+					}
 					if (StringUtils.hasText(input.getTemplateLocation())) {
 						selector.setTemplateLocation(input.getTemplateLocation());
 					}
@@ -670,25 +706,25 @@ public interface ComponentFlow {
 
 	static class OrderedInputOperation implements Ordered {
 
-		private String id;
+		private @Nullable String id;
 		private int order;
-		private Function<ComponentContext<?>, ComponentContext<?>> operation;
-		private Function<ComponentContext<?>, Optional<String>> next;
+		private @Nullable Function<ComponentContext<?>, ComponentContext<?>> operation;
+		private @Nullable Function<ComponentContext<?>, Optional<String>> next;
 
 		@Override
 		public int getOrder() {
 			return order;
 		}
 
-		public String getId() {
+		public @Nullable String getId() {
 			return id;
 		}
 
-		public Function<ComponentContext<?>, ComponentContext<?>> getOperation() {
+		public @Nullable Function<ComponentContext<?>, ComponentContext<?>> getOperation() {
 			return operation;
 		}
 
-		public Function<ComponentContext<?>, Optional<String>> getNext() {
+		public @Nullable Function<ComponentContext<?>, Optional<String>> getNext() {
 			return next;
 		}
 

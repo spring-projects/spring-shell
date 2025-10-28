@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,6 +27,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.config.UserConfigPathProvider;
 import org.springframework.util.StringUtils;
 
+/**
+ * @author Piotr Olaszewski
+ */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class UserConfigAutoConfiguration {
@@ -42,14 +46,15 @@ public class UserConfigAutoConfiguration {
 
 	static class LocationResolver {
 
-		private final static String XDG_CONFIG_HOME = "XDG_CONFIG_HOME";
-		private final static String APP_DATA = "APP_DATA";
+		private static final String XDG_CONFIG_HOME = "XDG_CONFIG_HOME";
+		private static final String APP_DATA = "APP_DATA";
 		private static final String USERCONFIG_PLACEHOLDER = "{userconfig}";
-		private Function<String, Path> pathProvider = (path) -> Paths.get(path);
-		private final String configDirEnv;
-		private final String configDirLocation;
 
-		LocationResolver(String configDirEnv, String configDirLocation) {
+		private final Function<String, Path> pathProvider = Paths::get;
+		private final @Nullable String configDirEnv;
+		private final @Nullable String configDirLocation;
+
+		LocationResolver(@Nullable String configDirEnv, @Nullable String configDirLocation) {
 			this.configDirEnv = configDirEnv;
 			this.configDirLocation = configDirLocation;
 		}

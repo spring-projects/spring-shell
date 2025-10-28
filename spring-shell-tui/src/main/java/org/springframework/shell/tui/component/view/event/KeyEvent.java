@@ -15,15 +15,17 @@
  */
 package org.springframework.shell.tui.component.view.event;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  *
  *        mask         special keys                  unicode keys                    ascii keys
  *   [         ] [                     ] [                                 ] [                     ]
  *   31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
  *
- *
+ * @author Piotr Olaszewski
  */
-public record KeyEvent(int key, String data) {
+public record KeyEvent(int key, @Nullable String data) {
 
 	public static KeyEvent of(int key) {
 		return new KeyEvent(key, null);

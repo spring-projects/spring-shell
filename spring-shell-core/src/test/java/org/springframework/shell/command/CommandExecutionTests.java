@@ -15,9 +15,14 @@
  */
 package org.springframework.shell.command;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jline.terminal.impl.DumbTerminal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -31,6 +36,7 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.CommandNotCurrentlyAvailable;
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
+import org.springframework.shell.context.DefaultShellContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,13 +47,16 @@ class CommandExecutionTests extends AbstractCommandTests {
 	private CommandCatalog commandCatalog;
 
 	@BeforeEach
-	void setupCommandExecutionTests() {
+	void setupCommandExecutionTests() throws IOException {
 		commandCatalog = CommandCatalog.of();
 		ConversionService conversionService = new DefaultConversionService();
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
 		resolvers.add(new ArgumentHeaderMethodArgumentResolver(conversionService, null));
 		resolvers.add(new CommandContextMethodArgumentResolver());
-		execution = CommandExecution.of(resolvers, null, null, null, conversionService, commandCatalog);
+		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DumbTerminal terminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
+		execution = CommandExecution.of(resolvers, null, terminal, new DefaultShellContext(), conversionService, commandCatalog);
 	}
 
 	@Test

@@ -15,17 +15,20 @@
  */
 package org.springframework.shell.standard.commands;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Model encapsulating info about {@code command availability}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 class CommandAvailabilityInfoModel {
 
 	private boolean available;
-	private String reason;
+	private @Nullable String reason;
 
-	CommandAvailabilityInfoModel(boolean available, String reason) {
+	CommandAvailabilityInfoModel(boolean available, @Nullable String reason) {
 		this.available = available;
 		this.reason = reason;
 	}
@@ -37,7 +40,7 @@ class CommandAvailabilityInfoModel {
 	 * @param reason the reason
 	 * @return a command parameter availability model
 	 */
-	static CommandAvailabilityInfoModel of(boolean available, String reason) {
+	static CommandAvailabilityInfoModel of(boolean available, @Nullable String reason) {
 		return new CommandAvailabilityInfoModel(available, reason);
 	}
 
@@ -45,7 +48,7 @@ class CommandAvailabilityInfoModel {
 		return available;
 	}
 
-	public String getReason() {
+	public @Nullable String getReason() {
 		return reason;
 	}
 }

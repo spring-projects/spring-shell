@@ -19,12 +19,14 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
 
 /**
  * A result for a successful resolve operation.
  *
  * @author Camilo Gonzalez
+ * @author Piotr Olaszewski
  */
 public class ValueResult {
 
@@ -40,8 +42,7 @@ public class ValueResult {
 		this(methodParameter, resolvedValue, new BitSet(), new BitSet());
 	}
 
-	public ValueResult(MethodParameter methodParameter, Object resolvedValue, BitSet wordsUsed,
-			BitSet wordsUsedForValue) {
+	public ValueResult(MethodParameter methodParameter, Object resolvedValue, @Nullable BitSet wordsUsed, @Nullable BitSet wordsUsedForValue) {
 
 		this.methodParameter = methodParameter;
 		this.resolvedValue = resolvedValue;

@@ -27,6 +27,7 @@ import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,35 +35,36 @@ import org.springframework.shell.tui.component.PathInput.PathInputContext;
 import org.springframework.shell.tui.component.context.ComponentContext;
 import org.springframework.shell.tui.component.support.AbstractTextComponent;
 import org.springframework.shell.tui.component.support.AbstractTextComponent.TextComponentContext.MessageLevel;
-import org.springframework.util.StringUtils;;
+import org.springframework.util.StringUtils;
 
 /**
  * Component for a simple path input.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(PathInput.class);
-	private PathInputContext currentContext;
+	private @Nullable PathInputContext currentContext;
 	private Function<String, Path> pathProvider = (path) -> Paths.get(path);
 
 	public PathInput(Terminal terminal) {
 		this(terminal, null);
 	}
 
-	public PathInput(Terminal terminal, String name) {
+	public PathInput(Terminal terminal, @Nullable String name) {
 		this(terminal, name, null);
 	}
 
-	public PathInput(Terminal terminal, String name, Function<PathInputContext, List<AttributedString>> renderer) {
+	public PathInput(Terminal terminal, @Nullable String name, @Nullable Function<PathInputContext, List<AttributedString>> renderer) {
 		super(terminal, name, null);
 		setRenderer(renderer != null ? renderer : new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/path-input-default.stg");
 	}
 
 	@Override
-	public PathInputContext getThisContext(ComponentContext<?> context) {
+	public PathInputContext getThisContext(@Nullable ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
@@ -135,7 +137,7 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 		return this.pathProvider.apply(path);
 	}
 
-	private void checkPath(String path, PathInputContext context) {
+	private void checkPath(@Nullable String path, PathInputContext context) {
 		if (!StringUtils.hasText(path)) {
 			context.setMessage(null);
 			return;
@@ -167,7 +169,7 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 
 		@Override
 		public Map<String, Object> toTemplateModel() {
-			Map<String, Object> attributes = super.toTemplateModel();
+			Map<String, @Nullable Object> attributes = super.toTemplateModel();
 			Map<String, Object> model = new HashMap<>();
 			model.put("model", attributes);
 			return model;

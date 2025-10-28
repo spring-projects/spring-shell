@@ -16,6 +16,7 @@
 
 package org.springframework.shell.table;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.springframework.util.StringUtils;
  * Multiple specifications can be combined on a single table.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class BorderSpecification {
 
@@ -102,14 +104,22 @@ public class BorderSpecification {
 	private String matchConstants() {
 		try {
 			for (String field : new String[] {"NONE", "INNER", "FULL", "OUTLINE"}) {
-				int value = ReflectionUtils.findField(getClass(), field).getInt(null);
+				Field reflectedField = ReflectionUtils.findField(getClass(), field);
+				if (reflectedField == null) {
+					continue;
+				}
+				int value = reflectedField.getInt(null);
 				if (match  == value) {
 					return field;
 				}
 			}
 			List<String> constants = new ArrayList<String>();
 			for (String field : new String[] {"TOP", "BOTTOM", "LEFT", "RIGHT", "INNER_HORIZONTAL", "INNER_VERTICAL"}) {
-				int value = ReflectionUtils.findField(getClass(), field).getInt(null);
+				Field reflectedField = ReflectionUtils.findField(getClass(), field);
+				if (reflectedField == null) {
+					continue;
+				}
+				int value = reflectedField.getInt(null);
 				if ((match & value) == value) {
 					constants.add(field);
 				}

@@ -22,6 +22,7 @@ import java.util.function.Function;
 
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.StringInput.StringInputContext;
 import org.springframework.shell.tui.component.flow.ComponentFlow.BaseBuilder;
 import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
@@ -30,20 +31,21 @@ import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
  * Base impl for {@link StringInputSpec}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class BaseStringInput extends BaseInput<StringInputSpec> implements StringInputSpec {
 
-	private String name;
-	private String resultValue;
-	private ResultMode resultMode;
-	private String defaultValue;
-	private Character maskCharacter;
-	private Function<StringInputContext, List<AttributedString>> renderer;
+	private @Nullable String name;
+	private @Nullable String resultValue;
+	private @Nullable ResultMode resultMode;
+	private @Nullable String defaultValue;
+	private @Nullable Character maskCharacter;
+	private @Nullable Function<StringInputContext, List<AttributedString>> renderer;
 	private List<Consumer<StringInputContext>> preHandlers = new ArrayList<>();
 	private List<Consumer<StringInputContext>> postHandlers = new ArrayList<>();
 	private boolean storeResult = true;
-	private String templateLocation;
-	private Function<StringInputContext, String> next;
+	private @Nullable String templateLocation;
+	private @Nullable Function<StringInputContext, String> next;
 
 	public BaseStringInput(BaseBuilder builder, String id) {
 		super(builder, id);
@@ -126,31 +128,31 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 		return this;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return name;
 	}
 
-	public String getResultValue() {
+	public @Nullable String getResultValue() {
 		return resultValue;
 	}
 
-	public ResultMode getResultMode() {
+	public @Nullable ResultMode getResultMode() {
 		return resultMode;
 	}
 
-	public String getDefaultValue() {
+	public @Nullable String getDefaultValue() {
 		return defaultValue;
 	}
 
-	public Character getMaskCharacter() {
+	public @Nullable Character getMaskCharacter() {
 		return maskCharacter;
 	}
 
-	public Function<StringInputContext, List<AttributedString>> getRenderer() {
+	public @Nullable Function<StringInputContext, List<AttributedString>> getRenderer() {
 		return renderer;
 	}
 
-	public String getTemplateLocation() {
+	public @Nullable String getTemplateLocation() {
 		return templateLocation;
 	}
 
@@ -166,7 +168,7 @@ public abstract class BaseStringInput extends BaseInput<StringInputSpec> impleme
 		return storeResult;
 	}
 
-	public Function<StringInputContext, String> getNext() {
+	public @Nullable Function<StringInputContext, String> getNext() {
 		return next;
 	}
 }

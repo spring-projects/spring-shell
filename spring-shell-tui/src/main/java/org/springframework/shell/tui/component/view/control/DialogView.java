@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.control.ButtonView.ButtonViewSelectEvent;
 import org.springframework.shell.tui.component.view.event.EventLoop;
@@ -34,27 +35,28 @@ import org.springframework.shell.tui.style.StyleSettings;
  * for a generic content.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class DialogView extends WindowView {
 
-	private View content;
+	private @Nullable View content;
 	private List<ButtonView> buttons;
 
 	public DialogView() {
 		this(null);
 	}
 
-	public DialogView(View content, ButtonView... buttons) {
+	public DialogView(@Nullable View content, ButtonView... buttons) {
 		this(content, Arrays.asList(buttons));
 	}
 
-	public DialogView(View content, List<ButtonView> buttons) {
+	public DialogView(@Nullable View content, List<ButtonView> buttons) {
 		this.content = content;
 		this.buttons = buttons;
 	}
 
 	@Override
-	public void setEventLoop(EventLoop eventLoop) {
+	public void setEventLoop(@Nullable EventLoop eventLoop) {
 		// TODO: should find better way to hook into eventloop
 		super.setEventLoop(eventLoop);
 		hookButtonEvents();
@@ -76,14 +78,17 @@ public class DialogView extends WindowView {
 
 	private void hookButtonEvents() {
 		buttons.forEach(b -> {
-			onDestroy(getEventLoop().viewEvents(ButtonViewSelectEvent.class, b)
-				.subscribe(event -> {
-					dispatch();
-					ViewService viewService = getViewService();
-					if (viewService != null) {
-						viewService.setModal(null);
-					}
-				}));
+			EventLoop eventLoop = getEventLoop();
+			if (eventLoop != null) {
+				onDestroy(eventLoop.viewEvents(ButtonViewSelectEvent.class, b)
+						.subscribe(event -> {
+							dispatch();
+							ViewService viewService = getViewService();
+							if (viewService != null) {
+								viewService.setModal(null);
+							}
+						}));
+			}
 		});
 	}
 

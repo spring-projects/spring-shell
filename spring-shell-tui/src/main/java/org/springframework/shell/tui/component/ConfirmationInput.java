@@ -24,6 +24,7 @@ import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,27 +38,28 @@ import org.springframework.util.StringUtils;
  * Component for a confirmation question.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ConfirmationInput extends AbstractTextComponent<Boolean, ConfirmationInputContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(ConfirmationInput.class);
 	private final boolean defaultValue;
-	private ConfirmationInputContext currentContext;
+	private @Nullable ConfirmationInputContext currentContext;
 
 	public ConfirmationInput(Terminal terminal) {
 		this(terminal, null);
 	}
 
-	public ConfirmationInput(Terminal terminal, String name) {
+	public ConfirmationInput(Terminal terminal, @Nullable String name) {
 		this(terminal, name, true, null);
 	}
 
-	public ConfirmationInput(Terminal terminal, String name, boolean defaultValue) {
+	public ConfirmationInput(Terminal terminal, @Nullable String name, boolean defaultValue) {
 		this(terminal, name, defaultValue, null);
 	}
 
-	public ConfirmationInput(Terminal terminal, String name, boolean defaultValue,
-			Function<ConfirmationInputContext, List<AttributedString>> renderer) {
+	public ConfirmationInput(Terminal terminal, @Nullable String name, boolean defaultValue,
+			@Nullable Function<ConfirmationInputContext, List<AttributedString>> renderer) {
 		super(terminal, name, null);
 		setRenderer(renderer != null ? renderer : new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/confirmation-input-default.stg");
@@ -65,7 +67,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 	}
 
 	@Override
-	public ConfirmationInputContext getThisContext(ComponentContext<?> context) {
+	public ConfirmationInputContext getThisContext(@Nullable ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
@@ -122,7 +124,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 		return false;
 	}
 
-	private Boolean parseBoolean(String input) {
+	private @Nullable Boolean parseBoolean(@Nullable String input) {
 		if (!StringUtils.hasText(input)) {
 			return null;
 		}
@@ -141,7 +143,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 		}
 	}
 
-	private void checkInput(String input, ConfirmationInputContext context) {
+	private void checkInput(@Nullable String input, ConfirmationInputContext context) {
 		if (!StringUtils.hasText(input)) {
 			context.setMessage(null);
 			return;
@@ -163,7 +165,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 		 *
 		 * @return a default value
 		 */
-		Boolean getDefaultValue();
+		@Nullable Boolean getDefaultValue();
 
 		/**
 		 * Sets a default value.
@@ -186,7 +188,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 		 *
 		 * @return path input context
 		 */
-		public static ConfirmationInputContext of(Boolean defaultValue) {
+		public static ConfirmationInputContext of(@Nullable Boolean defaultValue) {
 			return new DefaultConfirmationInputContext(defaultValue);
 		}
 	}
@@ -194,14 +196,14 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 	private static class DefaultConfirmationInputContext extends BaseTextComponentContext<Boolean, ConfirmationInputContext>
 			implements ConfirmationInputContext {
 
-		private Boolean defaultValue;
+		private @Nullable Boolean defaultValue;
 
-		public DefaultConfirmationInputContext(Boolean defaultValue) {
+		public DefaultConfirmationInputContext(@Nullable Boolean defaultValue) {
 			this.defaultValue = defaultValue;
 		}
 
 		@Override
-		public Boolean getDefaultValue() {
+		public @Nullable Boolean getDefaultValue() {
 			return defaultValue;
 		}
 
@@ -212,7 +214,7 @@ public class ConfirmationInput extends AbstractTextComponent<Boolean, Confirmati
 
 		@Override
 		public Map<String, Object> toTemplateModel() {
-			Map<String, Object> attributes = super.toTemplateModel();
+			Map<String, @Nullable Object> attributes = super.toTemplateModel();
 			attributes.put("defaultValue", getDefaultValue() != null ? getDefaultValue() : null);
 			Map<String, Object> model = new HashMap<>();
 			model.put("model", attributes);

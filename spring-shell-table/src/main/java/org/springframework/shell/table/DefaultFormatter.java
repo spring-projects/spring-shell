@@ -16,14 +16,17 @@
 
 package org.springframework.shell.table;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A very simple formatter that uses {@link Object#toString()} and splits on newlines.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class DefaultFormatter implements Formatter {
 
-	public String[] format(Object value) {
+	public String[] format(@Nullable Object value) {
 		return value == null ? new String[] {""} : value.toString().split("\n");
 	}
 

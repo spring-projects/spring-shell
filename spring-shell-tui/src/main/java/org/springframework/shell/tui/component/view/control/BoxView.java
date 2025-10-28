@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.tui.component.view.control;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +32,12 @@ import org.springframework.util.StringUtils;
  * implementation by either subclassing or wrapping.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class BoxView extends AbstractView {
 
 	private final static Logger log = LoggerFactory.getLogger(BoxView.class);
-	private String title = null;
+	private @Nullable String title = null;
 	private boolean showBorder = false;
 	private int innerX = -1;
 	private int innerY;
@@ -50,7 +52,7 @@ public class BoxView extends AbstractView {
 	private int titleStyle = -1;
 	private int focusedTitleColor = -1;
 	private int focusedTitleStyle = -1;
-	private HorizontalAlign titleAlign;
+	private @Nullable HorizontalAlign titleAlign;
 
 	@Override
 	public void setRect(int x, int y, int width, int height) {

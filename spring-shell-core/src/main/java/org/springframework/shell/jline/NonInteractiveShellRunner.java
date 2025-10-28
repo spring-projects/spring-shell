@@ -25,6 +25,7 @@ import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
 import org.jline.reader.impl.DefaultParser;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
@@ -44,6 +45,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  * @author Chris Bono
+ * @author Piotr Olaszewski
  */
 @Order(NonInteractiveShellRunner.PRECEDENCE)
 public class NonInteractiveShellRunner implements ShellRunner {
@@ -60,7 +62,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private Parser lineParser;
 
-	private String primaryCommand;
+	private @Nullable String primaryCommand;
 
     private static final String SINGLE_QUOTE = "\'";
     private static final String DOUBLE_QUOTE = "\"";
@@ -103,7 +105,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		this(shell, shellContext, null);
 	}
 
-	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext, String primaryCommand) {
+	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext, @Nullable String primaryCommand) {
 		this.shell = shell;
 		this.shellContext = shellContext;
 		this.primaryCommand = primaryCommand;
@@ -160,7 +162,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		}
 
 		@Override
-		public Input readInput() {
+		public @Nullable Input readInput() {
 			if (inputIdx == parsedLineInputs.size()) {
 				return null;
 			}

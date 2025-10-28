@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import org.jspecify.annotations.Nullable;
 import reactor.util.context.ContextView;
 
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.shell.tui.component.view.control.View;
@@ -35,6 +35,7 @@ import org.springframework.util.ObjectUtils;
  * Adds standard shell Headers.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 
@@ -77,14 +78,12 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 		}
 	}
 
-	@Nullable
-	public Integer getPriority() {
+	public @Nullable Integer getPriority() {
 		Number priority = getHeader(PRIORITY, Number.class);
 		return (priority != null ? priority.intValue() : null);
 	}
 
-	@Nullable
-	public View getView() {
+	public @Nullable View getView() {
 		View view = getHeader(VIEW, View.class);
 		return view;
 	}
@@ -94,8 +93,7 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 	 *
 	 * @return the {@link ContextView} header if present.
 	 */
-	@Nullable
-	public ContextView getReactorContext() {
+	public @Nullable ContextView getReactorContext() {
 		return getHeader(REACTOR_CONTEXT, ContextView.class);
 	}
 
@@ -104,14 +102,12 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 	 *
 	 * @return the {@link EventLoop.Type} header if present.
 	 */
-	@Nullable
-	public EventLoop.Type getEventType() {
+	public EventLoop.@Nullable Type getEventType() {
 		return getHeader(EVENT_TYPE, EventLoop.Type.class);
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nullable
-	public <T> T getHeader(String key, Class<T> type) {
+	public @Nullable <T> T getHeader(String key, Class<T> type) {
 		Object value = getHeader(key);
 		if (value == null) {
 			return null;
@@ -124,7 +120,7 @@ public class ShellMessageHeaderAccessor extends MessageHeaderAccessor {
 	}
 
 	@Override
-	protected void verifyType(String headerName, Object headerValue) {
+	protected void verifyType(@Nullable String headerName, @Nullable Object headerValue) {
 		if (headerName != null && headerValue != null) {
 			super.verifyType(headerName, headerValue);
 			if (ShellMessageHeaderAccessor.PRIORITY.equals(headerName)) {

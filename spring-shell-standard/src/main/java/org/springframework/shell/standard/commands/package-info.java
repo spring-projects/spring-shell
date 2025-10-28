@@ -19,7 +19,9 @@
  *
  * @author Eric Bottard
  */
+@NullMarked
 @ShellCommandGroup("Built-In Commands")
 package org.springframework.shell.standard.commands;
 
+import org.jspecify.annotations.NullMarked;
 import org.springframework.shell.standard.ShellCommandGroup;

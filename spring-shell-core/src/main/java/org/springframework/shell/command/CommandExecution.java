@@ -19,10 +19,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import jakarta.validation.Validator;
 import org.jline.terminal.Terminal;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.Order;
@@ -42,12 +45,14 @@ import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.command.invocation.ShellMethodArgumentResolverComposite;
 import org.springframework.shell.command.parser.ParserConfig;
 import org.springframework.shell.context.ShellContext;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
  * Interface to evaluate a result from a command with an arguments.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandExecution {
 
@@ -57,7 +62,7 @@ public interface CommandExecution {
 	 * @param args         the command args
 	 * @return evaluated execution
 	 */
-	Object evaluate(String[] args);
+	@Nullable Object evaluate(String[] args);
 
 	/**
 	 * Gets an instance of a default {@link CommandExecution}.
@@ -92,7 +97,7 @@ public interface CommandExecution {
 	 * @param conversionService the conversion services
 	 * @return default command execution
 	 */
-	public static CommandExecution of(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
+	public static CommandExecution of(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
 			Terminal terminal, ShellContext shellContext, ConversionService conversionService, CommandCatalog commandCatalog) {
 		return new DefaultCommandExecution(resolvers, validator, terminal, shellContext, conversionService, commandCatalog);
 	}
@@ -102,15 +107,15 @@ public interface CommandExecution {
 	 */
 	static class DefaultCommandExecution implements CommandExecution {
 
-		private List<? extends HandlerMethodArgumentResolver> resolvers;
-		private Validator validator;
-		private Terminal terminal;
-		private ShellContext shellContext;
-		private ConversionService conversionService;
-		private CommandCatalog commandCatalog;
+		private @Nullable List<? extends HandlerMethodArgumentResolver> resolvers;
+		private @Nullable Validator validator;
+		private @Nullable Terminal terminal;
+		private @Nullable ShellContext shellContext;
+		private @Nullable ConversionService conversionService;
+		private @Nullable CommandCatalog commandCatalog;
 
-		public DefaultCommandExecution(List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-				Terminal terminal, ShellContext shellContext, ConversionService conversionService, CommandCatalog commandCatalog) {
+		public DefaultCommandExecution(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers, @Nullable Validator validator,
+				@Nullable Terminal terminal, @Nullable ShellContext shellContext, @Nullable ConversionService conversionService, @Nullable CommandCatalog commandCatalog) {
 			this.resolvers = resolvers;
 			this.validator = validator;
 			this.terminal = terminal;
@@ -119,10 +124,12 @@ public interface CommandExecution {
 			this.commandCatalog = commandCatalog;
 		}
 
-		public Object evaluate(String[] args) {
-			CommandParser parser = CommandParser.of(conversionService, commandCatalog.getRegistrations(), new ParserConfig());
+		public @Nullable Object evaluate(String[] args) {
+			Map<String, CommandRegistration> registrations = commandCatalog == null ? Map.of() : commandCatalog.getRegistrations();
+			CommandParser parser = CommandParser.of(conversionService, registrations, new ParserConfig());
 			CommandParserResults results = parser.parse(args);
 			CommandRegistration registration = results.registration();
+			Assert.state(registration != null, "'registration' must not be null");
 
 			// fast fail with availability before doing anything else
 			Availability availability = registration.getAvailability();
@@ -162,9 +169,9 @@ public interface CommandExecution {
 			CommandRegistration usedRegistration;
 			if (handleHelpOption) {
 				String command = registration.getCommand();
-				CommandParser helpParser = CommandParser.of(conversionService, commandCatalog.getRegistrations(),
+				CommandParser helpParser = CommandParser.of(conversionService, registrations,
 						new ParserConfig());
-				CommandRegistration helpCommandRegistration = commandCatalog.getRegistrations()
+				CommandRegistration helpCommandRegistration = registrations
 						.get(registration.getHelpOption().getCommand());
 				CommandParserResults helpResults = helpParser.parse(new String[] { "help", "--command", command });
 				results = helpResults;
@@ -177,7 +184,7 @@ public interface CommandExecution {
 			if (!results.errors().isEmpty()) {
 				throw new CommandParserExceptionsException("Command parser resulted errors", results.errors());
 			}
-
+			Assert.notNull(usedRegistration, "'usedRegistration' must not be null");
 			CommandContext ctx = CommandContext.of(args, results, terminal, usedRegistration, shellContext);
 
 			Object res = null;
@@ -186,10 +193,16 @@ public interface CommandExecution {
 
 			// pick the target to execute
 			if (targetInfo.getTargetType() == TargetType.FUNCTION) {
-				res = targetInfo.getFunction().apply(ctx);
+				Function<CommandContext, ?> function = targetInfo.getFunction();
+				if (function != null) {
+					res = function.apply(ctx);
+				}
 			}
 			else if (targetInfo.getTargetType() == TargetType.CONSUMER) {
-				targetInfo.getConsumer().accept(ctx);
+				Consumer<CommandContext> consumer = targetInfo.getConsumer();
+				if (consumer != null) {
+					consumer.accept(ctx);
+				}
 			}
 			else if (targetInfo.getTargetType() == TargetType.METHOD) {
 				try {
@@ -222,7 +235,7 @@ public interface CommandExecution {
 					if (resolvers != null) {
 						argumentResolvers.addResolvers(resolvers);
 					}
-					if (!paramValues.isEmpty()) {
+					if (!paramValues.isEmpty() && conversionService != null) {
 						argumentResolvers.addResolver(new ParamNameHandlerMethodArgumentResolver(paramValues, conversionService));
 					}
 					invocableShellMethod.setMessageMethodArgumentResolvers(argumentResolvers);
@@ -262,7 +275,7 @@ public interface CommandExecution {
 		}
 
 		@Override
-		public Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
+		public @Nullable Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
 			Object source = paramValues.get(parameter.getParameterName());
 			if (source == null) {
 				return null;

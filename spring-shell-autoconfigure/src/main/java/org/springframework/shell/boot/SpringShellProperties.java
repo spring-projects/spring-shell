@@ -15,12 +15,14 @@
  */
 package org.springframework.shell.boot;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Configuration properties for shell.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 @ConfigurationProperties(prefix = "spring.shell")
 public class SpringShellProperties {
@@ -118,36 +120,36 @@ public class SpringShellProperties {
 
 	public static class Config {
 
-		private String env;
-		private String location;
+		private @Nullable String env;
+		private @Nullable String location;
 
-		public String getEnv() {
+		public @Nullable String getEnv() {
 			return env;
 		}
 
-		public void setEnv(String env) {
+		public void setEnv(@Nullable String env) {
 			this.env = env;
 		}
 
-		public String getLocation() {
+		public @Nullable String getLocation() {
 			return location;
 		}
 
-		public void setLocation(String location) {
+		public void setLocation(@Nullable String location) {
 			this.location = location;
 		}
 	}
 
 	public static class History {
 
-		private String name;
+		private @Nullable String name;
 		private boolean enabled = true;
 
-		public String getName() {
+		public @Nullable String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void setName(@Nullable String name) {
 			this.name = name;
 		}
 
@@ -189,7 +191,7 @@ public class SpringShellProperties {
 	public static class Noninteractive {
 
 		private boolean enabled = true;
-		private String primaryCommand;
+		private @Nullable String primaryCommand;
 
 		public boolean isEnabled() {
 			return enabled;
@@ -199,24 +201,24 @@ public class SpringShellProperties {
 			this.enabled = enabled;
 		}
 
-		public String getPrimaryCommand() {
+		public @Nullable String getPrimaryCommand() {
 			return primaryCommand;
 		}
 
-		public void setPrimaryCommand(String primaryCommand) {
+		public void setPrimaryCommand(@Nullable String primaryCommand) {
 			this.primaryCommand = primaryCommand;
 		}
 	}
 
 	public static class Theme {
 
-		private String name;
+		private @Nullable String name;
 
-		public String getName() {
+		public @Nullable String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void setName(@Nullable String name) {
 			this.name = name;
 		}
 	}
@@ -334,7 +336,7 @@ public class SpringShellProperties {
 	public static class CompletionCommand {
 
 		private boolean enabled = true;
-		private String rootCommand;
+		private @Nullable String rootCommand;
 
 		public boolean isEnabled() {
 			return enabled;
@@ -344,11 +346,11 @@ public class SpringShellProperties {
 			this.enabled = enabled;
 		}
 
-		public String getRootCommand() {
+		public @Nullable String getRootCommand() {
 			return rootCommand;
 		}
 
-		public void setRootCommand(String rootCommand) {
+		public void setRootCommand(@Nullable String rootCommand) {
 			this.rootCommand = rootCommand;
 		}
 	}
@@ -625,7 +627,7 @@ public class SpringShellProperties {
 		}
 	}
 
-	public static enum OptionNamingCase {
+	public enum OptionNamingCase {
 		NOOP,
 		CAMEL,
 		SNAKE,

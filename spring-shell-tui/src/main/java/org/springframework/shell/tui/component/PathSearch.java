@@ -44,6 +44,7 @@ import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.InfoCmp.Capability;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,13 +74,14 @@ import static org.jline.keymap.KeyMap.key;
  * sources.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(PathSearch.class);
 	private final static String DEFAULT_TEMPLATE_LOCATION = "classpath:org/springframework/shell/component/path-search-default.stg";
 	private final PathSearchConfig config;
-	private PathSearchContext currentContext;
+	private @Nullable PathSearchContext currentContext;
 	private Function<String, Path> pathProvider = (path) -> Paths.get(path);
 	private final SelectorList<PathViewItem> selectorList;
 
@@ -87,16 +89,16 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		this(terminal, null);
 	}
 
-	public PathSearch(Terminal terminal, String name) {
+	public PathSearch(Terminal terminal, @Nullable String name) {
 		this(terminal, name, null);
 	}
 
-	public PathSearch(Terminal terminal, String name, PathSearchConfig config) {
+	public PathSearch(Terminal terminal, @Nullable String name, @Nullable PathSearchConfig config) {
 		this(terminal, name, config, null);
 	}
 
-	public PathSearch(Terminal terminal, String name, PathSearchConfig config,
-			Function<PathSearchContext, List<AttributedString>> renderer) {
+	public PathSearch(Terminal terminal, @Nullable String name, @Nullable PathSearchConfig config,
+			@Nullable Function<PathSearchContext, List<AttributedString>> renderer) {
 		super(terminal, name, null);
 		setRenderer(renderer != null ? renderer : new DefaultRenderer());
 		setTemplateLocation(DEFAULT_TEMPLATE_LOCATION);
@@ -114,7 +116,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	}
 
 	@Override
-	public PathSearchContext getThisContext(ComponentContext<?> context) {
+	public PathSearchContext getThisContext(@Nullable ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
@@ -199,7 +201,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		return this.pathProvider.apply(path);
 	}
 
-	private void inputUpdated(PathSearchContext context, String input) {
+	private void inputUpdated(PathSearchContext context, @Nullable String input) {
 		context.setMessage("Type '<path> <pattern>' to search", MessageLevel.INFO);
 		updateSelectorList(input, context);
 		selectorListUpdated(context);
@@ -214,7 +216,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		context.setPathViewItems(pathViews);
 	}
 
-	private void updateSelectorList(String path, PathSearchContext context) {
+	private void updateSelectorList(@Nullable String path, PathSearchContext context) {
 		if (path == null) {
 			// when user removes all input
 			this.selectorList.reset(Collections.emptyList());
@@ -365,7 +367,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 		 *
 		 * @return path view items
 		 */
-		List<PathViewItem> getPathViewItems();
+		@Nullable List<PathViewItem> getPathViewItems();
 
 		/**
 		 * Sets a path view items.
@@ -501,11 +503,11 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	private static class DefaultPathSearchContext extends BaseTextComponentContext<Path, PathSearchContext>
 			implements PathSearchContext {
 
-		private List<PathViewItem> pathViewItems;
-		private PathSearchConfig pathSearchConfig;
+		private @Nullable List<PathViewItem> pathViewItems;
+		private PathSearchConfig pathSearchConfig = new PathSearchConfig();
 
 		@Override
-		public List<PathViewItem> getPathViewItems() {
+		public @Nullable List<PathViewItem> getPathViewItems() {
 			return this.pathViewItems;
 		}
 
@@ -526,7 +528,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
 		@Override
 		public Map<String, Object> toTemplateModel() {
-			Map<String, Object> attributes = super.toTemplateModel();
+			Map<String, @Nullable Object> attributes = super.toTemplateModel();
 			attributes.put("pathViewItems", getPathViewItems());
 			Map<String, Object> model = new HashMap<>();
 			model.put("model", attributes);

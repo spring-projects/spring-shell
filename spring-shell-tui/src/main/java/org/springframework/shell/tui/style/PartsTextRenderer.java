@@ -19,11 +19,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.stringtemplate.v4.AttributeRenderer;
 
 import org.springframework.shell.tui.style.PartsText.PartText;
 import org.springframework.util.Assert;
 
+/**
+ * @author Piotr Olaszewski
+ */
 public class PartsTextRenderer implements AttributeRenderer<PartsText> {
 
 	private final ThemeResolver themeResolver;
@@ -41,7 +45,7 @@ public class PartsTextRenderer implements AttributeRenderer<PartsText> {
 		int len = 0;
 		int dots = 2;
 		int prefix = values.prefix;
-		int width = values.width;
+		int width = values.width == null ? formatString.length() : values.width;
 		int max = width - prefix;
 		List<PartText> parts = value.getParts();
 
@@ -95,15 +99,15 @@ public class PartsTextRenderer implements AttributeRenderer<PartsText> {
 	}
 
 	private static class Values {
-		Integer width;
-		Integer prefix;
-		String textStyle;
-		String matchStyle;
+		@Nullable Integer width;
+		int prefix = 0;
+		@Nullable String textStyle;
+		@Nullable String matchStyle;
 
-		public void setWidth(Integer width) {
+		public void setWidth(int width) {
 			this.width = width;
 		}
-		public void setPrefix(Integer prefix) {
+		public void setPrefix(int prefix) {
 			this.prefix = prefix;
 		}
 		public void setTextStyle(String textStyle) {

@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import org.jline.utils.AttributedStyle;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.geom.Rectangle;
 import org.springframework.shell.tui.style.ThemeResolver;
 import org.springframework.shell.tui.style.ThemeResolver.ResolvedValues;
@@ -28,6 +28,7 @@ import org.springframework.shell.tui.style.ThemeResolver.ResolvedValues;
  * Base implementation of a {@link Control}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractControl implements Control {
 
@@ -35,8 +36,8 @@ public abstract class AbstractControl implements Control {
 	private int y = 0;
 	private int width = 0;
 	private int height = 0;
-	private ThemeResolver themeResolver;
-	private String themeName;
+	private @Nullable ThemeResolver themeResolver;
+	private @Nullable String themeName;
 
 	@Override
 	public void setRect(int x, int y, int width, int height) {
@@ -65,8 +66,7 @@ public abstract class AbstractControl implements Control {
 	 *
 	 * @return a theme resolver
 	 */
-	@Nullable
-	protected ThemeResolver getThemeResolver() {
+	protected @Nullable ThemeResolver getThemeResolver() {
 		return themeResolver;
 	}
 
@@ -84,8 +84,7 @@ public abstract class AbstractControl implements Control {
 	 *
 	 * @return a theme name
 	 */
-	@Nullable
-	protected String getThemeName() {
+	protected @Nullable String getThemeName() {
 		return themeName;
 	}
 
@@ -155,14 +154,14 @@ public abstract class AbstractControl implements Control {
 	 * @param fallbackSpinner the fallback spinner to use
 	 * @return resolved spinner
 	 */
-	protected Spinner resolveThemeSpinner(String tag, Spinner defaultSpinner, Spinner fallbackSpinner) {
+	protected Spinner resolveThemeSpinner(String tag, @Nullable Spinner defaultSpinner, Spinner fallbackSpinner) {
 		if (defaultSpinner != null) {
 			return defaultSpinner;
 		}
 		Spinner spinner = null;
 		ThemeResolver themeResolver = getThemeResolver();
 		if (themeResolver != null) {
-			spinner = getThemeResolver().resolveSpinnerTag(tag);
+			spinner = themeResolver.resolveSpinnerTag(tag);
 		}
 		if (spinner == null) {
 			spinner = fallbackSpinner;

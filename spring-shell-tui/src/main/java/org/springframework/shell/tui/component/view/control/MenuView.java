@@ -22,10 +22,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.lang.Nullable;
 import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.event.MouseEvent;
@@ -43,6 +43,7 @@ import org.springframework.util.StringUtils;
  * typically used in layouts which builds complete terminal UI's.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class MenuView extends BoxView {
 
@@ -51,7 +52,7 @@ public class MenuView extends BoxView {
 	private int activeItemIndex = -1;
 
 	// we support only one radio group
-	private MenuItem radioActive;
+	private @Nullable MenuItem radioActive;
 
 	// keep checked states outside of items itself
 	private Set<MenuItem> checkedActive = new HashSet<>();
@@ -338,9 +339,9 @@ public class MenuView extends BoxView {
 	public static class MenuItem  {
 
 		private final String title;
-		private final MenuItemCheckStyle checkStyle;
-		private final List<MenuItem> items;
-		private Runnable action;
+		private final @Nullable MenuItemCheckStyle checkStyle;
+		private final @Nullable List<MenuItem> items;
+		private @Nullable Runnable action;
 		private boolean initialCheckState = false;
 
 		/**
@@ -369,7 +370,7 @@ public class MenuView extends BoxView {
 		 * @param checkStyle the check style
 		 * @param action the action to run when item is chosen
 		 */
-		public MenuItem(String title, MenuItemCheckStyle checkStyle, Runnable action) {
+		public MenuItem(String title, MenuItemCheckStyle checkStyle, @Nullable Runnable action) {
 			this(title, checkStyle, action, false);
 		}
 
@@ -382,7 +383,7 @@ public class MenuView extends BoxView {
 		 * @param action the action to run when item is chosen
 		 * @param initialCheckState initial checked state
 		 */
-		public MenuItem(String title, MenuItemCheckStyle checkStyle, Runnable action, boolean initialCheckState) {
+		public MenuItem(String title, MenuItemCheckStyle checkStyle, @Nullable Runnable action, boolean initialCheckState) {
 			Assert.state(StringUtils.hasText(title), "title must have text");
 			Assert.notNull(checkStyle, "check style cannot be null");
 			this.title = title;
@@ -434,7 +435,7 @@ public class MenuView extends BoxView {
 			return new MenuItem(title, checkStyle, action, initialCheckState);
 		}
 
-		public Runnable getAction() {
+		public @Nullable Runnable getAction() {
 			return action;
 		}
 
@@ -466,8 +467,7 @@ public class MenuView extends BoxView {
 		 *
 		 * @return a check style
 		 */
-		@Nullable
-		public MenuItemCheckStyle getCheckStyle() {
+		public @Nullable MenuItemCheckStyle getCheckStyle() {
 			return checkStyle;
 		}
 
@@ -477,8 +477,7 @@ public class MenuView extends BoxView {
 		 *
 		 * @return a menu items
 		 */
-		@Nullable
-		public List<MenuItem> getItems() {
+		public @Nullable List<MenuItem> getItems() {
 			return items;
 		}
 	}

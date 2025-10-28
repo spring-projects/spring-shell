@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanExpressionContext;
 import org.springframework.beans.factory.config.BeanExpressionResolver;
@@ -27,7 +28,6 @@ import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.ValueConstants;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
@@ -50,6 +50,7 @@ import org.springframework.util.ClassUtils;
  * value to the expected target method parameter type.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractArgumentMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -57,11 +58,10 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 
 	private final ConversionService conversionService;
 
-	@Nullable
-	private final ConfigurableBeanFactory configurableBeanFactory;
 
-	@Nullable
-	private final BeanExpressionContext expressionContext;
+	private final @Nullable ConfigurableBeanFactory configurableBeanFactory;
+
+	private final @Nullable BeanExpressionContext expressionContext;
 
 	private final Map<MethodParameter, NamedValueInfo> namedValueInfoCache = new ConcurrentHashMap<>(256);
 
@@ -87,7 +87,7 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
+	public @Nullable Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
 		NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
 
@@ -164,8 +164,7 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 	 * Resolve the given annotation-specified value,
 	 * potentially containing placeholders and expressions.
 	 */
-	@Nullable
-	private Object resolveEmbeddedValuesAndExpressions(String value) {
+	private @Nullable Object resolveEmbeddedValuesAndExpressions(String value) {
 		if (this.configurableBeanFactory == null || this.expressionContext == null) {
 			return value;
 		}
@@ -186,8 +185,7 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 	 * @return the resolved argument. May be {@code null}
 	 * @throws Exception in case of errors
 	 */
-	@Nullable
-	protected abstract Object resolveArgumentInternal(MethodParameter parameter, Message<?> message, List<String> names)
+	protected abstract @Nullable Object resolveArgumentInternal(MethodParameter parameter, Message<?> message, List<String> names)
 			throws Exception;
 
 	/**
@@ -206,8 +204,7 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 	 * Specifically for booleans method parameters, use {@link Boolean#FALSE}.
 	 * Also raise an ISE for primitive types.
 	 */
-	@Nullable
-	private Object handleNullValue(List<String> name, @Nullable Object value, Class<?> paramType) {
+	private @Nullable Object handleNullValue(List<String> name, @Nullable Object value, Class<?> paramType) {
 		if (value == null) {
 			if (Boolean.TYPE.equals(paramType)) {
 				return Boolean.FALSE;
@@ -242,8 +239,7 @@ public abstract class AbstractArgumentMethodArgumentResolver implements HandlerM
 
 		private final boolean required;
 
-		@Nullable
-		private final String defaultValue;
+		private final @Nullable String defaultValue;
 
 		protected NamedValueInfo(List<String> names, boolean required, @Nullable String defaultValue) {
 			this.names = names;

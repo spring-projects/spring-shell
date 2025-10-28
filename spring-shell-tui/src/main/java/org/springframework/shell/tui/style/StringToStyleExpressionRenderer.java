@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import org.jline.style.StyleExpression;
+import org.jspecify.annotations.Nullable;
 import org.stringtemplate.v4.AttributeRenderer;
 
 import org.springframework.util.Assert;
@@ -30,6 +31,7 @@ import org.springframework.util.StringUtils;
  * settings.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class StringToStyleExpressionRenderer implements AttributeRenderer<String> {
 
@@ -42,7 +44,7 @@ public class StringToStyleExpressionRenderer implements AttributeRenderer<String
 	}
 
 	@Override
-	public String toString(String value, String formatString, Locale locale) {
+	public String toString(String value, @Nullable String formatString, Locale locale) {
 		if (!StringUtils.hasText(formatString)) {
 			return value;
 		}
@@ -52,8 +54,9 @@ public class StringToStyleExpressionRenderer implements AttributeRenderer<String
 		else if (formatString.startsWith(TRUNCATE)) {
 			String f = formatString.substring(TRUNCATE.length());
 			TruncateValues config = mapValues(f);
-			if (value.length() + config.prefix > config.width) {
-				return String.format(locale, "%1." + (config.width - config.prefix - 2) + "s.." , value);
+			Integer width = config.width;
+			if (width != null && value.length() + config.prefix > width) {
+				return String.format(locale, "%1." + (width - config.prefix - 2) + "s.." , value);
 			}
 			else {
 				return value;
@@ -65,13 +68,13 @@ public class StringToStyleExpressionRenderer implements AttributeRenderer<String
 	}
 
 	private static class TruncateValues {
-		Integer width;
-		Integer prefix;
+		@Nullable Integer width;
+		int prefix = 0;
 
 		public void setWidth(Integer width) {
 			this.width = width;
 		}
-		public void setPrefix(Integer prefix) {
+		public void setPrefix(int prefix) {
 			this.prefix = prefix;
 		}
 	}

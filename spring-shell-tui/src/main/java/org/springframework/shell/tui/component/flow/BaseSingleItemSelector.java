@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.SingleItemSelector.SingleItemSelectorContext;
 import org.springframework.shell.tui.component.flow.ComponentFlow.BaseBuilder;
 import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
@@ -35,22 +36,23 @@ import org.springframework.shell.tui.component.support.SelectorItem;
  * Base impl for {@link SingleItemSelectorSpec}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelectorSpec> implements SingleItemSelectorSpec {
 
-	private String name;
-	private String resultValue;
-	private ResultMode resultMode;
+	private @Nullable String name;
+	private @Nullable String resultValue;
+	private @Nullable ResultMode resultMode;
 	private List<SelectItem> selectItems = new ArrayList<>();
-	private String defaultSelect;
-	private Comparator<SelectorItem<String>> comparator;
-	private Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
-	private Integer maxItems;
+	private @Nullable String defaultSelect;
+	private @Nullable Comparator<SelectorItem<String>> comparator;
+	private @Nullable Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> renderer;
+	private @Nullable Integer maxItems;
 	private List<Consumer<SingleItemSelectorContext<String, SelectorItem<String>>>> preHandlers = new ArrayList<>();
 	private List<Consumer<SingleItemSelectorContext<String, SelectorItem<String>>>> postHandlers = new ArrayList<>();
 	private boolean storeResult = true;
-	private String templateLocation;
-	private Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> next;
+	private @Nullable String templateLocation;
+	private @Nullable Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> next;
 
 	public BaseSingleItemSelector(BaseBuilder builder, String id) {
 		super(builder, id);
@@ -165,15 +167,15 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 		return this;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return name;
 	}
 
-	public String getResultValue() {
+	public @Nullable String getResultValue() {
 		return resultValue;
 	}
 
-	public ResultMode getResultMode() {
+	public @Nullable ResultMode getResultMode() {
 		return resultMode;
 	}
 
@@ -181,23 +183,23 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 		return selectItems;
 	}
 
-	public String getDefaultSelect() {
+	public @Nullable String getDefaultSelect() {
 		return defaultSelect;
 	}
 
-	public Comparator<SelectorItem<String>> getComparator() {
+	public @Nullable Comparator<SelectorItem<String>> getComparator() {
 		return comparator;
 	}
 
-	public Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> getRenderer() {
+	public @Nullable Function<SingleItemSelectorContext<String, SelectorItem<String>>, List<AttributedString>> getRenderer() {
 		return renderer;
 	}
 
-	public String getTemplateLocation() {
+	public @Nullable String getTemplateLocation() {
 		return templateLocation;
 	}
 
-	public Integer getMaxItems() {
+	public @Nullable Integer getMaxItems() {
 		return maxItems;
 	}
 
@@ -213,7 +215,7 @@ public abstract class BaseSingleItemSelector extends BaseInput<SingleItemSelecto
 		return storeResult;
 	}
 
-	public Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> getNext() {
+	public @Nullable Function<SingleItemSelectorContext<String, SelectorItem<String>>, String> getNext() {
 		return next;
 	}
 }
