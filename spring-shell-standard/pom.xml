@@ -41,6 +41,11 @@
 			<artifactId>spring-shell-tui</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jspecify</groupId>
+			<artifactId>jspecify</artifactId>
+			<version>${jspecify.version}</version>
+		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>

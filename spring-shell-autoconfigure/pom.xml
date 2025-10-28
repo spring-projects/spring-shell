@@ -47,6 +47,11 @@
 			<version>${spring-boot.version}</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.jspecify</groupId>
+			<artifactId>jspecify</artifactId>
+			<version>${jspecify.version}</version>
+		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
