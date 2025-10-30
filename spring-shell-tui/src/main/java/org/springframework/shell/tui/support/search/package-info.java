@@ -1,4 +1,4 @@
 @NullMarked
-package org.springframework.shell.support.search;
+package org.springframework.shell.tui.support.search;
 
 import org.jspecify.annotations.NullMarked;

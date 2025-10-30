@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.shell.tui.component.view.control.MenuView.MenuItem;
 import org.springframework.shell.tui.component.view.control.MenuView.MenuViewOpenSelectedItemEvent;
+import org.springframework.shell.tui.component.view.event.EventLoop;
 import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.tui.component.view.event.KeyHandler;
 import org.springframework.shell.tui.component.view.event.MouseEvent;

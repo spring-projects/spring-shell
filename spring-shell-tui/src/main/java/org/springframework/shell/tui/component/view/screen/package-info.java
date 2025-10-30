@@ -1,4 +1,4 @@
 @NullMarked
-package org.springframework.shell.component.view.screen;
+package org.springframework.shell.tui.component.view.screen;
 
 import org.jspecify.annotations.NullMarked;

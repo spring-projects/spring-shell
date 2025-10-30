@@ -1,4 +1,4 @@
 @NullMarked
-package org.springframework.shell.component.view.event;
+package org.springframework.shell.tui.component.view.event;
 
 import org.jspecify.annotations.NullMarked;

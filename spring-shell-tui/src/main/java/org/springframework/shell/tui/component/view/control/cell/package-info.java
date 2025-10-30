@@ -1,4 +1,4 @@
 @NullMarked
-package org.springframework.shell.component.view.control.cell;
+package org.springframework.shell.tui.component.view.control.cell;
 
 import org.jspecify.annotations.NullMarked;
