@@ -15,10 +15,10 @@
  */
 package org.springframework.shell.samples.catalog.scenario.grid;
 
-import org.springframework.shell.component.view.control.BoxView;
-import org.springframework.shell.component.view.control.GridView;
-import org.springframework.shell.component.view.control.View;
-import org.springframework.shell.component.view.screen.Color;
+import org.springframework.shell.tui.component.view.control.BoxView;
+import org.springframework.shell.tui.component.view.control.GridView;
+import org.springframework.shell.tui.component.view.control.View;
+import org.springframework.shell.tui.component.view.screen.Color;
 import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;

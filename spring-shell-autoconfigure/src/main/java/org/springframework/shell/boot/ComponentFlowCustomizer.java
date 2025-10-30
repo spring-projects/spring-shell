@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.boot;
 
-import org.springframework.shell.component.flow.ComponentFlow;
+import org.springframework.shell.tui.component.flow.ComponentFlow;
 
 /**
  * Callback interface that can be used to customize a {@link ComponentFlow.Builder}.

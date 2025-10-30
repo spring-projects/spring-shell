@@ -40,7 +40,7 @@ import org.springframework.shell.standard.commands.Quit;
 import org.springframework.shell.standard.commands.Script;
 import org.springframework.shell.standard.commands.Stacktrace;
 import org.springframework.shell.standard.commands.Version;
-import org.springframework.shell.style.TemplateExecutor;
+import org.springframework.shell.tui.style.TemplateExecutor;
 
 /**
  * Creates beans for standard commands.

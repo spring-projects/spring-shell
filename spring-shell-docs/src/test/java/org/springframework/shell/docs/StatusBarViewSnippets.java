@@ -17,10 +17,10 @@ package org.springframework.shell.docs;
 
 import java.util.List;
 
-import org.springframework.shell.component.view.control.StatusBarView;
-import org.springframework.shell.component.view.control.StatusBarView.StatusItem;
-import org.springframework.shell.component.view.event.KeyEvent;
-import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.shell.tui.component.view.control.StatusBarView;
+import org.springframework.shell.tui.component.view.control.StatusBarView.StatusItem;
+import org.springframework.shell.tui.component.view.event.KeyEvent;
+import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
 
 class StatusBarViewSnippets {
 

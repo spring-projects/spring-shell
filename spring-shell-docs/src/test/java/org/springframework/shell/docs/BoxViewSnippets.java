@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.component.view.control.BoxView;
+import org.springframework.shell.tui.component.view.control.BoxView;
 
 class BoxViewSnippets {
 

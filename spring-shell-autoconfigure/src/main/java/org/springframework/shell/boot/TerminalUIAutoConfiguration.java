@@ -23,13 +23,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
-import org.springframework.shell.component.ViewComponentBuilder;
-import org.springframework.shell.component.ViewComponentExecutor;
-import org.springframework.shell.component.view.TerminalUI;
-import org.springframework.shell.component.view.TerminalUIBuilder;
-import org.springframework.shell.component.view.TerminalUICustomizer;
-import org.springframework.shell.style.ThemeActive;
-import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.tui.component.ViewComponentBuilder;
+import org.springframework.shell.tui.component.ViewComponentExecutor;
+import org.springframework.shell.tui.component.view.TerminalUI;
+import org.springframework.shell.tui.component.view.TerminalUIBuilder;
+import org.springframework.shell.tui.component.view.TerminalUICustomizer;
+import org.springframework.shell.tui.style.ThemeActive;
+import org.springframework.shell.tui.style.ThemeResolver;
 
 @AutoConfiguration
 @ConditionalOnClass(TerminalUI.class)

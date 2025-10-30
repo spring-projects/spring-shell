@@ -28,9 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.style.FigureSettings;
-import org.springframework.shell.style.StyleSettings;
-import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.tui.style.FigureSettings;
+import org.springframework.shell.tui.style.StyleSettings;
+import org.springframework.shell.tui.style.ThemeResolver;
 
 @ShellComponent
 public class ThemeCommands {

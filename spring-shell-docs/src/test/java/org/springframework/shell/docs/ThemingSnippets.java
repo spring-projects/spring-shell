@@ -20,11 +20,11 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.style.FigureSettings;
-import org.springframework.shell.style.StyleSettings;
-import org.springframework.shell.style.Theme;
-import org.springframework.shell.style.ThemeResolver;
-import org.springframework.shell.style.ThemeSettings;
+import org.springframework.shell.tui.style.FigureSettings;
+import org.springframework.shell.tui.style.StyleSettings;
+import org.springframework.shell.tui.style.Theme;
+import org.springframework.shell.tui.style.ThemeResolver;
+import org.springframework.shell.tui.style.ThemeSettings;
 
 @SuppressWarnings("unused")
 public class ThemingSnippets {

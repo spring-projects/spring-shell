@@ -16,8 +16,8 @@
 package org.springframework.shell.samples.catalog.scenario;
 
 import org.springframework.lang.Nullable;
-import org.springframework.shell.component.view.TerminalUI;
-import org.springframework.shell.component.view.control.View;
+import org.springframework.shell.tui.component.view.TerminalUI;
+import org.springframework.shell.tui.component.view.control.View;
 import org.springframework.shell.samples.catalog.Catalog;
 
 /**

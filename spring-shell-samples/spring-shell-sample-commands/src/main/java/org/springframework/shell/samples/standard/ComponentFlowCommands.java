@@ -31,10 +31,10 @@ import org.springframework.shell.command.CommandExecution.CommandParserException
 import org.springframework.shell.command.CommandParser;
 import org.springframework.shell.command.CommandParser.CommandParserException;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.component.flow.ComponentFlow;
-import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
-import org.springframework.shell.component.flow.ResultMode;
-import org.springframework.shell.component.flow.SelectItem;
+import org.springframework.shell.tui.component.flow.ComponentFlow;
+import org.springframework.shell.tui.component.flow.ComponentFlow.ComponentFlowResult;
+import org.springframework.shell.tui.component.flow.ResultMode;
+import org.springframework.shell.tui.component.flow.SelectItem;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;

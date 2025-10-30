@@ -18,10 +18,10 @@ package org.springframework.shell.samples.catalog;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.annotation.CommandScan;
-import org.springframework.shell.style.FigureSettings;
-import org.springframework.shell.style.StyleSettings;
-import org.springframework.shell.style.Theme;
-import org.springframework.shell.style.ThemeSettings;
+import org.springframework.shell.tui.style.FigureSettings;
+import org.springframework.shell.tui.style.StyleSettings;
+import org.springframework.shell.tui.style.Theme;
+import org.springframework.shell.tui.style.ThemeSettings;
 
 @Configuration
 @CommandScan

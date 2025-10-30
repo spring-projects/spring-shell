@@ -29,9 +29,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.Shell;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.completion.CompletionResolver;
-import org.springframework.shell.component.ViewComponentBuilder;
-import org.springframework.shell.style.TemplateExecutor;
-import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.tui.component.ViewComponentBuilder;
+import org.springframework.shell.tui.style.TemplateExecutor;
+import org.springframework.shell.tui.style.ThemeResolver;
 
 /**
  * Base class helping to build shell components.

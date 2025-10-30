@@ -35,7 +35,7 @@ import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.style.TemplateExecutor;
+import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.util.FileCopyUtils;
 
 /**

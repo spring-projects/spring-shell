@@ -15,9 +15,9 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.component.view.control.ProgressView;
-import org.springframework.shell.component.view.control.ProgressView.ProgressViewItem;
-import org.springframework.shell.geom.HorizontalAlign;
+import org.springframework.shell.tui.component.view.control.ProgressView;
+import org.springframework.shell.tui.component.view.control.ProgressView.ProgressViewItem;
+import org.springframework.shell.tui.geom.HorizontalAlign;
 
 public class ProgressViewSnippets {
 

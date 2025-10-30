@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.component.view.event.EventLoop;
-import org.springframework.shell.component.view.event.MouseEvent;
+import org.springframework.shell.tui.component.view.event.EventLoop;
+import org.springframework.shell.tui.component.view.event.MouseEvent;
 
 class MouseHandlingSnippets {
 

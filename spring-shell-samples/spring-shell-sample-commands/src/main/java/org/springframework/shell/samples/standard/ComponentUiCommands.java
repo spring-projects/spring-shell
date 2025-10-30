@@ -19,15 +19,15 @@ import java.util.ArrayList;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.component.ViewComponent;
-import org.springframework.shell.component.ViewComponent.ViewComponentRun;
-import org.springframework.shell.component.view.TerminalUI;
-import org.springframework.shell.component.view.control.BoxView;
-import org.springframework.shell.component.view.control.InputView;
-import org.springframework.shell.component.view.control.ProgressView;
-import org.springframework.shell.component.view.control.ProgressView.ProgressViewItem;
-import org.springframework.shell.geom.HorizontalAlign;
-import org.springframework.shell.geom.VerticalAlign;
+import org.springframework.shell.tui.component.ViewComponent;
+import org.springframework.shell.tui.component.ViewComponent.ViewComponentRun;
+import org.springframework.shell.tui.component.view.TerminalUI;
+import org.springframework.shell.tui.component.view.control.BoxView;
+import org.springframework.shell.tui.component.view.control.InputView;
+import org.springframework.shell.tui.component.view.control.ProgressView;
+import org.springframework.shell.tui.component.view.control.ProgressView.ProgressViewItem;
+import org.springframework.shell.tui.geom.HorizontalAlign;
+import org.springframework.shell.tui.geom.VerticalAlign;
 import org.springframework.shell.standard.AbstractShellComponent;
 
 @Command

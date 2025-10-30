@@ -30,8 +30,6 @@ import org.jline.utils.AttributedStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.shell.ExitRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -151,9 +149,5 @@ class InteractiveShellRunnerTests {
         readThread.join();
         writeThread.join();
     }
-
-	private static ApplicationArguments ofApplicationArguments(String... args) {
-		return new DefaultApplicationArguments(args);
-	}
 
 }
