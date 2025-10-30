@@ -22,9 +22,11 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.Assert;
 
 /**
  * A table model that is backed by a list of beans.
@@ -33,6 +35,7 @@ import org.springframework.beans.BeanWrapperImpl;
  * a convenience constructor for adding a special header row.</p>
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class BeanListTableModel<T> extends TableModel {
 
@@ -40,7 +43,7 @@ public class BeanListTableModel<T> extends TableModel {
 
 	private final List<String> propertyNames;
 
-	private final List<Object> headerRow;
+	private final @Nullable List<Object> headerRow;
 
 	public BeanListTableModel(Class<T> clazz, Iterable<T> list) {
 		this.data = new ArrayList<BeanWrapper>();
@@ -86,14 +89,16 @@ public class BeanListTableModel<T> extends TableModel {
 	}
 
 	@Override
-	public Object getValue(int row, int column) {
+	public @Nullable Object getValue(int row, int column) {
 		if (headerRow != null && row == 0) {
 			return headerRow.get(column);
 		}
 		else {
 			int rowToUse = headerRow == null ? row : row - 1;
 			String propertyName = propertyNames.get(column);
-			return data.get(rowToUse).getPropertyValue(propertyName);
+			BeanWrapper beanWrapper = data.get(rowToUse);
+			Assert.notNull(beanWrapper, "'beanWrapper' must not be null");
+			return beanWrapper.getPropertyValue(propertyName);
 		}
 	}
 }

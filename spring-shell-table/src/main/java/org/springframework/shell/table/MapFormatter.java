@@ -16,12 +16,15 @@
 
 package org.springframework.shell.table;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 
 /**
  * A formatter suited for key-value pairs, that renders each mapping on a new line.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class MapFormatter implements Formatter {
 
@@ -32,7 +35,10 @@ public class MapFormatter implements Formatter {
 	}
 
 	@Override
-	public String[] format(Object value) {
+	public String[] format(@Nullable Object value) {
+		if (value == null) {
+			return new String[]{""};
+		}
 		Map<?, ?> map = (Map<?, ?>) value;
 		String[] result = new String[map.size()];
 		int i = 0;

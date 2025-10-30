@@ -16,12 +16,14 @@
 
 package org.springframework.shell.table;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 /**
  * A TableModel backed by a row-first array.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class ArrayTableModel extends TableModel {
 
@@ -43,7 +45,7 @@ public class ArrayTableModel extends TableModel {
 		return data.length > 0 ? data[0].length : 0;
 	}
 
-	public Object getValue(int row, int column) {
+	public @Nullable Object getValue(int row, int column) {
 		return data[row][column];
 	}
 }

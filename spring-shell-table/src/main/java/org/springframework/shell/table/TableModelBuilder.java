@@ -19,12 +19,14 @@ package org.springframework.shell.table;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 /**
  * Helper class to build a TableModel incrementally.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class TableModelBuilder<T> {
 
@@ -74,7 +76,7 @@ public class TableModelBuilder<T> {
 			}
 
 			@Override
-			public Object getValue(int row, int column) {
+			public @Nullable Object getValue(int row, int column) {
 				return rows.get(row).get(column);
 			}
 		};

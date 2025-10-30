@@ -16,10 +16,13 @@
 
 package org.springframework.shell.table;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Abstracts away the contract a {@link Table} will use to retrieve tabular data.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public abstract class TableModel {
 
@@ -40,7 +43,7 @@ public abstract class TableModel {
 	 * @param row the row that is being queried
 	 * @param column the column that is being queried
 	 */
-	public abstract Object getValue(int row, int column);
+	public abstract @Nullable Object getValue(int row, int column);
 
 	/**
 	 * @return a transposed view of this model, where rows become columns and vice-versa.
@@ -58,7 +61,7 @@ public abstract class TableModel {
 			}
 
 			@Override
-			public Object getValue(int row, int column) {
+			public @Nullable Object getValue(int row, int column) {
 				return TableModel.this.getValue(column, row);
 			}
 		};
