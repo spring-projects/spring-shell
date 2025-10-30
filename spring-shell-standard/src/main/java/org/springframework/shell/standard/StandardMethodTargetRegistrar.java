@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.jline.terminal.Terminal;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +65,7 @@ import org.springframework.util.StringUtils;
  * @author Florent Biville
  * @author Camilo Gonzalez
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 
@@ -237,7 +239,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 	 */
 	private String getOrInferGroup(Method method) {
 		ShellMethod methodAnn = AnnotationUtils.getAnnotation(method, ShellMethod.class);
-		if (!methodAnn.group().equals(ShellMethod.INHERITED)) {
+		if (methodAnn != null && !methodAnn.group().equals(ShellMethod.INHERITED)) {
 			return methodAnn.group();
 		}
 		Class<?> clazz = method.getDeclaringClass();
@@ -267,7 +269,7 @@ public class StandardMethodTargetRegistrar implements MethodTargetRegistrar {
 	 * selected</li>
 	 * </ol>
 	 */
-	private Supplier<Availability> findAvailabilityIndicator(String[] commandKeys, Object bean, Method method) {
+	private @Nullable Supplier<Availability> findAvailabilityIndicator(String[] commandKeys, Object bean, Method method) {
 		ShellMethodAvailability explicit = method.getAnnotation(ShellMethodAvailability.class);
 		final Method indicator;
 		if (explicit != null) {

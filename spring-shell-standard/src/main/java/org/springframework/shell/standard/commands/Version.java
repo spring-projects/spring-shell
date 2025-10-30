@@ -25,11 +25,13 @@ import java.util.Map;
 
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.tui.style.TemplateExecutor;
+import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 /**
@@ -37,6 +39,7 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 @ShellComponent
 public class Version extends AbstractShellComponent {
@@ -48,7 +51,7 @@ public class Version extends AbstractShellComponent {
 	}
 
 	private TemplateExecutor templateExecutor;
-	private String template;
+	private @Nullable String template;
 
 	public Version(TemplateExecutor templateExecutor) {
 		this.templateExecutor = templateExecutor;
@@ -56,6 +59,7 @@ public class Version extends AbstractShellComponent {
 
 	@ShellMethod(key = "version", value = "Show version info")
 	public AttributedString version() {
+		Assert.notNull(template, "'template' must not be null");
 		String templateResource = resourceAsString(getResourceLoader().getResource(template));
 
 		Map<String, Object> attributes = new HashMap<>();

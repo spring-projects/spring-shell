@@ -37,81 +37,91 @@ import org.springframework.shell.tui.style.ThemeResolver;
  * Base class helping to build shell components.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractShellComponent implements ApplicationContextAware, InitializingBean, ResourceLoaderAware {
 
-    private ApplicationContext applicationContext;
+	@SuppressWarnings("NullAway.Init")
+	private ApplicationContext applicationContext;
 
-    private ResourceLoader resourceLoader;
+	@SuppressWarnings("NullAway.Init")
+	private ResourceLoader resourceLoader;
 
-    private ObjectProvider<Shell> shellProvider;
+	@SuppressWarnings("NullAway.Init")
+	private ObjectProvider<Shell> shellProvider;
 
-    private ObjectProvider<Terminal> terminalProvider;
+	@SuppressWarnings("NullAway.Init")
+	private ObjectProvider<Terminal> terminalProvider;
 
-    private ObjectProvider<CommandCatalog> commandCatalogProvider;
+	@SuppressWarnings("NullAway.Init")
+	private ObjectProvider<CommandCatalog> commandCatalogProvider;
 
-    private ObjectProvider<CompletionResolver> completionResolverProvider;
+	@SuppressWarnings("NullAway.Init")
+	private ObjectProvider<CompletionResolver> completionResolverProvider;
 
-    private ObjectProvider<TemplateExecutor> templateExecutorProvider;
+	@SuppressWarnings("NullAway.Init")
+	private ObjectProvider<TemplateExecutor> templateExecutorProvider;
 
-    private ObjectProvider<ThemeResolver> themeResolverProvider;
+	@SuppressWarnings("NullAway.Init")
+	private ObjectProvider<ThemeResolver> themeResolverProvider;
 
-    private ObjectProvider<ViewComponentBuilder> viewComponentBuilderProvider;
+	@SuppressWarnings("NullAway.Init")
+	private ObjectProvider<ViewComponentBuilder> viewComponentBuilderProvider;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
-    @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        shellProvider = applicationContext.getBeanProvider(Shell.class);
-        terminalProvider = applicationContext.getBeanProvider(Terminal.class);
-        commandCatalogProvider = applicationContext.getBeanProvider(CommandCatalog.class);
-        completionResolverProvider = applicationContext.getBeanProvider(CompletionResolver.class);
-        templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
-        themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
-        viewComponentBuilderProvider = applicationContext.getBeanProvider(ViewComponentBuilder.class);
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		shellProvider = applicationContext.getBeanProvider(Shell.class);
+		terminalProvider = applicationContext.getBeanProvider(Terminal.class);
+		commandCatalogProvider = applicationContext.getBeanProvider(CommandCatalog.class);
+		completionResolverProvider = applicationContext.getBeanProvider(CompletionResolver.class);
+		templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
+		themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
+		viewComponentBuilderProvider = applicationContext.getBeanProvider(ViewComponentBuilder.class);
+	}
 
-    protected ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
+	protected ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
 
-    protected ResourceLoader getResourceLoader() {
-        return resourceLoader;
-    }
+	protected ResourceLoader getResourceLoader() {
+		return resourceLoader;
+	}
 
-    protected Shell getShell() {
-        return shellProvider.getObject();
-    }
+	protected Shell getShell() {
+		return shellProvider.getObject();
+	}
 
-    protected Terminal getTerminal() {
-        return terminalProvider.getObject();
-    }
+	protected Terminal getTerminal() {
+		return terminalProvider.getObject();
+	}
 
-    protected CommandCatalog getCommandCatalog() {
-        return commandCatalogProvider.getObject();
-    }
+	protected CommandCatalog getCommandCatalog() {
+		return commandCatalogProvider.getObject();
+	}
 
-    protected Stream<CompletionResolver> getCompletionResolver() {
-        return completionResolverProvider.orderedStream();
-    }
+	protected Stream<CompletionResolver> getCompletionResolver() {
+		return completionResolverProvider.orderedStream();
+	}
 
-    protected TemplateExecutor getTemplateExecutor() {
-        return templateExecutorProvider.getObject();
-    }
+	protected TemplateExecutor getTemplateExecutor() {
+		return templateExecutorProvider.getObject();
+	}
 
-    protected ThemeResolver getThemeResolver() {
-        return themeResolverProvider.getObject();
-    }
+	protected ThemeResolver getThemeResolver() {
+		return themeResolverProvider.getObject();
+	}
 
-    protected ViewComponentBuilder getViewComponentBuilder() {
-        return viewComponentBuilderProvider.getObject();
-    }
+	protected ViewComponentBuilder getViewComponentBuilder() {
+		return viewComponentBuilderProvider.getObject();
+	}
 }

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
+import org.springframework.util.StringUtils;
 
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 
@@ -36,15 +37,25 @@ import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class FileValueProvider implements ValueProvider {
 
 	@Override
 	public List<CompletionProposal> complete(CompletionContext completionContext) {
 		String input = completionContext.currentWordUpToCursor();
-		int lastSlash = input.lastIndexOf(File.separatorChar);
-		Path dir = lastSlash > -1 ? Paths.get(input.substring(0, lastSlash + 1)) : Paths.get("");
-		String prefix = input.substring(lastSlash + 1);
+
+		Path dir = Paths.get("");
+		String prefix;
+		if (StringUtils.hasText(input)) {
+			int lastSlash = input.lastIndexOf(File.separatorChar);
+			if (lastSlash > -1) {
+				dir = Paths.get(input.substring(0, lastSlash + 1));
+			}
+			prefix = input.substring(lastSlash + 1);
+		} else {
+			prefix = "";
+		}
 
 		try {
 			return Files

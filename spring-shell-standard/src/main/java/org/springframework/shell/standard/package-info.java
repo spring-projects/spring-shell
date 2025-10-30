@@ -19,4 +19,7 @@
  *
  * @author Eric Bottard
  */
+@NullMarked
 package org.springframework.shell.standard;
+
+import org.jspecify.annotations.NullMarked;

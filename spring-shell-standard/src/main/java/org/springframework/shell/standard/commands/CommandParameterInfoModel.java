@@ -17,23 +17,25 @@ package org.springframework.shell.standard.commands;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
  * Model encapsulating info about {@code command parameter}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 class CommandParameterInfoModel {
 
 	private String type;
 	private List<String> arguments;
 	private boolean required;
-	private String description;
-	private String defaultValue;
+	private @Nullable String description;
+	private @Nullable String defaultValue;
 
-	CommandParameterInfoModel(String type, List<String> arguments, boolean required, String description,
-			String defaultValue) {
+	CommandParameterInfoModel(String type, List<String> arguments, boolean required, @Nullable String description,
+			@Nullable String defaultValue) {
 		this.type = type;
 		this.arguments = arguments;
 		this.required = required;
@@ -52,7 +54,7 @@ class CommandParameterInfoModel {
 	 * @return a command parameter info model
 	 */
 	static CommandParameterInfoModel of(String type, List<String> arguments, boolean required,
-			String description, String defaultValue) {
+										@Nullable String description, @Nullable String defaultValue) {
 		return new CommandParameterInfoModel(type, arguments, required, description, defaultValue);
 	}
 
@@ -68,11 +70,11 @@ class CommandParameterInfoModel {
 		return required;
 	}
 
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return description;
 	}
 
-	public String getDefaultValue() {
+	public @Nullable String getDefaultValue() {
 		return defaultValue;
 	}
 

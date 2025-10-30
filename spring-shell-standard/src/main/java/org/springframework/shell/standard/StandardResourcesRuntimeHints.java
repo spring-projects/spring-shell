@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.standard;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 
@@ -22,11 +23,12 @@ import org.springframework.aot.hint.RuntimeHintsRegistrar;
  * {@link RuntimeHintsRegistrar} for Shell Standard resources.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 class StandardResourcesRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
-	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 		hints.resources().registerPattern("org/springframework/shell/component/*.stg");
 	}
 }

@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.Availability;
 import org.springframework.shell.command.CommandOption;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -30,17 +32,18 @@ import org.springframework.util.StringUtils;
  * Model encapsulating info about {@code command}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 class CommandInfoModel {
 
 	private String name;
 	private List<String> aliases;
-	private String description;
+	private @Nullable String description;
 	private List<CommandParameterInfoModel> parameters;
 	private CommandAvailabilityInfoModel availability;
 
-	CommandInfoModel(String name, List<String> aliases, String description, List<CommandParameterInfoModel> parameters,
-			CommandAvailabilityInfoModel availability) {
+	CommandInfoModel(String name, List<String> aliases, @Nullable String description, List<CommandParameterInfoModel> parameters,
+					 CommandAvailabilityInfoModel availability) {
 		this.name = name;
 		this.aliases = aliases;
 		this.description = description;
@@ -92,11 +95,13 @@ class CommandInfoModel {
 		}
 		else {
 			if (o.getType() != null) {
-				if (ClassUtils.isAssignable(o.getType().getRawClass(), Void.class)) {
+				Class<?> rawClass = o.getType().getRawClass();
+				Assert.notNull(rawClass, "'rawClass' must not be null");
+				if (ClassUtils.isAssignable(rawClass, Void.class)) {
 					return "";
 				}
 				else {
-					return ClassUtils.getShortName(o.getType().getRawClass());
+					return ClassUtils.getShortName(rawClass);
 				}
 			}
 			else {
@@ -117,7 +122,7 @@ class CommandInfoModel {
 		return this.aliases;
 	}
 
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return description;
 	}
 

@@ -707,7 +707,7 @@ public interface CommandRegistration {
 		 * @param availability the availability
 		 * @return builder for chaining
 		 */
-		Builder availability(Supplier<Availability> availability);
+		Builder availability(@Nullable Supplier<Availability> availability);
 
 		/**
 		 * Define a group for a command.
@@ -1389,7 +1389,7 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public Builder availability(Supplier<Availability> availability) {
+		public Builder availability(@Nullable Supplier<Availability> availability) {
 			this.availability = availability;
 			return this;
 		}

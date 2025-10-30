@@ -18,6 +18,7 @@ package org.springframework.shell.standard.completion;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.ReflectionHints;
 import org.springframework.aot.hint.RuntimeHints;
@@ -28,11 +29,12 @@ import org.springframework.aot.hint.TypeReference;
  * {@link RuntimeHintsRegistrar} for Shell Standard completion temlate model classes.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 class StandardCompletionModelsRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
-	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 		ReflectionHints reflection = hints.reflection();
 		registerForDeclaredMethodsInvocation(reflection, AbstractCompletions.DefaultCommandModel.class,
 				AbstractCompletions.DefaultCommandModelCommand.class,
