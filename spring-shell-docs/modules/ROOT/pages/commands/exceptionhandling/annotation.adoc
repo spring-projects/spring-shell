@@ -3,7 +3,7 @@
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-`@ShellComponent` classes can have `@ExceptionResolver` methods to handle exceptions from component
+`@Command` classes can have `@ExceptionResolver` methods to handle exceptions from component
 methods. These are meant for annotated methods.
 
 The exception may match against a top-level exception being propagated (e.g. a direct `IOException`

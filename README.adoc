@@ -27,14 +27,13 @@ Here is a quick teaser of a complete Spring Shell application in Java:
 ----
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.command.annotation.Command;
 
 @SpringBootApplication
-@ShellComponent
+@Command
 public class DemoApplication {
 
-	@ShellMethod
+	@Command
 	public String hi() {
 		return "hi";
 	}
