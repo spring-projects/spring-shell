@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.jline.terminal.impl.DumbTerminal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
@@ -61,6 +60,10 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 					.and()
 				.withStringInput("field2")
 					.name("Field2")
+					.and()
+				.withStringInput("field3")
+					.name("Field3")
+					.required()
 					.and()
 				.withConfirmationInput("confirmation1")
 					.name("Confirmation1")
