@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.command;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
@@ -25,6 +26,7 @@ import org.springframework.core.annotation.Order;
  * with command.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandExceptionResolver {
 
@@ -40,5 +42,5 @@ public interface CommandExceptionResolver {
 	 * @return a corresponding {@code HandlingResult} framework to handle, or
 	 *         {@code null} for default processing in the resolution chain
 	 */
-	CommandHandlingResult resolve(Exception ex);
+	@Nullable CommandHandlingResult resolve(Exception ex);
 }

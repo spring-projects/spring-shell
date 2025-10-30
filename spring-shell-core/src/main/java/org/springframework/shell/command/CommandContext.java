@@ -21,15 +21,18 @@ import java.util.stream.Stream;
 
 import org.jline.terminal.Terminal;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.shell.command.CommandParser.CommandParserResults;
 import org.springframework.shell.context.ShellContext;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
  * Interface containing information about current command execution.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandContext {
 
@@ -69,7 +72,7 @@ public interface CommandContext {
 	 * @param name the option name
 	 * @return mapped value
 	 */
-	<T> T getOptionValue(String name);
+	@Nullable <T> T getOptionValue(String name);
 
 	/**
 	 * Gets a terminal.
@@ -94,8 +97,10 @@ public interface CommandContext {
 	 * @param commandRegistration the command registration
 	 * @return a command context
 	 */
-	static CommandContext of(String[] args, CommandParserResults results, Terminal terminal,
-			CommandRegistration commandRegistration, ShellContext shellContext) {
+	static CommandContext of(String[] args, CommandParserResults results, @Nullable Terminal terminal,
+			CommandRegistration commandRegistration, @Nullable ShellContext shellContext) {
+		Assert.notNull(terminal, "'terminal' must not be null");
+		Assert.notNull(shellContext, "'shellContext' must not be null");
 		return new DefaultCommandContext(args, results, terminal, commandRegistration, shellContext);
 	}
 
@@ -141,7 +146,7 @@ public interface CommandContext {
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> T getOptionValue(String name) {
+		public @Nullable <T> T getOptionValue(String name) {
 			Optional<CommandParserResult> find = find(name);
 			if (find.isPresent()) {
 				return (T) find.get().value();

@@ -17,7 +17,7 @@ package org.springframework.shell.tui.component.view.event;
 
 import java.util.function.Predicate;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.view.control.View;
 
 /**
@@ -27,6 +27,7 @@ import org.springframework.shell.tui.component.view.control.View;
  * {@link MouseHandler} itself don't define any restrictions how it's used.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 @FunctionalInterface
 public interface MouseHandler {
@@ -117,7 +118,7 @@ public interface MouseHandler {
 	 * @param capture the view which captured an event
 	 * @return a mouse handler result
 	 */
-	static MouseHandlerResult resultOf(MouseEvent event, boolean consumed, View focus, View capture) {
+	static MouseHandlerResult resultOf(MouseEvent event, boolean consumed, @Nullable View focus, @Nullable View capture) {
 		return new MouseHandlerResult(event, consumed, focus, capture);
 	}
 
@@ -130,6 +131,6 @@ public interface MouseHandler {
 	 * @param capture the view which captured an event
 	 */
 	record MouseHandlerResult(@Nullable MouseEvent event, boolean consumed, @Nullable View focus,
-			@Nullable View capture) {
+							  @Nullable View capture) {
 	}
 }

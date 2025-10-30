@@ -24,6 +24,7 @@ import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,24 +37,25 @@ import org.springframework.util.StringUtils;
  * Component for a simple string input.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class StringInput extends AbstractTextComponent<String, StringInputContext> {
 
 	private final static Logger log = LoggerFactory.getLogger(StringInput.class);
-	private final String defaultValue;
-	private StringInputContext currentContext;
-	private Character maskCharacter;
+	private final @Nullable String defaultValue;
+	private @Nullable StringInputContext currentContext;
+	private @Nullable Character maskCharacter;
 
 	public StringInput(Terminal terminal) {
 		this(terminal, null, null, null);
 	}
 
-	public StringInput(Terminal terminal, String name, String defaultValue) {
+	public StringInput(Terminal terminal, @Nullable String name, @Nullable String defaultValue) {
 		this(terminal, name, defaultValue, null);
 	}
 
-	public StringInput(Terminal terminal, String name, String defaultValue,
-			Function<StringInputContext, List<AttributedString>> renderer) {
+	public StringInput(Terminal terminal, @Nullable String name, @Nullable String defaultValue,
+					  @Nullable Function<StringInputContext, List<AttributedString>> renderer) {
 		super(terminal, name, null);
 		setRenderer(renderer != null ? renderer : new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/string-input-default.stg");
@@ -65,12 +67,12 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	 *
 	 * @param maskCharacter a mask character
 	 */
-	public void setMaskCharacter(Character maskCharacter) {
+	public void setMaskCharacter(@Nullable Character maskCharacter) {
 		this.maskCharacter = maskCharacter;
 	}
 
 	@Override
-	public StringInputContext getThisContext(ComponentContext<?> context) {
+	public StringInputContext getThisContext(@Nullable ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
@@ -110,7 +112,9 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 				if (StringUtils.hasLength(input)) {
 					input = input.length() > 1 ? input.substring(0, input.length() - 1) : null;
 				}
-				context.setInput(input);
+				if (input != null) {
+					context.setInput(input);
+				}
 				break;
 			case OPERATION_EXIT:
 				if (StringUtils.hasText(context.getInput())) {
@@ -133,14 +137,14 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		 *
 		 * @return a default value
 		 */
-		String getDefaultValue();
+		@Nullable String getDefaultValue();
 
 		/**
 		 * Sets a default value.
 		 *
 		 * @param defaultValue the default value
 		 */
-		void setDefaultValue(String defaultValue);
+		void setDefaultValue(@Nullable String defaultValue);
 
 		/**
 		 * Sets a mask character.
@@ -154,14 +158,14 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		 *
 		 * @return a masked input
 		 */
-		String getMaskedInput();
+		@Nullable String getMaskedInput();
 
 		/**
 		 * Gets a masked result value.
 		 *
 		 * @return masked result value
 		 */
-		String getMaskedResultValue();
+		@Nullable String getMaskedResultValue();
 
 		/**
 		 * Returns flag if there is a mask character defined.
@@ -175,7 +179,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		 *
 		 * @return a mask character.
 		 */
-		Character getMaskCharacter();
+		@Nullable Character getMaskCharacter();
 
 		/**
 		 * Gets an empty {@link StringInputContext}.
@@ -191,7 +195,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		 *
 		 * @return path input context
 		 */
-		public static StringInputContext of(String defaultValue, Character maskCharacter) {
+		public static StringInputContext of(@Nullable String defaultValue, @Nullable Character maskCharacter) {
 			return new DefaultStringInputContext(defaultValue, maskCharacter);
 		}
 	}
@@ -199,21 +203,21 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 	private static class DefaultStringInputContext extends BaseTextComponentContext<String, StringInputContext>
 			implements StringInputContext {
 
-		private String defaultValue;
-		private Character maskCharacter;
+		private @Nullable String defaultValue;
+		private @Nullable Character maskCharacter;
 
-		public DefaultStringInputContext(String defaultValue, Character maskCharacter) {
+		public DefaultStringInputContext(@Nullable String defaultValue, @Nullable Character maskCharacter) {
 			this.defaultValue = defaultValue;
 			this.maskCharacter = maskCharacter;
 		}
 
 		@Override
-		public String getDefaultValue() {
+		public @Nullable String getDefaultValue() {
 			return defaultValue;
 		}
 
 		@Override
-		public void setDefaultValue(String defaultValue) {
+		public void setDefaultValue(@Nullable String defaultValue) {
 			this.defaultValue = defaultValue;
 		}
 
@@ -223,12 +227,12 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		}
 
 		@Override
-		public String getMaskedInput() {
+		public @Nullable String getMaskedInput() {
 			return maybeMask(getInput());
 		}
 
 		@Override
-		public String getMaskedResultValue() {
+		public @Nullable String getMaskedResultValue() {
 			return maybeMask(getResultValue());
 		}
 
@@ -238,13 +242,13 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 		}
 
 		@Override
-		public Character getMaskCharacter() {
+		public @Nullable Character getMaskCharacter() {
 			return maskCharacter;
 		}
 
 		@Override
-		public Map<String, Object> toTemplateModel() {
-			Map<String, Object> attributes = super.toTemplateModel();
+		public Map<String, @Nullable Object> toTemplateModel() {
+			Map<String, @Nullable Object> attributes = super.toTemplateModel();
 			attributes.put("defaultValue", getDefaultValue() != null ? getDefaultValue() : null);
 			attributes.put("maskedInput", getMaskedInput());
 			attributes.put("maskedResultValue", getMaskedResultValue());
@@ -255,7 +259,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 			return model;
 		}
 
-		private String maybeMask(String str) {
+		private @Nullable String maybeMask(@Nullable String str) {
 			if (StringUtils.hasLength(str) && maskCharacter != null) {
 				return new String(new char[str.length()]).replace('\0', maskCharacter);
 			}

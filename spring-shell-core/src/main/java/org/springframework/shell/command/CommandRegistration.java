@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.ResolvableType;
-import org.springframework.lang.Nullable;
 import org.springframework.shell.Availability;
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.context.InteractionMode;
@@ -41,6 +41,7 @@ import org.springframework.util.StringUtils;
  * Interface defining a command registration endpoint.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandRegistration {
 
@@ -63,7 +64,7 @@ public interface CommandRegistration {
 	 *
 	 * @return the group
 	 */
-	String getGroup();
+	@Nullable String getGroup();
 
 	/**
 	 * Returns if command is hidden.
@@ -77,7 +78,7 @@ public interface CommandRegistration {
 	 *
 	 * @return the description
 	 */
-	String getDescription();
+	@Nullable String getDescription();
 
 	/**
 	 * Get {@link Availability} for a command
@@ -339,30 +340,30 @@ public interface CommandRegistration {
 		 *
 		 * @return the bean
 		 */
-		Object getBean();
+		@Nullable Object getBean();
 
 		/**
 		 * Get the bean method
 		 *
 		 * @return the bean method
 		 */
-		Method getMethod();
+		@Nullable Method getMethod();
 
 		/**
 		 * Get the function
 		 *
 		 * @return the function
 		 */
-		Function<CommandContext, ?> getFunction();
+		@Nullable Function<CommandContext, ?> getFunction();
 
 		/**
 		 * Get the consumer
 		 *
 		 * @return the consumer
 		 */
-		Consumer<CommandContext> getConsumer();
+		@Nullable Consumer<CommandContext> getConsumer();
 
-		static TargetInfo of(Object bean, Method method) {
+		static TargetInfo of(Object bean, @Nullable Method method) {
 			return new DefaultTargetInfo(TargetType.METHOD, bean, method, null, null);
 		}
 
@@ -381,13 +382,13 @@ public interface CommandRegistration {
 		static class DefaultTargetInfo implements TargetInfo {
 
 			private final TargetType targetType;
-			private final Object bean;
-			private final Method method;
-			private final Function<CommandContext, ?> function;
-			private final Consumer<CommandContext> consumer;
+			private final @Nullable Object bean;
+			private final @Nullable Method method;
+			private final @Nullable Function<CommandContext, ?> function;
+			private final @Nullable Consumer<CommandContext> consumer;
 
-			public DefaultTargetInfo(TargetType targetType, Object bean, Method method,
-					Function<CommandContext, ?> function, Consumer<CommandContext> consumer) {
+			public DefaultTargetInfo(TargetType targetType, @Nullable Object bean, @Nullable Method method,
+									@Nullable Function<CommandContext, ?> function, @Nullable Consumer<CommandContext> consumer) {
 				this.targetType = targetType;
 				this.bean = bean;
 				this.method = method;
@@ -401,22 +402,22 @@ public interface CommandRegistration {
 			}
 
 			@Override
-			public Object getBean() {
+			public @Nullable Object getBean() {
 				return bean;
 			}
 
 			@Override
-			public Method getMethod() {
+			public @Nullable Method getMethod() {
 				return method;
 			}
 
 			@Override
-			public Function<CommandContext, ?> getFunction() {
+			public @Nullable Function<CommandContext, ?> getFunction() {
 				return function;
 			}
 
 			@Override
-			public Consumer<CommandContext> getConsumer() {
+			public @Nullable Consumer<CommandContext> getConsumer() {
 				return consumer;
 			}
 		}
@@ -563,38 +564,38 @@ public interface CommandRegistration {
 		 *
 		 * @return long names options for help
 		 */
-		String[] getLongNames();
+		String @Nullable [] getLongNames();
 
 		/**
 		 * Gets short names options for help.
 		 *
 		 * @return short names options for help
 		 */
-		Character[] getShortNames();
+		Character @Nullable [] getShortNames();
 
 		/**
 		 * Gets command for help.
 		 *
 		 * @return command for help
 		 */
-		String getCommand();
+		@Nullable String getCommand();
 
 		static HelpOptionInfo of() {
 			return of(false, null, null, null);
 		}
 
-		static HelpOptionInfo of(boolean enabled, String[] longNames, Character[] shortNames, String command) {
+		static HelpOptionInfo of(boolean enabled, String @Nullable[] longNames, Character @Nullable[] shortNames, @Nullable String command) {
 			return new DefaultHelpOptionInfo(enabled, longNames, shortNames, command);
 		}
 
 		static class DefaultHelpOptionInfo implements HelpOptionInfo {
 
-			private final String command;
-			private final String[] longNames;
-			private final Character[] shortNames;
+			private final @Nullable String command;
+			private final String @Nullable [] longNames;
+			private final Character @Nullable [] shortNames;
 			private final boolean enabled;
 
-			public DefaultHelpOptionInfo(boolean enabled, String[] longNames, Character[] shortNames, String command) {
+			public DefaultHelpOptionInfo(boolean enabled, String @Nullable [] longNames, Character @Nullable [] shortNames, @Nullable String command) {
 				this.command = command;
 				this.longNames = longNames;
 				this.shortNames = shortNames;
@@ -607,17 +608,17 @@ public interface CommandRegistration {
 			}
 
 			@Override
-			public String[] getLongNames() {
+			public String @Nullable [] getLongNames() {
 				return longNames;
 			}
 
 			@Override
-			public Character[] getShortNames() {
+			public Character @Nullable [] getShortNames() {
 				return shortNames;
 			}
 
 			@Override
-			public String getCommand() {
+			public @Nullable String getCommand() {
 				return command;
 			}
 		}
@@ -690,7 +691,7 @@ public interface CommandRegistration {
 		 * @param mode the interaction mode
 		 * @return builder for chaining
 		 */
-		Builder interactionMode(InteractionMode mode);
+		Builder interactionMode(@Nullable InteractionMode mode);
 
 		/**
 		 * Define a description text for a command.
@@ -796,18 +797,18 @@ public interface CommandRegistration {
 	static class DefaultOptionSpec implements OptionSpec {
 
 		private BaseBuilder builder;
-		private String[] longNames;
-		private Character[] shortNames;
-		private ResolvableType type;
-		private String description;
+		private String[] longNames = new String[0];
+		private Character[] shortNames = new Character[0];
+		private @Nullable ResolvableType type;
+		private @Nullable String description;
 		private boolean required;
-		private String defaultValue;
-		private Integer position;
-		private Integer arityMin;
-		private Integer arityMax;
-		private String label;
-		private CompletionResolver completion;
-		private Function<String, String> optionNameModifier;
+		private @Nullable String defaultValue;
+		private @Nullable Integer position;
+		private @Nullable Integer arityMin;
+		private @Nullable Integer arityMax;
+		private @Nullable String label;
+		private @Nullable CompletionResolver completion;
+		private @Nullable Function<String, String> optionNameModifier;
 
 		DefaultOptionSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -941,11 +942,11 @@ public interface CommandRegistration {
 			return shortNames;
 		}
 
-		public ResolvableType getType() {
+		public @Nullable ResolvableType getType() {
 			return type;
 		}
 
-		public String getDescription() {
+		public @Nullable String getDescription() {
 			return description;
 		}
 
@@ -953,32 +954,31 @@ public interface CommandRegistration {
 			return required;
 		}
 
-		public String getDefaultValue() {
+		public @Nullable String getDefaultValue() {
 			return defaultValue;
 		}
 
-		public Integer getPosition() {
+		public @Nullable Integer getPosition() {
 			return position;
 		}
 
-		public Integer getArityMin() {
+		public @Nullable Integer getArityMin() {
 			return arityMin;
 		}
 
-		public Integer getArityMax() {
+		public @Nullable Integer getArityMax() {
 			return arityMax;
 		}
 
-		public String getLabel() {
+		public @Nullable String getLabel() {
 			return label;
 		}
 
-		public CompletionResolver getCompletion() {
+		public @Nullable CompletionResolver getCompletion() {
 			return completion;
 		}
 
-		@Nullable
-		public Function<String, String> getOptionNameModifier() {
+		public @Nullable Function<String, String> getOptionNameModifier() {
 			if (optionNameModifier != null) {
 				return optionNameModifier;
 			}
@@ -992,10 +992,10 @@ public interface CommandRegistration {
 	static class DefaultTargetSpec implements TargetSpec {
 
 		private BaseBuilder builder;
-		private Object bean;
-		private Method method;
-		private Function<CommandContext, ?> function;
-		private Consumer<CommandContext> consumer;
+		private @Nullable Object bean;
+		private @Nullable Method method;
+		private @Nullable Function<CommandContext, ?> function;
+		private @Nullable Consumer<CommandContext> consumer;
 
 		DefaultTargetSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -1037,8 +1037,8 @@ public interface CommandRegistration {
 	static class DefaultAliasSpec implements AliasSpec {
 
 		private BaseBuilder builder;
-		private String[] commands;
-		private String group;
+		private String[] commands = new String[0];
+		private @Nullable String group;
 
 		DefaultAliasSpec(BaseBuilder builder) {
 			this.builder = builder;
@@ -1125,9 +1125,9 @@ public interface CommandRegistration {
 	static class DefaultHelpOptionsSpec implements HelpOptionsSpec {
 
 		private BaseBuilder builder;
-		private String command;
-		private String[] longNames;
-		private Character[] shortNames;
+		private @Nullable String command;
+		private String @Nullable [] longNames;
+		private Character @Nullable [] shortNames;
 		private boolean enabled = true;
 
 		DefaultHelpOptionsSpec(BaseBuilder builder) {
@@ -1138,8 +1138,8 @@ public interface CommandRegistration {
 			this.builder = otherBuilder;
 			this.builder.helpOptionsSpec = this;
 			this.command = otherSpec.command;
-			this.longNames = otherSpec.longNames.clone();
-			this.shortNames = otherSpec.shortNames.clone();
+			this.longNames = otherSpec.longNames != null ? otherSpec.longNames.clone() : null;
+			this.shortNames = otherSpec.shortNames != null ? otherSpec.shortNames.clone() : null;
 			this.enabled = otherSpec.enabled;
 		}
 
@@ -1177,22 +1177,22 @@ public interface CommandRegistration {
 
 		private String command;
 		private InteractionMode interactionMode;
-		private String group;
+		private @Nullable String group;
 		private boolean hidden;
-		private String description;
-		private Supplier<Availability> availability;
-		private List<CommandOption> options;
+		private @Nullable String description;
+		private @Nullable Supplier<Availability> availability;
+		private @Nullable List<CommandOption> options;
 		private List<DefaultOptionSpec> optionSpecs;
 		private DefaultTargetSpec targetSpec;
 		private List<DefaultAliasSpec> aliasSpecs;
-		private DefaultExitCodeSpec exitCodeSpec;
-		private DefaultErrorHandlingSpec errorHandlingSpec;
-		private DefaultHelpOptionsSpec helpOptionsSpec;
+		private @Nullable DefaultExitCodeSpec exitCodeSpec;
+		private @Nullable DefaultErrorHandlingSpec errorHandlingSpec;
+		private @Nullable DefaultHelpOptionsSpec helpOptionsSpec;
 
-		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, String group,
-				boolean hidden,	String description, Supplier<Availability> availability,
+		public DefaultCommandRegistration(String[] commands, InteractionMode interactionMode, @Nullable String group,
+				boolean hidden,	@Nullable String description, @Nullable Supplier<Availability> availability,
 				List<DefaultOptionSpec> optionSpecs, DefaultTargetSpec targetSpec, List<DefaultAliasSpec> aliasSpecs,
-				DefaultExitCodeSpec exitCodeSpec, DefaultErrorHandlingSpec errorHandlingSpec, DefaultHelpOptionsSpec helpOptionsSpec) {
+				@Nullable DefaultExitCodeSpec exitCodeSpec, @Nullable DefaultErrorHandlingSpec errorHandlingSpec, @Nullable DefaultHelpOptionsSpec helpOptionsSpec) {
 			this.command = commandArrayToName(commands);
 			this.interactionMode = interactionMode;
 			this.group = group;
@@ -1218,7 +1218,7 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public String getGroup() {
+		public @Nullable String getGroup() {
 			return group;
 		}
 
@@ -1228,7 +1228,7 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public String getDescription() {
+		public @Nullable String getDescription() {
 			return description;
 		}
 
@@ -1333,19 +1333,19 @@ public interface CommandRegistration {
 
 	static abstract class BaseBuilder implements Builder {
 
-		private String[] commands;
+		private String @Nullable[] commands;
 		private InteractionMode interactionMode = InteractionMode.ALL;
-		private String group;
+		private @Nullable String group;
 		private boolean hidden;
-		private String description;
-		private Supplier<Availability> availability;
+		private @Nullable String description;
+		private @Nullable Supplier<Availability> availability;
 		private List<DefaultOptionSpec> optionSpecs = new ArrayList<>();
 		private List<DefaultAliasSpec> aliasSpecs = new ArrayList<>();
-		private DefaultTargetSpec targetSpec;
-		private DefaultExitCodeSpec exitCodeSpec;
-		private DefaultErrorHandlingSpec errorHandlingSpec;
-		private DefaultHelpOptionsSpec helpOptionsSpec;
-		private Function<String, String> defaultOptionNameModifier;
+		private @Nullable DefaultTargetSpec targetSpec;
+		private @Nullable DefaultExitCodeSpec exitCodeSpec;
+		private @Nullable DefaultErrorHandlingSpec errorHandlingSpec;
+		private @Nullable DefaultHelpOptionsSpec helpOptionsSpec;
+		private @Nullable Function<String, String> defaultOptionNameModifier;
 
 		@Override
 		public Builder command(String... commands) {
@@ -1360,7 +1360,7 @@ public interface CommandRegistration {
 		}
 
 		@Override
-		public Builder interactionMode(InteractionMode mode) {
+		public Builder interactionMode(@Nullable InteractionMode mode) {
 			this.interactionMode = mode != null ? mode : InteractionMode.ALL;
 			return this;
 		}

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Disposable;
@@ -49,6 +50,7 @@ import org.springframework.util.ObjectUtils;
  * Defaults to textItem, spinnerItem, percentItem
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ProgressView extends BoxView {
 
@@ -57,8 +59,8 @@ public class ProgressView extends BoxView {
 	private final int tickEnd;
 	private int tickValue;
 	private boolean running = false;
-	private String description;
-	private Spinner spinner;
+	private @Nullable String description;
+	private @Nullable Spinner spinner;
 	private List<ProgressViewItem> items;
 	private GridView grid;
 	private long startTime;
@@ -206,7 +208,7 @@ public class ProgressView extends BoxView {
 	 *
 	 * @return a progress description
 	 */
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return description;
 	}
 
@@ -242,7 +244,7 @@ public class ProgressView extends BoxView {
 		dispatch(ShellMessageBuilder.ofView(this, ProgressViewStartEvent.of(this, state)));
 	}
 
-	private Disposable.Composite disposables;
+	private Disposable.@Nullable Composite disposables;
 	private final String TAG_KEY = "ProgressView";
 	private final String TAG_VALUE = UUID.randomUUID().toString();
 
@@ -398,7 +400,7 @@ public class ProgressView extends BoxView {
 		return new ProgressContext() {
 
 			@Override
-			public String getDescription() {
+			public @Nullable String getDescription() {
 				return ProgressView.this.getDescription();
 			}
 
@@ -418,12 +420,12 @@ public class ProgressView extends BoxView {
 			}
 
 			@Override
-			public Spinner resolveThemeSpinner(String tag, Spinner defaultSpinner, Spinner fallbackSpinner) {
+			public Spinner resolveThemeSpinner(String tag, @Nullable Spinner defaultSpinner, Spinner fallbackSpinner) {
 				return ProgressView.this.resolveThemeSpinner(tag, defaultSpinner, fallbackSpinner);
 			}
 
 			@Override
-			public Spinner getSpinner() {
+			public @Nullable Spinner getSpinner() {
 				return ProgressView.this.spinner;
 			}
 		};
@@ -439,7 +441,7 @@ public class ProgressView extends BoxView {
 		 *
 		 * @return a progress description
 		 */
-		String getDescription();
+		@Nullable String getDescription();
 
 		/**
 		 * Get a state of a {@link ProgressView}.
@@ -460,7 +462,7 @@ public class ProgressView extends BoxView {
 		 *
 		 * @return spinner frames
 		 */
-		Spinner getSpinner();
+		@Nullable Spinner getSpinner();
 
 		/**
 		 * Resolve style using existing {@link ThemeResolver} and {@code theme name}.
@@ -472,7 +474,7 @@ public class ProgressView extends BoxView {
 		 */
 		int resolveThemeStyle(String tag, int defaultStyle);
 
-		Spinner resolveThemeSpinner(String tag, Spinner defaultSpinner, Spinner fallbackSpinner);
+		Spinner resolveThemeSpinner(String tag, @Nullable Spinner defaultSpinner, Spinner fallbackSpinner);
 
 	}
 

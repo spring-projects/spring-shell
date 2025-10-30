@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.context.ComponentContext;
 import org.springframework.shell.tui.component.support.AbstractSelectorComponent;
 import org.springframework.shell.tui.component.support.Enableable;
@@ -34,30 +35,34 @@ import org.springframework.shell.tui.component.support.Matchable;
 import org.springframework.shell.tui.component.support.Nameable;
 import org.springframework.shell.tui.component.support.Selectable;
 import org.springframework.shell.tui.component.MultiItemSelector.MultiItemSelectorContext;
+import org.springframework.util.StringUtils;
 
 /**
  * Component able to pick multiple items.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & Selectable & Itemable<T>>
 		extends AbstractSelectorComponent<T, MultiItemSelectorContext<T, I>, I> {
 
-	private MultiItemSelectorContext<T, I> currentContext;
+	private @Nullable MultiItemSelectorContext<T, I> currentContext;
 
-	public MultiItemSelector(Terminal terminal, List<I> items, String name, Comparator<I> comparator) {
+	public MultiItemSelector(Terminal terminal, List<I> items, @Nullable String name, @Nullable Comparator<I> comparator) {
 		super(terminal, name, items, false, comparator);
 		setRenderer(new DefaultRenderer());
 		setTemplateLocation("classpath:org/springframework/shell/component/multi-item-selector-default.stg");
 	}
 
 	@Override
-	public MultiItemSelectorContext<T, I> getThisContext(ComponentContext<?> context) {
+	public MultiItemSelectorContext<T, I> getThisContext(@Nullable ComponentContext<?> context) {
 		if (context != null && currentContext == context) {
 			return currentContext;
 		}
 		currentContext = MultiItemSelectorContext.empty(getItemMapper());
-		currentContext.setName(name);
+		if (StringUtils.hasText(name)) {
+			currentContext.setName(name);
+		}
 		currentContext.setTerminalWidth(getTerminal().getWidth());
 		if (currentContext.getItems() == null) {
 			currentContext.setItems(getItems());
@@ -144,7 +149,8 @@ public class MultiItemSelector<T, I extends Nameable & Matchable & Enableable & 
 					Map<String, Object> map = new HashMap<>();
 					map.put("name", is.getName());
 					map.put("selected", is.isSelected());
-					map.put("onrow", getCursorRow().intValue() == is.getIndex());
+					Integer cursorRow = getCursorRow();
+					map.put("onrow", cursorRow != null && cursorRow == is.getIndex());
 					map.put("enabled", is.isEnabled());
 					return map;
 				})

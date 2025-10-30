@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
@@ -42,6 +43,7 @@ import org.springframework.util.StringUtils;
  * Interface to parse command line arguments.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface Parser {
 
@@ -65,13 +67,13 @@ public interface Parser {
 	 * @param messageResults message results
 	 * @param directiveResults directive result
 	 */
-	public record ParseResult(CommandRegistration commandRegistration, List<OptionResult> optionResults,
+	public record ParseResult(@Nullable CommandRegistration commandRegistration, List<OptionResult> optionResults,
 			List<ArgumentResult> argumentResults, List<MessageResult> messageResults,
 			List<DirectiveResult> directiveResults) {
 
-		public record OptionResult(CommandOption option, Object value) {
+		public record OptionResult(CommandOption option, @Nullable Object value) {
 
-			public static OptionResult of(CommandOption option, Object value) {
+			public static OptionResult of(CommandOption option, @Nullable Object value) {
 				return new OptionResult(option, value);
 			}
 		}
@@ -105,7 +107,7 @@ public interface Parser {
 		}
 
 		public DefaultParser(CommandModel commandModel, Lexer lexer, Ast ast, ParserConfig config,
-				ConversionService conversionService) {
+							 @Nullable ConversionService conversionService) {
 			this.commandModel = commandModel;
 			this.lexer = lexer;
 			this.ast = ast;
@@ -276,9 +278,17 @@ public interface Parser {
 			currentOptionArgument.clear();
 			CommandInfo info = commandModel.resolve(resolvedCommmand);
 
+			if (info == null) {
+				return;
+			}
+			CommandRegistration registration = info.registration;
+			if (registration == null) {
+				return;
+			}
+
 			String name = node.getName();
 			if (name.startsWith("--")) {
-				info.registration.getOptions().forEach(option -> {
+				registration.getOptions().forEach(option -> {
 					Set<String> longNames = Arrays.asList(option.getLongNames()).stream()
 						.map(n -> "--" + n)
 						.collect(Collectors.toSet());
@@ -291,7 +301,7 @@ public interface Parser {
 			}
 			else if (name.startsWith("-")) {
 				if (name.length() == 2) {
-					info.registration.getOptions().forEach(option -> {
+					registration.getOptions().forEach(option -> {
 						Set<String> shortNames = Arrays.asList(option.getShortNames()).stream()
 								.map(n -> "-" + Character.toString(n))
 								.collect(Collectors.toSet());
@@ -302,7 +312,7 @@ public interface Parser {
 					});
 				}
 				else if (name.length() > 2) {
-					info.registration.getOptions().forEach(option -> {
+					registration.getOptions().forEach(option -> {
 						Set<String> shortNames = Arrays.asList(option.getShortNames()).stream()
 								.map(n -> "-" + Character.toString(n))
 								.collect(Collectors.toSet());
@@ -399,7 +409,7 @@ public interface Parser {
 		protected void onExitOptionArgumentNode(OptionArgumentNode node) {
 		}
 
-		private Object convertOptionType(CommandOption option, Object value) {
+		private @Nullable Object convertOptionType(CommandOption option, @Nullable Object value) {
 			ResolvableType type = option.getType();
 			if (value == null && type != null && type.isAssignableFrom(boolean.class)) {
 				return true;

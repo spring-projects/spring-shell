@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.result.CommandNotFoundMessageProvider.ProviderContext;
 
@@ -26,11 +27,12 @@ import org.springframework.shell.result.CommandNotFoundMessageProvider.ProviderC
  * Provider for a message used within {@link CommandNotFoundResultHandler}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 @FunctionalInterface
 public interface CommandNotFoundMessageProvider extends Function<ProviderContext, String> {
 
-	static ProviderContext contextOf(Throwable error, List<String> commands, Map<String, CommandRegistration> registrations, String text) {
+	static ProviderContext contextOf(Throwable error, List<String> commands, @Nullable Map<String, CommandRegistration> registrations, @Nullable String text) {
 		return new ProviderContext() {
 
 			@Override
@@ -44,12 +46,12 @@ public interface CommandNotFoundMessageProvider extends Function<ProviderContext
 			}
 
 			@Override
-			public Map<String, CommandRegistration> registrations() {
+			public @Nullable Map<String, CommandRegistration> registrations() {
 				return registrations;
 			}
 
 			@Override
-			public String text() {
+			public @Nullable String text() {
 				return text;
 			}
 		};
@@ -79,14 +81,14 @@ public interface CommandNotFoundMessageProvider extends Function<ProviderContext
 		 *
 		 * @return a command registrations
 		 */
-		Map<String, CommandRegistration> registrations();
+		@Nullable Map<String, CommandRegistration> registrations();
 
 		/**
 		 * Gets a raw input text.
 		 *
 		 * @return a raw input text
 		 */
-		String text();
+		@Nullable String text();
 	}
 
 }

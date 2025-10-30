@@ -24,9 +24,10 @@ import org.jline.reader.ParsedLine;
  * should be escaped/quoted.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 @FunctionalInterface
 public interface CompletingParsedLine {
 
-	public CharSequence emit(CharSequence candidate);
+	CharSequence emit(CharSequence candidate);
 }

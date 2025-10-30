@@ -25,13 +25,16 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 import org.jline.utils.Colors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.view.control.Spinner;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
  * Service which helps to do various things with styles.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ThemeResolver {
 
@@ -39,7 +42,7 @@ public class ThemeResolver {
 	private StyleResolver styleResolver = new StyleResolver(styleSource, "default");
 	private StyleExpression styleExpression = new StyleExpression(styleResolver);
 	private ThemeRegistry themeRegistry;
-	private final Theme theme;
+	private final @Nullable Theme theme;
 
 	public ThemeResolver(ThemeRegistry themeRegistry, String themeName) {
 		this.themeRegistry = themeRegistry;
@@ -116,7 +119,8 @@ public class ThemeResolver {
 	 * @param tag the tag
 	 * @return a style
 	 */
-	public String resolveStyleTag(String tag) {
+	public String resolveStyleTag(@Nullable String tag) {
+		Assert.state(theme != null, "'theme' must not be null");
 		return theme.getSettings().styles().resolveTag(tag);
 	}
 
@@ -127,8 +131,9 @@ public class ThemeResolver {
 	 * @param themeName the theme name
 	 * @return a style
 	 */
-	public String resolveStyleTag(String tag, String themeName) {
+	public String resolveStyleTag(String tag, @Nullable String themeName) {
 		Theme t = StringUtils.hasText(themeName) ? themeRegistry.get(themeName) : theme;
+		Assert.state(t != null, "'theme' must not be null");
 		return t.getSettings().styles().resolveTag(tag);
 	}
 
@@ -139,6 +144,7 @@ public class ThemeResolver {
 	 * @return a style
 	 */
 	public String resolveFigureTag(String tag) {
+		Assert.state(theme != null, "'theme' must not be null");
 		return theme.getSettings().figures().resolveTag(tag);
 	}
 
@@ -149,6 +155,7 @@ public class ThemeResolver {
 	 * @return a spinner
 	 */
 	public Spinner resolveSpinnerTag(String tag) {
+		Assert.state(theme != null, "'theme' must not be null");
 		return theme.getSettings().spinners().resolveTag(tag);
 	}
 

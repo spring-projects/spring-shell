@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.tui.component.view.control;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.view.control.cell.Cell;
 import org.springframework.shell.tui.component.view.screen.Screen;
 import org.springframework.shell.tui.geom.Rectangle;
@@ -26,6 +26,7 @@ import org.springframework.shell.tui.style.ThemeResolver;
  * {@link Rectangle} it is bound to and draw into a {@link Screen}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  * @see View
  * @see Cell
  */

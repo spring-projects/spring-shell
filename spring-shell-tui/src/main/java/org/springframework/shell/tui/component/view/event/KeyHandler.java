@@ -17,7 +17,7 @@ package org.springframework.shell.tui.component.view.event;
 
 import java.util.function.Predicate;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.view.control.View;
 
 /**
@@ -25,6 +25,7 @@ import org.springframework.shell.tui.component.view.control.View;
  * {@link KeyHandlerResult}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 @FunctionalInterface
 public interface KeyHandler {
@@ -105,7 +106,7 @@ public interface KeyHandler {
 	 * @param focus  the view
 	 * @return a Key handler result
 	 */
-	static KeyHandlerResult resultOf(KeyEvent event, boolean consumed, View focus) {
+	static KeyHandlerResult resultOf(KeyEvent event, boolean consumed, @Nullable View focus) {
 		return new KeyHandlerResult(event, consumed, focus, null);
 	}
 
@@ -126,6 +127,6 @@ public interface KeyHandler {
 	 * @param capture the view which captured an event
 	 */
 	record KeyHandlerResult(@Nullable KeyEvent event, boolean consumed, @Nullable View focus,
-			@Nullable View capture) {
+							@Nullable View capture) {
 	}
 }

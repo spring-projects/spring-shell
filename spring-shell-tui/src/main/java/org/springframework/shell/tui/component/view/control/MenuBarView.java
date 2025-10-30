@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,12 +47,13 @@ import org.springframework.shell.tui.style.ThemeResolver;
  * Internally {@link MenuView} is used to show the menus.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class MenuBarView extends BoxView {
 
 	private final Logger log = LoggerFactory.getLogger(MenuBarView.class);
 	private final List<MenuBarItem> items = new ArrayList<>();
-	private MenuView currentMenuView;
+	private @Nullable MenuView currentMenuView;
 	private int activeItemIndex = -1;
 
 	// Need to keep menuviews alive not to lose their states
@@ -220,13 +222,13 @@ public class MenuBarView extends BoxView {
 	}
 
 	@Override
-	public void setThemeName(String themeName) {
+	public void setThemeName(@Nullable String themeName) {
 		super.setThemeName(themeName);
 		menuViews.values().forEach(view -> view.setThemeName(themeName));
 	}
 
 	@Override
-	public void setThemeResolver(ThemeResolver themeResolver) {
+	public void setThemeResolver(@Nullable ThemeResolver themeResolver) {
 		super.setThemeResolver(themeResolver);
 		menuViews.values().forEach(view -> view.setThemeResolver(themeResolver));
 	}
@@ -246,9 +248,11 @@ public class MenuBarView extends BoxView {
 	}
 
 	private MenuView buildMenuView(MenuBarItem item) {
+		EventLoop eventLoop = getEventLoop();
+
 		MenuView menuView = new MenuView(item.getItems());
 		menuView.init();
-		menuView.setEventLoop(getEventLoop());
+		menuView.setEventLoop(eventLoop);
 		menuView.setThemeResolver(getThemeResolver());
 		menuView.setThemeName(getThemeName());
 		menuView.setViewService(getViewService());
@@ -258,10 +262,12 @@ public class MenuBarView extends BoxView {
 		int x = positionAtIndex(activeItemIndex);
 		Dimension dim = menuView.getPreferredDimension();
 		menuView.setRect(rect.x() + x, rect.y() + 1, dim.width(), dim.height());
-		menuView.onDestroy(getEventLoop().viewEvents(MenuViewOpenSelectedItemEvent.class, menuView)
-			.subscribe(event -> {
-				closeCurrentMenuView();
-			}));
+		if (eventLoop != null) {
+			menuView.onDestroy(eventLoop.viewEvents(MenuViewOpenSelectedItemEvent.class, menuView)
+					.subscribe(event -> {
+						closeCurrentMenuView();
+					}));
+		}
 
 		return menuView;
 	}
@@ -300,15 +306,15 @@ public class MenuBarView extends BoxView {
 
 		private String title;
 		private List<MenuItem> items;
-		private Integer hotKey;
+		private @Nullable Integer hotKey;
 
 		public MenuBarItem(String title) {
 			this(title, null);
 		}
 
-		public MenuBarItem(String title, MenuItem[] items) {
+		public MenuBarItem(String title, MenuItem @Nullable [] items) {
 			this.title = title;
-			this.items = Arrays.asList(items);
+			this.items = items == null ? List.of() : Arrays.asList(items);
 		}
 
 		public static MenuBarItem of(String title, MenuItem... items) {
@@ -323,7 +329,7 @@ public class MenuBarView extends BoxView {
 			return items;
 		}
 
-		public Integer getHotKey() {
+		public @Nullable Integer getHotKey() {
 			return hotKey;
 		}
 

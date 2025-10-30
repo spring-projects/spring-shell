@@ -16,12 +16,15 @@
 
 package org.springframework.shell;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
  * Represents a proposal for TAB completion, made not only of the text to append, but also metadata about the proposal.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class CompletionProposal {
 
@@ -38,12 +41,12 @@ public class CompletionProposal {
 	/**
 	 * The description for the proposal.
 	 */
-	private String description;
+	private @Nullable String description;
 
 	/**
 	 * The category of the proposal, which may be used to group proposals together.
 	 */
-	private String category;
+	private @Nullable String category;
 
 	/**
 	 * Whether the proposal should bypass escaping and quoting rules. This is useful for command proposals, which can
@@ -79,16 +82,16 @@ public class CompletionProposal {
 		return this;
 	}
 
-	public String description() {
+	public @Nullable String description() {
 		return description;
 	}
 
-	public CompletionProposal description(String description) {
+	public CompletionProposal description(@Nullable String description) {
 		this.description = description;
 		return this;
 	}
 
-	public String category() {
+	public @Nullable String category() {
 		return category;
 	}
 

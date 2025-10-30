@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.tui.component.context;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
  * component spesific contexts.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface ComponentContext<C extends ComponentContext<C>> {
 
@@ -85,7 +88,7 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 	 *
 	 * @return a terminal width
 	 */
-	Integer getTerminalWidth();
+	@Nullable Integer getTerminalWidth();
 
 	/**
 	 * Set terminal width.
@@ -102,5 +105,5 @@ public interface ComponentContext<C extends ComponentContext<C>> {
 	 *
 	 * @return map of context values
 	 */
-	Map<String, Object> toTemplateModel();
+	Map<String, @Nullable Object> toTemplateModel();
 }

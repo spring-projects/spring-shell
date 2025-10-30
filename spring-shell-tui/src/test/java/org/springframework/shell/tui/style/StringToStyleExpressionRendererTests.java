@@ -68,4 +68,14 @@ class StringToStyleExpressionRendererTests {
 	void truncate(String value, String expression, String expected) {
 		assertThat(renderer.toString(value, expression, LOCALE)).isEqualTo(expected);
 	}
+
+	@Test
+	void handleMissingPrefix() {
+		assertThat(renderer.toString("0123456789", "truncate-width:6", LOCALE)).isEqualTo("0123..");
+	}
+
+	@Test
+	void handleMissingWidth() {
+		assertThat(renderer.toString("0123456789", "truncate-prefix:6", LOCALE)).isEqualTo("0123456789");
+	}
 }

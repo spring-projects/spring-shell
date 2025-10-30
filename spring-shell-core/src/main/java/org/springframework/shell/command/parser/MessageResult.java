@@ -15,12 +15,15 @@
  */
 package org.springframework.shell.command.parser;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Encapsulating {@link ParserMessage} with position and {@code inserts}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
-public record MessageResult(ParserMessage parserMessage, int position, Object[] inserts) {
+public record MessageResult(ParserMessage parserMessage, int position, Object @Nullable [] inserts) {
 
 	/**
 	 * Constructs {@code MessageResult} with parser message, position and inserts.
@@ -30,7 +33,7 @@ public record MessageResult(ParserMessage parserMessage, int position, Object[] 
 	 * @param inserts the inserts
 	 * @return a message result
 	 */
-	public static MessageResult of(ParserMessage parserMessage, int position, Object... inserts) {
+	public static MessageResult of(ParserMessage parserMessage, int position, @Nullable Object... inserts) {
 		return new MessageResult(parserMessage, position, inserts);
 	}
 

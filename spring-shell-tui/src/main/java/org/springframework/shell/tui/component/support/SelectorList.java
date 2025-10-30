@@ -15,13 +15,18 @@
  */
 package org.springframework.shell.tui.component.support;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Piotr Olaszewski
+ */
 public interface SelectorList<T extends Nameable> {
 
 	void reset(List<T> items);
-	T getSelected();
+	@Nullable T getSelected();
 	void scrollUp();
 	void scrollDown();
 	List<ProjectionItem<T>> getProjection();
@@ -54,7 +59,7 @@ public interface SelectorList<T extends Nameable> {
 		}
 
 		@Override
-		public T getSelected() {
+		public @Nullable T getSelected() {
 			int index = start + position;
 			if (this.items.isEmpty()) {
 				return null;

@@ -20,22 +20,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.command.CommandRegistration;
 
 /**
  * A result to be handled by the {@link ResultHandler} when no command could be mapped to user input
+ *
+ * @author Piotr Olaszewski
  */
 public class CommandNotFound extends RuntimeException {
 
 	private final List<String> words;
-	private final Map<String, CommandRegistration> registrations;
-	private final String text;
+	private final @Nullable Map<String, CommandRegistration> registrations;
+	private final @Nullable String text;
 
 	public CommandNotFound(List<String> words) {
 		this(words, null, null);
 	}
 
-	public CommandNotFound(List<String> words, Map<String, CommandRegistration> registrations, String text) {
+	public CommandNotFound(List<String> words, @Nullable Map<String, CommandRegistration> registrations, @Nullable String text) {
 		this.words = words;
 		this.registrations = registrations;
 		this.text = text;
@@ -60,7 +63,7 @@ public class CommandNotFound extends RuntimeException {
 	 *
 	 * @return known command registrations
 	 */
-	public Map<String, CommandRegistration> getRegistrations() {
+	public @Nullable Map<String, CommandRegistration> getRegistrations() {
 		return registrations;
 	}
 
@@ -69,7 +72,7 @@ public class CommandNotFound extends RuntimeException {
 	 *
 	 * @return raw text input
 	 */
-	public String getText() {
+	public @Nullable String getText() {
 		return text;
 	}
 }

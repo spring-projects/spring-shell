@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
  * {@link CommandNotFoundMessageProvider} bean.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public final class CommandNotFoundResultHandler extends TerminalAwareResultHandler<CommandNotFound> {
 
@@ -44,9 +45,8 @@ public final class CommandNotFoundResultHandler extends TerminalAwareResultHandl
 
 		@Override
 		public String apply(ProviderContext context) {
-			String message = new AttributedString(context.error().getMessage(),
+			return new AttributedString(context.error().getMessage(),
 					AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi();
-			return message;
 		}
 	}
 }

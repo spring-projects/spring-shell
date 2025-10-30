@@ -37,6 +37,7 @@ import org.jline.terminal.impl.DumbTerminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp.Capability;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,7 @@ import org.springframework.util.StringUtils;
  * Base class for components.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class AbstractComponent<T extends ComponentContext<T>> implements ResourceLoaderAware {
 
@@ -70,11 +72,11 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	private final KeyMap<String> keyMap = new KeyMap<>();
 	private final List<Consumer<T>> preRunHandlers = new ArrayList<>();
 	private final List<Consumer<T>> postRunHandlers = new ArrayList<>();
-	private Function<T, List<AttributedString>> renderer;
+	private @Nullable Function<T, List<AttributedString>> renderer;
 	private boolean printResults = true;
-	private String templateLocation;
-	private TemplateExecutor templateExecutor;
-	private ResourceLoader resourceLoader;
+	private @Nullable String templateLocation;
+	private @Nullable TemplateExecutor templateExecutor;
+	private @Nullable ResourceLoader resourceLoader;
 
 	public AbstractComponent(Terminal terminal) {
 		Assert.notNull(terminal, "terminal must be set");
@@ -101,7 +103,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 *
 	 * @param renderer the display renderer function
 	 */
-	public void setRenderer(Function<T, List<AttributedString>> renderer) {
+	public void setRenderer(@Nullable Function<T, List<AttributedString>> renderer) {
 		this.renderer = renderer;
 	}
 
@@ -114,7 +116,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 */
 	public List<AttributedString> render(T context) {
 		log.debug("Rendering with context [{}] as class [{}] in [{}]", context, context.getClass(), this);
-		return renderer.apply(context);
+		return renderer == null ? List.of() : renderer.apply(context);
 	}
 
 	/**
@@ -167,7 +169,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 *
 	 * @return a template executor
 	 */
-	public TemplateExecutor getTemplateExecutor() {
+	public @Nullable TemplateExecutor getTemplateExecutor() {
 		return templateExecutor;
 	}
 
@@ -211,7 +213,11 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 * @param attributes the attributes
 	 * @return rendered content as attributed strings
 	 */
-	protected List<AttributedString> renderTemplateResource(Map<String, Object> attributes) {
+	protected List<AttributedString> renderTemplateResource(Map<String, @Nullable Object> attributes) {
+		Assert.notNull(resourceLoader, "'resourceLoader' must not be null");
+		Assert.notNull(templateLocation, "'templateLocation' must not be null");
+		Assert.notNull(templateExecutor, "'templateExecutor' must not be null");
+
 		String templateResource = resourceAsString(resourceLoader.getResource(templateLocation));
 		log.debug("Rendering template: {}", templateResource);
 		log.debug("Rendering template attributes: {}", attributes);
@@ -238,7 +244,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 * @param context the context
 	 * @return a component context
 	 */
-	public abstract T getThisContext(ComponentContext<?> context);
+	public abstract T getThisContext(@Nullable ComponentContext<?> context);
 
 	/**
 	 * Read input.

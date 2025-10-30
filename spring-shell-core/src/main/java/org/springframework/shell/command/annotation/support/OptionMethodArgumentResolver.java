@@ -19,10 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandlingException;
 import org.springframework.shell.command.annotation.Option;
@@ -57,8 +57,7 @@ public class OptionMethodArgumentResolver extends AbstractArgumentMethodArgument
 	}
 
 	@Override
-	@Nullable
-	protected Object resolveArgumentInternal(MethodParameter parameter, Message<?> message, List<String> names)
+	protected @Nullable Object resolveArgumentInternal(MethodParameter parameter, Message<?> message, List<String> names)
 			throws Exception {
 		for (String name : names) {
 			if (message.getHeaders().containsKey(ARGUMENT_PREFIX + name)) {

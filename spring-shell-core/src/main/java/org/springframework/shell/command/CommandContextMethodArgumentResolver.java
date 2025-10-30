@@ -17,6 +17,7 @@ package org.springframework.shell.command;
 
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
@@ -26,6 +27,7 @@ import org.springframework.messaging.handler.invocation.HandlerMethodArgumentRes
  * {@link CommandContext}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class CommandContextMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -39,7 +41,7 @@ public class CommandContextMethodArgumentResolver implements HandlerMethodArgume
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter parameter, Message<?> message){
+	public @Nullable Object resolveArgument(MethodParameter parameter, Message<?> message){
 		CommandContext commandContext = message.getHeaders().get(HEADER_COMMAND_CONTEXT, CommandContext.class);
 		return parameter.isOptional() ? Optional.ofNullable(commandContext) : commandContext;
 	}

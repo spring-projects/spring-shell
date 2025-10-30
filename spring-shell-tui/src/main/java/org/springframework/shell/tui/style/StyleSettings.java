@@ -15,10 +15,13 @@
  */
 package org.springframework.shell.tui.style;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Base class defining a settings for styles.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class StyleSettings {
 
@@ -198,7 +201,11 @@ public abstract class StyleSettings {
 	 * @param tag the tag
 	 * @return a theme setting
 	 */
-	public String resolveTag(String tag) {
+	public String resolveTag(@Nullable String tag) {
+		if (tag == null) {
+			throw new IllegalArgumentException("Unknown tag 'null'");
+		}
+
 		switch (tag) {
 			case TAG_TITLE:
 				return title();
@@ -259,7 +266,7 @@ public abstract class StyleSettings {
 	 * @return array of all tags
 	 */
 	public static String[] tags() {
-		return new String[] {
+		return new String[]{
 				TAG_TITLE,
 				TAG_VALUE,
 				TAG_LIST_KEY,

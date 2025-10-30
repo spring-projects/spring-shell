@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,10 +56,7 @@ import org.springframework.shell.command.annotation.OptionValues;
 import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.completion.CompletionProvider;
 import org.springframework.shell.context.InteractionMode;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
 /**
  * Factory bean used in {@link CommandRegistrationBeanRegistrar} to build
@@ -75,6 +73,7 @@ import org.springframework.util.StringUtils;
  * This is internal class and not meant for generic use.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>, ApplicationContextAware, InitializingBean {
 
@@ -84,18 +83,20 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 	public static final String COMMAND_METHOD_NAME = "commandMethodName";
 	public static final String COMMAND_METHOD_PARAMETERS = "commandMethodParameters";
 
+	@SuppressWarnings("NullAway.Init")
 	private ObjectProvider<CommandRegistration.BuilderSupplier> supplier;
+	@SuppressWarnings("NullAway.Init")
 	private ApplicationContext applicationContext;
+	@SuppressWarnings("NullAway.Init")
 	private Object commandBean;
-	private Class<?> commandBeanType;
-	private String commandBeanName;
-	private String commandMethodName;
-	private Class<?>[] commandMethodParameters;
+	private @Nullable Class<?> commandBeanType;
+	private @Nullable String commandBeanName;
+	private @Nullable String commandMethodName;
+	private Class<?> @Nullable [] commandMethodParameters;
 
 	@Override
 	public CommandRegistration getObject() throws Exception {
-		CommandRegistration registration = buildRegistration();
-		return registration;
+		return buildRegistration();
 	}
 
 	@Override
@@ -110,6 +111,7 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(commandBeanName, "'commandBeanName' must not be null");
 		this.commandBean = applicationContext.getBean(commandBeanName);
 		this.supplier = applicationContext.getBeanProvider(CommandRegistration.BuilderSupplier.class);
 	}
@@ -135,7 +137,13 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 	}
 
 	private CommandRegistration buildRegistration() {
+		Assert.notNull(commandBeanType, "'commandBeanType' must not be null");
+		Assert.notNull(commandMethodName, "'commandMethodName' must not be null");
+
 		Method method = ReflectionUtils.findMethod(commandBeanType, commandMethodName, commandMethodParameters);
+
+		Assert.notNull(method, "'method' must not be null");
+
 		MergedAnnotation<Command> classAnn = MergedAnnotations.from(commandBeanType, SearchStrategy.TYPE_HIERARCHY)
 				.get(Command.class);
 		MergedAnnotation<Command> methodAnn = MergedAnnotations.from(method, SearchStrategy.TYPE_HIERARCHY)
@@ -211,8 +219,7 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 		methodCommandExceptionResolver.exceptionResolverMethodResolver = exceptionResolverMethodResolver;
 		builder.withErrorHandling().resolver(methodCommandExceptionResolver);
 
-		CommandRegistration registration = builder.build();
-		return registration;
+		return builder.build();
 	}
 
 	private void onCommandParameter(MethodParameter mp, Builder builder) {
@@ -351,11 +358,13 @@ class CommandRegistrationFactoryBean implements FactoryBean<CommandRegistration>
 
 	private static class MethodCommandExceptionResolver implements CommandExceptionResolver {
 
+		@SuppressWarnings("NullAway.Init")
 		Object bean;
+		@SuppressWarnings("NullAway.Init")
 		ExceptionResolverMethodResolver exceptionResolverMethodResolver;
 
 		@Override
-		public CommandHandlingResult resolve(Exception ex) {
+		public @Nullable CommandHandlingResult resolve(Exception ex) {
 			Method exceptionHandlerMethod = exceptionResolverMethodResolver.resolveMethodByThrowable(ex);
 			if (exceptionHandlerMethod == null) {
 				return null;

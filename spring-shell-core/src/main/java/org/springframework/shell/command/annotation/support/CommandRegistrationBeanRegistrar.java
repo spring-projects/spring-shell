@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -42,6 +43,7 @@ import org.springframework.util.ReflectionUtils.MethodFilter;
  * {@link Command @Command} class.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public final class CommandRegistrationBeanRegistrar {
 
@@ -100,8 +102,7 @@ public final class CommandRegistrationBeanRegistrar {
 	}
 
 	private BeanDefinition createCommandClassBeanDefinition(Class<?> type) {
-		RootBeanDefinition definition = new RootBeanDefinition(type);
-		return definition;
+		return new RootBeanDefinition(type);
 	}
 
 	private BeanDefinition createCommandMethodBeanDefinition(Class<?> commandBeanType, String commandBeanName,
@@ -118,7 +119,7 @@ public final class CommandRegistrationBeanRegistrar {
 		return containsBeanDefinition(this.beanFactory, name);
 	}
 
-	private boolean containsBeanDefinition(BeanFactory beanFactory, String name) {
+	private boolean containsBeanDefinition(@Nullable BeanFactory beanFactory, String name) {
 		if (beanFactory instanceof ListableBeanFactory listableBeanFactory
 				&& listableBeanFactory.containsBeanDefinition(name)) {
 			return true;

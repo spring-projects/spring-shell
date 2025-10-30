@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.context.ShellContext;
 
@@ -30,6 +31,7 @@ import org.springframework.shell.context.ShellContext;
  * Interface defining contract to handle existing {@link CommandRegistration}s.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandCatalog {
 
@@ -89,9 +91,9 @@ public interface CommandCatalog {
 
 		private final Map<String, CommandRegistration> commandRegistrations = new HashMap<>();
 		private final Collection<CommandResolver> resolvers = new ArrayList<>();
-		private final ShellContext shellContext;
+		private final @Nullable ShellContext shellContext;
 
-		DefaultCommandCatalog(Collection<CommandResolver> resolvers, ShellContext shellContext) {
+		DefaultCommandCatalog(@Nullable Collection<CommandResolver> resolvers, @Nullable ShellContext shellContext) {
 			this.shellContext = shellContext;
 			if (resolvers != null) {
 				this.resolvers.addAll(resolvers);
@@ -146,7 +148,7 @@ public interface CommandCatalog {
 		 * effectively disables filtering as as we only care if mode is set to interactive
 		 * or non-interactive.
 		 */
-		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(ShellContext shellContext) {
+		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(@Nullable ShellContext shellContext) {
 			return e -> {
 				InteractionMode mim = e.getValue().getInteractionMode();
 				InteractionMode cim = shellContext != null ? shellContext.getInteractionMode() : InteractionMode.ALL;

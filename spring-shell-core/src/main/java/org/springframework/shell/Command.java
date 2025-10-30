@@ -18,9 +18,13 @@ package org.springframework.shell;
 
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+/**
+ * @author Piotr Olaszewski
+ */
 public interface Command {
 
 	/**
@@ -45,10 +49,10 @@ public interface Command {
 			this(description, null);
 		}
 
-		public Help(String description, String group) {
-			this.group = StringUtils.hasText(group) ? group : "";
-			Assert.isTrue(StringUtils.hasText(description), "Command description cannot be null or empty in group='" + this.group + "'");
+		public Help(String description, @Nullable String group) {
+			Assert.isTrue(StringUtils.hasText(description), "Command description cannot be null or empty");
 			this.description = description;
+			this.group = StringUtils.hasText(group) ? group : "";
 		}
 
 		public String getDescription() {

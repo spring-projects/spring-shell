@@ -17,10 +17,10 @@ package org.springframework.shell.tui.component.message;
 
 import java.util.UUID;
 
+import org.jspecify.annotations.Nullable;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
 
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.shell.tui.component.view.control.View;
@@ -31,6 +31,7 @@ import org.springframework.shell.tui.component.view.event.EventLoop;
  * a header.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  *
  * @see ShellMessageHeaderAccessor
  */
@@ -39,8 +40,7 @@ public final class StaticShellMessageHeaderAccessor {
 	private StaticShellMessageHeaderAccessor() {
 	}
 
-	@Nullable
-	public static UUID getId(Message<?> message) {
+	public static @Nullable UUID getId(Message<?> message) {
 		Object value = message.getHeaders().get(MessageHeaders.ID);
 		if (value == null) {
 			return null;
@@ -48,8 +48,7 @@ public final class StaticShellMessageHeaderAccessor {
 		return (value instanceof UUID ? (UUID) value : UUID.fromString(value.toString()));
 	}
 
-	@Nullable
-	public static Long getTimestamp(Message<?> message) {
+	public static @Nullable Long getTimestamp(Message<?> message) {
 		Object value = message.getHeaders().get(MessageHeaders.TIMESTAMP);
 		if (value == null) {
 			return null;
@@ -57,14 +56,12 @@ public final class StaticShellMessageHeaderAccessor {
 		return (value instanceof Long ? (Long) value : Long.parseLong(value.toString()));
 	}
 
-	@Nullable
-	public static Integer getPriority(Message<?> message) {
+	public static @Nullable Integer getPriority(Message<?> message) {
 		Number priority = message.getHeaders().get(ShellMessageHeaderAccessor.PRIORITY, Number.class);
 		return (priority != null ? priority.intValue() : null);
 	}
 
-	@Nullable
-	public static View getView(Message<?> message) {
+	public static @Nullable View getView(Message<?> message) {
 		View view = message.getHeaders().get(ShellMessageHeaderAccessor.VIEW, View.class);
 		return view;
 	}
@@ -90,9 +87,8 @@ public final class StaticShellMessageHeaderAccessor {
 	 * @param message the message to get a header from.
 	 * @return the {@link EventLoop.Type} header if present.
 	 */
-	public static EventLoop.Type getEventType(Message<?> message) {
-		EventLoop.Type eventType = message.getHeaders()
+	public static EventLoop.@Nullable Type getEventType(Message<?> message) {
+		return message.getHeaders()
 				.get(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.class);
-		return eventType;
 	}
 }

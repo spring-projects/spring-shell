@@ -23,6 +23,7 @@ import java.util.TreeMap;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ import org.springframework.util.Assert;
  * Default implementation of a {@link Screen}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class DefaultScreen implements Screen, DisplayLines {
 
@@ -96,7 +98,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 	}
 
 	@Override
-	public Screen clip(int x, int y, int width, int height) {
+	public @Nullable Screen clip(int x, int y, int width, int height) {
 		return null;
 	}
 
@@ -169,14 +171,14 @@ public class DefaultScreen implements Screen, DisplayLines {
 	 */
 	private static class DefaultScreenItem implements ScreenItem {
 
-		CharSequence content;
+		@Nullable CharSequence content;
 		int foreground = -1;
 		int background = -1;
 		int style = -1;
 		int border;
 
 		@Override
-		public CharSequence getContent() {
+		public @Nullable CharSequence getContent() {
 			return content;
 		}
 
@@ -242,7 +244,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 	private class Layer {
 		DefaultScreenItem[][] items = new DefaultScreenItem[rows][columns];
 
-		DefaultScreenItem getScreenItem(int x, int y) {
+		@Nullable DefaultScreenItem getScreenItem(int x, int y) {
 			if (y < rows && x < columns) {
 				if (items[y][x] == null) {
 					items[y][x] = new DefaultScreenItem();
@@ -362,7 +364,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 		}
 
 		@Override
-		public void text(String text, Rectangle rect, HorizontalAlign hAlign, VerticalAlign vAlign) {
+		public void text(String text, Rectangle rect, @Nullable HorizontalAlign hAlign, @Nullable VerticalAlign vAlign) {
 			int x = rect.x();
 			if (hAlign == HorizontalAlign.CENTER) {
 				x = x + rect.width() / 2;
@@ -391,6 +393,9 @@ public class DefaultScreen implements Screen, DisplayLines {
 					continue;
 				}
 				DefaultScreenItem item = layer.getScreenItem(i, y);
+				if (item == null) {
+					continue;
+				}
 				if (i > x) {
 					item.border |= ScreenItem.BORDER_RIGHT;
 				}
@@ -410,6 +415,9 @@ public class DefaultScreen implements Screen, DisplayLines {
 					continue;
 				}
 				DefaultScreenItem item = layer.getScreenItem(x, i);
+				if (item == null) {
+					continue;
+				}
 				if (i > y) {
 					item.border |= ScreenItem.BORDER_BOTTOM;
 				}

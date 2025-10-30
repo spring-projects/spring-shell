@@ -15,13 +15,15 @@
  */
 package org.springframework.shell.result;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.lang.Nullable;
 
+/**
+ * @author Piotr Olaszewski
+ */
 public class ResultHandlerNotFoundException extends ResultHandlingException {
 
-	@Nullable
-	private final TypeDescriptor resultType;
+	private final @Nullable TypeDescriptor resultType;
 
 	/**
 	 * Create a new handling executor not found exception.
@@ -37,8 +39,7 @@ public class ResultHandlerNotFoundException extends ResultHandlingException {
 	/**
 	 * Return the source type that was requested to convert from.
 	 */
-	@Nullable
-	public TypeDescriptor getResultType() {
+	public @Nullable TypeDescriptor getResultType() {
 		return this.resultType;
 	}
 }

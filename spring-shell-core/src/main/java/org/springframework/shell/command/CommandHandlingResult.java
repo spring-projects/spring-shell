@@ -15,12 +15,13 @@
  */
 package org.springframework.shell.command;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holder for handling some processing, typically with {@link CommandExceptionResolver}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface CommandHandlingResult {
 
@@ -29,8 +30,7 @@ public interface CommandHandlingResult {
 	 *
 	 * @return a message
 	 */
-	@Nullable
-	String message();
+	@Nullable String message();
 
 	/**
 	 * Gets an exit code for this {@code CommandHandlingResult}. Exit code only has meaning
@@ -38,7 +38,7 @@ public interface CommandHandlingResult {
 	 *
 	 * @return an exit code
 	 */
-	Integer exitCode();
+	@Nullable Integer exitCode();
 
 	/**
 	 * Indicate whether this {@code CommandHandlingResult} has a result.
@@ -80,31 +80,31 @@ public interface CommandHandlingResult {
 	 * @param exitCode the exit code
 	 * @return instance of {@code CommandHandlingResult}
 	 */
-	public static CommandHandlingResult of(@Nullable String message, Integer exitCode) {
+	public static CommandHandlingResult of(@Nullable String message, @Nullable Integer exitCode) {
 		return new DefaultHandlingResult(message, exitCode);
 	}
 
 	static class DefaultHandlingResult implements CommandHandlingResult {
 
-		private final String message;
-		private final Integer exitCode;
+		private final @Nullable String message;
+		private final @Nullable Integer exitCode;
 
 		DefaultHandlingResult(String message) {
 			this(message, null);
 		}
 
-		DefaultHandlingResult(String message, Integer exitCode) {
+		DefaultHandlingResult(@Nullable String message, @Nullable Integer exitCode) {
 			this.message = message;
 			this.exitCode = exitCode;
 		}
 
 		@Override
-		public String message() {
+		public @Nullable String message() {
 			return message;
 		}
 
 		@Override
-		public Integer exitCode() {
+		public @Nullable Integer exitCode() {
 			return exitCode;
 		}
 

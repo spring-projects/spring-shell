@@ -18,6 +18,7 @@ package org.springframework.shell.tui.component.view.control;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +29,13 @@ import org.springframework.shell.tui.component.view.event.KeyHandler;
 import org.springframework.shell.tui.component.view.screen.Screen;
 import org.springframework.shell.tui.geom.Position;
 import org.springframework.shell.tui.geom.Rectangle;
+import org.springframework.util.StringUtils;
 
 /**
  * {@code InputView} is used as a text input.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class InputView extends BoxView {
 
@@ -104,9 +107,11 @@ public class InputView extends BoxView {
 		dispatch(ShellMessageBuilder.ofView(this, InputViewTextChangeEvent.of(this, oldText, newText)));
 	}
 
-	private void add(String data) {
+	private void add(@Nullable String data) {
 		String oldText = text.stream().collect(Collectors.joining());
-		text.add(cursorIndex, data);
+		if (StringUtils.hasText(data)) {
+			text.add(cursorIndex, data);
+		}
 		moveCursor(1);
 		String newText = text.stream().collect(Collectors.joining());
 		dispatchTextChange(oldText, newText);

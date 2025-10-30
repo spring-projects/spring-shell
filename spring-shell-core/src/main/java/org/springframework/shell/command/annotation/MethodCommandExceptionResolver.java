@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.jline.terminal.Terminal;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,24 +34,27 @@ import org.springframework.shell.command.invocation.InvocableShellMethod;
 import org.springframework.shell.command.invocation.ShellMethodArgumentResolverComposite;
 import org.springframework.util.Assert;
 
+/**
+ * @author Piotr Olaszewski
+ */
 public class MethodCommandExceptionResolver implements CommandExceptionResolver {
 
 	private final static Logger log = LoggerFactory.getLogger(MethodCommandExceptionResolver.class);
 	private final Object bean;
-	private final Terminal terminal;
+	private final @Nullable Terminal terminal;
 
 	public MethodCommandExceptionResolver(Object bean) {
 		this(bean, null);
 	}
 
-	public MethodCommandExceptionResolver(Object bean, Terminal terminal) {
+	public MethodCommandExceptionResolver(Object bean, @Nullable Terminal terminal) {
 		Assert.notNull(bean, "Target bean must be set");
 		this.bean = bean;
 		this.terminal = terminal;
 	}
 
 	@Override
-	public CommandHandlingResult resolve(Exception ex) {
+	public @Nullable CommandHandlingResult resolve(Exception ex) {
 		try {
 			ExceptionResolverMethodResolver resolver = new ExceptionResolverMethodResolver(bean.getClass());
 			Method exceptionResolverMethod = resolver.resolveMethodByThrowable(ex);
@@ -121,9 +125,8 @@ public class MethodCommandExceptionResolver implements CommandExceptionResolver 
 		}
 
 		@Override
-		public Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
-			Terminal terminal = message.getHeaders().get("terminal", Terminal.class);
-			return terminal;
+		public @Nullable Object resolveArgument(MethodParameter parameter, Message<?> message) throws Exception {
+			return message.getHeaders().get("terminal", Terminal.class);
 		}
 
 	}

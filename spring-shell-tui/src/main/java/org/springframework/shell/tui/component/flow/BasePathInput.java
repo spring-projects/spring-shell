@@ -22,6 +22,7 @@ import java.util.function.Function;
 
 import org.jline.utils.AttributedString;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.PathInput.PathInputContext;
 import org.springframework.shell.tui.component.flow.ComponentFlow.BaseBuilder;
 import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
@@ -30,19 +31,20 @@ import org.springframework.shell.tui.component.flow.ComponentFlow.Builder;
  * Base impl for {@link PathInputSpec}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public abstract class BasePathInput extends BaseInput<PathInputSpec> implements PathInputSpec {
 
-	private String name;
-	private String resultValue;
-	private ResultMode resultMode;
-	private String defaultValue;
-	private Function<PathInputContext, List<AttributedString>> renderer;
+	private @Nullable String name;
+	private @Nullable String resultValue;
+	private @Nullable ResultMode resultMode;
+	private @Nullable String defaultValue;
+	private @Nullable Function<PathInputContext, List<AttributedString>> renderer;
 	private List<Consumer<PathInputContext>> preHandlers = new ArrayList<>();
 	private List<Consumer<PathInputContext>> postHandlers = new ArrayList<>();
 	private boolean storeResult = true;
-	private String templateLocation;
-	private Function<PathInputContext, String> next;
+	private @Nullable String templateLocation;
+	private @Nullable Function<PathInputContext, String> next;
 
 	public BasePathInput(BaseBuilder builder, String id) {
 		super(builder, id);
@@ -119,27 +121,27 @@ public abstract class BasePathInput extends BaseInput<PathInputSpec> implements 
 		return this;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return name;
 	}
 
-	public String getResultValue() {
+	public @Nullable String getResultValue() {
 		return resultValue;
 	}
 
-	public ResultMode getResultMode() {
+	public @Nullable ResultMode getResultMode() {
 		return resultMode;
 	}
 
-	public String getDefaultValue() {
+	public @Nullable String getDefaultValue() {
 		return defaultValue;
 	}
 
-	public Function<PathInputContext, List<AttributedString>> getRenderer() {
+	public @Nullable Function<PathInputContext, List<AttributedString>> getRenderer() {
 		return renderer;
 	}
 
-	public String getTemplateLocation() {
+	public @Nullable String getTemplateLocation() {
 		return templateLocation;
 	}
 
@@ -155,7 +157,7 @@ public abstract class BasePathInput extends BaseInput<PathInputSpec> implements 
 		return storeResult;
 	}
 
-	public Function<PathInputContext, String> getNext() {
+	public @Nullable Function<PathInputContext, String> getNext() {
 		return next;
 	}
 }

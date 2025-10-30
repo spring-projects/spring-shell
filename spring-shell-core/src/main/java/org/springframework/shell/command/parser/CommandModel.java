@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.parser.ParserConfig.Feature;
 
@@ -30,6 +30,7 @@ import org.springframework.shell.command.parser.ParserConfig.Feature;
  * those are used with parser model.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class CommandModel {
 
@@ -41,12 +42,11 @@ public class CommandModel {
 		buildModel(registrations);
 	}
 
-	@Nullable
-	CommandInfo getRootCommand(String command) {
+	@Nullable CommandInfo getRootCommand(String command) {
 		return rootCommands.get(command);
 	}
 
-	CommandInfo resolve(List<String> commands) {
+	@Nullable CommandInfo resolve(List<String> commands) {
 		CommandInfo info = null;
 		boolean onRoot = true;
 		for (String commandx : commands) {
@@ -56,6 +56,9 @@ public class CommandModel {
 				onRoot = false;
 			}
 			else {
+				if (info == null) {
+					continue;
+				}
 				Optional<CommandInfo> nextInfo = info.getChildren().stream()
 					.filter(i -> i.command.equals(command))
 					.findFirst();
@@ -103,7 +106,7 @@ public class CommandModel {
 	// root1 sub1
 	// root1 sub2
 
-	private CommandInfo getOrCreate(String[] commands, CommandRegistration registration) {
+	private @Nullable CommandInfo getOrCreate(String[] commands, CommandRegistration registration) {
 		CommandInfo ret = null;
 
 		CommandInfo parent = null;
@@ -122,6 +125,10 @@ public class CommandModel {
 				continue;
 			}
 
+			if (parent == null) {
+				continue;
+			}
+
 			CommandInfo children = parent.getChildren(command);
 			if (children == null) {
 				children = new CommandInfo(key, i < commands.length - 1 ? null : registration, parent);
@@ -135,7 +142,7 @@ public class CommandModel {
 
 		}
 
-		if (ret.registration == null) {
+		if (ret != null && ret.registration == null) {
 			ret.registration = registration;
 		}
 		return ret;
@@ -170,12 +177,12 @@ public class CommandModel {
 	 */
 	static class CommandInfo {
 		String command;
-		CommandRegistration registration;
-		CommandInfo parent;
+		@Nullable CommandRegistration registration;
+		@Nullable CommandInfo parent;
 		// private List<CommandInfo> children = new ArrayList<>();
 		private Map<String, CommandInfo> children = new HashMap<>();
 
-		CommandInfo(String command, CommandRegistration registration, CommandInfo parent) {
+		CommandInfo(String command, @Nullable CommandRegistration registration, @Nullable CommandInfo parent) {
 			this.registration = registration;
 			this.parent = parent;
 			this.command = command;
@@ -212,7 +219,7 @@ public class CommandModel {
 			this.children.put(command, children);
 		}
 
-		CommandInfo getChildren(String command) {
+		@Nullable CommandInfo getChildren(String command) {
 			return children.get(command);
 			// return children.stream()
 			// 	.filter(c -> c.command.equals(command))

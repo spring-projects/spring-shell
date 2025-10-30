@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.jline.terminal.Terminal;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.style.ThemeResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -32,13 +33,14 @@ import org.springframework.util.StringUtils;
  * Builder that can be used to configure and create a {@link TerminalUI}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class TerminalUIBuilder {
 
 	private final Terminal terminal;
 	private final Set<TerminalUICustomizer> customizers;
-	private final ThemeResolver themeResolver;
-	private final String themeName;
+	private final @Nullable ThemeResolver themeResolver;
+	private final @Nullable String themeName;
 
 	/**
 	 * Create a new {@link TerminalUIBuilder} instance.
@@ -65,8 +67,8 @@ public class TerminalUIBuilder {
 	 * @param themeResolver the theme resolver
 	 * @param themeName the theme name
 	 */
-	public TerminalUIBuilder(Terminal terminal, Set<TerminalUICustomizer> customizers, ThemeResolver themeResolver,
-			String themeName) {
+	public TerminalUIBuilder(Terminal terminal, Set<TerminalUICustomizer> customizers, @Nullable ThemeResolver themeResolver,
+			@Nullable String themeName) {
 		this.terminal = terminal;
 		this.customizers = customizers;
 		this.themeResolver = themeResolver;

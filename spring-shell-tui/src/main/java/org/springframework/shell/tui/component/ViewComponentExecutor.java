@@ -18,6 +18,7 @@ package org.springframework.shell.tui.component;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +30,13 @@ import org.springframework.shell.tui.component.ViewComponent.ViewComponentRun;
  * component in a thread so that it doesn't need to block from a command.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ViewComponentExecutor implements AutoCloseable {
 
 	private final Logger log = LoggerFactory.getLogger(ViewComponentExecutor.class);
 	private final SimpleAsyncTaskExecutor executor;
-	private Future<?> future;
+	private @Nullable Future<?> future;
 
 	public ViewComponentExecutor() {
 		this.executor = new SimpleAsyncTaskExecutor();

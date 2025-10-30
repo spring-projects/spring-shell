@@ -26,6 +26,7 @@ import org.jline.reader.EOFError;
 import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.CompletingParsedLine;
 
 /**
@@ -34,6 +35,7 @@ import org.springframework.shell.CompletingParsedLine;
  *
  * @author Original JLine author
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class ExtendedDefaultParser implements Parser {
 
@@ -238,10 +240,10 @@ public class ExtendedDefaultParser implements Parser {
 
 		private final int cursor;
 
-		private final String openingQuote;
+		private final @Nullable String openingQuote;
 
 		public ExtendedArgumentList(final String line, final List<String> words, final int wordIndex,
-				final int wordCursor, final int cursor, final String openingQuote) {
+				final int wordCursor, final int cursor, final @Nullable String openingQuote) {
 			this.line = line;
 			this.words = Collections.unmodifiableList(Objects.requireNonNull(words));
 			this.wordIndex = wordIndex;

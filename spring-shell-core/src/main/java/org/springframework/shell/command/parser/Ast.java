@@ -29,6 +29,7 @@ import java.util.List;
  * arguments makes sense which happen later when ast tree is visited.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface Ast {
 
@@ -82,7 +83,9 @@ public interface Ast {
 						break;
 					case OPTION:
 						optionNode = new OptionNode(token, token.getValue());
-						commandNode.addChildNode(optionNode);
+						if (commandNode != null) {
+							commandNode.addChildNode(optionNode);
+						}
 						break;
 					case ARGUMENT:
 						if (optionNode != null) {
@@ -91,7 +94,9 @@ public interface Ast {
 						}
 						else {
 							CommandArgumentNode commandArgumentNode = new CommandArgumentNode(token, commandNode);
-							commandNode.addChildNode(commandArgumentNode);
+							if (commandNode != null) {
+								commandNode.addChildNode(commandArgumentNode);
+							}
 						}
 						break;
 					case DOUBLEDASH:

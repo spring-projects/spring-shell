@@ -45,8 +45,8 @@ public class GridView extends BoxView {
 
 	private final static Logger log = LoggerFactory.getLogger(GridView.class);
 	private List<GridItem> gridItems = new ArrayList<>();
-	private int[] columnSize;
-	private int[] rowSize;
+	private int[] columnSize = new int[0];
+	private int[] rowSize = new int[0];
 	private int minWidth;
 	private int minHeight;
 	private int gapRows;
@@ -205,7 +205,11 @@ public class GridView extends BoxView {
 		return args -> {
 			View focus = null;
 			for (GridItem i : gridItems) {
-				MouseHandlerResult r = i.view.getMouseHandler().handle(args);
+				MouseHandler mouseHandler = i.view.getMouseHandler();
+				if (mouseHandler == null) {
+					continue;
+				}
+				MouseHandlerResult r = mouseHandler.handle(args);
 				if (r.focus() != null) {
 					focus = r.focus();
 					break;
@@ -233,8 +237,9 @@ public class GridView extends BoxView {
 				found = true;
 			}
 		}
-		if (toFocus != null) {
-			getViewService().setFocus(toFocus);
+		ViewService viewService = getViewService();
+		if (toFocus != null && viewService != null) {
+			viewService.setFocus(toFocus);
 		}
 	}
 

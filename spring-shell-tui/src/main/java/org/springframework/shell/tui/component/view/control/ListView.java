@@ -24,7 +24,7 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.control.cell.ListCell;
 import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
@@ -45,6 +45,7 @@ import org.springframework.util.Assert;
  * </ul>
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ListView<T> extends BoxView {
 
@@ -254,7 +255,7 @@ public class ListView<T> extends BoxView {
 		}
 	}
 
-	private T selectedItem() {
+	private @Nullable T selectedItem() {
 		T selectedItem = null;
 		int active = start + pos;
 		if (active >= 0 && active < items.size()) {
@@ -301,9 +302,9 @@ public class ListView<T> extends BoxView {
 	 *
 	 * @param item the list view item
 	 */
-	public record ListViewItemEventArgs<T>(T item) implements ViewEventArgs {
+	public record ListViewItemEventArgs<T>(@Nullable T item) implements ViewEventArgs {
 
-		public static <T> ListViewItemEventArgs<T> of(T item) {
+		public static <T> ListViewItemEventArgs<T> of(@Nullable T item) {
 			return new ListViewItemEventArgs<T>(item);
 		}
 	}
@@ -316,7 +317,7 @@ public class ListView<T> extends BoxView {
 	 */
 	public record ListViewOpenSelectedItemEvent<T>(View view, ListViewItemEventArgs<T> args) implements ViewEvent {
 
-		public static <T> ListViewOpenSelectedItemEvent<T> of(View view, T item) {
+		public static <T> ListViewOpenSelectedItemEvent<T> of(View view, @Nullable T item) {
 			return new ListViewOpenSelectedItemEvent<T>(view, ListViewItemEventArgs.of(item));
 		}
 	}
@@ -329,7 +330,7 @@ public class ListView<T> extends BoxView {
 	 */
 	public record ListViewSelectedItemChangedEvent<T>(View view, ListViewItemEventArgs<T> args) implements ViewEvent {
 
-		public static <T> ListViewSelectedItemChangedEvent<T> of(View view, T item) {
+		public static <T> ListViewSelectedItemChangedEvent<T> of(View view, @Nullable T item) {
 			return new ListViewSelectedItemChangedEvent<T>(view, ListViewItemEventArgs.of(item));
 		}
 	}

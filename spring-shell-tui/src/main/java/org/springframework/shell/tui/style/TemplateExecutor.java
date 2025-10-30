@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jline.utils.AttributedString;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
@@ -32,6 +33,7 @@ import org.stringtemplate.v4.misc.STMessage;
  * Template executor which knows to use styling.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class TemplateExecutor {
 
@@ -54,7 +56,7 @@ public class TemplateExecutor {
 	 * @param attributes the ST template attributes
 	 * @return a rendered template
 	 */
-	public AttributedString render(String template, Map<String, Object> attributes) {
+	public AttributedString render(String template, Map<String, @Nullable Object> attributes) {
 		STGroup group = new STGroup();
 		group.setListener(ERROR_LISTENER);
 		group.registerRenderer(String.class, renderer1);
@@ -76,7 +78,7 @@ public class TemplateExecutor {
 	 * @param attributes the ST template attributes
 	 * @return a rendered template
 	 */
-	public AttributedString renderGroup(String template, Map<String, Object> attributes) {
+	public AttributedString renderGroup(String template, Map<String, @Nullable Object> attributes) {
 		STGroup group = new STGroupString(template);
 		group.setListener(ERROR_LISTENER);
 		group.registerRenderer(String.class, renderer1);

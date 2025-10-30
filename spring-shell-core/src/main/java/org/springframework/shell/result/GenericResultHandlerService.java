@@ -15,43 +15,40 @@
  */
 package org.springframework.shell.result;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.CopyOnWriteArraySet;
-
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.lang.Nullable;
 import org.springframework.shell.ResultHandler;
 import org.springframework.shell.ResultHandlerService;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base {@link ResultHandlerService} implementation suitable for use in most
  * environments.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class GenericResultHandlerService implements ResultHandlerService {
 
 	private final ResultHandlers resultHandlers = new ResultHandlers();
 
 	@Override
-	public void handle(Object source) {
+	public void handle(@Nullable Object source) {
 		handle(source, TypeDescriptor.forObject(source));
 	}
 
 	@Override
-	public void handle(Object result, TypeDescriptor resultType) {
+	public void handle(@Nullable Object result, @Nullable TypeDescriptor resultType) {
 		if (result == null) {
 			return;
 		}
@@ -80,8 +77,8 @@ public class GenericResultHandlerService implements ResultHandlerService {
 	/**
 	 * Add a plain result handler to this registry.
 	 *
-	 * @param <T> the type of result handler
-	 * @param resultType the class of a result type
+	 * @param <T>           the type of result handler
+	 * @param resultType    the class of a result type
 	 * @param resultHandler the result handler
 	 */
 	public <T> void addResultHandler(Class<T> resultType, ResultHandler<? super T> resultHandler) {
@@ -97,12 +94,11 @@ public class GenericResultHandlerService implements ResultHandlerService {
 		this.resultHandlers.add(handler);
 	}
 
-	private GenericResultHandler getResultHandler(TypeDescriptor resultType) {
+	private @Nullable GenericResultHandler getResultHandler(@Nullable TypeDescriptor resultType) {
 		return this.resultHandlers.find(resultType);
 	}
 
-	@Nullable
-	private Object handleResultHandlerNotFound(
+	private @Nullable Object handleResultHandlerNotFound(
 			@Nullable Object source, @Nullable TypeDescriptor sourceType) {
 		if (source == null) {
 			return null;
@@ -113,8 +109,7 @@ public class GenericResultHandlerService implements ResultHandlerService {
 		throw new ResultHandlerNotFoundException(sourceType);
 	}
 
-	@Nullable
-	private ResolvableType[] getRequiredTypeInfo(Class<?> handlerClass, Class<?> genericIfc) {
+	private ResolvableType @Nullable [] getRequiredTypeInfo(Class<?> handlerClass, Class<?> genericIfc) {
 		ResolvableType resolvableType = ResolvableType.forClass(handlerClass).as(genericIfc);
 		ResolvableType[] generics = resolvableType.getGenerics();
 		if (generics.length < 1) {
@@ -191,8 +186,7 @@ public class GenericResultHandlerService implements ResultHandlerService {
 			Set<Class<?>> handlerTypes = handler.getHandlerTypes();
 			if (handlerTypes == null) {
 				this.globalHandlers.add(handler);
-			}
-			else {
+			} else {
 				for (Class<?> handlerType : handlerTypes) {
 					getMatchableConverters(handlerType).add(handler);
 				}
@@ -203,7 +197,11 @@ public class GenericResultHandlerService implements ResultHandlerService {
 			return this.handlers.computeIfAbsent(handlerType, k -> new ResultHandlersForType());
 		}
 
-		public GenericResultHandler find(TypeDescriptor resultType) {
+		public @Nullable GenericResultHandler find(@Nullable TypeDescriptor resultType) {
+			if (resultType == null) {
+				return null;
+			}
+
 			List<Class<?>> resultCandidates = getClassHierarchy(resultType.getType());
 			for (Class<?> resultCandidate : resultCandidates) {
 				GenericResultHandler handler = getRegisteredHandler(resultType, resultCandidate);
@@ -214,8 +212,7 @@ public class GenericResultHandlerService implements ResultHandlerService {
 			return null;
 		}
 
-		@Nullable
-		private GenericResultHandler getRegisteredHandler(TypeDescriptor resultType, Class<?> handlerType) {
+		private @Nullable GenericResultHandler getRegisteredHandler(TypeDescriptor resultType, Class<?> handlerType) {
 			ResultHandlersForType resultHandlersForType = this.handlers.get(handlerType);
 			if (resultHandlersForType != null) {
 				GenericResultHandler handler = resultHandlersForType.getHandler(resultType);
@@ -261,14 +258,14 @@ public class GenericResultHandlerService implements ResultHandlerService {
 		}
 
 		private void addInterfacesToClassHierarchy(Class<?> type, boolean asArray,
-				List<Class<?>> hierarchy, Set<Class<?>> visited) {
+												   List<Class<?>> hierarchy, Set<Class<?>> visited) {
 			for (Class<?> implementedInterface : type.getInterfaces()) {
 				addToClassHierarchy(hierarchy.size(), implementedInterface, asArray, hierarchy, visited);
 			}
 		}
 
 		private void addToClassHierarchy(int index, Class<?> type, boolean asArray,
-				List<Class<?>> hierarchy, Set<Class<?>> visited) {
+										 List<Class<?>> hierarchy, Set<Class<?>> visited) {
 			if (asArray) {
 				type = Array.newInstance(type, 0).getClass();
 			}
@@ -278,7 +275,8 @@ public class GenericResultHandlerService implements ResultHandlerService {
 		}
 	}
 
-	private static void invokeHandler(GenericResultHandler handler, Object result, TypeDescriptor resultType) {
-		handler.handle(result, resultType);;
+	private static void invokeHandler(GenericResultHandler handler, Object result, @Nullable TypeDescriptor resultType) {
+		requireNonNull(resultType);
+		handler.handle(result, resultType);
 	}
 }

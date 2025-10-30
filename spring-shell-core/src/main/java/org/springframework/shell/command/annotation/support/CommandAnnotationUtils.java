@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.annotation.MergedAnnotation;
-import org.springframework.lang.Nullable;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.util.StringUtils;
@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
  * defaults and every field may have its own logic.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 class CommandAnnotationUtils {
 

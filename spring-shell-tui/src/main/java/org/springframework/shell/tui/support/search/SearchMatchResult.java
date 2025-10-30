@@ -15,10 +15,13 @@
  */
 package org.springframework.shell.tui.support.search;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Interface defining result used in {@link SearchMatch}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface SearchMatchResult {
 
@@ -55,7 +58,7 @@ public interface SearchMatchResult {
 	 *
 	 * @return {@link SearchMatchAlgorithm} handling a search
 	 */
-	SearchMatchAlgorithm getAlgorithm();
+	@Nullable SearchMatchAlgorithm getAlgorithm();
 
 	/**
 	 * Construct {@link SearchMatchResult} with given parameters.
@@ -66,7 +69,7 @@ public interface SearchMatchResult {
 	 * @param positions the positions
 	 * @return a search match result
 	 */
-	public static SearchMatchResult of(int start, int end, int score, int[] positions, SearchMatchAlgorithm algo) {
+	public static SearchMatchResult of(int start, int end, int score, int[] positions, @Nullable SearchMatchAlgorithm algo) {
 		return new DefaultResult(start, end, score, positions, algo);
 	}
 
@@ -84,9 +87,9 @@ public interface SearchMatchResult {
 		int end;
 		int score;
 		int[] positions;
-		SearchMatchAlgorithm algo;
+		@Nullable SearchMatchAlgorithm algo;
 
-		DefaultResult(int start, int end, int score, int[] positions, SearchMatchAlgorithm algo) {
+		DefaultResult(int start, int end, int score, int[] positions, @Nullable SearchMatchAlgorithm algo) {
 			this.start = start;
 			this.end = end;
 			this.score = score;
@@ -115,7 +118,7 @@ public interface SearchMatchResult {
 		}
 
 		@Override
-		public SearchMatchAlgorithm getAlgorithm() {
+		public @Nullable SearchMatchAlgorithm getAlgorithm() {
 			return algo;
 		}
 	}

@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.tui.component.context;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,12 +27,13 @@ import java.util.stream.Stream;
  * Base implementation of a {@link ComponentContext}.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 @SuppressWarnings("unchecked")
 public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedHashMap<Object, Object>
 		implements ComponentContext<C> {
 
-	private Integer terminalWidth;
+	private @Nullable Integer terminalWidth;
 
 	@Override
 	public Object get(Object key) {
@@ -63,18 +66,18 @@ public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedH
 	}
 
 	@Override
-	public Integer getTerminalWidth() {
+	public @Nullable Integer getTerminalWidth() {
 		return terminalWidth;
 	}
 
 	@Override
-	public void setTerminalWidth(Integer terminalWidth) {
+	public void setTerminalWidth(@Nullable Integer terminalWidth) {
 		this.terminalWidth = terminalWidth;
 	}
 
 	@Override
-	public Map<String, Object> toTemplateModel() {
-		Map<String, Object> attributes = new HashMap<>();
+	public Map<String, @Nullable Object> toTemplateModel() {
+		Map<String, @Nullable Object> attributes = new HashMap<>();
 		// hardcoding enclosed map values into 'rawValues'
 		// as it may contain anything
 		attributes.put("rawValues", this);

@@ -17,7 +17,7 @@ package org.springframework.shell.tui.component.view.screen;
 
 import org.jline.utils.AttributedString;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.geom.HorizontalAlign;
 import org.springframework.shell.tui.geom.Position;
 import org.springframework.shell.tui.geom.Rectangle;
@@ -29,6 +29,7 @@ import org.springframework.shell.tui.geom.VerticalAlign;
  * with visible content.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface Screen {
 
@@ -91,7 +92,7 @@ public interface Screen {
 	 * @param height the height
 	 * @return new clipped screen
 	 */
-	Screen clip(int x, int y, int width, int height);
+	@Nullable Screen clip(int x, int y, int width, int height);
 
 	/**
 	 * Interface to write into a {@link Screen}. Contains convenient methods user is

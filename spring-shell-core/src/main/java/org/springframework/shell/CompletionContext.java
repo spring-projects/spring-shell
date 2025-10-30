@@ -16,17 +16,19 @@
 
 package org.springframework.shell;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.shell.command.CommandOption;
+import org.springframework.shell.command.CommandRegistration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.shell.command.CommandOption;
-import org.springframework.shell.command.CommandRegistration;
 
 /**
  * Represents the buffer context in which completion was triggered.
  *
  * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
 public class CompletionContext {
 
@@ -36,17 +38,17 @@ public class CompletionContext {
 
 	private final int position;
 
-	private final CommandOption commandOption;
+	private final @Nullable CommandOption commandOption;
 
-	private final CommandRegistration commandRegistration;
+	private final @Nullable CommandRegistration commandRegistration;
 
 	/**
 	 *
-	 * @param words words in the buffer, excluding words for the command name
+	 * @param words     words in the buffer, excluding words for the command name
 	 * @param wordIndex the index of the word the cursor is in
-	 * @param position the position inside the current word where the cursor is
+	 * @param position  the position inside the current word where the cursor is
 	 */
-	public CompletionContext(List<String> words, int wordIndex, int position, CommandRegistration commandRegistration,  CommandOption commandOption) {
+	public CompletionContext(List<String> words, int wordIndex, int position, @Nullable CommandRegistration commandRegistration, @Nullable CommandOption commandOption) {
 		this.words = words;
 		this.wordIndex = wordIndex;
 		this.position = position;
@@ -66,11 +68,11 @@ public class CompletionContext {
 		return position;
 	}
 
-	public CommandOption getCommandOption() {
+	public @Nullable CommandOption getCommandOption() {
 		return commandOption;
 	}
 
-	public CommandRegistration getCommandRegistration() {
+	public @Nullable CommandRegistration getCommandRegistration() {
 		return commandRegistration;
 	}
 
@@ -80,7 +82,10 @@ public class CompletionContext {
 			if (!start.isEmpty()) {
 				start += " ";
 			}
-			start += currentWord().substring(0, position);
+			String currentWord = currentWord();
+			if (currentWord != null) {
+				start += currentWord.substring(0, position);
+			}
 		}
 		return start;
 	}
@@ -88,11 +93,11 @@ public class CompletionContext {
 	/**
 	 * Return the whole word the cursor is in, or {@code null} if the cursor is past the last word.
 	 */
-	public String currentWord() {
+	public @Nullable String currentWord() {
 		return wordIndex >= 0 && wordIndex < words.size() ? words.get(wordIndex) : null;
 	}
 
-	public String currentWordUpToCursor() {
+	public @Nullable String currentWordUpToCursor() {
 		String currentWord = currentWord();
 		return currentWord != null ? currentWord.substring(0, getPosition()) : null;
 	}
@@ -101,7 +106,7 @@ public class CompletionContext {
 	 * Return a copy of this context, as if the first {@literal nbWords} were not present
 	 */
 	public CompletionContext drop(int nbWords) {
-		return new CompletionContext(new ArrayList<String>(words.subList(nbWords, words.size())), wordIndex - nbWords,
+		return new CompletionContext(new ArrayList<>(words.subList(nbWords, words.size())), wordIndex - nbWords,
 				position, commandRegistration, commandOption);
 	}
 
@@ -115,7 +120,7 @@ public class CompletionContext {
 	/**
 	 * Return a copy of this context with given command registration.
 	 */
-	public CompletionContext commandRegistration(CommandRegistration commandRegistration) {
+	public CompletionContext commandRegistration(@Nullable CommandRegistration commandRegistration) {
 		return new CompletionContext(words, wordIndex, position, commandRegistration, commandOption);
 	}
 }

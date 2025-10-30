@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.tui.component.view.control;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.event.KeyEvent;
 import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
@@ -30,13 +31,14 @@ import org.springframework.util.Assert;
  * controlling main viewing area, menubar, statusbar and modal window system.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class AppView extends BoxView {
 
-	private GridView grid;
-	private View main;
-	private View menu;
-	private View status;
+	private @Nullable GridView grid;
+	private @Nullable View main;
+	private @Nullable View menu;
+	private @Nullable View status;
 	private boolean menuVisible = true;
 	private boolean statusVisible = true;
 
@@ -51,19 +53,36 @@ public class AppView extends BoxView {
 	}
 
 	@Override
-	public void setThemeName(String themeName) {
+	public void setThemeName(@Nullable String themeName) {
+		if (themeName == null) {
+			return;
+		}
+
 		super.setThemeName(themeName);
-		main.setThemeName(themeName);
-		menu.setThemeName(themeName);
-		status.setThemeName(themeName);
+		if (main != null) {
+			main.setThemeName(themeName);
+		}
+		if (menu != null) {
+			menu.setThemeName(themeName);
+		}
+		if (status != null) {
+			status.setThemeName(themeName);
+		}
 	}
 
 	@Override
-	public void setThemeResolver(ThemeResolver themeResolver) {
+	public void setThemeResolver(@Nullable ThemeResolver themeResolver) {
 		super.setThemeResolver(themeResolver);
-		main.setThemeResolver(themeResolver);
-		menu.setThemeResolver(themeResolver);
-		status.setThemeResolver(themeResolver);
+
+		if (main != null) {
+			main.setThemeResolver(themeResolver);
+		}
+		if (menu != null) {
+			menu.setThemeResolver(themeResolver);
+		}
+		if (status != null) {
+			status.setThemeResolver(themeResolver);
+		}
 	}
 
 	private void initLayout() {
@@ -72,24 +91,48 @@ public class AppView extends BoxView {
 		grid.setColumnSize(0);
 		grid.clearItems();
 		if (menuVisible && statusVisible) {
-			grid.addItem(menu, 0, 0, 1, 1, 0, 0);
-			grid.addItem(main, 1, 0, 1, 1, 0, 0);
-			grid.addItem(status, 2, 0, 1, 1, 0, 0);
+			if (menu != null) {
+				grid.addItem(menu, 0, 0, 1, 1, 0, 0);
+			}
+			if (main != null) {
+				grid.addItem(main, 1, 0, 1, 1, 0, 0);
+			}
+			if (status != null) {
+				grid.addItem(status, 2, 0, 1, 1, 0, 0);
+			}
 		}
 		else if (!menuVisible && !statusVisible) {
-			grid.addItem(menu, 0, 0, 0, 0, 0, 0);
-			grid.addItem(main, 0, 0, 3, 1, 0, 0);
-			grid.addItem(status, 2, 0, 0, 0, 0, 0);
+			if (menu != null) {
+				grid.addItem(menu, 0, 0, 0, 0, 0, 0);
+			}
+			if (main != null) {
+				grid.addItem(main, 0, 0, 3, 1, 0, 0);
+			}
+			if (status != null) {
+				grid.addItem(status, 2, 0, 0, 0, 0, 0);
+			}
 		}
 		else if (menuVisible && !statusVisible) {
-			grid.addItem(menu, 0, 0, 1, 1, 0, 0);
-			grid.addItem(main, 1, 0, 2, 1, 0, 0);
-			grid.addItem(status, 2, 0, 0, 1, 0, 0);
+			if (menu != null) {
+				grid.addItem(menu, 0, 0, 1, 1, 0, 0);
+			}
+			if (main != null) {
+				grid.addItem(main, 1, 0, 2, 1, 0, 0);
+			}
+			if (status != null) {
+				grid.addItem(status, 2, 0, 0, 1, 0, 0);
+			}
 		}
 		else if (!menuVisible && statusVisible) {
-			grid.addItem(menu, 0, 0, 0, 1, 0, 0);
-			grid.addItem(main, 0, 0, 2, 1, 0, 0);
-			grid.addItem(status, 2, 0, 1, 1, 0, 0);
+			if (menu != null) {
+				grid.addItem(menu, 0, 0, 0, 1, 0, 0);
+			}
+			if (main != null) {
+				grid.addItem(main, 0, 0, 2, 1, 0, 0);
+			}
+			if (status != null) {
+				grid.addItem(status, 2, 0, 1, 1, 0, 0);
+			}
 		}
 	}
 
@@ -105,6 +148,9 @@ public class AppView extends BoxView {
 
 	@Override
 	public MouseHandler getMouseHandler() {
+		if (grid == null) {
+			return super.getMouseHandler();
+		}
 		MouseHandler handler = grid.getMouseHandler();
 		return handler.thenIfNotConsumed(super.getMouseHandler());
 	}

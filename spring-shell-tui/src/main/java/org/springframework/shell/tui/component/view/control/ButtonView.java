@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.tui.component.view.control;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.tui.component.view.event.KeyHandler;
@@ -32,21 +33,22 @@ import org.springframework.shell.tui.style.StyleSettings;
  * {@code ButtonView} is a {@link View} with border and text acting as a button.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ButtonView extends BoxView {
 
-	private String text;
-	private Runnable action;
+	private @Nullable String text;
+	private @Nullable Runnable action;
 
 	public ButtonView() {
 		this(null, null);
 	}
 
-	public ButtonView(String text) {
+	public ButtonView(@Nullable String text) {
 		this(text, null);
 	}
 
-	public ButtonView(String text, Runnable action) {
+	public ButtonView(@Nullable String text, @Nullable Runnable action) {
 		this.text = text;
 		this.action = action;
 	}
@@ -84,7 +86,7 @@ public class ButtonView extends BoxView {
 		super.drawInternal(screen);
 	}
 
-	public Dimension getPreferredDimension() {
+	public @Nullable Dimension getPreferredDimension() {
 		return null;
 	}
 
