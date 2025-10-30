@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,8 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.context.TypeExcludeFilter;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -42,6 +40,7 @@ import org.springframework.util.StringUtils;
  * {@link ImportBeanDefinitionRegistrar} for {@link CommandScan @CommandScan}.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 
@@ -91,9 +90,6 @@ public class CommandScanRegistrar implements ImportBeanDefinitionRegistrar {
 		scanner.setEnvironment(this.environment);
 		scanner.setResourceLoader(this.resourceLoader);
 		scanner.addIncludeFilter(new AnnotationTypeFilter(Command.class));
-		TypeExcludeFilter typeExcludeFilter = new TypeExcludeFilter();
-		typeExcludeFilter.setBeanFactory((BeanFactory) registry);
-		scanner.addExcludeFilter(typeExcludeFilter);
 		return scanner;
 	}
 

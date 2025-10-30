@@ -253,8 +253,7 @@ public interface ShellTestClient extends Closeable {
 		@Override
 		public InteractiveShellSession run() {
 			ShellRunner runner = new InteractiveShellRunner(lineReader, promptProvider, shell, new DefaultShellContext());
-			ApplicationArguments appArgs = new DefaultApplicationArguments();
-			this.blockingQueue.add(new ShellRunnerTaskData(runner, appArgs, state));
+			this.blockingQueue.add(new ShellRunnerTaskData(runner, new String[] {}, state));
 			return this;
 		}
 
@@ -301,8 +300,7 @@ public interface ShellTestClient extends Closeable {
 		@Override
 		public NonInteractiveShellSession run() {
 			ShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
-			ApplicationArguments appArgs = new DefaultApplicationArguments(args);
-			this.blockingQueue.add(new ShellRunnerTaskData(runner, appArgs, state));
+			this.blockingQueue.add(new ShellRunnerTaskData(runner, args, state));
 			return this;
 		}
 
@@ -314,7 +312,7 @@ public interface ShellTestClient extends Closeable {
 
 	static record ShellRunnerTaskData(
 		ShellRunner runner,
-		ApplicationArguments args,
+		String[] args,
 		AtomicInteger state
 	) {}
 
@@ -340,12 +338,7 @@ public interface ShellTestClient extends Closeable {
 					try {
 						log.trace("Running {}", data.runner());
 						data.state().set(-1);
-						if (data.runner().canRun(data.args)) {
-							data.runner().run(data.args());
-						}
-						else {
-							data.runner().run(data.args().getSourceArgs());
-						}
+						data.runner().run(data.args());
 						data.state().set(0);
 						log.trace("Running done {}", data.runner());
 					} catch (Exception e) {

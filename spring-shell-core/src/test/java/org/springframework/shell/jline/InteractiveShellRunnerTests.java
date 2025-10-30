@@ -152,19 +152,6 @@ class InteractiveShellRunnerTests {
         writeThread.join();
     }
 
-
-	@Test
-	void oldApiCanRunReturnFalse() {
-        InteractiveShellRunner runner = new InteractiveShellRunner(null, null, null, null);
-		assertThat(runner.canRun(ofApplicationArguments())).isFalse();
-	}
-
-	@Test
-	void oldApiRunThrows() {
-        InteractiveShellRunner runner = new InteractiveShellRunner(null, null, null, null);
-		assertThatThrownBy(() -> runner.run(ofApplicationArguments()));
-	}
-
 	private static ApplicationArguments ofApplicationArguments(String... args) {
 		return new DefaultApplicationArguments(args);
 	}

@@ -62,16 +62,6 @@ class ScriptShellRunnerTests {
 		assertThat(shellRunner.run(new String[]{"@" + pathStr})).isTrue();
 	}
 
-	@Test
-	void oldApiCanRunReturnFalse() {
-		assertThat(runner.canRun(ofApplicationArguments())).isFalse();
-	}
-
-	@Test
-	void oldApiRunThrows() {
-		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> runner.run(ofApplicationArguments()));
-	}
-
 	private static ApplicationArguments ofApplicationArguments(String... args) {
 		return new DefaultApplicationArguments(args);
 	}

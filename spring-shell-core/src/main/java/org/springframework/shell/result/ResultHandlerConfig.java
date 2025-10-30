@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,9 @@ package org.springframework.shell.result;
 import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.shell.TerminalSizeAware;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandParserExceptionResolver;
@@ -34,12 +32,12 @@ import org.springframework.shell.jline.InteractiveShellRunner;
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 @Configuration(proxyBeanMethods = false)
 public class ResultHandlerConfig {
 
 	@Bean
-	@ConditionalOnClass(TerminalSizeAware.class)
 	public TerminalSizeAwareResultHandler terminalSizeAwareResultHandler(Terminal terminal) {
 		return new TerminalSizeAwareResultHandler(terminal);
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import org.springframework.shell.style.TemplateExecutor;
  * Creates beans for standard commands.
  *
  * @author Eric Bottard
+ * @author Mahmoud Ben Hassine
  */
 @AutoConfiguration
 @ConditionalOnClass({ Help.Command.class })
@@ -113,19 +114,8 @@ public class StandardCommandsAutoConfiguration {
 	public Version version(SpringShellProperties properties, ObjectProvider<BuildProperties> buildProperties,
 			ObjectProvider<GitProperties> gitProperties, ObjectProvider<TemplateExecutor> templateExecutor) {
 		Version version = new Version(templateExecutor.getIfAvailable());
-		version.setBuildProperties(buildProperties.getIfAvailable());
-		version.setGitProperties(gitProperties.getIfAvailable());
 		VersionCommand versionProperties = properties.getCommand().getVersion();
 		version.setTemplate(versionProperties.getTemplate());
-		version.setShowBuildArtifact(versionProperties.isShowBuildArtifact());
-		version.setShowBuildGroup(versionProperties.isShowBuildGroup());
-		version.setShowBuildName(versionProperties.isShowBuildName());
-		version.setShowBuildTime(versionProperties.isShowBuildTime());
-		version.setShowBuildVersion(versionProperties.isShowBuildVersion());
-		version.setShowGitBranch(versionProperties.isShowGitBranch());
-		version.setShowGitCommitId(versionProperties.isShowGitCommitId());
-		version.setShowGitShortCommitId(versionProperties.isShowGitShortCommitId());
-		version.setShowGitCommitTime(versionProperties.isShowGitCommitTime());
 		return version;
 	}
 }

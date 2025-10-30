@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,42 +15,13 @@
  */
 package org.springframework.shell;
 
-import org.springframework.boot.ApplicationArguments;
-
 /**
  * Interface for shell runners.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public interface ShellRunner {
-
-	/**
-	 * Checks if a particular shell runner can execute.
-	 *
-	 * For {@link #canRun(ApplicationArguments)} and
-	 * {@link #run(ApplicationArguments)} prefer {@link #run(String[])}.
-	 *
-	 * @param args the application arguments
-	 * @return true if shell runner can execute
-	 */
-	@Deprecated(since = "3.3.0", forRemoval = true)
-	default boolean canRun(ApplicationArguments args) {
-		return false;
-	}
-
-	/**
-	 * Execute application.
-	 *
-	 * For {@link #canRun(ApplicationArguments)} and
-	 * {@link #run(ApplicationArguments)} prefer {@link #run(String[])}.
-	 *
-	 * @param args the application argumets
-	 * @throws Exception in errors
-	 */
-	@Deprecated(since = "3.3.0", forRemoval = true)
-	default void run(ApplicationArguments args) throws Exception {
-		throw new UnsupportedOperationException("Should get implemented together with canRun");
-	}
 
 	/**
 	 * Execute {@code ShellRunner} with given args. Return value indicates if run

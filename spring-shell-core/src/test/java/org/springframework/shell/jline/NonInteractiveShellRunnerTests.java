@@ -82,18 +82,6 @@ class NonInteractiveShellRunnerTests {
 		assertThat(value.readInput().rawText()).isEqualTo("foobar");
 	}
 
-	@Test
-	void oldApiCanRunReturnFalse() {
-		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, null);
-		assertThat(runner.canRun(ofApplicationArguments())).isFalse();
-	}
-
-	@Test
-	void oldApiRunThrows() {
-		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, null);
-		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> runner.run(ofApplicationArguments()));
-	}
-
 	private static ApplicationArguments ofApplicationArguments(String... args) {
 		return new DefaultApplicationArguments(args);
 	}

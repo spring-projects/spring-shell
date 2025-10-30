@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,16 @@
  */
 package org.springframework.shell.boot;
 
-import java.util.List;
-
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.DefaultShellApplicationRunner;
-import org.springframework.shell.ShellApplicationRunner;
-import org.springframework.shell.ShellRunner;
 
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class ApplicationRunnerAutoConfiguration {
-
-	@Bean
-	@ConditionalOnMissingBean(ShellApplicationRunner.class)
-	public DefaultShellApplicationRunner defaultShellApplicationRunner(List<ShellRunner> shellRunners) {
-		return new DefaultShellApplicationRunner(shellRunners);
-	}
 
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.context", name = "close", havingValue = "true")
