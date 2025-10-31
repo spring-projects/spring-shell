@@ -14,6 +14,7 @@
 	<description>Samples applications of how to use Spring Shell</description>
 
 	<modules>
+		<module>spring-shell-sample-hello-world</module>
 		<module>spring-shell-sample-catalog</module>
 		<module>spring-shell-sample-commands</module>
 		<module>spring-shell-sample-e2e</module>
