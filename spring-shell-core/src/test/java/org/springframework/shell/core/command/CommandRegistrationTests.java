@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.core.ResolvableType;
-import org.springframework.shell.core.Availability;
+import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.CommandRegistration.OptionArity;
 import org.springframework.shell.core.command.CommandRegistration.TargetInfo.TargetType;
 import org.springframework.shell.core.context.InteractionMode;

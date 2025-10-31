@@ -27,7 +27,6 @@ import org.jline.utils.AttributedString;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
-import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;

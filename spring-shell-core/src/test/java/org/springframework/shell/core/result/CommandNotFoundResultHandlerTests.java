@@ -29,10 +29,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.shell.core.CommandNotFound;
+import org.springframework.shell.core.command.CommandNotFound;
 import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.result.CommandNotFoundMessageProvider;
-import org.springframework.shell.core.result.CommandNotFoundResultHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

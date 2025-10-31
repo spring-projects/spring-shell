@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.shell.core.Availability;
+import org.springframework.shell.core.command.availability.Availability;
 
 /**
  * Annotation marking a method having {@link Availability}.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.standard;
+package org.springframework.shell.core;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,8 +25,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 import org.springframework.util.StringUtils;
 
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;

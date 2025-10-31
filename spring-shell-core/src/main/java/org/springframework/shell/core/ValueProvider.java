@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.standard;
+package org.springframework.shell.core;
 
 import java.util.List;
 
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 
 /**
  * Beans implementing this interface are queried during TAB completion to gather

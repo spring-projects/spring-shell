@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core;
+package org.springframework.shell.core.command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.core.command.CommandRegistration;
+
+import org.springframework.shell.core.result.ResultHandler;
 
 /**
  * A result to be handled by the {@link ResultHandler} when no command could be mapped to user input

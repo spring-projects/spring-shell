@@ -19,10 +19,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
 import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.completion.RegistrationOptionsCompletionResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

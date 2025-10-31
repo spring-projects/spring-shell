@@ -5,8 +5,7 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.shell.core.CommandNotFound;
-import org.springframework.shell.core.ResultHandler;
+import org.springframework.shell.core.command.CommandNotFound;
 import org.springframework.shell.core.result.CommandNotFoundMessageProvider.ProviderContext;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;

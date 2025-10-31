@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.standard.completion;
+package org.springframework.shell.core.completion;
 
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.standard.completion.AbstractCompletions.CommandModel;
+import org.springframework.shell.core.completion.AbstractCompletions.CommandModel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

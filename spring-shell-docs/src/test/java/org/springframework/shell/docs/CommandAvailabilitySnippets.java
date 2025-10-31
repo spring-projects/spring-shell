@@ -18,8 +18,8 @@ package org.springframework.shell.docs;
 import java.util.Calendar;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.Availability;
-import org.springframework.shell.core.AvailabilityProvider;
+import org.springframework.shell.core.command.availability.Availability;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.CommandAvailability;

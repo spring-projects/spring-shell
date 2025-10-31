@@ -37,7 +37,7 @@ import org.springframework.shell.tui.component.flow.ComponentFlow;
 import org.springframework.shell.tui.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.tui.component.flow.ResultMode;
 import org.springframework.shell.tui.component.flow.SelectItem;
-import org.springframework.shell.standard.AbstractCommand;
+import org.springframework.shell.standard.commands.AbstractCommand;
 import org.springframework.util.StringUtils;
 
 public class ComponentFlowCommands extends AbstractCommand {

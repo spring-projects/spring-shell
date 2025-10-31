@@ -21,7 +21,7 @@ import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.standard.AbstractCommand;
+import org.springframework.shell.standard.commands.AbstractCommand;
 
 public class RegisterCommands extends AbstractCommand {
 

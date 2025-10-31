@@ -19,8 +19,6 @@ package org.springframework.shell.core.result;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedCharSequence;
 
-import org.springframework.shell.core.ResultHandler;
-
 /**
  * A {@link ResultHandler} that knows how to render JLine's {@link AttributedCharSequence}.
  *

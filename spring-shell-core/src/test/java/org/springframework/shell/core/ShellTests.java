@@ -28,10 +28,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.shell.core.command.CommandNotFound;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 import org.springframework.shell.core.completion.RegistrationOptionsCompletionResolver;
 import org.springframework.shell.core.context.ShellContext;
+import org.springframework.shell.core.result.ResultHandlerService;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

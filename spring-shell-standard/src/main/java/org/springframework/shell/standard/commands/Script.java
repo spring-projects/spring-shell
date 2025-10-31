@@ -22,7 +22,6 @@ import java.io.Reader;
 import org.jline.reader.Parser;
 
 import org.springframework.shell.core.jline.FileInputProvider;
-import org.springframework.shell.standard.AbstractCommand;
 
 /**
  * A command that can read and execute other commands from a file.

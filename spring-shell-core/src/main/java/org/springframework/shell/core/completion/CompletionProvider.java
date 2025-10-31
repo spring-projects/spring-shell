@@ -18,9 +18,6 @@ package org.springframework.shell.core.completion;
 import java.util.List;
 import java.util.function.Function;
 
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
-
 /**
  * Interface resolving completion proposals.
  *

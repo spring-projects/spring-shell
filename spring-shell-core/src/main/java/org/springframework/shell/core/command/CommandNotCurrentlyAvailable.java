@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core;
+package org.springframework.shell.core.command;
+
+import org.springframework.shell.core.command.availability.Availability;
 
 /**
  * Indicates that a command exists but is currently not invokable.

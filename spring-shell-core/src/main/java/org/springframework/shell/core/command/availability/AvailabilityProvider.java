@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.shell.core.command.availability;
 
-package org.springframework.shell.core;
+import java.util.function.Supplier;
 
 /**
- * Implementations know how to deal with results of method invocations, whether normal results or exceptions thrown.
+ * Interface resolving {@link Availability}.
  *
- * @author Eric Bottard
+ * @author Janne Valkealahti
  */
-public interface ResultHandler<T> {
-
-	/**
-	 * Deal with some method execution result, whether it was the normal return value, or some kind
-	 * of {@link Throwable}.
-	 */
-	void handleResult(T result);
-
+@FunctionalInterface
+public interface AvailabilityProvider extends Supplier<Availability> {
 }

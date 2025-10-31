@@ -16,8 +16,8 @@
 package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.Availability;
-import org.springframework.shell.core.AvailabilityProvider;
+import org.springframework.shell.core.command.availability.Availability;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.CommandAvailability;

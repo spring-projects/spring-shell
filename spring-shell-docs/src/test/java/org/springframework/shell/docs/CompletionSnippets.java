@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;

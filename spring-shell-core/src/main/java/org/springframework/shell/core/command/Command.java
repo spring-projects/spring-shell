@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core;
+package org.springframework.shell.core.command;
 
 import java.util.Objects;
 

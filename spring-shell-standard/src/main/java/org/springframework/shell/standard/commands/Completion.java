@@ -15,9 +15,8 @@
  */
 package org.springframework.shell.standard.commands;
 
-import org.springframework.shell.standard.AbstractCommand;
-import org.springframework.shell.standard.completion.BashCompletions;
-import org.springframework.shell.standard.completion.ZshCompletions;
+import org.springframework.shell.core.completion.BashCompletions;
+import org.springframework.shell.core.completion.ZshCompletions;
 
 /**
  * Command to create a shell completion files, i.e. for {@code bash}.

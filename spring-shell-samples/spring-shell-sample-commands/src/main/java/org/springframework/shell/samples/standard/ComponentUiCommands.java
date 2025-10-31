@@ -28,7 +28,7 @@ import org.springframework.shell.tui.component.view.control.ProgressView;
 import org.springframework.shell.tui.component.view.control.ProgressView.ProgressViewItem;
 import org.springframework.shell.tui.geom.HorizontalAlign;
 import org.springframework.shell.tui.geom.VerticalAlign;
-import org.springframework.shell.standard.AbstractCommand;
+import org.springframework.shell.standard.commands.AbstractCommand;
 
 @Command
 public class ComponentUiCommands extends AbstractCommand {

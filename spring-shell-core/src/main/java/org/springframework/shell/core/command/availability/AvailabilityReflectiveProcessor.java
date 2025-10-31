@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core;
+package org.springframework.shell.core.command.availability;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;

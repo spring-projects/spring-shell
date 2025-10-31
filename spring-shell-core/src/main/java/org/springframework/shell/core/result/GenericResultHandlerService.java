@@ -18,8 +18,6 @@ package org.springframework.shell.core.result;
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.shell.core.ResultHandler;
-import org.springframework.shell.core.ResultHandlerService;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 

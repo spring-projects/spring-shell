@@ -18,8 +18,6 @@ package org.springframework.shell.core.result;
 
 import org.jline.terminal.Terminal;
 
-import org.springframework.shell.core.ResultHandler;
-
 /**
  * Base class for ResultHandlers that rely on JLine's {@link Terminal}.
  *

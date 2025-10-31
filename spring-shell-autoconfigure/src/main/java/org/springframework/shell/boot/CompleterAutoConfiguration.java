@@ -26,9 +26,9 @@ import org.jline.reader.ParsedLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.CompletingParsedLine;
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.jline.CompletingParsedLine;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 import org.springframework.shell.core.Shell;
 
 /**

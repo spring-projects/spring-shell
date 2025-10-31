@@ -27,7 +27,6 @@ import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.core.CompletingParsedLine;
 
 /**
  * Shameful copy-paste of JLine's {@link org.jline.reader.impl.DefaultParser} which

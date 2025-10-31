@@ -25,7 +25,6 @@ import org.jline.utils.AttributedStyle;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.shell.core.ResultHandler;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.shell.core.context.ShellContext;

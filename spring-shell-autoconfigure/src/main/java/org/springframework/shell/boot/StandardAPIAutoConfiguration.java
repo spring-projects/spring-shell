@@ -20,10 +20,10 @@ import org.springframework.boot.LazyInitializationExcludeFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.standard.CommandValueProvider;
-import org.springframework.shell.standard.EnumValueProvider;
-import org.springframework.shell.standard.FileValueProvider;
-import org.springframework.shell.standard.ValueProvider;
+import org.springframework.shell.core.CommandValueProvider;
+import org.springframework.shell.core.EnumValueProvider;
+import org.springframework.shell.core.FileValueProvider;
+import org.springframework.shell.core.ValueProvider;
 
 /**
  * Sets up all required beans for supporting the standard Shell API.

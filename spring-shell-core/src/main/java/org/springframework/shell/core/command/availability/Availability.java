@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core;
+package org.springframework.shell.core.command.availability;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;

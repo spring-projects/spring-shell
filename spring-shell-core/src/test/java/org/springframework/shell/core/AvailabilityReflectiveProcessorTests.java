@@ -21,6 +21,8 @@ import org.springframework.aot.hint.ExecutableMode;
 import org.springframework.aot.hint.ReflectionHints;
 import org.springframework.aot.hint.TypeReference;
 import org.springframework.aot.hint.annotation.Reflective;
+import org.springframework.shell.core.command.availability.Availability;
+import org.springframework.shell.core.command.availability.AvailabilityReflectiveProcessor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

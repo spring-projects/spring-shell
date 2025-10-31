@@ -18,6 +18,8 @@ package org.springframework.shell.core;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.shell.core.completion.CompletionProposal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CompletionProposalTest {

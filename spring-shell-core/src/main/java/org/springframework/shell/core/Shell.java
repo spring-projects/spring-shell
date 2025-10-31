@@ -42,11 +42,15 @@ import org.springframework.shell.core.command.*;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandExecution.CommandExecutionException;
 import org.springframework.shell.core.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 import org.springframework.shell.core.completion.CompletionResolver;
 import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.shell.core.context.ShellContext;
 import org.springframework.shell.core.exit.ExitCodeExceptionProvider;
 import org.springframework.shell.core.exit.ExitCodeMappings;
+import org.springframework.shell.core.result.ResultHandler;
+import org.springframework.shell.core.result.ResultHandlerService;
 import org.springframework.util.StringUtils;
 
 /**

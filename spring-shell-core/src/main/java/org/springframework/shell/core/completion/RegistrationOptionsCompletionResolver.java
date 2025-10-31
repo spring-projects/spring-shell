@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
 import org.springframework.shell.core.command.CommandRegistration;
 
 /**

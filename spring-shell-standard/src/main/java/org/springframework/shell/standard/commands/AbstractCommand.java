@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.standard;
+package org.springframework.shell.standard.commands;
 
 import java.util.stream.Stream;
 

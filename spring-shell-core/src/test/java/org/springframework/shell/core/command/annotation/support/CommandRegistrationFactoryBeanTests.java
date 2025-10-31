@@ -22,15 +22,14 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.Availability;
-import org.springframework.shell.core.AvailabilityProvider;
+import org.springframework.shell.core.command.availability.Availability;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.CommandRegistration.OptionArity;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.CommandAvailability;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.annotation.OptionValues;
-import org.springframework.shell.core.command.annotation.support.CommandRegistrationFactoryBean;
 import org.springframework.shell.core.completion.CompletionProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;

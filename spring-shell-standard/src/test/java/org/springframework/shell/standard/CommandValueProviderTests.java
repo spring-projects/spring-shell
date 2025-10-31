@@ -25,8 +25,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.CommandValueProvider;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 

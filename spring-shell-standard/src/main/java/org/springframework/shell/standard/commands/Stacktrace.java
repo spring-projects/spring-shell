@@ -18,7 +18,6 @@ package org.springframework.shell.standard.commands;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.shell.core.result.ThrowableResultHandler;
-import org.springframework.shell.standard.AbstractCommand;
 
 /**
  * A command to display the full stacktrace when an error occurs.

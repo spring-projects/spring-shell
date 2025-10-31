@@ -25,7 +25,6 @@ import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandExceptionResolver;
 import org.springframework.shell.core.command.CommandParserExceptionResolver;
 import org.springframework.shell.core.context.ShellContext;
-import org.springframework.shell.core.ResultHandler;
 import org.springframework.shell.core.jline.InteractiveShellRunner;
 
 /**

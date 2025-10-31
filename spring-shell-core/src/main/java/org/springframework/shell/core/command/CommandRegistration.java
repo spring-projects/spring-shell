@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.ResolvableType;
-import org.springframework.shell.core.Availability;
+import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.completion.CompletionResolver;
 import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.util.Assert;

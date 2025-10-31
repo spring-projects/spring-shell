@@ -18,8 +18,6 @@ package org.springframework.shell.core.result;
 
 import org.jline.terminal.Terminal;
 
-import org.springframework.shell.core.ResultHandler;
-
 /**
  * A simple {@link ResultHandler} that deals with Objects (hence comes as a last resort)
  * and prints the {@link Object#toString()} value of results to standard out.

@@ -17,7 +17,7 @@ package org.springframework.shell.core.jline;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.core.ResultHandler;
+import org.springframework.shell.core.result.ResultHandler;
 import org.springframework.shell.core.result.GenericResultHandlerService;
 
 import static org.assertj.core.api.Assertions.assertThat;

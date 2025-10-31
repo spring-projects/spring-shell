@@ -19,7 +19,6 @@ package org.springframework.shell.standard.commands;
 import org.jline.utils.InfoCmp;
 
 import org.springframework.shell.core.context.InteractionMode;
-import org.springframework.shell.standard.AbstractCommand;
 
 /**
  * ANSI console related commands.

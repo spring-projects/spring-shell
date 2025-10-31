@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core;
+package org.springframework.shell.core.completion;
 
 import org.jspecify.annotations.Nullable;
 

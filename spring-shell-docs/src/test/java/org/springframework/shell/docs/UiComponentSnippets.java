@@ -26,7 +26,7 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 
 import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.standard.AbstractCommand;
+import org.springframework.shell.standard.commands.AbstractCommand;
 import org.springframework.shell.tui.component.ConfirmationInput;
 import org.springframework.shell.tui.component.MultiItemSelector;
 import org.springframework.shell.tui.component.PathInput;

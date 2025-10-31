@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.standard;
+package org.springframework.shell.core;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.ResolvableType;
-import org.springframework.shell.core.CompletionContext;
-import org.springframework.shell.core.CompletionProposal;
 import org.springframework.shell.core.command.CommandOption;
+import org.springframework.shell.core.completion.CompletionContext;
+import org.springframework.shell.core.completion.CompletionProposal;
 
 /**
  * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed parameters.

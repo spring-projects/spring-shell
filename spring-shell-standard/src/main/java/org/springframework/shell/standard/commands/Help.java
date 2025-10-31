@@ -32,7 +32,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.shell.core.Utils;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
