@@ -18,7 +18,6 @@
 		<module>spring-shell-sample-catalog</module>
 		<module>spring-shell-sample-commands</module>
 		<module>spring-shell-sample-e2e</module>
-		<module>spring-shell-sample-ffm</module>
 	</modules>
 
 	<build>
