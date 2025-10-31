@@ -32,9 +32,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${spring-framework.version}</version>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-core</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jspecify</groupId>
