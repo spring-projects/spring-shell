@@ -26,6 +26,7 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.component.ConfirmationInput;
 import org.springframework.shell.tui.component.MultiItemSelector;
 import org.springframework.shell.tui.component.PathInput;
@@ -40,7 +41,6 @@ import org.springframework.shell.tui.component.PathSearch.PathSearchContext;
 import org.springframework.shell.tui.component.SingleItemSelector.SingleItemSelectorContext;
 import org.springframework.shell.tui.component.StringInput.StringInputContext;
 import org.springframework.shell.tui.component.support.SelectorItem;
-import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.util.StringUtils;
 
 public class UiComponentSnippets {
@@ -69,7 +69,7 @@ public class UiComponentSnippets {
 	}
 	// end::snippet1[]
 
-	class Dump1 extends AbstractShellComponent {
+	class Dump1 extends AbstractCommand {
 		// tag::snippet2[]
 		@Command(command = "component stringcustom", description = "String input", group = "Components")
 		public String stringInputCustom(boolean mask) {
@@ -89,7 +89,7 @@ public class UiComponentSnippets {
 	class Dump2 {
 		// tag::snippet3[]
 		@Command
-		public class ComponentCommands extends AbstractShellComponent {
+		public class ComponentCommands extends AbstractCommand {
 
 			@Command(command = "component string", description = "String input", group = "Components")
 			public String stringInput(boolean mask) {
@@ -109,7 +109,7 @@ public class UiComponentSnippets {
 	class Dump3 {
 		// tag::snippet4[]
 		@Command
-		public class ComponentCommands extends AbstractShellComponent {
+		public class ComponentCommands extends AbstractCommand {
 
 			@Command(command = "component path input", description = "Path input", group = "Components")
 			public String pathInput() {
@@ -126,7 +126,7 @@ public class UiComponentSnippets {
 	class Dump4 {
 		// tag::snippet5[]
 		@Command
-		public class ComponentCommands extends AbstractShellComponent {
+		public class ComponentCommands extends AbstractCommand {
 
 			@Command(command = "component confirmation", description = "Confirmation input", group = "Components")
 			public String confirmationInput(boolean no) {
@@ -143,7 +143,7 @@ public class UiComponentSnippets {
 	class Dump5 {
 		// tag::snippet6[]
 		@Command
-		public class ComponentCommands extends AbstractShellComponent {
+		public class ComponentCommands extends AbstractCommand {
 
 			@Command(command = "component single", description = "Single selector", group = "Components")
 			public String singleSelector() {
@@ -166,7 +166,7 @@ public class UiComponentSnippets {
 	class Dump6 {
 		// tag::snippet7[]
 		@Command
-		public class ComponentCommands extends AbstractShellComponent {
+		public class ComponentCommands extends AbstractCommand {
 
 			@Command(command = "component multi", description = "Multi selector", group = "Components")
 			public String multiSelector() {
@@ -191,7 +191,7 @@ public class UiComponentSnippets {
 
 	class Dump7 {
 		@Command
-		public class ComponentCommands extends AbstractShellComponent {
+		public class ComponentCommands extends AbstractCommand {
 
 			@Command(command = "component single", description = "Single selector", group = "Components")
 			public String singleSelector() {
@@ -215,7 +215,7 @@ public class UiComponentSnippets {
 
 	class Dump8 {
 		@Command
-		public class ComponentCommands extends AbstractShellComponent {
+		public class ComponentCommands extends AbstractCommand {
 
 			@Command(command = "component path input", description = "Path search", group = "Components")
 			public String pathSearch() {

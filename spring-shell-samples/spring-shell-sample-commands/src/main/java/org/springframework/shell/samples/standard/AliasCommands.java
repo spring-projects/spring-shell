@@ -17,15 +17,13 @@ package org.springframework.shell.samples.standard;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.command.annotation.Command;
 
-@ShellComponent
 public class AliasCommands {
 
 	private final static String DESCRIPTION = "main1 with main2 as alias";
 
-	@ShellMethod(key = { "alias anno main1", "alias anno main2" }, group = "Alias Commands", value = DESCRIPTION)
+	@Command(alias = { "alias anno main1", "alias anno main2" }, group = "Alias Commands", command = DESCRIPTION)
 	public String annoMain1() {
 		return "Hello annoMain1";
 	}

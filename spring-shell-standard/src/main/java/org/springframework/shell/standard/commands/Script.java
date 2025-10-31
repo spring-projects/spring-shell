@@ -21,10 +21,9 @@ import java.io.Reader;
 
 import org.jline.reader.Parser;
 
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.jline.FileInputProvider;
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.AbstractCommand;
 
 /**
  * A command that can read and execute other commands from a file.
@@ -32,8 +31,7 @@ import org.springframework.shell.standard.ShellMethod;
  * @author Eric Bottard
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class Script extends AbstractShellComponent {
+public class Script extends AbstractCommand {
 
     private final Parser parser;
 
@@ -55,7 +53,7 @@ public class Script extends AbstractShellComponent {
     public interface Command {
     }
 
-    @ShellMethod(value = "Read and execute commands from a file.")
+    @org.springframework.shell.command.annotation.Command(command = "Read and execute commands from a file.")
     public void script(File file) throws Exception {
         Reader reader = new FileReader(file);
         try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {

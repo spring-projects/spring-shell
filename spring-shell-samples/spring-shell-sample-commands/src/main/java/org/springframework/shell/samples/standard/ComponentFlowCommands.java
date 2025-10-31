@@ -31,23 +31,21 @@ import org.springframework.shell.command.CommandExecution.CommandParserException
 import org.springframework.shell.command.CommandParser;
 import org.springframework.shell.command.CommandParser.CommandParserException;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.tui.component.flow.ComponentFlow;
 import org.springframework.shell.tui.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.tui.component.flow.ResultMode;
 import org.springframework.shell.tui.component.flow.SelectItem;
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.util.StringUtils;
 
-@ShellComponent
-public class ComponentFlowCommands extends AbstractShellComponent {
+public class ComponentFlowCommands extends AbstractCommand {
 
 	@Autowired
 	private ComponentFlow.Builder componentFlowBuilder;
 
-	@ShellMethod(key = "flow showcase1", value = "Showcase", group = "Flow")
+	@Command(command = "flow showcase1", description = "Showcase", group = "Flow")
 	public void showcase1() {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("key1", "value1");
@@ -80,14 +78,14 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 		flow.run();
 	}
 
-	@ShellMethod(key = "flow showcase2", value = "Showcase with options", group = "Flow")
+	@Command(command = "flow showcase2", description = "Showcase with options", group = "Flow")
 	public String showcase2(
-		@ShellOption(help = "Field1 value", defaultValue = ShellOption.NULL) String field1,
-		@ShellOption(help = "Field2 value", defaultValue = ShellOption.NULL) String field2,
-		@ShellOption(help = "Confirmation1 value", defaultValue = ShellOption.NULL) Boolean confirmation1,
-		@ShellOption(help = "Path1 value", defaultValue = ShellOption.NULL) String path1,
-		@ShellOption(help = "Single1 value", defaultValue = ShellOption.NULL) String single1,
-		@ShellOption(help = "Multi1 value", defaultValue = ShellOption.NULL) List<String> multi1
+		@Option(description = "Field1 value", defaultValue = Option.NULL) String field1,
+		@Option(description = "Field2 value", defaultValue = Option.NULL) String field2,
+		@Option(description = "Confirmation1 value", defaultValue = Option.NULL) Boolean confirmation1,
+		@Option(description = "Path1 value", defaultValue = Option.NULL) String path1,
+		@Option(description = "Single1 value", defaultValue = Option.NULL) String single1,
+		@Option(description = "Multi1 value", defaultValue = Option.NULL) List<String> multi1
 	) {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("key1", "value1");
@@ -252,7 +250,7 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 			.build();
 	}
 
-	@ShellMethod(key = "flow conditional", value = "Second component based on first", group = "Flow")
+	@Command(command = "flow conditional", description = "Second component based on first", group = "Flow")
 	public void conditional() {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("Field1", "field1");
@@ -277,9 +275,9 @@ public class ComponentFlowCommands extends AbstractShellComponent {
 		flow.run();
 	}
 
-	@ShellMethod(key = "flow autoselect", value = "Autoselect item", group = "Flow")
+	@Command(command = "flow autoselect", description = "Autoselect item", group = "Flow")
 	public void autoselect(
-			@ShellOption(defaultValue = "Field3") String defaultValue
+			@Option(defaultValue = "Field3") String defaultValue
 		) {
 		Map<String, String> single1SelectItems = IntStream.range(1, 10)
 			.boxed()

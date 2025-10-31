@@ -23,13 +23,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.command.annotation.OptionValues;
 import org.springframework.shell.standard.EnumValueProvider;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.standard.ValueProvider;
 
-@ShellComponent
 public class CompleteCommands {
 
 	@Bean
@@ -63,8 +62,10 @@ public class CompleteCommands {
 			.build();
 	}
 
-	@ShellMethod(value = "complete sample2", key = "complete sample2")
-	public String completeCommandSample2(@ShellOption(valueProvider = FunnyValuesProvider.class) String arg1) {
+	@Command(description = "complete sample2", command = "complete sample2")
+	public String completeCommandSample2(
+			// FIXME @OptionValues(provider = FunnyValuesProvider.class)
+			String arg1) {
 		return "You said " + arg1;
 	}
 
@@ -112,8 +113,10 @@ public class CompleteCommands {
 			.build();
 	}
 
-	@ShellMethod(value = "complete sample4", key = "complete sample4")
-	public String completeCommandSample4(@ShellOption(valueProvider = EnumValueProvider.class) MyEnums arg1) {
+	@Command(description = "complete sample4", command = "complete sample4")
+	public String completeCommandSample4(
+			// FIXME @OptionValues(provider = EnumValueProvider.class)
+			MyEnums arg1) {
 		return "You said " + arg1;
 	}
 

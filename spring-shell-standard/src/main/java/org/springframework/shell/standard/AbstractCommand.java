@@ -39,7 +39,7 @@ import org.springframework.shell.tui.style.ThemeResolver;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-public abstract class AbstractShellComponent implements ApplicationContextAware, InitializingBean, ResourceLoaderAware {
+public abstract class AbstractCommand implements ApplicationContextAware, InitializingBean, ResourceLoaderAware {
 
 	@SuppressWarnings("NullAway.Init")
 	private ApplicationContext applicationContext;

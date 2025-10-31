@@ -31,11 +31,8 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.Utils;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.CommandValueProvider;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
@@ -47,8 +44,7 @@ import org.springframework.util.FileCopyUtils;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-@ShellComponent
-public class Help extends AbstractShellComponent {
+public class Help extends AbstractCommand {
 
 	/**
 	 * Marker interface for beans providing {@literal help} functionality to the shell.
@@ -78,10 +74,12 @@ public class Help extends AbstractShellComponent {
 		this.templateExecutor = templateExecutor;
 	}
 
-	@ShellMethod(value = "Display help about available commands")
+	@org.springframework.shell.command.annotation.Command(command = "Display help about available commands")
 	public AttributedString help(
-			@ShellOption(defaultValue = ShellOption.NULL, valueProvider = CommandValueProvider.class, value = { "-C",
-					"--command" }, help = "The command to obtain help for.", arity = Integer.MAX_VALUE) String @Nullable [] command)
+			@Option(defaultValue = Option.NULL, shortNames = { 'C'}, longNames = {"--command" }, description = "The command to obtain help for.", arity = CommandRegistration.OptionArity.ONE_OR_MORE)
+			// FIXME @OptionValues(provider = CommandValueProvider.class) // How to migrate valueProvider?
+			String @Nullable [] command)
+
 			throws IOException {
 		if (command == null) {
 			return renderCommands();

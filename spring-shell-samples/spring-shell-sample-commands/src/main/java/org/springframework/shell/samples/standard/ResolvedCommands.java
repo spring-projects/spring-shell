@@ -23,8 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.command.annotation.Command;
 
 public class ResolvedCommands {
 
@@ -44,7 +43,7 @@ public class ResolvedCommands {
 		}
 	}
 
-	@ShellComponent
+	@Command
 	public static class ResolvedCommandsCommands {
 
 		private final Server1CommandResolver server1CommandResolver;
@@ -56,25 +55,25 @@ public class ResolvedCommands {
 			this.server2CommandResolver = server2CommandResolver;
 		}
 
-		@ShellMethod(key = "resolve enableserver1", group = GROUP)
+		@Command(command = "resolve enableserver1", group = GROUP)
 		public String server1Enable() {
 			server1CommandResolver.enabled = true;
 			return "Enabled server1";
 		}
 
-		@ShellMethod(key = "resolve disableserver1", group = GROUP)
+		@Command(command = "resolve disableserver1", group = GROUP)
 		public String server1Disable() {
 			server1CommandResolver.enabled = false;
 			return "Disabled server1";
 		}
 
-		@ShellMethod(key = "resolve enableserver2", group = GROUP)
+		@Command(command = "resolve enableserver2", group = GROUP)
 		public String server2Enable() {
 			server2CommandResolver.enabled = true;
 			return "Enabled server2";
 		}
 
-		@ShellMethod(key = "resolve disableserver2", group = GROUP)
+		@Command(command = "resolve disableserver2", group = GROUP)
 		public String server2Disable() {
 			server2CommandResolver.enabled = false;
 			return "Disabled server2";

@@ -19,9 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,40 +26,8 @@ import org.springframework.stereotype.Component;
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
+@Command
 public class DefaultValueCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "default-value", group = GROUP)
-		public String testDefaultValue(
-			@ShellOption(defaultValue = "hi") String arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean1", group = GROUP)
-		public String testDefaultValueBoolean1(
-			@ShellOption(defaultValue = "false") boolean arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean2", group = GROUP)
-		public String testDefaultValueBoolean2(
-			@ShellOption(defaultValue = "true") boolean arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "default-value-boolean3", group = GROUP)
-		public String testDefaultValueBoolean3(
-			@ShellOption boolean arg1
-		) {
-			return "Hello " + arg1;
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

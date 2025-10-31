@@ -17,16 +17,14 @@
 package org.springframework.shell.samples.standard;
 
 import org.springframework.shell.Availability;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.CommandAvailability;
 
 /**
  * Showcases dynamic command availability.
  *
  * @author Eric Bottard
  */
-@ShellComponent
 public class DynamicCommands {
 
 	private boolean connected;
@@ -37,23 +35,23 @@ public class DynamicCommands {
 		return connected ? Availability.available() : Availability.unavailable("you are not connected");
 	}
 
-	@ShellMethod(value = "Authenticate with the system", group = "Dynamic Commands")
+	@Command(description = "Authenticate with the system", group = "Dynamic Commands")
 	public void authenticate(String credentials) {
 		authenticated = "sesame".equals(credentials);
 	}
 
-	@ShellMethod(value = "Connect to the system", group = "Dynamic Commands")
+	@Command(description = "Connect to the system", group = "Dynamic Commands")
 	public void connect() {
 		connected = true;
 	}
 
-	@ShellMethod(value = "Disconnect from the system", group = "Dynamic Commands")
+	@Command(description = "Disconnect from the system", group = "Dynamic Commands")
 	public void disconnect() {
 		connected = false;
 	}
 
-	@ShellMethod(value = "Blow Everything up", group = "Dynamic Commands")
-	@ShellMethodAvailability("dangerousAvailability")
+	@Command(description = "Blow Everything up", group = "Dynamic Commands")
+	// FIXME how to migrate to @CommandAvailability("dangerousAvailability")?
 	public String blowUp() {
 		return "Boom!";
 	}

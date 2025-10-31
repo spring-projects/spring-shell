@@ -20,12 +20,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.shell.command.annotation.EnableCommand;
 import org.springframework.shell.samples.AbstractSampleTests;
 import org.springframework.shell.samples.e2e.RequiredValueCommands.Annotation;
-import org.springframework.shell.samples.e2e.RequiredValueCommands.LegacyAnnotation;
 import org.springframework.shell.samples.e2e.RequiredValueCommands.Registration;
 import org.springframework.shell.test.ShellTestClient.BaseShellSession;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = { LegacyAnnotation.class, Registration.class })
+@ContextConfiguration(classes = { Registration.class })
 @EnableCommand(Annotation.class)
 class RequiredValueCommandsTests extends AbstractSampleTests {
 

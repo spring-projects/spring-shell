@@ -21,8 +21,8 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.completion.AbstractCompletions.CommandModel;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -264,20 +264,20 @@ class AbstractCompletionsTests {
 
 	private static class TestCommands {
 
-		@ShellMethod
-		void test1(@ShellOption String param1) {
+		@Command
+		void test1(@Option String param1) {
 		}
 
-		@ShellMethod
+		@Command
 		void test2() {
 		}
 
-		@ShellMethod
+		@Command
 		void test3() {
 		}
 
-		@ShellMethod
-		void test4(@ShellOption String param4) {
+		@Command
+		void test4(@Option String param4) {
 		}
 	}
 }

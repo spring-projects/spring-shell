@@ -27,9 +27,8 @@ import org.jline.utils.AttributedString;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
@@ -41,8 +40,7 @@ import org.springframework.util.FileCopyUtils;
  * @author Mahmoud Ben Hassine
  * @author Piotr Olaszewski
  */
-@ShellComponent
-public class Version extends AbstractShellComponent {
+public class Version extends AbstractCommand {
 
 	/**
 	 * Marker interface used in auto-config.
@@ -57,7 +55,7 @@ public class Version extends AbstractShellComponent {
 		this.templateExecutor = templateExecutor;
 	}
 
-	@ShellMethod(key = "version", value = "Show version info")
+	@org.springframework.shell.command.annotation.Command(command = "version", description = "Show version info")
 	public AttributedString version() {
 		Assert.notNull(template, "'template' must not be null");
 		String templateResource = resourceAsString(getResourceLoader().getResource(template));

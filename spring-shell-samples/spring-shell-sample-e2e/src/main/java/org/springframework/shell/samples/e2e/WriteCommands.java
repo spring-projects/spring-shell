@@ -15,36 +15,13 @@
  */
 package org.springframework.shell.samples.e2e;
 
-import org.jline.terminal.Terminal;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
 import org.springframework.stereotype.Component;
 
 public class WriteCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@Autowired
-		Terminal terminal;
-
-		@ShellMethod(key = LEGACY_ANNO + "write-terminalwriter", group = GROUP)
-		public void writeTerminalWriterAnnotation() {
-			terminal.writer().println("hi");
-			terminal.writer().flush();
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "write-systemout", group = GROUP)
-		public void writeSystemOutAnnotation() {
-			System.out.println("hi");
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

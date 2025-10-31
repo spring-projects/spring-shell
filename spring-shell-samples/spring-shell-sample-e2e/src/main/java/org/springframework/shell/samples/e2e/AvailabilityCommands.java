@@ -22,74 +22,9 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.CommandAvailability;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 public class AvailabilityCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		// find from <methodName>Availability
-		@ShellMethod(key = LEGACY_ANNO + "availability-1", group = GROUP)
-		public String testAvailability1LegacyAnnotation(
-		) {
-			return "Hello";
-		}
-
-		public Availability testAvailability1LegacyAnnotationAvailability() {
-			return Availability.unavailable("not available 1");
-		}
-
-		// find from method name in @ShellMethodAvailability
-		@ShellMethod(key = LEGACY_ANNO + "availability-2", group = GROUP)
-		@ShellMethodAvailability("testAvailability2LegacyAnnotationAvailability2")
-		public String testAvailability2LegacyAnnotation(
-		) {
-			return "Hello";
-		}
-
-		public Availability testAvailability2LegacyAnnotationAvailability2() {
-			return Availability.unavailable("not available 2");
-		}
-
-		// find backwards from @ShellMethodAvailability command name
-		@ShellMethod(key = LEGACY_ANNO + "availability-3", group = GROUP)
-		public String testAvailability3LegacyAnnotation(
-		) {
-			return "Hello";
-		}
-
-		@ShellMethodAvailability("e2e anno availability-3")
-		public Availability testAvailability3LegacyAnnotationAvailability3() {
-			return Availability.unavailable("not available 3");
-		}
-
-		private boolean connected = false;
-
-		@ShellMethod(key = LEGACY_ANNO + "availability-set", group = GROUP)
-		public void testAvailabilitySetLegacyAnnotation(
-			@ShellOption(value = "connected") boolean connected
-		) {
-			this.connected = connected;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "availability-use", group = GROUP)
-		@ShellMethodAvailability("testAvailabilityLegacyAnnotationConnected")
-		public void testAvailabilityUseLegacyAnnotation(
-		) {
-		}
-
-		public Availability testAvailabilityLegacyAnnotationConnected() {
-			return connected
-				? Availability.available()
-				: Availability.unavailable("you are not connected");
-		}
-
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

@@ -15,16 +15,16 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+
+import org.springframework.shell.command.annotation.Command;
 
 public class AnnotationRegistrationSnippets {
 
 	// tag::snippet1[]
-	@ShellComponent
+	@Command
 	static class MyCommands {
 
-		@ShellMethod
+		@Command
 		public void mycommand() {
 		}
 	}
@@ -33,7 +33,7 @@ public class AnnotationRegistrationSnippets {
 	static class Dump1 {
 
 		// tag::snippet2[]
-		@ShellMethod(value = "Add numbers.", key = "sum")
+		@Command(description = "Add numbers.", command = "sum")
 		public int add(int a, int b) {
 			return a + b;
 		}

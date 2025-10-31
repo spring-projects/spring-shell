@@ -23,16 +23,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 
 /**
  * A command that displays all previously run commands, optionally dumping to a file readable by {@link Script}.
  *
  * @author Eric Bottard
  */
-@ShellComponent
 public class History {
 
     private final org.jline.reader.History jLineHistory;
@@ -55,8 +53,8 @@ public class History {
     public interface Command {
     }
 
-    @ShellMethod(value = "Display or save the history of previously run commands")
-    public List<String> history(@ShellOption(help = "A file to save history to.", defaultValue = ShellOption.NULL) File file) throws IOException {
+    @org.springframework.shell.command.annotation.Command(description = "Display or save the history of previously run commands")
+    public List<String> history(@Option(description = "A file to save history to.", defaultValue = Option.NULL) File file) throws IOException {
         if (file == null) {
             List<String> result = new ArrayList<>(jLineHistory.size());
             jLineHistory.forEach(e -> result.add(e.line()));

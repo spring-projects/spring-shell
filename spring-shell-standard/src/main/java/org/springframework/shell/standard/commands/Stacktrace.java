@@ -16,11 +16,10 @@
 package org.springframework.shell.standard.commands;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.result.ThrowableResultHandler;
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.AbstractCommand;
 
 /**
  * A command to display the full stacktrace when an error occurs.
@@ -28,8 +27,7 @@ import org.springframework.shell.standard.ShellMethod;
  * @author Eric Bottard
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class Stacktrace extends AbstractShellComponent {
+public class Stacktrace extends AbstractCommand {
 
 	/**
 	 * Marker interface for beans providing {@literal stacktrace} functionality to the shell.
@@ -50,8 +48,8 @@ public class Stacktrace extends AbstractShellComponent {
 		this.throwableResultHandler = throwableResultHandler;
 	}
 
-	@ShellMethod(key = ThrowableResultHandler.DETAILS_COMMAND_NAME,
-			value = "Display the full stacktrace of the last error.",
+	@org.springframework.shell.command.annotation.Command(command = ThrowableResultHandler.DETAILS_COMMAND_NAME,
+			description = "Display the full stacktrace of the last error.",
 			interactionMode = InteractionMode.INTERACTIVE)
 	public void stacktrace() {
 		ThrowableResultHandler handler = throwableResultHandler.getIfAvailable();

@@ -18,33 +18,8 @@ package org.springframework.shell.samples.e2e;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 public class PositionalArgumentsCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "positional-args-1", group = GROUP)
-		public String testPositionalArgs1(
-				@ShellOption(arity = 1, defaultValue = ShellOption.NULL) String arg1,
-				@ShellOption(arity = 1, defaultValue = ShellOption.NULL) String arg2,
-				@ShellOption(arity = 1, defaultValue = ShellOption.NULL) String arg3
-		) {
-				return String.format("Hi arg1='%s' arg2='%s' arg3='%s'", arg1, arg2, arg3);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "positional-args-2", group = GROUP)
-		public String testPositionalArgs2(
-				@ShellOption(arity = 1, defaultValue = "defaultArg1") String arg1,
-				@ShellOption(arity = 1, defaultValue = "defaultArg2") String arg2,
-				@ShellOption(arity = 1, defaultValue = ShellOption.NULL) String arg3
-		) {
-				return String.format("Hi arg1='%s' arg2='%s' arg3='%s'", arg1, arg2, arg3);
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

@@ -19,38 +19,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 public class ShortOptionTypeCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "short-option-type-string", group = GROUP)
-		public String shortOptionTypeStringLegacyAnnotation(
-				@ShellOption(value = { "--arg", "-a" }) String arg)		{
-			return String.format("Hi '%s'", arg);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "short-option-type-single-boolean", group = GROUP)
-		public String shortOptionTypeSingleBooleanLegacyAnnotation(
-				@ShellOption(value = "-a") boolean a)
-		{
-			return String.format("Hi '%s'", a);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "short-option-type-multi-boolean", group = GROUP)
-		public String shortOptionTypeMultiBooleanLegacyAnnotation(
-				@ShellOption(value = "-a") boolean a,
-				@ShellOption(value = "-b") boolean b,
-				@ShellOption(value = "-c") boolean c)
-		{
-			return String.format("Hi a='%s' b='%s' c='%s'", a, b, c);
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

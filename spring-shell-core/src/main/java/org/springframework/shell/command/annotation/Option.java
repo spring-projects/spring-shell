@@ -34,6 +34,17 @@ import org.springframework.shell.command.CommandRegistration.OptionArity;
 public @interface Option {
 
 	/**
+	 * Used to indicate that the default value is the value {@literal null}, which is different from the fact that
+	 * there is no default value.
+	 */
+	String NULL = "__NULL__";
+
+	/**
+	 * Used to indicate that there is no default value (<em>i.e.</em> parameter is mandatory).
+	 */
+	String NONE = "__NONE__";
+
+	/**
 	 * Long names of an option. There can be multiple names where first is primary
 	 * one and other are aliases.
 	 *

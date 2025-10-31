@@ -16,13 +16,11 @@
 
 package org.springframework.shell.samples.standard;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.table.*;
 
 import java.util.Random;
 
-@ShellComponent
 public class TableCommands {
 
 	private static final String TEXT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt " +
@@ -31,7 +29,7 @@ public class TableCommands {
 			"voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat " +
 			"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
-	@ShellMethod(value = "Showcase Table rendering", group = "Tables")
+	@Command(description = "Showcase Table rendering", group = "Tables")
 	public Table table() {
 		String[][] data = new String[3][3];
 		TableModel model = new ArrayTableModel(data);

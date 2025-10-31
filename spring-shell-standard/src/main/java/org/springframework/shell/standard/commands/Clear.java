@@ -18,10 +18,9 @@ package org.springframework.shell.standard.commands;
 
 import org.jline.utils.InfoCmp;
 
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.context.InteractionMode;
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.AbstractCommand;
 
 /**
  * ANSI console related commands.
@@ -29,8 +28,7 @@ import org.springframework.shell.standard.ShellMethod;
  * @author Eric Bottard
  * @author Janne Valkealahti
  */
-@ShellComponent
-public class Clear extends AbstractShellComponent {
+public class Clear extends AbstractCommand {
 
 	/**
 	 * Marker interface for beans providing {@literal clear} functionality to the shell.
@@ -48,7 +46,7 @@ public class Clear extends AbstractShellComponent {
 	public Clear() {
 	}
 
-	@ShellMethod(value = "Clear the shell screen.", interactionMode = InteractionMode.INTERACTIVE)
+	@org.springframework.shell.command.annotation.Command(command = "Clear the shell screen.", interactionMode = InteractionMode.INTERACTIVE)
 	public void clear() {
 		getTerminal().puts(InfoCmp.Capability.clear_screen);
 	}

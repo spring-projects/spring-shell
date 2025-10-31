@@ -19,9 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,17 +27,6 @@ import org.springframework.stereotype.Component;
  * @author Janne Valkealahti
  */
 public class OptionalValueCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "optional-value", group = GROUP)
-		public String testOptionalValue(
-			@ShellOption(defaultValue = ShellOption.NULL) String arg1
-		) {
-			return "Hello " + arg1;
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

@@ -16,19 +16,19 @@
 package org.springframework.shell.docs;
 
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Option;
 
 class OptionTypesSnippets {
 
 	class Dump1 {
 		// tag::option-type-boolean-anno[]
 		String example(
-			@ShellOption() boolean arg1,
-			@ShellOption(defaultValue = "true") boolean arg2,
-			@ShellOption(defaultValue = "false") boolean arg3,
-			@ShellOption() Boolean arg4,
-			@ShellOption(defaultValue = "true") Boolean arg5,
-			@ShellOption(defaultValue = "false") Boolean arg6
+			@Option() boolean arg1,
+			@Option(defaultValue = "true") boolean arg2,
+			@Option(defaultValue = "false") boolean arg3,
+			@Option() Boolean arg4,
+			@Option(defaultValue = "true") Boolean arg5,
+			@Option(defaultValue = "false") Boolean arg6
 		) {
 			return String.format("arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s",
 					arg1, arg2, arg3, arg4, arg5, arg6);
@@ -71,7 +71,7 @@ class OptionTypesSnippets {
 
 	class Dump2 {
 		// tag::option-type-integer-anno[]
-		String example(@ShellOption(value = "arg1") int arg1) {
+		String example(@Option(description = "arg1") int arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-type-integer-anno[]
@@ -97,7 +97,7 @@ class OptionTypesSnippets {
 
 	class Dump3 {
 		// tag::option-type-string-anno[]
-		String example(@ShellOption(value = "arg1") String arg1) {
+		String example(@Option(description = "arg1") String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-type-string-anno[]
@@ -130,7 +130,7 @@ class OptionTypesSnippets {
 		// end::option-type-enum-class[]
 
 		// tag::option-type-enum-anno[]
-		String example(@ShellOption(value = "arg1") OptionTypeEnum arg1) {
+		String example(@Option(description = "arg1") OptionTypeEnum arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-type-enum-anno[]
@@ -156,7 +156,7 @@ class OptionTypesSnippets {
 
 	class Dump5 {
 		// tag::option-type-string-array-anno[]
-		String example(@ShellOption(value = "arg1") String[] arg1) {
+		String example(@Option(description = "arg1") String[] arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-type-string-array-anno[]

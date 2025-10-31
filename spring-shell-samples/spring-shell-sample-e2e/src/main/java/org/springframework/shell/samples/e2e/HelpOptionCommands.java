@@ -17,24 +17,11 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.stereotype.Component;
 
-@ShellComponent
+@Command
 public class HelpOptionCommands extends BaseE2ECommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "help-option-default", group = GROUP)
-		public String testHelpOptionDefault(
-			@ShellOption(defaultValue = "hi") String arg1
-		) {
-			return "Hello " + arg1;
-		}
-	}
 
 	@Component
 	public static class Registration extends BaseE2ECommands {

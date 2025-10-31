@@ -29,7 +29,6 @@ import org.springframework.shell.command.annotation.support.OptionMethodArgument
 import org.springframework.shell.completion.CompletionResolver;
 import org.springframework.shell.completion.RegistrationOptionsCompletionResolver;
 import org.springframework.shell.config.ShellConversionServiceSupplier;
-import org.springframework.shell.standard.ShellOptionMethodArgumentResolver;
 
 @AutoConfiguration
 public class ParameterResolverAutoConfiguration {
@@ -46,7 +45,6 @@ public class ParameterResolverAutoConfiguration {
 		resolvers.add(new ArgumentHeaderMethodArgumentResolver(shellConversionServiceSupplier.get(), null));
 		resolvers.add(new HeadersMethodArgumentResolver());
 		resolvers.add(new CommandContextMethodArgumentResolver());
-		resolvers.add(new ShellOptionMethodArgumentResolver(shellConversionServiceSupplier.get(), null));
 		resolvers.add(new OptionMethodArgumentResolver(shellConversionServiceSupplier.get(), null));
 		return new CommandExecutionHandlerMethodArgumentResolvers(resolvers);
 	}

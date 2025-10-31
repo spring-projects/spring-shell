@@ -39,9 +39,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.shell.tui.style.Theme;
 import org.springframework.shell.tui.style.ThemeRegistry;
@@ -234,36 +233,36 @@ class HelpTests {
 		}
 	}
 
-	@ShellComponent
+	@Command
 	static class CommandsPojo {
 
-		@ShellMethod(prefix = "--")
+		@Command // FIXME how to migrate (prefix = "--")
 		public void firstCommand(
 				// Single key and arity = 0. Help displayed on same line
-				@ShellOption(help = "Whether to delete recursively", arity = 0, value = "-r") boolean r,
+				@Option(description = "Whether to delete recursively", arity = CommandRegistration.OptionArity.ZERO, shortNames = {'r'}) boolean r,
 				// Multiple keys and arity 0. Help displayed on next line
-				@ShellOption(help = "Do not ask for confirmation. YOLO", arity = 0, value = {"-f", "--force"}) boolean force,
+				@Option(description = "Do not ask for confirmation. YOLO", arity = CommandRegistration.OptionArity.ZERO, shortNames = {'f'}, longNames = {"force"}) boolean force,
 				// Single key, arity >= 1. Help displayed on next line. Optional
 				// Also, bears bean validation annotation
-				@ShellOption(help = "The answer to everything", defaultValue = "42", value = "-n") @Max(5) int n,
+				@Option(description = "The answer to everything", defaultValue = "42", shortNames = {'n'}) @Max(5) int n,
 		        // Single key, arity > 1.
-		        @ShellOption(help = "Some other parameters", arity = 3, value = "-o") float[] o
+		        @Option(description = "Some other parameters", arity = CommandRegistration.OptionArity.ONE_OR_MORE, shortNames = {'o'}) float[] o
 		) {
 		}
 
-		@ShellMethod
+		@Command
 		public void secondCommand() {
 		}
 
-		@ShellMethod
+		@Command
 		public void thirdCommand() {
 		}
 
-		@ShellMethod
+		@Command
 		public void firstCommandInGroup() {
 		}
 
-		@ShellMethod
+		@Command
 		public void secondCommandInGroup() {
 		}
 	}

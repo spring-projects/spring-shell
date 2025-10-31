@@ -23,9 +23,6 @@ import org.springframework.shell.AvailabilityProvider;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.CommandAvailability;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 
 import static java.util.Calendar.DAY_OF_WEEK;
 import static java.util.Calendar.SUNDAY;
@@ -34,18 +31,18 @@ class CommandAvailabilitySnippets {
 
 	class Dump1 {
 		// tag::availability-method-in-shellcomponent[]
-		@ShellComponent
+		@Command
 		public class MyCommands {
 
 			private boolean connected;
 
-			@ShellMethod("Connect to the server.")
+			@Command(description = "Connect to the server.")
 			public void connect(String user, String password) {
 				// do something
 				connected = true;
 			}
 
-			@ShellMethod("Download the nuclear codes.")
+			@Command(description = "Download the nuclear codes.")
 			public void download() {
 				// do something
 			}
@@ -63,8 +60,8 @@ class CommandAvailabilitySnippets {
 		boolean connected;
 
 		// tag::availability-method-name-in-shellcomponent[]
-		@ShellMethod("Download the nuclear codes.")
-		@ShellMethodAvailability("availabilityCheck") // <1>
+		@Command(description = "Download the nuclear codes.")
+		//@CommandAvailability("availabilityCheck") // <1>
 		public void download() {
 		}
 
@@ -79,15 +76,15 @@ class CommandAvailabilitySnippets {
 	class Dump3 {
 		boolean connected;
 		// tag::availability-method-name-multi-in-shellcomponent[]
-		@ShellMethod("Download the nuclear codes.")
+		@Command(description = "Download the nuclear codes.")
 		public void download() {
 		}
 
-		@ShellMethod("Disconnect from the server.")
+		@Command(description = "Disconnect from the server.")
 		public void disconnect() {
 		}
 
-		@ShellMethodAvailability({"download", "disconnect"})
+		//@CommandAvailability({"download", "disconnect"})
 		public Availability availabilityCheck() {
 			return connected
 				? Availability.available()
@@ -98,20 +95,20 @@ class CommandAvailabilitySnippets {
 	}
 
 	// tag::availability-method-default-value-in-shellcomponent[]
-	@ShellComponent
+	@Command
 	public class Toggles {
 
-		@ShellMethodAvailability
+		//@CommandAvailability
 		public Availability availabilityOnWeekdays() {
 			return Calendar.getInstance().get(DAY_OF_WEEK) == SUNDAY
 				? Availability.available()
 				: Availability.unavailable("today is not Sunday");
 		}
 
-		@ShellMethod
+		@Command
 		public void foo() {}
 
-		@ShellMethod
+		@Command
 		public void bar() {}
 	}
 	// end::availability-method-default-value-in-shellcomponent[]

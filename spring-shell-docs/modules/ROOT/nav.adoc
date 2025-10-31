@@ -7,7 +7,6 @@
 ** xref:commands/registration/index.adoc[]
 ** xref:commands/registration/programmatic.adoc[]
 ** xref:commands/registration/annotation.adoc[]
-** xref:commands/registration/legacyannotation.adoc[]
 ** xref:commands/organize.adoc[]
 ** xref:commands/availability.adoc[]
 ** xref:commands/exceptionhandling/index.adoc[]

@@ -23,19 +23,8 @@ import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 public class OptionSnippets {
-
-	class Dump1Legacy {
-		// tag::option-with-annotation[]
-		@ShellMethod
-		public String example(@ShellOption(value = { "--arg" }) String arg1) {
-			return "Hello " + arg1;
-		}
-		// end::option-with-annotation[]
-	}
 
 	class Dump1 {
 		// tag::option-with-option-annotation[]
@@ -48,8 +37,8 @@ public class OptionSnippets {
 
 	class Dump7 {
 		// tag::option-with-annotation-without-prefix[]
-		@ShellMethod
-		public String example(@ShellOption(value = { "arg" }) String arg1) {
+		@Command
+		public String example(@Option(label = "arg") String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-with-annotation-without-prefix[]
@@ -57,7 +46,7 @@ public class OptionSnippets {
 
 	class Dump2 {
 		// tag::option-without-annotation[]
-		@ShellMethod
+		@Command
 		public String example(String arg1) {
 			return "Hello " + arg1;
 		}
@@ -67,9 +56,9 @@ public class OptionSnippets {
 	class Dump3 {
 		// tag::option-with-annotation-shortarg[]
 		public String example(
-			@ShellOption(value = { "-a" }) String arg1,
-			@ShellOption(value = { "-b" }) String arg2,
-			@ShellOption(value = { "-c" }) String arg3
+			@Option(shortNames = { 'a' }) String arg1,
+			@Option(shortNames = { 'b' }) String arg2,
+			@Option(shortNames = { 'c' }) String arg3
 		) {
 			return "Hello " + arg1;
 		}
@@ -78,7 +67,7 @@ public class OptionSnippets {
 
 	class Dump4 {
 		// tag::option-with-annotation-arity[]
-		public String example(@ShellOption(arity = 1) String arg1) {
+		public String example(@Option(arity = OptionArity.EXACTLY_ONE) String arg1) {
 			return "Hello " + arg1;
 		}
 		// end::option-with-annotation-arity[]
@@ -87,7 +76,7 @@ public class OptionSnippets {
 	class Dump5 {
 		// tag::option-with-annotation-optional[]
 		public String example(
-			@ShellOption(defaultValue = ShellOption.NULL) String arg1
+			@Option(defaultValue = Option.NULL) String arg1
 		) {
 			return "Hello " + arg1;
 		}
@@ -97,7 +86,7 @@ public class OptionSnippets {
 	class Dump6 {
 		// tag::option-with-annotation-default[]
 		public String example(
-			@ShellOption(defaultValue = "defaultValue") String arg1
+			@Option(defaultValue = "defaultValue") String arg1
 		) {
 			return "Hello " + arg1;
 		}
@@ -277,12 +266,12 @@ public class OptionSnippets {
 		// end::option-registration-naming-case-bean[]
 
 		// tag::option-registration-naming-case-sample1[]
-		@ShellMethod(key = "option-naming-sample")
+		@Command(command = "option-naming-sample")
 		public void optionNamingSample(
-			@ShellOption("from_snake") String snake,
-			@ShellOption("fromCamel") String camel,
-			@ShellOption("from-kebab") String kebab,
-			@ShellOption("FromPascal") String pascal
+			@Option(description = "from_snake") String snake,
+			@Option(description = "fromCamel") String camel,
+			@Option(description = "from-kebab") String kebab,
+			@Option(description = "FromPascal") String pascal
 		) {}
 		// end::option-registration-naming-case-sample1[]
 
@@ -291,18 +280,18 @@ public class OptionSnippets {
 	static class LegacyAnnotation {
 
 		// tag::option-registration-zeroorone-legacyannotation[]
-		@ShellMethod(key = "example")
+		@Command(command = "example")
 		String zeroOrOne(
-			@ShellOption(arity = 1) String arg)
+			@Option(arity = OptionArity.EXACTLY_ONE) String arg)
 		{
 			return String.format("Hi '%s'", arg);
 		}
 		// end::option-registration-zeroorone-legacyannotation[]
 
 		// tag::option-registration-zerooronewithminmax-legacyannotation[]
-		@ShellMethod(key = "example")
+		@Command(command = "example")
 		String zeroOrOneWithMinMax(
-			@ShellOption(arity = 1) String arg)
+			@Option(arity = OptionArity.EXACTLY_ONE) String arg)
 		{
 			return String.format("Hi '%s'", arg);
 		}
@@ -310,21 +299,21 @@ public class OptionSnippets {
 
 		// tag::option-optional-legacyannotation[]
 		void optionalOption(
-			@ShellOption(defaultValue = ShellOption.NULL) String arg
+			@Option(defaultValue = Option.NULL) String arg
 		) {
 		}
 		// end::option-optional-legacyannotation[]
 
 		// tag::option-mandatory-legacyannotation[]
 		void mandatoryOption(
-			@ShellOption() String arg
+			@Option() String arg
 		) {
 		}
 		// end::option-mandatory-legacyannotation[]
 
 		// tag::option-default-legacyannotation[]
 		void defaultOption(
-			@ShellOption(defaultValue = "default") String arg
+			@Option(defaultValue = "default") String arg
 		) {
 		}
 		// end::option-default-legacyannotation[]

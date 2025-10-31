@@ -26,51 +26,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 public class OptionConversionCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "option-conversion-integer", group = GROUP)
-		public String optionConversionIntegerAnnotation(
-			@ShellOption Integer arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-conversion-custom", group = GROUP)
-		public String optionConversionCustomAnnotation(
-			@ShellOption MyPojo arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-conversion-customset", group = GROUP)
-		public String optionConversionCustomSetAnnotation(
-			@ShellOption Set<MyPojo> arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-conversion-customlist", group = GROUP)
-		public String optionConversionCustomListAnnotation(
-			@ShellOption List<MyPojo> arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-conversion-customarray", group = GROUP)
-		public String optionConversionCustomArrayAnnotation(
-			@ShellOption MyPojo[] arg1
-		) {
-			return "Hello " + Arrays.asList(arg1);
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

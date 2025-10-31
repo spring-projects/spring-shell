@@ -18,12 +18,11 @@ package org.springframework.shell.samples.e2e;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import org.springframework.shell.samples.AbstractSampleTests;
-import org.springframework.shell.samples.e2e.HelpOptionCommands.LegacyAnnotation;
 import org.springframework.shell.samples.e2e.HelpOptionCommands.Registration;
 import org.springframework.shell.test.ShellTestClient.BaseShellSession;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = { LegacyAnnotation.class, Registration.class })
+@ContextConfiguration(classes = { Registration.class })
 class HelpOptionCommandsTests extends AbstractSampleTests {
 
 	@ParameterizedTest

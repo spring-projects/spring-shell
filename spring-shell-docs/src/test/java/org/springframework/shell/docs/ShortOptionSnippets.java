@@ -18,32 +18,8 @@ package org.springframework.shell.docs;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 public class ShortOptionSnippets {
-
-	static class LegacyAnnotation {
-
-		// tag::option-type-string-legacyannotation[]
-		@ShellMethod(key = "example")
-		String stringWithShortOption(
-				@ShellOption(value = { "--arg", "-a" }) String arg)		{
-			return String.format("Hi '%s'", arg);
-		}
-		// end::option-type-string-legacyannotation[]
-
-		// tag::option-type-multiple-booleans-legacyannotation[]
-		@ShellMethod(key = "example")
-		public String multipleBooleans(
-				@ShellOption(value = "-a") boolean a,
-				@ShellOption(value = "-b") boolean b,
-				@ShellOption(value = "-c") boolean c)
-		{
-			return String.format("Hi a='%s' b='%s' c='%s'", a, b, c);
-		}
-		// end::option-type-multiple-booleans-legacyannotation[]
-	}
 
 	// @Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	static class Annotation {

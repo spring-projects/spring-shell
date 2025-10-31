@@ -22,9 +22,6 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.OptionArity;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,39 +30,6 @@ import org.springframework.stereotype.Component;
  * @author Janne Valkealahti
  */
 public class ArityCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "arity-boolean-default-true", group = GROUP)
-		public String testArityBooleanDefaultTrueLegacyAnnotation(
-			@ShellOption(value = "--overwrite", arity = 1, defaultValue = "true") Boolean overwrite
-		) {
-			return "Hello " + overwrite;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "arity-string-array", group = GROUP)
-		public String testArityStringArrayLegacyAnnotation(
-			@ShellOption(value = "--arg1", arity = 3) String[] arg1
-		) {
-			return "Hello " + Arrays.asList(arg1);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "arity-float-array", group = GROUP)
-		public String testArityFloatArrayLegacyAnnotation(
-			@ShellOption(value = "--arg1", arity = 3) float[] arg1
-		) {
-			return "Hello " + stringOfFloats(arg1);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "string-arityeone-required", group = GROUP)
-		public String testStringArityeoneRequiredLegacyAnnotation(
-			@ShellOption(value = "--arg1", arity = 1) String arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

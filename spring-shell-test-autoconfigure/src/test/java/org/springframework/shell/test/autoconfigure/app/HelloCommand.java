@@ -15,13 +15,13 @@
  */
 package org.springframework.shell.test.autoconfigure.app;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
 
-@ShellComponent
+import org.springframework.shell.command.annotation.Command;
+
+@Command
 public class HelloCommand {
 
-	@ShellMethod
+	@Command
 	public String hello() {
 		return "hello";
 	}

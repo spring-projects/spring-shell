@@ -27,35 +27,10 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.command.annotation.OptionValues;
 import org.springframework.shell.completion.CompletionProvider;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.standard.ValueProvider;
 import org.springframework.stereotype.Component;
 
 public class InteractiveCompletionCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "interactive-completion-1", group = GROUP)
-		public String testInteractiveCompletion1(
-			@ShellOption(valueProvider = Test1ValuesProvider.class) String arg1,
-			@ShellOption(valueProvider = Test2ValuesProvider.class) String arg2
-		) {
-			return "Hello " + arg1;
-		}
-
-		@Bean
-		Test1ValuesProvider test1ValuesProvider() {
-			return new Test1ValuesProvider();
-		}
-
-		@Bean
-		Test2ValuesProvider test2ValuesProvider() {
-			return new Test2ValuesProvider();
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

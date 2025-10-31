@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.springframework.boot.context.TypeExcludeFilter;
 import org.springframework.boot.test.context.filter.annotation.StandardAnnotationCustomizableTypeExcludeFilter;
-import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.command.annotation.Command;
 
 /**
  * {@link TypeExcludeFilter} for {@link ShellTest @ShellTest}.
@@ -34,7 +34,7 @@ public class ShellTypeExcludeFilter extends StandardAnnotationCustomizableTypeEx
 
 	static {
 		Set<Class<?>> includes = new LinkedHashSet<>();
-		includes.add(ShellComponent.class);
+		includes.add(Command.class);
 		DEFAULT_INCLUDES = Collections.unmodifiableSet(includes);
 	}
 

@@ -19,27 +19,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 public class OptionNamingCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "option-naming-1", group = GROUP)
-		public String testOptionNaming1Annotation(
-			@ShellOption("from_snake") String snake,
-			@ShellOption("fromCamel") String camel,
-			@ShellOption("from-kebab") String kebab,
-			@ShellOption("FromPascal") String pascal
-		) {
-			return String.format("snake='%s' camel='%s' kebab='%s' pascal='%s' ", snake, camel, kebab, pascal);
-		}
-
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

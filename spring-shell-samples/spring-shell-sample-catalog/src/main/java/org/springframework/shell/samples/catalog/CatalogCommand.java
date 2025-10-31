@@ -20,7 +20,7 @@ import java.util.List;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.tui.component.view.TerminalUIBuilder;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
-import org.springframework.shell.standard.AbstractShellComponent;
+import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.style.ThemeResolver;
 
 /**
@@ -29,7 +29,7 @@ import org.springframework.shell.tui.style.ThemeResolver;
  * @author Janne Valkealahti
  */
 @Command
-public class CatalogCommand extends AbstractShellComponent {
+public class CatalogCommand extends AbstractCommand {
 
 	private final List<Scenario> scenarios;
 	private final TerminalUIBuilder terminalUIBuilder;

@@ -27,8 +27,6 @@ import org.springframework.shell.command.CommandHandlingResult;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.ExceptionResolver;
 import org.springframework.shell.command.annotation.ExitCode;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,57 +35,6 @@ import org.springframework.stereotype.Component;
  * @author Janne Valkealahti
  */
 public class ErrorHandlingCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "error-handling", group = GROUP)
-		String testErrorHandling(String arg1) throws IOException {
-			if ("throw1".equals(arg1)) {
-				throw new CustomException1();
-			}
-			if ("throw2".equals(arg1)) {
-				throw new CustomException2(11);
-			}
-			if ("throw3".equals(arg1)) {
-				throw new RuntimeException();
-			}
-			if ("throw4".equals(arg1)) {
-				throw new IllegalArgumentException();
-			}
-			if ("throw5".equals(arg1)) {
-				throw new CustomException3();
-			}
-			if ("throw6".equals(arg1)) {
-				throw new CustomException4();
-			}
-			return "Hello " + arg1;
-		}
-
-		@ExceptionResolver({ CustomException1.class })
-		CommandHandlingResult errorHandler1(CustomException1 e) {
-			return CommandHandlingResult.of("Hi, handled custom exception\n", 42);
-		}
-
-		@ExceptionResolver
-		CommandHandlingResult errorHandler2(IllegalArgumentException e) {
-			return CommandHandlingResult.of("Hi, handled illegal exception\n", 42);
-		}
-
-		@ExceptionResolver({ CustomException3.class })
-		@ExitCode(3)
-		String errorHandler3(CustomException3 e) {
-			return "Hi, handled custom exception 3\n";
-		}
-
-		@ExceptionResolver({ CustomException4.class })
-		@ExitCode(code = 4)
-		void errorHandler3(CustomException4 e, Terminal terminal) {
-			PrintWriter writer = terminal.writer();
-			writer.println(String.format("Hi, handled custom exception %s", e));
-			writer.flush();
-		}
-	}
 
 	@Component
 	public static class Registration extends BaseE2ECommands {

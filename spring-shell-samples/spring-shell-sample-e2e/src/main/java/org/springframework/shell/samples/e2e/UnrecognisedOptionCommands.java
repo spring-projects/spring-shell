@@ -17,29 +17,9 @@ package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 public class UnrecognisedOptionCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-noother", group = GROUP)
-		public String testUnrecognisedOptionNoOtherAnnotation(
-		) {
-			return "Hi";
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "unrecognised-option-withrequired", group = GROUP)
-		public String testUnrecognisedOptionWithRequiredAnnotation(
-			@ShellOption(help = "Desc arg1") String arg1
-		) {
-			return "Hello " + arg1;
-		}
-	}
 
 	@Component
 	public static class Registration extends BaseE2ECommands {

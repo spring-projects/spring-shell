@@ -16,18 +16,17 @@
 
 package org.springframework.shell.standard.test2;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
 
-@ShellComponent
+import org.springframework.shell.command.annotation.Command;
+
 public class GroupTwoCommands {
 
-	@ShellMethod(value = "Do Something.", group = "Explicit Group Method Level 2")
+	@Command(description = "Do Something.", group = "Explicit Group Method Level 2")
 	public void explicit2() {
 
 	}
 
-	@ShellMethod(value = "Do Something Else")
+	@Command(description = "Do Something Else")
 	public void implicit2() {
 
 	}

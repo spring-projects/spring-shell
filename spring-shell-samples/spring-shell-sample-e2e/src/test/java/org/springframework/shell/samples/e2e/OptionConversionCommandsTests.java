@@ -21,12 +21,11 @@ import org.springframework.shell.command.annotation.EnableCommand;
 import org.springframework.shell.samples.AbstractSampleTests;
 import org.springframework.shell.samples.e2e.OptionConversionCommands.Annotation;
 import org.springframework.shell.samples.e2e.OptionConversionCommands.CommonConfiguration;
-import org.springframework.shell.samples.e2e.OptionConversionCommands.LegacyAnnotation;
 import org.springframework.shell.samples.e2e.OptionConversionCommands.Registration;
 import org.springframework.shell.test.ShellTestClient.BaseShellSession;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = { LegacyAnnotation.class, Registration.class, CommonConfiguration.class })
+@ContextConfiguration(classes = { Registration.class, CommonConfiguration.class })
 @EnableCommand(Annotation.class)
 class OptionConversionCommandsTests extends AbstractSampleTests {
 

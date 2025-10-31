@@ -19,13 +19,11 @@ import java.util.function.Function;
 
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.standard.AbstractCommand;
 
-@ShellComponent
-public class RegisterCommands extends AbstractShellComponent {
+public class RegisterCommands extends AbstractCommand {
 
 	private final static String GROUP = "Register Commands";
 	private final PojoMethods pojoMethods = new PojoMethods();
@@ -63,14 +61,14 @@ public class RegisterCommands extends AbstractShellComponent {
 			.build();
 	}
 
-    @ShellMethod(key = "register add", value = "Register commands", group = GROUP)
+    @Command(command = "register add", description = "Register commands", group = GROUP)
     public String register() {
 		getCommandCatalog().register(registered1, registered2, registered3);
 		registerFunctionCommand("register registered4");
 		return "Registered commands registered1, registered2, registered3, registered4";
     }
 
-    @ShellMethod(key = "register remove", value = "Deregister commands", group = GROUP)
+    @Command(command = "register remove", description = "Deregister commands", group = GROUP)
     public String deregister() {
 		getCommandCatalog().unregister("register registered1", "register registered2", "register registered3",
 				"register registered4");
@@ -98,18 +96,18 @@ public class RegisterCommands extends AbstractShellComponent {
 
 	public static class PojoMethods {
 
-		@ShellMethod
+		@Command
 		public String registered1() {
 			return "registered1";
 		}
 
-		@ShellMethod
+		@Command
 		public String registered2(String arg1) {
 			return "registered2" + arg1;
 		}
 
-		@ShellMethod
-		public String registered3(@ShellOption(defaultValue = ShellOption.NULL) String arg1) {
+		@Command
+		public String registered3(@Option(defaultValue = Option.NULL) String arg1) {
 			return "registered3" + arg1;
 		}
 	}

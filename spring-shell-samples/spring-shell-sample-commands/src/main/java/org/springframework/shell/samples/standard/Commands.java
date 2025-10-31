@@ -23,59 +23,62 @@ import java.util.List;
 
 import jakarta.validation.constraints.Size;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
+
 
 /**
  * Example commands for the Shell 2 Standard resolver.
  *
  * @author Eric Bottard
  */
-@ShellComponent()
+@Command()
 public class Commands {
 
-	@ShellMethod(value = "A command whose name looks the same as another one.", key = "help me out")
+	@Command(description = "A command whose name looks the same as another one.", command = "help me out")
 	public void helpMeOut() {
 		System.out.println("You can go");
 	}
 
-	@ShellMethod("Change Password. Shows support for bean validation.")
+	@Command(description = "Change Password. Shows support for bean validation.")
 	public String changePassword(@Size(min = 8) String password) {
 		return "Password changed";
 	}
 
-	@ShellMethod(value = "Shows non trivial character encoding.")
+	@Command(description = "Shows non trivial character encoding.")
 	public String helloWorld() {
 		return "こんにちは世界";
 	}
 
-	@ShellMethod("Shows support for boolean parameters, with arity=0.")
-	public void shutdown(@ShellOption(arity = 0) boolean force) {
+	@Command(description = "Shows support for boolean parameters, with arity=0.")
+	public void shutdown(@Option(arity = CommandRegistration.OptionArity.ZERO) boolean force) {
 		System.out.println("You passed " + force);
 	}
 
-	@ShellMethod("Add numbers.")
+	@Command(description = "Add numbers.")
 	public int add(int a, int b, int c) {
 		return a + b + c;
 	}
 
-	@ShellMethod("Concat strings.")
+	@Command(description = "Concat strings.")
 	public String concat(String a, String b, String c) {
 		return a + b + c;
 	}
 
-	@ShellMethod("Fails with an exception. Shows enum conversion.")
+	@Command(description = "Fails with an exception. Shows enum conversion.")
 	public void fail(ElementType elementType) {
 		throw new IllegalArgumentException("You said " + elementType);
 	}
 
-	@ShellMethod("Add array numbers.")
-	public double addDoubles(@ShellOption(arity = 3) double[] numbers) {
+	@Command(description = "Add array numbers.")
+	public double addDoubles(
+			@Option(arity = CommandRegistration.OptionArity.ONE_OR_MORE) // FIXME what if it's a number? like 3 in this case?
+			double[] numbers) {
 		return Arrays.stream(numbers).sum();
 	}
 
-	@ShellMethod("Get iterables.")
+	@Command(description = "Get iterables.")
 	public Iterable<String> iterables() {
 		List<String> list = Arrays.asList("first", "second");
 		Iterable<String> iterable = new Iterable<String>() {

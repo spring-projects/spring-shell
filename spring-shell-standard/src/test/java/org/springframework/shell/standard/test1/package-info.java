@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-@ShellCommandGroup("Implicit Group Package Level 1")
 package org.springframework.shell.standard.test1;
 
-import org.springframework.shell.standard.ShellCommandGroup;

@@ -23,9 +23,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,81 +31,6 @@ import org.springframework.stereotype.Component;
  * @author Janne Valkealahti
  */
 public class OptionTypeCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-string", group = GROUP)
-		public String optionTypeStringAnnotation(
-			@ShellOption(help = "Desc arg1") String arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-boolean", group = GROUP)
-		public String optionTypeBooleanAnnotation(
-			@ShellOption() boolean arg1,
-			@ShellOption(defaultValue = "true") boolean arg2,
-			@ShellOption(defaultValue = "false") boolean arg3,
-			@ShellOption() Boolean arg4,
-			@ShellOption(defaultValue = "true") Boolean arg5,
-			@ShellOption(defaultValue = "false") Boolean arg6,
-			boolean arg7
-		) {
-			return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s arg7=%s", arg1, arg2, arg3,
-					arg4, arg5, arg6, arg7);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-integer", group = GROUP)
-		public String optionTypeIntegerAnnotation(
-			@ShellOption int arg1,
-			@ShellOption Integer arg2
-		) {
-			return String.format("Hello '%s' '%s'", arg1, arg2);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-enum", group = GROUP)
-		public String optionTypeEnumAnnotation(
-			@ShellOption(help = "Desc arg1") OptionTypeEnum arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-string-array", group = GROUP)
-		public String optionTypeStringArrayAnnotation(
-			@ShellOption(help = "Desc arg1") String[] arg1
-		) {
-			return "Hello " + stringOfStrings(arg1);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-int-array", group = GROUP)
-		public String optionTypeIntArrayAnnotation(
-			@ShellOption(help = "Desc arg1") int[] arg1
-		) {
-			return "Hello " + stringOfInts(arg1);
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-string-list", group = GROUP)
-		public String optionTypeStringListAnnotation(
-			@ShellOption(help = "Desc arg1") List<String> arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-string-set", group = GROUP)
-		public String optionTypeStringSetAnnotation(
-			@ShellOption(help = "Desc arg1") Set<String> arg1
-		) {
-			return "Hello " + arg1;
-		}
-
-		@ShellMethod(key = LEGACY_ANNO + "option-type-string-collection", group = GROUP)
-		public String optionTypeStringCollectionAnnotation(
-			@ShellOption(help = "Desc arg1") Collection<String> arg1
-		) {
-			return "Hello " + arg1;
-		}
-	}
 
 	@Command(command = BaseE2ECommands.ANNO, group = BaseE2ECommands.GROUP)
 	public static class Annotation extends BaseE2ECommands {

@@ -15,13 +15,8 @@
  */
 package org.springframework.shell.samples.e2e;
 
-import jakarta.validation.constraints.Min;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,18 +25,6 @@ import org.springframework.stereotype.Component;
  * @author Janne Valkealahti
  */
 public class ValidatedValueCommands {
-
-	@ShellComponent
-	public static class LegacyAnnotation extends BaseE2ECommands {
-
-		@ShellMethod(key = LEGACY_ANNO + "validated-value", group = GROUP)
-		public String testValidatedValueAnnotation(
-			@ShellOption @Min(value = 1) Integer arg1,
-			@ShellOption @Min(value = 1) Integer arg2
-		) {
-			return "Hello " + arg1;
-		}
-	}
 
 	@Component
 	public static class Registration extends BaseE2ECommands {

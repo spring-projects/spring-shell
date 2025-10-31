@@ -15,9 +15,7 @@
  */
 package org.springframework.shell.standard.commands;
 
-import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.standard.completion.BashCompletions;
 import org.springframework.shell.standard.completion.ZshCompletions;
 
@@ -27,8 +25,7 @@ import org.springframework.shell.standard.completion.ZshCompletions;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-@ShellComponent
-public class Completion extends AbstractShellComponent {
+public class Completion extends AbstractCommand {
 
 	/**
 	 * Marker interface used in auto-config.
@@ -42,13 +39,13 @@ public class Completion extends AbstractShellComponent {
 		this.rootCommand = rootCommand;
 	}
 
-	@ShellMethod(key = "completion bash", value = "Generate bash completion script")
+	@org.springframework.shell.command.annotation.Command(command = "completion bash", description = "Generate bash completion script")
 	public String bash() {
 		BashCompletions bashCompletions = new BashCompletions(getResourceLoader(), getCommandCatalog());
 		return bashCompletions.generate(rootCommand);
 	}
 
-	@ShellMethod(key = "completion zsh", value = "Generate zsh completion script")
+	@org.springframework.shell.command.annotation.Command(command = "completion zsh", description = "Generate zsh completion script")
 	public String zsh() {
 		ZshCompletions zshCompletions = new ZshCompletions(getResourceLoader(), getCommandCatalog());
 		return zshCompletions.generate(rootCommand);

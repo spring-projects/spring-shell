@@ -19,12 +19,11 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import org.springframework.shell.samples.AbstractSampleTests;
-import org.springframework.shell.samples.e2e.ErrorHandlingCommands.LegacyAnnotation;
 import org.springframework.shell.samples.e2e.ErrorHandlingCommands.Registration;
 import org.springframework.shell.test.ShellTestClient.BaseShellSession;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = { LegacyAnnotation.class, Registration.class })
+@ContextConfiguration(classes = { Registration.class })
 class ErrorHandlingCommandsTests extends AbstractSampleTests {
 
 	@ParameterizedTest

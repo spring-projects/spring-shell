@@ -17,14 +17,12 @@
 package org.springframework.shell.samples.standard;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.command.annotation.Command;
 import org.springframework.stereotype.Component;
 
-@ShellComponent
 class ConversionCommands {
 
-	@ShellMethod("Shows conversion using Spring converter")
+	@Command(description = "Shows conversion using Spring converter")
 	public Object conversionExample(DomainObject object) {
 		return object;
 	}

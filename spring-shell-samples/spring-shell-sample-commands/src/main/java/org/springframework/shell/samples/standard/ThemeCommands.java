@@ -25,14 +25,12 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.tui.style.FigureSettings;
 import org.springframework.shell.tui.style.StyleSettings;
 import org.springframework.shell.tui.style.ThemeResolver;
 
-@ShellComponent
 public class ThemeCommands {
 
 	List<String> colorGround = Arrays.asList("fg", "bg");
@@ -50,7 +48,7 @@ public class ThemeCommands {
 	@Autowired
 	private ThemeResolver themeResolver;
 
-	@ShellMethod(key = "theme showcase values", value = "Showcase colors and styles", group = "Styles")
+	@Command(command = "theme showcase values", description = "Showcase colors and styles", group = "Styles")
 	public AttributedString showcaseValues() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		combinations1().stream()
@@ -65,7 +63,7 @@ public class ThemeCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "theme showcase rgb", value = "Showcase colors and styles with rgb", group = "Styles")
+	@Command(command = "theme showcase rgb", description = "Showcase colors and styles with rgb", group = "Styles")
 	public AttributedString showcaseRgb() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		combinations2().stream()
@@ -80,7 +78,7 @@ public class ThemeCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "theme style list", value = "List styles", group = "Styles")
+	@Command(command = "theme style list", description = "List styles", group = "Styles")
 	public AttributedString styleList() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		themeTags.stream()
@@ -96,9 +94,9 @@ public class ThemeCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "theme style resolve", value = "Resolve given style", group = "Styles")
+	@Command(command = "theme style resolve", description = "Resolve given style", group = "Styles")
 	public AttributedString styleResolve(
-		@ShellOption(value = "--spec", defaultValue = "default") String spec
+		@Option(longNames = "--spec", defaultValue = "default") String spec
 	) {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		AttributedStyle style = themeResolver.resolveStyle(spec);
@@ -108,9 +106,9 @@ public class ThemeCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "theme expression resolve", value = "Resolve given style expression", group = "Styles")
+	@Command(command = "theme expression resolve", description = "Resolve given style expression", group = "Styles")
 	public AttributedString expressionResolve(
-		@ShellOption(value = "--expression", defaultValue = "hi @{bold from} expression") String expression
+		@Option(longNames = "--expression", defaultValue = "hi @{bold from} expression") String expression
 	) {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		AttributedString styledStr = themeResolver.evaluateExpression(expression);
@@ -119,7 +117,7 @@ public class ThemeCommands {
 		return builder.toAttributedString();
 	}
 
-	@ShellMethod(key = "theme figure list", value = "List figures", group = "Styles")
+	@Command(command = "theme figure list", description = "List figures", group = "Styles")
 	public AttributedString figureList() {
 		AttributedStringBuilder builder = new AttributedStringBuilder();
 		Stream.of(FigureSettings.tags())

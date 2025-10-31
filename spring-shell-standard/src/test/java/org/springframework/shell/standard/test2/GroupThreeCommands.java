@@ -16,20 +16,17 @@
 
 package org.springframework.shell.standard.test2;
 
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
 
-@ShellComponent
-@ShellCommandGroup("Explicit Group 3 Class Level")
+import org.springframework.shell.command.annotation.Command;
+
 public class GroupThreeCommands {
 
-	@ShellMethod(value = "Do Something.", group = "Explicit Group Method Level 3")
+	@Command(description = "Do Something.", group = "Explicit Group Method Level 3")
 	public void explicit3() {
 
 	}
 
-	@ShellMethod(value = "Do Something Else")
+	@Command(description = "Do Something Else")
 	public void implicit3() {
 
 	}
