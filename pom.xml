@@ -84,7 +84,6 @@
 	</properties>
 
 	<modules>
-		<module>spring-shell-table</module>
 		<module>spring-shell-tui</module>
 		<module>spring-shell-core</module>
 		<module>spring-shell-standard</module>
