@@ -16,9 +16,8 @@
 package org.springframework.shell.standard.commands;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.context.InteractionMode;
-import org.springframework.shell.result.ThrowableResultHandler;
+import org.springframework.shell.core.context.InteractionMode;
+import org.springframework.shell.core.result.ThrowableResultHandler;
 import org.springframework.shell.standard.AbstractCommand;
 
 /**
@@ -48,7 +47,7 @@ public class Stacktrace extends AbstractCommand {
 		this.throwableResultHandler = throwableResultHandler;
 	}
 
-	@org.springframework.shell.command.annotation.Command(command = ThrowableResultHandler.DETAILS_COMMAND_NAME,
+	@org.springframework.shell.core.command.annotation.Command(command = ThrowableResultHandler.DETAILS_COMMAND_NAME,
 			description = "Display the full stacktrace of the last error.",
 			interactionMode = InteractionMode.INTERACTIVE)
 	public void stacktrace() {

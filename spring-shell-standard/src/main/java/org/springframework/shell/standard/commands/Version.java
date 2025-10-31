@@ -27,7 +27,6 @@ import org.jline.utils.AttributedString;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
-import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.util.Assert;
@@ -55,7 +54,7 @@ public class Version extends AbstractCommand {
 		this.templateExecutor = templateExecutor;
 	}
 
-	@org.springframework.shell.command.annotation.Command(command = "version", description = "Show version info")
+	@org.springframework.shell.core.command.annotation.Command(command = "version", description = "Show version info")
 	public AttributedString version() {
 		Assert.notNull(template, "'template' must not be null");
 		String templateResource = resourceAsString(getResourceLoader().getResource(template));

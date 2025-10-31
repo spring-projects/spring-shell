@@ -17,7 +17,7 @@
 package org.springframework.shell.standard.test2;
 
 
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Command;
 
 public class GroupTwoCommands {
 

@@ -17,8 +17,8 @@ package org.springframework.shell.samples.standard;
 
 import java.util.ArrayList;
 
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.tui.component.ViewComponent;
 import org.springframework.shell.tui.component.ViewComponent.ViewComponentRun;
 import org.springframework.shell.tui.component.view.TerminalUI;

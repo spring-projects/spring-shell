@@ -17,8 +17,8 @@ package org.springframework.shell.standard;
 
 import java.util.List;
 
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.core.CompletionContext;
+import org.springframework.shell.core.CompletionProposal;
 
 /**
  * Beans implementing this interface are queried during TAB completion to gather

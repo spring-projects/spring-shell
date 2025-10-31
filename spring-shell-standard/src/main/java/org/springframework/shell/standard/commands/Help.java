@@ -29,9 +29,9 @@ import org.jline.utils.AttributedString;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
-import org.springframework.shell.Utils;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.Utils;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.standard.AbstractCommand;
 import org.springframework.shell.tui.style.TemplateExecutor;
 import org.springframework.util.Assert;
@@ -74,7 +74,7 @@ public class Help extends AbstractCommand {
 		this.templateExecutor = templateExecutor;
 	}
 
-	@org.springframework.shell.command.annotation.Command(command = "Display help about available commands")
+	@org.springframework.shell.core.command.annotation.Command(command = "Display help about available commands")
 	public AttributedString help(
 			@Option(defaultValue = Option.NULL, shortNames = { 'C'}, longNames = {"--command" }, description = "The command to obtain help for.", arity = CommandRegistration.OptionArity.ONE_OR_MORE)
 			// FIXME @OptionValues(provider = CommandValueProvider.class) // How to migrate valueProvider?

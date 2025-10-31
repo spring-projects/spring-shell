@@ -27,15 +27,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.shell.ResultHandler;
-import org.springframework.shell.ResultHandlerService;
-import org.springframework.shell.Shell;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.config.ShellConversionServiceSupplier;
-import org.springframework.shell.context.ShellContext;
-import org.springframework.shell.exit.ExitCodeMappings;
-import org.springframework.shell.result.GenericResultHandlerService;
-import org.springframework.shell.result.ResultHandlerConfig;
+import org.springframework.shell.core.ResultHandler;
+import org.springframework.shell.core.ResultHandlerService;
+import org.springframework.shell.core.Shell;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.config.ShellConversionServiceSupplier;
+import org.springframework.shell.core.context.ShellContext;
+import org.springframework.shell.core.exit.ExitCodeMappings;
+import org.springframework.shell.core.result.GenericResultHandlerService;
+import org.springframework.shell.core.result.ResultHandlerConfig;
 
 /**
  * Creates supporting beans for running the Shell

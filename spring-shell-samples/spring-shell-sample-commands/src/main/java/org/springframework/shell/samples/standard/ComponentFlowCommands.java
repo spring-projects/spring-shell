@@ -27,12 +27,12 @@ import org.jline.terminal.impl.DumbTerminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandExecution.CommandParserExceptionsException;
-import org.springframework.shell.command.CommandParser;
-import org.springframework.shell.command.CommandParser.CommandParserException;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.CommandExecution.CommandParserExceptionsException;
+import org.springframework.shell.core.command.CommandParser;
+import org.springframework.shell.core.command.CommandParser.CommandParserException;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.tui.component.flow.ComponentFlow;
 import org.springframework.shell.tui.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.tui.component.flow.ResultMode;

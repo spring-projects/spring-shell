@@ -22,9 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandContext;
-import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

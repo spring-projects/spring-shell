@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.shell.config.UserConfigPathProvider;
+import org.springframework.shell.core.config.UserConfigPathProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,3 +1,3 @@
 org.springframework.aot.hint.RuntimeHintsRegistrar=\
-org.springframework.shell.CoreResourcesRuntimeHints,\
-org.springframework.shell.JnaRuntimeHints
+org.springframework.shell.core.CoreResourcesRuntimeHints,\
+org.springframework.shell.core.JnaRuntimeHints

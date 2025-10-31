@@ -18,10 +18,10 @@ package org.springframework.shell.docs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandCatalogCustomizer;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.CommandResolver;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandCatalogCustomizer;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandResolver;
 
 public class CommandCatalogSnippets {
 

@@ -17,7 +17,7 @@ package org.springframework.shell.samples.catalog;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.command.annotation.CommandScan;
+import org.springframework.shell.core.command.annotation.CommandScan;
 import org.springframework.shell.tui.style.FigureSettings;
 import org.springframework.shell.tui.style.StyleSettings;
 import org.springframework.shell.tui.style.Theme;

@@ -22,9 +22,9 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
-import org.springframework.shell.completion.CompletionResolver;
-import org.springframework.shell.config.ShellConversionServiceSupplier;
+import org.springframework.shell.core.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.core.completion.CompletionResolver;
+import org.springframework.shell.core.config.ShellConversionServiceSupplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -15,9 +15,9 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.context.InteractionMode;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.context.InteractionMode;
 
 public class CommandRegistrationInteractionModeSnippets {
 

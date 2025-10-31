@@ -19,14 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.command.annotation.OptionValues;
-import org.springframework.shell.completion.CompletionProvider;
-import org.springframework.shell.completion.CompletionResolver;
+import org.springframework.shell.core.CompletionContext;
+import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
+import org.springframework.shell.core.command.annotation.OptionValues;
+import org.springframework.shell.core.completion.CompletionProvider;
+import org.springframework.shell.core.completion.CompletionResolver;
 
 public class CompletionSnippets {
 

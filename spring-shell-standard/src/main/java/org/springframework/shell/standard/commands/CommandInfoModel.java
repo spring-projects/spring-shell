@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.Availability;
-import org.springframework.shell.command.CommandOption;
-import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.core.Availability;
+import org.springframework.shell.core.command.CommandOption;
+import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;

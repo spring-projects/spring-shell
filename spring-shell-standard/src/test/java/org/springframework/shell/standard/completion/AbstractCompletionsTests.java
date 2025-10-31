@@ -19,10 +19,10 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.standard.completion.AbstractCompletions.CommandModel;
 
 import static org.assertj.core.api.Assertions.assertThat;

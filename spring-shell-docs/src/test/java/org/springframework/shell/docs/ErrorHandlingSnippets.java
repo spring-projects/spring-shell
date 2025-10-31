@@ -21,11 +21,11 @@ import org.jline.terminal.Terminal;
 
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandExceptionResolver;
-import org.springframework.shell.command.CommandHandlingResult;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.ExceptionResolver;
-import org.springframework.shell.command.annotation.ExitCode;
+import org.springframework.shell.core.command.CommandExceptionResolver;
+import org.springframework.shell.core.command.CommandHandlingResult;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.ExceptionResolver;
+import org.springframework.shell.core.command.annotation.ExitCode;
 
 class ErrorHandlingSnippets {
 

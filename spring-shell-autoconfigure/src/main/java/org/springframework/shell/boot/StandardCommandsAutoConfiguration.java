@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.shell.boot.SpringShellProperties.HelpCommand.GroupingMode;
 import org.springframework.shell.boot.SpringShellProperties.VersionCommand;
 import org.springframework.shell.boot.condition.OnCompletionCommandCondition;
-import org.springframework.shell.result.ThrowableResultHandler;
+import org.springframework.shell.core.result.ThrowableResultHandler;
 import org.springframework.shell.standard.commands.Clear;
 import org.springframework.shell.standard.commands.Completion;
 import org.springframework.shell.standard.commands.Help;

@@ -17,10 +17,10 @@ package org.springframework.shell.samples.standard;
 
 import java.util.function.Function;
 
-import org.springframework.shell.command.CommandContext;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.standard.AbstractCommand;
 
 public class RegisterCommands extends AbstractCommand {

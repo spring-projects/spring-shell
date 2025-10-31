@@ -18,9 +18,9 @@ package org.springframework.shell.docs;
 import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.command.CommandContext;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
 
 class WritingSnippets {
 

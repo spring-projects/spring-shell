@@ -23,8 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.annotation.Option;
 
 /**
  * A command that displays all previously run commands, optionally dumping to a file readable by {@link Script}.
@@ -53,7 +52,7 @@ public class History {
     public interface Command {
     }
 
-    @org.springframework.shell.command.annotation.Command(description = "Display or save the history of previously run commands")
+    @org.springframework.shell.core.command.annotation.Command(description = "Display or save the history of previously run commands")
     public List<String> history(@Option(description = "A file to save history to.", defaultValue = Option.NULL) File file) throws IOException {
         if (file == null) {
             List<String> result = new ArrayList<>(jLineHistory.size());

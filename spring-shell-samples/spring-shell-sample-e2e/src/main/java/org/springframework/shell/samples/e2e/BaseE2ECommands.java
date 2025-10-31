@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.util.StringUtils;
 
 /**

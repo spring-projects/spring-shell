@@ -1,6 +1,6 @@
 package org.springframework.shell.boot;
 
-import org.springframework.shell.jline.NonInteractiveShellRunner;
+import org.springframework.shell.core.jline.NonInteractiveShellRunner;
 
 /**
  * Callback interface that can be implemented by beans wishing to customize the

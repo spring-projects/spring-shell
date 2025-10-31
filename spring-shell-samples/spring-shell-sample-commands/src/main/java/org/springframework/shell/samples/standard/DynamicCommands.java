@@ -16,9 +16,8 @@
 
 package org.springframework.shell.samples.standard;
 
-import org.springframework.shell.Availability;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.CommandAvailability;
+import org.springframework.shell.core.Availability;
+import org.springframework.shell.core.command.annotation.Command;
 
 /**
  * Showcases dynamic command availability.

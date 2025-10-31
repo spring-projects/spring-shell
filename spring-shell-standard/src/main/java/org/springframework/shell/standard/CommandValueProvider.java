@@ -19,9 +19,9 @@ package org.springframework.shell.standard;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.core.CompletionContext;
+import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.command.CommandCatalog;
 
 /**
  * A {@link ValueProvider} that can be used to auto-complete names of shell commands.

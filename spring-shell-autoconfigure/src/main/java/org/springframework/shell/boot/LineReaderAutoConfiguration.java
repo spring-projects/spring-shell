@@ -38,8 +38,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.config.UserConfigPathProvider;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.config.UserConfigPathProvider;
 import org.springframework.util.StringUtils;
 
 /**

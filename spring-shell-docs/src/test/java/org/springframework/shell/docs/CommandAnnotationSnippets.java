@@ -15,9 +15,9 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.CommandScan;
-import org.springframework.shell.command.annotation.EnableCommand;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.CommandScan;
+import org.springframework.shell.core.command.annotation.EnableCommand;
 
 class CommandAnnotationSnippets {
 

@@ -15,9 +15,7 @@
  */
 package org.springframework.shell.docs;
 
-import jakarta.validation.constraints.Null;
-
-import org.springframework.shell.command.CommandContext;
+import org.springframework.shell.core.command.CommandContext;
 
 @SuppressWarnings("unused")
 public class CommandContextSnippets {

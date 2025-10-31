@@ -21,8 +21,7 @@ import java.io.Reader;
 
 import org.jline.reader.Parser;
 
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.jline.FileInputProvider;
+import org.springframework.shell.core.jline.FileInputProvider;
 import org.springframework.shell.standard.AbstractCommand;
 
 /**
@@ -53,7 +52,7 @@ public class Script extends AbstractCommand {
     public interface Command {
     }
 
-    @org.springframework.shell.command.annotation.Command(command = "Read and execute commands from a file.")
+    @org.springframework.shell.core.command.annotation.Command(command = "Read and execute commands from a file.")
     public void script(File file) throws Exception {
         Reader reader = new FileReader(file);
         try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {

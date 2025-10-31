@@ -17,7 +17,7 @@ package org.springframework.shell.samples.catalog;
 
 import java.util.List;
 
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.tui.component.view.TerminalUIBuilder;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.standard.AbstractCommand;

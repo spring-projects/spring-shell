@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.core.CompletionContext;
+import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;

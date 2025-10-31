@@ -19,7 +19,7 @@ package org.springframework.shell.boot;
 import org.springframework.boot.LazyInitializationExcludeFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandCatalog;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.EnumValueProvider;
 import org.springframework.shell.standard.FileValueProvider;

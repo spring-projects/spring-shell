@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.result.CommandNotFoundMessageProvider;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.result.CommandNotFoundMessageProvider;
 
 @SuppressWarnings("unused")
 class CommandNotFoundSnippets {

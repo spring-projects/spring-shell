@@ -22,13 +22,13 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.handler.annotation.support.HeadersMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
-import org.springframework.shell.command.ArgumentHeaderMethodArgumentResolver;
-import org.springframework.shell.command.CommandContextMethodArgumentResolver;
-import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
-import org.springframework.shell.command.annotation.support.OptionMethodArgumentResolver;
-import org.springframework.shell.completion.CompletionResolver;
-import org.springframework.shell.completion.RegistrationOptionsCompletionResolver;
-import org.springframework.shell.config.ShellConversionServiceSupplier;
+import org.springframework.shell.core.command.ArgumentHeaderMethodArgumentResolver;
+import org.springframework.shell.core.command.CommandContextMethodArgumentResolver;
+import org.springframework.shell.core.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.core.command.annotation.support.OptionMethodArgumentResolver;
+import org.springframework.shell.core.completion.CompletionResolver;
+import org.springframework.shell.core.completion.RegistrationOptionsCompletionResolver;
+import org.springframework.shell.core.config.ShellConversionServiceSupplier;
 
 @AutoConfiguration
 public class ParameterResolverAutoConfiguration {

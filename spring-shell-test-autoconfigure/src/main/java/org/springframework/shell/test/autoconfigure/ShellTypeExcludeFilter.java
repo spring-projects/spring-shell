@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.springframework.boot.context.TypeExcludeFilter;
 import org.springframework.boot.test.context.filter.annotation.StandardAnnotationCustomizableTypeExcludeFilter;
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Command;
 
 /**
  * {@link TypeExcludeFilter} for {@link ShellTest @ShellTest}.

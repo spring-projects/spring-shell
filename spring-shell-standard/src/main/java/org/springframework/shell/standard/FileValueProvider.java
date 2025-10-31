@@ -25,8 +25,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.core.CompletionContext;
+import org.springframework.shell.core.CompletionProposal;
 import org.springframework.util.StringUtils;
 
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;

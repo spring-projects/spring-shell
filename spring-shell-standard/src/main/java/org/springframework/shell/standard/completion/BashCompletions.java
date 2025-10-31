@@ -16,7 +16,7 @@
 package org.springframework.shell.standard.completion;
 
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandCatalog;
 
 /**
  * Completion script generator for a {@code bash}.

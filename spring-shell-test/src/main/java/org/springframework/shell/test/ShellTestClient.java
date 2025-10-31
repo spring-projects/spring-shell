@@ -26,14 +26,12 @@ import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.DefaultApplicationArguments;
-import org.springframework.shell.Shell;
-import org.springframework.shell.ShellRunner;
-import org.springframework.shell.context.DefaultShellContext;
-import org.springframework.shell.jline.InteractiveShellRunner;
-import org.springframework.shell.jline.NonInteractiveShellRunner;
-import org.springframework.shell.jline.PromptProvider;
+import org.springframework.shell.core.Shell;
+import org.springframework.shell.core.ShellRunner;
+import org.springframework.shell.core.context.DefaultShellContext;
+import org.springframework.shell.core.jline.InteractiveShellRunner;
+import org.springframework.shell.core.jline.NonInteractiveShellRunner;
+import org.springframework.shell.core.jline.PromptProvider;
 import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
 
 /**

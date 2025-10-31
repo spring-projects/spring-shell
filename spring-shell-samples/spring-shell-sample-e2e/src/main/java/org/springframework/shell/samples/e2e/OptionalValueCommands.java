@@ -16,9 +16,9 @@
 package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.stereotype.Component;
 
 /**

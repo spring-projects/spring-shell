@@ -25,9 +25,9 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandExecution;
-import org.springframework.shell.exit.ExitCodeExceptionProvider;
-import org.springframework.shell.exit.ExitCodeMappings;
+import org.springframework.shell.core.command.CommandExecution;
+import org.springframework.shell.core.exit.ExitCodeExceptionProvider;
+import org.springframework.shell.core.exit.ExitCodeMappings;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for exit codes.

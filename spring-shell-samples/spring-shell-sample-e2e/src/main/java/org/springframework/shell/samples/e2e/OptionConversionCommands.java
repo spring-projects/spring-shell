@@ -16,16 +16,15 @@
 package org.springframework.shell.samples.e2e;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.stereotype.Component;
 
 public class OptionConversionCommands {

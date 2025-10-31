@@ -30,8 +30,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.jline.ExtendedDefaultParser;
-import org.springframework.shell.jline.PromptProvider;
+import org.springframework.shell.core.jline.ExtendedDefaultParser;
+import org.springframework.shell.core.jline.PromptProvider;
 
 /**
  * Shell implementation using JLine to capture input and trigger completions.

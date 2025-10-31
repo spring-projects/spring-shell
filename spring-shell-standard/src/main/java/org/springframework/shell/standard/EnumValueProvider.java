@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.ResolvableType;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.command.CommandOption;
+import org.springframework.shell.core.CompletionContext;
+import org.springframework.shell.core.CompletionProposal;
+import org.springframework.shell.core.command.CommandOption;
 
 /**
  * A {@link ValueProvider} that knows how to complete values for {@link Enum} typed parameters.

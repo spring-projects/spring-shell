@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.CommandResolver;
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandResolver;
+import org.springframework.shell.core.command.annotation.Command;
 
 public class ResolvedCommands {
 

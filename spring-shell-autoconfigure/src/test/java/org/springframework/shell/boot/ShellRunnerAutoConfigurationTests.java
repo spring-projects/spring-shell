@@ -22,14 +22,14 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.shell.Shell;
-import org.springframework.shell.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
-import org.springframework.shell.completion.CompletionResolver;
-import org.springframework.shell.context.ShellContext;
-import org.springframework.shell.jline.InteractiveShellRunner;
-import org.springframework.shell.jline.NonInteractiveShellRunner;
-import org.springframework.shell.jline.PromptProvider;
-import org.springframework.shell.jline.ScriptShellRunner;
+import org.springframework.shell.core.Shell;
+import org.springframework.shell.core.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
+import org.springframework.shell.core.completion.CompletionResolver;
+import org.springframework.shell.core.context.ShellContext;
+import org.springframework.shell.core.jline.InteractiveShellRunner;
+import org.springframework.shell.core.jline.NonInteractiveShellRunner;
+import org.springframework.shell.core.jline.PromptProvider;
+import org.springframework.shell.core.jline.ScriptShellRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;

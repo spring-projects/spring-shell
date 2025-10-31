@@ -38,9 +38,9 @@ import org.stringtemplate.v4.STGroupString;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.Utils;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.core.Utils;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

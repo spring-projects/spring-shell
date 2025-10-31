@@ -18,11 +18,11 @@ package org.springframework.shell.docs;
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.CommandRegistration.OptionArity;
-import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandRegistration.OptionArity;
+import org.springframework.shell.core.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 
 public class OptionSnippets {
 

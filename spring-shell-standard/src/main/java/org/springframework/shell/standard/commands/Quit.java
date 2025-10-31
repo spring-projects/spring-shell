@@ -16,8 +16,8 @@
 
 package org.springframework.shell.standard.commands;
 
-import org.springframework.shell.ExitRequest;
-import org.springframework.shell.context.InteractionMode;
+import org.springframework.shell.core.ExitRequest;
+import org.springframework.shell.core.context.InteractionMode;
 
 /**
  * A command that terminates the running shell.
@@ -39,7 +39,7 @@ public class Quit {
 	 */
 	public interface Command {}
 
-	@org.springframework.shell.command.annotation.Command(description = "Exit the shell.", command = {"quit", "exit"}, interactionMode = InteractionMode.INTERACTIVE)
+	@org.springframework.shell.core.command.annotation.Command(description = "Exit the shell.", command = {"quit", "exit"}, interactionMode = InteractionMode.INTERACTIVE)
 	public void quit() {
 		throw new ExitRequest();
 	}

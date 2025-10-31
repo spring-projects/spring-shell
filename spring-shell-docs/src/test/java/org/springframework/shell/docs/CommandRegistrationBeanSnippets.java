@@ -17,7 +17,7 @@ package org.springframework.shell.docs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.boot.CommandRegistrationCustomizer;
-import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandRegistration;
 
 public class CommandRegistrationBeanSnippets {
 

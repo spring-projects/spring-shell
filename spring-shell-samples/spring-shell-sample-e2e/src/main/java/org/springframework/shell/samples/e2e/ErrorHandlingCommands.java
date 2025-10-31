@@ -15,18 +15,11 @@
  */
 package org.springframework.shell.samples.e2e;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import org.jline.terminal.Terminal;
-
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandExceptionResolver;
-import org.springframework.shell.command.CommandHandlingResult;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.ExceptionResolver;
-import org.springframework.shell.command.annotation.ExitCode;
+import org.springframework.shell.core.command.CommandExceptionResolver;
+import org.springframework.shell.core.command.CommandHandlingResult;
+import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.stereotype.Component;
 
 /**

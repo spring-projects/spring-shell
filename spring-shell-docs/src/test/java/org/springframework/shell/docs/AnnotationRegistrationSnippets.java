@@ -16,7 +16,7 @@
 package org.springframework.shell.docs;
 
 
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Command;
 
 public class AnnotationRegistrationSnippets {
 

@@ -17,7 +17,7 @@ package org.springframework.shell.samples.e2e;
 
 import org.junit.jupiter.params.ParameterizedTest;
 
-import org.springframework.shell.command.annotation.EnableCommand;
+import org.springframework.shell.core.command.annotation.EnableCommand;
 import org.springframework.shell.samples.AbstractSampleTests;
 import org.springframework.shell.samples.e2e.HelpCommands.Registration;
 import org.springframework.shell.samples.e2e.HelpCommands.Annotation;

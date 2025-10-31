@@ -25,14 +25,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.Shell;
+import org.springframework.shell.core.Shell;
 import org.springframework.shell.boot.condition.OnNotPrimaryCommandCondition;
 import org.springframework.shell.boot.condition.OnPrimaryCommandCondition;
-import org.springframework.shell.context.ShellContext;
-import org.springframework.shell.jline.InteractiveShellRunner;
-import org.springframework.shell.jline.NonInteractiveShellRunner;
-import org.springframework.shell.jline.PromptProvider;
-import org.springframework.shell.jline.ScriptShellRunner;
+import org.springframework.shell.core.context.ShellContext;
+import org.springframework.shell.core.jline.InteractiveShellRunner;
+import org.springframework.shell.core.jline.NonInteractiveShellRunner;
+import org.springframework.shell.core.jline.PromptProvider;
+import org.springframework.shell.core.jline.ScriptShellRunner;
 
 @AutoConfiguration
 public class ShellRunnerAutoConfiguration {

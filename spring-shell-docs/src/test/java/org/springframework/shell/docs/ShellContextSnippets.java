@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.context.InteractionMode;
-import org.springframework.shell.context.ShellContext;
+import org.springframework.shell.core.context.InteractionMode;
+import org.springframework.shell.core.context.ShellContext;
 
 @SuppressWarnings("unused")
 class ShellContextSnippets {

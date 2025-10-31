@@ -25,16 +25,16 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.MethodTargetRegistrar;
+import org.springframework.shell.core.MethodTargetRegistrar;
 import org.springframework.shell.boot.SpringShellProperties.Help;
-import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandCatalogCustomizer;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
-import org.springframework.shell.command.CommandRegistration.OptionNameModifier;
-import org.springframework.shell.command.support.OptionNameModifierSupport;
-import org.springframework.shell.command.CommandResolver;
-import org.springframework.shell.context.ShellContext;
+import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandCatalogCustomizer;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandRegistration.BuilderSupplier;
+import org.springframework.shell.core.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.core.command.support.OptionNameModifierSupport;
+import org.springframework.shell.core.command.CommandResolver;
+import org.springframework.shell.core.context.ShellContext;
 
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)

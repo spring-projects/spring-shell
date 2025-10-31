@@ -20,8 +20,8 @@ import org.jline.terminal.spi.TerminalExt;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.context.DefaultShellContext;
-import org.springframework.shell.context.ShellContext;
+import org.springframework.shell.core.context.DefaultShellContext;
+import org.springframework.shell.core.context.ShellContext;
 
 @AutoConfiguration
 public class ShellContextAutoConfiguration {

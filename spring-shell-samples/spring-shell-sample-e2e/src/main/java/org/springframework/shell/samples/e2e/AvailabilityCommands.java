@@ -16,12 +16,12 @@
 package org.springframework.shell.samples.e2e;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.Availability;
-import org.springframework.shell.AvailabilityProvider;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.CommandAvailability;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.core.Availability;
+import org.springframework.shell.core.AvailabilityProvider;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.CommandAvailability;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.stereotype.Component;
 
 public class AvailabilityCommands {

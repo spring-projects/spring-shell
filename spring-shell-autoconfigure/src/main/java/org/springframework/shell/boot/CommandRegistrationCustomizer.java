@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.boot;
 
-import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.core.command.CommandRegistration;
 
 /**
  * Callback interface that can be used to customize a {@link CommandRegistration.Builder}.

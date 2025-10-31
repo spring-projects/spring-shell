@@ -18,11 +18,11 @@ package org.springframework.shell.docs;
 import java.util.Calendar;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.Availability;
-import org.springframework.shell.AvailabilityProvider;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.CommandAvailability;
+import org.springframework.shell.core.Availability;
+import org.springframework.shell.core.AvailabilityProvider;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.CommandAvailability;
 
 import static java.util.Calendar.DAY_OF_WEEK;
 import static java.util.Calendar.SUNDAY;

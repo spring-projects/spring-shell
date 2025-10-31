@@ -18,8 +18,7 @@ package org.springframework.shell.standard.commands;
 
 import org.jline.utils.InfoCmp;
 
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.context.InteractionMode;
+import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.shell.standard.AbstractCommand;
 
 /**
@@ -46,7 +45,7 @@ public class Clear extends AbstractCommand {
 	public Clear() {
 	}
 
-	@org.springframework.shell.command.annotation.Command(command = "Clear the shell screen.", interactionMode = InteractionMode.INTERACTIVE)
+	@org.springframework.shell.core.command.annotation.Command(command = "Clear the shell screen.", interactionMode = InteractionMode.INTERACTIVE)
 	public void clear() {
 		getTerminal().puts(InfoCmp.Capability.clear_screen);
 	}

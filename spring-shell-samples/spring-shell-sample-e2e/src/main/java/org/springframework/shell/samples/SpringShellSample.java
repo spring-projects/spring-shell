@@ -22,8 +22,8 @@ import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.annotation.CommandScan;
-import org.springframework.shell.jline.PromptProvider;
+import org.springframework.shell.core.command.annotation.CommandScan;
+import org.springframework.shell.core.jline.PromptProvider;
 
 /**
  * Main entry point for the application.

@@ -19,9 +19,9 @@ import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.command.CommandContext;
-import org.springframework.shell.command.CommandRegistration;
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.stereotype.Component;
 
 public class StdOutTypeCommands {

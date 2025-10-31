@@ -17,7 +17,7 @@
 package org.springframework.shell.samples.standard;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.stereotype.Component;
 
 class ConversionCommands {
