@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,12 +38,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.config.UserConfigPathProvider;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
@@ -57,7 +58,7 @@ public class LineReaderAutoConfiguration {
 
 	private Parser parser;
 
-	private CommandCatalog commandRegistry;
+	private CommandRegistry commandRegistry;
 
 	private org.jline.reader.History jLineHistory;
 
@@ -68,8 +69,8 @@ public class LineReaderAutoConfiguration {
 	private UserConfigPathProvider userConfigPathProvider;
 
 	public LineReaderAutoConfiguration(Terminal terminal, Completer completer, Parser parser,
-			CommandCatalog commandRegistry, org.jline.reader.History jLineHistory,
-			SpringShellProperties springShellProperties, UserConfigPathProvider userConfigPathProvider) {
+									   CommandRegistry commandRegistry, org.jline.reader.History jLineHistory,
+									   SpringShellProperties springShellProperties, UserConfigPathProvider userConfigPathProvider) {
 		this.terminal = terminal;
 		this.completer = completer;
 		this.parser = parser;

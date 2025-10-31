@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@ package org.springframework.shell.docs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.shell.core.command.CommandCatalog;
-import org.springframework.shell.core.command.CommandCatalogCustomizer;
+import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.CommandRegistryCustomizer;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.CommandResolver;
 
-public class CommandCatalogSnippets {
+public class CommandRegistrySnippets {
 
-	CommandCatalog catalog = CommandCatalog.of();
+	CommandRegistry catalog = CommandRegistry.of();
 
 	void dump1() {
 		// tag::snippet1[]
@@ -53,14 +53,14 @@ public class CommandCatalogSnippets {
 	// end::snippet2[]
 
 	// tag::snippet3[]
-	static class CustomCommandCatalogCustomizer implements CommandCatalogCustomizer {
+	static class CustomCommandRegistryCustomizer implements CommandRegistryCustomizer {
 
 		@Override
-		public void customize(CommandCatalog commandCatalog) {
+		public void customize(CommandRegistry commandRegistry) {
 			CommandRegistration registration = CommandRegistration.builder()
 				.command("resolve command")
 				.build();
-			commandCatalog.register(registration);
+			commandRegistry.register(registration);
 		}
 	}
 	// end::snippet3[]

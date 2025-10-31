@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,18 @@
 package org.springframework.shell.standard.completion;
 
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 
 /**
  * Completion script generator for a {@code bash}.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public class BashCompletions extends AbstractCompletions {
 
-	public BashCompletions(ResourceLoader resourceLoader, CommandCatalog commandCatalog) {
-		super(resourceLoader, commandCatalog);
+	public BashCompletions(ResourceLoader resourceLoader, CommandRegistry commandRegistry) {
+		super(resourceLoader, commandRegistry);
 	}
 
 	public String generate(String rootCommand) {

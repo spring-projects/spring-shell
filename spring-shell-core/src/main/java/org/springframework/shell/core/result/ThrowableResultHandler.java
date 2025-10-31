@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.jline.utils.AttributedStyle;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.shell.core.ResultHandler;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.shell.core.context.ShellContext;
 import org.springframework.shell.core.jline.InteractiveShellRunner;
@@ -52,16 +52,16 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 
 	private @Nullable Throwable lastError;
 
-	private final CommandCatalog commandCatalog;
+	private final CommandRegistry commandRegistry;
 
 	private final ObjectProvider<InteractiveShellRunner> interactiveRunner;
 
 	private final ShellContext shellContext;
 
-	public ThrowableResultHandler(Terminal terminal, CommandCatalog commandCatalog, ShellContext shellContext,
-			ObjectProvider<InteractiveShellRunner> interactiveRunner) {
+	public ThrowableResultHandler(Terminal terminal, CommandRegistry commandRegistry, ShellContext shellContext,
+								  ObjectProvider<InteractiveShellRunner> interactiveRunner) {
 		super(terminal);
-		this.commandCatalog = commandCatalog;
+		this.commandRegistry = commandRegistry;
 		this.shellContext = shellContext;
 		this.interactiveRunner = interactiveRunner;
 	}
@@ -120,7 +120,7 @@ public class ThrowableResultHandler extends TerminalAwareResultHandler<Throwable
 	}
 
 	private boolean showShortError() {
-		return commandCatalog.getRegistrations().keySet().contains(DETAILS_COMMAND_NAME)
+		return commandRegistry.getRegistrations().keySet().contains(DETAILS_COMMAND_NAME)
 				&& this.shellContext.getInteractionMode() == InteractionMode.INTERACTIVE;
 	}
 }

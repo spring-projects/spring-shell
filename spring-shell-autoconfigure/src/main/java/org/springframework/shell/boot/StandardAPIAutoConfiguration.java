@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package org.springframework.shell.boot;
 import org.springframework.boot.LazyInitializationExcludeFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.standard.CommandValueProvider;
 import org.springframework.shell.standard.EnumValueProvider;
 import org.springframework.shell.standard.FileValueProvider;
@@ -29,12 +29,13 @@ import org.springframework.shell.standard.ValueProvider;
  * Sets up all required beans for supporting the standard Shell API.
  *
  * @author Eric Bottard
+ * @author Mahmoud Ben Hassine
  */
 @AutoConfiguration
 public class StandardAPIAutoConfiguration {
 
 	@Bean
-	public ValueProvider commandValueProvider(CommandCatalog commandRegistry) {
+	public ValueProvider commandValueProvider(CommandRegistry commandRegistry) {
 		return new CommandValueProvider(commandRegistry);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,9 @@ import org.springframework.shell.core.context.ShellContext;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
-public interface CommandCatalog {
+public interface CommandRegistry {
 
 	/**
 	 * Register a {@link CommandRegistration}.
@@ -65,35 +66,35 @@ public interface CommandCatalog {
 	Map<String, CommandRegistration> getRegistrations();
 
 	/**
-	 * Gets an instance of a default {@link CommandCatalog}.
+	 * Gets an instance of a default {@link CommandRegistry}.
 	 *
 	 * @return default command catalog
 	 */
-	static CommandCatalog of() {
-		return new DefaultCommandCatalog(null, null);
+	static CommandRegistry of() {
+		return new DefaultCommandRegistry(null, null);
 	}
 
 	/**
-	 * Gets an instance of a default {@link CommandCatalog}.
+	 * Gets an instance of a default {@link CommandRegistry}.
 	 *
 	 * @param resolvers the command resolvers
 	 * @param shellContext the shell context
 	 * @return default command catalog
 	 */
-	static CommandCatalog of(Collection<CommandResolver> resolvers, ShellContext shellContext) {
-		return new DefaultCommandCatalog(resolvers, shellContext);
+	static CommandRegistry of(Collection<CommandResolver> resolvers, ShellContext shellContext) {
+		return new DefaultCommandRegistry(resolvers, shellContext);
 	}
 
 	/**
-	 * Default implementation of a {@link CommandCatalog}.
+	 * Default implementation of a {@link CommandRegistry}.
 	 */
-	static class DefaultCommandCatalog implements CommandCatalog {
+	static class DefaultCommandRegistry implements CommandRegistry {
 
 		private final Map<String, CommandRegistration> commandRegistrations = new HashMap<>();
 		private final Collection<CommandResolver> resolvers = new ArrayList<>();
 		private final @Nullable ShellContext shellContext;
 
-		DefaultCommandCatalog(@Nullable Collection<CommandResolver> resolvers, @Nullable ShellContext shellContext) {
+		DefaultCommandRegistry(@Nullable Collection<CommandResolver> resolvers, @Nullable ShellContext shellContext) {
 			this.shellContext = shellContext;
 			if (resolvers != null) {
 				this.resolvers.addAll(resolvers);

@@ -27,7 +27,7 @@ import org.mockito.MockitoAnnotations;
 
 import org.springframework.shell.core.CompletionContext;
 import org.springframework.shell.core.CompletionProposal;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 class CommandValueProviderTests {
 
 	@Mock
-	private CommandCatalog catalog;
+	private CommandRegistry catalog;
 
 	@BeforeEach
 	void setUp() {

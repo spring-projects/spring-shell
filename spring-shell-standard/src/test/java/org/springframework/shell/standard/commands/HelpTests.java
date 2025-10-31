@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
@@ -62,7 +62,7 @@ class HelpTests {
 	private final CommandsPojo commandsPojo = new CommandsPojo();
 
 	@Autowired
-	private CommandCatalog commandCatalog;
+	private CommandRegistry commandRegistry;
 
 	@Autowired
 	private Help help;
@@ -82,8 +82,8 @@ class HelpTests {
 	void setup(TestInfo testInfo) {
 		Optional<Method> testMethod = testInfo.getTestMethod();
 		testMethod.ifPresent(method -> this.testName = method.getName());
-		Collection<CommandRegistration> regs = this.commandCatalog.getRegistrations().values();
-		regs.forEach(r -> this.commandCatalog.unregister(r));
+		Collection<CommandRegistration> regs = this.commandRegistry.getRegistrations().values();
+		regs.forEach(r -> this.commandRegistry.unregister(r));
 	}
 
 	@Test
@@ -116,7 +116,7 @@ class HelpTests {
 				.type(float[].class)
 				.and()
 			.build();
-		commandCatalog.register(registration);
+		commandRegistry.register(registration);
 		String help = this.help.help(new String[] { "first-command" }).toString();
 		help = removeNewLines(help);
 		assertThat(help).isEqualTo(sample());
@@ -168,7 +168,7 @@ class HelpTests {
 				.shortNames('r')
 				.and()
 			.build();
-		commandCatalog.register(registration1);
+		commandRegistry.register(registration1);
 
 		CommandRegistration registration2 = CommandRegistration.builder()
 			.command("second-command")
@@ -180,7 +180,7 @@ class HelpTests {
 				.method(commandsPojo, "secondCommand")
 				.and()
 			.build();
-		commandCatalog.register(registration2);
+		commandRegistry.register(registration2);
 
 		CommandRegistration registration3 = CommandRegistration.builder()
 			.command("third-command")
@@ -189,7 +189,7 @@ class HelpTests {
 				.method(commandsPojo, "thirdCommand")
 				.and()
 			.build();
-		commandCatalog.register(registration3);
+		commandRegistry.register(registration3);
 
 		CommandRegistration registration4 = CommandRegistration.builder()
 			.command("first-group-command")
@@ -199,7 +199,7 @@ class HelpTests {
 				.method(commandsPojo, "firstCommandInGroup")
 				.and()
 			.build();
-		commandCatalog.register(registration4);
+		commandRegistry.register(registration4);
 
 		CommandRegistration registration5 = CommandRegistration.builder()
 			.command("second-group-command")
@@ -209,15 +209,15 @@ class HelpTests {
 				.method(commandsPojo, "secondCommandInGroup")
 				.and()
 			.build();
-		commandCatalog.register(registration5);
+		commandRegistry.register(registration5);
 	}
 
 	@Configuration
 	static class Config {
 
 		@Bean
-		public CommandCatalog commandCatalog() {
-			return CommandCatalog.of();
+		public CommandRegistry commandRegistry() {
+			return CommandRegistry.of();
 		}
 
 		@Bean

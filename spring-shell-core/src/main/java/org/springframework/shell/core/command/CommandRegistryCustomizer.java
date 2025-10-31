@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,18 @@
 package org.springframework.shell.core.command;
 
 /**
- * Interface to customize a {@link CommandCatalog}.
+ * Interface to customize a {@link CommandRegistry}.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 @FunctionalInterface
-public interface CommandCatalogCustomizer {
+public interface CommandRegistryCustomizer {
 
 	/**
 	 * Customize a command catalog.
 	 *
-	 * @param commandCatalog a command catalog
+	 * @param commandRegistry a command catalog
 	 */
-	void customize(CommandCatalog commandCatalog);
+	void customize(CommandRegistry commandRegistry);
 }

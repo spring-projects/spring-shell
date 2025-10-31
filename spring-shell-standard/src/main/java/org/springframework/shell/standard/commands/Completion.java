@@ -41,13 +41,13 @@ public class Completion extends AbstractCommand {
 
 	@org.springframework.shell.core.command.annotation.Command(command = "completion bash", description = "Generate bash completion script")
 	public String bash() {
-		BashCompletions bashCompletions = new BashCompletions(getResourceLoader(), getCommandCatalog());
+		BashCompletions bashCompletions = new BashCompletions(getResourceLoader(), getCommandRegistry());
 		return bashCompletions.generate(rootCommand);
 	}
 
 	@org.springframework.shell.core.command.annotation.Command(command = "completion zsh", description = "Generate zsh completion script")
 	public String zsh() {
-		ZshCompletions zshCompletions = new ZshCompletions(getResourceLoader(), getCommandCatalog());
+		ZshCompletions zshCompletions = new ZshCompletions(getResourceLoader(), getCommandRegistry());
 		return zshCompletions.generate(rootCommand);
 	}
 }

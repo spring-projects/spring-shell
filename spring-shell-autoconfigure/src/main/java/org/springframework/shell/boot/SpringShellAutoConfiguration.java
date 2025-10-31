@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.ResultHandler;
 import org.springframework.shell.core.ResultHandlerService;
 import org.springframework.shell.core.Shell;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.config.ShellConversionServiceSupplier;
 import org.springframework.shell.core.context.ShellContext;
 import org.springframework.shell.core.exit.ExitCodeMappings;
@@ -64,9 +64,9 @@ public class SpringShellAutoConfiguration {
 	}
 
 	@Bean
-	public Shell shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal,
-			ShellConversionServiceSupplier shellConversionServiceSupplier, ShellContext shellContext,
-			ExitCodeMappings exitCodeMappings) {
+	public Shell shell(ResultHandlerService resultHandlerService, CommandRegistry commandRegistry, Terminal terminal,
+					   ShellConversionServiceSupplier shellConversionServiceSupplier, ShellContext shellContext,
+					   ExitCodeMappings exitCodeMappings) {
 		Shell shell = new Shell(resultHandlerService, commandRegistry, terminal, shellContext, exitCodeMappings);
 		shell.setConversionService(shellConversionServiceSupplier.get());
 		return shell;

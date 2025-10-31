@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
+
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.util.Assert;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -39,7 +41,6 @@ import org.stringtemplate.v4.STGroupString;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.core.Utils;
-import org.springframework.shell.core.command.CommandCatalog;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
@@ -51,15 +52,16 @@ import org.springframework.util.MultiValueMap;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 public abstract class AbstractCompletions {
 
 	private final ResourceLoader resourceLoader;
-	private final CommandCatalog commandCatalog;
+	private final CommandRegistry commandRegistry;
 
-	public AbstractCompletions(ResourceLoader resourceLoader, CommandCatalog commandCatalog) {
+	public AbstractCompletions(ResourceLoader resourceLoader, CommandRegistry commandRegistry) {
 		this.resourceLoader = resourceLoader;
-		this.commandCatalog = commandCatalog;
+		this.commandRegistry = commandRegistry;
 	}
 
 	protected Builder builder() {
@@ -72,7 +74,7 @@ public abstract class AbstractCompletions {
 	 * all needed to build completions structure.
 	 */
 	protected CommandModel generateCommandModel() {
-		Collection<CommandRegistration> commandsByName = Utils.removeHiddenCommands(commandCatalog.getRegistrations())
+		Collection<CommandRegistration> commandsByName = Utils.removeHiddenCommands(commandRegistry.getRegistrations())
 				.values();
 		HashMap<String, DefaultCommandModelCommand> commands = new HashMap<>();
 		HashSet<CommandModelCommand> topCommands = new HashSet<>();

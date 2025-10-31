@@ -31,7 +31,6 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
-import org.springframework.shell.core.command.*;
 import org.springframework.shell.core.command.CommandRegistration.OptionArity;
 import org.springframework.shell.core.context.DefaultShellContext;
 
@@ -40,11 +39,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommandExecutionCustomConversionTests {
 
 	private CommandExecution execution;
-	private CommandCatalog commandCatalog;
+	private CommandRegistry commandRegistry;
 
 	@BeforeEach
 	void setupCommandExecutionTests() throws IOException {
-		commandCatalog = CommandCatalog.of();
+		commandRegistry = CommandRegistry.of();
 		DefaultConversionService conversionService = new DefaultConversionService();
 		conversionService.addConverter(new StringToMyPojo2Converter());
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
@@ -53,7 +52,7 @@ class CommandExecutionCustomConversionTests {
 		ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		DumbTerminal terminal = new DumbTerminal("terminal", "ansi", in, out, StandardCharsets.UTF_8);
-		execution = CommandExecution.of(resolvers, null, terminal, new DefaultShellContext(), conversionService, commandCatalog);
+		execution = CommandExecution.of(resolvers, null, terminal, new DefaultShellContext(), conversionService, commandRegistry);
 	}
 
 	@Test
@@ -70,7 +69,7 @@ class CommandExecutionCustomConversionTests {
 				.method(pojo1, "method1")
 				.and()
 			.build();
-		commandCatalog.register(r1);
+		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "myarg1value" });
 		assertThat(pojo1.method1Pojo2).isNotNull();
 	}
@@ -89,7 +88,7 @@ class CommandExecutionCustomConversionTests {
 				.method(pojo1, "method2")
 				.and()
 			.build();
-		commandCatalog.register(r1);
+		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
 		assertThat(pojo1.method2Pojo2).hasSize(2);
 		assertThat(pojo1.method2Pojo2[0].arg).isEqualTo("a");
@@ -112,7 +111,7 @@ class CommandExecutionCustomConversionTests {
 				.method(pojo1, "method2")
 				.and()
 			.build();
-		commandCatalog.register(r1);
+		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
 		assertThat(pojo1.method2Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method2Pojo2[0].arg).isEqualTo("a");
@@ -136,7 +135,7 @@ class CommandExecutionCustomConversionTests {
 				.method(pojo1, "method3")
 				.and()
 			.build();
-		commandCatalog.register(r1);
+		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
 		assertThat(pojo1.method3Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method3Pojo2.get(0)).isInstanceOf(Pojo2.class);
@@ -163,7 +162,7 @@ class CommandExecutionCustomConversionTests {
 				.method(pojo1, "method3")
 				.and()
 			.build();
-		commandCatalog.register(r1);
+		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
 		assertThat(pojo1.method3Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method3Pojo2.get(0)).isInstanceOf(Pojo2.class);
@@ -185,7 +184,7 @@ class CommandExecutionCustomConversionTests {
 				.method(pojo1, "method4")
 				.and()
 			.build();
-		commandCatalog.register(r1);
+		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "--arg1", "a,b" });
 		assertThat(pojo1.method4Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method4Pojo2.iterator().next()).isInstanceOf(Pojo2.class);
@@ -208,7 +207,7 @@ class CommandExecutionCustomConversionTests {
 				.method(pojo1, "method4")
 				.and()
 			.build();
-		commandCatalog.register(r1);
+		commandRegistry.register(r1);
 		execution.evaluate(new String[] { "command1", "a,b" });
 		assertThat(pojo1.method4Pojo2).isNotNull().hasSize(2);
 		assertThat(pojo1.method4Pojo2.iterator().next()).isInstanceOf(Pojo2.class);

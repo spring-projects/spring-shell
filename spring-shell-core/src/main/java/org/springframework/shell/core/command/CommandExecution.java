@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 public interface CommandExecution {
 
@@ -98,8 +99,8 @@ public interface CommandExecution {
 	 * @return default command execution
 	 */
 	public static CommandExecution of(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers, Validator validator,
-			Terminal terminal, ShellContext shellContext, ConversionService conversionService, CommandCatalog commandCatalog) {
-		return new DefaultCommandExecution(resolvers, validator, terminal, shellContext, conversionService, commandCatalog);
+			Terminal terminal, ShellContext shellContext, ConversionService conversionService, CommandRegistry commandRegistry) {
+		return new DefaultCommandExecution(resolvers, validator, terminal, shellContext, conversionService, commandRegistry);
 	}
 
 	/**
@@ -112,20 +113,20 @@ public interface CommandExecution {
 		private @Nullable Terminal terminal;
 		private @Nullable ShellContext shellContext;
 		private @Nullable ConversionService conversionService;
-		private @Nullable CommandCatalog commandCatalog;
+		private @Nullable CommandRegistry commandRegistry;
 
 		public DefaultCommandExecution(@Nullable List<? extends HandlerMethodArgumentResolver> resolvers, @Nullable Validator validator,
-				@Nullable Terminal terminal, @Nullable ShellContext shellContext, @Nullable ConversionService conversionService, @Nullable CommandCatalog commandCatalog) {
+				@Nullable Terminal terminal, @Nullable ShellContext shellContext, @Nullable ConversionService conversionService, @Nullable CommandRegistry commandRegistry) {
 			this.resolvers = resolvers;
 			this.validator = validator;
 			this.terminal = terminal;
 			this.shellContext = shellContext;
 			this.conversionService = conversionService;
-			this.commandCatalog = commandCatalog;
+			this.commandRegistry = commandRegistry;
 		}
 
 		public @Nullable Object evaluate(String[] args) {
-			Map<String, CommandRegistration> registrations = commandCatalog == null ? Map.of() : commandCatalog.getRegistrations();
+			Map<String, CommandRegistration> registrations = commandRegistry == null ? Map.of() : commandRegistry.getRegistrations();
 			CommandParser parser = CommandParser.of(conversionService, registrations, new ParserConfig());
 			CommandParserResults results = parser.parse(args);
 			CommandRegistration registration = results.registration();

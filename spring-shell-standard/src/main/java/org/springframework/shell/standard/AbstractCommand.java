@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.core.Shell;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.completion.CompletionResolver;
 import org.springframework.shell.tui.component.ViewComponentBuilder;
 import org.springframework.shell.tui.style.TemplateExecutor;
@@ -38,6 +38,7 @@ import org.springframework.shell.tui.style.ThemeResolver;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 public abstract class AbstractCommand implements ApplicationContextAware, InitializingBean, ResourceLoaderAware {
 
@@ -54,7 +55,7 @@ public abstract class AbstractCommand implements ApplicationContextAware, Initia
 	private ObjectProvider<Terminal> terminalProvider;
 
 	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<CommandCatalog> commandCatalogProvider;
+	private ObjectProvider<CommandRegistry> commandRegistryProvider;
 
 	@SuppressWarnings("NullAway.Init")
 	private ObjectProvider<CompletionResolver> completionResolverProvider;
@@ -82,7 +83,7 @@ public abstract class AbstractCommand implements ApplicationContextAware, Initia
 	public void afterPropertiesSet() throws Exception {
 		shellProvider = applicationContext.getBeanProvider(Shell.class);
 		terminalProvider = applicationContext.getBeanProvider(Terminal.class);
-		commandCatalogProvider = applicationContext.getBeanProvider(CommandCatalog.class);
+		commandRegistryProvider = applicationContext.getBeanProvider(CommandRegistry.class);
 		completionResolverProvider = applicationContext.getBeanProvider(CompletionResolver.class);
 		templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
 		themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
@@ -105,8 +106,8 @@ public abstract class AbstractCommand implements ApplicationContextAware, Initia
 		return terminalProvider.getObject();
 	}
 
-	protected CommandCatalog getCommandCatalog() {
-		return commandCatalogProvider.getObject();
+	protected CommandRegistry getCommandRegistry() {
+		return commandRegistryProvider.getObject();
 	}
 
 	protected Stream<CompletionResolver> getCompletionResolver() {

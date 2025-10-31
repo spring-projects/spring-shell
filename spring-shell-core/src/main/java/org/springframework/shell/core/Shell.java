@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,15 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.shell.core.command.CommandAlias;
-import org.springframework.shell.core.command.CommandCatalog;
-import org.springframework.shell.core.command.CommandExceptionResolver;
-import org.springframework.shell.core.command.CommandExecution;
+import org.springframework.shell.core.command.*;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandExecution.CommandExecutionException;
 import org.springframework.shell.core.command.CommandExecution.CommandExecutionHandlerMethodArgumentResolvers;
-import org.springframework.shell.core.command.CommandHandlingResult;
-import org.springframework.shell.core.command.CommandOption;
-import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.completion.CompletionResolver;
 import org.springframework.shell.core.context.InteractionMode;
 import org.springframework.shell.core.context.ShellContext;
@@ -60,6 +55,7 @@ import org.springframework.util.StringUtils;
  * @author Eric Bottard
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 public class Shell {
 
@@ -73,7 +69,7 @@ public class Shell {
 	public static final Object NO_INPUT = new Object();
 
 	private final Terminal terminal;
-	private final CommandCatalog commandRegistry;
+	private final CommandRegistry commandRegistry;
 	protected List<CompletionResolver> completionResolvers = new ArrayList<>();
 	private @Nullable CommandExecutionHandlerMethodArgumentResolvers argumentResolvers;
 	private ConversionService conversionService = new DefaultConversionService();
@@ -91,8 +87,8 @@ public class Shell {
 	private Validator validator = Utils.defaultValidator();
 	private List<CommandExceptionResolver> exceptionResolvers = new ArrayList<>();
 
-	public Shell(ResultHandlerService resultHandlerService, CommandCatalog commandRegistry, Terminal terminal,
-			ShellContext shellContext, ExitCodeMappings exitCodeMappings) {
+	public Shell(ResultHandlerService resultHandlerService, CommandRegistry commandRegistry, Terminal terminal,
+				 ShellContext shellContext, ExitCodeMappings exitCodeMappings) {
 		this.resultHandlerService = resultHandlerService;
 		this.commandRegistry = commandRegistry;
 		this.terminal = terminal;

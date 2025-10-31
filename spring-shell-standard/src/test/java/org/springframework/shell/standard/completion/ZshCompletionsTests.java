@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandRegistration;
 
@@ -48,17 +48,17 @@ class ZshCompletionsTests {
 
 	@Test
 	void testNoCommands() {
-		CommandCatalog commandCatalog = CommandCatalog.of();
-		ZshCompletions completions = new ZshCompletions(context, commandCatalog);
+		CommandRegistry commandRegistry = CommandRegistry.of();
+		ZshCompletions completions = new ZshCompletions(context, commandRegistry);
 		String zsh = completions.generate("root-command");
 		assertThat(zsh).contains("root-command");
 	}
 
 	@Test
 	void testCommandFromMethod() {
-		CommandCatalog commandCatalog = CommandCatalog.of();
-		registerFromMethod(commandCatalog);
-		ZshCompletions completions = new ZshCompletions(context, commandCatalog);
+		CommandRegistry commandRegistry = CommandRegistry.of();
+		registerFromMethod(commandRegistry);
+		ZshCompletions completions = new ZshCompletions(context, commandRegistry);
 		String zsh = completions.generate("root-command");
 		assertThat(zsh).contains("root-command")
 				.contains("testmethod1)")
@@ -68,9 +68,9 @@ class ZshCompletionsTests {
 
 	@Test
 	void testCommandFromFunction() {
-		CommandCatalog commandCatalog = CommandCatalog.of();
-		registerFromFunction(commandCatalog, "testmethod1");
-		ZshCompletions completions = new ZshCompletions(context, commandCatalog);
+		CommandRegistry commandRegistry = CommandRegistry.of();
+		registerFromFunction(commandRegistry, "testmethod1");
+		ZshCompletions completions = new ZshCompletions(context, commandRegistry);
 		String zsh = completions.generate("root-command");
 		assertThat(zsh).contains("root-command")
 				.contains("testmethod1)")
@@ -78,7 +78,7 @@ class ZshCompletionsTests {
 				.contains("--arg1");
 	}
 
-	private void registerFromMethod(CommandCatalog commandCatalog) {
+	private void registerFromMethod(CommandRegistry commandRegistry) {
 		Pojo1 pojo1 = new Pojo1();
 		CommandRegistration registration = CommandRegistration.builder()
 			.command("testmethod1")
@@ -90,10 +90,10 @@ class ZshCompletionsTests {
 				.longNames("arg1")
 				.and()
 			.build();
-		commandCatalog.register(registration);
+		commandRegistry.register(registration);
 	}
 
-	private void registerFromFunction(CommandCatalog commandCatalog, String command) {
+	private void registerFromFunction(CommandRegistry commandRegistry, String command) {
 		Function<CommandContext, String> function = ctx -> {
 			String arg1 = ctx.getOptionValue("arg1");
 			return String.format("hi, arg1 value is '%s'", arg1);
@@ -107,7 +107,7 @@ class ZshCompletionsTests {
 				.longNames("arg1")
 				.and()
 			.build();
-		commandCatalog.register(registration);
+		commandRegistry.register(registration);
 	}
 
 	protected static class Pojo1 {

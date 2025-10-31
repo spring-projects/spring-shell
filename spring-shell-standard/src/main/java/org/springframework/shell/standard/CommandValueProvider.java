@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.shell.core.CompletionContext;
 import org.springframework.shell.core.CompletionProposal;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 
 /**
  * A {@link ValueProvider} that can be used to auto-complete names of shell commands.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public class CommandValueProvider implements ValueProvider {
 
-	private final CommandCatalog commandRegistry;
+	private final CommandRegistry commandRegistry;
 
-	public CommandValueProvider(CommandCatalog commandRegistry) {
+	public CommandValueProvider(CommandRegistry commandRegistry) {
 		this.commandRegistry = commandRegistry;
 	}
 

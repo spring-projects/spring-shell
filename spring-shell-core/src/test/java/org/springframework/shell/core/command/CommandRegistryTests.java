@@ -22,17 +22,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CommandCatalogTests extends AbstractCommandTests {
+class CommandRegistryTests extends AbstractCommandTests {
 
 	@Test
-	void testCommandCatalog () {
+	void testCommandRegistry () {
 		CommandRegistration r1 = CommandRegistration.builder()
 			.command("group1 sub1")
 			.withTarget()
 				.function(function1)
 				.and()
 			.build();
-		CommandCatalog catalog = CommandCatalog.of();
+		CommandRegistry catalog = CommandRegistry.of();
 		catalog.register(r1);
 		assertThat(catalog.getRegistrations()).hasSize(1);
 		catalog.unregister(r1);
@@ -50,7 +50,7 @@ class CommandCatalogTests extends AbstractCommandTests {
 				.function(function1)
 				.and()
 			.build();
-		CommandCatalog catalog = CommandCatalog.of();
+		CommandRegistry catalog = CommandRegistry.of();
 		catalog.register(r1);
 		assertThat(catalog.getRegistrations()).hasSize(2);
 	}
@@ -60,7 +60,7 @@ class CommandCatalogTests extends AbstractCommandTests {
 		// catalog itself would not have any registered command but
 		// this custom resolver adds one which may dymanically go away.
 		DynamicCommandResolver resolver = new DynamicCommandResolver();
-		CommandCatalog catalog = CommandCatalog.of(List.of(resolver), null);
+		CommandRegistry catalog = CommandRegistry.of(List.of(resolver), null);
 		assertThat(catalog.getRegistrations()).hasSize(1);
 		resolver.enabled = false;
 		assertThat(catalog.getRegistrations()).isEmpty();

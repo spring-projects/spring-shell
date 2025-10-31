@@ -18,18 +18,18 @@ package org.springframework.shell.standard.commands;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GroupsInfoModelTests {
 
-	private CommandCatalog commandCatalog;
+	private CommandRegistry commandRegistry;
 
 	@BeforeEach
 	void setup() {
-		this.commandCatalog = CommandCatalog.of();
+		this.commandRegistry = CommandRegistry.of();
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class GroupsInfoModelTests {
 				.consumer(ctx -> {})
 				.and()
 			.build();
-		this.commandCatalog.register(r1, r2);
+		this.commandRegistry.register(r1, r2);
 		GroupsInfoModel gim = buildGIM();
 
 		assertThat(gim.getCommands()).hasSize(2);
@@ -73,14 +73,14 @@ class GroupsInfoModelTests {
 				.consumer(ctx -> {})
 				.and()
 			.build();
-		this.commandCatalog.register(r1);
+		this.commandRegistry.register(r1);
 		GroupsInfoModel gim = buildGIM();
 
 		assertThat(gim.getCommands()).hasSize(1);
 	}
 
 	private GroupsInfoModel buildGIM(boolean showGroups) {
-		return GroupsInfoModel.of(showGroups, this.commandCatalog.getRegistrations());
+		return GroupsInfoModel.of(showGroups, this.commandRegistry.getRegistrations());
 	}
 
 	private GroupsInfoModel buildGIM() {

@@ -63,14 +63,14 @@ public class RegisterCommands extends AbstractCommand {
 
     @Command(command = "register add", description = "Register commands", group = GROUP)
     public String register() {
-		getCommandCatalog().register(registered1, registered2, registered3);
+		getCommandRegistry().register(registered1, registered2, registered3);
 		registerFunctionCommand("register registered4");
 		return "Registered commands registered1, registered2, registered3, registered4";
     }
 
     @Command(command = "register remove", description = "Deregister commands", group = GROUP)
     public String deregister() {
-		getCommandCatalog().unregister("register registered1", "register registered2", "register registered3",
+		getCommandRegistry().unregister("register registered1", "register registered2", "register registered3",
 				"register registered4");
 		return "Deregistered commands registered1, registered2, registered3, registered4";
     }
@@ -91,7 +91,7 @@ public class RegisterCommands extends AbstractCommand {
 				.longNames("arg1")
 				.and()
 			.build();
-		getCommandCatalog().register(registration);
+		getCommandRegistry().register(registration);
 	}
 
 	public static class PojoMethods {

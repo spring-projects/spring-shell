@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.MethodTargetRegistrar;
 import org.springframework.shell.boot.SpringShellProperties.Help;
-import org.springframework.shell.core.command.CommandCatalog;
-import org.springframework.shell.core.command.CommandCatalogCustomizer;
+import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.CommandRegistryCustomizer;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.CommandRegistration.BuilderSupplier;
 import org.springframework.shell.core.command.CommandRegistration.OptionNameModifier;
@@ -38,30 +38,30 @@ import org.springframework.shell.core.context.ShellContext;
 
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
-public class CommandCatalogAutoConfiguration {
+public class CommandRegistryAutoConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean(CommandCatalog.class)
-	public CommandCatalog commandCatalog(ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
-			ObjectProvider<CommandResolver> commandResolvers,
-			ObjectProvider<CommandCatalogCustomizer> commandCatalogCustomizers,
-			ShellContext shellContext) {
+	@ConditionalOnMissingBean(CommandRegistry.class)
+	public CommandRegistry commandRegistry(ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
+										  ObjectProvider<CommandResolver> commandResolvers,
+										  ObjectProvider<CommandRegistryCustomizer> commandRegistryCustomizers,
+										  ShellContext shellContext) {
 		List<CommandResolver> resolvers = commandResolvers.orderedStream().collect(Collectors.toList());
-		CommandCatalog catalog = CommandCatalog.of(resolvers, shellContext);
+		CommandRegistry registry = CommandRegistry.of(resolvers, shellContext);
 		methodTargetRegistrars.orderedStream().forEach(resolver -> {
-			resolver.register(catalog);
+			resolver.register(registry);
 		});
-		commandCatalogCustomizers.orderedStream().forEach(customizer -> {
-			customizer.customize(catalog);
+		commandRegistryCustomizers.orderedStream().forEach(customizer -> {
+			customizer.customize(registry);
 		});
-		return catalog;
+		return registry;
 	}
 
 	@Bean
-	public CommandCatalogCustomizer defaultCommandCatalogCustomizer(ObjectProvider<CommandRegistration> commandRegistrations) {
-		return catalog -> {
+	public CommandRegistryCustomizer defaultCommandRegistryCustomizer(ObjectProvider<CommandRegistration> commandRegistrations) {
+		return registry -> {
 			commandRegistrations.orderedStream().forEach(registration -> {
-				catalog.register(registration);
+				registry.register(registration);
 			});
 		};
 	}

@@ -28,7 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.completion.RegistrationOptionsCompletionResolver;
 import org.springframework.shell.core.context.ShellContext;
@@ -54,7 +54,7 @@ class ShellTests {
 	ResultHandlerService resultHandlerService;
 
 	@Mock
-	CommandCatalog commandRegistry;
+	CommandRegistry commandRegistry;
 
 	@Mock
 	Terminal terminal;

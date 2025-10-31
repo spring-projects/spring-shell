@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
@@ -118,13 +118,13 @@ class AbstractCompletionsTests {
 	@Test
 	void deepL3Commands() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		CommandCatalog commandCatalog = CommandCatalog.of();
+		CommandRegistry commandRegistry = CommandRegistry.of();
 
-		commandCatalog.register(r3_4_5);
-		commandCatalog.register(r3_4_6);
-		commandCatalog.register(r3_5_5);
-		commandCatalog.register(r3_5_6);
-		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
+		commandRegistry.register(r3_4_5);
+		commandRegistry.register(r3_4_6);
+		commandRegistry.register(r3_5_5);
+		commandRegistry.register(r3_5_6);
+		TestCompletions completions = new TestCompletions(resourceLoader, commandRegistry);
 		CommandModel commandModel = completions.testCommandModel();
 
 		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
@@ -156,11 +156,11 @@ class AbstractCompletionsTests {
 	@Test
 	void deepL2Commands() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		CommandCatalog commandCatalog = CommandCatalog.of();
+		CommandRegistry commandRegistry = CommandRegistry.of();
 
-		commandCatalog.register(r3_4);
-		commandCatalog.register(r3_5);
-		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
+		commandRegistry.register(r3_4);
+		commandRegistry.register(r3_5);
+		TestCompletions completions = new TestCompletions(resourceLoader, commandRegistry);
 		CommandModel commandModel = completions.testCommandModel();
 
 		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
@@ -192,14 +192,14 @@ class AbstractCompletionsTests {
 	@Test
 	void testBasicModelGeneration() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		CommandCatalog commandCatalog = CommandCatalog.of();
+		CommandRegistry commandRegistry = CommandRegistry.of();
 
-		commandCatalog.register(r1);
-		commandCatalog.register(r2);
-		commandCatalog.register(r3);
-		commandCatalog.register(r3_4);
+		commandRegistry.register(r1);
+		commandRegistry.register(r2);
+		commandRegistry.register(r3);
+		commandRegistry.register(r3_4);
 
-		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
+		TestCompletions completions = new TestCompletions(resourceLoader, commandRegistry);
 		CommandModel commandModel = completions.testCommandModel();
 		assertThat(commandModel.getCommands()).satisfiesExactlyInAnyOrder(
 			c1 -> {
@@ -236,8 +236,8 @@ class AbstractCompletionsTests {
 	@Test
 	void testBuilder() {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		CommandCatalog commandCatalog = CommandCatalog.of();
-		TestCompletions completions = new TestCompletions(resourceLoader, commandCatalog);
+		CommandRegistry commandRegistry = CommandRegistry.of();
+		TestCompletions completions = new TestCompletions(resourceLoader, commandRegistry);
 
 		String result = completions.testBuilder()
 				.attribute("x", "command")
@@ -249,8 +249,8 @@ class AbstractCompletionsTests {
 
 	private static class TestCompletions extends AbstractCompletions {
 
-		public TestCompletions(ResourceLoader resourceLoader, CommandCatalog commandCatalog) {
-			super(resourceLoader, commandCatalog);
+		public TestCompletions(ResourceLoader resourceLoader, CommandRegistry commandRegistry) {
+			super(resourceLoader, commandRegistry);
 		}
 
 		CommandModel testCommandModel() {

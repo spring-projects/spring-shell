@@ -24,7 +24,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.CommandResolver;
 import org.springframework.shell.core.command.CommandRegistration.Builder;
@@ -33,33 +33,33 @@ import org.springframework.shell.core.command.CommandRegistration.OptionNameModi
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CommandCatalogAutoConfigurationTests {
+class CommandRegistryAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(CommandCatalogAutoConfiguration.class,
+			.withConfiguration(AutoConfigurations.of(CommandRegistryAutoConfiguration.class,
 					JLineShellAutoConfiguration.class, ShellContextAutoConfiguration.class));
 
 	@Test
-	void defaultCommandCatalog() {
-		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(CommandCatalog.class));
+	void defaultCommandRegistry() {
+		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(CommandRegistry.class));
 	}
 
 	@Test
 	void testCommandResolvers() {
 		this.contextRunner.withUserConfiguration(CustomCommandResolverConfiguration.class)
 				.run((context) -> {
-					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
-					assertThat(commandCatalog).extracting("resolvers").asInstanceOf(InstanceOfAssertFactories.LIST)
+					CommandRegistry commandRegistry = context.getBean(CommandRegistry.class);
+					assertThat(commandRegistry).extracting("resolvers").asInstanceOf(InstanceOfAssertFactories.LIST)
 							.hasSize(1);
 				});
 	}
 
 	@Test
-	void customCommandCatalog() {
-		this.contextRunner.withUserConfiguration(CustomCommandCatalogConfiguration.class)
+	void customCommandRegistry() {
+		this.contextRunner.withUserConfiguration(CustomCommandRegistryConfiguration.class)
 				.run((context) -> {
-					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
-					assertThat(commandCatalog).isSameAs(CustomCommandCatalogConfiguration.testCommandCatalog);
+					CommandRegistry commandRegistry = context.getBean(CommandRegistry.class);
+					assertThat(commandRegistry).isSameAs(CustomCommandRegistryConfiguration.TEST_COMMAND_REGISTRY);
 				});
 	}
 
@@ -67,8 +67,8 @@ class CommandCatalogAutoConfigurationTests {
 	void registerCommandRegistration() {
 		this.contextRunner.withUserConfiguration(CustomCommandRegistrationConfiguration.class)
 				.run(context -> {
-					CommandCatalog commandCatalog = context.getBean(CommandCatalog.class);
-					assertThat(commandCatalog.getRegistrations().get("customcommand")).isNotNull();
+					CommandRegistry commandRegistry = context.getBean(CommandRegistry.class);
+					assertThat(commandRegistry.getRegistrations().get("customcommand")).isNotNull();
 				});
 	}
 
@@ -158,13 +158,13 @@ class CommandCatalogAutoConfigurationTests {
 	}
 
 	@Configuration
-	static class CustomCommandCatalogConfiguration {
+	static class CustomCommandRegistryConfiguration {
 
-		static final CommandCatalog testCommandCatalog = CommandCatalog.of();
+		static final CommandRegistry TEST_COMMAND_REGISTRY = CommandRegistry.of();
 
 		@Bean
-		CommandCatalog customCommandCatalog() {
-			return testCommandCatalog;
+		CommandRegistry customCommandRegistry() {
+			return TEST_COMMAND_REGISTRY;
 		}
 	}
 

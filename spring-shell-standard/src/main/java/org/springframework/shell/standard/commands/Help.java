@@ -122,7 +122,7 @@ public class Help extends AbstractCommand {
 
 	private AttributedString renderCommands() {
 		Map<String, CommandRegistration> registrations = Utils
-				.removeHiddenCommands(getCommandCatalog().getRegistrations());
+				.removeHiddenCommands(getCommandRegistry().getRegistrations());
 
 		boolean isStg = commandTemplate != null && commandTemplate.endsWith(".stg");
 
@@ -137,7 +137,7 @@ public class Help extends AbstractCommand {
 
 	private AttributedString renderCommand(String command) {
 		Map<String, CommandRegistration> registrations = Utils
-				.removeHiddenCommands(getCommandCatalog().getRegistrations());
+				.removeHiddenCommands(getCommandRegistry().getRegistrations());
 		CommandRegistration registration = registrations.get(command);
 		if (registration == null) {
 			throw new IllegalArgumentException("Unknown command '" + command + "'");

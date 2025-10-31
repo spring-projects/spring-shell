@@ -21,7 +21,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandExceptionResolver;
 import org.springframework.shell.core.command.CommandParserExceptionResolver;
 import org.springframework.shell.core.context.ShellContext;
@@ -65,9 +65,9 @@ public class ResultHandlerConfig {
 	}
 
 	@Bean
-	public ThrowableResultHandler throwableResultHandler(Terminal terminal, CommandCatalog commandCatalog,
+	public ThrowableResultHandler throwableResultHandler(Terminal terminal, CommandRegistry commandRegistry,
 			ShellContext shellContext, ObjectProvider<InteractiveShellRunner> interactiveApplicationRunner) {
-		return new ThrowableResultHandler(terminal, commandCatalog, shellContext, interactiveApplicationRunner);
+		return new ThrowableResultHandler(terminal, commandRegistry, shellContext, interactiveApplicationRunner);
 	}
 
 	@Bean

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,20 @@
 
 package org.springframework.shell.core;
 
-import org.springframework.shell.core.command.CommandCatalog;
+import org.springframework.shell.core.command.CommandRegistry;
 
 /**
  * Strategy interface for registering commands.
  *
  * @author Eric Bottard
  * @author Camilo Gonzalez
+ * @author Mahmoud Ben Hassine
  */
 public interface MethodTargetRegistrar {
 
 	/**
 	 * Register mappings from {@literal <command keyword(s)>} to actual behavior.
 	 */
-	void register(CommandCatalog registry);
+	void register(CommandRegistry registry);
 
 }
