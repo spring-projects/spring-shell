@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.command.parser;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Encapsulating {@code Directive} with its fields, {@code name} and

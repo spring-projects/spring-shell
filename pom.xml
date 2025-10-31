@@ -56,8 +56,8 @@
 		<commons-io.version>2.20.0</commons-io.version>
 		<slf4j.version>2.0.17</slf4j.version>
 		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
-		<errorprone.version>2.36.0</errorprone.version>
-		<nullaway.version>0.12.7</nullaway.version>
+		<errorprone.version>2.42.0</errorprone.version>
+		<nullaway.version>0.12.10</nullaway.version>
 		<jspecify.version>1.0.0</jspecify.version>
 
 		<!-- test dependencies -->
@@ -107,7 +107,27 @@
 					<release>${java.version}</release>
 					<compilerArgs>
 						<compilerArg>-parameters</compilerArg>
+						<compilerArg>
+							-XDcompilePolicy=simple
+							--should-stop=ifError=FLOW
+							-Xplugin:ErrorProne
+							-Xep:NullAway:ERROR
+							-XepOpt:NullAway:JSpecifyMode=true
+							-XepOpt:NullAway:OnlyNullMarked=true
+						</compilerArg>
 					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>com.google.errorprone</groupId>
+							<artifactId>error_prone_core</artifactId>
+							<version>${errorprone.version}</version>
+						</path>
+						<path>
+							<groupId>com.uber.nullaway</groupId>
+							<artifactId>nullaway</artifactId>
+							<version>${nullaway.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -230,59 +250,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>nullaway</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<configuration>
-							<showWarnings>true</showWarnings>
-
-						</configuration>
-						<executions>
-							<execution>
-								<id>default-compile</id>
-								<phase>none</phase>
-							</execution>
-							<execution>
-								<id>java-compile</id>
-								<phase>compile</phase>
-								<goals>
-									<goal>compile</goal>
-								</goals>
-								<configuration>
-									<annotationProcessorPaths>
-										<path>
-											<groupId>com.google.errorprone</groupId>
-											<artifactId>error_prone_core</artifactId>
-											<version>${errorprone.version}</version>
-										</path>
-										<path>
-											<groupId>com.uber.nullaway</groupId>
-											<artifactId>nullaway</artifactId>
-											<version>${nullaway.version}</version>
-										</path>
-									</annotationProcessorPaths>
-									<compilerArgs>
-										<arg>-XDcompilePolicy=simple</arg>
-										<arg>--should-stop=ifError=FLOW</arg>
-										<arg>-Xplugin:ErrorProne -XepDisableAllChecks -Xep:NullAway:ERROR
-											-XepOpt:NullAway:OnlyNullMarked=true
-											-XepOpt:NullAway:CustomContractAnnotations=org.springframework.lang.Contract
-										</arg>
-									</compilerArgs>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 	<repositories>
 		<repository>

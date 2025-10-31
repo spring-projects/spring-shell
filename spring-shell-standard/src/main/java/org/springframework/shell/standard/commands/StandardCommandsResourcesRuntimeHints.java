@@ -17,7 +17,7 @@ package org.springframework.shell.standard.commands;
 
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link RuntimeHintsRegistrar} for Shell Standard Commands resources.
