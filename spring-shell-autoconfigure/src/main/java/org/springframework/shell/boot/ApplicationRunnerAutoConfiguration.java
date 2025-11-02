@@ -15,20 +15,36 @@
  */
 package org.springframework.shell.boot;
 
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.core.ShellRunner;
+import org.springframework.util.ClassUtils;
 
+/**
+ * @author Janne Valkealahti
+ * @author Chris Bono
+ * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
+ */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class ApplicationRunnerAutoConfiguration {
 
 	@Bean
+	public ApplicationRunner applicationRunner(ObjectProvider<ShellRunner> shellRunner) {
+		return new ShellApplicationRunner(shellRunner);
+	}
+
+	@Bean
 	@ConditionalOnProperty(prefix = "spring.shell.context", name = "close", havingValue = "true")
-	public ApplicationReadyEventListener applicationReadyEventListener() {
+	public ApplicationListener<ApplicationReadyEvent> applicationReadyEventListener() {
 		return new ApplicationReadyEventListener();
 	}
 
@@ -41,6 +57,24 @@ public class ApplicationRunnerAutoConfiguration {
 			event.getApplicationContext().close();
 		}
 
+	}
+
+	record ShellApplicationRunner(ObjectProvider<ShellRunner> shellRunner) implements ApplicationRunner {
+		@Override
+		public void run(ApplicationArguments args) throws Exception {
+			shellRunner.orderedStream().forEachOrdered(runner -> {
+				try {
+					boolean run = runner.run(args.getSourceArgs());
+					if (run) {
+						return;
+					}
+				}
+				catch (Exception e) {
+					throw new IllegalStateException(
+							"Unable to run '" + ClassUtils.getShortName(runner.getClass()) + "'", e);
+				}
+			});
+		}
 	}
 
 }
