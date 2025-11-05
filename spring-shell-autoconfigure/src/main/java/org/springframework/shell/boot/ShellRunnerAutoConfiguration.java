@@ -61,7 +61,7 @@ public class ShellRunnerAutoConfiguration {
 
 		@Bean
 		@ConditionalOnProperty(prefix = "spring.shell.interactive", value = "enabled", havingValue = "true",
-				matchIfMissing = false)
+				matchIfMissing = true)
 		public InteractiveShellRunner interactiveApplicationRunner(LineReader lineReader, PromptProvider promptProvider,
 				Shell shell, ShellContext shellContext) {
 			return new InteractiveShellRunner(lineReader, promptProvider, shell, shellContext);
@@ -69,7 +69,7 @@ public class ShellRunnerAutoConfiguration {
 
 		@Bean
 		@ConditionalOnProperty(prefix = "spring.shell.noninteractive", value = "enabled", havingValue = "true",
-				matchIfMissing = true)
+				matchIfMissing = false)
 		public NonInteractiveShellRunner nonInteractiveApplicationRunner(Shell shell, ShellContext shellContext,
 				ObjectProvider<NonInteractiveShellRunnerCustomizer> customizer) {
 			NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(shell, shellContext);
