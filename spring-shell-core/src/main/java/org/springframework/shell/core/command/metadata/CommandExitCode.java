@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.boot;
+package org.springframework.shell.core.command.metadata;
 
-import org.springframework.shell.core.command.Command;
+import java.util.List;
+import java.util.function.Function;
 
 /**
- * Callback interface that can be used to customize a {@link Command.Builder}.
+ * Represents a command exit code mapping strategy.
+ *
+ * <p>
+ * Holds mapping functions that translate a {@link Throwable} to an exit code.
+ * </p>
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
-@FunctionalInterface
-public interface CommandRegistrationCustomizer {
+public record CommandExitCode(List<Function<Throwable, Integer>> mappingFunctions) {
 
 	/**
-	 * Callback to customize a {@link Command.Builder} instance.
-	 * @param commandRegistrationBuilder the command registration builder to customize
+	 * Returns an empty {@link CommandExitCode}.
+	 * @return an empty command exit code
 	 */
-	void customize(Command.Builder commandRegistrationBuilder);
+	public static CommandExitCode empty() {
+		return new CommandExitCode(List.of());
+	}
 
 }

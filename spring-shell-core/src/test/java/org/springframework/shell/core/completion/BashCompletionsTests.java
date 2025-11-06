@@ -23,9 +23,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistry;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

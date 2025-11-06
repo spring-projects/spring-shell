@@ -21,9 +21,8 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandResolver;
-import org.springframework.shell.core.command.annotation.Command;
 
 public class ResolvedCommands {
 
@@ -44,7 +43,7 @@ public class ResolvedCommands {
 
 	}
 
-	@Command
+	@org.springframework.shell.core.command.annotation.Command
 	public static class ResolvedCommandsCommands {
 
 		private final Server1CommandResolver server1CommandResolver;
@@ -57,25 +56,25 @@ public class ResolvedCommands {
 			this.server2CommandResolver = server2CommandResolver;
 		}
 
-		@Command(command = "resolve enableserver1", group = GROUP)
+		@org.springframework.shell.core.command.annotation.Command(command = "resolve enableserver1", group = GROUP)
 		public String server1Enable() {
 			server1CommandResolver.enabled = true;
 			return "Enabled server1";
 		}
 
-		@Command(command = "resolve disableserver1", group = GROUP)
+		@org.springframework.shell.core.command.annotation.Command(command = "resolve disableserver1", group = GROUP)
 		public String server1Disable() {
 			server1CommandResolver.enabled = false;
 			return "Disabled server1";
 		}
 
-		@Command(command = "resolve enableserver2", group = GROUP)
+		@org.springframework.shell.core.command.annotation.Command(command = "resolve enableserver2", group = GROUP)
 		public String server2Enable() {
 			server2CommandResolver.enabled = true;
 			return "Enabled server2";
 		}
 
-		@Command(command = "resolve disableserver2", group = GROUP)
+		@org.springframework.shell.core.command.annotation.Command(command = "resolve disableserver2", group = GROUP)
 		public String server2Disable() {
 			server2CommandResolver.enabled = false;
 			return "Disabled server2";
@@ -85,26 +84,22 @@ public class ResolvedCommands {
 
 	static class Server1CommandResolver implements CommandResolver {
 
-		private final List<CommandRegistration> registrations = new ArrayList<>();
+		private final List<Command> registrations = new ArrayList<>();
 
 		boolean enabled = false;
 
 		Server1CommandResolver() {
-			CommandRegistration resolved1 = CommandRegistration.builder()
+			Command resolved1 = Command.builder()
 				.command("resolve server1 command1")
 				.group(GROUP)
 				.description("server1 command1")
-				.withTarget()
-				.function(ctx -> {
-					return "hi from server1 command1";
-				})
-				.and()
+				.withTarget(targetSpec -> targetSpec.function(ctx -> "hi from server1 command1"))
 				.build();
 			registrations.add(resolved1);
 		}
 
 		@Override
-		public List<CommandRegistration> resolve() {
+		public List<Command> resolve() {
 			return enabled ? registrations : Collections.emptyList();
 		}
 
@@ -112,37 +107,29 @@ public class ResolvedCommands {
 
 	static class Server2CommandResolver implements CommandResolver {
 
-		private final List<CommandRegistration> registrations = new ArrayList<>();
+		private final List<Command> registrations = new ArrayList<>();
 
 		boolean enabled = false;
 
 		Server2CommandResolver() {
-			CommandRegistration resolved1 = CommandRegistration.builder()
+			Command resolved1 = Command.builder()
 				.command("resolve server2 command1")
 				.group(GROUP)
 				.description("server2 command1")
-				.withTarget()
-				.function(ctx -> {
-					return "hi from server2 command1";
-				})
-				.and()
+				.withTarget(targetSpec -> targetSpec.function(ctx -> "hi from server2 command1"))
 				.build();
-			CommandRegistration resolved2 = CommandRegistration.builder()
+			Command resolved2 = Command.builder()
 				.command("resolve server2 command2")
 				.group(GROUP)
 				.description("server2 command2")
-				.withTarget()
-				.function(ctx -> {
-					return "hi from server2 command2";
-				})
-				.and()
+				.withTarget(targetSpec -> targetSpec.function(ctx -> "hi from server2 command2"))
 				.build();
 			registrations.add(resolved1);
 			registrations.add(resolved2);
 		}
 
 		@Override
-		public List<CommandRegistration> resolve() {
+		public List<Command> resolve() {
 			return enabled ? registrations : Collections.emptyList();
 		}
 

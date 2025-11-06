@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.util.Assert;
 import org.stringtemplate.v4.ST;

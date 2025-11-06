@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.shell.core.command.metadata.CommandOption;
 import org.springframework.shell.core.command.parser.*;
 import org.springframework.shell.core.command.parser.Ast.DefaultAst;
 import org.springframework.shell.core.command.parser.Lexer.DefaultLexer;
@@ -245,7 +246,7 @@ public interface CommandParser {
 				positional.add(ar.value());
 			});
 
-			return new DefaultCommandParserResults(result.commandRegistration(), results, positional, errors);
+			return new DefaultCommandParserResults(result.command(), results, positional, errors);
 		}
 
 	}

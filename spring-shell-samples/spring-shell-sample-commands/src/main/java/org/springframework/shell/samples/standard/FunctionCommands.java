@@ -17,92 +17,69 @@ package org.springframework.shell.samples.standard;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 
 @Configuration
 public class FunctionCommands {
 
 	@Bean
-	public CommandRegistration commandRegistration1() {
-		return CommandRegistration.builder()
+	public Command commandRegistration1() {
+		return Command.builder()
 			.command("function", "command1")
 			.description("function sample")
 			.group("Function Commands")
-			.withTarget()
-			.function(ctx -> {
+			.withTarget(targetSpec -> targetSpec.function(ctx -> {
 				String arg1 = ctx.getOptionValue("arg1");
 				return String.format("hi, arg1 value is '%s'", arg1);
-			})
-			.and()
-			.withOption()
-			.longNames("arg1")
-			.and()
+			}))
+			.withOption(optionSpec -> optionSpec.longNames("arg1"))
 			.build();
 	}
 
 	@Bean
-	public CommandRegistration commandRegistration2() {
-		return CommandRegistration.builder()
+	public Command commandRegistration2() {
+		return Command.builder()
 			.command("function", "command2")
 			.description("function sample")
 			.group("Function Commands")
-			.withTarget()
-			.function(ctx -> {
+			.withTarget(targetSpec -> targetSpec.function(ctx -> {
 				Boolean a = ctx.getOptionValue("a");
 				Boolean b = ctx.getOptionValue("b");
 				Boolean c = ctx.getOptionValue("c");
 				return String.format("hi, boolean values for a, b, c are '%s' '%s' '%s'", a, b, c);
-			})
-			.and()
-			.withOption()
-			.shortNames('a')
-			.type(boolean.class)
-			.and()
-			.withOption()
-			.shortNames('b')
-			.type(boolean.class)
-			.and()
-			.withOption()
-			.shortNames('c')
-			.type(boolean.class)
-			.and()
+			}))
+			.withOption(optionSpec -> optionSpec.shortNames('a').type(boolean.class))
+			.withOption(optionSpec -> optionSpec.shortNames('b').type(boolean.class))
+			.withOption(optionSpec -> optionSpec.shortNames('c').type(boolean.class))
 			.build();
 	}
 
 	@Bean
-	public CommandRegistration commandRegistration3() {
-		return CommandRegistration.builder()
+	public Command commandRegistration3() {
+		return Command.builder()
 			.command("function", "command3")
 			.description("function sample")
 			.group("Function Commands")
-			.withTarget()
-			.consumer(ctx -> {
+			.withTarget(targetSpec -> targetSpec.consumer(ctx -> {
 				String arg1 = ctx.getOptionValue("arg1");
 				ctx.getTerminal().writer().println(String.format("hi, arg1 value is '%s'", arg1));
-			})
-			.and()
-			.withOption()
-			.longNames("arg1")
-			.and()
+			}))
+			.withOption(optionSpec -> optionSpec.longNames("arg1"))
 			.build();
 	}
 
 	@Bean
-	public CommandRegistration commandRegistration4() {
-		return CommandRegistration.builder()
+	public Command commandRegistration4() {
+		return Command.builder()
 			.command("function", "command4")
 			.description("function sample")
 			.group("Function Commands")
-			.withTarget()
-			.consumer(ctx -> {
+			.withTarget(targetSpec -> targetSpec.consumer(ctx -> {
 				ctx.getTerminal()
 					.writer()
 					.println(String.format("hi, command is '%s'", ctx.getCommandRegistration().getCommand()));
-			})
-			.and()
-			.withOption()
-			.longNames("arg1")
-			.and()
+			}))
+			.withOption(optionSpec -> optionSpec.longNames("arg1"))
 			.build();
 	}
 

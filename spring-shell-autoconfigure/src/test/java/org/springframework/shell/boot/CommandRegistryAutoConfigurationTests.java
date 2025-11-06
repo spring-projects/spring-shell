@@ -25,11 +25,11 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandResolver;
-import org.springframework.shell.core.command.CommandRegistration.Builder;
-import org.springframework.shell.core.command.CommandRegistration.BuilderSupplier;
-import org.springframework.shell.core.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.core.command.Command.Builder;
+import org.springframework.shell.core.command.BuilderSupplier;
+import org.springframework.shell.core.command.OptionNameModifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -162,12 +162,10 @@ class CommandRegistryAutoConfigurationTests {
 	static class CustomCommandRegistrationConfiguration {
 
 		@Bean
-		CommandRegistration commandRegistration() {
-			return CommandRegistration.builder()
+		Command commandRegistration() {
+			return Command.builder()
 				.command("customcommand")
-				.withTarget()
-				.function(ctx -> null)
-				.and()
+				.withTarget(targetSpec -> targetSpec.function(ctx -> null))
 				.build();
 		}
 

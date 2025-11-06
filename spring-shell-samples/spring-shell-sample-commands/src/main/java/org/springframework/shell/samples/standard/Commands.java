@@ -23,7 +23,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.Size;
 
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command.OptionArity;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
 
@@ -51,7 +51,7 @@ public class Commands {
 	}
 
 	@Command(description = "Shows support for boolean parameters, with arity=0.")
-	public void shutdown(@Option(arity = CommandRegistration.OptionArity.ZERO) boolean force) {
+	public void shutdown(@Option(arity = OptionArity.ZERO) boolean force) {
 		System.out.println("You passed " + force);
 	}
 
@@ -71,17 +71,17 @@ public class Commands {
 	}
 
 	@Command(description = "Add array numbers.")
-	public double addDoubles(@Option(arity = CommandRegistration.OptionArity.ONE_OR_MORE) // FIXME
-																							// what
-																							// if
-																							// it's
-																							// a
-																							// number?
-																							// like
-																							// 3
-																							// in
-																							// this
-																							// case?
+	public double addDoubles(@Option(arity = OptionArity.ONE_OR_MORE) // FIXME
+																		// what
+																		// if
+																		// it's
+																		// a
+																		// number?
+																		// like
+																		// 3
+																		// in
+																		// this
+																		// case?
 	double[] numbers) {
 		return Arrays.stream(numbers).sum();
 	}
