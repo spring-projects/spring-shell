@@ -18,9 +18,8 @@ package org.springframework.shell.docs;
 import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.annotation.Command;
 
 class WritingSnippets {
 
@@ -30,7 +29,7 @@ class WritingSnippets {
 		@Autowired
 		Terminal terminal;
 
-		@Command
+		@org.springframework.shell.core.command.annotation.Command
 		public void example() {
 			terminal.writer().println("hi");
 			terminal.writer().flush();
@@ -42,7 +41,7 @@ class WritingSnippets {
 	class Dump2 {
 
 		// tag::anno-terminal-writer[]
-		@Command
+		@org.springframework.shell.core.command.annotation.Command
 		public void example(CommandContext ctx) {
 			ctx.getTerminal().writer().println("hi");
 			ctx.getTerminal().writer().flush();
@@ -53,10 +52,10 @@ class WritingSnippets {
 
 	void dump1() {
 		// tag::reg-terminal-writer[]
-		CommandRegistration.builder().command("example").withTarget().consumer(ctx -> {
+		Command.builder().command("example").withTarget(targetSpec -> targetSpec.consumer(ctx -> {
 			ctx.getTerminal().writer().println("hi");
 			ctx.getTerminal().writer().flush();
-		}).and().build();
+		})).build();
 		// end::reg-terminal-writer[]
 	}
 

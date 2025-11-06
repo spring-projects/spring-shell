@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 
 public class ExitCodeSnippets {
 
@@ -38,12 +38,12 @@ public class ExitCodeSnippets {
 
 	void dump1() {
 		// tag::example1[]
-		CommandRegistration.builder().withExitCode().map(MyException.class, 3).map(t -> {
+		Command.builder().withExitCode(exitCodeSpec -> exitCodeSpec.map(MyException.class, 3).map(t -> {
 			if (t instanceof MyException) {
 				return ((MyException) t).getCode();
 			}
 			return 0;
-		}).and().build();
+		})).build();
 		// end::example1[]
 	}
 

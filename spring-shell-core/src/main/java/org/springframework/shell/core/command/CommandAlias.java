@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.docs;
+package org.springframework.shell.core.command;
 
-import org.springframework.shell.core.command.Command;
+import org.jspecify.annotations.Nullable;
 
-class CommandRegistrationHiddenSnippets {
-
-	// tag::snippet1[]
-	Command commandRegistration() {
-		return Command.builder()
-			.command("mycommand")
-			// define as hidden
-			.hidden()
-			// can be defined via a flag (false)
-			.hidden(false)
-			// can be defined via a flag (true)
-			.hidden(true)
-			.build();
-	}
-	// end::snippet1[]
-
+/**
+ * Represents a command alias.
+ *
+ * @author Janne Valkealahti
+ * @author Piotr Olaszewski
+ */
+public record CommandAlias(String command, @Nullable String group) {
 }

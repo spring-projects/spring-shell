@@ -15,15 +15,14 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.context.InteractionMode;
 
 public class CommandRegistrationInteractionModeSnippets {
 
 	// tag::snippet1[]
-	CommandRegistration commandRegistration() {
-		return CommandRegistration.builder()
+	Command commandRegistration() {
+		return Command.builder()
 			.command("mycommand")
 			// can be defined for all modes
 			.interactionMode(InteractionMode.ALL)
@@ -38,7 +37,8 @@ public class CommandRegistrationInteractionModeSnippets {
 	static class Dump1 {
 
 		// tag::snippet2[]
-		@Command(command = "mycommand", interactionMode = InteractionMode.INTERACTIVE)
+		@org.springframework.shell.core.command.annotation.Command(command = "mycommand",
+				interactionMode = InteractionMode.INTERACTIVE)
 		public void mycommand() {
 		}
 		// end::snippet2[]

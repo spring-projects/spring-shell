@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.result.CommandNotFoundMessageProvider;
 
 @SuppressWarnings("unused")
@@ -35,7 +35,7 @@ class CommandNotFoundSnippets {
 			// actual error, usually CommandNotFound exception
 			Throwable error = context.error();
 			// access to registrations at this time
-			Map<String, CommandRegistration> registrations = context.registrations();
+			Map<String, Command> registrations = context.registrations();
 			// raw text input from a user
 			String text = context.text();
 			return "My custom message";

@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.annotation.Option;
 
 class OptionTypesSnippets {
@@ -32,38 +32,15 @@ class OptionTypesSnippets {
 		// end::option-type-boolean-anno[]
 		void dump() {
 			// tag::option-type-boolean-reg[]
-			CommandRegistration.builder()
+			Command.builder()
 				.command("example")
-				.withOption()
-				.longNames("arg1")
-				.type(boolean.class)
-				.and()
-				.withOption()
-				.longNames("arg2")
-				.type(boolean.class)
-				.defaultValue("true")
-				.and()
-				.withOption()
-				.longNames("arg3")
-				.type(boolean.class)
-				.defaultValue("false")
-				.and()
-				.withOption()
-				.longNames("arg4")
-				.type(Boolean.class)
-				.and()
-				.withOption()
-				.longNames("arg5")
-				.type(Boolean.class)
-				.defaultValue("true")
-				.and()
-				.withOption()
-				.longNames("arg6")
-				.type(Boolean.class)
-				.defaultValue("false")
-				.and()
-				.withTarget()
-				.function(ctx -> {
+				.withOption(optionSpec -> optionSpec.longNames("arg1").type(boolean.class))
+				.withOption(optionSpec -> optionSpec.longNames("arg2").type(boolean.class).defaultValue("true"))
+				.withOption(optionSpec -> optionSpec.longNames("arg3").type(boolean.class).defaultValue("false"))
+				.withOption(optionSpec -> optionSpec.longNames("arg4").type(Boolean.class))
+				.withOption(optionSpec -> optionSpec.longNames("arg5").type(Boolean.class).defaultValue("true"))
+				.withOption(optionSpec -> optionSpec.longNames("arg6").type(Boolean.class).defaultValue("false"))
+				.withTarget(targetSpec -> targetSpec.function(ctx -> {
 					boolean arg1 = ctx.hasMappedOption("arg1") ? ctx.getOptionValue("arg1") : false;
 					boolean arg2 = ctx.getOptionValue("arg2");
 					boolean arg3 = ctx.getOptionValue("arg3");
@@ -72,8 +49,7 @@ class OptionTypesSnippets {
 					Boolean arg6 = ctx.getOptionValue("arg6");
 					return String.format("Hello arg1=%s arg2=%s arg3=%s arg4=%s arg5=%s arg6=%s", arg1, arg2, arg3,
 							arg4, arg5, arg6);
-				})
-				.and()
+				}))
 				.build();
 			// end::option-type-boolean-reg[]
 		}
@@ -90,19 +66,13 @@ class OptionTypesSnippets {
 		// end::option-type-integer-anno[]
 		void dump() {
 			// tag::option-type-integer-reg[]
-			CommandRegistration.builder()
+			Command.builder()
 				.command("example")
-				.withOption()
-				.longNames("arg1")
-				.type(int.class)
-				.required()
-				.and()
-				.withTarget()
-				.function(ctx -> {
+				.withOption(optionSpec -> optionSpec.longNames("arg1").type(int.class).required())
+				.withTarget(targetSpec -> targetSpec.function(ctx -> {
 					boolean arg1 = ctx.getOptionValue("arg1");
 					return "Hello " + arg1;
-				})
-				.and()
+				}))
 				.build();
 			// end::option-type-integer-reg[]
 		}
@@ -119,19 +89,13 @@ class OptionTypesSnippets {
 		// end::option-type-string-anno[]
 		void dump() {
 			// tag::option-type-string-reg[]
-			CommandRegistration.builder()
+			Command.builder()
 				.command("example")
-				.withOption()
-				.longNames("arg1")
-				.type(String.class)
-				.required()
-				.and()
-				.withTarget()
-				.function(ctx -> {
+				.withOption(optionSpec -> optionSpec.longNames("arg1").type(String.class).required())
+				.withTarget(targetSpec -> targetSpec.function(ctx -> {
 					String arg1 = ctx.getOptionValue("arg1");
 					return "Hello " + arg1;
-				})
-				.and()
+				}))
 				.build();
 			// end::option-type-string-reg[]
 		}
@@ -156,19 +120,13 @@ class OptionTypesSnippets {
 		// end::option-type-enum-anno[]
 		void dump() {
 			// tag::option-type-enum-reg[]
-			CommandRegistration.builder()
+			Command.builder()
 				.command("example")
-				.withOption()
-				.longNames("arg1")
-				.type(OptionTypeEnum.class)
-				.required()
-				.and()
-				.withTarget()
-				.function(ctx -> {
+				.withOption(optionSpec -> optionSpec.longNames("arg1").type(OptionTypeEnum.class).required())
+				.withTarget(targetSpec -> targetSpec.function(ctx -> {
 					OptionTypeEnum arg1 = ctx.getOptionValue("arg1");
 					return "Hello " + arg1;
-				})
-				.and()
+				}))
 				.build();
 			// end::option-type-enum-reg[]
 		}
@@ -185,19 +143,13 @@ class OptionTypesSnippets {
 		// end::option-type-string-array-anno[]
 		void dump() {
 			// tag::option-type-string-array-reg[]
-			CommandRegistration.builder()
+			Command.builder()
 				.command("example")
-				.withOption()
-				.longNames("arg1")
-				.type(String[].class)
-				.required()
-				.and()
-				.withTarget()
-				.function(ctx -> {
+				.withOption(optionSpec -> optionSpec.longNames("arg1").type(String[].class).required())
+				.withTarget(targetSpec -> targetSpec.function(ctx -> {
 					String[] arg1 = ctx.getOptionValue("arg1");
 					return "Hello " + arg1;
-				})
-				.and()
+				}))
 				.build();
 			// end::option-type-string-array-reg[]
 		}
