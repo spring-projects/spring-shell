@@ -54,16 +54,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell-standard</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.shell</groupId>
-				<artifactId>spring-shell-table</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.shell</groupId>
 				<artifactId>spring-shell-test</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>

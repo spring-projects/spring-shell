@@ -15,11 +15,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-standard</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-autoconfigure</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -49,7 +44,7 @@
 			<plugin>
 				<groupId>org.antora</groupId>
 				<artifactId>antora-maven-plugin</artifactId>
-				<version>1.0.0-alpha.5</version>
+				<version>${antora-maven-plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<environmentVariables>
@@ -61,7 +56,7 @@
 			<plugin>
 				<groupId>io.spring.maven.antora</groupId>
 				<artifactId>antora-component-version-maven-plugin</artifactId>
-				<version>0.0.4</version>
+				<version>${antora-component-version-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>

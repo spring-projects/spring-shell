@@ -68,6 +68,7 @@
 
 		<!-- documentation dependencies -->
 		<antora-maven-plugin.version>1.0.0-alpha.5</antora-maven-plugin.version>
+		<antora-component-version-maven-plugin.version>0.0.4</antora-component-version-maven-plugin.version>
 
 		<!-- plugin versions -->
 		<errorprone.version>2.42.0</errorprone.version> <!-- upgrade to 2.43.0 requires Java 21+ -->

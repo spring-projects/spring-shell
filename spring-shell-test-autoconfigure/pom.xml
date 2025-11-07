@@ -33,11 +33,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-standard</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-test</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -55,11 +50,6 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>${junit-jupiter.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jspecify</groupId>
-			<artifactId>jspecify</artifactId>
-			<version>${jspecify.version}</version>
 		</dependency>
 
 		<!-- Test dependencies -->
