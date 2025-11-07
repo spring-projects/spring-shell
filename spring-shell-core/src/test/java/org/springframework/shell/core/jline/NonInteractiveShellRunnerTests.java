@@ -23,12 +23,9 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.shell.core.InputProvider;
 import org.springframework.shell.core.Shell;
 import org.springframework.shell.core.context.DefaultShellContext;
-import org.springframework.shell.core.jline.NonInteractiveShellRunner;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -83,10 +80,6 @@ class NonInteractiveShellRunnerTests {
 		runner.run(ofArgs("foobar"));
 		InputProvider value = valueCapture.getValue();
 		assertThat(value.readInput().rawText()).isEqualTo("foobar");
-	}
-
-	private static ApplicationArguments ofApplicationArguments(String... args) {
-		return new DefaultApplicationArguments(args);
 	}
 
 	private static String[] ofArgs(String... args) {

@@ -25,8 +25,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.shell.core.Shell;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,10 +60,6 @@ class ScriptShellRunnerTests {
 		String pathStr = file.toAbsolutePath().toString();
 		ScriptShellRunner shellRunner = new ScriptShellRunner(null, shell);
 		shellRunner.run(new String[] { "@" + pathStr });
-	}
-
-	private static ApplicationArguments ofApplicationArguments(String... args) {
-		return new DefaultApplicationArguments(args);
 	}
 
 	private static String[] ofArgs(String... args) {

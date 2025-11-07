@@ -74,7 +74,7 @@ import org.springframework.util.*;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-class CommandRegistrationFactoryBean
+public class CommandRegistrationFactoryBean
 		implements FactoryBean<CommandRegistration>, ApplicationContextAware, InitializingBean {
 
 	private final Log log = LogFactory.getLog(CommandRegistrationFactoryBean.class);

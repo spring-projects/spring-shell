@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.command.annotation.support;
+package org.springframework.shell.boot;
 
 import java.util.Collections;
 
@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.core.command.annotation.support.CommandRegistrationFactoryBean;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.CommandRegistration;
