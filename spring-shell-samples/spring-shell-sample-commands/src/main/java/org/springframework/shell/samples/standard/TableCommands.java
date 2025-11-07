@@ -17,7 +17,7 @@
 package org.springframework.shell.samples.standard;
 
 import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.tui.table.*;
+import org.springframework.shell.core.tui.table.*;
 
 import java.util.Random;
 

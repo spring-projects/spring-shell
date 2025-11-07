@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.samples.catalog.scenario.other;
 
-import org.springframework.shell.tui.component.view.control.InputView;
-import org.springframework.shell.tui.component.view.control.View;
+import org.springframework.shell.core.tui.component.view.control.InputView;
+import org.springframework.shell.core.tui.component.view.control.View;
 import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;;

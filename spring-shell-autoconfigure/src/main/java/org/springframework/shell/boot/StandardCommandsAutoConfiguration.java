@@ -32,15 +32,15 @@ import org.springframework.shell.boot.SpringShellProperties.HelpCommand.Grouping
 import org.springframework.shell.boot.SpringShellProperties.VersionCommand;
 import org.springframework.shell.boot.condition.OnCompletionCommandCondition;
 import org.springframework.shell.core.result.ThrowableResultHandler;
-import org.springframework.shell.standard.commands.Clear;
-import org.springframework.shell.standard.commands.Completion;
-import org.springframework.shell.standard.commands.Help;
-import org.springframework.shell.standard.commands.History;
-import org.springframework.shell.standard.commands.Quit;
-import org.springframework.shell.standard.commands.Script;
-import org.springframework.shell.standard.commands.Stacktrace;
-import org.springframework.shell.standard.commands.Version;
-import org.springframework.shell.tui.style.TemplateExecutor;
+import org.springframework.shell.core.commands.Clear;
+import org.springframework.shell.core.commands.Completion;
+import org.springframework.shell.core.commands.Help;
+import org.springframework.shell.core.commands.History;
+import org.springframework.shell.core.commands.Quit;
+import org.springframework.shell.core.commands.Script;
+import org.springframework.shell.core.commands.Stacktrace;
+import org.springframework.shell.core.commands.Version;
+import org.springframework.shell.core.tui.style.TemplateExecutor;
 import org.springframework.util.Assert;
 
 /**

@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.shell.standard.commands.Completion;
-import org.springframework.shell.standard.commands.Help;
+import org.springframework.shell.core.commands.Completion;
+import org.springframework.shell.core.commands.Help;
 import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -27,21 +27,21 @@ import org.jline.utils.AttributedStringBuilder;
 
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.standard.commands.AbstractCommand;
-import org.springframework.shell.tui.component.ConfirmationInput;
-import org.springframework.shell.tui.component.ConfirmationInput.ConfirmationInputContext;
-import org.springframework.shell.tui.component.MultiItemSelector;
-import org.springframework.shell.tui.component.MultiItemSelector.MultiItemSelectorContext;
-import org.springframework.shell.tui.component.PathInput;
-import org.springframework.shell.tui.component.PathSearch;
-import org.springframework.shell.tui.component.PathInput.PathInputContext;
-import org.springframework.shell.tui.component.PathSearch.PathSearchConfig;
-import org.springframework.shell.tui.component.PathSearch.PathSearchContext;
-import org.springframework.shell.tui.component.SingleItemSelector;
-import org.springframework.shell.tui.component.SingleItemSelector.SingleItemSelectorContext;
-import org.springframework.shell.tui.component.StringInput;
-import org.springframework.shell.tui.component.StringInput.StringInputContext;
-import org.springframework.shell.tui.component.support.SelectorItem;
+import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.tui.component.ConfirmationInput;
+import org.springframework.shell.core.tui.component.ConfirmationInput.ConfirmationInputContext;
+import org.springframework.shell.core.tui.component.MultiItemSelector;
+import org.springframework.shell.core.tui.component.MultiItemSelector.MultiItemSelectorContext;
+import org.springframework.shell.core.tui.component.PathInput;
+import org.springframework.shell.core.tui.component.PathSearch;
+import org.springframework.shell.core.tui.component.PathInput.PathInputContext;
+import org.springframework.shell.core.tui.component.PathSearch.PathSearchConfig;
+import org.springframework.shell.core.tui.component.PathSearch.PathSearchContext;
+import org.springframework.shell.core.tui.component.SingleItemSelector;
+import org.springframework.shell.core.tui.component.SingleItemSelector.SingleItemSelectorContext;
+import org.springframework.shell.core.tui.component.StringInput;
+import org.springframework.shell.core.tui.component.StringInput.StringInputContext;
+import org.springframework.shell.core.tui.component.support.SelectorItem;
 import org.springframework.util.StringUtils;
 
 public class ComponentCommands extends AbstractCommand {

@@ -15,12 +15,12 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.tui.component.view.control.MenuBarView;
-import org.springframework.shell.tui.component.view.control.MenuBarView.MenuBarItem;
-import org.springframework.shell.tui.component.view.control.MenuView.MenuItem;
-import org.springframework.shell.tui.component.view.control.MenuView.MenuItemCheckStyle;
-import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
-import org.springframework.shell.tui.component.view.event.KeyEvent.KeyMask;
+import org.springframework.shell.core.tui.component.view.control.MenuBarView;
+import org.springframework.shell.core.tui.component.view.control.MenuBarView.MenuBarItem;
+import org.springframework.shell.core.tui.component.view.control.MenuView.MenuItem;
+import org.springframework.shell.core.tui.component.view.control.MenuView.MenuItemCheckStyle;
+import org.springframework.shell.core.tui.component.view.event.KeyEvent.Key;
+import org.springframework.shell.core.tui.component.view.event.KeyEvent.KeyMask;
 
 public class MenuBarViewSnippets {
 

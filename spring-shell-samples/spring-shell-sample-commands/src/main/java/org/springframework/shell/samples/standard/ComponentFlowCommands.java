@@ -33,11 +33,11 @@ import org.springframework.shell.core.command.CommandParser.CommandParserExcepti
 import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.tui.component.flow.ComponentFlow;
-import org.springframework.shell.tui.component.flow.ComponentFlow.ComponentFlowResult;
-import org.springframework.shell.tui.component.flow.ResultMode;
-import org.springframework.shell.tui.component.flow.SelectItem;
-import org.springframework.shell.standard.commands.AbstractCommand;
+import org.springframework.shell.core.tui.component.flow.ComponentFlow;
+import org.springframework.shell.core.tui.component.flow.ComponentFlow.ComponentFlowResult;
+import org.springframework.shell.core.tui.component.flow.ResultMode;
+import org.springframework.shell.core.tui.component.flow.SelectItem;
+import org.springframework.shell.core.commands.AbstractCommand;
 import org.springframework.util.StringUtils;
 
 public class ComponentFlowCommands extends AbstractCommand {

@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.tui.support.search.SearchMatch;
-import org.springframework.shell.tui.support.search.SearchMatchResult;
+import org.springframework.shell.core.tui.support.search.SearchMatch;
+import org.springframework.shell.core.tui.support.search.SearchMatchResult;
 
 class SearchAlgorithmsSnippets {
 

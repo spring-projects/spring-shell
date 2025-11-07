@@ -19,16 +19,16 @@ import java.util.ArrayList;
 
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.tui.component.ViewComponent;
-import org.springframework.shell.tui.component.ViewComponent.ViewComponentRun;
-import org.springframework.shell.tui.component.view.TerminalUI;
-import org.springframework.shell.tui.component.view.control.BoxView;
-import org.springframework.shell.tui.component.view.control.InputView;
-import org.springframework.shell.tui.component.view.control.ProgressView;
-import org.springframework.shell.tui.component.view.control.ProgressView.ProgressViewItem;
-import org.springframework.shell.tui.geom.HorizontalAlign;
-import org.springframework.shell.tui.geom.VerticalAlign;
-import org.springframework.shell.standard.commands.AbstractCommand;
+import org.springframework.shell.core.tui.component.ViewComponent;
+import org.springframework.shell.core.tui.component.ViewComponent.ViewComponentRun;
+import org.springframework.shell.core.tui.component.view.TerminalUI;
+import org.springframework.shell.core.tui.component.view.control.BoxView;
+import org.springframework.shell.core.tui.component.view.control.InputView;
+import org.springframework.shell.core.tui.component.view.control.ProgressView;
+import org.springframework.shell.core.tui.component.view.control.ProgressView.ProgressViewItem;
+import org.springframework.shell.core.tui.geom.HorizontalAlign;
+import org.springframework.shell.core.tui.geom.VerticalAlign;
+import org.springframework.shell.core.commands.AbstractCommand;
 
 @Command
 public class ComponentUiCommands extends AbstractCommand {

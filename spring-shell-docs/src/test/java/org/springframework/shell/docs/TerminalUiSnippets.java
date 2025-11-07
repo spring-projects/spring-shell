@@ -18,15 +18,15 @@ package org.springframework.shell.docs;
 import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.tui.component.message.ShellMessageBuilder;
-import org.springframework.shell.tui.component.view.TerminalUI;
-import org.springframework.shell.tui.component.view.TerminalUIBuilder;
-import org.springframework.shell.tui.component.view.control.BoxView;
-import org.springframework.shell.tui.component.view.control.DialogView;
-import org.springframework.shell.tui.component.view.event.EventLoop;
-import org.springframework.shell.tui.component.view.event.KeyEvent.Key;
-import org.springframework.shell.tui.geom.HorizontalAlign;
-import org.springframework.shell.tui.geom.VerticalAlign;
+import org.springframework.shell.core.tui.component.message.ShellMessageBuilder;
+import org.springframework.shell.core.tui.component.view.TerminalUI;
+import org.springframework.shell.core.tui.component.view.TerminalUIBuilder;
+import org.springframework.shell.core.tui.component.view.control.BoxView;
+import org.springframework.shell.core.tui.component.view.control.DialogView;
+import org.springframework.shell.core.tui.component.view.event.EventLoop;
+import org.springframework.shell.core.tui.component.view.event.KeyEvent.Key;
+import org.springframework.shell.core.tui.geom.HorizontalAlign;
+import org.springframework.shell.core.tui.geom.VerticalAlign;
 
 class TerminalUiSnippets {
 

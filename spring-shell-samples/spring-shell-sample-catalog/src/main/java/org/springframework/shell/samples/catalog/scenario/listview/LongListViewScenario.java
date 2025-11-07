@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.springframework.shell.tui.component.view.control.ListView;
-import org.springframework.shell.tui.component.view.control.View;
+import org.springframework.shell.core.tui.component.view.control.ListView;
+import org.springframework.shell.core.tui.component.view.control.View;
 import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;

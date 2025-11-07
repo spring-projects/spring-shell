@@ -85,9 +85,7 @@
 	</properties>
 
 	<modules>
-		<module>spring-shell-tui</module>
 		<module>spring-shell-core</module>
-		<module>spring-shell-standard</module>
 		<module>spring-shell-test</module>
 		<module>spring-shell-autoconfigure</module>
 		<module>spring-shell-test-autoconfigure</module>

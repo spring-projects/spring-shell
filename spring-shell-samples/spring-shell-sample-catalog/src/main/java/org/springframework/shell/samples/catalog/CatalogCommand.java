@@ -18,10 +18,10 @@ package org.springframework.shell.samples.catalog;
 import java.util.List;
 
 import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.tui.component.view.TerminalUIBuilder;
+import org.springframework.shell.core.tui.component.view.TerminalUIBuilder;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
-import org.springframework.shell.standard.commands.AbstractCommand;
-import org.springframework.shell.tui.style.ThemeResolver;
+import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.tui.style.ThemeResolver;
 
 /**
  * Main command access point to view showcase catalog.

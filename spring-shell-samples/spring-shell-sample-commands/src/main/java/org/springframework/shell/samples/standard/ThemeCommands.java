@@ -27,9 +27,9 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.tui.style.FigureSettings;
-import org.springframework.shell.tui.style.StyleSettings;
-import org.springframework.shell.tui.style.ThemeResolver;
+import org.springframework.shell.core.tui.style.FigureSettings;
+import org.springframework.shell.core.tui.style.StyleSettings;
+import org.springframework.shell.core.tui.style.ThemeResolver;
 
 public class ThemeCommands {
 

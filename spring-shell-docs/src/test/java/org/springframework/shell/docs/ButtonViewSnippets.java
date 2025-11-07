@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.tui.component.view.control.ButtonView;
+import org.springframework.shell.core.tui.component.view.control.ButtonView;
 
 class ButtonViewSnippets {
 

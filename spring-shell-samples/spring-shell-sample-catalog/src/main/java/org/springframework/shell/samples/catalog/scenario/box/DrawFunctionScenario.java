@@ -15,10 +15,10 @@
  */
 package org.springframework.shell.samples.catalog.scenario.box;
 
-import org.springframework.shell.tui.component.view.control.BoxView;
-import org.springframework.shell.tui.component.view.control.View;
-import org.springframework.shell.tui.geom.HorizontalAlign;
-import org.springframework.shell.tui.geom.VerticalAlign;
+import org.springframework.shell.core.tui.component.view.control.BoxView;
+import org.springframework.shell.core.tui.component.view.control.View;
+import org.springframework.shell.core.tui.geom.HorizontalAlign;
+import org.springframework.shell.core.tui.geom.VerticalAlign;
 import org.springframework.shell.samples.catalog.scenario.AbstractScenario;
 import org.springframework.shell.samples.catalog.scenario.Scenario;
 import org.springframework.shell.samples.catalog.scenario.ScenarioComponent;
