@@ -22,14 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.shell.core.Shell;
-import org.springframework.shell.core.jline.ScriptShellRunner;
-
-import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScriptShellRunnerTests {
@@ -37,21 +35,24 @@ class ScriptShellRunnerTests {
 	@Mock
 	Shell shell;
 
-	private final ScriptShellRunner runner = new ScriptShellRunner(null, null);
+	private final ScriptShellRunner runner = new ScriptShellRunner(null, shell);
 
 	@Test
 	void shouldNotRunWhenNoArgs() throws Exception {
-		assertThat(runner.run(ofArgs())).isFalse();
+		runner.run(ofArgs());
+		Mockito.verifyNoInteractions(shell);
 	}
 
 	@Test
 	void shouldNotRunWhenInOptionValue() throws Exception {
-		assertThat(runner.run(ofArgs("--foo", "@"))).isFalse();
+		runner.run(ofArgs("--foo", "@"));
+		Mockito.verifyNoInteractions(shell);
 	}
 
 	@Test
 	void shouldNotRunWhenJustFirstArgWithoutFile() throws Exception {
-		assertThat(runner.run(ofArgs("@"))).isFalse();
+		runner.run(ofArgs("@"));
+		Mockito.verifyNoInteractions(shell);
 	}
 
 	@Test
@@ -60,7 +61,7 @@ class ScriptShellRunnerTests {
 		Path file = Files.createFile(path);
 		String pathStr = file.toAbsolutePath().toString();
 		ScriptShellRunner shellRunner = new ScriptShellRunner(null, shell);
-		assertThat(shellRunner.run(new String[] { "@" + pathStr })).isTrue();
+		shellRunner.run(new String[] { "@" + pathStr });
 	}
 
 	private static ApplicationArguments ofApplicationArguments(String... args) {

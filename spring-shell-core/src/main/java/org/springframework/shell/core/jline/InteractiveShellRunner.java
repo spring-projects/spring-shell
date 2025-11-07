@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,11 +69,10 @@ public class InteractiveShellRunner implements ShellRunner {
 	}
 
 	@Override
-	public boolean run(String[] args) throws Exception {
+	public void run(String[] args) throws Exception {
 		shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
 		InputProvider inputProvider = new JLineInputProvider(lineReader, promptProvider);
 		shell.run(inputProvider);
-		return true;
 	}
 
 	public static class JLineInputProvider implements InputProvider {

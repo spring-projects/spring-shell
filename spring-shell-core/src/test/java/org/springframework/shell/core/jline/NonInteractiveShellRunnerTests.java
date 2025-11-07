@@ -41,8 +41,9 @@ class NonInteractiveShellRunnerTests {
 
 	@Test
 	void testEmptyArgsDontRun() throws Exception {
-		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(null, null);
-		assertThat(runner.run(new String[0])).isFalse();
+		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, null);
+		runner.run(new String[0]);
+		Mockito.verifyNoInteractions(shell);
 	}
 
 	@Test
@@ -50,7 +51,8 @@ class NonInteractiveShellRunnerTests {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
-		assertThat(runner.run(ofArgs("hi"))).isTrue();
+		runner.run(ofArgs("hi"));
+		Mockito.verify(shell).run(Mockito.any(InputProvider.class));
 	}
 
 	@Test
@@ -58,7 +60,7 @@ class NonInteractiveShellRunnerTests {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
-		assertThat(runner.run(ofArgs("foo bar"))).isTrue();
+		runner.run(ofArgs("foo bar"));
 		InputProvider value = valueCapture.getValue();
 		assertThat(value.readInput().rawText()).isEqualTo("\"foo bar\"");
 	}
@@ -68,7 +70,7 @@ class NonInteractiveShellRunnerTests {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
-		assertThat(runner.run(ofArgs("'foo bar'"))).isTrue();
+		runner.run(ofArgs("'foo bar'"));
 		InputProvider value = valueCapture.getValue();
 		assertThat(value.readInput().rawText()).isEqualTo("'foo bar'");
 	}
@@ -78,7 +80,7 @@ class NonInteractiveShellRunnerTests {
 		NonInteractiveShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
 		ArgumentCaptor<InputProvider> valueCapture = ArgumentCaptor.forClass(InputProvider.class);
 		Mockito.doNothing().when(shell).run(valueCapture.capture());
-		assertThat(runner.run(ofArgs("foobar"))).isTrue();
+		runner.run(ofArgs("foobar"));
 		InputProvider value = valueCapture.getValue();
 		assertThat(value.readInput().rawText()).isEqualTo("foobar");
 	}

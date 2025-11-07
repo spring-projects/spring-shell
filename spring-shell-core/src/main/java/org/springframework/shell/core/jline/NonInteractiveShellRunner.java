@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 the original author or authors.
+ * Copyright 2021-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,10 +133,10 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	}
 
 	@Override
-	public boolean run(String[] args) throws Exception {
+	public void run(String[] args) throws Exception {
 		List<String> commands = commandsFromArgs.apply(args);
 		if (commands.isEmpty()) {
-			return false;
+			return;
 		}
 		List<ParsedLine> parsedLines = commands.stream()
 			.map(rawCommandLine -> lineParser.parse(rawCommandLine, rawCommandLine.length() + 1))
@@ -144,7 +144,6 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		MultiParsedLineInputProvider inputProvider = new MultiParsedLineInputProvider(parsedLines);
 		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
 		shell.run(inputProvider);
-		return true;
 	}
 
 	/**

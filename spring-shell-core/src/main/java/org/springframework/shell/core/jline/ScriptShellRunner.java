@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,13 +64,13 @@ public class ScriptShellRunner implements ShellRunner {
 	}
 
 	@Override
-	public boolean run(String[] args) throws Exception {
+	public void run(String[] args) throws Exception {
 		String[] sourceArgs = args;
 		if (ObjectUtils.isEmpty(sourceArgs)) {
-			return false;
+			return;
 		}
 		if (!(sourceArgs[0].startsWith("@") && sourceArgs[0].length() > 1)) {
-			return false;
+			return;
 		}
 
 		List<File> scriptsToRun = Arrays.asList(args)
@@ -85,8 +85,6 @@ public class ScriptShellRunner implements ShellRunner {
 				shell.run(inputProvider);
 			}
 		}
-
-		return true;
 	}
 
 }

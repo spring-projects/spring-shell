@@ -24,14 +24,10 @@ package org.springframework.shell.core;
 public interface ShellRunner {
 
 	/**
-	 * Execute {@code ShellRunner} with given args. Return value indicates if run
-	 * operation happened and no further runners should be used.
+	 * Execute {@code ShellRunner} with given args.
 	 * @param args the raw arguments
-	 * @return true if run execution happened
 	 * @throws Exception possible error during run
 	 */
-	default boolean run(String[] args) throws Exception {
-		return false;
-	}
+	void run(String[] args) throws Exception;
 
 }
