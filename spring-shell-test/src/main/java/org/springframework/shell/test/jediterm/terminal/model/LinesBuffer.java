@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.test.jediterm.terminal.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.test.jediterm.terminal.StyledTextConsumer;
 import org.springframework.shell.test.jediterm.terminal.TextStyle;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class LinesBuffer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(LinesBuffer.class);
+	private static final Log log = LogFactory.getLog(LinesBuffer.class);
 
 	public static final int DEFAULT_MAX_LINES_COUNT = 5000;
 
@@ -230,7 +230,7 @@ public class LinesBuffer {
 
 	public synchronized TerminalLine getLine(int row) {
 		if (row < 0) {
-			LOG.error("Negative line number: " + row);
+			log.error("Negative line number: " + row);
 			return TerminalLine.createEmpty();
 		}
 

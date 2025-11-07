@@ -23,8 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jline.reader.LineReader;
 import org.jline.terminal.Terminal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.Shell;
 import org.springframework.shell.core.ShellRunner;
@@ -158,7 +158,7 @@ public interface ShellTestClient extends Closeable {
 
 	static class DefaultShellClient implements ShellTestClient {
 
-		private final static Logger log = LoggerFactory.getLogger(DefaultShellClient.class);
+		private final static Log log = LogFactory.getLog(DefaultShellClient.class);
 
 		private TerminalSession terminalSession;
 
@@ -336,7 +336,7 @@ public interface ShellTestClient extends Closeable {
 
 	static class ShellRunnerTask implements Runnable {
 
-		private final static Logger log = LoggerFactory.getLogger(ShellRunnerTask.class);
+		private final static Log log = LogFactory.getLog(ShellRunnerTask.class);
 
 		private BlockingQueue<ShellRunnerTaskData> blockingQueue;
 
@@ -355,11 +355,11 @@ public interface ShellTestClient extends Closeable {
 						return;
 					}
 					try {
-						log.trace("Running {}", data.runner());
+						log.trace("Running " + data.runner());
 						data.state().set(-1);
 						data.runner().run(data.args());
 						data.state().set(0);
-						log.trace("Running done {}", data.runner());
+						log.trace("Running done " + data.runner());
 					}
 					catch (Exception e) {
 						data.state().set(1);

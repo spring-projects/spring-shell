@@ -21,8 +21,8 @@ import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -87,7 +87,7 @@ public class ShellAutoConfiguration {
 
 	private static class TestTtyConnector implements TtyConnector {
 
-		private final static Logger log = LoggerFactory.getLogger(TestTtyConnector.class);
+		private final static Log log = LogFactory.getLog(TestTtyConnector.class);
 
 		InputStreamReader myReader;
 
@@ -116,13 +116,13 @@ public class ShellAutoConfiguration {
 		public int read(char[] buf, int offset, int length) throws IOException {
 			log.trace("read1");
 			int read = this.myReader.read(buf, offset, length);
-			log.trace("read2 {}", read);
+			log.trace("read2 " + read);
 			return read;
 		}
 
 		@Override
 		public void write(byte[] bytes) throws IOException {
-			log.trace("write1 {}", bytes);
+			log.trace("write1 " + bytes);
 			this.myWriter.write(new String(bytes));
 			this.myWriter.flush();
 			log.trace("write2");
@@ -147,7 +147,7 @@ public class ShellAutoConfiguration {
 		public boolean ready() throws IOException {
 			log.trace("ready1");
 			boolean ready = myReader.ready();
-			log.trace("ready2 {}", ready);
+			log.trace("ready2 " + ready);
 			return ready;
 		}
 

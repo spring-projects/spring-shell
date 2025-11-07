@@ -31,8 +31,8 @@ import java.util.stream.Stream;
 
 import org.jline.terminal.Terminal;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
@@ -344,7 +344,7 @@ public interface ComponentFlow {
 
 	static class DefaultComponentFlow implements ComponentFlow {
 
-		private static final Logger log = LoggerFactory.getLogger(DefaultComponentFlow.class);
+		private static final Log log = LogFactory.getLog(DefaultComponentFlow.class);
 
 		private final Terminal terminal;
 
@@ -437,7 +437,7 @@ public interface ComponentFlow {
 
 			OrderedInputOperationList.Node node = oiol.getFirst();
 			while (node != null) {
-				log.debug("Calling apply for {}", node.data.id);
+				log.debug("Calling apply for " + node.data.id);
 				Function<ComponentContext<?>, ComponentContext<?>> operation = node.data.getOperation();
 				if (operation != null) {
 					context = operation.apply(context);

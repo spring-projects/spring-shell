@@ -28,8 +28,8 @@ import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.InfoCmp.Capability;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.context.BaseComponentContext;
 import org.springframework.shell.core.tui.component.context.ComponentContext;
@@ -52,7 +52,7 @@ import static org.jline.keymap.KeyMap.key;
 public abstract class AbstractSelectorComponent<T, C extends SelectorComponentContext<T, I, C>, I extends Nameable & Matchable & Enableable & Selectable & Itemable<T>>
 		extends AbstractComponent<C> {
 
-	private final static Logger log = LoggerFactory.getLogger(AbstractSelectorComponent.class);
+	private final static Log log = LogFactory.getLog(AbstractSelectorComponent.class);
 
 	protected final @Nullable String name;
 
@@ -168,7 +168,7 @@ public abstract class AbstractSelectorComponent<T, C extends SelectorComponentCo
 		ItemStateViewProjection buildItemStateView = buildItemStateView(start.get(), thisContext);
 		List<ItemState<I>> itemStateView = buildItemStateView.items;
 		String operation = bindingReader.readBinding(keyMap);
-		log.debug("Binding read result {}", operation);
+		log.debug("Binding read result " + operation);
 		if (operation == null) {
 			return true;
 		}

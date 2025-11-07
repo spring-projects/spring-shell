@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.test.jediterm.terminal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author jediterm authors
@@ -114,10 +114,10 @@ public enum TerminalMode {
 		}
 	};
 
-	private static final Logger LOG = LoggerFactory.getLogger(TerminalMode.class);
+	private static final Log log = LogFactory.getLog(TerminalMode.class);
 
 	public void setEnabled(Terminal terminal, boolean enabled) {
-		LOG.warn("Mode " + name() + " is not implemented, setting to " + enabled);
+		log.warn("Mode " + name() + " is not implemented, setting to " + enabled);
 	}
 
 }

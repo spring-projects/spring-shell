@@ -23,8 +23,8 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.view.control.MenuView.MenuItem;
 import org.springframework.shell.core.tui.component.view.control.MenuView.MenuViewOpenSelectedItemEvent;
@@ -52,7 +52,7 @@ import org.springframework.shell.core.tui.style.ThemeResolver;
  */
 public class MenuBarView extends BoxView {
 
-	private final Logger log = LoggerFactory.getLogger(MenuBarView.class);
+	private final Log log = LogFactory.getLog(MenuBarView.class);
 
 	private final List<MenuBarItem> items = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class MenuBarView extends BoxView {
 	@Override
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getInnerRect();
-		log.debug("Drawing menu bar to {}", rect);
+		log.debug("Drawing menu bar to " + rect);
 		Writer writer1 = screen.writerBuilder().build();
 		Writer writer2 = screen.writerBuilder().style(ScreenItem.STYLE_BOLD).build();
 		int x = rect.x();

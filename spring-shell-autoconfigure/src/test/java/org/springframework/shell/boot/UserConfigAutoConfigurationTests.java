@@ -18,8 +18,8 @@ package org.springframework.shell.boot;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UserConfigAutoConfigurationTests {
 
-	private static final Logger log = LoggerFactory.getLogger(UserConfigAutoConfigurationTests.class);
+	private static final Log log = LogFactory.getLog(UserConfigAutoConfigurationTests.class);
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 		.withConfiguration(AutoConfigurations.of(UserConfigAutoConfiguration.class));
@@ -41,7 +41,7 @@ class UserConfigAutoConfigurationTests {
 			UserConfigPathProvider provider = context.getBean(UserConfigPathProvider.class);
 			Path path = provider.provide();
 			assertThat(path).isNotNull();
-			log.info("Path testDefaults: {}", path.toAbsolutePath());
+			log.info("Path testDefaults: " + path.toAbsolutePath());
 		});
 	}
 
@@ -52,7 +52,7 @@ class UserConfigAutoConfigurationTests {
 			UserConfigPathProvider provider = context.getBean(UserConfigPathProvider.class);
 			Path path = provider.provide();
 			assertThat(path).isNotNull();
-			log.info("Path testUserConfig: {}", path.toAbsolutePath());
+			log.info("Path testUserConfig: " + path.toAbsolutePath());
 		});
 	}
 

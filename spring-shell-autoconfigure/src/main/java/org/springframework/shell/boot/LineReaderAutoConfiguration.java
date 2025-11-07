@@ -29,8 +29,8 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -50,7 +50,7 @@ import org.springframework.util.StringUtils;
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class LineReaderAutoConfiguration {
 
-	private final static Logger log = LoggerFactory.getLogger(LineReaderAutoConfiguration.class);
+	private final static Log log = LogFactory.getLog(LineReaderAutoConfiguration.class);
 
 	private Terminal terminal;
 
@@ -129,14 +129,14 @@ public class LineReaderAutoConfiguration {
 		if (this.springShellProperties.getHistory().isEnabled()) {
 			// Discover history location
 			Path userConfigPath = this.userConfigPathProvider.provide();
-			log.debug("Resolved userConfigPath {}", userConfigPath);
+			log.debug("Resolved userConfigPath " + userConfigPath);
 			String historyFileName = this.springShellProperties.getHistory().getName();
 			if (!StringUtils.hasText(historyFileName)) {
 				historyFileName = fallbackHistoryFileName;
 			}
-			log.debug("Resolved historyFileName {}", historyFileName);
+			log.debug("Resolved historyFileName " + historyFileName);
 			String historyPath = userConfigPath.resolve(historyFileName).toAbsolutePath().toString();
-			log.debug("Resolved historyPath {}", historyPath);
+			log.debug("Resolved historyPath " + historyPath);
 			// set history file
 			lineReader.setVariable(LineReader.HISTORY_FILE, Paths.get(historyPath));
 		}

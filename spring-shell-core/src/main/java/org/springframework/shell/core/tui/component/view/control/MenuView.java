@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.core.tui.component.message.ShellMessageBuilder;
@@ -47,7 +47,7 @@ import org.springframework.util.StringUtils;
  */
 public class MenuView extends BoxView {
 
-	private final Logger log = LoggerFactory.getLogger(MenuView.class);
+	private final Log log = LogFactory.getLog(MenuView.class);
 
 	private final List<MenuItem> items = new ArrayList<>();
 
@@ -215,7 +215,7 @@ public class MenuView extends BoxView {
 	 * Request to handle mouse event.
 	 */
 	private void mouseSelect(MouseEvent event) {
-		log.trace("select({})", event);
+		log.trace("select(" + event + ")");
 		setSelected(indexAtPosition(event.x(), event.y()));
 		select();
 	}
@@ -260,7 +260,7 @@ public class MenuView extends BoxView {
 	 * Request to move selection up or down.
 	 */
 	private void move(int count) {
-		log.trace("move({})", count);
+		log.trace("move(" + count + ")");
 		setSelected(activeItemIndex + count);
 	}
 

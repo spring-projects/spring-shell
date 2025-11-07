@@ -24,8 +24,8 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.test.jediterm.terminal.CursorShape;
 import org.springframework.shell.test.jediterm.terminal.RequestOrigin;
@@ -49,7 +49,7 @@ import org.springframework.shell.test.jediterm.terminal.util.CharUtils;
  */
 public class JediTerminal implements Terminal, TerminalCoordinates {
 
-	private static final Logger LOG = LoggerFactory.getLogger(JediTerminal.class.getName());
+	private static final Log log = LogFactory.getLog(JediTerminal.class.getName());
 
 	private int myScrollRegionTop;
 
@@ -378,7 +378,7 @@ public class JediTerminal implements Terminal, TerminalCoordinates {
 					myTerminalTextBuffer.moveScreenLinesToHistory();
 					break;
 				default:
-					LOG.warn("Unsupported erase in display mode:" + arg);
+					log.warn("Unsupported erase in display mode:" + arg);
 					beginY = 1;
 					endY = 1;
 					break;
@@ -466,7 +466,7 @@ public class JediTerminal implements Terminal, TerminalCoordinates {
 					myTerminalTextBuffer.eraseCharacters(0, -1, myCursorY - 1);
 					break;
 				default:
-					LOG.warn("Unsupported erase in line mode:" + arg);
+					log.warn("Unsupported erase in line mode:" + arg);
 					break;
 			}
 		}
@@ -719,7 +719,7 @@ public class JediTerminal implements Terminal, TerminalCoordinates {
 	@Override
 	public void setScrollingRegion(int top, int bottom) {
 		if (top > bottom) {
-			LOG.error("Top margin of scroll region can't be greater then bottom: " + top + ">" + bottom);
+			log.error("Top margin of scroll region can't be greater then bottom: " + top + ">" + bottom);
 		}
 		myScrollRegionTop = Math.max(1, top);
 		myScrollRegionBottom = Math.min(myTerminalHeight, bottom);

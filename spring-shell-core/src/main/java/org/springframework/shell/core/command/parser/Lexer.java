@@ -23,8 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.command.parser.CommandModel.CommandInfo;
 import org.springframework.shell.core.command.parser.ParserConfig.Feature;
@@ -64,7 +64,7 @@ public interface Lexer {
 	 */
 	public class DefaultLexer implements Lexer {
 
-		private final static Logger log = LoggerFactory.getLogger(DefaultLexer.class);
+		private final static Log log = LogFactory.getLog(DefaultLexer.class);
 
 		private final CommandModel commandModel;
 
@@ -122,7 +122,7 @@ public interface Lexer {
 
 		@Override
 		public LexerResult tokenize(List<String> arguments) {
-			log.debug("Tokenizing arguments {}", arguments);
+			log.debug("Tokenizing arguments " + arguments);
 			List<MessageResult> errorResults = new ArrayList<>();
 			List<Token> tokenList = new ArrayList<Token>();
 
@@ -237,7 +237,7 @@ public interface Lexer {
 
 			}
 
-			log.debug("Generated token list {}", tokenList);
+			log.debug("Generated token list " + tokenList);
 			return new LexerResult(tokenList, errorResults);
 		}
 

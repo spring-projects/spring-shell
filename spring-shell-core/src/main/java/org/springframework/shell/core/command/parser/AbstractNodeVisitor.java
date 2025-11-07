@@ -17,8 +17,8 @@ package org.springframework.shell.core.command.parser;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.command.parser.Parser.ParseResult;
 
@@ -30,17 +30,17 @@ import org.springframework.shell.core.command.parser.Parser.ParseResult;
  */
 public abstract class AbstractNodeVisitor implements NodeVisitor {
 
-	private final static Logger log = LoggerFactory.getLogger(AbstractNodeVisitor.class);
+	private final static Log log = LogFactory.getLog(AbstractNodeVisitor.class);
 
 	@Override
 	public final ParseResult visit(List<NonterminalAstNode> nonterminalNodes, List<TerminalAstNode> terminalNodes) {
 		for (NonterminalAstNode ntn : nonterminalNodes) {
-			log.debug("visit {}", ntn);
+			log.debug("visit " + ntn);
 			if (ntn instanceof CommandNode node) {
-				log.debug("onEnterRootCommandNode {}", node);
+				log.debug("onEnterRootCommandNode " + node);
 				onEnterRootCommandNode(node);
 				visitChildren(node);
-				log.debug("onExitRootCommandNode {}", node);
+				log.debug("onExitRootCommandNode " + node);
 				onExitRootCommandNode(node);
 			}
 		}
@@ -150,64 +150,64 @@ public abstract class AbstractNodeVisitor implements NodeVisitor {
 	protected abstract void onExitDirectiveNode(DirectiveNode node);
 
 	private void visitChildren(NonterminalAstNode node) {
-		log.debug("visitChildren {}", node);
+		log.debug("visitChildren " + node);
 		for (AstNode syntaxNode : node.getChildren()) {
 			visitInternal(syntaxNode);
 		}
 	}
 
 	private void enterCommandNode(CommandNode node) {
-		log.debug("enterCommandNode {}", node);
+		log.debug("enterCommandNode " + node);
 		onEnterCommandNode(node);
 	}
 
 	private void exitCommandNode(CommandNode node) {
-		log.debug("exitCommandNode {}", node);
+		log.debug("exitCommandNode " + node);
 		onExitCommandNode(node);
 	}
 
 	private void enterOptionNode(OptionNode node) {
-		log.debug("enterOptionNode {}", node);
+		log.debug("enterOptionNode " + node);
 		onEnterOptionNode(node);
 	}
 
 	private void exitOptionNode(OptionNode node) {
-		log.debug("exitOptionNode {}", node);
+		log.debug("exitOptionNode " + node);
 		onExitOptionNode(node);
 	}
 
 	private void enterCommandArgumentNode(CommandArgumentNode node) {
-		log.debug("enterCommandArgumentNode {}", node);
+		log.debug("enterCommandArgumentNode " + node);
 		onEnterCommandArgumentNode(node);
 	}
 
 	private void exitCommandArgumentNode(CommandArgumentNode node) {
-		log.debug("exitCommandArgumentNode {}", node);
+		log.debug("exitCommandArgumentNode " + node);
 		onExitCommandArgumentNode(node);
 	}
 
 	private void enterOptionArgumentNode(OptionArgumentNode node) {
-		log.debug("enterOptionArgumentNode {}", node);
+		log.debug("enterOptionArgumentNode " + node);
 		onEnterOptionArgumentNode(node);
 	}
 
 	private void exitOptionArgumentNode(OptionArgumentNode node) {
-		log.debug("exitOptionArgumentNode {}", node);
+		log.debug("exitOptionArgumentNode " + node);
 		onExitOptionArgumentNode(node);
 	}
 
 	private void enterDirectiveNode(DirectiveNode node) {
-		log.debug("enterDirectiveNode {}", node);
+		log.debug("enterDirectiveNode " + node);
 		onEnterDirectiveNode(node);
 	}
 
 	private void exitDirectiveNode(DirectiveNode node) {
-		log.debug("exitDirectiveNode {}", node);
+		log.debug("exitDirectiveNode " + node);
 		onExitDirectiveNode(node);
 	}
 
 	private void visitInternal(AstNode node) {
-		log.debug("visitInternal {}", node);
+		log.debug("visitInternal " + node);
 		if (node instanceof CommandNode n) {
 			enterCommandNode(n);
 			visitChildren(n);

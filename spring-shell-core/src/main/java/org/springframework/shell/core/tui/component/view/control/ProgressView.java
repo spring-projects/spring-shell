@@ -23,8 +23,8 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
 import reactor.core.publisher.Flux;
@@ -54,7 +54,7 @@ import org.springframework.util.ObjectUtils;
  */
 public class ProgressView extends BoxView {
 
-	private final static Logger log = LoggerFactory.getLogger(ProgressView.class);
+	private final static Log log = LogFactory.getLog(ProgressView.class);
 
 	private final int tickStart;
 
@@ -112,9 +112,9 @@ public class ProgressView extends BoxView {
 				long elapsedTime = updateTime - startTime;
 				long elapsedFrame = elapsedTime / interval;
 				frame = (int) elapsedFrame % spin.getFrames().length;
-				log.debug("Calculate frame {} {} {}", interval, elapsedTime, elapsedFrame);
+				log.debug(String.format("Calculate frame %s %s %s", interval, elapsedTime, elapsedFrame));
 			}
-			log.debug("Drawing frame {}", frame);
+			log.debug("Drawing frame " + frame);
 
 			return String.format("%s", spin.getFrames()[frame]);
 		});

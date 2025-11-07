@@ -16,8 +16,8 @@
 package org.springframework.shell.core.tui.component.view.control;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.view.screen.Screen;
 import org.springframework.shell.core.tui.geom.HorizontalAlign;
@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
  */
 public class BoxView extends AbstractView {
 
-	private final static Logger log = LoggerFactory.getLogger(BoxView.class);
+	private final static Log log = LogFactory.getLog(BoxView.class);
 
 	private @Nullable String title = null;
 
@@ -184,7 +184,7 @@ public class BoxView extends AbstractView {
 	 * @param screen the screen
 	 */
 	protected void drawInternal(Screen screen) {
-		log.trace("drawInternal() {}", this);
+		log.trace("drawInternal() " + this);
 		Rectangle rect = getRect();
 		if (rect.width() <= 0 || rect.height() <= 0) {
 			return;

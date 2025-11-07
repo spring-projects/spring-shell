@@ -45,8 +45,8 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.InfoCmp.Capability;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.PathSearch.PathSearchContext;
 import org.springframework.shell.core.tui.component.PathSearch.PathSearchContext.PathViewItem;
@@ -76,7 +76,7 @@ import static org.jline.keymap.KeyMap.key;
  */
 public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
-	private final static Logger log = LoggerFactory.getLogger(PathSearch.class);
+	private final static Log log = LogFactory.getLog(PathSearch.class);
 
 	private final static String DEFAULT_TEMPLATE_LOCATION = "classpath:org/springframework/shell/component/path-search-default.stg";
 
@@ -139,7 +139,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	@Override
 	protected boolean read(BindingReader bindingReader, KeyMap<String> keyMap, PathSearchContext context) {
 		String operation = bindingReader.readBinding(keyMap);
-		log.debug("Binding read result {}", operation);
+		log.debug("Binding read result " + operation);
 		if (operation == null) {
 			return true;
 		}
@@ -612,10 +612,10 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 					p = "";
 				}
 				Path path = Path.of(p);
-				log.debug("Walking input {} for path {}", input, path);
+				log.debug(String.format("Walking input %s for path %s", input, path));
 				Files.walkFileTree(path, visitor);
-				log.debug("walked files {} dirs {}", visitor.getPathCounters().getFileCounter().get(),
-						visitor.getPathCounters().getDirectoryCounter().get());
+				log.debug(String.format("walked files %s dirs %s", visitor.getPathCounters().getFileCounter().get(),
+						visitor.getPathCounters().getDirectoryCounter().get()));
 			}
 			catch (Exception e) {
 				log.debug("PathSearchPathVisitor caused exception", e);

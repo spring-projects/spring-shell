@@ -28,8 +28,8 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.BridgeMethodResolver;
@@ -67,8 +67,7 @@ import org.springframework.util.StringUtils;
  */
 public class InvocableShellMethod {
 
-	/** Public for wrapping with fallback logger. */
-	public static final Logger log = LoggerFactory.getLogger(InvocableShellMethod.class);
+	public static final Log log = LogFactory.getLog(InvocableShellMethod.class);
 
 	private static final Object[] EMPTY_ARGS = new Object[0];
 

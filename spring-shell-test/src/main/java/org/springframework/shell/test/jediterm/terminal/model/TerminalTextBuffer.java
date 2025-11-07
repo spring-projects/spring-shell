@@ -23,8 +23,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.test.jediterm.terminal.StyledTextConsumer;
 import org.springframework.shell.test.jediterm.terminal.StyledTextConsumerAdapter;
@@ -44,7 +44,7 @@ import org.springframework.shell.test.jediterm.terminal.util.Pair;
  */
 public class TerminalTextBuffer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TerminalTextBuffer.class);
+	private static final Log log = LogFactory.getLog(TerminalTextBuffer.class);
 
 	private final StyleState myStyleState;
 
@@ -192,10 +192,10 @@ public class TerminalTextBuffer {
 
 	public void deleteCharacters(final int x, final int y, final int count) {
 		if (y > myHeight - 1 || y < 0) {
-			LOG.error("attempt to delete in line " + y + "\n" + "args were x:" + x + " count:" + count);
+			log.error("attempt to delete in line " + y + "\n" + "args were x:" + x + " count:" + count);
 		}
 		else if (count < 0) {
-			LOG.error("Attempt to delete negative chars number: count:" + count);
+			log.error("Attempt to delete negative chars number: count:" + count);
 		}
 		else if (count > 0) {
 			myScreenBuffer.deleteCharacters(x, y, count, createEmptyStyleWithCurrentColor());
@@ -206,10 +206,10 @@ public class TerminalTextBuffer {
 
 	public void insertBlankCharacters(final int x, final int y, final int count) {
 		if (y > myHeight - 1 || y < 0) {
-			LOG.error("attempt to insert blank chars in line " + y + "\n" + "args were x:" + x + " count:" + count);
+			log.error("attempt to insert blank chars in line " + y + "\n" + "args were x:" + x + " count:" + count);
 		}
 		else if (count < 0) {
-			LOG.error("Attempt to insert negative blank chars number: count:" + count);
+			log.error("Attempt to insert negative blank chars number: count:" + count);
 		}
 		else if (count > 0) { // nothing to do
 			myScreenBuffer.insertBlankCharacters(x, y, count, myWidth, createEmptyStyleWithCurrentColor());
@@ -287,14 +287,14 @@ public class TerminalTextBuffer {
 	public TerminalLine getLine(int index) {
 		if (index >= 0) {
 			if (index >= getHeight()) {
-				LOG.error("Attempt to get line out of bounds: " + index + " >= " + getHeight());
+				log.error("Attempt to get line out of bounds: " + index + " >= " + getHeight());
 				return TerminalLine.createEmpty();
 			}
 			return myScreenBuffer.getLine(index);
 		}
 		else {
 			if (index < -getHistoryLinesCount()) {
-				LOG.error("Attempt to get line out of bounds: " + index + " < " + -getHistoryLinesCount());
+				log.error("Attempt to get line out of bounds: " + index + " < " + -getHistoryLinesCount());
 				return TerminalLine.createEmpty();
 			}
 			return myHistoryBuffer.getLine(getHistoryLinesCount() + index);
@@ -433,7 +433,7 @@ public class TerminalTextBuffer {
 			fireModelChangeEvent();
 		}
 		else {
-			LOG.error("Attempt to erase characters in line: " + y);
+			log.error("Attempt to erase characters in line: " + y);
 		}
 	}
 

@@ -24,8 +24,8 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.geom.HorizontalAlign;
 import org.springframework.shell.core.tui.geom.Position;
@@ -43,7 +43,7 @@ import org.springframework.util.Assert;
  */
 public class DefaultScreen implements Screen, DisplayLines {
 
-	private final static Logger log = LoggerFactory.getLogger(DefaultScreen.class);
+	private final static Log log = LogFactory.getLog(DefaultScreen.class);
 
 	private boolean showCursor;
 
@@ -93,7 +93,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 		this.rows = rows;
 		this.columns = columns;
 		reset();
-		log.trace("Screen reset rows={} cols={}", this.rows, this.columns);
+		log.trace(String.format("Screen reset rows=%s cols=%s", this.rows, this.columns));
 	}
 
 	@Override
@@ -356,8 +356,8 @@ public class DefaultScreen implements Screen, DisplayLines {
 
 		@Override
 		public void border(int x, int y, int width, int height) {
-			log.trace("PrintBorder rows={}, columns={}, x={}, y={}, width={}, height={}", rows, columns, x, y, width,
-					height);
+			log.trace(String.format("PrintBorder rows=%s}, columns=%s, x=%s, y=%s, width=%s, height=%s", rows, columns,
+					x, y, width, height));
 			printBorderHorizontal(x, y, width);
 			printBorderHorizontal(x, y + height - 1, width);
 			printBorderVertical(x, y, height);
@@ -366,7 +366,7 @@ public class DefaultScreen implements Screen, DisplayLines {
 
 		@Override
 		public void background(Rectangle rect, int color) {
-			log.trace("Background {} {}", color, rect);
+			log.trace(String.format("Background %s %s", color, rect));
 			Layer layer = getLayer(index);
 			for (int i = rect.y(); i < rect.y() + rect.height(); i++) {
 				for (int j = rect.x(); j < rect.x() + rect.width(); j++) {

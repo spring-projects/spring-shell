@@ -38,8 +38,8 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp.Capability;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -58,7 +58,7 @@ import org.springframework.util.StringUtils;
  */
 public abstract class AbstractComponent<T extends ComponentContext<T>> implements ResourceLoaderAware {
 
-	private final static Logger log = LoggerFactory.getLogger(AbstractComponent.class);
+	private final static Log log = LogFactory.getLog(AbstractComponent.class);
 
 	public final static String OPERATION_EXIT = "EXIT";
 
@@ -128,7 +128,8 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	 * @return list of attributed strings
 	 */
 	public List<AttributedString> render(T context) {
-		log.debug("Rendering with context [{}] as class [{}] in [{}]", context, context.getClass(), this);
+		log.debug(
+				String.format("Rendering with context [%s] as class [%s] in [%s]", context, context.getClass(), this));
 		return renderer == null ? List.of() : renderer.apply(context);
 	}
 
@@ -208,7 +209,8 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 				hasTty = false;
 			}
 		}
-		log.debug("Terminal is {} with size {}, marking hasTty as {}", this.terminal, this.terminal.getSize(), hasTty);
+		log.debug(String.format("Terminal is %s with size %s, marking hasTty as %s", this.terminal,
+				this.terminal.getSize(), hasTty));
 		return hasTty;
 	}
 
@@ -223,8 +225,8 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 		Assert.notNull(templateExecutor, "'templateExecutor' must not be null");
 
 		String templateResource = resourceAsString(resourceLoader.getResource(templateLocation));
-		log.debug("Rendering template: {}", templateResource);
-		log.debug("Rendering template attributes: {}", attributes);
+		log.debug("Rendering template: " + templateResource);
+		log.debug("Rendering template attributes: " + attributes);
 		AttributedString rendered;
 		if (templateLocation.endsWith(".stg")) {
 			rendered = templateExecutor.renderGroup(templateResource, attributes);
@@ -232,7 +234,7 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 		else {
 			rendered = templateExecutor.render(templateResource, attributes);
 		}
-		log.debug("Template executor result: [{}]", rendered);
+		log.debug("Template executor result: [" + rendered + "]");
 		List<AttributedString> rows = rendered.columnSplitLength(Integer.MAX_VALUE);
 		// remove last if empty as columnsplit adds it
 		int lastIndex = rows.size() - 1;
@@ -326,10 +328,10 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 	}
 
 	private void printResults(ComponentContext<?> context) {
-		log.debug("About to write result with incoming context [{}] as class [{}] in [{}]", context, context.getClass(),
-				this);
+		log.debug(String.format("About to write result with incoming context [%s] as class [%s] in [%s]", context,
+				context.getClass(), this));
 		String out = render(getThisContext(context)).stream().map(as -> as.toAnsi()).collect(Collectors.joining("\n"));
-		log.debug("Writing result [{}] in [{}]", out, this);
+		log.debug(String.format("Writing result [%s] in [%s]", out, this));
 		if (StringUtils.hasText(out)) {
 			terminal.writer().println(out);
 			terminal.writer().flush();

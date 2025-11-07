@@ -54,7 +54,6 @@
 		<jline.version>3.30.6</jline.version>
 		<antlr-st4.version>4.3.4</antlr-st4.version>
 		<commons-io.version>2.20.0</commons-io.version>
-		<slf4j.version>2.0.17</slf4j.version>
 		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
 		<errorprone.version>2.42.0</errorprone.version>
 		<nullaway.version>0.12.10</nullaway.version>
@@ -68,6 +67,7 @@
 		<awaitility.version>4.3.0</awaitility.version>
 		<hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
 		<jakarta.el.version>4.0.2</jakarta.el.version>
+		<log4j.version>2.25.2</log4j.version>
 
 		<!-- documentation dependencies -->
 		<antora-maven-plugin.version>1.0.0-alpha.5</antora-maven-plugin.version>

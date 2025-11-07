@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.test.jediterm.terminal.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.test.jediterm.terminal.StyledTextConsumer;
 import org.springframework.shell.test.jediterm.terminal.TextStyle;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 public final class TerminalLine {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TerminalLine.class);
+	private static final Log log = LogFactory.getLog(TerminalLine.class);
 
 	private TextEntries myTextEntries = new TextEntries();
 
@@ -336,7 +336,7 @@ public final class TerminalLine {
 		int startTextOffsetInd = Arrays.binarySearch(offsets, startTextOffset);
 		int endTextOffsetInd = Arrays.binarySearch(offsets, endTextOffset);
 		if (startTextOffsetInd < 0 || endTextOffsetInd < 0) {
-			LOG.error("Cannot find " + Arrays.toString(new int[] { startTextOffset, endTextOffset }) + " in "
+			log.error("Cannot find " + Arrays.toString(new int[] { startTextOffset, endTextOffset }) + " in "
 					+ Arrays.toString(offsets) + ": "
 					+ Arrays.toString(new int[] { startTextOffsetInd, endTextOffsetInd }));
 			consumer.consume(startTextOffset, y, te.getStyle(), text, startRow);

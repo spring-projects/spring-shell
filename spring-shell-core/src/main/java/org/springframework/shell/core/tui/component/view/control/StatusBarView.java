@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.core.tui.component.view.event.MouseEvent;
@@ -47,7 +47,7 @@ import org.springframework.util.StringUtils;
  */
 public class StatusBarView extends BoxView {
 
-	private final Logger log = LoggerFactory.getLogger(StatusBarView.class);
+	private final Log log = LogFactory.getLog(StatusBarView.class);
 
 	private final List<StatusItem> items = new ArrayList<>();
 
@@ -90,7 +90,7 @@ public class StatusBarView extends BoxView {
 	@Override
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getInnerRect();
-		log.debug("Drawing status bar to {}", rect);
+		log.debug("Drawing status bar to " + rect);
 		Writer writer = screen.writerBuilder().build();
 
 		int primaryX = rect.x();

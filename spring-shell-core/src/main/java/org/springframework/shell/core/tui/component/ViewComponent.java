@@ -17,8 +17,8 @@ package org.springframework.shell.core.tui.component;
 
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.core.tui.component.view.TerminalUI;
@@ -35,7 +35,7 @@ import org.springframework.util.Assert;
  */
 public class ViewComponent {
 
-	private final static Logger log = LoggerFactory.getLogger(ViewComponent.class);
+	private final static Log log = LogFactory.getLog(ViewComponent.class);
 
 	private final Terminal terminal;
 

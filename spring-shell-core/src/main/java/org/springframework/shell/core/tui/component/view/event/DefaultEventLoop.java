@@ -25,8 +25,8 @@ import java.util.concurrent.locks.LockSupport;
 
 import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
@@ -56,7 +56,7 @@ import org.springframework.shell.core.tui.component.view.event.processor.TaskEve
  */
 public class DefaultEventLoop implements EventLoop {
 
-	private final static Logger log = LoggerFactory.getLogger(DefaultEventLoop.class);
+	private final static Log log = LogFactory.getLog(DefaultEventLoop.class);
 
 	private final Queue<Message<?>> messageQueue = new PriorityQueue<>(MessageComparator.comparingPriority());
 
@@ -106,9 +106,9 @@ public class DefaultEventLoop implements EventLoop {
 
 	@Override
 	public void dispatch(Message<?> message) {
-		log.debug("dispatch {}", message);
+		log.debug("dispatch " + message);
 		if (!doSend(message, 1000)) {
-			log.warn("Failed to send message: {}", message);
+			log.warn("Failed to send message: " + message);
 		}
 	}
 
@@ -280,7 +280,7 @@ public class DefaultEventLoop implements EventLoop {
 			// }
 		}
 		catch (Exception ex) {
-			log.warn("Error during processing event: {}", messageToSend);
+			log.warn("Error during processing event: " + messageToSend);
 		}
 	}
 

@@ -23,8 +23,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.test.jediterm.terminal.emulator.Emulator;
 import org.springframework.shell.test.jediterm.terminal.emulator.JediEmulator;
@@ -36,7 +36,7 @@ import org.springframework.shell.test.jediterm.terminal.emulator.JediEmulator;
  */
 public class TerminalStarter implements TerminalOutputStream {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TerminalStarter.class);
+	private static final Log log = LogFactory.getLog(TerminalStarter.class);
 
 	private final Emulator myEmulator;
 
@@ -70,14 +70,14 @@ public class TerminalStarter implements TerminalOutputStream {
 			}
 		}
 		catch (final InterruptedIOException e) {
-			LOG.info("Terminal exiting");
+			log.info("Terminal exiting");
 		}
 		catch (final Exception e) {
 			if (!myTtyConnector.isConnected()) {
 				myTerminal.disconnected();
 				return;
 			}
-			LOG.error("Caught exception in terminal thread", e);
+			log.error("Caught exception in terminal thread", e);
 		}
 	}
 
@@ -144,7 +144,7 @@ public class TerminalStarter implements TerminalOutputStream {
 				myTtyConnector.close();
 			}
 			catch (Exception e) {
-				LOG.error("Error closing terminal", e);
+				log.error("Error closing terminal", e);
 			}
 			finally {
 				myEmulatorExecutor.shutdown();

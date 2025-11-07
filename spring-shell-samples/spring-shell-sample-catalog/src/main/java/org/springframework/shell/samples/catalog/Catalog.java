@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -76,7 +76,7 @@ public class Catalog {
 	private final static ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>> LISTVIEW_STRING_TYPEREF = new ParameterizedTypeReference<ListViewSelectedItemChangedEvent<String>>() {
 	};
 
-	private final static Logger log = LoggerFactory.getLogger(Catalog.class);
+	private final static Log log = LogFactory.getLog(Catalog.class);
 
 	// mapping from category name to scenarios(can belong to multiple categories)
 	private final Map<String, List<ScenarioData>> categoryMap = new TreeMap<>();
@@ -259,7 +259,7 @@ public class Catalog {
 	}
 
 	private void setStyle(String name) {
-		log.debug("Setting active theme name {}", name);
+		log.debug("Setting active theme name " + name);
 		activeThemeName = name;
 		scenarios.setThemeName(activeThemeName);
 		categories.setThemeName(activeThemeName);

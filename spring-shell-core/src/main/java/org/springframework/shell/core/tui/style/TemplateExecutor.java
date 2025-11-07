@@ -21,8 +21,8 @@ import java.util.stream.Stream;
 
 import org.jline.utils.AttributedString;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroup;
@@ -37,7 +37,7 @@ import org.stringtemplate.v4.misc.STMessage;
  */
 public class TemplateExecutor {
 
-	private final static Logger log = LoggerFactory.getLogger(TemplateExecutor.class);
+	private final static Log log = LogFactory.getLog(TemplateExecutor.class);
 
 	private final static STErrorListener ERROR_LISTENER = new LoggingSTErrorListener();
 
@@ -99,32 +99,32 @@ public class TemplateExecutor {
 			attributes.entrySet().stream().forEach(e -> st.add(e.getKey(), e.getValue()));
 		}
 		String templateRendered = st.render();
-		log.debug("Rendered template {}", templateRendered);
+		log.debug("Rendered template " + templateRendered);
 		return themeResolver.evaluateExpression(templateRendered);
 	}
 
 	private static class LoggingSTErrorListener implements STErrorListener {
 
-		private final static Logger log = LoggerFactory.getLogger(LoggingSTErrorListener.class);
+		private final static Log log = LogFactory.getLog(LoggingSTErrorListener.class);
 
 		@Override
 		public void compileTimeError(STMessage msg) {
-			log.debug("compileTimeError [{}]", msg);
+			log.debug("compileTimeError [" + msg + "]");
 		}
 
 		@Override
 		public void runTimeError(STMessage msg) {
-			log.debug("runTimeError [{}]", msg);
+			log.debug("runTimeError [" + msg + "]");
 		}
 
 		@Override
 		public void IOError(STMessage msg) {
-			log.debug("IOError [{}]", msg);
+			log.debug("IOError [" + msg + "]");
 		}
 
 		@Override
 		public void internalError(STMessage msg) {
-			log.debug("internalError [{}]", msg);
+			log.debug("internalError [" + msg + "]");
 		}
 
 	}

@@ -28,8 +28,8 @@ import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.PathInput.PathInputContext;
 import org.springframework.shell.core.tui.component.context.ComponentContext;
@@ -45,7 +45,7 @@ import org.springframework.util.StringUtils;
  */
 public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 
-	private final static Logger log = LoggerFactory.getLogger(PathInput.class);
+	private final static Log log = LogFactory.getLog(PathInput.class);
 
 	private @Nullable PathInputContext currentContext;
 
@@ -84,7 +84,7 @@ public class PathInput extends AbstractTextComponent<Path, PathInputContext> {
 	@Override
 	protected boolean read(BindingReader bindingReader, KeyMap<String> keyMap, PathInputContext context) {
 		String operation = bindingReader.readBinding(keyMap);
-		log.debug("Binding read result {}", operation);
+		log.debug("Binding read result " + operation);
 		if (operation == null) {
 			return true;
 		}

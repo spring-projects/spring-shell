@@ -17,8 +17,8 @@ package org.springframework.shell.test.jediterm.terminal.ui;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.test.jediterm.terminal.Terminal;
 import org.springframework.shell.test.jediterm.terminal.TerminalDisplay;
@@ -36,7 +36,7 @@ import org.springframework.shell.test.jediterm.terminal.model.TerminalTextBuffer
  */
 public class JediTermWidget implements TerminalSession, TerminalWidget {
 
-	private static final Logger log = LoggerFactory.getLogger(JediTermWidget.class);
+	private static final Log log = LogFactory.getLog(JediTermWidget.class);
 
 	private final TerminalPanel terminalPanel;
 

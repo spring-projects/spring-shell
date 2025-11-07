@@ -22,8 +22,8 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
 
@@ -50,7 +50,7 @@ import org.springframework.shell.core.tui.geom.Rectangle;
  */
 public abstract class AbstractView extends AbstractControl implements View {
 
-	private final static Logger log = LoggerFactory.getLogger(AbstractView.class);
+	private final static Log log = LogFactory.getLog(AbstractView.class);
 
 	private final Disposable.Composite disposables = Disposables.composite();
 
@@ -161,7 +161,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	@Override
 	public void focus(View view, boolean focus) {
-		log.debug("Focus view={} focus={}", view, focus);
+		log.debug("Focus view=" + view + " focus=" + focus);
 		if (view == this && focus) {
 			hasFocus = true;
 		}
@@ -181,7 +181,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 */
 	@Override
 	public MouseHandler getMouseHandler() {
-		log.trace("getMouseHandler() {}", this);
+		log.trace("getMouseHandler() " + this);
 		return args -> {
 			MouseEvent event = args.event();
 			int mouse = event.mouse();
@@ -210,7 +210,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 	 */
 	@Override
 	public KeyHandler getKeyHandler() {
-		log.trace("getKeyHandler() {}", this);
+		log.trace("getKeyHandler() " + this);
 		KeyHandler handler = args -> {
 			KeyEvent event = args.event();
 			boolean consumed = false;
@@ -229,7 +229,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 
 	@Override
 	public KeyHandler getHotKeyHandler() {
-		log.trace("getHotKeyHandler() {}", this);
+		log.trace("getHotKeyHandler() " + this);
 		return args -> {
 			KeyEvent event = args.event();
 			View view = null;
@@ -429,7 +429,7 @@ public abstract class AbstractView extends AbstractControl implements View {
 			eventLoop.dispatch(message);
 		}
 		else {
-			log.warn("Can't dispatch message {} as eventloop is not set", message);
+			log.warn("Can't dispatch message " + message + " as eventloop is not set");
 		}
 	}
 

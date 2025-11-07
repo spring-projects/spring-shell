@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.core.tui.component.view.event.KeyHandler;
@@ -43,7 +43,7 @@ import org.springframework.util.Assert;
  */
 public class GridView extends BoxView {
 
-	private final static Logger log = LoggerFactory.getLogger(GridView.class);
+	private final static Log log = LogFactory.getLog(GridView.class);
 
 	private List<GridItem> gridItems = new ArrayList<>();
 

@@ -19,8 +19,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.shell.core.tui.component.ViewComponent.ViewComponentRun;
@@ -34,7 +34,7 @@ import org.springframework.shell.core.tui.component.ViewComponent.ViewComponentR
  */
 public class ViewComponentExecutor implements AutoCloseable {
 
-	private final Logger log = LoggerFactory.getLogger(ViewComponentExecutor.class);
+	private final Log log = LogFactory.getLog(ViewComponentExecutor.class);
 
 	private final SimpleAsyncTaskExecutor executor;
 

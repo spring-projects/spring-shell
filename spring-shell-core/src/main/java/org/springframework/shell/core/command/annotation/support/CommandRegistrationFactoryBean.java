@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -77,7 +77,7 @@ import org.springframework.util.*;
 class CommandRegistrationFactoryBean
 		implements FactoryBean<CommandRegistration>, ApplicationContextAware, InitializingBean {
 
-	private final Logger log = LoggerFactory.getLogger(CommandRegistrationFactoryBean.class);
+	private final Log log = LogFactory.getLog(CommandRegistrationFactoryBean.class);
 
 	public static final String COMMAND_BEAN_TYPE = "commandBeanType";
 
@@ -237,7 +237,7 @@ class CommandRegistrationFactoryBean
 			.get(Option.class);
 
 		Option so = mp.getParameterAnnotation(Option.class);
-		log.debug("Registering with mp='{}' so='{}'", mp, so);
+		log.debug("Registering with mp='" + mp + "' so='" + so + "'");
 		if (so != null) {
 			List<String> longNames = new ArrayList<>();
 			List<Character> shortNames = new ArrayList<>();
@@ -255,12 +255,13 @@ class CommandRegistrationFactoryBean
 				String longName = mp.getParameterName();
 				Class<?> parameterType = mp.getParameterType();
 				if (longName != null) {
-					log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
+					log.debug(String.format("Using mp='%s' longName='%s' parameterType='%s'", mp, longName,
+							parameterType));
 					longNames.add(longName);
 				}
 			}
 			if (!longNames.isEmpty() || !shortNames.isEmpty()) {
-				log.debug("Registering longNames='{}' shortNames='{}'", longNames, shortNames);
+				log.debug(String.format("Registering longNames='%s' shortNames='%s'", longNames, shortNames));
 				Class<?> parameterType = mp.getParameterType();
 				OptionSpec optionSpec = builder.withOption();
 				optionSpec.type(parameterType);
@@ -345,7 +346,7 @@ class CommandRegistrationFactoryBean
 				return;
 			}
 			if (longName != null) {
-				log.debug("Using mp='{}' longName='{}' parameterType='{}'", mp, longName, parameterType);
+				log.debug(String.format("Using mp='%s' longName='%s' parameterType='%s'", mp, longName, parameterType));
 				OptionSpec optionSpec = builder.withOption();
 				optionSpec.longNames(longName);
 				optionSpec.type(parameterType);

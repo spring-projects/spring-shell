@@ -30,8 +30,8 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp.Capability;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.core.tui.component.view.control.View;
@@ -63,7 +63,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class TerminalUI implements ViewService {
 
-	private final static Logger log = LoggerFactory.getLogger(TerminalUI.class);
+	private final static Log log = LogFactory.getLog(TerminalUI.class);
 
 	private final Terminal terminal;
 
@@ -298,7 +298,7 @@ public class TerminalUI implements ViewService {
 			terminal.puts(Capability.cursor_normal);
 			targetCursorPos = size.cursorPos(virtualDisplay.getCursorPosition().y(),
 					virtualDisplay.getCursorPosition().x());
-			log.debug("Display targetCursorPos {}", targetCursorPos);
+			log.debug("Display targetCursorPos " + targetCursorPos);
 		}
 		else {
 			terminal.puts(Capability.cursor_invisible);
@@ -335,7 +335,7 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void handleKeyEvent(KeyEvent event) {
-		log.trace("handleKeyEvent {}", event);
+		log.trace("handleKeyEvent " + event);
 
 		if (rootView != null) {
 			// if hotkeys consume, we're done
@@ -363,7 +363,7 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void handleMouseEvent(MouseEvent event) {
-		log.trace("handleMouseEvent {}", event);
+		log.trace("handleMouseEvent " + event);
 		View view = modalView != null ? modalView : rootView;
 		if (view != null) {
 			MouseHandler handler = view.getMouseHandler();
@@ -384,7 +384,7 @@ public class TerminalUI implements ViewService {
 		registerEventHandling();
 
 		terminal.handle(Signal.WINCH, signal -> {
-			log.debug("Handling signal {}", signal);
+			log.debug("Handling signal " + signal);
 			dispatchWinch();
 		});
 
@@ -434,14 +434,14 @@ public class TerminalUI implements ViewService {
 	private boolean read(BindingReader bindingReader, KeyMap<Integer> keyMap) {
 		Thread readThread = Thread.currentThread();
 		terminal.handle(Signal.INT, signal -> {
-			log.debug("Handling signal {}", signal);
+			log.debug("Handling signal " + signal);
 			readThread.interrupt();
 		});
 
 		Integer operation = null;
 		try {
 			operation = bindingReader.readBinding(keyMap);
-			log.debug("Read got operation {}", operation);
+			log.debug("Read got operation " + operation);
 		}
 		catch (IOError e) {
 			// Ignore Ctrl+C interrupts and just exit the loop
@@ -474,12 +474,12 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void dispatchKeyEvent(KeyEvent event) {
-		log.debug("Dispatch key event: {}", event);
+		log.debug("Dispatch key event: " + event);
 		eventLoop.dispatch(ShellMessageBuilder.ofKeyEvent(event));
 	}
 
 	private void dispatchMouse(MouseEvent event) {
-		log.debug("Dispatch mouse event: {}", event);
+		log.debug("Dispatch mouse event: " + event);
 		eventLoop.dispatch(ShellMessageBuilder.ofMouseEvent(event));
 	}
 
