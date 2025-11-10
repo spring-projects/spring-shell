@@ -8,15 +8,15 @@
 		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>spring-shell-sample-hello-world</artifactId>
-	<name>Spring Shell Samples - Hello World</name>
+	<artifactId>spring-shell-sample-hello-world-spring-boot</artifactId>
+	<name>Spring Shell Samples - Hello World with Spring Boot</name>
 	<packaging>jar</packaging>
-	<description>Hello World Spring Shell application</description>
+	<description>Hello World Spring Boot based Shell application</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-core</artifactId>
+			<artifactId>spring-shell-starter</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 

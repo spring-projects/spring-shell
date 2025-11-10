@@ -1,18 +1,19 @@
 package org.springframework.shell.samples.helloworld;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.EnableCommand;
 import org.springframework.shell.core.command.annotation.Option;
 
-@SpringBootApplication
 @EnableCommand(SpringShellApplication.class)
-@Command
 public class SpringShellApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringShellApplication.class, args);
+	public static void main(String[] args) throws Exception {
+		ApplicationContext context = new AnnotationConfigApplicationContext(SpringShellApplication.class);
+		ShellRunner runner = context.getBean(ShellRunner.class);
+		runner.run(args);
 	}
 
 	@Command
