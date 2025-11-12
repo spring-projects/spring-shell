@@ -56,8 +56,8 @@ class ShellRunnerAutoConfigurationTests {
 	class Interactive {
 
 		@Test
-		void disabledByDefault() {
-			contextRunner.run(context -> assertThat(context).doesNotHaveBean(InteractiveShellRunner.class));
+		void enabledByDefault() {
+			contextRunner.run(context -> assertThat(context).hasSingleBean(InteractiveShellRunner.class));
 		}
 
 		@Test
@@ -72,18 +72,18 @@ class ShellRunnerAutoConfigurationTests {
 	class NonInteractive {
 
 		@Test
-		void enabledByDefault() {
-			contextRunner.run(context -> assertThat(context).hasSingleBean(NonInteractiveShellRunner.class));
-		}
-
-		@Test
 		void primaryCommandNotSet() {
-			contextRunner.run(context -> {
+			contextRunner.withPropertyValues("spring.shell.noninteractive.enabled:true").run(context -> {
 				assertThat(context).hasSingleBean(NonInteractiveShellRunner.class);
 				NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
 				String command = (String) ReflectionTestUtils.getField(runner, "primaryCommand");
 				assertThat(command).isNull();
 			});
+		}
+
+		@Test
+		void disabledByDefault() {
+			contextRunner.run(context -> assertThat(context).doesNotHaveBean(NonInteractiveShellRunner.class));
 		}
 
 		@Test
@@ -95,10 +95,12 @@ class ShellRunnerAutoConfigurationTests {
 		@Test
 		void canBeCustomized() {
 			NonInteractiveShellRunnerCustomizer customizer = mock(NonInteractiveShellRunnerCustomizer.class);
-			contextRunner.withBean(NonInteractiveShellRunnerCustomizer.class, () -> customizer).run(context -> {
-				NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
-				verify(customizer).customize(runner);
-			});
+			contextRunner.withPropertyValues("spring.shell.noninteractive.enabled:true")
+				.withBean(NonInteractiveShellRunnerCustomizer.class, () -> customizer)
+				.run(context -> {
+					NonInteractiveShellRunner runner = context.getBean(NonInteractiveShellRunner.class);
+					verify(customizer).customize(runner);
+				});
 		}
 
 	}
