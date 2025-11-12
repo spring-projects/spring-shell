@@ -29,6 +29,8 @@ public interface Input {
 
 	Input EMPTY = () -> "";
 
+	Input INTERRUPTED = () -> "";
+
 	/**
 	 * Return the input as entered by the user.
 	 */

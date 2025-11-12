@@ -22,13 +22,13 @@ import org.springframework.shell.core.command.availability.Availability;
  *
  * @author Eric Bottard
  */
-public class CommandNotCurrentlyAvailable extends RuntimeException {
+public class CommandNotCurrentlyAvailableException extends RuntimeException {
 
 	private final String command;
 
 	private final Availability availability;
 
-	public CommandNotCurrentlyAvailable(String command, Availability availability) {
+	public CommandNotCurrentlyAvailableException(String command, Availability availability) {
 		super(String.format("Command '%s' exists but is not currently available because %s", command,
 				availability.getReason()));
 		this.command = command;

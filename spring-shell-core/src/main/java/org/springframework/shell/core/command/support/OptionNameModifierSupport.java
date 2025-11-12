@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.core.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.core.command.support.OptionNameModifier;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 

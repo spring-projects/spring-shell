@@ -21,10 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.shell.core.command.CommandRegistration.OptionArity;
-
 /**
- * Annotation marking a method parameter to be a candicate for an option.
+ * Annotation marking a method parameter to be a candidate for an option.
  *
  * @author Janne Valkealahti
  */
@@ -34,30 +32,16 @@ import org.springframework.shell.core.command.CommandRegistration.OptionArity;
 public @interface Option {
 
 	/**
-	 * Used to indicate that the default value is the value {@literal null}, which is
-	 * different from the fact that there is no default value.
+	 * Long name of an option.
+	 * @return Option long name, defaults to empty.
 	 */
-	String NULL = "__NULL__";
+	String longName() default "";
 
 	/**
-	 * Used to indicate that there is no default value (<em>i.e.</em> parameter is
-	 * mandatory).
+	 * Short name of an option.
+	 * @return Option short name, defaults to empty.
 	 */
-	String NONE = "__NONE__";
-
-	/**
-	 * Long names of an option. There can be multiple names where first is primary one and
-	 * other are aliases.
-	 * @return Option long names, defaults to empty.
-	 */
-	String[] longNames() default {};
-
-	/**
-	 * Short names of an option. There can be multiple names where first is primary one
-	 * and other are aliases.
-	 * @return Option short names, defaults to empty.
-	 */
-	char[] shortNames() default {};
+	char shortName() default ' ';
 
 	/**
 	 * Mark option required.
@@ -78,18 +62,12 @@ public @interface Option {
 	String description() default "";
 
 	/**
-	 * Return a label of the option.
-	 * @return label of the option
-	 */
-	String label() default "";
-
-	/**
 	 * Define option arity.
 	 * @return option arity
 	 * @see #arityMin()
 	 * @see #arityMax()
 	 */
-	OptionArity arity() default OptionArity.NONE;
+	int arity() default 0;
 
 	/**
 	 * Define option arity min. If Defined non-negative will be used instead of

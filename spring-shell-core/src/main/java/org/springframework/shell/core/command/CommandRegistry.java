@@ -15,155 +15,69 @@
  */
 package org.springframework.shell.core.command;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.core.context.InteractionMode;
-import org.springframework.shell.core.context.ShellContext;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
- * Interface defining contract to handle existing {@link CommandRegistration}s.
+ * Class representing a registry of {@link Command}s. If defined as a Spring bean, it will
+ * be automatically populated by Spring with all available commands.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  */
-public interface CommandRegistry {
+public class CommandRegistry implements SmartInitializingSingleton, ApplicationContextAware {
 
-	/**
-	 * Register a {@link CommandRegistration}.
-	 * @param registration the command registration
-	 */
-	void register(CommandRegistration... registration);
+	private final Set<Command> commands;
 
-	/**
-	 * Unregister a {@link CommandRegistration}.
-	 * @param registration the command registration
-	 */
-	void unregister(CommandRegistration... registration);
+	@SuppressWarnings("NullAway.Init")
+	private ApplicationContext applicationContext;
 
-	/**
-	 * Unregister a {@link CommandRegistration} by its command name.
-	 * @param commandName the command name
-	 */
-	void unregister(String... commandName);
-
-	/**
-	 * Gets all {@link CommandRegistration}s mapped with their names. Returned map is a
-	 * copy and cannot be used to register new commands.
-	 * @return all command registrations
-	 */
-	Map<String, CommandRegistration> getRegistrations();
-
-	/**
-	 * Gets an instance of a default {@link CommandRegistry}.
-	 * @return default command catalog
-	 */
-	static CommandRegistry of() {
-		return new DefaultCommandRegistry(null, null);
+	public CommandRegistry() {
+		this.commands = new HashSet<>();
 	}
 
-	/**
-	 * Gets an instance of a default {@link CommandRegistry}.
-	 * @param resolvers the command resolvers
-	 * @param shellContext the shell context
-	 * @return default command catalog
-	 */
-	static CommandRegistry of(Collection<CommandResolver> resolvers, ShellContext shellContext) {
-		return new DefaultCommandRegistry(resolvers, shellContext);
+	public CommandRegistry(Set<Command> commands) {
+		this.commands = commands;
 	}
 
-	/**
-	 * Default implementation of a {@link CommandRegistry}.
-	 */
-	static class DefaultCommandRegistry implements CommandRegistry {
+	public Set<Command> getCommands() {
+		return Set.copyOf(commands);
+	}
 
-		private final Map<String, CommandRegistration> commandRegistrations = new HashMap<>();
+	@Nullable public Command getCommandByName(String name) {
+		return commands.stream().filter(command -> command.getName().equals(name)).findFirst().orElse(null);
+	}
 
-		private final Collection<CommandResolver> resolvers = new ArrayList<>();
+	public void registerCommand(Command command) {
+		commands.add(command);
+	}
 
-		private final @Nullable ShellContext shellContext;
+	public void unregisterCommand(Command command) {
+		commands.remove(command);
+	}
 
-		DefaultCommandRegistry(@Nullable Collection<CommandResolver> resolvers, @Nullable ShellContext shellContext) {
-			this.shellContext = shellContext;
-			if (resolvers != null) {
-				this.resolvers.addAll(resolvers);
-			}
-		}
+	public void clearCommands() {
+		commands.clear();
+	}
 
-		@Override
-		public void register(CommandRegistration... registration) {
-			for (CommandRegistration r : registration) {
-				String commandName = r.getCommand();
-				commandRegistrations.put(commandName, r);
-				for (CommandAlias a : r.getAliases()) {
-					commandRegistrations.put(a.getCommand(), r);
-				}
-			}
-		}
+	@Override
+	public void afterSingletonsInstantiated() {
+		Collection<Command> commandCollection = this.applicationContext.getBeansOfType(Command.class).values();
+		commands.addAll(commandCollection);
+	}
 
-		@Override
-		public void unregister(CommandRegistration... registration) {
-			for (CommandRegistration r : registration) {
-				String commandName = r.getCommand();
-				commandRegistrations.remove(commandName);
-				for (CommandAlias a : r.getAliases()) {
-					commandRegistrations.remove(a.getCommand());
-				}
-			}
-		}
-
-		@Override
-		public void unregister(String... commandName) {
-			for (String n : commandName) {
-				commandRegistrations.remove(n);
-			}
-		}
-
-		@Override
-		public Map<String, CommandRegistration> getRegistrations() {
-			Map<String, CommandRegistration> regs = new HashMap<>();
-			regs.putAll(commandRegistrations);
-			for (CommandResolver resolver : resolvers) {
-				resolver.resolve().stream().forEach(r -> {
-					regs.put(r.getCommand(), r);
-				});
-			}
-			return regs.entrySet()
-				.stream()
-				.filter(filterByInteractionMode(shellContext))
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-		}
-
-		/**
-		 * Filter registration entries by currently set mode. Having it set to ALL or null
-		 * effectively disables filtering as as we only care if mode is set to interactive
-		 * or non-interactive.
-		 */
-		private static Predicate<Entry<String, CommandRegistration>> filterByInteractionMode(
-				@Nullable ShellContext shellContext) {
-			return e -> {
-				InteractionMode mim = e.getValue().getInteractionMode();
-				InteractionMode cim = shellContext != null ? shellContext.getInteractionMode() : InteractionMode.ALL;
-				if (mim == null || cim == null || mim == InteractionMode.ALL) {
-					return true;
-				}
-				else if (mim == InteractionMode.INTERACTIVE) {
-					return cim == InteractionMode.INTERACTIVE || cim == InteractionMode.ALL;
-				}
-				else if (mim == InteractionMode.NONINTERACTIVE) {
-					return cim == InteractionMode.NONINTERACTIVE || cim == InteractionMode.ALL;
-				}
-				return true;
-			};
-		}
-
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 }

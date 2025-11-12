@@ -29,10 +29,9 @@ import org.springframework.shell.core.command.parser.Parser.DefaultParser;
 import org.springframework.shell.core.command.parser.Parser.ParseResult;
 
 /**
- * Interface parsing arguments for a {@link CommandRegistration}. A command is always
- * identified by a set of words like {@code command subcommand1 subcommand2} and remaining
- * part of it are options which this interface intercepts and translates into format we
- * can understand.
+ * Interface parsing arguments for a {@link Command}. A command is always identified by a
+ * set of words like {@code command subcommand1 subcommand2} and remaining part of it are
+ * options which this interface intercepts and translates into format we can understand.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -78,7 +77,7 @@ public interface CommandParser {
 		 * Gets the registration.
 		 * @return the registration
 		 */
-		@Nullable CommandRegistration registration();
+		@Nullable Command registration();
 
 		/**
 		 * Gets the results.
@@ -106,8 +105,8 @@ public interface CommandParser {
 		 * @param errors the parsing errors
 		 * @return a new instance of results
 		 */
-		static CommandParserResults of(CommandRegistration registration, List<CommandParserResult> results,
-				List<String> positional, List<CommandParserException> errors) {
+		static CommandParserResults of(Command registration, List<CommandParserResult> results, List<String> positional,
+				List<CommandParserException> errors) {
 			return new DefaultCommandParserResults(registration, results, positional, errors);
 		}
 
@@ -130,8 +129,8 @@ public interface CommandParser {
 	 * @param config the parser config
 	 * @return instance of a default command parser
 	 */
-	static CommandParser of(@Nullable ConversionService conversionService,
-			Map<String, CommandRegistration> registrations, ParserConfig config) {
+	static CommandParser of(@Nullable ConversionService conversionService, Map<String, Command> registrations,
+			ParserConfig config) {
 		return new AstCommandParser(registrations, config, conversionService);
 	}
 
@@ -140,7 +139,7 @@ public interface CommandParser {
 	 */
 	static class DefaultCommandParserResults implements CommandParserResults {
 
-		private @Nullable CommandRegistration registration;
+		private @Nullable Command registration;
 
 		private List<CommandParserResult> results;
 
@@ -148,7 +147,7 @@ public interface CommandParser {
 
 		private List<CommandParserException> errors;
 
-		DefaultCommandParserResults(@Nullable CommandRegistration registration, List<CommandParserResult> results,
+		DefaultCommandParserResults(@Nullable Command registration, List<CommandParserResult> results,
 				List<String> positional, List<CommandParserException> errors) {
 			this.registration = registration;
 			this.results = results;
@@ -157,7 +156,7 @@ public interface CommandParser {
 		}
 
 		@Override
-		public @Nullable CommandRegistration registration() {
+		public @Nullable Command registration() {
 			return registration;
 		}
 
@@ -209,13 +208,13 @@ public interface CommandParser {
 	 */
 	static class AstCommandParser implements CommandParser {
 
-		private final Map<String, CommandRegistration> registrations;
+		private final Map<String, Command> registrations;
 
 		private final ParserConfig configuration;
 
 		private final @Nullable ConversionService conversionService;
 
-		public AstCommandParser(Map<String, CommandRegistration> registrations, ParserConfig configuration,
+		public AstCommandParser(Map<String, Command> registrations, ParserConfig configuration,
 				@Nullable ConversionService conversionService) {
 			this.registrations = registrations;
 			this.configuration = configuration;

@@ -23,7 +23,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.util.StringUtils;
 
 /**
@@ -56,12 +56,12 @@ class GroupsInfoModel {
 	 * @param registrations the command registrations
 	 * @return a groups info model
 	 */
-	static GroupsInfoModel of(boolean showGroups, Map<String, CommandRegistration> registrations) {
+	static GroupsInfoModel of(boolean showGroups, Map<String, Command> registrations) {
 		// throw away registrations aliases as those are then handled in a model
 		// collect commands into groups with sorting
-		HashSet<CommandRegistration> regsWithoutAliases = new HashSet<>(registrations.values());
-		SortedMap<String, Map<String, CommandRegistration>> commandsByGroupAndName = regsWithoutAliases.stream()
-			.collect(Collectors.toMap(r -> r.getCommand(), r -> r))
+		HashSet<Command> regsWithoutAliases = new HashSet<>(registrations.values());
+		SortedMap<String, Map<String, Command>> commandsByGroupAndName = regsWithoutAliases.stream()
+			.collect(Collectors.toMap(r -> r.getName(), r -> r))
 			.entrySet()
 			.stream()
 			.collect(Collectors.groupingBy(

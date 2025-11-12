@@ -15,66 +15,32 @@
  */
 package org.springframework.shell.core.commands;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jline.utils.AttributedString;
-
-import org.jspecify.annotations.Nullable;
-import org.springframework.core.io.Resource;
-import org.springframework.shell.core.tui.style.TemplateExecutor;
-import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
 
 /**
- * Command to list version and other build related infos.
+ * Command to print the current version of Spring Shell.
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
  * @author Piotr Olaszewski
  */
-public class Version extends AbstractCommand {
+public class Version implements Command {
 
-	/**
-	 * Marker interface used in auto-config.
-	 */
-	public interface Command {
-
+	@Override
+	public String getDescription() {
+		return "Show version info";
 	}
 
-	private TemplateExecutor templateExecutor;
-
-	private @Nullable String template;
-
-	public Version(TemplateExecutor templateExecutor) {
-		this.templateExecutor = templateExecutor;
-	}
-
-	@org.springframework.shell.core.command.annotation.Command(command = "version", description = "Show version info")
-	public AttributedString version() {
-		Assert.notNull(template, "'template' must not be null");
-		String templateResource = resourceAsString(getResourceLoader().getResource(template));
-
-		Map<String, Object> attributes = new HashMap<>();
-		return templateExecutor.render(templateResource, attributes);
-	}
-
-	public void setTemplate(String template) {
-		this.template = template;
-	}
-
-	private static String resourceAsString(Resource resource) {
-		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
-			return FileCopyUtils.copyToString(reader);
+	@Override
+	public void execute(CommandContext commandContext) throws Exception {
+		Package pkg = Version.class.getPackage();
+		String version = "N/A";
+		if (pkg != null && pkg.getImplementationVersion() != null) {
+			version = pkg.getImplementationVersion();
 		}
-		catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		commandContext.terminal().writer().println("Version: " + version);
+		commandContext.terminal().flush();
 	}
 
 }

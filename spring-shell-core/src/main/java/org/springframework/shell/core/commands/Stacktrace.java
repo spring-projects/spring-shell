@@ -15,55 +15,27 @@
  */
 package org.springframework.shell.core.commands;
 
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.shell.core.context.InteractionMode;
-import org.springframework.shell.core.result.ThrowableResultHandler;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
 
 /**
  * A command to display the full stacktrace when an error occurs.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
-public class Stacktrace extends AbstractCommand {
+public class Stacktrace implements Command {
 
-	/**
-	 * Marker interface for beans providing {@literal stacktrace} functionality to the
-	 * shell.
-	 *
-	 * <p>
-	 * To override the stacktrace command, simply register your own bean implementing that
-	 * interface and the standard implementation will back off.
-	 * </p>
-	 *
-	 * <p>
-	 * To disable the {@literal stacktrace} command entirely, set the
-	 * {@literal spring.shell.command.stacktrace.enabled=false} property in the
-	 * environment.
-	 * </p>
-	 *
-	 * @author Eric Bottard
-	 */
-	public interface Command {
-
+	@Override
+	public String getDescription() {
+		return "Display the full stacktrace of the last error.";
 	}
 
-	private ObjectProvider<ThrowableResultHandler> throwableResultHandler;
-
-	public Stacktrace(ObjectProvider<ThrowableResultHandler> throwableResultHandler) {
-		this.throwableResultHandler = throwableResultHandler;
-	}
-
-	@org.springframework.shell.core.command.annotation.Command(command = ThrowableResultHandler.DETAILS_COMMAND_NAME,
-			description = "Display the full stacktrace of the last error.",
-			interactionMode = InteractionMode.INTERACTIVE)
-	public void stacktrace() {
-		ThrowableResultHandler handler = throwableResultHandler.getIfAvailable();
-		if (handler != null) {
-			if (handler.getLastError() != null) {
-				handler.getLastError().printStackTrace(getTerminal().writer());
-			}
-		}
+	@Override
+	public void execute(CommandContext commandContext) throws Exception {
+		// Think of this like $? in bash
+		// TODO check to best place to store this global state
 	}
 
 }

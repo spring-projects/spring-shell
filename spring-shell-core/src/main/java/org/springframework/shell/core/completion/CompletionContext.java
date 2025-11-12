@@ -18,7 +18,7 @@ package org.springframework.shell.core.completion;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.shell.core.command.CommandOption;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,19 +40,19 @@ public class CompletionContext {
 
 	private final @Nullable CommandOption commandOption;
 
-	private final @Nullable CommandRegistration commandRegistration;
+	private final @Nullable Command command;
 
 	/**
 	 * @param words words in the buffer, excluding words for the command name
 	 * @param wordIndex the index of the word the cursor is in
 	 * @param position the position inside the current word where the cursor is
 	 */
-	public CompletionContext(List<String> words, int wordIndex, int position,
-			@Nullable CommandRegistration commandRegistration, @Nullable CommandOption commandOption) {
+	public CompletionContext(List<String> words, int wordIndex, int position, @Nullable Command command,
+			@Nullable CommandOption commandOption) {
 		this.words = words;
 		this.wordIndex = wordIndex;
 		this.position = position;
-		this.commandRegistration = commandRegistration;
+		this.command = command;
 		this.commandOption = commandOption;
 	}
 
@@ -72,8 +72,8 @@ public class CompletionContext {
 		return commandOption;
 	}
 
-	public @Nullable CommandRegistration getCommandRegistration() {
-		return commandRegistration;
+	public @Nullable Command getCommand() {
+		return command;
 	}
 
 	public String upToCursor() {
@@ -108,20 +108,20 @@ public class CompletionContext {
 	 */
 	public CompletionContext drop(int nbWords) {
 		return new CompletionContext(new ArrayList<>(words.subList(nbWords, words.size())), wordIndex - nbWords,
-				position, commandRegistration, commandOption);
+				position, command, commandOption);
 	}
 
 	/**
 	 * Return a copy of this context with given command option.
 	 */
 	public CompletionContext commandOption(CommandOption commandOption) {
-		return new CompletionContext(words, wordIndex, position, commandRegistration, commandOption);
+		return new CompletionContext(words, wordIndex, position, command, commandOption);
 	}
 
 	/**
 	 * Return a copy of this context with given command registration.
 	 */
-	public CompletionContext commandRegistration(@Nullable CommandRegistration commandRegistration) {
+	public CompletionContext commandRegistration(@Nullable Command commandRegistration) {
 		return new CompletionContext(words, wordIndex, position, commandRegistration, commandOption);
 	}
 

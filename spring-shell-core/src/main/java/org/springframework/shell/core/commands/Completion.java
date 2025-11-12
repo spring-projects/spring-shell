@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.core.commands;
 
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.completion.BashCompletions;
 import org.springframework.shell.core.completion.ZshCompletions;
 
@@ -24,13 +26,11 @@ import org.springframework.shell.core.completion.ZshCompletions;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-public class Completion extends AbstractCommand {
+public class Completion implements Command {
 
-	/**
-	 * Marker interface used in auto-config.
-	 */
-	public interface Command {
-
+	@Override
+	public void execute(CommandContext commandContext) throws Exception {
+		// TODO
 	}
 
 	private String rootCommand;
@@ -39,18 +39,22 @@ public class Completion extends AbstractCommand {
 		this.rootCommand = rootCommand;
 	}
 
-	@org.springframework.shell.core.command.annotation.Command(command = "completion bash",
-			description = "Generate bash completion script")
-	public String bash() {
-		BashCompletions bashCompletions = new BashCompletions(getResourceLoader(), getCommandRegistry());
-		return bashCompletions.generate(rootCommand);
-	}
-
-	@org.springframework.shell.core.command.annotation.Command(command = "completion zsh",
-			description = "Generate zsh completion script")
-	public String zsh() {
-		ZshCompletions zshCompletions = new ZshCompletions(getResourceLoader(), getCommandRegistry());
-		return zshCompletions.generate(rootCommand);
-	}
+	// @org.springframework.shell.core.command.annotation.Command(command = "completion
+	// bash",
+	// description = "Generate bash completion script")
+	// public String bash() {
+	// BashCompletions bashCompletions = new BashCompletions(getResourceLoader(),
+	// getCommandRegistry());
+	// return bashCompletions.generate(rootCommand);
+	// }
+	//
+	// @org.springframework.shell.core.command.annotation.Command(command = "completion
+	// zsh",
+	// description = "Generate zsh completion script")
+	// public String zsh() {
+	// ZshCompletions zshCompletions = new ZshCompletions(getResourceLoader(),
+	// getCommandRegistry());
+	// return zshCompletions.generate(rootCommand);
+	// }
 
 }

@@ -1,6 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
- *
+ * Copyright 2017-2023
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,20 +13,17 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core.result;
+package org.springframework.shell.core.command;
 
 /**
- * Implementations know how to deal with results of method invocations, whether normal
- * results or exceptions thrown.
+ * Exception to signal that a command could be mapped to user input
  *
- * @author Eric Bottard
+ * @author Piotr Olaszewski
  */
-public interface ResultHandler<T> {
+public class CommandNotFoundException extends RuntimeException {
 
-	/**
-	 * Deal with some method execution result, whether it was the normal return value, or
-	 * some kind of {@link Throwable}.
-	 */
-	void handleResult(T result);
+	public CommandNotFoundException(String message) {
+		super(message);
+	}
 
 }

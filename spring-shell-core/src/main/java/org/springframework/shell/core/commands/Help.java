@@ -15,26 +15,11 @@
  */
 package org.springframework.shell.core.commands;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.jline.utils.AttributedString;
-
-import org.jspecify.annotations.Nullable;
-import org.springframework.core.io.Resource;
-import org.springframework.shell.core.Utils;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.core.tui.style.TemplateExecutor;
-import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
 
 /**
  * A command to display help about all available commands.
@@ -43,122 +28,18 @@ import org.springframework.util.FileCopyUtils;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-public class Help extends AbstractCommand {
+public class Help implements Command {
 
-	/**
-	 * Marker interface for beans providing {@literal help} functionality to the shell.
-	 *
-	 * <p>
-	 * To override the help command, simply register your own bean implementing that
-	 * interface and the standard implementation will back off.
-	 * </p>
-	 *
-	 * <p>
-	 * To disable the {@literal help} command entirely, set the
-	 * {@literal spring.shell.command.help.enabled=false} property in the environment.
-	 * </p>
-	 *
-	 * @author Eric Bottard
-	 */
-	public interface Command {
-
-	}
-
-	private boolean showGroups = true;
-
-	private TemplateExecutor templateExecutor;
-
-	private @Nullable String commandTemplate;
-
-	private @Nullable String commandsTemplate;
-
-	public Help(TemplateExecutor templateExecutor) {
-		this.templateExecutor = templateExecutor;
-	}
-
-	@org.springframework.shell.core.command.annotation.Command(command = "Display help about available commands")
-	public AttributedString help(@Option(defaultValue = Option.NULL, shortNames = { 'C' }, longNames = { "--command" },
-			description = "The command to obtain help for.", arity = CommandRegistration.OptionArity.ONE_OR_MORE)
-	// FIXME @OptionValues(provider = CommandValueProvider.class) // How to migrate
-	// valueProvider?
-	String @Nullable [] command)
-
-			throws IOException {
-		if (command == null) {
-			return renderCommands();
-		}
-		else {
-			String commandStr = Stream.of(command).map(c -> c.trim()).collect(Collectors.joining(" "));
-			return renderCommand(commandStr);
-		}
-	}
-
-	/**
-	 * Sets a location for a template rendering command help.
-	 * @param commandTemplate the command template location
-	 */
-	public void setCommandTemplate(String commandTemplate) {
-		this.commandTemplate = commandTemplate;
-	}
-
-	/**
-	 * Sets a location for a template rendering commands help.
-	 * @param commandsTemplate the commands template location
-	 */
-	public void setCommandsTemplate(String commandsTemplate) {
-		this.commandsTemplate = commandsTemplate;
-	}
-
-	/**
-	 * Sets if groups should be shown in a listing, defaults to true. If not enabled a
-	 * simple list is shown without groups.
-	 * @param showGroups the flag to show groups
-	 */
-	public void setShowGroups(boolean showGroups) {
-		this.showGroups = showGroups;
-	}
-
-	private AttributedString renderCommands() {
-		Map<String, CommandRegistration> registrations = Utils
-			.removeHiddenCommands(getCommandRegistry().getRegistrations());
-
-		boolean isStg = commandTemplate != null && commandTemplate.endsWith(".stg");
-
-		Map<String, Object> model = new HashMap<>();
-		model.put("model", GroupsInfoModel.of(this.showGroups, registrations));
-
-		Assert.notNull(commandsTemplate, "'commandsTemplate' must not be null");
-		String templateResource = resourceAsString(getResourceLoader().getResource(commandsTemplate));
-		return isStg ? this.templateExecutor.renderGroup(templateResource, model)
-				: this.templateExecutor.render(templateResource, model);
-	}
-
-	private AttributedString renderCommand(String command) {
-		Map<String, CommandRegistration> registrations = Utils
-			.removeHiddenCommands(getCommandRegistry().getRegistrations());
-		CommandRegistration registration = registrations.get(command);
-		if (registration == null) {
-			throw new IllegalArgumentException("Unknown command '" + command + "'");
-		}
-
-		boolean isStg = commandTemplate != null && commandTemplate.endsWith(".stg");
-
-		Map<String, Object> model = new HashMap<>();
-		model.put("model", CommandInfoModel.of(command, registration));
-
-		Assert.notNull(commandTemplate, "'commandsTemplate' must not be null");
-		String templateResource = resourceAsString(getResourceLoader().getResource(commandTemplate));
-		return isStg ? this.templateExecutor.renderGroup(templateResource, model)
-				: this.templateExecutor.render(templateResource, model);
-	}
-
-	private static String resourceAsString(Resource resource) {
-		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
-			return FileCopyUtils.copyToString(reader);
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+	@Override
+	public void execute(CommandContext commandContext) throws Exception {
+		Set<Command> availableCommands = commandContext.commandRegistry().getCommands();
+		// FIXME render message from template
+		// TODO do we really need a template engine? would Java String templates be
+		// enough?
+		String helpMessage = "Available commands: "
+				+ availableCommands.stream().map(Command::getName).sorted().collect(Collectors.joining(", "));
+		commandContext.terminal().writer().println(helpMessage);
+		commandContext.terminal().flush();
 	}
 
 }

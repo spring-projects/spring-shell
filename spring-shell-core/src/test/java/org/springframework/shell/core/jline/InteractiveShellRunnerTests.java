@@ -25,29 +25,19 @@ import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Attributes;
 import org.jline.terminal.impl.ExternalTerminal;
-import org.jline.utils.AttributedString;
-import org.jline.utils.AttributedStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.shell.core.ExitRequest;
-import org.springframework.shell.core.jline.InteractiveShellRunner;
-import org.springframework.shell.core.jline.PromptProvider;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @Disabled("Hands intermittently")
 class InteractiveShellRunnerTests {
 
 	private PipedOutputStream outIn;
 
-	private InteractiveShellRunner.JLineInputProvider jLineInputProvider;
-
-	private PromptProvider dummyPromptProvider() {
-		return () -> new AttributedString("dummy-shell:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
-	}
+	private JLineInputProvider jLineInputProvider;
 
 	private void initForShortcutKeyTest() throws Exception {
 		PipedInputStream in = new PipedInputStream();
@@ -61,7 +51,7 @@ class InteractiveShellRunnerTests {
 		LineReaderBuilder builder = LineReaderBuilder.builder().terminal(terminal);
 
 		LineReader lineReader = builder.build();
-		jLineInputProvider = new InteractiveShellRunner.JLineInputProvider(lineReader, dummyPromptProvider());
+		jLineInputProvider = new JLineInputProvider(lineReader);
 	}
 
 	@Test

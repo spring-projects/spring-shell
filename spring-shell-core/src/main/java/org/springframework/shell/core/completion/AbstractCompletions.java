@@ -41,7 +41,7 @@ import org.stringtemplate.v4.STGroupString;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.core.Utils;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -75,32 +75,31 @@ public abstract class AbstractCompletions {
 	 * completions structure.
 	 */
 	protected CommandModel generateCommandModel() {
-		Collection<CommandRegistration> commandsByName = Utils.removeHiddenCommands(commandRegistry.getRegistrations())
-			.values();
-		HashMap<String, DefaultCommandModelCommand> commands = new HashMap<>();
+		Collection<Command> commands = commandRegistry.getCommands();
+		HashMap<String, DefaultCommandModelCommand> commandsMap = new HashMap<>();
 		HashSet<CommandModelCommand> topCommands = new HashSet<>();
-		commandsByName.stream().forEach(registration -> {
-			String key = registration.getCommand();
+		commands.stream().forEach(registration -> {
+			String key = registration.getName();
 			String[] splitKeys = key.split(" ");
 			String commandKey = "";
 			for (int i = 0; i < splitKeys.length; i++) {
 				DefaultCommandModelCommand parent = null;
 				String main = splitKeys[i];
 				if (i > 0) {
-					parent = commands.get(commandKey);
+					parent = commandsMap.get(commandKey);
 					commandKey = commandKey + " " + splitKeys[i];
 				}
 				else {
 					commandKey = splitKeys[i];
 				}
 				String desc = i + 1 < splitKeys.length ? null : registration.getDescription();
-				DefaultCommandModelCommand command = commands.computeIfAbsent(commandKey,
+				DefaultCommandModelCommand command = commandsMap.computeIfAbsent(commandKey,
 						(fullCommand) -> new DefaultCommandModelCommand(fullCommand, main, desc));
 
 				// TODO long vs short
 				List<CommandModelOption> options = registration.getOptions()
 					.stream()
-					.flatMap(co -> Arrays.stream(co.getLongNames()))
+					.map(co -> co.getLongName())
 					.map(lo -> CommandModelOption.of("--", lo))
 					.collect(Collectors.toList());
 

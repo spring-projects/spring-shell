@@ -22,7 +22,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.core.command.CommandRegistration;
+
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.parser.ParserConfig.Feature;
 
 /**
@@ -38,7 +39,7 @@ public class CommandModel {
 
 	private final ParserConfig configuration;
 
-	public CommandModel(Map<String, CommandRegistration> registrations, ParserConfig configuration) {
+	public CommandModel(Map<String, Command> registrations, ParserConfig configuration) {
 		this.configuration = configuration;
 		buildModel(registrations);
 	}
@@ -99,7 +100,7 @@ public class CommandModel {
 		return tokens;
 	}
 
-	void xxx(String command, CommandRegistration registration) {
+	void xxx(String command, Command registration) {
 		String[] commands = command.split(" ");
 		for (int i = 0; i < commands.length; i++) {
 
@@ -109,7 +110,7 @@ public class CommandModel {
 	// root1 sub1
 	// root1 sub2
 
-	private @Nullable CommandInfo getOrCreate(String[] commands, CommandRegistration registration) {
+	private @Nullable CommandInfo getOrCreate(String[] commands, Command registration) {
 		CommandInfo ret = null;
 
 		CommandInfo parent = null;
@@ -152,7 +153,7 @@ public class CommandModel {
 		return ret;
 	}
 
-	private void buildModel(Map<String, CommandRegistration> registrations) {
+	private void buildModel(Map<String, Command> registrations) {
 		registrations.entrySet().forEach(e -> {
 			String[] commands = e.getKey().split(" ");
 			getOrCreate(commands, e.getValue());
@@ -185,14 +186,14 @@ public class CommandModel {
 
 		String command;
 
-		@Nullable CommandRegistration registration;
+		@Nullable Command registration;
 
 		@Nullable CommandInfo parent;
 
 		// private List<CommandInfo> children = new ArrayList<>();
 		private Map<String, CommandInfo> children = new HashMap<>();
 
-		CommandInfo(String command, @Nullable CommandRegistration registration, @Nullable CommandInfo parent) {
+		CommandInfo(String command, @Nullable Command registration, @Nullable CommandInfo parent) {
 			this.registration = registration;
 			this.parent = parent;
 			this.command = command;
@@ -209,12 +210,10 @@ public class CommandModel {
 			});
 			if (registration != null) {
 				registration.getOptions().forEach(commandOption -> {
-					for (String longName : commandOption.getLongNames()) {
-						tokens.put("--" + longName, new Token(longName, TokenType.OPTION));
-					}
-					for (Character shortName : commandOption.getShortNames()) {
-						tokens.put("-" + shortName, new Token(shortName.toString(), TokenType.OPTION));
-					}
+					String longName = commandOption.getLongName();
+					tokens.put("--" + longName, new Token(longName, TokenType.OPTION));
+					String shortName = commandOption.getShortName().toString();
+					tokens.put("-" + shortName, new Token(shortName.toString(), TokenType.OPTION));
 				});
 			}
 			return tokens;

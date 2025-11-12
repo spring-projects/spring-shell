@@ -24,25 +24,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jline.reader.Parser;
+import org.jline.terminal.Terminal;
 
-import org.springframework.core.annotation.Order;
-import org.springframework.shell.core.Shell;
+import org.springframework.shell.core.Input;
 import org.springframework.shell.core.ShellRunner;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandNotFoundException;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.util.ObjectUtils;
 
 /**
  * A {@link ShellRunner} that looks for process arguments that start with {@literal @},
  * which are then interpreted as references to script files to run and exit.
  *
- * <p>
- * Has higher precedence than {@link NonInteractiveShellRunner} and
- * {@link InteractiveShellRunner} which gives it top priority to run the shell if scripts
- * are found.
- *
  * @author Eric Bottard
  */
 // tag::documentation[]
-@Order(ScriptShellRunner.PRECEDENCE)
 public class ScriptShellRunner implements ShellRunner {
 
 	// end::documentation[]
@@ -52,15 +50,16 @@ public class ScriptShellRunner implements ShellRunner {
 	 * which also controls the order it is consulted on the ability to handle the current
 	 * shell.
 	 */
-	public static final int PRECEDENCE = InteractiveShellRunner.PRECEDENCE - 100;
-
 	private final Parser parser;
 
-	private final Shell shell;
+	private final Terminal terminal;
 
-	public ScriptShellRunner(Parser parser, Shell shell) {
+	private final CommandRegistry commandRegistry;
+
+	public ScriptShellRunner(Parser parser, Terminal terminal, CommandRegistry commandRegistry) {
 		this.parser = parser;
-		this.shell = shell;
+		this.terminal = terminal;
+		this.commandRegistry = commandRegistry;
 	}
 
 	@Override
@@ -82,9 +81,45 @@ public class ScriptShellRunner implements ShellRunner {
 		for (File file : scriptsToRun) {
 			try (Reader reader = new FileReader(file);
 					FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-				shell.run(inputProvider);
+				execute(inputProvider);
 			}
 		}
+	}
+
+	private void execute(FileInputProvider inputProvider) throws Exception {
+		while (true) {
+			Input input = inputProvider.readInput();
+			if (input == Input.INTERRUPTED || input == Input.EMPTY) {
+				break;
+			}
+			if (input == null || input.words().isEmpty()) {
+				// Ignore empty lines
+				continue;
+			}
+			String commandName = input.words().get(0);
+			Command command = this.commandRegistry.getCommandByName(commandName);
+			if (command == null) {
+				String availableCommands = getAvailableCommands();
+				throw new CommandNotFoundException(
+						"No command found for name: " + commandName + ". Available commands: " + availableCommands);
+			}
+			CommandContext commandContext = new CommandContext(input.words(), this.commandRegistry, this.terminal);
+			try {
+				command.execute(commandContext);
+			}
+			catch (Exception exception) {
+				this.terminal.writer().append(exception.getMessage());
+				this.terminal.writer().flush();
+			}
+		}
+	}
+
+	private String getAvailableCommands() {
+		return this.commandRegistry.getCommands()
+			.stream()
+			.map(Command::getName)
+			.sorted()
+			.collect(Collectors.joining(", "));
 	}
 
 }

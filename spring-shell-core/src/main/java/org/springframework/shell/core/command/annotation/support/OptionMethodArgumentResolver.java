@@ -51,8 +51,7 @@ public class OptionMethodArgumentResolver extends AbstractArgumentMethodArgument
 	protected NamedValueInfo createNamedValueInfo(MethodParameter parameter) {
 		Option annot = parameter.getParameterAnnotation(Option.class);
 		Assert.state(annot != null, "No Option annotation");
-		List<String> names = Arrays.stream(annot != null ? annot.longNames() : new String[0])
-			.collect(Collectors.toList());
+		List<String> names = List.of(annot.longName());
 		return new HeaderNamedValueInfo(annot, names);
 	}
 

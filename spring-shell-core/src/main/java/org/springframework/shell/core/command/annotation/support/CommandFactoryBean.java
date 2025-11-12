@@ -1,0 +1,89 @@
+/*
+ * Copyright 2023-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.springframework.shell.core.command.annotation.support;
+
+import java.lang.reflect.Method;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.MergedAnnotations;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.commands.adapter.MethodInvokerCommandAdapter;
+import org.springframework.util.Assert;
+import org.springframework.util.MethodInvoker;
+
+/**
+ * Factory bean to build instance of {@link Command}. This is internal class and not meant
+ * for generic use.
+ *
+ * @author Janne Valkealahti
+ * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
+ */
+public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<Command> {
+
+	private final Log log = LogFactory.getLog(CommandFactoryBean.class);
+
+	private final Method method;
+
+	@SuppressWarnings("NullAway.Init")
+	private ApplicationContext applicationContext;
+
+	public CommandFactoryBean(Method method) {
+		Assert.notNull(method, "'method' must not be null");
+		this.method = method;
+	}
+
+	@Override
+	public Command getObject() throws Exception {
+		org.springframework.shell.core.command.annotation.Command command = MergedAnnotations.from(this.method)
+			.get(org.springframework.shell.core.command.annotation.Command.class)
+			.synthesize();
+		String name = command.name()[0];
+		String description = command.description();
+		String help = command.help();
+		String group = command.group();
+		// TODO handle options, aliases, etc
+		MethodInvoker methodInvoker = getMethodInvoker();
+		log.debug("Creating command for method : " + this.method.getName());
+		return new MethodInvokerCommandAdapter(name, description, help, group, methodInvoker);
+	}
+
+	private MethodInvoker getMethodInvoker() throws ClassNotFoundException, NoSuchMethodException {
+		MethodInvoker methodInvoker = new MethodInvoker();
+		Class<?> declaringClass = this.method.getDeclaringClass();
+		methodInvoker.setTargetClass(declaringClass);
+		methodInvoker.setTargetObject(this.applicationContext.getBean(declaringClass));
+		methodInvoker.setTargetMethod(method.getName());
+		return methodInvoker;
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Command.class;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+}

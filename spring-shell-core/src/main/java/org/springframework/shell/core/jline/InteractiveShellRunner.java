@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,96 +16,87 @@
 
 package org.springframework.shell.core.jline;
 
-import org.jline.reader.EndOfFileException;
-import org.jline.reader.LineReader;
-import org.jline.reader.UserInterruptException;
-import org.jline.utils.AttributedString;
+import java.util.stream.Collectors;
 
-import org.springframework.core.annotation.Order;
-import org.springframework.shell.core.ExitRequest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jline.terminal.Terminal;
+
 import org.springframework.shell.core.Input;
 import org.springframework.shell.core.InputProvider;
-import org.springframework.shell.core.Shell;
 import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.context.InteractionMode;
-import org.springframework.shell.core.context.ShellContext;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandRegistry;
 
 /**
- * A {@link ShellRunner} that bootstraps the shell in interactive mode.
- *
- * <p>
- * Has lower precedence than {@link ScriptShellRunner} and
- * {@link NonInteractiveShellRunner} which makes it the default shell runner when the
- * other runners opt-out of handling the shell.
+ * A {@link ShellRunner} that bootstraps the shell in interactive mode. It requires an
+ * {@link InputProvider} to read user inputs, a {@link Terminal} to write output to the
+ * user and a {@link CommandRegistry} to look up commands.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
  * @author Chris Bono
+ * @author Mahmoud Ben Hassine
  */
-@Order(InteractiveShellRunner.PRECEDENCE)
 public class InteractiveShellRunner implements ShellRunner {
 
-	/**
-	 * The precedence at which this runner is ordered by the DefaultApplicationRunner -
-	 * which also controls the order it is consulted on the ability to handle the current
-	 * shell.
-	 */
-	public static final int PRECEDENCE = 0;
+	private static final Log log = LogFactory.getLog(InteractiveShellRunner.class);
 
-	private final LineReader lineReader;
+	private final InputProvider inputProvider;
 
-	private final PromptProvider promptProvider;
+	private final Terminal terminal;
 
-	private final Shell shell;
+	private final CommandRegistry commandRegistry;
 
-	private final ShellContext shellContext;
-
-	public InteractiveShellRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell,
-			ShellContext shellContext) {
-		this.lineReader = lineReader;
-		this.promptProvider = promptProvider;
-		this.shell = shell;
-		this.shellContext = shellContext;
+	public InteractiveShellRunner(InputProvider inputProvider, Terminal terminal, CommandRegistry commandRegistry) {
+		this.inputProvider = inputProvider;
+		this.terminal = terminal;
+		this.commandRegistry = commandRegistry;
 	}
 
 	@Override
 	public void run(String[] args) throws Exception {
-		shellContext.setInteractionMode(InteractionMode.INTERACTIVE);
-		InputProvider inputProvider = new JLineInputProvider(lineReader, promptProvider);
-		shell.run(inputProvider);
+		while (true) {
+			Input input = this.inputProvider.readInput();
+			if (input == Input.INTERRUPTED || input == Input.EMPTY) {
+				break;
+			}
+			if (input.rawText().equalsIgnoreCase("quit") || input.rawText().equalsIgnoreCase("exit")) {
+				break;
+			}
+			if (input == null || input.rawText().isEmpty() || input.words().isEmpty()) {
+				// Ignore empty lines
+				continue;
+			}
+			String commandName = input.words().get(0);
+			Command command = this.commandRegistry.getCommandByName(commandName);
+			if (command == null) {
+				String availableCommands = getAvailableCommands();
+				this.terminal.writer()
+					.println(
+							"No command found for name: " + commandName + ". Available commands: " + availableCommands);
+				this.terminal.writer().flush();
+				continue;
+			}
+			log.debug(String.format("Evaluate input with line=[%s], command=[%s]", input.rawText(), command));
+			CommandContext commandContext = new CommandContext(input.words(), this.commandRegistry, this.terminal);
+			try {
+				command.execute(commandContext);
+			}
+			catch (Exception exception) {
+				this.terminal.writer().append(exception.getMessage());
+				this.terminal.writer().flush();
+			}
+		}
 	}
 
-	public static class JLineInputProvider implements InputProvider {
-
-		private final LineReader lineReader;
-
-		private final PromptProvider promptProvider;
-
-		public JLineInputProvider(LineReader lineReader, PromptProvider promptProvider) {
-			this.lineReader = lineReader;
-			this.promptProvider = promptProvider;
-		}
-
-		@Override
-		public Input readInput() {
-			try {
-				AttributedString prompt = promptProvider.getPrompt();
-				lineReader.readLine(prompt.toAnsi(lineReader.getTerminal()));
-			}
-			catch (UserInterruptException e) {
-				if (e.getPartialLine().isEmpty()) {
-					throw new ExitRequest(1);
-				}
-				else {
-					return Input.EMPTY;
-				}
-			}
-			catch (EndOfFileException e) {
-				throw new ExitRequest(1);
-			}
-			return new ParsedLineInput(lineReader.getParsedLine());
-		}
-
+	private String getAvailableCommands() {
+		return this.commandRegistry.getCommands()
+			.stream()
+			.map(Command::getName)
+			.sorted()
+			.collect(Collectors.joining(", "));
 	}
 
 }

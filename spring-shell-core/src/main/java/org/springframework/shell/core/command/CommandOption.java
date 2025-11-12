@@ -25,26 +25,27 @@ import org.springframework.shell.core.completion.CompletionResolver;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
+// TODO this is better defined as a record.
 public interface CommandOption {
 
 	/**
-	 * Gets a long names of an option.
-	 * @return long names of an option
+	 * Gets a long name of an option.
+	 * @return long name of an option
 	 */
-	String[] getLongNames();
+	String getLongName();
 
 	/**
 	 * Gets a modified long names of an option. Set within a command registration if
 	 * option name modifier were used to have an info about original names.
 	 * @return modified long names of an option
 	 */
-	String[] getLongNamesModified();
+	String getLongNameModified();
 
 	/**
 	 * Gets a short names of an option.
 	 * @return short names of an option
 	 */
-	Character[] getShortNames();
+	Character getShortName();
 
 	/**
 	 * Gets a description of an option.
@@ -89,12 +90,6 @@ public interface CommandOption {
 	int getArityMax();
 
 	/**
-	 * Gets a label.
-	 * @return the label
-	 */
-	@Nullable String getLabel();
-
-	/**
 	 * Gets a completion function.
 	 * @return the completion function
 	 */
@@ -102,33 +97,9 @@ public interface CommandOption {
 
 	/**
 	 * Gets an instance of a default {@link CommandOption}.
-	 * @param longNames the long names
-	 * @param shortNames the short names
-	 * @param description the description
-	 * @return default command option
-	 */
-	public static CommandOption of(String[] longNames, Character[] shortNames, String description) {
-		return of(longNames, null, shortNames, description, null, false, null, null, null, null, null, null);
-	}
-
-	/**
-	 * Gets an instance of a default {@link CommandOption}.
-	 * @param longNames the long names
-	 * @param shortNames the short names
-	 * @param description the description
-	 * @param type the type
-	 * @return default command option
-	 */
-	public static CommandOption of(String @Nullable [] longNames, Character @Nullable [] shortNames, String description,
-			ResolvableType type) {
-		return of(longNames, null, shortNames, description, type, false, null, null, null, null, null, null);
-	}
-
-	/**
-	 * Gets an instance of a default {@link CommandOption}.
-	 * @param longNames the long names
-	 * @param longNamesModified the modified long names
-	 * @param shortNames the short names
+	 * @param longName the long name
+	 * @param longNameModified the modified long name
+	 * @param shortName the short name
 	 * @param description the description
 	 * @param type the type
 	 * @param required the required flag
@@ -140,32 +111,31 @@ public interface CommandOption {
 	 * @param completion the completion
 	 * @return default command option
 	 */
-	public static CommandOption of(String @Nullable [] longNames, String @Nullable [] longNamesModified,
-			Character @Nullable [] shortNames, @Nullable String description, @Nullable ResolvableType type,
-			boolean required, @Nullable String defaultValue, @Nullable Integer position, @Nullable Integer arityMin,
-			@Nullable Integer arityMax, @Nullable String label, @Nullable CompletionResolver completion) {
-		return new DefaultCommandOption(longNames, longNamesModified, shortNames, description, type, required,
+	static CommandOption of(String longName, String longNameModified, Character shortName, String description,
+			ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin,
+			Integer arityMax, String label, CompletionResolver completion) {
+		return new DefaultCommandOption(longName, longNameModified, shortName, description, type, required,
 				defaultValue, position, arityMin, arityMax, label, completion);
 	}
 
 	/**
 	 * Default implementation of {@link CommandOption}.
 	 */
-	public static class DefaultCommandOption implements CommandOption {
+	class DefaultCommandOption implements CommandOption {
 
-		private String[] longNames;
+		private String longName;
 
-		private String[] longNamesModified;
+		private String longNameModified;
 
-		private Character[] shortNames;
+		private Character shortName;
 
-		private @Nullable String description;
+		private String description;
 
-		private @Nullable ResolvableType type;
+		private ResolvableType type;
 
 		private boolean required;
 
-		private @Nullable String defaultValue;
+		private String defaultValue;
 
 		private int position;
 
@@ -173,17 +143,14 @@ public interface CommandOption {
 
 		private int arityMax;
 
-		private @Nullable String label;
+		private CompletionResolver completion;
 
-		private @Nullable CompletionResolver completion;
-
-		public DefaultCommandOption(String @Nullable [] longNames, String @Nullable [] longNamesModified,
-				Character @Nullable [] shortNames, @Nullable String description, @Nullable ResolvableType type,
-				boolean required, @Nullable String defaultValue, @Nullable Integer position, @Nullable Integer arityMin,
-				@Nullable Integer arityMax, @Nullable String label, @Nullable CompletionResolver completion) {
-			this.longNames = longNames != null ? longNames : new String[0];
-			this.longNamesModified = longNamesModified != null ? longNamesModified : new String[0];
-			this.shortNames = shortNames != null ? shortNames : new Character[0];
+		public DefaultCommandOption(String longName, String longNameModified, Character shortName, String description,
+				ResolvableType type, boolean required, String defaultValue, Integer position, Integer arityMin,
+				Integer arityMax, String label, CompletionResolver completion) {
+			this.longName = longName;
+			this.longNameModified = longNameModified;
+			this.shortName = shortName;
 			this.description = description;
 			this.type = type;
 			this.required = required;
@@ -191,32 +158,31 @@ public interface CommandOption {
 			this.position = position != null && position > -1 ? position : -1;
 			this.arityMin = arityMin != null ? arityMin : -1;
 			this.arityMax = arityMax != null ? arityMax : -1;
-			this.label = label;
 			this.completion = completion;
 		}
 
 		@Override
-		public String[] getLongNames() {
-			return longNames;
+		public String getLongName() {
+			return longName;
 		}
 
 		@Override
-		public String[] getLongNamesModified() {
-			return longNamesModified;
+		public String getLongNameModified() {
+			return longNameModified;
 		}
 
 		@Override
-		public Character[] getShortNames() {
-			return shortNames;
+		public Character getShortName() {
+			return shortName;
 		}
 
 		@Override
-		public @Nullable String getDescription() {
+		public String getDescription() {
 			return description;
 		}
 
 		@Override
-		public @Nullable ResolvableType getType() {
+		public ResolvableType getType() {
 			return type;
 		}
 
@@ -226,7 +192,7 @@ public interface CommandOption {
 		}
 
 		@Override
-		public @Nullable String getDefaultValue() {
+		public String getDefaultValue() {
 			return defaultValue;
 		}
 
@@ -246,12 +212,7 @@ public interface CommandOption {
 		}
 
 		@Override
-		public @Nullable String getLabel() {
-			return label;
-		}
-
-		@Override
-		public @Nullable CompletionResolver getCompletion() {
+		public CompletionResolver getCompletion() {
 			return completion;
 		}
 

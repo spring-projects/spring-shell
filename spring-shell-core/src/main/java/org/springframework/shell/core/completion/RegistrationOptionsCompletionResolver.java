@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 
 /**
  * Default implementation of a {@link CompletionResolver}.
@@ -32,21 +32,21 @@ public class RegistrationOptionsCompletionResolver implements CompletionResolver
 
 	@Override
 	public List<CompletionProposal> apply(CompletionContext context) {
-		CommandRegistration commandRegistration = context.getCommandRegistration();
+		Command commandRegistration = context.getCommand();
 		if (commandRegistration == null) {
 			return Collections.emptyList();
 		}
 		List<CompletionProposal> candidates = new ArrayList<>();
 		commandRegistration.getOptions()
 			.stream()
-			.flatMap(o -> Stream.of(o.getLongNames()))
+			.flatMap(o -> Stream.of(o.getLongName()))
 			.map(ln -> "--" + ln)
 			.filter(ln -> !context.getWords().contains(ln))
 			.map(CompletionProposal::new)
 			.forEach(candidates::add);
 		commandRegistration.getOptions()
 			.stream()
-			.flatMap(o -> Stream.of(o.getShortNames()))
+			.flatMap(o -> Stream.of(o.getShortName()))
 			.map(ln -> "-" + ln)
 			.filter(ln -> !context.getWords().contains(ln))
 			.map(CompletionProposal::new)

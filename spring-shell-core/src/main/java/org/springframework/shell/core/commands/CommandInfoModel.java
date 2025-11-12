@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.CommandOption;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -56,17 +56,17 @@ class CommandInfoModel {
 	}
 
 	/**
-	 * Builds {@link CommandInfoModel} from {@link CommandRegistration}.
+	 * Builds {@link CommandInfoModel} from {@link Command}.
 	 * @param name the command name
-	 * @param registration the command registration
+	 * @param command the command
 	 * @return the command info model
 	 */
-	static CommandInfoModel of(String name, CommandRegistration registration) {
-		List<CommandOption> options = registration.getOptions();
+	static CommandInfoModel of(String name, Command command) {
+		List<CommandOption> options = command.getOptions();
 		List<CommandParameterInfoModel> parameters = options.stream().map(o -> {
 			String type = commandOptionType(o);
 			List<String> arguments = Stream
-				.concat(Stream.of(o.getLongNames()).map(a -> "--" + a), Stream.of(o.getShortNames()).map(s -> "-" + s))
+				.concat(Stream.of(o.getLongName()).map(a -> "--" + a), Stream.of(o.getShortName()).map(s -> "-" + s))
 				.collect(Collectors.toList());
 			boolean required = o.isRequired();
 			String description = o.getDescription();
@@ -74,41 +74,33 @@ class CommandInfoModel {
 			return CommandParameterInfoModel.of(type, arguments, required, description, defaultValue);
 		}).collect(Collectors.toList());
 
-		List<String> aliases = registration.getAliases()
-			.stream()
-			.map(ca -> ca.getCommand())
-			.collect(Collectors.toList());
+		List<String> aliases = command.getAliases().stream().map(ca -> ca.getCommand()).collect(Collectors.toList());
 
-		String description = registration.getDescription();
+		String description = command.getDescription();
 		boolean available = true;
 		String availReason = "";
-		if (registration.getAvailability() != null) {
-			Availability a = registration.getAvailability();
-			available = a.isAvailable();
-			availReason = a.getReason();
-		}
+		// if (command.getAvailability() != null) {
+		// Availability a = registration.getAvailability();
+		// available = a.isAvailable();
+		// availReason = a.getReason();
+		// }
 		CommandAvailabilityInfoModel availModel = CommandAvailabilityInfoModel.of(available, availReason);
 		return new CommandInfoModel(name, aliases, description, parameters, availModel);
 	}
 
 	private static String commandOptionType(CommandOption o) {
-		if (StringUtils.hasText(o.getLabel())) {
-			return o.getLabel();
-		}
-		else {
-			if (o.getType() != null) {
-				Class<?> rawClass = o.getType().getRawClass();
-				Assert.notNull(rawClass, "'rawClass' must not be null");
-				if (ClassUtils.isAssignable(rawClass, Void.class)) {
-					return "";
-				}
-				else {
-					return ClassUtils.getShortName(rawClass);
-				}
+		if (o.getType() != null) {
+			Class<?> rawClass = o.getType().getRawClass();
+			Assert.notNull(rawClass, "'rawClass' must not be null");
+			if (ClassUtils.isAssignable(rawClass, Void.class)) {
+				return "";
 			}
 			else {
-				return "String";
+				return ClassUtils.getShortName(rawClass);
 			}
+		}
+		else {
+			return "String";
 		}
 	}
 

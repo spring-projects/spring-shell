@@ -18,42 +18,21 @@ package org.springframework.shell.core.commands;
 
 import org.jline.utils.InfoCmp;
 
-import org.springframework.shell.core.context.InteractionMode;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
 
 /**
  * ANSI console related commands.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
-public class Clear extends AbstractCommand {
+public class Clear implements Command {
 
-	/**
-	 * Marker interface for beans providing {@literal clear} functionality to the shell.
-	 *
-	 * <p>
-	 * To override the clear command, simply register your own bean implementing that
-	 * interface and the standard implementation will back off.
-	 * </p>
-	 *
-	 * <p>
-	 * To disable the {@literal clear} command entirely, set the
-	 * {@literal spring.shell.command.clear.enabled=false} property in the environment.
-	 * </p>
-	 *
-	 * @author Eric Bottard
-	 */
-	public interface Command {
-
-	}
-
-	public Clear() {
-	}
-
-	@org.springframework.shell.core.command.annotation.Command(command = "Clear the shell screen.",
-			interactionMode = InteractionMode.INTERACTIVE)
-	public void clear() {
-		getTerminal().puts(InfoCmp.Capability.clear_screen);
+	@Override
+	public void execute(CommandContext commandContext) throws Exception {
+		commandContext.terminal().puts(InfoCmp.Capability.clear_screen);
 	}
 
 }

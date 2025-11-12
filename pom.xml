@@ -86,13 +86,13 @@
 
 	<modules>
 		<module>spring-shell-core</module>
-		<module>spring-shell-test</module>
-		<module>spring-shell-autoconfigure</module>
-		<module>spring-shell-test-autoconfigure</module>
-		<module>spring-shell-docs</module>
-		<module>spring-shell-dependencies</module>
+<!--		<module>spring-shell-test</module>-->
+<!--		<module>spring-shell-autoconfigure</module>-->
+<!--		<module>spring-shell-test-autoconfigure</module>-->
+<!--		<module>spring-shell-docs</module>-->
+<!--		<module>spring-shell-dependencies</module>-->
 		<module>spring-shell-samples</module>
-		<module>spring-shell-starters</module>
+<!--		<module>spring-shell-starters</module>-->
 	</modules>
 
 	<build>

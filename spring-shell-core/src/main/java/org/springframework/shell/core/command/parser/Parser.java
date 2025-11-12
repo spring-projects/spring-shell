@@ -30,7 +30,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.CommandOption;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.parser.Ast.AstResult;
 import org.springframework.shell.core.command.parser.CommandModel.CommandInfo;
 import org.springframework.shell.core.command.parser.Lexer.LexerResult;
@@ -56,8 +56,7 @@ public interface Parser {
 
 	/**
 	 * Results from a {@link Parser} containing needed information like resolved
-	 * {@link CommandRegistration}, list of {@link CommandOption} instances, errors and
-	 * directive.
+	 * {@link Command}, list of {@link CommandOption} instances, errors and directive.
 	 *
 	 * @param commandRegistration command registration
 	 * @param optionResults option results
@@ -65,7 +64,7 @@ public interface Parser {
 	 * @param messageResults message results
 	 * @param directiveResults directive result
 	 */
-	public record ParseResult(@Nullable CommandRegistration commandRegistration, List<OptionResult> optionResults,
+	public record ParseResult(@Nullable Command commandRegistration, List<OptionResult> optionResults,
 			List<ArgumentResult> argumentResults, List<MessageResult> messageResults,
 			List<DirectiveResult> directiveResults) {
 
@@ -177,7 +176,7 @@ public interface Parser {
 		@Override
 		protected ParseResult buildResult() {
 			CommandInfo info = commandModel.resolve(resolvedCommmand);
-			CommandRegistration registration = info != null ? info.registration : null;
+			Command registration = info != null ? info.registration : null;
 
 			List<MessageResult> messageResults = new ArrayList<>();
 			if (registration != null) {
@@ -297,7 +296,7 @@ public interface Parser {
 			if (info == null) {
 				return;
 			}
-			CommandRegistration registration = info.registration;
+			Command registration = info.registration;
 			if (registration == null) {
 				return;
 			}
@@ -305,7 +304,7 @@ public interface Parser {
 			String name = node.getName();
 			if (name.startsWith("--")) {
 				registration.getOptions().forEach(option -> {
-					Set<String> longNames = Arrays.asList(option.getLongNames())
+					Set<String> longNames = Arrays.asList(option.getLongName())
 						.stream()
 						.map(n -> "--" + n)
 						.collect(Collectors.toSet());
@@ -319,7 +318,7 @@ public interface Parser {
 			else if (name.startsWith("-")) {
 				if (name.length() == 2) {
 					registration.getOptions().forEach(option -> {
-						Set<String> shortNames = Arrays.asList(option.getShortNames())
+						Set<String> shortNames = Arrays.asList(option.getShortName())
 							.stream()
 							.map(n -> "-" + Character.toString(n))
 							.collect(Collectors.toSet());
@@ -331,7 +330,7 @@ public interface Parser {
 				}
 				else if (name.length() > 2) {
 					registration.getOptions().forEach(option -> {
-						Set<String> shortNames = Arrays.asList(option.getShortNames())
+						Set<String> shortNames = Arrays.asList(option.getShortName())
 							.stream()
 							.map(n -> "-" + Character.toString(n))
 							.collect(Collectors.toSet());
@@ -367,25 +366,25 @@ public interface Parser {
 					if (optionPos + 1 < expectedOptionCount) {
 						if (currentOption.getArityMin() > -1
 								&& currentOptionArgument.size() < currentOption.getArityMin()) {
-							String arg = currentOption.getLongNames()[0];
+							String arg = currentOption.getLongName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
 									currentOptionArgument.size()));
 						}
 						else if (currentOption.getArityMax() > -1
 								&& currentOptionArgument.size() > currentOption.getArityMax()) {
-							String arg = currentOption.getLongNames()[0];
+							String arg = currentOption.getLongName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
 									currentOption.getArityMax()));
 						}
 					}
 					else {
 						if (currentOption.getArityMin() > -1 && toUse.size() < currentOption.getArityMin()) {
-							String arg = currentOption.getLongNames()[0];
+							String arg = currentOption.getLongName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
 									currentOption.getArityMin()));
 						}
 						else if (currentOption.getArityMax() > -1 && toUse.size() > currentOption.getArityMax()) {
-							String arg = currentOption.getLongNames()[0];
+							String arg = currentOption.getLongName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
 									currentOption.getArityMax()));
 						}
@@ -448,7 +447,7 @@ public interface Parser {
 			return value;
 		}
 
-		private List<MessageResult> validateOptionNotMissing(CommandRegistration registration) {
+		private List<MessageResult> validateOptionNotMissing(Command registration) {
 			HashSet<CommandOption> requiredOptions = registration.getOptions()
 				.stream()
 				.filter(o -> o.isRequired())
@@ -464,17 +463,17 @@ public interface Parser {
 				if (argumentResultValues.isEmpty()) {
 					return true;
 				}
-				List<String> longNames = Arrays.asList(o.getLongNames());
+				List<String> longNames = Arrays.asList(o.getLongName());
 				return !Collections.disjoint(argumentResultValues, longNames);
 			}).collect(Collectors.toSet());
 
 			return requiredOptions2.stream().map(o -> {
 				String ins0 = "";
-				if (o.getLongNames().length > 0) {
-					ins0 = "--" + o.getLongNames()[0];
+				if (o.getLongName() != null) {
+					ins0 = "--" + o.getLongName();
 				}
-				else if (o.getShortNames().length > 0) {
-					ins0 = "-" + o.getShortNames()[0];
+				else if (o.getShortName() != null) {
+					ins0 = "-" + o.getShortName();
 				}
 
 				String ins1 = "";
@@ -485,7 +484,7 @@ public interface Parser {
 			}).collect(Collectors.toList());
 		}
 
-		private List<MessageResult> validateOptionIsValid(CommandRegistration registration) {
+		private List<MessageResult> validateOptionIsValid(Command registration) {
 			return invalidOptionNodes.stream().map(on -> {
 				return MessageResult.of(ParserMessage.UNRECOGNISED_OPTION, 0, on.getName());
 			}).collect(Collectors.toList());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,16 @@ package org.springframework.shell.core.commands;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jline.reader.Parser;
 
+import org.springframework.shell.core.Input;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandNotFoundException;
+import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.jline.FileInputProvider;
 
 /**
@@ -28,40 +35,49 @@ import org.springframework.shell.core.jline.FileInputProvider;
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public class Script extends AbstractCommand {
 
 	private final Parser parser;
 
-	public Script(Parser parser) {
+	public Script(String name, String description, Parser parser) {
+		super(name, description);
 		this.parser = parser;
 	}
 
-	/**
-	 * Marker interface for beans providing {@literal script} functionality to the shell.
-	 * <p>
-	 * <p>
-	 * To override the script command, simply register your own bean implementing that
-	 * interface and the standard implementation will back off.
-	 * </p>
-	 * <p>
-	 * <p>
-	 * To disable the {@literal script} command entirely, set the
-	 * {@literal spring.shell.command.script.enabled=false} property in the environment.
-	 * </p>
-	 *
-	 * @author Eric Bottard
-	 */
-	public interface Command {
-
+	@Override
+	public void execute(CommandContext commandContext) throws Exception {
+		List<CommandOption> options = getOptions();
+		File file = null;// TODO get file name from options
+		Reader reader = new FileReader(file);
+		FileInputProvider inputProvider = new FileInputProvider(reader, parser);
+		Input input;
+		while ((input = inputProvider.readInput()) != null) {
+			executeCommand(commandContext, input);
+		}
 	}
 
-	@org.springframework.shell.core.command.annotation.Command(command = "Read and execute commands from a file.")
-	public void script(File file) throws Exception {
-		Reader reader = new FileReader(file);
-		try (FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
-			getShell().run(inputProvider);
+	private void executeCommand(CommandContext commandContext, Input input) throws Exception {
+		String commandName = input.words().get(0);
+		Command command = commandContext.commandRegistry().getCommandByName(commandName);
+		if (command == null) {
+			String availableCommands = getAvailableCommands(commandContext);
+			throw new CommandNotFoundException(
+					"No command found for name: " + commandName + ". Available commands: " + availableCommands);
 		}
+		CommandContext singleCommandContext = new CommandContext(input.words(), commandContext.commandRegistry(),
+				commandContext.terminal());
+		command.execute(singleCommandContext);
+	}
+
+	private String getAvailableCommands(CommandContext commandContext) {
+		return commandContext.commandRegistry()
+			.getCommands()
+			.stream()
+			.map(Command::getName)
+			.sorted()
+			.collect(Collectors.joining(", "));
 	}
 
 }

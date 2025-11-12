@@ -60,9 +60,7 @@ public class History {
 
 	@org.springframework.shell.core.command.annotation.Command(
 			description = "Display or save the history of previously run commands")
-	public List<String> history(
-			@Option(description = "A file to save history to.", defaultValue = Option.NULL) File file)
-			throws IOException {
+	public List<String> history(@Option(description = "A file to save history to.") File file) throws IOException {
 		if (file == null) {
 			List<String> result = new ArrayList<>(jLineHistory.size());
 			jLineHistory.forEach(e -> result.add(e.line()));

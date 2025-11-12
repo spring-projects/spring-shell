@@ -23,21 +23,24 @@ import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
 import org.springframework.shell.core.command.annotation.support.EnableCommandRegistrar;
+import org.springframework.stereotype.Component;
 
 /**
  * Enable support for {@link Command @Command} annotated classes. {@code @Command} classes
  * can be registered directly on this annotation.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import(EnableCommandRegistrar.class)
+@Component
 public @interface EnableCommand {
 
 	/**
-	 * Defines candicate classes for shell commands.
+	 * Defines candidate classes for shell commands.
 	 * @return candidate classes for shell commands
 	 */
 	Class<?>[] value() default {};

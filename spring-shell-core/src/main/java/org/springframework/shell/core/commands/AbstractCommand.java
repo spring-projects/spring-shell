@@ -15,23 +15,13 @@
  */
 package org.springframework.shell.core.commands;
 
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jline.terminal.Terminal;
-
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.core.Shell;
-import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.completion.CompletionResolver;
-import org.springframework.shell.core.tui.component.ViewComponentBuilder;
-import org.springframework.shell.core.tui.style.TemplateExecutor;
-import org.springframework.shell.core.tui.style.ThemeResolver;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandAlias;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandOption;
 
 /**
  * Base class helping to build shell components.
@@ -40,90 +30,74 @@ import org.springframework.shell.core.tui.style.ThemeResolver;
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  */
-public abstract class AbstractCommand implements ApplicationContextAware, InitializingBean, ResourceLoaderAware {
+public abstract class AbstractCommand implements Command {
 
-	@SuppressWarnings("NullAway.Init")
-	private ApplicationContext applicationContext;
+	private final String name;
 
-	@SuppressWarnings("NullAway.Init")
-	private ResourceLoader resourceLoader;
+	private final String description;
 
-	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<Shell> shellProvider;
+	private final String help;
 
-	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<Terminal> terminalProvider;
+	private final String group;
 
-	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<CommandRegistry> commandRegistryProvider;
+	private List<CommandOption> options = new ArrayList<>();
 
-	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<CompletionResolver> completionResolverProvider;
+	private List<CommandAlias> aliases = new ArrayList<>();
 
-	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<TemplateExecutor> templateExecutorProvider;
+	public AbstractCommand(String name, String description) {
+		this(name, description, "", "");
+	}
 
-	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<ThemeResolver> themeResolverProvider;
+	public AbstractCommand(String name, String description, String group) {
+		this(name, description, group, "");
+	}
 
-	@SuppressWarnings("NullAway.Init")
-	private ObjectProvider<ViewComponentBuilder> viewComponentBuilderProvider;
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
+	public AbstractCommand(String name, String description, String group, String help) {
+		this.name = name;
+		this.description = description;
+		this.group = group;
+		this.help = help;
 	}
 
 	@Override
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
+	public String getName() {
+		return this.name;
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		shellProvider = applicationContext.getBeanProvider(Shell.class);
-		terminalProvider = applicationContext.getBeanProvider(Terminal.class);
-		commandRegistryProvider = applicationContext.getBeanProvider(CommandRegistry.class);
-		completionResolverProvider = applicationContext.getBeanProvider(CompletionResolver.class);
-		templateExecutorProvider = applicationContext.getBeanProvider(TemplateExecutor.class);
-		themeResolverProvider = applicationContext.getBeanProvider(ThemeResolver.class);
-		viewComponentBuilderProvider = applicationContext.getBeanProvider(ViewComponentBuilder.class);
+	public String getGroup() {
+		return this.group;
 	}
 
-	protected ApplicationContext getApplicationContext() {
-		return applicationContext;
+	@Override
+	public String getDescription() {
+		return this.description;
 	}
 
-	protected ResourceLoader getResourceLoader() {
-		return resourceLoader;
+	@Override
+	public String getHelp() {
+		return this.help;
 	}
 
-	protected Shell getShell() {
-		return shellProvider.getObject();
+	@Override
+	public List<CommandOption> getOptions() {
+		return this.options;
 	}
 
-	protected Terminal getTerminal() {
-		return terminalProvider.getObject();
+	public void setOptions(List<CommandOption> options) {
+		this.options = options;
 	}
 
-	protected CommandRegistry getCommandRegistry() {
-		return commandRegistryProvider.getObject();
+	@Override
+	public List<CommandAlias> getAliases() {
+		return this.aliases;
 	}
 
-	protected Stream<CompletionResolver> getCompletionResolver() {
-		return completionResolverProvider.orderedStream();
+	public void setAliases(List<CommandAlias> aliases) {
+		this.aliases = aliases;
 	}
 
-	protected TemplateExecutor getTemplateExecutor() {
-		return templateExecutorProvider.getObject();
-	}
-
-	protected ThemeResolver getThemeResolver() {
-		return themeResolverProvider.getObject();
-	}
-
-	protected ViewComponentBuilder getViewComponentBuilder() {
-		return viewComponentBuilderProvider.getObject();
-	}
+	@Override
+	public abstract void execute(CommandContext commandContext) throws Exception;
 
 }

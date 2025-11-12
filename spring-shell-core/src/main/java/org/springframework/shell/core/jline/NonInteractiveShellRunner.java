@@ -15,179 +15,64 @@
  */
 package org.springframework.shell.core.jline;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.jline.reader.ParsedLine;
-import org.jline.reader.Parser;
-import org.jline.reader.impl.DefaultParser;
+import org.jline.terminal.Terminal;
 
-import org.jspecify.annotations.Nullable;
-import org.springframework.core.annotation.Order;
-import org.springframework.shell.core.Input;
-import org.springframework.shell.core.InputProvider;
-import org.springframework.shell.core.Shell;
 import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.Utils;
-import org.springframework.shell.core.context.InteractionMode;
-import org.springframework.shell.core.context.ShellContext;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandNotFoundException;
+import org.springframework.shell.core.command.CommandRegistry;
 
 /**
- * A {@link ShellRunner} that executes commands without entering interactive shell mode.
- *
- * <p>
- * Has higher precedence than {@link InteractiveShellRunner} which gives it an opportunity
- * to handle the shell in non-interactive fashion.
+ * A {@link ShellRunner} that executes a command without entering interactive shell mode.
  *
  * @author Janne Valkealahti
  * @author Chris Bono
  * @author Piotr Olaszewski
  */
-@Order(NonInteractiveShellRunner.PRECEDENCE)
 public class NonInteractiveShellRunner implements ShellRunner {
 
-	/**
-	 * The precedence at which this runner is ordered by the DefaultApplicationRunner -
-	 * which also controls the order it is consulted on the ability to handle the current
-	 * shell.
-	 */
-	public static final int PRECEDENCE = InteractiveShellRunner.PRECEDENCE - 50;
+	private final String primaryCommand;
 
-	private final Shell shell;
+	private final Terminal terminal;
 
-	private final ShellContext shellContext;
+	private final CommandRegistry commandRegistry;
 
-	private Parser lineParser;
-
-	private @Nullable String primaryCommand;
-
-	private static final String SINGLE_QUOTE = "\'";
-
-	private static final String DOUBLE_QUOTE = "\"";
-
-	private Function<String[], List<String>> commandsFromArgs = args -> {
-		if (ObjectUtils.isEmpty(args)) {
-			if (StringUtils.hasText(primaryCommand)) {
-				Collections.singletonList(primaryCommand);
-			}
-			else {
-				return Collections.emptyList();
-			}
-		}
-		// re-quote if needed having whitespace
-		String raw = Arrays.stream(args).map(a -> {
-			if (!isQuoted(a) && StringUtils.containsWhitespace(a)) {
-				return "\"" + a + "\"";
-			}
-			return a;
-		}).collect(Collectors.joining(" "));
-		if (StringUtils.hasText(primaryCommand)) {
-			return Collections.singletonList(primaryCommand + " " + raw);
-		}
-		else {
-			return Collections.singletonList(raw);
-		}
-	};
-
-	private static boolean isQuoted(String str) {
-		if (str == null) {
-			return false;
-		}
-		return str.startsWith(SINGLE_QUOTE) && str.endsWith(SINGLE_QUOTE)
-				|| str.startsWith(DOUBLE_QUOTE) && str.endsWith(DOUBLE_QUOTE);
-	}
-
-	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext) {
-		this(shell, shellContext, null);
-	}
-
-	public NonInteractiveShellRunner(Shell shell, ShellContext shellContext, @Nullable String primaryCommand) {
-		this.shell = shell;
-		this.shellContext = shellContext;
+	public NonInteractiveShellRunner(String primaryCommand, Terminal terminal, CommandRegistry commandRegistry) {
 		this.primaryCommand = primaryCommand;
-		this.lineParser = new DefaultParser();
+		this.terminal = terminal;
+		this.commandRegistry = commandRegistry;
 	}
 
-	/**
-	 * Sets the function that creates the command() to run from the input application
-	 * arguments.
-	 * @param commandsFromArgs function that takes input application arguments and creates
-	 * zero or more commands where each command is a string that specifies the command and
-	 * options (eg. 'history --file myHistory.txt')
-	 */
-	public void setCommandsFromArgs(Function<String[], List<String>> commandsFromArgs) {
-		this.commandsFromArgs = commandsFromArgs;
-	}
-
-	/**
-	 * Sets the line parser used to parse commands.
-	 * @param lineParser the line parser used to parse commands
-	 */
-	public void setLineParser(Parser lineParser) {
-		this.lineParser = lineParser;
-	}
-
+	// TODO handle command arguments, ex: history --file myHistory.txt
 	@Override
 	public void run(String[] args) throws Exception {
-		List<String> commands = commandsFromArgs.apply(args);
-		if (commands.isEmpty()) {
-			return;
+		Command command = commandRegistry.getCommandByName(primaryCommand);
+		if (command == null) {
+			String availableCommands = getAvailableCommands();
+			throw new CommandNotFoundException(
+					"No command found for name: " + primaryCommand + ". Available commands: " + availableCommands);
 		}
-		List<ParsedLine> parsedLines = commands.stream()
-			.map(rawCommandLine -> lineParser.parse(rawCommandLine, rawCommandLine.length() + 1))
-			.collect(Collectors.toList());
-		MultiParsedLineInputProvider inputProvider = new MultiParsedLineInputProvider(parsedLines);
-		shellContext.setInteractionMode(InteractionMode.NONINTERACTIVE);
-		shell.run(inputProvider);
+		CommandContext commandContext = new CommandContext(List.of(primaryCommand), this.commandRegistry,
+				this.terminal);
+		try {
+			command.execute(commandContext);
+		}
+		catch (Exception exception) {
+			this.terminal.writer().append(exception.getMessage());
+			this.terminal.writer().flush();
+		}
 	}
 
-	/**
-	 * An {@link InputProvider} that returns an input for each entry in a list of
-	 * {@link ParsedLine parsed lines}.
-	 */
-	static class MultiParsedLineInputProvider implements InputProvider {
-
-		private final List<ParsedLineInput> parsedLineInputs;
-
-		private int inputIdx;
-
-		MultiParsedLineInputProvider(List<ParsedLine> parsedLines) {
-			this.parsedLineInputs = parsedLines.stream().map(ParsedLineInput::new).collect(Collectors.toList());
-		}
-
-		@Override
-		public @Nullable Input readInput() {
-			if (inputIdx == parsedLineInputs.size()) {
-				return null;
-			}
-			return parsedLineInputs.get(inputIdx++);
-		}
-
-		private static class ParsedLineInput implements Input {
-
-			private final ParsedLine parsedLine;
-
-			ParsedLineInput(ParsedLine parsedLine) {
-				this.parsedLine = parsedLine;
-			}
-
-			@Override
-			public String rawText() {
-				return parsedLine.line();
-			}
-
-			@Override
-			public List<String> words() {
-				return Utils.sanitizeInput(parsedLine.words());
-			}
-
-		}
-
+	private String getAvailableCommands() {
+		return this.commandRegistry.getCommands()
+			.stream()
+			.map(Command::getName)
+			.sorted()
+			.collect(Collectors.joining(", "));
 	}
 
 }

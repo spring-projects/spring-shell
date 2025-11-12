@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,68 +16,70 @@
 
 package org.springframework.shell.core.command;
 
-import java.util.Objects;
-
-import org.jspecify.annotations.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import java.util.Collections;
+import java.util.List;
 
 /**
+ * @author Eric Bottard
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
+@FunctionalInterface
 public interface Command {
 
 	/**
-	 * Encapsulates help metadata about a shell command.
-	 *
-	 * @author Eric Bottard
+	 * Get the name of the command.
+	 * @return the name of the command
 	 */
-	class Help {
-
-		/**
-		 * Optional group to gather related commands together.
-		 */
-		private final String group;
-
-		/**
-		 * A required, short one sentence description of the command. Should start with a
-		 * capital and end with a dot for consistency.
-		 */
-		private final String description;
-
-		public Help(String description) {
-			this(description, null);
-		}
-
-		public Help(String description, @Nullable String group) {
-			Assert.isTrue(StringUtils.hasText(description), "Command description cannot be null or empty");
-			this.description = description;
-			this.group = StringUtils.hasText(group) ? group : "";
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public String getGroup() {
-			return group;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-			Help help = (Help) o;
-			return Objects.equals(group, help.group) && Objects.equals(description, help.description);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(group, description);
-		}
-
+	default String getName() {
+		return this.getClass().getSimpleName().toLowerCase();
 	}
+
+	/**
+	 * Get a short description of the command.
+	 * @return the description of the command
+	 */
+	default String getDescription() {
+		return "";
+	}
+
+	/**
+	 * Get the help text of the command.
+	 * @return the help text of the command
+	 */
+	default String getHelp() {
+		// TODO generate default help from description, options, aliases, etc.
+		return "";
+	}
+
+	/**
+	 * Get the group of the command.
+	 * @return the group of the command
+	 */
+	default String getGroup() {
+		return "";
+	}
+
+	/**
+	 * Get the options of the command.
+	 * @return the options of the command
+	 */
+	default List<CommandOption> getOptions() {
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Get the aliases of the command.
+	 * @return the aliases of the command
+	 */
+	default List<CommandAlias> getAliases() {
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Execute the command within the given context.
+	 * @param commandContext the context of the command
+	 */
+	void execute(CommandContext commandContext) throws Exception;
 
 }
