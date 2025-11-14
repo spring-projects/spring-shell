@@ -32,6 +32,8 @@ import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.util.Assert;
 import org.stringtemplate.v4.ST;
@@ -40,8 +42,6 @@ import org.stringtemplate.v4.STGroupString;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.core.Utils;
-import org.springframework.shell.core.command.Command;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -99,7 +99,7 @@ public abstract class AbstractCompletions {
 				// TODO long vs short
 				List<CommandModelOption> options = registration.getOptions()
 					.stream()
-					.map(co -> co.getLongName())
+					.map(CommandOption::longName)
 					.map(lo -> CommandModelOption.of("--", lo))
 					.collect(Collectors.toList());
 

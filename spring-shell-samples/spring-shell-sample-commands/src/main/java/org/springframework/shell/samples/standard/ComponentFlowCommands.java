@@ -27,11 +27,10 @@ import org.jline.terminal.impl.DumbTerminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandExecution.CommandParserExceptionsException;
 import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandParser.CommandParserException;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.tui.component.flow.ComponentFlow;
 import org.springframework.shell.core.tui.component.flow.ComponentFlow.ComponentFlowResult;
@@ -45,7 +44,8 @@ public class ComponentFlowCommands extends AbstractCommand {
 	@Autowired
 	private ComponentFlow.Builder componentFlowBuilder;
 
-	@Command(command = "flow showcase1", description = "Showcase", group = "Flow")
+	@org.springframework.shell.core.command.annotation.Command(command = "flow showcase1", description = "Showcase",
+			group = "Flow")
 	public void showcase1() {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("key1", "value1");
@@ -79,7 +79,8 @@ public class ComponentFlowCommands extends AbstractCommand {
 		flow.run();
 	}
 
-	@Command(command = "flow showcase2", description = "Showcase with options", group = "Flow")
+	@org.springframework.shell.core.command.annotation.Command(command = "flow showcase2",
+			description = "Showcase with options", group = "Flow")
 	public String showcase2(@Option(description = "Field1 value", defaultValue = Option.NULL) String field1,
 			@Option(description = "Field2 value", defaultValue = Option.NULL) String field2,
 			@Option(description = "Confirmation1 value", defaultValue = Option.NULL) Boolean confirmation1,
@@ -140,31 +141,17 @@ public class ComponentFlowCommands extends AbstractCommand {
 	}
 
 	@Bean
-	public CommandRegistration showcaseRegistration() {
-		return CommandRegistration.builder()
+	public Command showcaseRegistration() {
+		return Command.builder()
 			.command("flow", "showcase3")
 			.description("Showcase")
-			.withOption()
-			.longNames("field1")
-			.and()
-			.withOption()
-			.longNames("field2")
-			.and()
-			.withOption()
-			.longNames("confirmation1")
-			.type(Boolean.class)
-			.and()
-			.withOption()
-			.longNames("path1")
-			.and()
-			.withOption()
-			.longNames("single1")
-			.and()
-			.withOption()
-			.longNames("multi1")
-			.and()
-			.withTarget()
-			.consumer(ctx -> {
+			.withOption(optionSpec -> optionSpec.longNames("field1"))
+			.withOption(optionSpec -> optionSpec.longNames("field2"))
+			.withOption(optionSpec -> optionSpec.longNames("confirmation1").type(Boolean.class))
+			.withOption(optionSpec -> optionSpec.longNames("path1"))
+			.withOption(optionSpec -> optionSpec.longNames("single1"))
+			.withOption(optionSpec -> optionSpec.longNames("multi1"))
+			.withTarget(targetSpec -> targetSpec.consumer(ctx -> {
 
 				String field1 = ctx.getOptionValue("field1");
 				String field2 = ctx.getOptionValue("field2");
@@ -248,12 +235,12 @@ public class ComponentFlowCommands extends AbstractCommand {
 						throw CommandParserExceptionsException.of("Missing options", errors);
 					}
 				}
-			})
-			.and()
+			}))
 			.build();
 	}
 
-	@Command(command = "flow conditional", description = "Second component based on first", group = "Flow")
+	@org.springframework.shell.core.command.annotation.Command(command = "flow conditional",
+			description = "Second component based on first", group = "Flow")
 	public void conditional() {
 		Map<String, String> single1SelectItems = new HashMap<>();
 		single1SelectItems.put("Field1", "field1");
@@ -279,7 +266,8 @@ public class ComponentFlowCommands extends AbstractCommand {
 		flow.run();
 	}
 
-	@Command(command = "flow autoselect", description = "Autoselect item", group = "Flow")
+	@org.springframework.shell.core.command.annotation.Command(command = "flow autoselect",
+			description = "Autoselect item", group = "Flow")
 	public void autoselect(@Option(defaultValue = "Field3") String defaultValue) {
 		Map<String, String> single1SelectItems = IntStream.range(1, 10)
 			.boxed()

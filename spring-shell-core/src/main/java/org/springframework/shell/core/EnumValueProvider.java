@@ -37,7 +37,7 @@ public class EnumValueProvider implements ValueProvider {
 		List<CompletionProposal> result = new ArrayList<>();
 		CommandOption commandOption = completionContext.getCommandOption();
 		if (commandOption != null) {
-			ResolvableType type = commandOption.getType();
+			ResolvableType type = commandOption.type();
 			if (type != null) {
 				Class<?> clazz = type.getRawClass();
 				if (clazz != null) {

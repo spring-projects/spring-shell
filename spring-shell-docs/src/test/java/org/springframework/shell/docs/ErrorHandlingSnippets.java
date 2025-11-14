@@ -22,8 +22,8 @@ import org.jline.terminal.Terminal;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.command.CommandExceptionResolver;
-import org.springframework.shell.core.command.CommandHandlingResult;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.metadata.CommandHandlingResult;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.annotation.ExceptionResolver;
 import org.springframework.shell.core.command.annotation.ExitCode;
 
@@ -46,7 +46,7 @@ class ErrorHandlingSnippets {
 		@Override
 		public CommandHandlingResult resolve(Exception e) {
 			if (e instanceof CustomException) {
-				return CommandHandlingResult.of("Hi, handled exception\n", 42);
+				return new CommandHandlingResult("Hi, handled exception\n", 42);
 			}
 			return null;
 		}
@@ -56,7 +56,9 @@ class ErrorHandlingSnippets {
 
 	void dump1() {
 		// tag::example1[]
-		CommandRegistration.builder().withErrorHandling().resolver(new CustomExceptionResolver()).and().build();
+		Command.builder()
+			.withErrorHandling(errorHandlingSpec -> errorHandlingSpec.resolver(new CustomExceptionResolver()))
+			.build();
 		// end::example1[]
 	}
 
@@ -67,7 +69,7 @@ class ErrorHandlingSnippets {
 		CommandHandlingResult errorHandler(Exception e) {
 			// Exception would be type of RuntimeException,
 			// optionally do something with it
-			return CommandHandlingResult.of("Hi, handled exception\n", 42);
+			return new CommandHandlingResult("Hi, handled exception\n", 42);
 		}
 		// end::exception-resolver-with-type-in-annotation[]
 
@@ -78,7 +80,7 @@ class ErrorHandlingSnippets {
 		// tag::exception-resolver-with-type-in-method[]
 		@ExceptionResolver
 		CommandHandlingResult errorHandler(RuntimeException e) {
-			return CommandHandlingResult.of("Hi, handled custom exception\n", 42);
+			return new CommandHandlingResult("Hi, handled custom exception\n", 42);
 		}
 		// end::exception-resolver-with-type-in-method[]
 

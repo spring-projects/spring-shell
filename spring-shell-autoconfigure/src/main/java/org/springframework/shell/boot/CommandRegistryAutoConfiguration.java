@@ -27,11 +27,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.MethodTargetRegistrar;
 import org.springframework.shell.boot.SpringShellProperties.Help;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistryCustomizer;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.CommandRegistration.BuilderSupplier;
-import org.springframework.shell.core.command.CommandRegistration.OptionNameModifier;
+import org.springframework.shell.core.command.BuilderSupplier;
+import org.springframework.shell.core.command.OptionNameModifier;
 import org.springframework.shell.core.command.support.OptionNameModifierSupport;
 import org.springframework.shell.core.command.CommandResolver;
 import org.springframework.shell.core.context.ShellContext;
@@ -57,8 +57,7 @@ public class CommandRegistryAutoConfiguration {
 	}
 
 	@Bean
-	public CommandRegistryCustomizer defaultCommandRegistryCustomizer(
-			ObjectProvider<CommandRegistration> commandRegistrations) {
+	public CommandRegistryCustomizer defaultCommandRegistryCustomizer(ObjectProvider<Command> commandRegistrations) {
 		return registry -> {
 			commandRegistrations.orderedStream().forEach(registration -> {
 				registry.register(registration);
@@ -71,11 +70,10 @@ public class CommandRegistryAutoConfiguration {
 		return registration -> {
 			Help help = properties.getHelp();
 			if (help.isEnabled()) {
-				registration.withHelpOptions()
-					.enabled(true)
+				registration.withHelpOptions(helpOptionsSpec -> helpOptionsSpec.enabled(true)
 					.longNames(help.getLongNames())
 					.shortNames(help.getShortNames())
-					.command(help.getCommand());
+					.command(help.getCommand()));
 			}
 		};
 	}
@@ -121,7 +119,7 @@ public class CommandRegistryAutoConfiguration {
 	public BuilderSupplier commandRegistrationBuilderSupplier(
 			ObjectProvider<CommandRegistrationCustomizer> customizerProvider) {
 		return () -> {
-			CommandRegistration.Builder builder = CommandRegistration.builder();
+			Command.Builder builder = Command.builder();
 			customizerProvider.orderedStream().forEach((customizer) -> customizer.customize(builder));
 			return builder;
 		};

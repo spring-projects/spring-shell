@@ -20,46 +20,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.completion.CompletionContext;
 import org.springframework.shell.core.completion.CompletionProposal;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.ValueProvider;
 
 public class CompleteCommands {
 
 	@Bean
-	CommandRegistration completeCommandRegistration1() {
-		return CommandRegistration.builder()
+	Command completeCommandRegistration1() {
+		return Command.builder()
 			.command("complete", "sample1")
 			.description("complete sample1")
 			.group("Complete Commands")
-			.withOption()
-			.longNames("arg1")
-			.completion(ctx -> {
+			.withOption(optionSpec -> optionSpec.longNames("arg1").completion(ctx -> {
 				CompletionProposal p1 = new CompletionProposal("arg1hi1");
 				CompletionProposal p2 = new CompletionProposal("arg1hi2");
 				return Arrays.asList(p1, p2);
-			})
-			.and()
-			.withOption()
-			.longNames("arg2")
-			.completion(ctx -> {
+			}))
+			.withOption(optionSpec -> optionSpec.longNames("arg2").completion(ctx -> {
 				CompletionProposal p1 = new CompletionProposal("arg2hi1");
 				CompletionProposal p2 = new CompletionProposal("arg2hi2");
 				return Arrays.asList(p1, p2);
-			})
-			.and()
-			.withTarget()
-			.function(ctx -> {
+			}))
+			.withTarget(targetSpec -> targetSpec.function(ctx -> {
 				String arg1 = ctx.getOptionValue("arg1");
 				return String.format("hi, arg1 value is '%s'", arg1);
-			})
-			.and()
+			}))
 			.build();
 	}
 
-	@Command(description = "complete sample2", command = "complete sample2")
+	@org.springframework.shell.core.command.annotation.Command(description = "complete sample2",
+			command = "complete sample2")
 	public String completeCommandSample2(
 			// FIXME @OptionValues(provider = FunnyValuesProvider.class)
 			String arg1) {
@@ -84,31 +76,26 @@ public class CompleteCommands {
 	}
 
 	@Bean
-	CommandRegistration completeCommandRegistration3() {
-		return CommandRegistration.builder()
+	Command completeCommandRegistration3() {
+		return Command.builder()
 			.command("complete", "sample3")
 			.description("complete sample3")
 			.group("Complete Commands")
-			.withOption()
-			.longNames("arg1")
-			.type(MyEnums.class)
-			.completion(ctx -> {
+			.withOption(optionSpec -> optionSpec.longNames("arg1").type(MyEnums.class).completion(ctx -> {
 				CompletionProposal p1 = new CompletionProposal(MyEnums.E1.toString());
 				CompletionProposal p2 = new CompletionProposal(MyEnums.E2.toString());
 				CompletionProposal p3 = new CompletionProposal(MyEnums.E3.toString());
 				return Arrays.asList(p1, p2, p3);
-			})
-			.and()
-			.withTarget()
-			.function(ctx -> {
+			}))
+			.withTarget(targetSpec -> targetSpec.function(ctx -> {
 				String arg1 = ctx.getOptionValue("arg1");
 				return String.format("You said '%s'", arg1);
-			})
-			.and()
+			}))
 			.build();
 	}
 
-	@Command(description = "complete sample4", command = "complete sample4")
+	@org.springframework.shell.core.command.annotation.Command(description = "complete sample4",
+			command = "complete sample4")
 	public String completeCommandSample4(
 			// FIXME @OptionValues(provider = EnumValueProvider.class)
 			MyEnums arg1) {

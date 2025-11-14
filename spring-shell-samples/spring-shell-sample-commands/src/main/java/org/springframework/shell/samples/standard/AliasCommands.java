@@ -16,33 +16,26 @@
 package org.springframework.shell.samples.standard;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.Command;
 
 public class AliasCommands {
 
 	private final static String DESCRIPTION = "main1 with main2 as alias";
 
-	@Command(alias = { "alias anno main1", "alias anno main2" }, group = "Alias Commands", command = DESCRIPTION)
+	@org.springframework.shell.core.command.annotation.Command(alias = { "alias anno main1", "alias anno main2" },
+			group = "Alias Commands", command = DESCRIPTION)
 	public String annoMain1() {
 		return "Hello annoMain1";
 	}
 
 	@Bean
-	public CommandRegistration regMain1() {
-		return CommandRegistration.builder()
+	public Command regMain1() {
+		return Command.builder()
 			.command("alias", "reg", "main1")
 			.group("Alias Commands")
 			.description(DESCRIPTION)
-			.withAlias()
-			.command("alias", "reg", "main2")
-			.group("Alias Commands")
-			.and()
-			.withTarget()
-			.function(ctx -> {
-				return "Hello regMain1";
-			})
-			.and()
+			.withAlias(aliasSpec -> aliasSpec.command("alias", "reg", "main2").group("Alias Commands"))
+			.withTarget(targetSpec -> targetSpec.function(ctx -> "Hello regMain1"))
 			.build();
 	}
 

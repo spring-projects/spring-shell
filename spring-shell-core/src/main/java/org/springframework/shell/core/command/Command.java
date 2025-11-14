@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.shell.core.command;
 
 import java.util.Collections;
@@ -82,4 +81,14 @@ public interface Command {
 	 */
 	void execute(CommandContext commandContext) throws Exception;
 
+	interface Builder {
+        Builder name(String name);
+        Builder description(String description);
+        Builder help(String help);
+        Builder group(String group);
+        Builder options(List<CommandOption> options);
+        Builder aliases(List<CommandAlias> aliases);
+        Builder action(Command action);
+        Command build();
+    }
 }

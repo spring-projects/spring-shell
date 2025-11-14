@@ -23,9 +23,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistry;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -89,7 +88,7 @@ class BashCompletionsTests {
 	// .method(pojo1, "method1")
 	// .and()
 	// .withOption()
-	// .longNames("arg1")
+	// .longName("arg1")
 	// .and()
 	// .build();
 	// commandRegistry.register(registration);
@@ -107,7 +106,7 @@ class BashCompletionsTests {
 	// .function(function)
 	// .and()
 	// .withOption()
-	// .longNames("arg1")
+	// .longName("arg1")
 	// .and()
 	// .build();
 	// commandRegistry.register(registration);

@@ -17,9 +17,8 @@ package org.springframework.shell.samples.standard;
 
 import java.util.function.Function;
 
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.commands.AbstractCommand;
 
@@ -29,50 +28,44 @@ public class RegisterCommands extends AbstractCommand {
 
 	private final PojoMethods pojoMethods = new PojoMethods();
 
-	private final CommandRegistration registered1;
+	private final Command registered1;
 
-	private final CommandRegistration registered2;
+	private final Command registered2;
 
-	private final CommandRegistration registered3;
+	private final Command registered3;
 
 	public RegisterCommands() {
-		registered1 = CommandRegistration.builder()
+		registered1 = Command.builder()
 			.command("register registered1")
 			.group(GROUP)
 			.description("registered1 command")
-			.withTarget()
-			.method(pojoMethods, "registered1")
-			.and()
+			.withTarget(targetSpec -> targetSpec.method(pojoMethods, "registered1"))
 			.build();
-		registered2 = CommandRegistration.builder()
+		registered2 = Command.builder()
 			.command("register registered2")
 			.description("registered2 command")
 			.group(GROUP)
-			.withTarget()
-			.method(pojoMethods, "registered2")
-			.and()
-			.withOption()
-			.longNames("arg1")
-			.and()
+			.withTarget(targetSpec -> targetSpec.method(pojoMethods, "registered2"))
+			.withOption(optionSpec -> optionSpec.longNames("arg1"))
 			.build();
-		registered3 = CommandRegistration.builder()
+		registered3 = Command.builder()
 			.command("register registered3")
 			.description("registered3 command")
 			.group(GROUP)
-			.withTarget()
-			.method(pojoMethods, "registered3")
-			.and()
+			.withTarget(targetSpec -> targetSpec.method(pojoMethods, "registered3"))
 			.build();
 	}
 
-	@Command(command = "register add", description = "Register commands", group = GROUP)
+	@org.springframework.shell.core.command.annotation.Command(command = "register add",
+			description = "Register commands", group = GROUP)
 	public String register() {
 		getCommandRegistry().register(registered1, registered2, registered3);
 		registerFunctionCommand("register registered4");
 		return "Registered commands registered1, registered2, registered3, registered4";
 	}
 
-	@Command(command = "register remove", description = "Deregister commands", group = GROUP)
+	@org.springframework.shell.core.command.annotation.Command(command = "register remove",
+			description = "Deregister commands", group = GROUP)
 	public String deregister() {
 		getCommandRegistry().unregister("register registered1", "register registered2", "register registered3",
 				"register registered4");
@@ -84,33 +77,29 @@ public class RegisterCommands extends AbstractCommand {
 			String arg1 = ctx.getOptionValue("arg1");
 			return String.format("hi, arg1 value is '%s'", arg1);
 		};
-		CommandRegistration registration = CommandRegistration.builder()
+		Command registration = Command.builder()
 			.command(command)
 			.description("registered4 command")
 			.group(GROUP)
-			.withTarget()
-			.function(function)
-			.and()
-			.withOption()
-			.longNames("arg1")
-			.and()
+			.withTarget(targetSpec -> targetSpec.function(function))
+			.withOption(optionSpec -> optionSpec.longNames("arg1"))
 			.build();
 		getCommandRegistry().register(registration);
 	}
 
 	public static class PojoMethods {
 
-		@Command
+		@org.springframework.shell.core.command.annotation.Command
 		public String registered1() {
 			return "registered1";
 		}
 
-		@Command
+		@org.springframework.shell.core.command.annotation.Command
 		public String registered2(String arg1) {
 			return "registered2" + arg1;
 		}
 
-		@Command
+		@org.springframework.shell.core.command.annotation.Command
 		public String registered3(@Option(defaultValue = Option.NULL) String arg1) {
 			return "registered3" + arg1;
 		}
