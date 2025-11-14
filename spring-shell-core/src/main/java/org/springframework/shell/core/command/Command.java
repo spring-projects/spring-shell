@@ -81,4 +81,14 @@ public interface Command {
 	 */
 	void execute(CommandContext commandContext) throws Exception;
 
+	interface Builder {
+        Builder name(String name);
+        Builder description(String description);
+        Builder help(String help);
+        Builder group(String group);
+        Builder options(List<CommandOption> options);
+        Builder aliases(List<CommandAlias> aliases);
+        Builder action(Command action);
+        Command build();
+    }
 }

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.ResolvableType;
-import org.springframework.shell.core.command.metadata.CommandOption;
+import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.completion.CompletionContext;
 import org.springframework.shell.core.completion.CompletionProposal;
 

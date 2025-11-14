@@ -89,7 +89,7 @@ class ZshCompletionsTests {
 	// .method(pojo1, "method1")
 	// .and()
 	// .withOption()
-	// .longNames("arg1")
+	// .longName("arg1")
 	// .and()
 	// .build();
 	// commandRegistry.register(registration);
@@ -107,7 +107,7 @@ class ZshCompletionsTests {
 	// .function(function)
 	// .and()
 	// .withOption()
-	// .longNames("arg1")
+	// .longName("arg1")
 	// .and()
 	// .build();
 	// commandRegistry.register(registration);

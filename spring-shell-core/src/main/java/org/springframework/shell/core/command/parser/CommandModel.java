@@ -210,10 +210,10 @@ public class CommandModel {
 			});
 			if (registration != null) {
 				registration.getOptions().forEach(commandOption -> {
-					String longName = commandOption.getLongName();
+					String longName = commandOption.longName();
 					tokens.put("--" + longName, new Token(longName, TokenType.OPTION));
-					String shortName = commandOption.getShortName().toString();
-					tokens.put("-" + shortName, new Token(shortName.toString(), TokenType.OPTION));
+					String shortName = commandOption.shortName().toString();
+					tokens.put("-" + shortName, new Token(shortName, TokenType.OPTION));
 				});
 			}
 			return tokens;

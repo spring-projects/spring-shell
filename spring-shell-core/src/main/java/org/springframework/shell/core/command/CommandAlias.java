@@ -13,29 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.command.metadata;
+package org.springframework.shell.core.command;
 
 import org.jspecify.annotations.Nullable;
 
 /**
- * Help option configuration for a command.
+ * Represents a command alias.
  *
- * <p>
- * Contains the enabled flag, long and short option names, and an optional help command to
- * delegate to.
- * </p>
- *
+ * @author Janne Valkealahti
  * @author Piotr Olaszewski
  */
-public record CommandHelpOptionInfo(boolean enabled, String @Nullable [] longNames, Character @Nullable [] shortNames,
-		@Nullable String command) {
-
-	/**
-	 * Returns a disabled help option configuration with no names or command.
-	 * @return an empty help option configuration
-	 */
-	public static CommandHelpOptionInfo empty() {
-		return new CommandHelpOptionInfo(false, null, null, null);
-	}
-
+public record CommandAlias(String command, @Nullable String group) {
 }
