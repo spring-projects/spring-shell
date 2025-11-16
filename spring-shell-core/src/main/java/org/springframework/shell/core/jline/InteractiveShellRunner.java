@@ -38,6 +38,7 @@ import org.springframework.shell.core.command.CommandRegistry;
  * @author Janne Valkealahti
  * @author Chris Bono
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 public class InteractiveShellRunner implements ShellRunner {
 
@@ -58,45 +59,47 @@ public class InteractiveShellRunner implements ShellRunner {
 	@Override
 	public void run(String[] args) throws Exception {
 		while (true) {
-			Input input = this.inputProvider.readInput();
-			if (input == Input.INTERRUPTED || input == Input.EMPTY) {
-				break;
-			}
-			if (input.rawText().equalsIgnoreCase("quit") || input.rawText().equalsIgnoreCase("exit")) {
-				break;
-			}
+			Input input = inputProvider.readInput();
 			if (input == null || input.rawText().isEmpty() || input.words().isEmpty()) {
 				// Ignore empty lines
 				continue;
 			}
-			String commandName = input.words().get(0);
-			Command command = this.commandRegistry.getCommandByName(commandName);
+
+			if (input == Input.INTERRUPTED || input == Input.EMPTY) {
+				break;
+			}
+
+			if (input.rawText().equalsIgnoreCase("quit") || input.rawText().equalsIgnoreCase("exit")) {
+				break;
+			}
+
+			Command command = commandRegistry.lookupCommand(input.words());
+
 			if (command == null) {
 				String availableCommands = getAvailableCommands();
-				this.terminal.writer()
-					.println(
-							"No command found for name: " + commandName + ". Available commands: " + availableCommands);
-				this.terminal.writer().flush();
+				terminal.writer().printf("No command found. Available commands: %s%n", availableCommands);
+				terminal.writer().flush();
 				continue;
 			}
-			log.debug(String.format("Evaluate input with line=[%s], command=[%s]", input.rawText(), command));
-			CommandContext commandContext = new CommandContext(input.words(), this.commandRegistry, this.terminal);
-			try {
-				command.execute(commandContext);
-			}
-			catch (Exception exception) {
-				this.terminal.writer().append(exception.getMessage());
-				this.terminal.writer().flush();
-			}
+
+			executeCommand(command, input);
+		}
+	}
+
+	private void executeCommand(Command command, Input input) {
+		try {
+			log.debug("Evaluate input with line=[%s], command=[%s]".formatted(input.rawText(), command));
+			CommandContext commandContext = new CommandContext(input.words(), commandRegistry, terminal);
+			command.execute(commandContext);
+		}
+		catch (Exception exception) {
+			terminal.writer().append(exception.getMessage());
+			terminal.writer().flush();
 		}
 	}
 
 	private String getAvailableCommands() {
-		return this.commandRegistry.getCommands()
-			.stream()
-			.map(Command::getName)
-			.sorted()
-			.collect(Collectors.joining(", "));
+		return commandRegistry.getCommands().stream().map(Command::getName).sorted().collect(Collectors.joining(", "));
 	}
 
 }

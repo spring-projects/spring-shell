@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandAlias;
-import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 
 /**
@@ -96,8 +95,5 @@ public abstract class AbstractCommand implements Command {
 	public void setAliases(List<CommandAlias> aliases) {
 		this.aliases = aliases;
 	}
-
-	@Override
-	public abstract void execute(CommandContext commandContext) throws Exception;
 
 }

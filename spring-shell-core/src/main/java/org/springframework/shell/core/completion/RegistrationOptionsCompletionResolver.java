@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,14 +39,14 @@ public class RegistrationOptionsCompletionResolver implements CompletionResolver
 		List<CompletionProposal> candidates = new ArrayList<>();
 		commandRegistration.getOptions()
 			.stream()
-			.flatMap(o -> Stream.of(o.getLongName()))
+			.flatMap(o -> Stream.of(o.longName()))
 			.map(ln -> "--" + ln)
 			.filter(ln -> !context.getWords().contains(ln))
 			.map(CompletionProposal::new)
 			.forEach(candidates::add);
 		commandRegistration.getOptions()
 			.stream()
-			.flatMap(o -> Stream.of(o.getShortName()))
+			.flatMap(o -> Stream.of(o.shortName()))
 			.map(ln -> "-" + ln)
 			.filter(ln -> !context.getWords().contains(ln))
 			.map(CompletionProposal::new)

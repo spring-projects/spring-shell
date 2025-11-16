@@ -36,6 +36,9 @@ import org.springframework.shell.core.ShellConfigurationException;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.EnableCommand;
+import org.springframework.shell.core.commands.Clear;
+import org.springframework.shell.core.commands.Help;
+import org.springframework.shell.core.commands.Version;
 import org.springframework.shell.core.jline.InteractiveShellRunner;
 import org.springframework.shell.core.jline.JLineInputProvider;
 import org.springframework.util.ReflectionUtils;
@@ -45,34 +48,45 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistrar {
 
+	private static final String COMMAND_REGISTRY_BEAN_NAME = "commandRegistry";
+
 	@Override
 	public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
-		EnableCommand shellAnnotation = metadata.getAnnotations().get(EnableCommand.class).synthesize();
-		// register built-in commands
-		registry.registerBeanDefinition("help",
-				new RootBeanDefinition(org.springframework.shell.core.commands.Help.class));
-		registry.registerBeanDefinition("clear",
-				new RootBeanDefinition(org.springframework.shell.core.commands.Clear.class));
-		registry.registerBeanDefinition("version",
-				new RootBeanDefinition(org.springframework.shell.core.commands.Version.class));
+		EnableCommand enableCommand = metadata.getAnnotations().get(EnableCommand.class).synthesize();
 
-		// register user defined commands
-		Class<?>[] candidateClasses = shellAnnotation.value();
+		registerBuiltInCommands(registry);
+		registerUserCommands(registry, enableCommand);
+		registerCommandRegistryIfNeeded(registry);
+		registerShellRunner(registry);
+	}
+
+	private static void registerBuiltInCommands(BeanDefinitionRegistry registry) {
+		registry.registerBeanDefinition("help", new RootBeanDefinition(Help.class));
+		registry.registerBeanDefinition("clear", new RootBeanDefinition(Clear.class));
+		registry.registerBeanDefinition("version", new RootBeanDefinition(Version.class));
+	}
+
+	private void registerUserCommands(BeanDefinitionRegistry registry, EnableCommand enableCommand) {
+		Class<?>[] candidateClasses = enableCommand.value();
 		for (Class<?> candidateClass : candidateClasses) {
 			registerCommands(candidateClass, registry);
 			registerAnnotatedMethods(candidateClass, registry);
 		}
+	}
 
-		// register command registry
-		if (!registry.containsBeanDefinition("commandRegistry")) {
+	private static void registerCommandRegistryIfNeeded(BeanDefinitionRegistry registry) {
+		if (!registry.containsBeanDefinition(COMMAND_REGISTRY_BEAN_NAME)) {
 			RootBeanDefinition beanDefinition = new RootBeanDefinition(CommandRegistry.class);
-			registry.registerBeanDefinition("commandRegistry", beanDefinition);
+			registry.registerBeanDefinition(COMMAND_REGISTRY_BEAN_NAME, beanDefinition);
 		}
+	}
 
-		// register shell runner (default to interactive if none is defined)
+	private static void registerShellRunner(BeanDefinitionRegistry registry) {
+		// register a shell runner (default to interactive if none is defined)
 		if (!registry.containsBeanDefinition("shellRunner")) {
 			BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder
 				.genericBeanDefinition(InteractiveShellRunner.class);
@@ -97,7 +111,7 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 				}
 
 				// autowire command registry
-				beanDefinitionBuilder.addConstructorArgReference("commandRegistry");
+				beanDefinitionBuilder.addConstructorArgReference(COMMAND_REGISTRY_BEAN_NAME);
 
 				registry.registerBeanDefinition("shellRunner", beanDefinitionBuilder.getBeanDefinition());
 			}

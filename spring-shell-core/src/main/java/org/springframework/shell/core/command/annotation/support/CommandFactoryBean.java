@@ -16,29 +16,42 @@
 package org.springframework.shell.core.command.annotation.support;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jline.terminal.Terminal;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.MergedAnnotations;
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.InputProvider;
+import org.springframework.shell.core.ShellRunner;
+import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.commands.adapter.MethodInvokerCommandAdapter;
 import org.springframework.util.Assert;
 import org.springframework.util.MethodInvoker;
+import org.springframework.util.StringUtils;
 
 /**
- * Factory bean to build instance of {@link Command}. This is internal class and not meant
- * for generic use.
+ * {@link ShellRunner} that bootstraps the shell in interactive mode.
+ * <p>
+ * It requires an {@link InputProvider} to read user input, a {@link Terminal} to write
+ * output, and a {@link CommandRegistry} to look up and execute commands.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  */
-public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<Command> {
+public class CommandFactoryBean
+		implements ApplicationContextAware, FactoryBean<org.springframework.shell.core.command.Command> {
 
 	private final Log log = LogFactory.getLog(CommandFactoryBean.class);
 
@@ -53,37 +66,59 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	}
 
 	@Override
-	public Command getObject() throws Exception {
-		org.springframework.shell.core.command.annotation.Command command = MergedAnnotations.from(this.method)
-			.get(org.springframework.shell.core.command.annotation.Command.class)
-			.synthesize();
-		String name = command.name()[0];
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+	@Override
+	public org.springframework.shell.core.command.Command getObject() {
+		List<String> parentCommandNames = getParentCommandNames();
+
+		Command command = MergedAnnotations.from(method).get(Command.class).synthesize();
+
+		String methodName = method.getName();
+		String currentName = StringUtils.hasText(command.name()) ? command.name() : methodName;
+		parentCommandNames.add(currentName);
+
+		String name = String.join(" ", parentCommandNames);
 		String description = command.description();
 		String help = command.help();
 		String group = command.group();
 		// TODO handle options, aliases, etc
 		MethodInvoker methodInvoker = getMethodInvoker();
-		log.debug("Creating command for method : " + this.method.getName());
+		log.debug("Creating command for method : %s".formatted(methodName));
+
 		return new MethodInvokerCommandAdapter(name, description, help, group, methodInvoker);
 	}
 
-	private MethodInvoker getMethodInvoker() throws ClassNotFoundException, NoSuchMethodException {
+	@Override
+	public @Nullable Class<?> getObjectType() {
+		return org.springframework.shell.core.command.Command.class;
+	}
+
+	private MethodInvoker getMethodInvoker() {
+		Class<?> declaringClass = method.getDeclaringClass();
+		Object bean = applicationContext.getBean(declaringClass);
+
 		MethodInvoker methodInvoker = new MethodInvoker();
-		Class<?> declaringClass = this.method.getDeclaringClass();
 		methodInvoker.setTargetClass(declaringClass);
-		methodInvoker.setTargetObject(this.applicationContext.getBean(declaringClass));
+		methodInvoker.setTargetObject(bean);
 		methodInvoker.setTargetMethod(method.getName());
 		return methodInvoker;
 	}
 
-	@Override
-	public Class<?> getObjectType() {
-		return Command.class;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
+	private List<String> getParentCommandNames() {
+		List<String> parentNames = new ArrayList<>();
+		Class<?> current = method.getDeclaringClass();
+		while (current != null) {
+			Command classCommand = AnnotatedElementUtils.findMergedAnnotation(current, Command.class);
+			if (classCommand != null) {
+				parentNames.add(classCommand.name());
+			}
+			current = current.getEnclosingClass();
+		}
+		Collections.reverse(parentNames);
+		return parentNames;
 	}
 
 }
