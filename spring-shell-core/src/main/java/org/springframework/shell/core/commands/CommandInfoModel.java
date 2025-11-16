@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.core.command.availability.Availability;
+
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.Command;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Model encapsulating info about {@code command}.
@@ -66,11 +65,11 @@ class CommandInfoModel {
 		List<CommandParameterInfoModel> parameters = options.stream().map(o -> {
 			String type = commandOptionType(o);
 			List<String> arguments = Stream
-				.concat(Stream.of(o.getLongName()).map(a -> "--" + a), Stream.of(o.getShortName()).map(s -> "-" + s))
+				.concat(Stream.of(o.longName()).map(a -> "--" + a), Stream.of(o.shortName()).map(s -> "-" + s))
 				.collect(Collectors.toList());
-			boolean required = o.isRequired();
-			String description = o.getDescription();
-			String defaultValue = o.getDefaultValue();
+			boolean required = o.required();
+			String description = o.description();
+			String defaultValue = o.defaultValue();
 			return CommandParameterInfoModel.of(type, arguments, required, description, defaultValue);
 		}).collect(Collectors.toList());
 
@@ -89,8 +88,8 @@ class CommandInfoModel {
 	}
 
 	private static String commandOptionType(CommandOption o) {
-		if (o.getType() != null) {
-			Class<?> rawClass = o.getType().getRawClass();
+		if (o.type() != null) {
+			Class<?> rawClass = o.type().getRawClass();
 			Assert.notNull(rawClass, "'rawClass' must not be null");
 			if (ClassUtils.isAssignable(rawClass, Void.class)) {
 				return "";

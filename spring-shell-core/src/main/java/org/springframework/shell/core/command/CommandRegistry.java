@@ -16,7 +16,10 @@
 package org.springframework.shell.core.command;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
@@ -38,6 +41,8 @@ public class CommandRegistry implements SmartInitializingSingleton, ApplicationC
 
 	private final Set<Command> commands;
 
+	private final CommandTree.Node root = new CommandTree.Node();
+
 	@SuppressWarnings("NullAway.Init")
 	private ApplicationContext applicationContext;
 
@@ -53,31 +58,76 @@ public class CommandRegistry implements SmartInitializingSingleton, ApplicationC
 		return Set.copyOf(commands);
 	}
 
-	@Nullable public Command getCommandByName(String name) {
+	public @Nullable Command getCommandByName(String name) {
 		return commands.stream().filter(command -> command.getName().equals(name)).findFirst().orElse(null);
 	}
 
-	public void registerCommand(Command command) {
-		commands.add(command);
-	}
+	public @Nullable Command lookupCommand(List<String> args) {
+		Command command = null;
 
-	public void unregisterCommand(Command command) {
-		commands.remove(command);
-	}
+		CommandTree.Node current = root;
+		for (String arg : args) {
+			CommandTree.Node next = current.getChild().get(arg);
+			if (next == null) {
+				return command;
+			}
+			current = next;
 
-	public void clearCommands() {
-		commands.clear();
+			Command cmd = current.getCommand();
+			if (cmd != null) {
+				command = cmd;
+			}
+		}
+
+		return command;
 	}
 
 	@Override
 	public void afterSingletonsInstantiated() {
-		Collection<Command> commandCollection = this.applicationContext.getBeansOfType(Command.class).values();
+		Collection<Command> commandCollection = applicationContext.getBeansOfType(Command.class).values();
 		commands.addAll(commandCollection);
+
+		for (Command command : commandCollection) {
+			CommandTree.Node current = root;
+			String[] names = command.getName().split(" ");
+			for (String name : names) {
+				current = current.child(name);
+			}
+			current.setCommand(command);
+		}
 	}
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
+	}
+
+	private static class CommandTree {
+
+		private static class Node {
+
+			private final Map<String, Node> child = new HashMap<>();
+
+			private @Nullable Command command;
+
+			private Map<String, Node> getChild() {
+				return child;
+			}
+
+			private Node child(String name) {
+				return child.computeIfAbsent(name, n -> new Node());
+			}
+
+			private @Nullable Command getCommand() {
+				return command;
+			}
+
+			private void setCommand(Command command) {
+				this.command = command;
+			}
+
+		}
+
 	}
 
 }

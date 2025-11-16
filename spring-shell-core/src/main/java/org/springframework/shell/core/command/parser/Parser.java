@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -194,8 +194,8 @@ public interface Parser {
 				List<CommandOption> optionsForArguments = registration.getOptions()
 					.stream()
 					.filter(o -> !resolvedOptions.contains(o))
-					.filter(o -> o.getPosition() > -1)
-					.sorted(Comparator.comparingInt(o -> o.getPosition()))
+					.filter(o -> o.position() > -1)
+					.sorted(Comparator.comparingInt(o -> o.position()))
 					.collect(Collectors.toList());
 
 				// leftover arguments to match into needed options
@@ -207,7 +207,7 @@ public interface Parser {
 				// try to find matching arguments
 				int i = 0;
 				for (CommandOption o : optionsForArguments) {
-					int aMax = o.getArityMax();
+					int aMax = o.arityMax();
 					if (aMax < 0) {
 						aMax = optionsForArguments.size() == 1 ? Integer.MAX_VALUE : 1;
 					}
@@ -218,7 +218,7 @@ public interface Parser {
 					if (asdf.isEmpty()) {
 						// don't arguments so only add if we know
 						// it's going to get added later via default value
-						if (o.getDefaultValue() == null) {
+						if (o.defaultValue() == null) {
 							resolvedOptions.add(o);
 							optionResults.add(OptionResult.of(o, null));
 						}
@@ -239,11 +239,11 @@ public interface Parser {
 				// possibly fill in from default values
 				registration.getOptions()
 					.stream()
-					.filter(o -> o.getDefaultValue() != null)
+					.filter(o -> o.defaultValue() != null)
 					.filter(o -> !resolvedOptions.contains(o))
 					.forEach(o -> {
 						resolvedOptions.add(o);
-						Object value = convertOptionType(o, o.getDefaultValue());
+						Object value = convertOptionType(o, o.defaultValue());
 						optionResults.add(OptionResult.of(o, value));
 					});
 
@@ -304,7 +304,7 @@ public interface Parser {
 			String name = node.getName();
 			if (name.startsWith("--")) {
 				registration.getOptions().forEach(option -> {
-					Set<String> longNames = Arrays.asList(option.getLongName())
+					Set<String> longNames = Arrays.asList(option.longName())
 						.stream()
 						.map(n -> "--" + n)
 						.collect(Collectors.toSet());
@@ -318,7 +318,7 @@ public interface Parser {
 			else if (name.startsWith("-")) {
 				if (name.length() == 2) {
 					registration.getOptions().forEach(option -> {
-						Set<String> shortNames = Arrays.asList(option.getShortName())
+						Set<String> shortNames = Arrays.asList(option.shortName())
 							.stream()
 							.map(n -> "-" + Character.toString(n))
 							.collect(Collectors.toSet());
@@ -330,7 +330,7 @@ public interface Parser {
 				}
 				else if (name.length() > 2) {
 					registration.getOptions().forEach(option -> {
-						Set<String> shortNames = Arrays.asList(option.getShortName())
+						Set<String> shortNames = Arrays.asList(option.shortName())
 							.stream()
 							.map(n -> "-" + Character.toString(n))
 							.collect(Collectors.toSet());
@@ -349,7 +349,7 @@ public interface Parser {
 		protected void onExitOptionNode(OptionNode node) {
 			if (!currentOptions.isEmpty()) {
 				for (CommandOption currentOption : currentOptions) {
-					int max = currentOption.getArityMax() > 0 ? currentOption.getArityMax() : Integer.MAX_VALUE;
+					int max = currentOption.arityMax() > 0 ? currentOption.arityMax() : Integer.MAX_VALUE;
 					max = Math.min(max, currentOptionArgument.size());
 					List<String> toUse = currentOptionArgument.subList(0, max);
 					List<String> toUnused = currentOptionArgument.subList(max, currentOptionArgument.size());
@@ -364,29 +364,28 @@ public interface Parser {
 					// because number of argument to eat dependes on arity
 					// and rest would go back to positional args.
 					if (optionPos + 1 < expectedOptionCount) {
-						if (currentOption.getArityMin() > -1
-								&& currentOptionArgument.size() < currentOption.getArityMin()) {
-							String arg = currentOption.getLongName();
+						if (currentOption.arityMin() > -1 && currentOptionArgument.size() < currentOption.arityMin()) {
+							String arg = currentOption.longName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
 									currentOptionArgument.size()));
 						}
-						else if (currentOption.getArityMax() > -1
-								&& currentOptionArgument.size() > currentOption.getArityMax()) {
-							String arg = currentOption.getLongName();
+						else if (currentOption.arityMax() > -1
+								&& currentOptionArgument.size() > currentOption.arityMax()) {
+							String arg = currentOption.longName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
-									currentOption.getArityMax()));
+									currentOption.arityMax()));
 						}
 					}
 					else {
-						if (currentOption.getArityMin() > -1 && toUse.size() < currentOption.getArityMin()) {
-							String arg = currentOption.getLongName();
+						if (currentOption.arityMin() > -1 && toUse.size() < currentOption.arityMin()) {
+							String arg = currentOption.longName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.NOT_ENOUGH_OPTION_ARGUMENTS, 0, arg,
-									currentOption.getArityMin()));
+									currentOption.arityMin()));
 						}
-						else if (currentOption.getArityMax() > -1 && toUse.size() > currentOption.getArityMax()) {
-							String arg = currentOption.getLongName();
+						else if (currentOption.arityMax() > -1 && toUse.size() > currentOption.arityMax()) {
+							String arg = currentOption.longName();
 							commonMessageResults.add(MessageResult.of(ParserMessage.TOO_MANY_OPTION_ARGUMENTS, 0, arg,
-									currentOption.getArityMax()));
+									currentOption.arityMax()));
 						}
 					}
 
@@ -432,14 +431,14 @@ public interface Parser {
 		}
 
 		private @Nullable Object convertOptionType(CommandOption option, @Nullable Object value) {
-			ResolvableType type = option.getType();
+			ResolvableType type = option.type();
 			if (value == null && type != null && type.isAssignableFrom(boolean.class)) {
 				return true;
 			}
-			if (conversionService != null && option.getType() != null && value != null) {
+			if (conversionService != null && option.type() != null && value != null) {
 				Object source = value;
 				TypeDescriptor sourceType = new TypeDescriptor(ResolvableType.forClass(source.getClass()), null, null);
-				TypeDescriptor targetType = new TypeDescriptor(option.getType(), null, null);
+				TypeDescriptor targetType = new TypeDescriptor(option.type(), null, null);
 				if (conversionService.canConvert(sourceType, targetType)) {
 					value = conversionService.convert(source, sourceType, targetType);
 				}
@@ -450,7 +449,7 @@ public interface Parser {
 		private List<MessageResult> validateOptionNotMissing(Command registration) {
 			HashSet<CommandOption> requiredOptions = registration.getOptions()
 				.stream()
-				.filter(o -> o.isRequired())
+				.filter(o -> o.required())
 				.collect(Collectors.toCollection(() -> new HashSet<>()));
 
 			List<String> argumentResultValues = argumentResults.stream()
@@ -463,22 +462,22 @@ public interface Parser {
 				if (argumentResultValues.isEmpty()) {
 					return true;
 				}
-				List<String> longNames = Arrays.asList(o.getLongName());
+				List<String> longNames = Arrays.asList(o.longName());
 				return !Collections.disjoint(argumentResultValues, longNames);
 			}).collect(Collectors.toSet());
 
 			return requiredOptions2.stream().map(o -> {
 				String ins0 = "";
-				if (o.getLongName() != null) {
-					ins0 = "--" + o.getLongName();
+				if (o.longName() != null) {
+					ins0 = "--" + o.longName();
 				}
-				else if (o.getShortName() != null) {
-					ins0 = "-" + o.getShortName();
+				else if (o.shortName() != null) {
+					ins0 = "-" + o.shortName();
 				}
 
 				String ins1 = "";
-				if (StringUtils.hasText(o.getDescription())) {
-					ins1 = ", " + o.getDescription();
+				if (StringUtils.hasText(o.description())) {
+					ins1 = ", " + o.description();
 				}
 				return MessageResult.of(ParserMessage.MANDATORY_OPTION_MISSING, 0, ins0, ins1);
 			}).collect(Collectors.toList());

@@ -40,7 +40,6 @@ import org.stringtemplate.v4.STGroupString;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.core.Utils;
 import org.springframework.shell.core.command.Command;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
@@ -99,7 +98,7 @@ public abstract class AbstractCompletions {
 				// TODO long vs short
 				List<CommandModelOption> options = registration.getOptions()
 					.stream()
-					.map(co -> co.getLongName())
+					.map(co -> co.longName())
 					.map(lo -> CommandModelOption.of("--", lo))
 					.collect(Collectors.toList());
 

@@ -11,11 +11,13 @@ import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.EnableCommand;
 import org.springframework.shell.core.commands.AbstractCommand;
 
-@EnableCommand(SpringShellApplication.class)
+@EnableCommand({ SpringShellApplication.class, SpringShellApplication.Nested.class,
+		SpringShellApplication.Nested.Child.class })
 public class SpringShellApplication {
 
 	public static void main(String[] args) throws Exception {
-		ApplicationContext context = new AnnotationConfigApplicationContext(SpringShellApplication.class);
+		ApplicationContext context = new AnnotationConfigApplicationContext(SpringShellApplication.class,
+				SpringShellApplication.Nested.class, SpringShellApplication.Nested.Child.class);
 		ShellRunner runner = context.getBean(ShellRunner.class);
 		runner.run(args);
 	}
@@ -24,6 +26,12 @@ public class SpringShellApplication {
 	public void sayHi(CommandContext commandContext) {
 		Terminal terminal = commandContext.terminal();
 		terminal.writer().println("Hi there!");
+	}
+
+	@Command(description = "Say hi using method name", group = "greetings")
+	public void nameFromMethod(CommandContext commandContext) {
+		Terminal terminal = commandContext.terminal();
+		terminal.writer().println("Hi from method name!");
 	}
 
 	@Bean
@@ -36,6 +44,44 @@ public class SpringShellApplication {
 				terminal.flush();
 			}
 		};
+	}
+
+	// root first
+	// root child
+	// root child first
+	// root child second
+	@Command(name = "root")
+	public static class Nested {
+
+		@Command(name = "first", description = "Say hi from nested method", group = "greetings")
+		public void nestedMethod(CommandContext commandContext) {
+			Terminal terminal = commandContext.terminal();
+			terminal.writer().println("Hi form nested!");
+		}
+
+		@Command(name = "child", description = "Say hi from nested method", group = "greetings")
+		public void child(CommandContext commandContext) {
+			Terminal terminal = commandContext.terminal();
+			terminal.writer().println("Hi form child!");
+		}
+
+		@Command(name = "child")
+		public static class Child {
+
+			@Command(name = "first", group = "greetings")
+			public void firstChild(CommandContext commandContext) {
+				Terminal terminal = commandContext.terminal();
+				terminal.writer().println("first!");
+			}
+
+			@Command(name = "second", group = "greetings")
+			public void secondChild(CommandContext commandContext) {
+				Terminal terminal = commandContext.terminal();
+				terminal.writer().println("second!");
+			}
+
+		}
+
 	}
 
 }

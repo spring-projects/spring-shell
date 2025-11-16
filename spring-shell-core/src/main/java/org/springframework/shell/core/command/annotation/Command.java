@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,10 @@ import org.springframework.aot.hint.annotation.Reflective;
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Documented
 @Reflective
 public @interface Command {
@@ -48,7 +49,7 @@ public @interface Command {
 	 * Values are split and trimmed meaning spaces doesn't matter.
 	 * @return the command as an array
 	 */
-	String[] name() default {};
+	String name() default "";
 
 	/**
 	 * Define alias as an array. Given that alias should be {@code alias1 sub1} it can be
