@@ -52,7 +52,6 @@
 		<spring-boot.version>4.0.0-SNAPSHOT</spring-boot.version>
 		<jline.version>3.30.6</jline.version>
 		<antlr-st4.version>4.3.4</antlr-st4.version>
-		<commons-io.version>2.20.0</commons-io.version>
 		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
 		<jspecify.version>1.0.0</jspecify.version>
 
