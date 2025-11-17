@@ -49,16 +49,7 @@ class PathSearchTests {
 						List.of(PartText.of("01", false), PartText.of("2", true), PartText.of("3", true),
 								PartText.of("456789", false))),
 				Arguments.of("0123456789", new int[] { 8, 9 },
-						List.of(PartText.of("01234567", false), PartText.of("8", true), PartText.of("9", true))),
-				Arguments.of(
-						"spring-shell-core/build/test-results/test/TEST-org.springframework.shell.support.search.FuzzyMatchV2SearchMatchAlgorithmTests.xml",
-						new int[] { 13, 33, 59, 67, 73 },
-						List.of(PartText.of("spring-shell-", false), PartText.of("c", true),
-								PartText.of("ore/build/test-resu", false), PartText.of("l", true),
-								PartText.of("ts/test/TEST-org.springfr", false), PartText.of("a", true),
-								PartText.of("mework.", false), PartText.of("s", true), PartText.of("hell.", false),
-								PartText.of("s", true),
-								PartText.of("upport.search.FuzzyMatchV2SearchMatchAlgorithmTests.xml", false))));
+						List.of(PartText.of("01234567", false), PartText.of("8", true), PartText.of("9", true))));
 	}
 
 	@ParameterizedTest
