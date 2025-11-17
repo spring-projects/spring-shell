@@ -16,10 +16,13 @@
 package org.springframework.shell.core.tui.component;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.PathMatcher;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,11 +37,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.file.AccumulatorPathVisitor;
-import org.apache.commons.io.file.Counters;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.NotFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
@@ -73,6 +71,7 @@ import static org.jline.keymap.KeyMap.key;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Andrey Litvitski
  */
 public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
@@ -614,8 +613,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 				Path path = Path.of(p);
 				log.debug(String.format("Walking input %s for path %s", input, path));
 				Files.walkFileTree(path, visitor);
-				log.debug(String.format("walked files %s dirs %s", visitor.getPathCounters().getFileCounter().get(),
-						visitor.getPathCounters().getDirectoryCounter().get()));
+				log.debug(String.format("walked files %s dirs %s", visitor.getFileCount(), visitor.getDirCount()));
 			}
 			catch (Exception e) {
 				log.debug("PathSearchPathVisitor caused exception", e);
@@ -623,7 +621,7 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 
 			// match and score candidates
 			Set<ScoredPath> treeSet = new HashSet<ScoredPath>();
-			Stream.concat(visitor.getFileList().stream(), visitor.getDirList().stream()).forEach(p -> {
+			Stream.concat(visitor.getFiles().stream(), visitor.getDirs().stream()).forEach(p -> {
 				SearchMatchResult result;
 				if (StringUtils.hasText(match)) {
 					SearchMatch searchMatch = SearchMatch.builder()
@@ -643,35 +641,79 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 			return treeSet.stream()
 				.sorted()
 				.limit(context.getPathSearchConfig().getMaxPathsSearch())
-				.collect(Collectors.collectingAndThen(Collectors.toList(),
-						list -> PathScannerResult.of(list, visitor.getPathCounters().getDirectoryCounter().get(),
-								visitor.getPathCounters().getFileCounter().get(), StringUtils.hasText(match))));
+				.collect(Collectors.collectingAndThen(Collectors.toList(), list -> PathScannerResult.of(list,
+						visitor.getDirCount(), visitor.getFileCount(), StringUtils.hasText(match))));
 		}
 
 	}
 
 	/**
-	 * Extension to AccumulatorPathVisitor which allows to break out from scanning when
-	 * enough results are found.
+	 * Extension to SimpleFileVisitor which allows to break out from scanning when enough
+	 * results are found.
 	 */
-	private static class PathSearchPathVisitor extends AccumulatorPathVisitor {
+	private static class PathSearchPathVisitor extends SimpleFileVisitor<Path> {
 
 		private final int limitFiles;
 
-		private final static IOFileFilter DNFILTER = new NotFileFilter(new WildcardFileFilter(".*"));
+		private long fileCount;
+
+		private long dirCount;
+
+		private final List<Path> files = new ArrayList<>();
+
+		private final List<Path> dirs = new ArrayList<>();
+
+		private final PathMatcher hiddenMatcher = FileSystems.getDefault().getPathMatcher("glob:.*");
 
 		PathSearchPathVisitor(int limitFiles) {
-			super(Counters.longPathCounters(), DNFILTER, DNFILTER);
 			this.limitFiles = limitFiles;
+		}
+
+		private boolean accept(Path path) {
+			Path name = path.getFileName();
+			if (name == null) {
+				return false;
+			}
+			return !this.hiddenMatcher.matches(name);
+		}
+
+		@Override
+		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+			if (!accept(dir)) {
+				return FileVisitResult.SKIP_SUBTREE;
+			}
+			this.dirs.add(dir);
+			this.dirCount++;
+			return FileVisitResult.CONTINUE;
 		}
 
 		@Override
 		public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
 			FileVisitResult result = super.visitFile(file, attributes);
-			if (getPathCounters().getFileCounter().get() >= this.limitFiles) {
-				return FileVisitResult.TERMINATE;
+			if (accept(file)) {
+				this.files.add(file);
+				this.fileCount++;
+				if (this.fileCount >= this.limitFiles) {
+					return FileVisitResult.TERMINATE;
+				}
 			}
 			return result;
+		}
+
+		public long getDirCount() {
+			return this.dirCount;
+		}
+
+		public List<Path> getFiles() {
+			return this.files;
+		}
+
+		public List<Path> getDirs() {
+			return this.dirs;
+		}
+
+		public long getFileCount() {
+			return this.fileCount;
 		}
 
 	}
