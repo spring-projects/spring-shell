@@ -15,16 +15,13 @@
  */
 package org.springframework.shell.core.jline;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jline.terminal.Terminal;
 
 import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandNotFoundException;
-import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.*;
+import org.springframework.shell.core.utils.CommandUtils;
 
 /**
  * A {@link ShellRunner} that executes a command without entering interactive shell mode.
@@ -41,23 +38,25 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private final CommandRegistry commandRegistry;
 
+	private CommandParser commandParser = new DefaultCommandParser();
+
 	public NonInteractiveShellRunner(String primaryCommand, Terminal terminal, CommandRegistry commandRegistry) {
 		this.primaryCommand = primaryCommand;
 		this.terminal = terminal;
 		this.commandRegistry = commandRegistry;
 	}
 
-	// TODO handle command arguments, ex: history --file myHistory.txt
 	@Override
 	public void run(String[] args) throws Exception {
-		Command command = commandRegistry.getCommandByName(primaryCommand);
+		ParsedInput parsedInput = commandParser.parse(() -> primaryCommand);
+		Command command = commandRegistry.getCommandByName(parsedInput.commandName());
 		if (command == null) {
-			String availableCommands = getAvailableCommands();
+			String availableCommands = CommandUtils.getAvailableCommands(commandRegistry);
 			throw new CommandNotFoundException(
-					"No command found for name: " + primaryCommand + ". Available commands: " + availableCommands);
+					"No command found for name: " + primaryCommand + ". " + availableCommands);
 		}
-		CommandContext commandContext = new CommandContext(List.of(primaryCommand), this.commandRegistry,
-				this.terminal);
+		CommandContext commandContext = new CommandContext(parsedInput.options(), parsedInput.arguments(),
+				this.commandRegistry, this.terminal);
 		try {
 			command.execute(commandContext);
 		}
@@ -73,6 +72,10 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			.map(Command::getName)
 			.sorted()
 			.collect(Collectors.joining(", "));
+	}
+
+	public void setCommandParser(CommandParser commandParser) {
+		this.commandParser = commandParser;
 	}
 
 }

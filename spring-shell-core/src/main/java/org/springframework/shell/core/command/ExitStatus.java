@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-present the original author or authors.
+ * Copyright 2025-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.command.parser;
 
-public class ParserAssertions {
+package org.springframework.shell.core.command;
 
-	public static TokenAssert assertThat(Token actual) {
-		return new TokenAssert(actual);
-	}
+/**
+ * Record representing the exit status of a command.
+ *
+ * @author Mahmoud Ben Hassine
+ * @since 4.0.0
+ */
+public record ExitStatus(int code, String description) {
 
-	public static ParserMessageAssert assertThat(ParserMessage message) {
-		return new ParserMessageAssert(message);
-	}
+	public static ExitStatus OK = new ExitStatus(0, "OK");
 
-	public static MessageResultAssert assertThat(MessageResult result) {
-		return new MessageResultAssert(result);
-	}
+	public static ExitStatus EXECUTION_ERROR = new ExitStatus(-1, "EXECUTION_ERROR");
+
+	public static ExitStatus USAGE_ERROR = new ExitStatus(-2, "USAGE_ERROR");
 
 }

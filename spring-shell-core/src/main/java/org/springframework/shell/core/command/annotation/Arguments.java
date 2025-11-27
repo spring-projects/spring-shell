@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-present the original author or authors.
+ * Copyright 2025-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.shell.core.command.annotation;
 
-package org.springframework.shell.core;
-
-import org.springframework.shell.core.command.CommandRegistry;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Strategy interface for registering commands.
+ * Annotation marking a method parameter as a target for a collection of arguments to a
+ * {@link Command}. The parameter type must be an array or a collection.
  *
- * @author Eric Bottard
- * @author Camilo Gonzalez
  * @author Mahmoud Ben Hassine
+ * @since 4.0.0
  */
-public interface MethodTargetRegistrar {
-
-	/**
-	 * Register mappings from {@literal <command keyword(s)>} to actual behavior.
-	 */
-	void register(CommandRegistry registry);
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+@Documented
+public @interface Arguments {
 
 }

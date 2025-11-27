@@ -25,14 +25,14 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.MergedAnnotations;
+import org.springframework.core.convert.support.ConfigurableConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.commands.adapter.MethodInvokerCommandAdapter;
 import org.springframework.util.Assert;
-import org.springframework.util.MethodInvoker;
 
 /**
- * Factory bean to build instance of {@link Command}. This is internal class and not meant
- * for generic use.
+ * Factory bean to build instances of {@link Command}.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -53,27 +53,27 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	}
 
 	@Override
-	public Command getObject() throws Exception {
+	public Command getObject() {
 		org.springframework.shell.core.command.annotation.Command command = MergedAnnotations.from(this.method)
 			.get(org.springframework.shell.core.command.annotation.Command.class)
 			.synthesize();
+		// TODO handle aliases, sub commands, hidden flag.
 		String name = command.name()[0];
 		String description = command.description();
 		String help = command.help();
 		String group = command.group();
-		// TODO handle options, aliases, etc
-		MethodInvoker methodInvoker = getMethodInvoker();
-		log.debug("Creating command for method : " + this.method.getName());
-		return new MethodInvokerCommandAdapter(name, description, help, group, methodInvoker);
-	}
-
-	private MethodInvoker getMethodInvoker() throws ClassNotFoundException, NoSuchMethodException {
-		MethodInvoker methodInvoker = new MethodInvoker();
+		log.debug("Creating command bean for method '" + this.method + "' with name '" + name + "'");
 		Class<?> declaringClass = this.method.getDeclaringClass();
-		methodInvoker.setTargetClass(declaringClass);
-		methodInvoker.setTargetObject(this.applicationContext.getBean(declaringClass));
-		methodInvoker.setTargetMethod(method.getName());
-		return methodInvoker;
+		Object targetObject = this.applicationContext.getBean(declaringClass);
+		ConfigurableConversionService configurableConversionService = new DefaultConversionService();
+		try {
+			configurableConversionService = this.applicationContext.getBean(ConfigurableConversionService.class);
+		}
+		catch (BeansException e) {
+			log.debug("No ConfigurableConversionService bean found, using a default conversion service.");
+		}
+		return new MethodInvokerCommandAdapter(name, description, group, help, this.method, targetObject,
+				configurableConversionService);
 	}
 
 	@Override

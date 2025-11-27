@@ -17,6 +17,7 @@ package org.springframework.shell.core.commands;
 
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.ExitStatus;
 
 /**
  * A command to display the full stacktrace when an error occurs.
@@ -33,9 +34,10 @@ public class Stacktrace implements Command {
 	}
 
 	@Override
-	public void execute(CommandContext commandContext) throws Exception {
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		// Think of this like $? in bash
 		// TODO check to best place to store this global state
+		return ExitStatus.OK;
 	}
 
 }

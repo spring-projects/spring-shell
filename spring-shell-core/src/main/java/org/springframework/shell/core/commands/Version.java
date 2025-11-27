@@ -17,6 +17,7 @@ package org.springframework.shell.core.commands;
 
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.ExitStatus;
 
 /**
  * Command to print the current version of Spring Shell.
@@ -33,7 +34,7 @@ public class Version implements Command {
 	}
 
 	@Override
-	public void execute(CommandContext commandContext) throws Exception {
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		Package pkg = Version.class.getPackage();
 		String version = "N/A";
 		if (pkg != null && pkg.getImplementationVersion() != null) {
@@ -41,6 +42,7 @@ public class Version implements Command {
 		}
 		commandContext.terminal().writer().println("Version: " + version);
 		commandContext.terminal().flush();
+		return ExitStatus.OK;
 	}
 
 }

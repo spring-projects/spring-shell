@@ -19,16 +19,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jline.reader.Parser;
 
 import org.springframework.shell.core.Input;
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandNotFoundException;
-import org.springframework.shell.core.command.CommandOption;
+import org.springframework.shell.core.command.*;
 import org.springframework.shell.core.jline.FileInputProvider;
+import org.springframework.shell.core.utils.CommandUtils;
 
 /**
  * A command that can read and execute other commands from a file.
@@ -47,8 +44,8 @@ public class Script extends AbstractCommand {
 	}
 
 	@Override
-	public void execute(CommandContext commandContext) throws Exception {
-		List<CommandOption> options = getOptions();
+	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
+		List<CommandOption> options = commandContext.options();
 		File file = null;// TODO get file name from options
 		Reader reader = new FileReader(file);
 		FileInputProvider inputProvider = new FileInputProvider(reader, parser);
@@ -56,28 +53,19 @@ public class Script extends AbstractCommand {
 		while ((input = inputProvider.readInput()) != null) {
 			executeCommand(commandContext, input);
 		}
+		return ExitStatus.OK;
 	}
 
 	private void executeCommand(CommandContext commandContext, Input input) throws Exception {
 		String commandName = input.words().get(0);
 		Command command = commandContext.commandRegistry().getCommandByName(commandName);
 		if (command == null) {
-			String availableCommands = getAvailableCommands(commandContext);
-			throw new CommandNotFoundException(
-					"No command found for name: " + commandName + ". Available commands: " + availableCommands);
+			String availableCommands = CommandUtils.getAvailableCommands(commandContext.commandRegistry());
+			throw new CommandNotFoundException("No command found for name: " + commandName + ". " + availableCommands);
 		}
-		CommandContext singleCommandContext = new CommandContext(input.words(), commandContext.commandRegistry(),
-				commandContext.terminal());
+		CommandContext singleCommandContext = new CommandContext(commandContext.options(), commandContext.arguments(),
+				commandContext.commandRegistry(), commandContext.terminal());
 		command.execute(singleCommandContext);
-	}
-
-	private String getAvailableCommands(CommandContext commandContext) {
-		return commandContext.commandRegistry()
-			.getCommands()
-			.stream()
-			.map(Command::getName)
-			.sorted()
-			.collect(Collectors.joining(", "));
 	}
 
 }

@@ -28,10 +28,8 @@ import org.jline.terminal.Terminal;
 
 import org.springframework.shell.core.Input;
 import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandNotFoundException;
-import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.*;
+import org.springframework.shell.core.utils.CommandUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -55,6 +53,8 @@ public class ScriptShellRunner implements ShellRunner {
 	private final Terminal terminal;
 
 	private final CommandRegistry commandRegistry;
+
+	private CommandParser commandParser = new DefaultCommandParser();
 
 	public ScriptShellRunner(Parser parser, Terminal terminal, CommandRegistry commandRegistry) {
 		this.parser = parser;
@@ -96,14 +96,16 @@ public class ScriptShellRunner implements ShellRunner {
 				// Ignore empty lines
 				continue;
 			}
-			String commandName = input.words().get(0);
+			ParsedInput parsedInput = commandParser.parse(input);
+			String commandName = parsedInput.commandName();
 			Command command = this.commandRegistry.getCommandByName(commandName);
 			if (command == null) {
-				String availableCommands = getAvailableCommands();
+				String availableCommands = CommandUtils.getAvailableCommands(this.commandRegistry);
 				throw new CommandNotFoundException(
-						"No command found for name: " + commandName + ". Available commands: " + availableCommands);
+						"No command found for name: " + commandName + ". " + availableCommands);
 			}
-			CommandContext commandContext = new CommandContext(input.words(), this.commandRegistry, this.terminal);
+			CommandContext commandContext = new CommandContext(parsedInput.options(), parsedInput.arguments(),
+					this.commandRegistry, this.terminal);
 			try {
 				command.execute(commandContext);
 			}
@@ -114,12 +116,8 @@ public class ScriptShellRunner implements ShellRunner {
 		}
 	}
 
-	private String getAvailableCommands() {
-		return this.commandRegistry.getCommands()
-			.stream()
-			.map(Command::getName)
-			.sorted()
-			.collect(Collectors.joining(", "));
+	public void setCommandParser(CommandParser commandParser) {
+		this.commandParser = commandParser;
 	}
 
 }

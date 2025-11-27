@@ -5,24 +5,26 @@ import java.util.function.Function;
 import org.jline.terminal.Terminal;
 
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.commands.AbstractCommand;
 
 public class FunctionCommandAdapter extends AbstractCommand {
 
 	Function<CommandContext, String> commandFunction;
 
-	public FunctionCommandAdapter(String name, String description, String help, String group,
+	public FunctionCommandAdapter(String name, String description, String group, String help,
 			Function<CommandContext, String> commandFunction) {
-		super(name, description, help, group);
+		super(name, description, group, help);
 		this.commandFunction = commandFunction;
 	}
 
 	@Override
-	public void execute(CommandContext commandContext) throws Exception {
+	public ExitStatus doExecute(CommandContext commandContext) {
 		String commandOutput = this.commandFunction.apply(commandContext);
 		Terminal terminal = commandContext.terminal();
 		terminal.writer().println(commandOutput);
 		terminal.flush();
+		return ExitStatus.OK;
 	}
 
 }

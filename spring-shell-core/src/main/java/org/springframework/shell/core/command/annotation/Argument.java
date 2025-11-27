@@ -22,42 +22,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation marking a method parameter as an option to a {@link Command}.
+ * Annotation marking a method parameter as an argument to a {@link Command}.
  *
- * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @since 4.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @Documented
-public @interface Option {
+public @interface Argument {
 
 	/**
-	 * Short name of an option.
-	 * @return Option short name, defaults to empty.
+	 * Index of the argument
+	 * @return the index of the argument
 	 */
-	char shortName() default ' ';
+	int index();
 
 	/**
-	 * Long name of an option.
-	 * @return Option long name, defaults to empty.
-	 */
-	String longName() default "";
-
-	/**
-	 * Return a short description of the option.
-	 * @return description of the option
+	 * Return a description of the argument.
+	 * @return description of the argument
 	 */
 	String description() default "";
 
 	/**
-	 * Mark option required.
-	 * @return true if option is required, defaults to false.
-	 */
-	boolean required() default false;
-
-	/**
-	 * Define option default value.
+	 * Define argument's default value.
 	 * @return default value
 	 */
 	String defaultValue() default "";

@@ -20,6 +20,7 @@ import org.jline.utils.InfoCmp;
 
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.ExitStatus;
 
 /**
  * ANSI console related commands.
@@ -31,8 +32,14 @@ import org.springframework.shell.core.command.CommandContext;
 public class Clear implements Command {
 
 	@Override
-	public void execute(CommandContext commandContext) throws Exception {
+	public String getDescription() {
+		return "Clear the terminal screen";
+	}
+
+	@Override
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		commandContext.terminal().puts(InfoCmp.Capability.clear_screen);
+		return ExitStatus.OK;
 	}
 
 }

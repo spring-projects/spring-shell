@@ -27,7 +27,11 @@ import org.springframework.shell.core.InputProvider;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.DefaultCommandParser;
+import org.springframework.shell.core.command.ParsedInput;
+import org.springframework.shell.core.utils.CommandUtils;
 
 /**
  * A {@link ShellRunner} that bootstraps the shell in interactive mode. It requires an
@@ -44,6 +48,8 @@ public class InteractiveShellRunner implements ShellRunner {
 	private static final Log log = LogFactory.getLog(InteractiveShellRunner.class);
 
 	private final InputProvider inputProvider;
+
+	private CommandParser commandParser = new DefaultCommandParser();
 
 	private final Terminal terminal;
 
@@ -69,26 +75,30 @@ public class InteractiveShellRunner implements ShellRunner {
 				// Ignore empty lines
 				continue;
 			}
-			String commandName = input.words().get(0);
+			ParsedInput parsedInput = commandParser.parse(input);
+			String commandName = parsedInput.commandName();
 			Command command = this.commandRegistry.getCommandByName(commandName);
 			if (command == null) {
-				String availableCommands = getAvailableCommands();
-				this.terminal.writer()
-					.println(
-							"No command found for name: " + commandName + ". Available commands: " + availableCommands);
+				String availableCommands = CommandUtils.getAvailableCommands(this.commandRegistry);
+				this.terminal.writer().println("No command found for name: " + commandName + ". " + availableCommands);
 				this.terminal.writer().flush();
 				continue;
 			}
 			log.debug(String.format("Evaluate input with line=[%s], command=[%s]", input.rawText(), command));
-			CommandContext commandContext = new CommandContext(input.words(), this.commandRegistry, this.terminal);
+			CommandContext commandContext = new CommandContext(parsedInput.options(), parsedInput.arguments(),
+					this.commandRegistry, this.terminal);
 			try {
 				command.execute(commandContext);
 			}
 			catch (Exception exception) {
-				this.terminal.writer().append(exception.getMessage());
+				this.terminal.writer().println(exception.getMessage());
 				this.terminal.writer().flush();
 			}
 		}
+	}
+
+	public void setCommandParser(CommandParser commandParser) {
+		this.commandParser = commandParser;
 	}
 
 	private String getAvailableCommands() {

@@ -1,5 +1,7 @@
 package org.springframework.shell.samples.helloworld;
 
+import java.util.List;
+
 import org.jline.terminal.Terminal;
 
 import org.springframework.context.ApplicationContext;
@@ -7,9 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.core.command.annotation.EnableCommand;
-import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.command.annotation.*;
 
 @EnableCommand(SpringShellApplication.class)
 public class SpringShellApplication {
@@ -20,22 +20,32 @@ public class SpringShellApplication {
 		runner.run(args);
 	}
 
-	@Command(name = "hi", description = "Say hi", group = "greetings")
-	public void sayHi(CommandContext commandContext) {
+	@Command(name = "hi", description = "Say hi to a given name", group = "greetings",
+			help = "A command that greets the user with 'Hi ${name}!' with a configurable suffix. Example usage: hi -s=! John")
+	public void sayHi(
+			@Argument(index = 0, description = "the name of the person to greet", defaultValue = "world") String name,
+			@Option(shortName = 's', longName = "suffix", description = "the suffix of the greeting message",
+					defaultValue = "!") char suffix) {
+		System.out.println("Hi " + name + suffix);
+	}
+
+	@Command(name = "hey", description = "Say hey to everyone", group = "greetings",
+			help = "A command that greets all given names. Example usage: hey John Doe -s=!")
+	public void sayHeyToEveryone(@Arguments List<String> names, @Option(shortName = 's', longName = "suffix",
+			description = "the suffix of the greeting message", defaultValue = "!") char suffix) {
+		System.out.println("Hey " + String.join(",", names) + suffix);
+	}
+
+	@Command(name = "yo", description = "Say yo", group = "greetings",
+			help = "A command that greets the user with 'Yo there! what's up?'")
+	public void sayYo(CommandContext commandContext) {
 		Terminal terminal = commandContext.terminal();
-		terminal.writer().println("Hi there!");
+		terminal.writer().println("Yo there! what's up?");
 	}
 
 	@Bean
-	public AbstractCommand sayHello() {
-		return new AbstractCommand("hello", "Say hello", "greetings") {
-			@Override
-			public void execute(CommandContext commandContext) {
-				Terminal terminal = commandContext.terminal();
-				terminal.writer().println("Hello there!");
-				terminal.flush();
-			}
-		};
+	public HelloCommand sayHello() {
+		return new HelloCommand();
 	}
 
 }

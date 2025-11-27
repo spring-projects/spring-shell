@@ -48,8 +48,7 @@ public interface Command {
 	 * @return the help text of the command
 	 */
 	default String getHelp() {
-		// TODO generate default help from description, options, aliases, etc.
-		return "";
+		return getName() + "(" + String.join(",", getAliases()) + "): " + getDescription();
 	}
 
 	/**
@@ -61,25 +60,18 @@ public interface Command {
 	}
 
 	/**
-	 * Get the options of the command.
-	 * @return the options of the command
-	 */
-	default List<CommandOption> getOptions() {
-		return Collections.emptyList();
-	}
-
-	/**
 	 * Get the aliases of the command.
 	 * @return the aliases of the command
 	 */
-	default List<CommandAlias> getAliases() {
+	default List<String> getAliases() {
 		return Collections.emptyList();
 	}
 
 	/**
 	 * Execute the command within the given context.
 	 * @param commandContext the context of the command
+	 * @return the exit status of the command
 	 */
-	void execute(CommandContext commandContext) throws Exception;
+	ExitStatus execute(CommandContext commandContext) throws Exception;
 
 }

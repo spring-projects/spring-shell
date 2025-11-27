@@ -15,23 +15,16 @@
  */
 package org.springframework.shell.core.exit;
 
-import java.util.List;
 import java.util.function.Function;
 
+import org.springframework.shell.core.command.ExitStatus;
+
 /**
- * Interface used with implementation of a boot's ExitCodeExceptionMapper in a context of
- * spring-shell spesific one. Mostly needed not to have a direct dependencies to boot
- * classes as currently only one implementation instance can exist which we need to reset
- * between command executions.
+ * Interface to map exceptions to {@link ExitStatus}. Typically, providing exception
+ * implementing boot's {@code ExitCodeGenerator}.
  *
  * @author Janne Valkealahti
  */
-public interface ExitCodeMappings {
-
-	/**
-	 * Reset mappings into a given functions.
-	 * @param functions the mapping functions
-	 */
-	void reset(List<Function<Throwable, Integer>> functions);
+public interface ExitStatusExceptionMapper extends Function<Exception, ExitStatus> {
 
 }

@@ -15,11 +15,10 @@
  */
 package org.springframework.shell.core.commands;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.ExitStatus;
+import org.springframework.shell.core.utils.CommandUtils;
 
 /**
  * A command to display help about all available commands.
@@ -27,19 +26,22 @@ import org.springframework.shell.core.command.CommandContext;
  * @author Eric Bottard
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 public class Help implements Command {
 
 	@Override
-	public void execute(CommandContext commandContext) throws Exception {
-		Set<Command> availableCommands = commandContext.commandRegistry().getCommands();
-		// FIXME render message from template
-		// TODO do we really need a template engine? would Java String templates be
-		// enough?
-		String helpMessage = "Available commands: "
-				+ availableCommands.stream().map(Command::getName).sorted().collect(Collectors.joining(", "));
+	public String getDescription() {
+		return "Display help about available commands";
+	}
+
+	@Override
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
+		String helpMessage = CommandUtils.getAvailableCommands(commandContext.commandRegistry());
+
 		commandContext.terminal().writer().println(helpMessage);
 		commandContext.terminal().flush();
+		return ExitStatus.OK;
 	}
 
 }

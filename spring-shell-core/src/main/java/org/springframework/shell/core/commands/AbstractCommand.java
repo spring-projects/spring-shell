@@ -19,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandAlias;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
+import org.springframework.shell.core.command.ExitStatus;
 
 /**
- * Base class helping to build shell components.
+ * Base class helping to build shell commands.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
@@ -40,9 +40,7 @@ public abstract class AbstractCommand implements Command {
 
 	private final String group;
 
-	private List<CommandOption> options = new ArrayList<>();
-
-	private List<CommandAlias> aliases = new ArrayList<>();
+	private List<String> aliases = new ArrayList<>();
 
 	public AbstractCommand(String name, String description) {
 		this(name, description, "", "");
@@ -80,24 +78,29 @@ public abstract class AbstractCommand implements Command {
 	}
 
 	@Override
-	public List<CommandOption> getOptions() {
-		return this.options;
-	}
-
-	public void setOptions(List<CommandOption> options) {
-		this.options = options;
-	}
-
-	@Override
-	public List<CommandAlias> getAliases() {
+	public List<String> getAliases() {
 		return this.aliases;
 	}
 
-	public void setAliases(List<CommandAlias> aliases) {
+	public void setAliases(List<String> aliases) {
 		this.aliases = aliases;
 	}
 
 	@Override
-	public abstract void execute(CommandContext commandContext) throws Exception;
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
+		List<CommandOption> options = commandContext.options();
+		if (options.size() == 1 && isHelp(options.get(0))) {
+			commandContext.terminal().writer().println(getHelp());
+			commandContext.terminal().flush();
+			return ExitStatus.OK;
+		}
+		return doExecute(commandContext);
+	}
+
+	private static boolean isHelp(CommandOption option) {
+		return option.longName().equalsIgnoreCase("help") || option.shortName() == 'h';
+	}
+
+	public abstract ExitStatus doExecute(CommandContext commandContext) throws Exception;
 
 }
