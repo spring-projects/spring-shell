@@ -65,6 +65,9 @@
 		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<log4j.version>2.25.2</log4j.version>
 
+        <!-- samples dependencies -->
+        <h2-database.version>2.4.240</h2-database.version>
+
 		<!-- documentation dependencies -->
 		<antora-maven-plugin.version>1.0.0-alpha.5</antora-maven-plugin.version>
 		<antora-component-version-maven-plugin.version>0.0.4</antora-component-version-maven-plugin.version>
