@@ -16,7 +16,7 @@
 
 package org.springframework.shell.core.jline;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,10 +77,35 @@ public class InteractiveShellRunner implements ShellRunner {
 			}
 			ParsedInput parsedInput = commandParser.parse(input);
 			String commandName = parsedInput.commandName();
+			if (!parsedInput.subCommands().isEmpty()) {
+				commandName += " " + String.join(" ", parsedInput.subCommands());
+			}
 			Command command = this.commandRegistry.getCommandByName(commandName);
+			// the user typed a non recognized command or a root command with subcommands
 			if (command == null) {
-				String availableCommands = CommandUtils.getAvailableCommands(this.commandRegistry);
-				this.terminal.writer().println("No command found for name: " + commandName + ". " + availableCommands);
+				// check if there are subcommands for the given root command
+				List<String> candidateSubCommands = CommandUtils.getAvailableCommands(this.commandRegistry)
+					.stream()
+					.filter(candidateSubCommand -> candidateSubCommand.startsWith(parsedInput.commandName()))
+					.toList();
+				if (!candidateSubCommands.isEmpty() && parsedInput.subCommands().isEmpty()) {
+					List<String> availableSubCommands = CommandUtils.getAvailableSubCommands(commandName,
+							this.commandRegistry);
+					this.terminal.writer().println("Available sub commands for " + commandName + ": ");
+					for (String availableSubCommand : availableSubCommands) {
+						this.terminal.writer()
+							.println("  " + availableSubCommand + ": "
+									+ this.commandRegistry.getCommandByName(commandName + " " + availableSubCommand)
+										.getDescription());
+					}
+				}
+				else {
+					// the user typed an incorrect command, print general available
+					// commands
+					String availableCommands = CommandUtils.formatAvailableCommands(this.commandRegistry);
+					this.terminal.writer()
+						.println("No command found for name: " + commandName + ". " + availableCommands);
+				}
 				this.terminal.writer().flush();
 				continue;
 			}
@@ -99,14 +124,6 @@ public class InteractiveShellRunner implements ShellRunner {
 
 	public void setCommandParser(CommandParser commandParser) {
 		this.commandParser = commandParser;
-	}
-
-	private String getAvailableCommands() {
-		return this.commandRegistry.getCommands()
-			.stream()
-			.map(Command::getName)
-			.sorted()
-			.collect(Collectors.joining(", "));
 	}
 
 }

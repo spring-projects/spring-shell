@@ -37,7 +37,7 @@ public class Help implements Command {
 
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		String helpMessage = CommandUtils.getAvailableCommands(commandContext.commandRegistry());
+		String helpMessage = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
 
 		commandContext.terminal().writer().println(helpMessage);
 		commandContext.terminal().flush();

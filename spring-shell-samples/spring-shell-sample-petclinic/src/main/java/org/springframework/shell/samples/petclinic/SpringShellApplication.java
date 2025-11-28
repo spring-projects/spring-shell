@@ -24,17 +24,16 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.annotation.EnableCommand;
-import org.springframework.shell.samples.petclinic.commands.OwnerDetailsCommand;
-import org.springframework.shell.samples.petclinic.commands.OwnersListCommand;
+import org.springframework.shell.samples.petclinic.commands.*;
 
 /**
  * @author Mahmoud Ben Hassine
  */
-@EnableCommand(SpringShellApplication.class)
+@EnableCommand({ SpringShellApplication.class, PetCommands.class })
 public class SpringShellApplication {
 
 	public static void main(String[] args) throws Exception {
-		Class<?>[] classes = { SpringShellApplication.class };
+		Class<?>[] classes = { SpringShellApplication.class, PetCommands.class };
 		ApplicationContext context = new AnnotationConfigApplicationContext(classes);
 		ShellRunner runner = context.getBean(ShellRunner.class);
 		runner.run(args);
@@ -48,6 +47,16 @@ public class SpringShellApplication {
 	@Bean
 	public OwnerDetailsCommand ownerDetailsCommand(JdbcClient jdbcClient) {
 		return new OwnerDetailsCommand(jdbcClient);
+	}
+
+	@Bean
+	public VetsListCommand vetsCommand(JdbcClient jdbcClient) {
+		return new VetsListCommand(jdbcClient);
+	}
+
+	@Bean
+	public VetDetailsCommand vetDetailsCommand(JdbcClient jdbcClient) {
+		return new VetDetailsCommand(jdbcClient);
 	}
 
 	@Bean

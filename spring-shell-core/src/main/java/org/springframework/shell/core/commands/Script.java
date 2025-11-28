@@ -60,7 +60,7 @@ public class Script extends AbstractCommand {
 		String commandName = input.words().get(0);
 		Command command = commandContext.commandRegistry().getCommandByName(commandName);
 		if (command == null) {
-			String availableCommands = CommandUtils.getAvailableCommands(commandContext.commandRegistry());
+			String availableCommands = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
 			throw new CommandNotFoundException("No command found for name: " + commandName + ". " + availableCommands);
 		}
 		CommandContext singleCommandContext = new CommandContext(commandContext.options(), commandContext.arguments(),

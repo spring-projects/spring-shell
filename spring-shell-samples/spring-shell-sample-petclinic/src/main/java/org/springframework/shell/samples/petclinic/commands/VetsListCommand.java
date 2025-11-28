@@ -25,30 +25,30 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.commands.AbstractCommand;
-import org.springframework.shell.samples.petclinic.domain.Owner;
+import org.springframework.shell.samples.petclinic.domain.Vet;
 
 /**
- * Spring Shell command to list Pet clinic owners.
+ * Spring Shell command to list Pet clinic veterinarians.
  *
  * @author Mahmoud Ben Hassine
  */
-public class OwnersListCommand extends AbstractCommand {
+public class VetsListCommand extends AbstractCommand {
 
 	private final JdbcClient jdbcClient;
 
-	public OwnersListCommand(JdbcClient jdbcClient) {
-		super("owners list", "List owners", "owners", "Command to list owners");
+	public VetsListCommand(JdbcClient jdbcClient) {
+		super("vets list", "List veterinarians", "vets", "Command to list veterinarians");
 		this.jdbcClient = jdbcClient;
 	}
 
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) {
 		PrintWriter writer = commandContext.terminal().writer();
-		List<@Nullable Owner> owners = this.jdbcClient.sql("SELECT id, first_name, last_name FROM OWNERS")
-			.query(new DataClassRowMapper<>(Owner.class))
+		List<@Nullable Vet> vets = this.jdbcClient.sql("SELECT id, first_name, last_name FROM VETS")
+			.query(new DataClassRowMapper<>(Vet.class))
 			.list();
-		for (Owner owner : owners) {
-			writer.println(owner);
+		for (Vet vet : vets) {
+			writer.println(vet);
 		}
 		writer.flush();
 		return ExitStatus.OK;

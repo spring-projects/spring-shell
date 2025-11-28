@@ -24,19 +24,19 @@ import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.commands.AbstractCommand;
-import org.springframework.shell.samples.petclinic.domain.Owner;
+import org.springframework.shell.samples.petclinic.domain.Vet;
 
 /**
- * Spring Shell command to show the details of a Pet clinic owner.
+ * Spring Shell command to show the details of a Pet clinic veterinarian.
  *
  * @author Mahmoud Ben Hassine
  */
-public class OwnerDetailsCommand extends AbstractCommand {
+public class VetDetailsCommand extends AbstractCommand {
 
 	private final JdbcClient jdbcClient;
 
-	public OwnerDetailsCommand(JdbcClient jdbcClient) {
-		super("owners info", "Show details of a given owner", "owners", "show the details of a given owner");
+	public VetDetailsCommand(JdbcClient jdbcClient) {
+		super("vets info", "Show details of a given veterinarian", "vets", "show the details of a given veterinarian");
 		this.jdbcClient = jdbcClient;
 	}
 
@@ -44,37 +44,37 @@ public class OwnerDetailsCommand extends AbstractCommand {
 	public ExitStatus doExecute(CommandContext commandContext) {
 		PrintWriter writer = commandContext.terminal().writer();
 		if (commandContext.options().isEmpty()) {
-			writer.println("Owner ID is required");
-			writer.println("Usage: owners info --ownerId=<id>");
+			writer.println("Veterinarian ID is required");
+			writer.println("Usage: vets info --vetId=<id>");
 			writer.flush();
 			return ExitStatus.USAGE_ERROR;
 		}
 		CommandOption commandOption = commandContext.options().get(0);
 		String longName = commandOption.longName();
-		if (!"ownerId".equalsIgnoreCase(longName)) {
+		if (!"vetId".equalsIgnoreCase(longName)) {
 			writer.println("Unrecognized option: " + longName);
-			writer.println("Usage: owners info --ownerId=<id>");
+			writer.println("Usage: vets info --vetId=<id>");
 			writer.flush();
 			return ExitStatus.USAGE_ERROR;
 		}
-		String ownerId = commandOption.value();
+		String vetId = commandOption.value();
 		try {
-			Integer.parseInt(ownerId);
+			Integer.parseInt(vetId);
 		}
 		catch (NumberFormatException e) {
-			writer.println("Invalid owner ID: " + ownerId + ". It must be a number.");
-			writer.println("Usage: owners info --ownerId=<id>");
+			writer.println("Invalid veterinarian ID: " + vetId + ". It must be a number.");
+			writer.println("Usage: vets info --vetId=<id>");
 			writer.flush();
 			return ExitStatus.USAGE_ERROR;
 		}
 		try {
-			Owner owner = this.jdbcClient.sql("SELECT * FROM OWNERS where id = " + ownerId)
-				.query(new DataClassRowMapper<>(Owner.class))
+			Vet vet = this.jdbcClient.sql("SELECT * FROM VETS where id = " + vetId)
+				.query(new DataClassRowMapper<>(Vet.class))
 				.single();
-			writer.println(owner);
+			writer.println(vet);
 		}
 		catch (EmptyResultDataAccessException exception) {
-			writer.println("No owner found with ID: " + ownerId);
+			writer.println("No veterinarian found with ID: " + vetId);
 		}
 		finally {
 			writer.flush();

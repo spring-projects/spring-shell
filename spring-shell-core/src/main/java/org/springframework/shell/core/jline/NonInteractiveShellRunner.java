@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.core.jline;
 
-import java.util.stream.Collectors;
-
 import org.jline.terminal.Terminal;
 
 import org.springframework.shell.core.ShellRunner;
@@ -29,6 +27,7 @@ import org.springframework.shell.core.utils.CommandUtils;
  * @author Janne Valkealahti
  * @author Chris Bono
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 public class NonInteractiveShellRunner implements ShellRunner {
 
@@ -49,9 +48,13 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	@Override
 	public void run(String[] args) throws Exception {
 		ParsedInput parsedInput = commandParser.parse(() -> primaryCommand);
-		Command command = commandRegistry.getCommandByName(parsedInput.commandName());
+		String commandName = parsedInput.commandName();
+		if (!parsedInput.subCommands().isEmpty()) {
+			commandName += " " + String.join(" ", parsedInput.subCommands());
+		}
+		Command command = this.commandRegistry.getCommandByName(commandName);
 		if (command == null) {
-			String availableCommands = CommandUtils.getAvailableCommands(commandRegistry);
+			String availableCommands = CommandUtils.formatAvailableCommands(commandRegistry);
 			throw new CommandNotFoundException(
 					"No command found for name: " + primaryCommand + ". " + availableCommands);
 		}
@@ -64,14 +67,6 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			this.terminal.writer().append(exception.getMessage());
 			this.terminal.writer().flush();
 		}
-	}
-
-	private String getAvailableCommands() {
-		return this.commandRegistry.getCommands()
-			.stream()
-			.map(Command::getName)
-			.sorted()
-			.collect(Collectors.joining(", "));
 	}
 
 	public void setCommandParser(CommandParser commandParser) {

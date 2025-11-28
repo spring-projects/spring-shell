@@ -57,8 +57,8 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		org.springframework.shell.core.command.annotation.Command command = MergedAnnotations.from(this.method)
 			.get(org.springframework.shell.core.command.annotation.Command.class)
 			.synthesize();
-		// TODO handle aliases, sub commands, hidden flag.
-		String name = command.name()[0];
+		// TODO handle aliases, hidden flag.
+		String name = String.join(" ", command.name());
 		String description = command.description();
 		String help = command.help();
 		String group = command.group();

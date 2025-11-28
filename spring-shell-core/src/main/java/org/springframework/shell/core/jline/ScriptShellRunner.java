@@ -37,6 +37,7 @@ import org.springframework.util.ObjectUtils;
  * which are then interpreted as references to script files to run and exit.
  *
  * @author Eric Bottard
+ * @author Mahmoud Ben Hassine
  */
 // tag::documentation[]
 public class ScriptShellRunner implements ShellRunner {
@@ -98,9 +99,12 @@ public class ScriptShellRunner implements ShellRunner {
 			}
 			ParsedInput parsedInput = commandParser.parse(input);
 			String commandName = parsedInput.commandName();
+			if (!parsedInput.subCommands().isEmpty()) {
+				commandName += " " + String.join(" ", parsedInput.subCommands());
+			}
 			Command command = this.commandRegistry.getCommandByName(commandName);
 			if (command == null) {
-				String availableCommands = CommandUtils.getAvailableCommands(this.commandRegistry);
+				String availableCommands = CommandUtils.formatAvailableCommands(this.commandRegistry);
 				throw new CommandNotFoundException(
 						"No command found for name: " + commandName + ". " + availableCommands);
 			}

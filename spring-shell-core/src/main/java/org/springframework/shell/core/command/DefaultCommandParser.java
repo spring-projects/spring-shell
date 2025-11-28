@@ -23,20 +23,20 @@ import org.springframework.shell.core.Input;
  * Default implementation of {@link CommandParser}. Supports options in the form -o=value
  * and --option=value. Options and arguments can be specified in any order. Arguments are
  * 0-based indexed among other arguments. <pre>
- * CommandSyntax ::= CommandName (Option | Argument)*
- * CommandName   ::= String
- * Option        ::= ShortOption | LongOption
- * ShortOption   ::= '-' Char ('=' String)?
- * LongOption    ::= '--' String ('=' String)?
- * Argument      ::= String
+ * CommandSyntax  ::= CommandName [SubCommandName]* [Option | Argument]*
+ * CommandName    ::= String
+ * SubCommandName ::= String
+ * Option         ::= ShortOption | LongOption
+ * ShortOption    ::= '-' Char ('=' String)?
+ * LongOption     ::= '--' String ('=' String)?
+ * Argument       ::= String
  *
- * Example: mycommand --option1=value1 arg1 -o2=value2 arg2
+ * Example: mycommand mysubcommand --option1=value1 arg1 -o2=value2 arg2
  * </pre>
  *
  * @author Mahmoud Ben Hassine
  * @since 4.0.0
  */
-// TODO add support for subcommands
 public class DefaultCommandParser implements CommandParser {
 
 	@Override
@@ -51,6 +51,23 @@ public class DefaultCommandParser implements CommandParser {
 		}
 
 		List<String> remainingWords = words.subList(1, words.size());
+
+		// parse sub commands: if no options, then need to use -- to separate sub commands
+		// from arguments (POSIX style)
+		int subCommandCount = 0;
+		for (String word : remainingWords) {
+			if (!isOption(word) && !isArgumentSeparator(word)) {
+				subCommandCount++;
+				parsedInputBuilder.addSubCommand(word);
+			}
+			else {
+				break;
+			}
+		}
+		if (subCommandCount > 0) {
+			remainingWords = remainingWords.subList(subCommandCount, remainingWords.size());
+		}
+
 		// parse options
 		List<String> options = remainingWords.stream().filter(this::isOption).toList();
 		for (String option : options) {
@@ -66,8 +83,13 @@ public class DefaultCommandParser implements CommandParser {
 		return parsedInputBuilder.build();
 	}
 
+	// Check if the word is the argument separator, ie empty "--" (POSIX style)
+	private boolean isArgumentSeparator(String word) {
+		return word.equals("--");
+	}
+
 	private boolean isOption(String word) {
-		return word.startsWith("-") || word.startsWith("--");
+		return word.startsWith("-") || (word.startsWith("--") && !isArgumentSeparator(word));
 	}
 
 	private CommandOption parseOption(String word) {

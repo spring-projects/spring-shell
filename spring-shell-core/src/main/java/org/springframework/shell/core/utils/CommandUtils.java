@@ -42,13 +42,14 @@ public class CommandUtils {
 	}
 
 	/**
-	 * Get a comma-separated string of available command names from the command registry.
+	 * Get a formatted string of available commands from the command registry.
 	 * @param commandRegistry the command registry
-	 * @return a string of available command names
+	 * @return a string of available commands with their descriptions
 	 */
-	public static String getAvailableCommands(CommandRegistry commandRegistry) {
+	public static String formatAvailableCommands(CommandRegistry commandRegistry) {
 		StringBuilder stringBuilder = new StringBuilder("Available commands: ");
 		stringBuilder.append(System.lineSeparator());
+		// TODO list commands by their groups
 		for (Command command : commandRegistry.getCommands()) {
 			stringBuilder.append("\t")
 				.append(command.getName())
@@ -57,6 +58,30 @@ public class CommandUtils {
 				.append(System.lineSeparator());
 		}
 		return stringBuilder.toString();
+	}
+
+	/**
+	 * Get a list of available commands from the command registry.
+	 * @param commandRegistry the command registry
+	 * @return a list of available commands
+	 */
+	public static List<String> getAvailableCommands(CommandRegistry commandRegistry) {
+		return commandRegistry.getCommands().stream().map(Command::getName).toList();
+	}
+
+	/**
+	 * Get a list of available sub-commands for a given command name from the command
+	 * registry.
+	 * @param commandName the name of the command
+	 * @param commandRegistry the command registry
+	 * @return a list of available sub-commands
+	 */
+	public static List<String> getAvailableSubCommands(String commandName, CommandRegistry commandRegistry) {
+		return commandRegistry.getCommands()
+			.stream()
+			.filter(command -> command.getName().startsWith(commandName + " "))
+			.map(command -> command.getName().substring(commandName.length()).trim())
+			.toList();
 	}
 
 }
