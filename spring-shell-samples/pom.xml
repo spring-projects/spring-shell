@@ -17,8 +17,6 @@
 		<module>spring-shell-sample-hello-world</module>
 		<module>spring-shell-sample-petclinic</module>
 <!--		<module>spring-shell-sample-hello-world-spring-boot</module>-->
-<!--		<module>spring-shell-sample-catalog</module>-->
-<!--		<module>spring-shell-sample-commands</module>-->
 	</modules>
 
 	<build>
