@@ -17,6 +17,9 @@ package org.springframework.shell.core.command;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+
+import org.springframework.shell.core.commands.AbstractCommand;
 
 /**
  * @author Eric Bottard
@@ -73,14 +76,70 @@ public interface Command {
 	 */
 	ExitStatus execute(CommandContext commandContext) throws Exception;
 
+	/**
+	 * Creates and returns a new instance of a {@code Builder} for defining and
+	 * constructing commands.
+	 * <p>
+	 * The builder allows customization of command properties such as name, description,
+	 * group, help text, aliases, and execution logic.
+	 * @return a new {@code Builder} instance for configuring and creating commands
+	 */
+	static Builder builder() {
+		return new DefaultCommandBuilder();
+	}
+
+	/**
+	 * Builder for creating command.
+	 */
 	interface Builder {
-        Builder name(String name);
-        Builder description(String description);
-        Builder help(String help);
-        Builder group(String group);
-        Builder options(List<CommandOption> options);
-        Builder aliases(List<CommandAlias> aliases);
-        Builder action(Command action);
-        Command build();
-    }
+
+		/**
+		 * Set the name of the command.
+		 * @return this builder
+		 */
+		Builder name(String name);
+
+		/**
+		 * Set the description of the command.
+		 * @return this builder
+		 */
+		Builder description(String description);
+
+		/**
+		 * Set the help of the command.
+		 * @return this builder
+		 */
+		Builder help(String help);
+
+		/**
+		 * Set the group of the command.
+		 * @return this builder
+		 */
+		Builder group(String group);
+
+		/**
+		 * Set the aliases of the command.
+		 * @return this builder
+		 */
+		Builder aliases(String... aliases);
+
+		/**
+		 * Set the aliases of the command.
+		 * @return this builder
+		 */
+		Builder aliases(List<String> aliases);
+
+		/**
+		 * Set command execution logic.
+		 * @return this builder
+		 */
+		Builder execute(Consumer<CommandContext> commandExecutor);
+
+		/**
+		 * Build the {@link AbstractCommand}.
+		 */
+		AbstractCommand build();
+
+	}
+
 }
