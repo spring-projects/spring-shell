@@ -3,13 +3,20 @@ package org.springframework.shell.samples.helloworld;
 import java.util.List;
 
 import org.jline.terminal.Terminal;
+import org.jline.utils.AttributedStringBuilder;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.annotation.*;
+import org.springframework.shell.core.command.annotation.Argument;
+import org.springframework.shell.core.command.annotation.Arguments;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.EnableCommand;
+import org.springframework.shell.core.command.annotation.Option;
+import org.springframework.shell.core.commands.AbstractCommand;
+import static org.jline.utils.AttributedStyle.*;
 
 @EnableCommand(SpringShellApplication.class)
 public class SpringShellApplication {
@@ -41,6 +48,26 @@ public class SpringShellApplication {
 	public void sayYo(CommandContext commandContext) {
 		Terminal terminal = commandContext.terminal();
 		terminal.writer().println("Yo there! what's up?");
+	}
+
+	@Bean
+	public AbstractCommand sayGoodMorning() {
+		return org.springframework.shell.core.command.Command.builder()
+			.name("good-morning")
+			.description("Say good morning")
+			.aliases("greetings")
+			.help("A command that greets the user with 'Good morning!'")
+			.execute(commandContext -> {
+				String ansiString = new AttributedStringBuilder().append("Good morning ")
+					.append("Sir", BOLD.foreground(GREEN))
+					.append("!")
+					.toAnsi();
+
+				Terminal terminal = commandContext.terminal();
+				terminal.writer().println(ansiString);
+				terminal.flush();
+			})
+			.build();
 	}
 
 	@Bean

@@ -97,10 +97,10 @@ public abstract class AbstractCommand implements Command {
 		return doExecute(commandContext);
 	}
 
+	public abstract ExitStatus doExecute(CommandContext commandContext) throws Exception;
+
 	private static boolean isHelp(CommandOption option) {
 		return option.longName().equalsIgnoreCase("help") || option.shortName() == 'h';
 	}
-
-	public abstract ExitStatus doExecute(CommandContext commandContext) throws Exception;
 
 }

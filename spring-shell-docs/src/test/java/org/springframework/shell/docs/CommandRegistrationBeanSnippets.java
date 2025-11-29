@@ -17,7 +17,8 @@ package org.springframework.shell.docs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.boot.CommandRegistrationCustomizer;
-import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.BuilderSupplier;
+import org.springframework.shell.core.command.Command;
 
 public class CommandRegistrationBeanSnippets {
 
@@ -25,8 +26,8 @@ public class CommandRegistrationBeanSnippets {
 
 		// tag::plain[]
 		@Bean
-		CommandRegistration commandRegistration() {
-			return CommandRegistration.builder().command("mycommand").build();
+		Command commandRegistration() {
+			return Command.builder().command("mycommand").build();
 		}
 		// end::plain[]
 
@@ -36,7 +37,7 @@ public class CommandRegistrationBeanSnippets {
 
 		// tag::fromsupplier[]
 		@Bean
-		CommandRegistration commandRegistration(CommandRegistration.BuilderSupplier builder) {
+		Command commandRegistration(BuilderSupplier builder) {
 			return builder.get().command("mycommand").build();
 		}
 		// end::fromsupplier[]
