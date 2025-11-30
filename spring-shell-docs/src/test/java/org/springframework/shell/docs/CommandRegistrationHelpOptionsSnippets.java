@@ -16,7 +16,7 @@
 package org.springframework.shell.docs;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
 
 class CommandRegistrationHelpOptionsSnippets {
 
@@ -24,13 +24,15 @@ class CommandRegistrationHelpOptionsSnippets {
 
 		// tag::defaults[]
 		@Bean
-		Command commandRegistration() {
-			return Command.builder()
+		CommandRegistration commandRegistration() {
+			return CommandRegistration.builder()
 				.command("mycommand")
-				.withHelpOptions(helpOptionsSpec -> helpOptionsSpec.enabled(true)
-					.longNames("help")
-					.shortNames('h')
-					.command("help"))
+				.withHelpOptions()
+				.enabled(true)
+				.longNames("help")
+				.shortNames('h')
+				.command("help")
+				.and()
 				.build();
 		}
 		// end::defaults[]

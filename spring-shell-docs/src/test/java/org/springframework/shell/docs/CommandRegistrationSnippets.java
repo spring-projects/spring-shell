@@ -15,19 +15,19 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
 
 public class CommandRegistrationSnippets {
 
 	void dump1() {
 		// tag::snippet1[]
-		Command.builder().withOption(optionSpec -> optionSpec.longNames("myopt")).build();
+		CommandRegistration.builder().withOption().longNames("myopt").and().build();
 		// end::snippet1[]
 	}
 
 	void dump2() {
 		// tag::snippet2[]
-		Command.builder().withOption(optionSpec -> optionSpec.shortNames('s')).build();
+		CommandRegistration.builder().withOption().shortNames('s').and().build();
 		// end::snippet2[]
 	}
 

@@ -15,18 +15,23 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
 
 class CommandRegistrationAliasSnippets {
 
 	// tag::builder[]
-	Command commandRegistration() {
-		return Command.builder()
+	CommandRegistration commandRegistration() {
+		return CommandRegistration.builder()
 			.command("mycommand")
 			// define alias as myalias
-			.withAlias(aliasSpec -> aliasSpec.command("myalias"))
+			.withAlias()
+			.command("myalias")
+			.and()
 			// define alias as myalias1 and myalias2
-			.withAlias(aliasSpec -> aliasSpec.command("myalias1", "myalias2"))
+			.withAlias()
+			.command("myalias1", "myalias2")
+			.and()
 			.build();
 	}
 	// end::builder[]
@@ -34,10 +39,10 @@ class CommandRegistrationAliasSnippets {
 	class Dump1 {
 
 		// tag::command1[]
-		@org.springframework.shell.core.command.annotation.Command
+		@Command
 		class MyCommands {
 
-			@org.springframework.shell.core.command.annotation.Command(command = "mycommand", alias = "myalias")
+			@Command(command = "mycommand", alias = "myalias")
 			void myCommand() {
 			}
 
@@ -49,11 +54,10 @@ class CommandRegistrationAliasSnippets {
 	class Dump2 {
 
 		// tag::command2[]
-		@org.springframework.shell.core.command.annotation.Command
+		@Command
 		class MyCommands {
 
-			@org.springframework.shell.core.command.annotation.Command(command = "mycommand",
-					alias = { "myalias1", "myalias2" })
+			@Command(command = "mycommand", alias = { "myalias1", "myalias2" })
 			void myCommand() {
 			}
 
@@ -65,10 +69,10 @@ class CommandRegistrationAliasSnippets {
 	class Dump3 {
 
 		// tag::command3[]
-		@org.springframework.shell.core.command.annotation.Command(alias = "myalias")
+		@Command(alias = "myalias")
 		class MyCommands {
 
-			@org.springframework.shell.core.command.annotation.Command(command = "mycommand")
+			@Command(command = "mycommand")
 			void myCommand() {
 			}
 
@@ -80,10 +84,10 @@ class CommandRegistrationAliasSnippets {
 	class Dump4 {
 
 		// tag::command4[]
-		@org.springframework.shell.core.command.annotation.Command(alias = "myalias1")
+		@Command(alias = "myalias1")
 		class MyCommands {
 
-			@org.springframework.shell.core.command.annotation.Command(command = "mycommand", alias = "myalias2")
+			@Command(command = "mycommand", alias = "myalias2")
 			void myCommand() {
 			}
 
@@ -95,14 +99,14 @@ class CommandRegistrationAliasSnippets {
 	class Dump5 {
 
 		// tag::command5[]
-		@org.springframework.shell.core.command.annotation.Command(command = "mycommand", alias = "myalias")
+		@Command(command = "mycommand", alias = "myalias")
 		class MyCommands {
 
-			@org.springframework.shell.core.command.annotation.Command(command = "", alias = "")
+			@Command(command = "", alias = "")
 			void myMainCommand() {
 			}
 
-			@org.springframework.shell.core.command.annotation.Command(command = "mysubcommand", alias = "mysubalias")
+			@Command(command = "mysubcommand", alias = "mysubalias")
 			void mySubCommand() {
 			}
 

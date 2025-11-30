@@ -21,7 +21,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.shell.core.completion.CompletionContext;
 import org.springframework.shell.core.completion.CompletionProposal;
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.annotation.OptionValues;
 import org.springframework.shell.core.completion.CompletionProvider;
@@ -31,9 +32,9 @@ public class CompletionSnippets {
 
 	// tag::builder-1[]
 	void dump1() {
-		Command.builder().withOption(optionSpec -> optionSpec.longNames("arg1").completion(ctx -> {
+		CommandRegistration.builder().withOption().longNames("arg1").completion(ctx -> {
 			return Arrays.asList("val1", "val2").stream().map(CompletionProposal::new).collect(Collectors.toList());
-		})).build();
+		}).and().build();
 	}
 	// end::builder-1[]
 
@@ -62,7 +63,7 @@ public class CompletionSnippets {
 	static class Dump1 {
 
 		// tag::anno-method[]
-		@org.springframework.shell.core.command.annotation.Command(command = "complete", description = "complete")
+		@Command(command = "complete", description = "complete")
 		public String complete(@Option @OptionValues(provider = "myCompletionProvider") String arg1) {
 			return "You said " + arg1;
 		}

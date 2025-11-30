@@ -55,7 +55,7 @@ public class SpringShellApplication {
 		return org.springframework.shell.core.command.Command.builder()
 			.name("good-morning")
 			.description("Say good morning")
-			.aliases("greetings")
+			.group("greetings")
 			.help("A command that greets the user with 'Good morning!'")
 			.execute(commandContext -> {
 				String ansiString = new AttributedStringBuilder().append("Good morning ")

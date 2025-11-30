@@ -15,7 +15,7 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
 
 public class CommandTargetSnippets {
 
@@ -32,29 +32,33 @@ public class CommandTargetSnippets {
 	void dump1() {
 		// tag::snippet12[]
 		CommandPojo pojo = new CommandPojo();
-		Command.builder()
+		CommandRegistration.builder()
 			.command("command")
-			.withTarget(targetSpec -> targetSpec.method(pojo, "command"))
-			.withOption(optionSpec -> optionSpec.longNames("arg"))
+			.withTarget()
+			.method(pojo, "command")
+			.and()
+			.withOption()
+			.longNames("arg")
+			.and()
 			.build();
 		// end::snippet12[]
 	}
 
 	void dump2() {
 		// tag::snippet2[]
-		Command.builder().command("command").withTarget(targetSpec -> targetSpec.function(ctx -> {
+		CommandRegistration.builder().command("command").withTarget().function(ctx -> {
 			String arg = ctx.getOptionValue("arg");
 			return String.format("hi, arg value is '%s'", arg);
-		})).withOption(optionSpec -> optionSpec.longNames("arg")).build();
+		}).and().withOption().longNames("arg").and().build();
 		// end::snippet2[]
 	}
 
 	void dump3() {
 		// tag::snippet3[]
-		Command.builder().command("command").withTarget(targetSpec -> targetSpec.consumer(ctx -> {
+		CommandRegistration.builder().command("command").withTarget().consumer(ctx -> {
 			String arg = ctx.getOptionValue("arg");
 			ctx.getTerminal().writer().println(String.format("hi, arg value is '%s'", arg));
-		})).withOption(optionSpec -> optionSpec.longNames("arg")).build();
+		}).and().withOption().longNames("arg").and().build();
 		// end::snippet3[]
 	}
 

@@ -15,10 +15,10 @@
  */
 package org.springframework.shell.boot;
 
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
 
 /**
- * Callback interface that can be used to customize a {@link Command.Builder}.
+ * Callback interface that can be used to customize a {@link CommandRegistration.Builder}.
  *
  * @author Janne Valkealahti
  */
@@ -26,9 +26,9 @@ import org.springframework.shell.core.command.Command;
 public interface CommandRegistrationCustomizer {
 
 	/**
-	 * Callback to customize a {@link Command.Builder} instance.
+	 * Callback to customize a {@link CommandRegistration.Builder} instance.
 	 * @param commandRegistrationBuilder the command registration builder to customize
 	 */
-	void customize(Command.Builder commandRegistrationBuilder);
+	void customize(CommandRegistration.Builder commandRegistrationBuilder);
 
 }

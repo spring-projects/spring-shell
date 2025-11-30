@@ -18,9 +18,9 @@ package org.springframework.shell.docs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.CommandRegistryCustomizer;
+import org.springframework.shell.core.command.CommandRegistration;
 import org.springframework.shell.core.command.CommandResolver;
 
 public class CommandRegistrySnippets {
@@ -29,7 +29,7 @@ public class CommandRegistrySnippets {
 
 	void dump1() {
 		// tag::snippet1[]
-		Command registration = Command.builder().build();
+		CommandRegistration registration = CommandRegistration.builder().build();
 		catalog.register(registration);
 		// end::snippet1[]
 	}
@@ -37,15 +37,15 @@ public class CommandRegistrySnippets {
 	// tag::snippet2[]
 	static class CustomCommandResolver implements CommandResolver {
 
-		List<Command> registrations = new ArrayList<>();
+		List<CommandRegistration> registrations = new ArrayList<>();
 
 		CustomCommandResolver() {
-			Command resolved = Command.builder().command("resolve command").build();
+			CommandRegistration resolved = CommandRegistration.builder().command("resolve command").build();
 			registrations.add(resolved);
 		}
 
 		@Override
-		public List<Command> resolve() {
+		public List<CommandRegistration> resolve() {
 			return registrations;
 		}
 
@@ -57,7 +57,7 @@ public class CommandRegistrySnippets {
 
 		@Override
 		public void customize(CommandRegistry commandRegistry) {
-			Command registration = Command.builder().command("resolve command").build();
+			CommandRegistration registration = CommandRegistration.builder().command("resolve command").build();
 			commandRegistry.register(registration);
 		}
 

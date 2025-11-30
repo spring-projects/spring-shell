@@ -18,10 +18,10 @@ package org.springframework.shell.docs;
 import java.util.Calendar;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.command.BuilderSupplier;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
+import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.CommandAvailability;
 
 import static java.util.Calendar.DAY_OF_WEEK;
@@ -32,18 +32,18 @@ class CommandAvailabilitySnippets {
 	class Dump1 {
 
 		// tag::availability-method-in-shellcomponent[]
-		@org.springframework.shell.core.command.annotation.Command
+		@Command
 		public class MyCommands {
 
 			private boolean connected;
 
-			@org.springframework.shell.core.command.annotation.Command(description = "Connect to the server.")
+			@Command(description = "Connect to the server.")
 			public void connect(String user, String password) {
 				// do something
 				connected = true;
 			}
 
-			@org.springframework.shell.core.command.annotation.Command(description = "Download the nuclear codes.")
+			@Command(description = "Download the nuclear codes.")
 			public void download() {
 				// do something
 			}
@@ -62,7 +62,7 @@ class CommandAvailabilitySnippets {
 		boolean connected;
 
 		// tag::availability-method-name-in-shellcomponent[]
-		@org.springframework.shell.core.command.annotation.Command(description = "Download the nuclear codes.")
+		@Command(description = "Download the nuclear codes.")
 		// @CommandAvailability("availabilityCheck") // <1>
 		public void download() {
 		}
@@ -79,11 +79,11 @@ class CommandAvailabilitySnippets {
 		boolean connected;
 
 		// tag::availability-method-name-multi-in-shellcomponent[]
-		@org.springframework.shell.core.command.annotation.Command(description = "Download the nuclear codes.")
+		@Command(description = "Download the nuclear codes.")
 		public void download() {
 		}
 
-		@org.springframework.shell.core.command.annotation.Command(description = "Disconnect from the server.")
+		@Command(description = "Disconnect from the server.")
 		public void disconnect() {
 		}
 
@@ -97,7 +97,7 @@ class CommandAvailabilitySnippets {
 	}
 
 	// tag::availability-method-default-value-in-shellcomponent[]
-	@org.springframework.shell.core.command.annotation.Command
+	@Command
 	public class Toggles {
 
 		// @CommandAvailability
@@ -106,11 +106,11 @@ class CommandAvailabilitySnippets {
 					: Availability.unavailable("today is not Sunday");
 		}
 
-		@org.springframework.shell.core.command.annotation.Command
+		@Command
 		public void foo() {
 		}
 
-		@org.springframework.shell.core.command.annotation.Command
+		@Command
 		public void bar() {
 		}
 
@@ -120,17 +120,17 @@ class CommandAvailabilitySnippets {
 	class Dump4 {
 
 		// tag::availability-method-annotation[]
-		@org.springframework.shell.core.command.annotation.Command
+		@Command
 		class MyCommands {
 
 			private boolean connected;
 
-			@org.springframework.shell.core.command.annotation.Command(command = "connect")
+			@Command(command = "connect")
 			public void connect(String user, String password) {
 				connected = true;
 			}
 
-			@org.springframework.shell.core.command.annotation.Command(command = "download")
+			@Command(command = "download")
 			@CommandAvailability(provider = "downloadAvailability")
 			public void download() {
 				// do something
@@ -153,24 +153,30 @@ class CommandAvailabilitySnippets {
 		private boolean connected;
 
 		@Bean
-		public Command connect(BuilderSupplier builder) {
+		public CommandRegistration connect(CommandRegistration.BuilderSupplier builder) {
 			return builder.get()
 				.command("connect")
-				.withOption(optionSpec -> optionSpec.longNames("connected").required().type(boolean.class))
-				.withTarget(targetSpec -> targetSpec.consumer(ctx -> {
+				.withOption()
+				.longNames("connected")
+				.required()
+				.type(boolean.class)
+				.and()
+				.withTarget()
+				.consumer(ctx -> {
 					boolean connected = ctx.getOptionValue("connected");
 					this.connected = connected;
-				}))
+				})
+				.and()
 				.build();
 		}
 
 		@Bean
-		public Command download(BuilderSupplier builder) {
+		public CommandRegistration download(CommandRegistration.BuilderSupplier builder) {
 			return builder.get().command("download").availability(() -> {
 				return connected ? Availability.available() : Availability.unavailable("you are not connected");
-			}).withTarget(targetSpec -> targetSpec.consumer(ctx -> {
+			}).withTarget().consumer(ctx -> {
 				// do something
-			})).build();
+			}).and().build();
 		}
 		// end::availability-method-programmatic[]
 

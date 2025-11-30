@@ -15,13 +15,13 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistration;
 
 class CommandRegistrationHiddenSnippets {
 
 	// tag::snippet1[]
-	Command commandRegistration() {
-		return Command.builder()
+	CommandRegistration commandRegistration() {
+		return CommandRegistration.builder()
 			.command("mycommand")
 			// define as hidden
 			.hidden()
