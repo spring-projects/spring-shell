@@ -15,7 +15,6 @@ import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.EnableCommand;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.core.commands.AbstractCommand;
 import static org.jline.utils.AttributedStyle.*;
 
 @EnableCommand(SpringShellApplication.class)
@@ -51,7 +50,7 @@ public class SpringShellApplication {
 	}
 
 	@Bean
-	public AbstractCommand sayGoodMorning() {
+	public org.springframework.shell.core.command.Command sayGoodMorning() {
 		return org.springframework.shell.core.command.Command.builder()
 			.name("good-morning")
 			.description("Say good morning")
@@ -66,8 +65,17 @@ public class SpringShellApplication {
 				Terminal terminal = commandContext.terminal();
 				terminal.writer().println(ansiString);
 				terminal.flush();
-			})
-			.build();
+			});
+	}
+
+	@Bean
+	public org.springframework.shell.core.command.Command sayGoodDay() {
+		return org.springframework.shell.core.command.Command.builder()
+			.name("good-day")
+			.description("Say good day")
+			.group("greetings")
+			.help("A command that greets the user with 'Good day!'")
+			.execute(commandContext -> "Good day!");
 	}
 
 	@Bean

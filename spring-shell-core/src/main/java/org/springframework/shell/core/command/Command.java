@@ -15,11 +15,18 @@
  */
 package org.springframework.shell.core.command;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
+
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.commands.adapter.ConsumerCommandAdapter;
+import org.springframework.shell.core.commands.adapter.FunctionCommandAdapter;
+import org.springframework.util.Assert;
 
 /**
  * @author Eric Bottard
@@ -85,60 +92,78 @@ public interface Command {
 	 * @return a new {@code Builder} instance for configuring and creating commands
 	 */
 	static Builder builder() {
-		return new DefaultCommandBuilder();
+		return new Builder();
 	}
 
 	/**
 	 * Builder for creating command.
 	 */
-	interface Builder {
+	final class Builder {
 
-		/**
-		 * Set the name of the command.
-		 * @return this builder
-		 */
-		Builder name(String name);
+		private @Nullable String name;
 
-		/**
-		 * Set the description of the command.
-		 * @return this builder
-		 */
-		Builder description(String description);
+		private @Nullable String description;
 
-		/**
-		 * Set the help of the command.
-		 * @return this builder
-		 */
-		Builder help(String help);
+		private String group = "";
 
-		/**
-		 * Set the group of the command.
-		 * @return this builder
-		 */
-		Builder group(String group);
+		private String help = "";
 
-		/**
-		 * Set the aliases of the command.
-		 * @return this builder
-		 */
-		Builder aliases(String... aliases);
+		private @Nullable List<String> aliases;
 
-		/**
-		 * Set the aliases of the command.
-		 * @return this builder
-		 */
-		Builder aliases(List<String> aliases);
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
 
-		/**
-		 * Set command execution logic.
-		 * @return this builder
-		 */
-		Builder execute(Consumer<CommandContext> commandExecutor);
+		public Builder description(String description) {
+			this.description = description;
+			return this;
+		}
 
-		/**
-		 * Build the {@link AbstractCommand}.
-		 */
-		AbstractCommand build();
+		public Builder help(String help) {
+			this.help = help;
+			return this;
+		}
+
+		public Builder group(String group) {
+			this.group = group;
+			return this;
+		}
+
+		public Builder aliases(String... aliases) {
+			this.aliases = Arrays.asList(aliases);
+			return this;
+		}
+
+		public Command execute(Consumer<CommandContext> commandExecutor) {
+			Assert.hasText(name, "'name' must be specified");
+			Assert.hasText(description, "description");
+
+			ConsumerCommandAdapter command = new ConsumerCommandAdapter(name, description, group, help,
+					commandExecutor);
+
+			initAliases(command);
+
+			return command;
+		}
+
+		public Command execute(Function<CommandContext, String> commandExecutor) {
+			Assert.hasText(name, "'name' must be specified");
+			Assert.hasText(description, "'description' must be specified");
+
+			FunctionCommandAdapter command = new FunctionCommandAdapter(name, description, group, help,
+					commandExecutor);
+
+			initAliases(command);
+
+			return command;
+		}
+
+		private void initAliases(AbstractCommand command) {
+			if (aliases != null) {
+				command.setAliases(aliases);
+			}
+		}
 
 	}
 
