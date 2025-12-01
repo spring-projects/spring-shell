@@ -15,116 +15,78 @@
  */
 package org.springframework.shell.boot;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
 
-import org.springframework.beans.factory.ObjectProvider;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.springframework.aop.support.AopUtils;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.MethodTargetRegistrar;
-import org.springframework.shell.boot.SpringShellProperties.Help;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.MethodIntrospector;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.shell.core.ShellConfigurationException;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.CommandRegistryCustomizer;
-import org.springframework.shell.core.command.CommandRegistration;
-import org.springframework.shell.core.command.CommandRegistration.BuilderSupplier;
-import org.springframework.shell.core.command.CommandRegistration.OptionNameModifier;
-import org.springframework.shell.core.command.support.OptionNameModifierSupport;
-import org.springframework.shell.core.command.CommandResolver;
-import org.springframework.shell.core.context.ShellContext;
+import org.springframework.shell.core.command.annotation.support.CommandFactoryBean;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 
 @AutoConfiguration
-@EnableConfigurationProperties(SpringShellProperties.class)
 public class CommandRegistryAutoConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean(CommandRegistry.class)
-	public CommandRegistry commandRegistry(ObjectProvider<MethodTargetRegistrar> methodTargetRegistrars,
-			ObjectProvider<CommandResolver> commandResolvers,
-			ObjectProvider<CommandRegistryCustomizer> commandRegistryCustomizers, ShellContext shellContext) {
-		List<CommandResolver> resolvers = commandResolvers.orderedStream().collect(Collectors.toList());
-		CommandRegistry registry = CommandRegistry.of(resolvers, shellContext);
-		methodTargetRegistrars.orderedStream().forEach(resolver -> {
-			resolver.register(registry);
-		});
-		commandRegistryCustomizers.orderedStream().forEach(customizer -> {
-			customizer.customize(registry);
-		});
-		return registry;
-	}
-
-	@Bean
-	public CommandRegistryCustomizer defaultCommandRegistryCustomizer(
-			ObjectProvider<CommandRegistration> commandRegistrations) {
-		return registry -> {
-			commandRegistrations.orderedStream().forEach(registration -> {
-				registry.register(registration);
-			});
-		};
-	}
-
-	@Bean
-	public CommandRegistrationCustomizer helpOptionsCommandRegistrationCustomizer(SpringShellProperties properties) {
-		return registration -> {
-			Help help = properties.getHelp();
-			if (help.isEnabled()) {
-				registration.withHelpOptions()
-					.enabled(true)
-					.longNames(help.getLongNames())
-					.shortNames(help.getShortNames())
-					.command(help.getCommand());
-			}
-		};
-	}
-
-	@Bean
-	@ConditionalOnBean(OptionNameModifier.class)
-	public CommandRegistrationCustomizer customOptionNameModifierCommandRegistrationCustomizer(
-			OptionNameModifier modifier) {
-		return builder -> {
-			builder.defaultOptionNameModifier(modifier);
-		};
-	}
-
-	@Bean
-	@ConditionalOnMissingBean(OptionNameModifier.class)
-	@ConditionalOnProperty(prefix = "spring.shell.option.naming", name = "case-type")
-	public CommandRegistrationCustomizer defaultOptionNameModifierCommandRegistrationCustomizer(
-			SpringShellProperties properties) {
-		return builder -> {
-			switch (properties.getOption().getNaming().getCaseType()) {
-				case NOOP:
-					break;
-				case CAMEL:
-					builder.defaultOptionNameModifier(OptionNameModifierSupport.CAMELCASE);
-					break;
-				case SNAKE:
-					builder.defaultOptionNameModifier(OptionNameModifierSupport.SNAKECASE);
-					break;
-				case KEBAB:
-					builder.defaultOptionNameModifier(OptionNameModifierSupport.KEBABCASE);
-					break;
-				case PASCAL:
-					builder.defaultOptionNameModifier(OptionNameModifierSupport.PASCALCASE);
-					break;
-				default:
-					break;
-			}
-		};
-	}
+	private static final Log log = LogFactory.getLog(SpringShellAutoConfiguration.class);
 
 	@Bean
 	@ConditionalOnMissingBean
-	public BuilderSupplier commandRegistrationBuilderSupplier(
-			ObjectProvider<CommandRegistrationCustomizer> customizerProvider) {
-		return () -> {
-			CommandRegistration.Builder builder = CommandRegistration.builder();
-			customizerProvider.orderedStream().forEach((customizer) -> customizer.customize(builder));
-			return builder;
-		};
+	CommandRegistry commandRegistry(ApplicationContext applicationContext) {
+		CommandRegistry commandRegistry = new CommandRegistry();
+		registerProgrammaticCommands(applicationContext, commandRegistry);
+		registerAnnotatedCommands(applicationContext, commandRegistry);
+		return commandRegistry;
+	}
+
+	private static void registerProgrammaticCommands(ApplicationContext applicationContext,
+			CommandRegistry commandRegistry) {
+		Map<String, Command> commandBeans = applicationContext.getBeansOfType(Command.class);
+		commandBeans.values().forEach(commandRegistry::registerCommand);
+	}
+
+	private static void registerAnnotatedCommands(ApplicationContext applicationContext,
+			CommandRegistry commandRegistry) {
+		Map<String, Object> springBootApps = applicationContext.getBeansWithAnnotation(SpringBootApplication.class);
+		Class<?> mainClass = AopUtils.getTargetClass(springBootApps.values().iterator().next());
+		String mainPackage = ClassUtils.getPackageName(mainClass);
+		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
+		Set<BeanDefinition> candidateComponents = scanner.findCandidateComponents(mainPackage);
+		for (BeanDefinition candidateComponent : candidateComponents) {
+			String className = candidateComponent.getBeanClassName();
+			if (className == null) {
+				log.warn(String.format("Skipping candidate component %s with null class name", candidateComponent));
+				continue;
+			}
+			try {
+				Class<?> cls = ClassUtils.forName(className, applicationContext.getClassLoader());
+				ReflectionUtils.MethodFilter filter = method -> AnnotatedElementUtils.hasAnnotation(method,
+						org.springframework.shell.core.command.annotation.Command.class);
+				Set<Method> methods = MethodIntrospector.selectMethods(cls, filter);
+				for (Method method : methods) {
+					CommandFactoryBean factoryBean = new CommandFactoryBean(method);
+					factoryBean.setApplicationContext(applicationContext);
+					commandRegistry.registerCommand(factoryBean.getObject());
+				}
+			}
+			catch (ClassNotFoundException e) {
+				throw new ShellConfigurationException("Unable to configure commands from class " + className, e);
+			}
+		}
 	}
 
 }

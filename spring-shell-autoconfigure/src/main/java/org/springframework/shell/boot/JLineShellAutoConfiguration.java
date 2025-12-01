@@ -19,6 +19,7 @@ package org.springframework.shell.boot;
 import java.io.IOException;
 
 import org.jline.reader.Parser;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.TerminalBuilder.SystemOutput;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.core.jline.ExtendedDefaultParser;
 import org.springframework.shell.core.jline.PromptProvider;
 
@@ -67,6 +69,17 @@ public class JLineShellAutoConfiguration {
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
 		return parser;
+	}
+
+	@Configuration
+	@ConditionalOnMissingBean(org.jline.reader.History.class)
+	public static class JLineHistoryConfiguration {
+
+		@Bean
+		public org.jline.reader.History history() {
+			return new DefaultHistory();
+		}
+
 	}
 
 }

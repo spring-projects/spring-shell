@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.springframework.shell.boot;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Configuration properties for shell.
+ * Configuration properties for Spring Shell.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
 @ConfigurationProperties(prefix = "spring.shell")
 public class SpringShellProperties {
@@ -31,19 +31,11 @@ public class SpringShellProperties {
 
 	private Config config = new Config();
 
-	private Script script = new Script();
-
 	private Interactive interactive = new Interactive();
-
-	private Noninteractive noninteractive = new Noninteractive();
 
 	private Theme theme = new Theme();
 
 	private Command command = new Command();
-
-	private Help help = new Help();
-
-	private Option option = new Option();
 
 	private Context context = new Context();
 
@@ -63,28 +55,12 @@ public class SpringShellProperties {
 		this.history = history;
 	}
 
-	public Script getScript() {
-		return script;
-	}
-
-	public void setScript(Script script) {
-		this.script = script;
-	}
-
 	public void setInteractive(Interactive interactive) {
 		this.interactive = interactive;
 	}
 
 	public Interactive getInteractive() {
 		return interactive;
-	}
-
-	public Noninteractive getNoninteractive() {
-		return noninteractive;
-	}
-
-	public void setNoninteractive(Noninteractive noninteractive) {
-		this.noninteractive = noninteractive;
 	}
 
 	public Theme getTheme() {
@@ -103,49 +79,25 @@ public class SpringShellProperties {
 		this.command = command;
 	}
 
-	public void setHelp(Help help) {
-		this.help = help;
-	}
-
-	public Help getHelp() {
-		return help;
-	}
-
-	public Option getOption() {
-		return option;
-	}
-
-	public void setOption(Option option) {
-		this.option = option;
-	}
-
-	public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
 	public static class Config {
 
-		private @Nullable String env;
+		private String env;
 
-		private @Nullable String location;
+		private String location;
 
-		public @Nullable String getEnv() {
+		public String getEnv() {
 			return env;
 		}
 
-		public void setEnv(@Nullable String env) {
+		public void setEnv(String env) {
 			this.env = env;
 		}
 
-		public @Nullable String getLocation() {
+		public String getLocation() {
 			return location;
 		}
 
-		public void setLocation(@Nullable String location) {
+		public void setLocation(String location) {
 			this.location = location;
 		}
 
@@ -153,15 +105,15 @@ public class SpringShellProperties {
 
 	public static class History {
 
-		private @Nullable String name;
+		private String name;
 
 		private boolean enabled = true;
 
-		public @Nullable String getName() {
+		public String getName() {
 			return name;
 		}
 
-		public void setName(@Nullable String name) {
+		public void setName(String name) {
 			this.name = name;
 		}
 
@@ -175,67 +127,29 @@ public class SpringShellProperties {
 
 	}
 
-	public static class Script {
-
-		private boolean enabled = false;
-
-		public boolean isEnabled() {
-			return enabled;
-		}
-
-		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-
-	}
-
 	public static class Interactive {
-
-		private boolean enabled = false;
-
-		public boolean isEnabled() {
-			return enabled;
-		}
-
-		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-
-	}
-
-	public static class Noninteractive {
 
 		private boolean enabled = true;
 
-		private @Nullable String primaryCommand;
-
 		public boolean isEnabled() {
 			return enabled;
 		}
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
-		}
-
-		public @Nullable String getPrimaryCommand() {
-			return primaryCommand;
-		}
-
-		public void setPrimaryCommand(@Nullable String primaryCommand) {
-			this.primaryCommand = primaryCommand;
 		}
 
 	}
 
 	public static class Theme {
 
-		private @Nullable String name;
+		private String name;
 
-		public @Nullable String getName() {
+		public String getName() {
 			return name;
 		}
 
-		public void setName(@Nullable String name) {
+		public void setName(String name) {
 			this.name = name;
 		}
 
@@ -305,20 +219,6 @@ public class SpringShellProperties {
 
 	}
 
-	public static class QuitCommand {
-
-		private boolean enabled = true;
-
-		public boolean isEnabled() {
-			return enabled;
-		}
-
-		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-
-	}
-
 	public static class StacktraceCommand {
 
 		private boolean enabled = true;
@@ -365,7 +265,7 @@ public class SpringShellProperties {
 
 		private boolean enabled = true;
 
-		private @Nullable String rootCommand;
+		private String rootCommand;
 
 		public boolean isEnabled() {
 			return enabled;
@@ -375,11 +275,11 @@ public class SpringShellProperties {
 			this.enabled = enabled;
 		}
 
-		public @Nullable String getRootCommand() {
+		public String getRootCommand() {
 			return rootCommand;
 		}
 
-		public void setRootCommand(@Nullable String rootCommand) {
+		public void setRootCommand(String rootCommand) {
 			this.rootCommand = rootCommand;
 		}
 
@@ -390,8 +290,6 @@ public class SpringShellProperties {
 		private HelpCommand help = new HelpCommand();
 
 		private ClearCommand clear = new ClearCommand();
-
-		private QuitCommand quit = new QuitCommand();
 
 		private StacktraceCommand stacktrace = new StacktraceCommand();
 
@@ -417,14 +315,6 @@ public class SpringShellProperties {
 
 		public void setClear(ClearCommand clear) {
 			this.clear = clear;
-		}
-
-		public QuitCommand getQuit() {
-			return quit;
-		}
-
-		public void setQuit(QuitCommand quit) {
-			this.quit = quit;
 		}
 
 		public StacktraceCommand getStacktrace() {
@@ -583,90 +473,6 @@ public class SpringShellProperties {
 
 	}
 
-	public static class Help {
-
-		/**
-		 * Command to call when presense of help option is detected.
-		 */
-		private String command = "help";
-
-		/**
-		 * Long style help option, without a prefix "--".
-		 */
-		private String[] longNames = new String[] { "help" };
-
-		/**
-		 * Short style help option, without a prefix "-".
-		 */
-		private Character[] shortNames = new Character[] { 'h' };
-
-		/**
-		 * Whether to enable help options for commands.
-		 */
-		private boolean enabled = true;
-
-		public String getCommand() {
-			return command;
-		}
-
-		public void setCommand(String command) {
-			this.command = command;
-		}
-
-		public String[] getLongNames() {
-			return longNames;
-		}
-
-		public void setLongNames(String[] longNames) {
-			this.longNames = longNames;
-		}
-
-		public Character[] getShortNames() {
-			return shortNames;
-		}
-
-		public void setShortNames(Character[] shortNames) {
-			this.shortNames = shortNames;
-		}
-
-		public boolean isEnabled() {
-			return enabled;
-		}
-
-		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-
-	}
-
-	public static class Option {
-
-		private OptionNaming naming = new OptionNaming();
-
-		public OptionNaming getNaming() {
-			return naming;
-		}
-
-		public void setNaming(OptionNaming naming) {
-			this.naming = naming;
-		}
-
-	}
-
-	public static class OptionNaming {
-
-		private OptionNamingCase caseType = OptionNamingCase.NOOP;
-
-		public OptionNamingCase getCaseType() {
-			return caseType;
-		}
-
-		public void setCaseType(OptionNamingCase caseType) {
-			this.caseType = caseType;
-		}
-
-	}
-
 	public static class Context {
 
 		private boolean close = false;
@@ -678,12 +484,6 @@ public class SpringShellProperties {
 		public void setClose(boolean close) {
 			this.close = close;
 		}
-
-	}
-
-	public enum OptionNamingCase {
-
-		NOOP, CAMEL, SNAKE, KEBAB, PASCAL
 
 	}
 

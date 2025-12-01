@@ -16,32 +16,11 @@
 
 package org.springframework.shell.boot;
 
-import org.jline.reader.Parser;
-
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.shell.boot.SpringShellProperties.HelpCommand.GroupingMode;
-import org.springframework.shell.boot.SpringShellProperties.VersionCommand;
-import org.springframework.shell.boot.condition.OnCompletionCommandCondition;
-import org.springframework.shell.core.result.ThrowableResultHandler;
-import org.springframework.shell.core.commands.Clear;
-import org.springframework.shell.core.commands.Completion;
-import org.springframework.shell.core.commands.Help;
-import org.springframework.shell.core.commands.History;
-import org.springframework.shell.core.commands.Quit;
-import org.springframework.shell.core.commands.Script;
-import org.springframework.shell.core.commands.Stacktrace;
-import org.springframework.shell.core.commands.Version;
-import org.springframework.shell.core.tui.style.TemplateExecutor;
-import org.springframework.util.Assert;
+import org.springframework.shell.core.command.Command;
 
 /**
  * Creates beans for standard commands.
@@ -51,87 +30,25 @@ import org.springframework.util.Assert;
  * @author Piotr Olaszewski
  */
 @AutoConfiguration
-@ConditionalOnClass({ Help.Command.class })
 @EnableConfigurationProperties(SpringShellProperties.class)
 public class StandardCommandsAutoConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean(Help.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.help", value = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public Help help(SpringShellProperties properties, ObjectProvider<TemplateExecutor> templateExecutor) {
-		TemplateExecutor executor = templateExecutor.getIfAvailable();
-		Assert.notNull(executor, "'executor' must not be null");
-		Help help = new Help(executor);
-		if (properties.getCommand().getHelp().getGroupingMode() == GroupingMode.FLAT) {
-			help.setShowGroups(false);
-		}
-		help.setCommandTemplate(properties.getCommand().getHelp().getCommandTemplate());
-		help.setCommandsTemplate(properties.getCommand().getHelp().getCommandsTemplate());
-		return help;
+	@ConditionalOnProperty(value = "spring.shell.command.help.enabled", havingValue = "true", matchIfMissing = true)
+	public Command helpCommand() {
+		return new org.springframework.shell.core.commands.Help();
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(Clear.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.clear", value = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public Clear clear() {
-		return new Clear();
+	@ConditionalOnProperty(value = "spring.shell.command.clear.enabled", havingValue = "true", matchIfMissing = true)
+	public Command clearCommand() {
+		return new org.springframework.shell.core.commands.Clear();
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(Quit.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.quit", value = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public Quit quit() {
-		return new Quit();
-	}
-
-	@Bean
-	@ConditionalOnMissingBean(Stacktrace.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.stacktrace", value = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public Stacktrace stacktrace(ObjectProvider<ThrowableResultHandler> throwableResultHandler) {
-		return new Stacktrace(throwableResultHandler);
-	}
-
-	@Bean
-	@ConditionalOnMissingBean(Script.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.script", value = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public Script script(Parser parser) {
-		return new Script(parser);
-	}
-
-	@Bean
-	@ConditionalOnMissingBean(History.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.history", value = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public History historyCommand(org.jline.reader.History jLineHistory) {
-		return new History(jLineHistory);
-	}
-
-	@Bean
-	@ConditionalOnMissingBean(Completion.Command.class)
-	@Conditional(OnCompletionCommandCondition.class)
-	public Completion completion(SpringShellProperties properties) {
-		String rootCommand = properties.getCommand().getCompletion().getRootCommand();
-		Assert.hasText(rootCommand, "'rootCommand' must be specified");
-		return new Completion(rootCommand);
-	}
-
-	@Bean
-	@ConditionalOnMissingBean(Version.Command.class)
-	@ConditionalOnProperty(prefix = "spring.shell.command.version", value = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public Version version(SpringShellProperties properties, ObjectProvider<BuildProperties> buildProperties,
-			ObjectProvider<GitProperties> gitProperties, ObjectProvider<TemplateExecutor> templateExecutor) {
-		TemplateExecutor executor = templateExecutor.getIfAvailable();
-		Assert.notNull(executor, "'executor' must not be null");
-		Version version = new Version(executor);
-		VersionCommand versionProperties = properties.getCommand().getVersion();
-		version.setTemplate(versionProperties.getTemplate());
-		return version;
+	@ConditionalOnProperty(value = "spring.shell.command.version.enabled", havingValue = "true", matchIfMissing = true)
+	public Command versionCommand() {
+		return new org.springframework.shell.core.commands.Version();
 	}
 
 }

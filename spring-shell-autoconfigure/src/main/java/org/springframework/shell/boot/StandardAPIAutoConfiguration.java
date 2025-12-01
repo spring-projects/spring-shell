@@ -21,7 +21,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.CommandValueProvider;
-import org.springframework.shell.core.EnumValueProvider;
 import org.springframework.shell.core.FileValueProvider;
 import org.springframework.shell.core.ValueProvider;
 
@@ -39,10 +38,11 @@ public class StandardAPIAutoConfiguration {
 		return new CommandValueProvider(commandRegistry);
 	}
 
-	@Bean
-	public ValueProvider enumValueProvider() {
-		return new EnumValueProvider();
-	}
+	// TODO put back when enum support is added
+	// @Bean
+	// public ValueProvider enumValueProvider() {
+	// return new EnumValueProvider();
+	// }
 
 	@Bean
 	public ValueProvider fileValueProvider() {

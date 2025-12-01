@@ -38,6 +38,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.config.UserConfigPathProvider;
 import org.springframework.util.StringUtils;
@@ -54,8 +55,6 @@ public class LineReaderAutoConfiguration {
 
 	private Terminal terminal;
 
-	private Completer completer;
-
 	private Parser parser;
 
 	private CommandRegistry commandRegistry;
@@ -69,11 +68,10 @@ public class LineReaderAutoConfiguration {
 
 	private UserConfigPathProvider userConfigPathProvider;
 
-	public LineReaderAutoConfiguration(Terminal terminal, Completer completer, Parser parser,
-			CommandRegistry commandRegistry, org.jline.reader.History jLineHistory,
-			SpringShellProperties springShellProperties, UserConfigPathProvider userConfigPathProvider) {
+	public LineReaderAutoConfiguration(Terminal terminal, Parser parser, CommandRegistry commandRegistry,
+			org.jline.reader.History jLineHistory, SpringShellProperties springShellProperties,
+			UserConfigPathProvider userConfigPathProvider) {
 		this.terminal = terminal;
-		this.completer = completer;
 		this.parser = parser;
 		this.commandRegistry = commandRegistry;
 		this.jLineHistory = jLineHistory;
@@ -91,7 +89,6 @@ public class LineReaderAutoConfiguration {
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 			.terminal(terminal)
 			.appName("Spring Shell")
-			.completer(completer)
 			.history(jLineHistory)
 			.highlighter(new Highlighter() {
 
@@ -99,10 +96,10 @@ public class LineReaderAutoConfiguration {
 				public AttributedString highlight(LineReader reader, String buffer) {
 					int l = 0;
 					String best = null;
-					for (String command : commandRegistry.getRegistrations().keySet()) {
-						if (buffer.startsWith(command) && command.length() > l) {
-							l = command.length();
-							best = command;
+					for (Command command : commandRegistry.getCommands()) {
+						if (buffer.startsWith(command.getName()) && command.getName().length() > l) {
+							l = command.getName().length();
+							best = command.getName();
 						}
 					}
 					if (best != null) {

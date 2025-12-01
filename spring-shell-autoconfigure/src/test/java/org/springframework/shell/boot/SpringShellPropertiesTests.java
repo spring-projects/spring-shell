@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.shell.boot.SpringShellProperties.OptionNamingCase;
 import org.springframework.shell.boot.SpringShellProperties.HelpCommand.GroupingMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,10 +35,7 @@ class SpringShellPropertiesTests {
 			assertThat(properties.getHistory().getName()).isNull();
 			assertThat(properties.getConfig().getLocation()).isNull();
 			assertThat(properties.getConfig().getEnv()).isNull();
-			assertThat(properties.getScript().isEnabled()).isFalse();
-			assertThat(properties.getInteractive().isEnabled()).isFalse();
-			assertThat(properties.getNoninteractive().isEnabled()).isTrue();
-			assertThat(properties.getNoninteractive().getPrimaryCommand()).isNull();
+			assertThat(properties.getInteractive().isEnabled()).isTrue();
 			assertThat(properties.getTheme().getName()).isNull();
 			assertThat(properties.getCommand().getClear().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getHelp().isEnabled()).isTrue();
@@ -47,7 +43,6 @@ class SpringShellPropertiesTests {
 			assertThat(properties.getCommand().getHelp().getCommandTemplate()).isNotNull();
 			assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isNotNull();
 			assertThat(properties.getCommand().getHistory().isEnabled()).isTrue();
-			assertThat(properties.getCommand().getQuit().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getScript().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getStacktrace().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getCompletion().isEnabled()).isTrue();
@@ -63,12 +58,6 @@ class SpringShellPropertiesTests {
 			assertThat(properties.getCommand().getVersion().isShowGitCommitId()).isFalse();
 			assertThat(properties.getCommand().getVersion().isShowGitShortCommitId()).isFalse();
 			assertThat(properties.getCommand().getVersion().isShowGitCommitTime()).isFalse();
-			assertThat(properties.getHelp().isEnabled()).isTrue();
-			assertThat(properties.getHelp().getCommand()).isEqualTo("help");
-			assertThat(properties.getHelp().getLongNames()).containsExactly("help");
-			assertThat(properties.getHelp().getShortNames()).containsExactly('h');
-			assertThat(properties.getOption().getNaming().getCaseType()).isEqualTo(OptionNamingCase.NOOP);
-			assertThat(properties.getContext().isClose()).isFalse();
 		});
 	}
 
@@ -118,10 +107,7 @@ class SpringShellPropertiesTests {
 				assertThat(properties.getHistory().getName()).isEqualTo("fakename");
 				assertThat(properties.getConfig().getLocation()).isEqualTo("fakelocation");
 				assertThat(properties.getConfig().getEnv()).isEqualTo("FAKE_ENV");
-				assertThat(properties.getScript().isEnabled()).isTrue();
 				assertThat(properties.getInteractive().isEnabled()).isTrue();
-				assertThat(properties.getNoninteractive().isEnabled()).isFalse();
-				assertThat(properties.getNoninteractive().getPrimaryCommand()).isEqualTo("fakecommand");
 				assertThat(properties.getTheme().getName()).isEqualTo("fake");
 				assertThat(properties.getCommand().getClear().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getHelp().isEnabled()).isFalse();
@@ -129,7 +115,6 @@ class SpringShellPropertiesTests {
 				assertThat(properties.getCommand().getHelp().getCommandTemplate()).isEqualTo("fake1");
 				assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isEqualTo("fake2");
 				assertThat(properties.getCommand().getHistory().isEnabled()).isFalse();
-				assertThat(properties.getCommand().getQuit().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getScript().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getStacktrace().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getCompletion().isEnabled()).isFalse();
@@ -145,24 +130,6 @@ class SpringShellPropertiesTests {
 				assertThat(properties.getCommand().getVersion().isShowGitCommitId()).isTrue();
 				assertThat(properties.getCommand().getVersion().isShowGitShortCommitId()).isTrue();
 				assertThat(properties.getCommand().getVersion().isShowGitCommitTime()).isTrue();
-				assertThat(properties.getHelp().isEnabled()).isFalse();
-				assertThat(properties.getHelp().getCommand()).isEqualTo("fake");
-				assertThat(properties.getHelp().getLongNames()).containsExactly("fake");
-				assertThat(properties.getHelp().getShortNames()).containsExactly('f');
-				assertThat(properties.getOption().getNaming().getCaseType()).isEqualTo(OptionNamingCase.CAMEL);
-				assertThat(properties.getContext().isClose()).isTrue();
-			});
-	}
-
-	@Test
-	void essentiallyUnset() {
-		this.contextRunner.withPropertyValues("spring.shell.help.long-names=")
-			.withPropertyValues("spring.shell.help.short-names=")
-			.withUserConfiguration(Config1.class)
-			.run(context -> {
-				SpringShellProperties properties = context.getBean(SpringShellProperties.class);
-				assertThat(properties.getHelp().getLongNames()).isEmpty();
-				assertThat(properties.getHelp().getShortNames()).isEmpty();
 			});
 	}
 
