@@ -16,22 +16,12 @@
 
 package org.springframework.shell.core.jline;
 
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jline.terminal.Terminal;
 
 import org.springframework.shell.core.Input;
 import org.springframework.shell.core.InputProvider;
 import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandParser;
-import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.DefaultCommandParser;
-import org.springframework.shell.core.command.ParsedInput;
-import org.springframework.shell.core.utils.CommandUtils;
+import org.springframework.shell.core.command.*;
 
 /**
  * A {@link ShellRunner} that bootstraps the shell in interactive mode. It requires an
@@ -45,20 +35,15 @@ import org.springframework.shell.core.utils.CommandUtils;
  */
 public class InteractiveShellRunner implements ShellRunner {
 
-	private static final Log log = LogFactory.getLog(InteractiveShellRunner.class);
-
 	private final InputProvider inputProvider;
 
 	private CommandParser commandParser = new DefaultCommandParser();
 
-	private final Terminal terminal;
-
-	private final CommandRegistry commandRegistry;
+	private final CommandExecutor commandExecutor;
 
 	public InteractiveShellRunner(InputProvider inputProvider, Terminal terminal, CommandRegistry commandRegistry) {
 		this.inputProvider = inputProvider;
-		this.terminal = terminal;
-		this.commandRegistry = commandRegistry;
+		this.commandExecutor = new CommandExecutor(commandRegistry, terminal);
 	}
 
 	@Override
@@ -76,49 +61,7 @@ public class InteractiveShellRunner implements ShellRunner {
 				continue;
 			}
 			ParsedInput parsedInput = commandParser.parse(input);
-			String commandName = parsedInput.commandName();
-			if (!parsedInput.subCommands().isEmpty()) {
-				commandName += " " + String.join(" ", parsedInput.subCommands());
-			}
-			Command command = this.commandRegistry.getCommandByName(commandName);
-			// the user typed a non recognized command or a root command with subcommands
-			if (command == null) {
-				// check if there are subcommands for the given root command
-				List<String> candidateSubCommands = CommandUtils.getAvailableCommands(this.commandRegistry)
-					.stream()
-					.filter(candidateSubCommand -> candidateSubCommand.startsWith(parsedInput.commandName()))
-					.toList();
-				if (!candidateSubCommands.isEmpty() && parsedInput.subCommands().isEmpty()) {
-					List<String> availableSubCommands = CommandUtils.getAvailableSubCommands(commandName,
-							this.commandRegistry);
-					this.terminal.writer().println("Available sub commands for " + commandName + ": ");
-					for (String availableSubCommand : availableSubCommands) {
-						this.terminal.writer()
-							.println("  " + availableSubCommand + ": "
-									+ this.commandRegistry.getCommandByName(commandName + " " + availableSubCommand)
-										.getDescription());
-					}
-				}
-				else {
-					// the user typed an incorrect command, print general available
-					// commands
-					String availableCommands = CommandUtils.formatAvailableCommands(this.commandRegistry);
-					this.terminal.writer()
-						.println("No command found for name: " + commandName + ". " + availableCommands);
-				}
-				this.terminal.writer().flush();
-				continue;
-			}
-			log.debug(String.format("Evaluate input with line=[%s], command=[%s]", input.rawText(), command));
-			CommandContext commandContext = new CommandContext(parsedInput.options(), parsedInput.arguments(),
-					this.commandRegistry, this.terminal);
-			try {
-				command.execute(commandContext);
-			}
-			catch (Exception exception) {
-				this.terminal.writer().println(exception.getMessage());
-				this.terminal.writer().flush();
-			}
+			this.commandExecutor.execute(parsedInput);
 		}
 	}
 

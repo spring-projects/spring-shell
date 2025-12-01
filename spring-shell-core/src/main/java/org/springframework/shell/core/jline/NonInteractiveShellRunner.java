@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,28 @@
  */
 package org.springframework.shell.core.jline;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.List;
+
+import org.jline.reader.Parser;
 import org.jline.terminal.Terminal;
 
+import org.springframework.shell.core.Input;
 import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.command.*;
-import org.springframework.shell.core.utils.CommandUtils;
+import org.springframework.shell.core.command.CommandExecutor;
+import org.springframework.shell.core.command.CommandParser;
+import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.DefaultCommandParser;
+import org.springframework.shell.core.command.ParsedInput;
+import org.springframework.util.ObjectUtils;
 
 /**
- * A {@link ShellRunner} that executes a command without entering interactive shell mode.
+ * A {@link ShellRunner} that executes commands without entering interactive shell mode.
+ * It can process a single command, or a script of commands defined in a file. The script
+ * file is specified by prefixing the file name with the special character {@literal @}.
  *
  * @author Janne Valkealahti
  * @author Chris Bono
@@ -31,42 +45,75 @@ import org.springframework.shell.core.utils.CommandUtils;
  */
 public class NonInteractiveShellRunner implements ShellRunner {
 
-	private final String primaryCommand;
+	private final Parser parser;
 
 	private final Terminal terminal;
 
-	private final CommandRegistry commandRegistry;
-
 	private CommandParser commandParser = new DefaultCommandParser();
 
-	public NonInteractiveShellRunner(String primaryCommand, Terminal terminal, CommandRegistry commandRegistry) {
-		this.primaryCommand = primaryCommand;
+	private final CommandExecutor commandExecutor;
+
+	public NonInteractiveShellRunner(Parser parser, Terminal terminal, CommandRegistry commandRegistry) {
+		this.parser = parser;
 		this.terminal = terminal;
-		this.commandRegistry = commandRegistry;
+		this.commandExecutor = new CommandExecutor(commandRegistry, terminal);
 	}
 
 	@Override
 	public void run(String[] args) throws Exception {
+		if (ObjectUtils.isEmpty(args)) {
+			terminal.writer().println("No command or script specified for non-interactive mode.");
+			terminal.writer().flush();
+			return;
+		}
+		if (isScript(args[0])) {
+			executeScripts(args);
+		}
+		else {
+			executeCommand(args);
+		}
+	}
+
+	private static boolean isScript(String arg) {
+		return arg.startsWith("@");
+	}
+
+	// FIXME should this throw Exceptions?
+	private void executeScripts(String[] args) throws Exception {
+		List<File> scriptsToRun = Arrays.stream(args)
+			.filter(s -> s.startsWith("@"))
+			.map(s -> new File(s.substring(1)))// TODO taken from v3, should we delete the
+												// file after execution?
+			.toList();
+
+		for (File script : scriptsToRun) {
+			executeScript(script);
+		}
+	}
+
+	// FIXME should this throw Exceptions?
+	private void executeScript(File script) throws Exception {
+		try (Reader reader = new FileReader(script);
+				FileInputProvider inputProvider = new FileInputProvider(reader, parser)) {
+			while (true) {
+				Input input = inputProvider.readInput();
+				if (input == Input.INTERRUPTED || input == Input.EMPTY) {
+					break;
+				}
+				if (input == null || input.words().isEmpty()) {
+					// Ignore empty lines
+					continue;
+				}
+				ParsedInput parsedInput = commandParser.parse(input);
+				this.commandExecutor.execute(parsedInput);
+			}
+		}
+	}
+
+	private void executeCommand(String[] args) {
+		String primaryCommand = String.join(" ", args);
 		ParsedInput parsedInput = commandParser.parse(() -> primaryCommand);
-		String commandName = parsedInput.commandName();
-		if (!parsedInput.subCommands().isEmpty()) {
-			commandName += " " + String.join(" ", parsedInput.subCommands());
-		}
-		Command command = this.commandRegistry.getCommandByName(commandName);
-		if (command == null) {
-			String availableCommands = CommandUtils.formatAvailableCommands(commandRegistry);
-			throw new CommandNotFoundException(
-					"No command found for name: " + primaryCommand + ". " + availableCommands);
-		}
-		CommandContext commandContext = new CommandContext(parsedInput.options(), parsedInput.arguments(),
-				this.commandRegistry, this.terminal);
-		try {
-			command.execute(commandContext);
-		}
-		catch (Exception exception) {
-			this.terminal.writer().append(exception.getMessage());
-			this.terminal.writer().flush();
-		}
+		this.commandExecutor.execute(parsedInput);
 	}
 
 	public void setCommandParser(CommandParser commandParser) {
