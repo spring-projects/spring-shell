@@ -17,7 +17,6 @@ package org.springframework.shell.core.command.annotation.support;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Set;
 
 import org.jline.reader.LineReader;
@@ -62,7 +61,6 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 		// register user defined commands
 		Class<?>[] candidateClasses = shellAnnotation.value();
 		for (Class<?> candidateClass : candidateClasses) {
-			registerCommands(candidateClass, registry);
 			registerAnnotatedMethods(candidateClass, registry);
 		}
 
@@ -106,16 +104,6 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 			}
 
 		}
-	}
-
-	private void registerCommands(Class<?> candidateClass, BeanDefinitionRegistry registry) {
-		Arrays.stream(candidateClass.getDeclaredMethods())
-			.filter(method -> method.getReturnType().equals(org.springframework.shell.core.command.Command.class))
-			.forEach(method -> {
-				RootBeanDefinition beanDefinition = new RootBeanDefinition(
-						org.springframework.shell.core.command.Command.class);
-				registry.registerBeanDefinition(method.getName(), beanDefinition);
-			});
 	}
 
 	private void registerAnnotatedMethods(Class<?> candidateClass, BeanDefinitionRegistry registry) {
