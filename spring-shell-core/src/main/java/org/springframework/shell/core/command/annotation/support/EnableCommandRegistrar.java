@@ -44,6 +44,7 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistrar {
 
