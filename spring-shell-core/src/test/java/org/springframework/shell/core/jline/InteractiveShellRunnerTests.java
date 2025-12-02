@@ -73,8 +73,7 @@ class InteractiveShellRunnerTests {
 			}
 		});
 		Thread readThread = new Thread(() -> {
-			assertThatNoException()
-				.isThrownBy(() -> assertThat(jLineInputProvider.readInput().rawText()).isEqualTo(""));
+			assertThatNoException().isThrownBy(() -> assertThat(jLineInputProvider.readInput()).isEqualTo(""));
 			endLatch.countDown();
 		});
 		readThread.start();

@@ -16,14 +16,14 @@
 
 package org.springframework.shell.core.commands;
 
-import org.jline.utils.InfoCmp;
+import java.io.PrintWriter;
 
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.ExitStatus;
 
 /**
- * ANSI console related commands.
+ * ANSI console clear command.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
@@ -38,7 +38,10 @@ public class Clear implements Command {
 
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		commandContext.terminal().puts(InfoCmp.Capability.clear_screen);
+		try (PrintWriter printWriter = commandContext.outputWriter()) {
+			printWriter.print("\033[H\033[2J");
+			printWriter.flush();
+		}
 		return ExitStatus.OK;
 	}
 

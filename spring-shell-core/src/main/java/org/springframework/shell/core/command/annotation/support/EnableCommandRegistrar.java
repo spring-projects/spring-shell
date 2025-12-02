@@ -15,15 +15,9 @@
  */
 package org.springframework.shell.core.command.annotation.support;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
-
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -32,12 +26,12 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.shell.core.ShellConfigurationException;
+import org.springframework.shell.core.ConsoleInputProvider;
+import org.springframework.shell.core.SystemShellRunner;
 import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.DefaultCommandParser;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.EnableCommand;
-import org.springframework.shell.core.jline.InteractiveShellRunner;
-import org.springframework.shell.core.jline.JLineInputProvider;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -75,36 +69,11 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 		// register shell runner (default to interactive if none is defined)
 		if (!registry.containsBeanDefinition("shellRunner")) {
 			BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder
-				.genericBeanDefinition(InteractiveShellRunner.class);
-			try {
-				// configure input provider
-				if (registry.containsBeanDefinition("inputProvider")) {
-					beanDefinitionBuilder.addConstructorArgReference("inputProvider");
-				}
-				else {
-					LineReader reader = LineReaderBuilder.builder().build();
-					JLineInputProvider inputProvider = new JLineInputProvider(reader);
-					beanDefinitionBuilder.addConstructorArgValue(inputProvider);
-				}
-
-				// configure terminal
-				if (registry.containsBeanDefinition("terminal")) {
-					beanDefinitionBuilder.addConstructorArgReference("terminal");
-				}
-				else {
-					Terminal terminal = TerminalBuilder.builder().system(true).build();
-					beanDefinitionBuilder.addConstructorArgValue(terminal);
-				}
-
-				// autowire command registry
-				beanDefinitionBuilder.addConstructorArgReference("commandRegistry");
-
-				registry.registerBeanDefinition("shellRunner", beanDefinitionBuilder.getBeanDefinition());
-			}
-			catch (IOException e) {
-				throw new ShellConfigurationException("Unable to configure shell runner", e);
-			}
-
+				.genericBeanDefinition(SystemShellRunner.class)
+				.addConstructorArgValue(new ConsoleInputProvider())
+				.addConstructorArgValue(new DefaultCommandParser())
+				.addConstructorArgReference("commandRegistry");
+			registry.registerBeanDefinition("shellRunner", beanDefinitionBuilder.getBeanDefinition());
 		}
 	}
 

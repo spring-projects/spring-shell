@@ -16,15 +16,14 @@
 package org.springframework.shell.core.commands;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
 import java.util.List;
 
-import org.jline.reader.Parser;
-
-import org.springframework.shell.core.Input;
-import org.springframework.shell.core.command.*;
-import org.springframework.shell.core.jline.FileInputProvider;
+import org.springframework.shell.core.FileInputProvider;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandArgument;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandNotFoundException;
+import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.utils.CommandUtils;
 
 /**
@@ -36,35 +35,31 @@ import org.springframework.shell.core.utils.CommandUtils;
  */
 public class Script extends AbstractCommand {
 
-	private final Parser parser;
-
-	public Script(String name, String description, Parser parser) {
+	public Script(String name, String description) {
 		super(name, description);
-		this.parser = parser;
 	}
 
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
-		List<CommandOption> options = commandContext.options();
-		File file = null;// TODO get file name from options
-		Reader reader = new FileReader(file);
-		FileInputProvider inputProvider = new FileInputProvider(reader, parser);
-		Input input;
-		while ((input = inputProvider.readInput()) != null) {
-			executeCommand(commandContext, input);
+		List<CommandArgument> arguments = commandContext.parsedInput().arguments();
+		File file = new File(arguments.get(0).value());
+		try (FileInputProvider inputProvider = new FileInputProvider(file)) {
+			String input;
+			while ((input = inputProvider.readInput()) != null) {
+				executeCommand(commandContext, input);
+			}
 		}
 		return ExitStatus.OK;
 	}
 
-	private void executeCommand(CommandContext commandContext, Input input) throws Exception {
-		String commandName = input.words().get(0);
-		Command command = commandContext.commandRegistry().getCommandByName(commandName);
+	private void executeCommand(CommandContext commandContext, String input) throws Exception {
+		Command command = commandContext.commandRegistry().getCommandByName(input);
 		if (command == null) {
 			String availableCommands = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
-			throw new CommandNotFoundException("No command found for name: " + commandName + ". " + availableCommands);
+			throw new CommandNotFoundException("No command found for name: " + input + ". " + availableCommands);
 		}
-		CommandContext singleCommandContext = new CommandContext(commandContext.options(), commandContext.arguments(),
-				commandContext.commandRegistry(), commandContext.terminal());
+		CommandContext singleCommandContext = new CommandContext(commandContext.parsedInput(),
+				commandContext.commandRegistry(), commandContext.outputWriter());
 		command.execute(singleCommandContext);
 	}
 

@@ -1,15 +1,31 @@
+/*
+ * Copyright 2025-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.shell.core.commands.adapter;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.core.convert.support.ConfigurableConversionService;
-import org.springframework.shell.core.command.CommandArgument;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandOption;
-import org.springframework.shell.core.command.ExitStatus;
+import org.springframework.shell.core.command.*;
 import org.springframework.shell.core.command.annotation.Argument;
 import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Option;
@@ -18,14 +34,32 @@ import org.springframework.util.MethodInvoker;
 
 import static org.springframework.shell.core.utils.CommandUtils.getOptionByName;
 
+/**
+ * An adapter to adapt a method as a command.
+ *
+ * @author Mahmoud Ben Hassine
+ * @since 4.0.0
+ */
 public class MethodInvokerCommandAdapter extends AbstractCommand {
 
-	Method method;
+	private static final Log log = LogFactory.getLog(MethodInvokerCommandAdapter.class);
 
-	Object targetObject;
+	private final Method method;
 
-	ConfigurableConversionService conversionService;
+	private final Object targetObject;
 
+	private final ConfigurableConversionService conversionService;
+
+	/**
+	 * Create a new {@link MethodInvokerCommandAdapter}.
+	 * @param name the name of the command
+	 * @param description the description of the command
+	 * @param group the group of the command
+	 * @param help the help text of the command
+	 * @param method the method to invoke
+	 * @param targetObject the target object on which to invoke the method
+	 * @param conversionService the conversion service to use for parameter conversion
+	 */
 	public MethodInvokerCommandAdapter(String name, String description, String group, String help, Method method,
 			Object targetObject, ConfigurableConversionService conversionService) {
 		super(name, description, group, help);
@@ -57,18 +91,24 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 
 		// invoke method
 		methodInvoker.invoke();
-		commandContext.terminal().flush();
+		try (PrintWriter outputWriter = commandContext.outputWriter()) {
+			outputWriter.flush();
+		}
 		return ExitStatus.OK;
 	}
 
 	private List<Object> prepareArguments(CommandContext commandContext) {
+		log.debug("Preparing method arguments for method: " + method.getName() + " of class: "
+				+ method.getDeclaringClass().getName() + " with context: " + commandContext);
 		List<Object> args = new ArrayList<>();
-		List<CommandOption> options = commandContext.options();
+		ParsedInput parsedInput = commandContext.parsedInput();
+		List<CommandOption> options = parsedInput.options();
 		Parameter[] parameters = method.getParameters();
 		Class<?>[] methodParameterTypes = method.getParameterTypes();
 		for (int i = 0; i < parameters.length; i++) {
 			Option optionAnnotation = parameters[i].getAnnotation(Option.class);
 			if (optionAnnotation != null) {
+				log.debug("Processing option for parameter: " + parameters[i].getName());
 				char shortName = optionAnnotation.shortName();
 				String longName = optionAnnotation.longName();
 				CommandOption commandOption = getOptionByName(options,
@@ -89,15 +129,17 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 			}
 			Argument argumentAnnotation = parameters[i].getAnnotation(Argument.class);
 			if (argumentAnnotation != null) {
+				log.debug("Processing argument for parameter: " + parameters[i].getName());
 				int index = argumentAnnotation.index();
-				String rawValue = commandContext.arguments().get(index).value();
+				String rawValue = parsedInput.arguments().get(index).value();
 				Class<?> parameterType = methodParameterTypes[i];
 				Object value = this.conversionService.convert(rawValue, parameterType);
 				args.add(value);
 			}
 			Arguments argumentsAnnotation = parameters[i].getAnnotation(Arguments.class);
 			if (argumentsAnnotation != null) {
-				List<String> rawValues = commandContext.arguments().stream().map(CommandArgument::value).toList();
+				log.debug("Processing arguments for parameter: " + parameters[i].getName());
+				List<String> rawValues = parsedInput.arguments().stream().map(CommandArgument::value).toList();
 				Class<?> parameterType = methodParameterTypes[i];
 				// TODO check for collection types
 				Object value = this.conversionService.convert(rawValues, parameterType);

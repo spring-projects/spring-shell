@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.core.commands;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,16 +89,22 @@ public abstract class AbstractCommand implements Command {
 
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		List<CommandOption> options = commandContext.options();
+		List<CommandOption> options = commandContext.parsedInput().options();
 		if (options.size() == 1 && isHelp(options.get(0))) {
-			commandContext.terminal().writer().println(getHelp());
-			commandContext.terminal().flush();
+			println(getHelp(), commandContext);
 			return ExitStatus.OK;
 		}
 		return doExecute(commandContext);
 	}
 
-	private static boolean isHelp(CommandOption option) {
+	protected void println(String message, CommandContext commandContext) {
+		try (PrintWriter outputWriter = commandContext.outputWriter()) {
+			outputWriter.println(message);
+			outputWriter.flush();
+		}
+	}
+
+	protected boolean isHelp(CommandOption option) {
 		return option.longName().equalsIgnoreCase("help") || option.shortName() == 'h';
 	}
 

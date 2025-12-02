@@ -20,6 +20,8 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.shell.core.utils.Utils;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

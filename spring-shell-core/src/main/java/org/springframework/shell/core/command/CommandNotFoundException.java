@@ -22,8 +22,14 @@ package org.springframework.shell.core.command;
  */
 public class CommandNotFoundException extends RuntimeException {
 
-	public CommandNotFoundException(String message) {
-		super(message);
+	private final String commandName;
+
+	public CommandNotFoundException(String commandName) {
+		this.commandName = commandName;
+	}
+
+	public String getCommandName() {
+		return commandName;
 	}
 
 }

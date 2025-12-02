@@ -15,18 +15,14 @@
  */
 package org.springframework.shell.core.command;
 
-import java.util.List;
-
-import org.jline.terminal.Terminal;
+import java.io.PrintWriter;
 
 /**
- * Interface containing information about the current command invocation.
+ * Interface containing runtime information about the current command invocation.
  *
- * @author Janne Valkealahti
- * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @since 4.0.0
  */
-public record CommandContext(List<CommandOption> options, List<CommandArgument> arguments,
-		CommandRegistry commandRegistry, Terminal terminal) {
+public record CommandContext(ParsedInput parsedInput, CommandRegistry commandRegistry, PrintWriter outputWriter) {
 
 }

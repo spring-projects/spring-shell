@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.core.commands;
 
+import java.io.PrintWriter;
+
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.ExitStatus;
@@ -40,8 +42,10 @@ public class Version implements Command {
 		if (pkg != null && pkg.getImplementationVersion() != null) {
 			version = pkg.getImplementationVersion();
 		}
-		commandContext.terminal().writer().println("Version: " + version);
-		commandContext.terminal().flush();
+		try (PrintWriter printWriter = commandContext.outputWriter()) {
+			printWriter.println("Version: " + version);
+			printWriter.flush();
+		}
 		return ExitStatus.OK;
 	}
 

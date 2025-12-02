@@ -31,9 +31,9 @@ import org.springframework.shell.core.command.annotation.EnableCommand;
 @AutoConfiguration
 @ConditionalOnMissingBean(annotation = EnableCommand.class)
 @ImportAutoConfiguration({ ApplicationRunnerAutoConfiguration.class, CommandRegistryAutoConfiguration.class,
-		ComponentFlowAutoConfiguration.class, JLineShellAutoConfiguration.class, LineReaderAutoConfiguration.class,
-		ShellRunnerAutoConfiguration.class, StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class,
-		TerminalUIAutoConfiguration.class, ThemingAutoConfiguration.class, UserConfigAutoConfiguration.class })
+		ComponentFlowAutoConfiguration.class, JLineShellAutoConfiguration.class, ShellRunnerAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, TerminalUIAutoConfiguration.class,
+		ThemingAutoConfiguration.class, UserConfigAutoConfiguration.class })
 public class SpringShellAutoConfiguration {
 
 }

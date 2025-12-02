@@ -15,14 +15,6 @@
  */
 package org.springframework.shell.core.command;
 
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jline.terminal.Terminal;
-
-import org.springframework.shell.core.utils.CommandUtils;
-
 /**
  * Executes commands based on parsed input.
  *
@@ -31,59 +23,35 @@ import org.springframework.shell.core.utils.CommandUtils;
  */
 public class CommandExecutor {
 
-	private static final Log log = LogFactory.getLog(CommandExecutor.class);
-
-	private final Terminal terminal;
-
 	private final CommandRegistry commandRegistry;
 
-	public CommandExecutor(CommandRegistry commandRegistry, Terminal terminal) {
+	/**
+	 * Create a new {@link CommandExecutor} instance.
+	 * @param commandRegistry the command registry
+	 */
+	public CommandExecutor(CommandRegistry commandRegistry) {
 		this.commandRegistry = commandRegistry;
-		this.terminal = terminal;
 	}
 
-	public void execute(ParsedInput parsedInput) {
-		String commandName = parsedInput.commandName();
-		if (!parsedInput.subCommands().isEmpty()) {
-			commandName += " " + String.join(" ", parsedInput.subCommands());
-		}
+	/**
+	 * Execute a command based on the given command context.
+	 * @param commandContext the command context
+	 * @return the exit status of the command execution
+	 * @throws CommandNotFoundException if the command is not found
+	 * @throws CommandExecutionException if an error occurs during command execution
+	 */
+	public ExitStatus execute(CommandContext commandContext)
+			throws CommandNotFoundException, CommandExecutionException {
+		String commandName = commandContext.parsedInput().commandName();
 		Command command = this.commandRegistry.getCommandByName(commandName);
-		// the user typed a non recognized command or a root command with subcommands
 		if (command == null) {
-			// check if there are subcommands for the given root command
-			List<String> candidateSubCommands = CommandUtils.getAvailableCommands(this.commandRegistry)
-				.stream()
-				.filter(candidateSubCommand -> candidateSubCommand.startsWith(parsedInput.commandName()))
-				.toList();
-			if (!candidateSubCommands.isEmpty() && parsedInput.subCommands().isEmpty()) {
-				List<String> availableSubCommands = CommandUtils.getAvailableSubCommands(commandName,
-						this.commandRegistry);
-				this.terminal.writer().println("Available sub commands for " + commandName + ": ");
-				for (String availableSubCommand : availableSubCommands) {
-					this.terminal.writer()
-						.println("  " + availableSubCommand + ": "
-								+ this.commandRegistry.getCommandByName(commandName + " " + availableSubCommand)
-									.getDescription());
-				}
-			}
-			else {
-				// the user typed an incorrect command, print general available
-				// commands
-				String availableCommands = CommandUtils.formatAvailableCommands(this.commandRegistry);
-				this.terminal.writer().println("No command found for name: " + commandName + ". " + availableCommands);
-			}
-			this.terminal.writer().flush();
-			return;
+			throw new CommandNotFoundException(commandName);
 		}
-		log.debug(String.format("Evaluate input for command=[%s]", command));
-		CommandContext commandContext = new CommandContext(parsedInput.options(), parsedInput.arguments(),
-				this.commandRegistry, this.terminal);
 		try {
-			command.execute(commandContext);
+			return command.execute(commandContext);
 		}
 		catch (Exception exception) {
-			this.terminal.writer().println(exception.getMessage());
-			this.terminal.writer().flush();
+			throw new CommandExecutionException("Unable to execute command " + commandName, exception);
 		}
 	}
 

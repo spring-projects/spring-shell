@@ -17,7 +17,8 @@ package org.springframework.shell.core.command;
 
 import java.util.List;
 
-import org.springframework.shell.core.Input;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Default implementation of {@link CommandParser}. Supports options in the form -o=value
@@ -39,9 +40,13 @@ import org.springframework.shell.core.Input;
  */
 public class DefaultCommandParser implements CommandParser {
 
+	private static final Log log = LogFactory.getLog(DefaultCommandParser.class);
+
 	@Override
-	public ParsedInput parse(Input input) {
-		List<String> words = input.words();
+	public ParsedInput parse(String input) {
+		log.debug("Parsing input: " + input);
+		// TODO use Utils.sanitizeInput ?
+		List<String> words = List.of(input.split(" "));
 
 		// the first word is the command name
 		String commandName = words.get(0);
@@ -80,7 +85,9 @@ public class DefaultCommandParser implements CommandParser {
 			CommandArgument commandArgument = parseArgument(i, arguments.get(i));
 			parsedInputBuilder.addArgument(commandArgument);
 		}
-		return parsedInputBuilder.build();
+		ParsedInput parsedInput = parsedInputBuilder.build();
+		log.debug("Parsed input: " + parsedInput);
+		return parsedInput;
 	}
 
 	// Check if the word is the argument separator, ie empty "--" (POSIX style)

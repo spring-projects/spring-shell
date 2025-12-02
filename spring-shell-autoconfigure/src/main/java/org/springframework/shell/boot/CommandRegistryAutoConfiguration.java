@@ -46,21 +46,19 @@ public class CommandRegistryAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	CommandRegistry commandRegistry(ApplicationContext applicationContext) {
+	public CommandRegistry commandRegistry(ApplicationContext applicationContext) {
 		CommandRegistry commandRegistry = new CommandRegistry();
 		registerProgrammaticCommands(applicationContext, commandRegistry);
 		registerAnnotatedCommands(applicationContext, commandRegistry);
 		return commandRegistry;
 	}
 
-	private static void registerProgrammaticCommands(ApplicationContext applicationContext,
-			CommandRegistry commandRegistry) {
+	private void registerProgrammaticCommands(ApplicationContext applicationContext, CommandRegistry commandRegistry) {
 		Map<String, Command> commandBeans = applicationContext.getBeansOfType(Command.class);
 		commandBeans.values().forEach(commandRegistry::registerCommand);
 	}
 
-	private static void registerAnnotatedCommands(ApplicationContext applicationContext,
-			CommandRegistry commandRegistry) {
+	private void registerAnnotatedCommands(ApplicationContext applicationContext, CommandRegistry commandRegistry) {
 		Map<String, Object> springBootApps = applicationContext.getBeansWithAnnotation(SpringBootApplication.class);
 		Class<?> mainClass = AopUtils.getTargetClass(springBootApps.values().iterator().next());
 		String mainPackage = ClassUtils.getPackageName(mainClass);

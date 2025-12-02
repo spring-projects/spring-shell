@@ -15,23 +15,44 @@
  */
 package org.springframework.shell.core;
 
+import java.io.Console;
+
 import org.jspecify.annotations.Nullable;
 
 /**
- * To be implemented by components able to provide a "line" of user input, whether
- * interactively or by batch.
+ * Input provider based on the JVM's system {@link Console}.
  *
- * @author Eric Bottard
- * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @since 4.0.0
  */
-public interface InputProvider {
+public class ConsoleInputProvider implements InputProvider {
+
+	private final Console console;
+
+	private String prompt = "$>";
 
 	/**
-	 * Return text entered by user to invoke commands.
-	 * @return user input line or {@literal null} if end of input is reached
-	 * @throws Exception on error
+	 * Create a new {@link ConsoleInputProvider} instance.
 	 */
-	@Nullable String readInput() throws Exception;
+	public ConsoleInputProvider() {
+		this.console = System.console();
+	}
+
+	/**
+	 * Create a new {@link ConsoleInputProvider} instance.
+	 * @param console the system console
+	 */
+	public ConsoleInputProvider(Console console) {
+		this.console = console;
+	}
+
+	@Override
+	public @Nullable String readInput() throws Exception {
+		return this.console.readLine(this.prompt);
+	}
+
+	public Console getConsole() {
+		return this.console;
+	}
 
 }

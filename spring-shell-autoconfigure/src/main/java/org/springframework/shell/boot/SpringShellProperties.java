@@ -131,12 +131,28 @@ public class SpringShellProperties {
 
 		private boolean enabled = true;
 
+		private Type type = Type.SYSTEM;
+
 		public boolean isEnabled() {
 			return enabled;
 		}
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
+		}
+
+		public Type getType() {
+			return type;
+		}
+
+		public void setType(Type type) {
+			this.type = type;
+		}
+
+		public enum Type {
+
+			SYSTEM, JLINE
+
 		}
 
 	}

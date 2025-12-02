@@ -25,7 +25,7 @@ class DefaultCommandParserTests {
 
 	@Test
 	void testParse() {
-		ParsedInput parsedInput = parser.parse(() -> "mycommand --option1=value1 arg1 -o2=value2 arg2");
+		ParsedInput parsedInput = parser.parse("mycommand --option1=value1 arg1 -o2=value2 arg2");
 		assertEquals("mycommand", parsedInput.commandName());
 		assertEquals(2, parsedInput.options().size());
 		assertEquals(2, parsedInput.arguments().size());

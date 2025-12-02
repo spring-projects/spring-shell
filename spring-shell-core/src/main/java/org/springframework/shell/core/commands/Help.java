@@ -15,6 +15,8 @@
  */
 package org.springframework.shell.core.commands;
 
+import java.io.PrintWriter;
+
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.ExitStatus;
@@ -38,9 +40,10 @@ public class Help implements Command {
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		String helpMessage = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
-
-		commandContext.terminal().writer().println(helpMessage);
-		commandContext.terminal().flush();
+		try (PrintWriter outputWriter = commandContext.outputWriter()) {
+			outputWriter.println(helpMessage);
+			outputWriter.flush();
+		}
 		return ExitStatus.OK;
 	}
 

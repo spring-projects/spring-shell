@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 the original author or authors.
+ * Copyright 2021-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,56 +15,61 @@
  */
 package org.springframework.shell.boot;
 
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.Parser;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.InputProvider;
+import org.springframework.shell.core.ConsoleInputProvider;
+import org.springframework.shell.core.NonInteractiveShellRunner;
 import org.springframework.shell.core.ShellRunner;
+import org.springframework.shell.core.SystemShellRunner;
+import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.jline.InteractiveShellRunner;
+import org.springframework.shell.core.command.DefaultCommandParser;
 import org.springframework.shell.core.jline.JLineInputProvider;
-import org.springframework.shell.core.jline.NonInteractiveShellRunner;
+import org.springframework.shell.core.jline.JLineShellRunner;
 
 @AutoConfiguration
 public class ShellRunnerAutoConfiguration {
 
 	@Bean
+	@ConditionalOnMissingBean
 	public ApplicationRunner springShellApplicationRunner(ShellRunner shellRunner) {
 		return args -> shellRunner.run(args.getSourceArgs());
 	}
 
 	@Bean
+	@ConditionalOnProperty(prefix = "spring.shell.interactive.type", name = "system", havingValue = "true",
+			matchIfMissing = true)
+	public ShellRunner systemShellRunner(ConsoleInputProvider consoleInputProvider, CommandParser commandParser,
+			CommandRegistry commandRegistry) {
+		return new SystemShellRunner(consoleInputProvider, commandParser, commandRegistry);
+	}
+
+	@Bean
+	@ConditionalOnProperty(prefix = "spring.shell.interactive.type", name = "jline", havingValue = "true")
+	public ShellRunner jlineShellRunner(JLineInputProvider inputProvider, CommandParser commandParser,
+			CommandRegistry commandRegistry) {
+		return new JLineShellRunner(inputProvider, commandParser, commandRegistry);
+	}
+
+	@Bean
+	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "false")
+	public ShellRunner nonInteractiveShellRunner(CommandParser commandParser, CommandRegistry commandRegistry) {
+		return new NonInteractiveShellRunner(commandParser, commandRegistry);
+	}
+
+	@Bean
 	@ConditionalOnMissingBean
-	public InputProvider inputProvider(LineReader reader) {
-		return new JLineInputProvider(reader);
-	}
-
-	// @Bean
-	// @ConditionalOnMissingBean
-	// public Terminal terminal() throws Exception {
-	// return TerminalBuilder.builder().system(true).build();
-	// }
-
-	@Bean
-	@ConditionalOnProperty(value = "spring.shell.interactive.enabled", havingValue = "true", matchIfMissing = true)
-	public InteractiveShellRunner shellRunner(InputProvider inputProvider, Terminal terminal,
-			CommandRegistry commandRegistry) {
-		return new InteractiveShellRunner(inputProvider, terminal, commandRegistry);
+	public ConsoleInputProvider consoleInputProvider() {
+		return new ConsoleInputProvider();
 	}
 
 	@Bean
-	@ConditionalOnProperty(value = "spring.shell.interactive.enabled", havingValue = "false")
-	public NonInteractiveShellRunner nonInteractiveShellRunner(Parser parser, Terminal terminal,
-			CommandRegistry commandRegistry) {
-		return new NonInteractiveShellRunner(parser, terminal, commandRegistry);
+	@ConditionalOnMissingBean
+	public CommandParser commandParser() {
+		return new DefaultCommandParser();
 	}
 
 }

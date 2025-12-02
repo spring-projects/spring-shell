@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core;
+package org.springframework.shell.core.utils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;

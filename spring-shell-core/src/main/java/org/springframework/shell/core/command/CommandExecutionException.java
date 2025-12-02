@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2025-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.test.autoconfigure.app;
 
-import org.springframework.shell.core.command.annotation.Command;
+package org.springframework.shell.core.command;
 
-@Command
-public class HelloCommand {
+/**
+ * Exception to signal that an error happened while executing a command.
+ *
+ * @author Mahmoud Ben Hassine
+ * @since 4.0.0
+ */
+public class CommandExecutionException extends RuntimeException {
 
-	@Command
-	public String hello() {
-		return "hello";
+	public CommandExecutionException(String message) {
+		super(message);
+	}
+
+	public CommandExecutionException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

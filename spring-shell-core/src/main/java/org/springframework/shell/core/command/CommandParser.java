@@ -15,8 +15,6 @@
  */
 package org.springframework.shell.core.command;
 
-import org.springframework.shell.core.Input;
-
 /**
  * Interface parsing arguments for a {@link Command}. A command is always identified by a
  * set of words like {@code command subcommand1 subcommand2} and remaining part of it are
@@ -34,6 +32,6 @@ public interface CommandParser {
 	 * @return the parsed input
 	 * @since 4.0.0
 	 */
-	ParsedInput parse(Input input);
+	ParsedInput parse(String input);
 
 }
