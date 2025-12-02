@@ -43,14 +43,15 @@ public class VetsListCommand extends AbstractCommand {
 
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) {
-		PrintWriter writer = commandContext.terminal().writer();
 		List<@Nullable Vet> vets = this.jdbcClient.sql("SELECT id, first_name, last_name FROM VETS")
 			.query(new DataClassRowMapper<>(Vet.class))
 			.list();
-		for (Vet vet : vets) {
-			writer.println(vet);
+		try (PrintWriter writer = commandContext.outputWriter()) {
+			for (Vet vet : vets) {
+				writer.println(vet);
+			}
+			writer.flush();
 		}
-		writer.flush();
 		return ExitStatus.OK;
 	}
 

@@ -1,15 +1,18 @@
 package org.springframework.shell.samples.helloworld;
 
+import java.io.PrintWriter;
 import java.util.List;
-
-import org.jline.terminal.Terminal;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.annotation.*;
+import org.springframework.shell.core.command.annotation.Argument;
+import org.springframework.shell.core.command.annotation.Arguments;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.EnableCommand;
+import org.springframework.shell.core.command.annotation.Option;
 
 @EnableCommand(SpringShellApplication.class)
 public class SpringShellApplication {
@@ -39,8 +42,10 @@ public class SpringShellApplication {
 	@Command(name = "yo", description = "Say yo", group = "greetings",
 			help = "A command that greets the user with 'Yo there! what's up?'")
 	public void sayYo(CommandContext commandContext) {
-		Terminal terminal = commandContext.terminal();
-		terminal.writer().println("Yo there! what's up?");
+		try (PrintWriter outputWriter = commandContext.outputWriter()) {
+			outputWriter.println("Yo there! what's up?");
+			outputWriter.flush();
+		}
 	}
 
 	@Bean

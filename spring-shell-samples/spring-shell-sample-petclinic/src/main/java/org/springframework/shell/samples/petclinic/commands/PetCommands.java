@@ -40,16 +40,18 @@ public class PetCommands {
 
 	@Command(name = { "pets", "list" }, description = "List pets", group = "pets", help = "List pets in Pet Clinic")
 	public void listPets(CommandContext commandContext) {
-		PrintWriter writer = commandContext.terminal().writer();
 		List<@Nullable Pet> pets = jdbcClient.sql("SELECT id, name FROM PETS")
 			.query(new DataClassRowMapper<>(Pet.class))
 			.list();
-		for (Pet pet : pets) {
-			writer.println(pet);
+		try (PrintWriter writer = commandContext.outputWriter()) {
+			for (Pet pet : pets) {
+				writer.println(pet);
+			}
+			writer.flush();
 		}
-		writer.flush();
 	}
 
+	// TODO inject context and use output writer instead of System.out and System.err
 	@Command(name = { "pets", "info" }, description = "Show detail about a given pet", group = "pets",
 			help = "Show the details about a given pet")
 	public void showPet(@Option(longName = "petId", description = "The pet ID") int id) {

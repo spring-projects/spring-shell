@@ -16,7 +16,7 @@
 	<modules>
 		<module>spring-shell-sample-hello-world</module>
 		<module>spring-shell-sample-petclinic</module>
-		<module>spring-shell-sample-hello-world-spring-boot</module>
+		<module>spring-shell-sample-spring-boot</module>
 	</modules>
 
 	<build>

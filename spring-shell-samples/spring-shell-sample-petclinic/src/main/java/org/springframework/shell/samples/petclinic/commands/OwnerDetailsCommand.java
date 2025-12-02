@@ -42,42 +42,43 @@ public class OwnerDetailsCommand extends AbstractCommand {
 
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) {
-		PrintWriter writer = commandContext.terminal().writer();
-		if (commandContext.options().isEmpty()) {
-			writer.println("Owner ID is required");
-			writer.println("Usage: owners info --ownerId=<id>");
-			writer.flush();
-			return ExitStatus.USAGE_ERROR;
-		}
-		CommandOption commandOption = commandContext.options().get(0);
-		String longName = commandOption.longName();
-		if (!"ownerId".equalsIgnoreCase(longName)) {
-			writer.println("Unrecognized option: " + longName);
-			writer.println("Usage: owners info --ownerId=<id>");
-			writer.flush();
-			return ExitStatus.USAGE_ERROR;
-		}
-		String ownerId = commandOption.value();
-		try {
-			Integer.parseInt(ownerId);
-		}
-		catch (NumberFormatException e) {
-			writer.println("Invalid owner ID: " + ownerId + ". It must be a number.");
-			writer.println("Usage: owners info --ownerId=<id>");
-			writer.flush();
-			return ExitStatus.USAGE_ERROR;
-		}
-		try {
-			Owner owner = this.jdbcClient.sql("SELECT * FROM OWNERS where id = " + ownerId)
-				.query(new DataClassRowMapper<>(Owner.class))
-				.single();
-			writer.println(owner);
-		}
-		catch (EmptyResultDataAccessException exception) {
-			writer.println("No owner found with ID: " + ownerId);
-		}
-		finally {
-			writer.flush();
+		try (PrintWriter writer = commandContext.outputWriter()) {
+			if (commandContext.parsedInput().options().isEmpty()) {
+				writer.println("Owner ID is required");
+				writer.println("Usage: owners info --ownerId=<id>");
+				writer.flush();
+				return ExitStatus.USAGE_ERROR;
+			}
+			CommandOption commandOption = commandContext.parsedInput().options().get(0);
+			String longName = commandOption.longName();
+			if (!"ownerId".equalsIgnoreCase(longName)) {
+				writer.println("Unrecognized option: " + longName);
+				writer.println("Usage: owners info --ownerId=<id>");
+				writer.flush();
+				return ExitStatus.USAGE_ERROR;
+			}
+			String ownerId = commandOption.value();
+			try {
+				Integer.parseInt(ownerId);
+			}
+			catch (NumberFormatException e) {
+				writer.println("Invalid owner ID: " + ownerId + ". It must be a number.");
+				writer.println("Usage: owners info --ownerId=<id>");
+				writer.flush();
+				return ExitStatus.USAGE_ERROR;
+			}
+			try {
+				Owner owner = this.jdbcClient.sql("SELECT * FROM OWNERS where id = " + ownerId)
+					.query(new DataClassRowMapper<>(Owner.class))
+					.single();
+				writer.println(owner);
+			}
+			catch (EmptyResultDataAccessException exception) {
+				writer.println("No owner found with ID: " + ownerId);
+			}
+			finally {
+				writer.flush();
+			}
 		}
 		return ExitStatus.OK;
 	}

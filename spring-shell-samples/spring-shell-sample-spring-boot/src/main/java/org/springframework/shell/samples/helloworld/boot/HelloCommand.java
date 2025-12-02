@@ -1,8 +1,7 @@
 package org.springframework.shell.samples.helloworld.boot;
 
+import java.io.PrintWriter;
 import java.util.List;
-
-import org.jline.terminal.Terminal;
 
 import org.springframework.shell.core.command.CommandArgument;
 import org.springframework.shell.core.command.CommandContext;
@@ -22,13 +21,13 @@ public class HelloCommand extends AbstractCommand {
 
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) {
-		Terminal terminal = commandContext.terminal();
+		PrintWriter outputWriter = commandContext.outputWriter();
 		// check for name argument
-		List<CommandArgument> arguments = commandContext.arguments();
+		List<CommandArgument> arguments = commandContext.parsedInput().arguments();
 		if (arguments.isEmpty()) {
-			terminal.writer().println("Error: Name argument is required.");
-			terminal.writer().println("Usage: " + getHelp());
-			terminal.flush();
+			outputWriter.println("Error: Name argument is required.");
+			outputWriter.println("Usage: " + getHelp());
+			outputWriter.flush();
 			return ExitStatus.USAGE_ERROR;
 		}
 
@@ -37,12 +36,12 @@ public class HelloCommand extends AbstractCommand {
 		String name = nameArgument.value();
 
 		// get suffix option
-		CommandOption suffixOption = getOptionByName(commandContext.options(), "s");
+		CommandOption suffixOption = getOptionByName(commandContext.parsedInput().options(), "s");
 		String suffix = suffixOption == null ? "!" : suffixOption.value();
 
 		// print greeting
-		terminal.writer().println("Hello " + name + suffix);
-		terminal.flush();
+		outputWriter.println("Hello " + name + suffix);
+		outputWriter.flush();
 		return ExitStatus.OK;
 	}
 

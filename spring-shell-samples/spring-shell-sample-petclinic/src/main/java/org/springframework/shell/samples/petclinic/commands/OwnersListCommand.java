@@ -43,14 +43,15 @@ public class OwnersListCommand extends AbstractCommand {
 
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) {
-		PrintWriter writer = commandContext.terminal().writer();
 		List<@Nullable Owner> owners = this.jdbcClient.sql("SELECT id, first_name, last_name FROM OWNERS")
 			.query(new DataClassRowMapper<>(Owner.class))
 			.list();
-		for (Owner owner : owners) {
-			writer.println(owner);
+		try (PrintWriter writer = commandContext.outputWriter()) {
+			for (Owner owner : owners) {
+				writer.println(owner);
+			}
+			writer.flush();
 		}
-		writer.flush();
 		return ExitStatus.OK;
 	}
 
