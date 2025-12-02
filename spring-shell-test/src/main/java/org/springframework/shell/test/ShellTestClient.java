@@ -22,15 +22,18 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jline.reader.LineReader;
+import org.jline.reader.Parser;
 import org.jline.terminal.Terminal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.shell.core.Shell;
+import org.springframework.shell.core.ConsoleInputProvider;
+import org.springframework.shell.core.NonInteractiveShellRunner;
 import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.context.DefaultShellContext;
-import org.springframework.shell.core.jline.InteractiveShellRunner;
-import org.springframework.shell.core.jline.NonInteractiveShellRunner;
+import org.springframework.shell.core.SystemShellRunner;
+import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.DefaultCommandParser;
+import org.springframework.shell.core.jline.JLineInputProvider;
 import org.springframework.shell.core.jline.PromptProvider;
 import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
 
@@ -54,7 +57,7 @@ public interface ShellTestClient extends Closeable {
 	 * @param args the command arguments
 	 * @return session for chaining
 	 */
-	NonInteractiveShellSession nonInterative(String... args);
+	NonInteractiveShellSession nonInteractive(String... args);
 
 	/**
 	 * Read the screen.
@@ -65,27 +68,47 @@ public interface ShellTestClient extends Closeable {
 	/**
 	 * Get an instance of a builder.
 	 * @param terminalSession the terminal session
-	 * @param shell the shell
 	 * @param promptProvider the prompt provider
 	 * @param lineReader the line reader
 	 * @param terminal the terminal
 	 * @return a Builder
 	 */
-	public static Builder builder(TerminalSession terminalSession, Shell shell, PromptProvider promptProvider,
-			LineReader lineReader, Terminal terminal) {
-		return new DefaultBuilder(terminalSession, shell, promptProvider, lineReader, terminal);
+	static Builder builder(TerminalSession terminalSession, PromptProvider promptProvider, LineReader lineReader,
+			Terminal terminal, Parser parser) {
+		return new Builder(terminalSession, promptProvider, lineReader, terminal, parser);
 	}
 
 	/**
 	 * Builder interface for {@code ShellClient}.
 	 */
-	interface Builder {
+	class Builder {
+
+		private TerminalSession terminalSession;
+
+		private PromptProvider promptProvider;
+
+		private LineReader lineReader;
+
+		private Terminal terminal;
+
+		private Parser parser;
 
 		/**
 		 * Build a shell client.
 		 * @return a shell client
 		 */
-		ShellTestClient build();
+		Builder(TerminalSession terminalSession, PromptProvider promptProvider, LineReader lineReader,
+				Terminal terminal, Parser parser) {
+			this.terminalSession = terminalSession;
+			this.promptProvider = promptProvider;
+			this.lineReader = lineReader;
+			this.terminal = terminal;
+			this.parser = parser;
+		}
+
+		public ShellTestClient build() {
+			return new DefaultShellClient(terminalSession, promptProvider, lineReader, terminal, parser);
+		}
 
 	}
 
@@ -128,41 +151,11 @@ public interface ShellTestClient extends Closeable {
 
 	}
 
-	static class DefaultBuilder implements Builder {
-
-		private TerminalSession terminalSession;
-
-		private Shell shell;
-
-		private PromptProvider promptProvider;
-
-		private LineReader lineReader;
-
-		private Terminal terminal;
-
-		DefaultBuilder(TerminalSession terminalSession, Shell shell, PromptProvider promptProvider,
-				LineReader lineReader, Terminal terminal) {
-			this.terminalSession = terminalSession;
-			this.shell = shell;
-			this.promptProvider = promptProvider;
-			this.lineReader = lineReader;
-			this.terminal = terminal;
-		}
-
-		@Override
-		public ShellTestClient build() {
-			return new DefaultShellClient(terminalSession, shell, promptProvider, lineReader, terminal);
-		}
-
-	}
-
-	static class DefaultShellClient implements ShellTestClient {
+	class DefaultShellClient implements ShellTestClient {
 
 		private final static Log log = LogFactory.getLog(DefaultShellClient.class);
 
 		private TerminalSession terminalSession;
-
-		private Shell shell;
 
 		private PromptProvider promptProvider;
 
@@ -172,15 +165,17 @@ public interface ShellTestClient extends Closeable {
 
 		private Terminal terminal;
 
+		private Parser parser;
+
 		private final BlockingQueue<ShellRunnerTaskData> blockingQueue = new LinkedBlockingDeque<>(10);
 
-		DefaultShellClient(TerminalSession terminalSession, Shell shell, PromptProvider promptProvider,
-				LineReader lineReader, Terminal terminal) {
+		DefaultShellClient(TerminalSession terminalSession, PromptProvider promptProvider, LineReader lineReader,
+				Terminal terminal, Parser parser) {
 			this.terminalSession = terminalSession;
-			this.shell = shell;
 			this.promptProvider = promptProvider;
 			this.lineReader = lineReader;
 			this.terminal = terminal;
+			this.parser = parser;
 		}
 
 		@Override
@@ -190,18 +185,18 @@ public interface ShellTestClient extends Closeable {
 				runnerThread = new Thread(new ShellRunnerTask(this.blockingQueue));
 				runnerThread.start();
 			}
-			return new DefaultInteractiveShellSession(shell, promptProvider, lineReader, blockingQueue, terminalSession,
+			return new DefaultInteractiveShellSession(promptProvider, lineReader, blockingQueue, terminalSession,
 					terminal);
 		}
 
 		@Override
-		public NonInteractiveShellSession nonInterative(String... args) {
+		public NonInteractiveShellSession nonInteractive(String... args) {
 			terminalSession.start();
 			if (runnerThread == null) {
 				runnerThread = new Thread(new ShellRunnerTask(this.blockingQueue));
 				runnerThread.start();
 			}
-			return new DefaultNonInteractiveShellSession(shell, args, blockingQueue, terminalSession, terminal);
+			return new DefaultNonInteractiveShellSession(parser, args, blockingQueue, terminalSession, terminal);
 		}
 
 		@Override
@@ -221,9 +216,7 @@ public interface ShellTestClient extends Closeable {
 
 	}
 
-	static class DefaultInteractiveShellSession implements InteractiveShellSession {
-
-		private Shell shell;
+	class DefaultInteractiveShellSession implements InteractiveShellSession {
 
 		private PromptProvider promptProvider;
 
@@ -237,9 +230,8 @@ public interface ShellTestClient extends Closeable {
 
 		private final AtomicInteger state = new AtomicInteger(-2);
 
-		public DefaultInteractiveShellSession(Shell shell, PromptProvider promptProvider, LineReader lineReader,
+		public DefaultInteractiveShellSession(PromptProvider promptProvider, LineReader lineReader,
 				BlockingQueue<ShellRunnerTaskData> blockingQueue, TerminalSession terminalSession, Terminal terminal) {
-			this.shell = shell;
 			this.promptProvider = promptProvider;
 			this.lineReader = lineReader;
 			this.blockingQueue = blockingQueue;
@@ -265,8 +257,10 @@ public interface ShellTestClient extends Closeable {
 
 		@Override
 		public InteractiveShellSession run() {
-			ShellRunner runner = new InteractiveShellRunner(lineReader, promptProvider, shell,
-					new DefaultShellContext());
+			JLineInputProvider inputProvider = new JLineInputProvider(lineReader);
+			inputProvider.setPromptProvider(promptProvider);
+			ShellRunner runner = new SystemShellRunner(new ConsoleInputProvider(), new DefaultCommandParser(),
+					new CommandRegistry());
 			this.blockingQueue.add(new ShellRunnerTaskData(runner, new String[] {}, state));
 			return this;
 		}
@@ -278,9 +272,7 @@ public interface ShellTestClient extends Closeable {
 
 	}
 
-	static class DefaultNonInteractiveShellSession implements NonInteractiveShellSession {
-
-		private Shell shell;
+	class DefaultNonInteractiveShellSession implements NonInteractiveShellSession {
 
 		private String[] args;
 
@@ -290,15 +282,17 @@ public interface ShellTestClient extends Closeable {
 
 		private Terminal terminal;
 
+		private Parser parser;
+
 		private final AtomicInteger state = new AtomicInteger(-2);
 
-		public DefaultNonInteractiveShellSession(Shell shell, String[] args,
+		public DefaultNonInteractiveShellSession(Parser parser, String[] args,
 				BlockingQueue<ShellRunnerTaskData> blockingQueue, TerminalSession terminalSession, Terminal terminal) {
-			this.shell = shell;
 			this.args = args;
 			this.blockingQueue = blockingQueue;
 			this.terminalSession = terminalSession;
 			this.terminal = terminal;
+			this.parser = parser;
 		}
 
 		@Override
@@ -319,7 +313,7 @@ public interface ShellTestClient extends Closeable {
 
 		@Override
 		public NonInteractiveShellSession run() {
-			ShellRunner runner = new NonInteractiveShellRunner(shell, new DefaultShellContext());
+			ShellRunner runner = new NonInteractiveShellRunner(new DefaultCommandParser(), new CommandRegistry());
 			this.blockingQueue.add(new ShellRunnerTaskData(runner, args, state));
 			return this;
 		}
@@ -331,10 +325,10 @@ public interface ShellTestClient extends Closeable {
 
 	}
 
-	static record ShellRunnerTaskData(ShellRunner runner, String[] args, AtomicInteger state) {
+	record ShellRunnerTaskData(ShellRunner runner, String[] args, AtomicInteger state) {
 	}
 
-	static class ShellRunnerTask implements Runnable {
+	class ShellRunnerTask implements Runnable {
 
 		private final static Log log = LogFactory.getLog(ShellRunnerTask.class);
 

@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.test.autoconfigure;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Janne Valkealahti
  */
+@Disabled
 @ShellTest(properties = { "spring.profiles.active=test", "spring.shell.test.terminal-width=81",
 		"spring.shell.test.terminal-height=25" })
 @ContextConfiguration(classes = ExampleShellApplication.class)

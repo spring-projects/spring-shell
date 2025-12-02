@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.springframework.shell.test.autoconfigure.app;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.test.autoconfigure.ShellTest;
 
 /**
@@ -23,8 +24,14 @@ import org.springframework.shell.test.autoconfigure.ShellTest;
  * {@link ShellTest @ShellTest} tests.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 @SpringBootApplication
 public class ExampleShellApplication {
+
+	@Command(name = "hi", description = "Says hello")
+	public String hello() {
+		return "hello";
+	}
 
 }

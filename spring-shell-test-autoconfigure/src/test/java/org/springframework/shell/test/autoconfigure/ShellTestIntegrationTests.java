@@ -94,7 +94,7 @@ class ShellTestIntegrationTests {
 
 		Condition<String> emptyCondition = new Condition<>(line -> line.trim().isEmpty(), "Have only whitespace");
 
-		NonInteractiveShellSession session = client.nonInterative("help").run();
+		NonInteractiveShellSession session = client.nonInteractive("help").run();
 
 		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
 			List<String> lines = session.screen().lines();
@@ -109,7 +109,7 @@ class ShellTestIntegrationTests {
 			assertThat(lines).are(emptyCondition);
 		});
 
-		NonInteractiveShellSession session2 = client.nonInterative("help", "help").run();
+		NonInteractiveShellSession session2 = client.nonInteractive("help", "help").run();
 		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
 			List<String> lines = session2.screen().lines();
 			assertThat(lines).areNot(helpCondition);
@@ -124,7 +124,7 @@ class ShellTestIntegrationTests {
 	void testNonInteractive2() {
 		Condition<String> helloCondition = new Condition<>(line -> line.contains("hello"), "Hello has expected output");
 
-		NonInteractiveShellSession session = client.nonInterative("hello").run();
+		NonInteractiveShellSession session = client.nonInteractive("hello").run();
 
 		await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
 			List<String> lines = session.screen().lines();

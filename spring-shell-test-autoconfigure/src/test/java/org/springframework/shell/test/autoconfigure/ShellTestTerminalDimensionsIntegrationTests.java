@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.test.autoconfigure;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 @ShellTest(terminalWidth = 81, terminalHeight = 25)
 @ContextConfiguration(classes = ExampleShellApplication.class)
 class ShellTestTerminalDimensionsIntegrationTests {

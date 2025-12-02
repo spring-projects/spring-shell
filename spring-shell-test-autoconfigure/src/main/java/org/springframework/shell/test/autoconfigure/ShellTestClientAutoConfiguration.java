@@ -16,12 +16,12 @@
 package org.springframework.shell.test.autoconfigure;
 
 import org.jline.reader.LineReader;
+import org.jline.reader.Parser;
 import org.jline.terminal.Terminal;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.Shell;
 import org.springframework.shell.core.jline.PromptProvider;
 import org.springframework.shell.test.ShellTestClient;
 import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
@@ -34,9 +34,9 @@ public class ShellTestClientAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	ShellTestClient shellTestClient(TerminalSession widget, Shell shell, PromptProvider promptProvider,
-			LineReader lineReader, Terminal terminal) {
-		return ShellTestClient.builder(widget, shell, promptProvider, lineReader, terminal).build();
+	ShellTestClient shellTestClient(TerminalSession widget, PromptProvider promptProvider, LineReader lineReader,
+			Terminal terminal, Parser parser) {
+		return ShellTestClient.builder(widget, promptProvider, lineReader, terminal, parser).build();
 	}
 
 }
