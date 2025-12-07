@@ -42,10 +42,9 @@ public class Version implements Command {
 		if (pkg != null && pkg.getImplementationVersion() != null) {
 			version = pkg.getImplementationVersion();
 		}
-		try (PrintWriter printWriter = commandContext.outputWriter()) {
-			printWriter.println("Version: " + version);
-			printWriter.flush();
-		}
+		PrintWriter printWriter = commandContext.outputWriter();
+		printWriter.println("Version: " + version);
+		printWriter.flush();
 		return ExitStatus.OK;
 	}
 
