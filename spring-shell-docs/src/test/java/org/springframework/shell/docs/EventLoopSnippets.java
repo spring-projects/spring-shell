@@ -20,8 +20,8 @@ import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
-import org.springframework.shell.core.tui.component.view.TerminalUI;
-import org.springframework.shell.core.tui.component.view.event.EventLoop;
+import org.springframework.shell.jline.tui.component.view.TerminalUI;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 
 class EventLoopSnippets {
 

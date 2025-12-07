@@ -17,12 +17,12 @@ package org.springframework.shell.docs;
 
 import java.util.List;
 
-import org.springframework.shell.core.tui.component.view.control.ListView;
-import org.springframework.shell.core.tui.component.view.control.ListView.ItemStyle;
-import org.springframework.shell.core.tui.component.view.control.cell.AbstractListCell;
-import org.springframework.shell.core.tui.component.view.screen.Screen;
-import org.springframework.shell.core.tui.component.view.screen.Screen.Writer;
-import org.springframework.shell.core.tui.geom.Rectangle;
+import org.springframework.shell.jline.tui.component.view.control.ListView;
+import org.springframework.shell.jline.tui.component.view.control.ListView.ItemStyle;
+import org.springframework.shell.jline.tui.component.view.control.cell.AbstractListCell;
+import org.springframework.shell.jline.tui.component.view.screen.Screen;
+import org.springframework.shell.jline.tui.component.view.screen.Screen.Writer;
+import org.springframework.shell.jline.tui.geom.Rectangle;
 
 public class ListViewSnippets {
 

@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-core</artifactId>
+			<artifactId>spring-shell-jline</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
         <dependency>

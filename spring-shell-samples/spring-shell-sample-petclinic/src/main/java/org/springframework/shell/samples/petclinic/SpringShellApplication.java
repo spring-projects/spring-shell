@@ -18,18 +18,21 @@ package org.springframework.shell.samples.petclinic;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.annotation.EnableCommand;
+import org.springframework.shell.jline.DefaultJLineShellConfiguration;
 import org.springframework.shell.samples.petclinic.commands.*;
 
 /**
  * @author Mahmoud Ben Hassine
  */
 @EnableCommand({ SpringShellApplication.class, PetCommands.class })
+@Import(DefaultJLineShellConfiguration.class)
 public class SpringShellApplication {
 
 	public static void main(String[] args) throws Exception {

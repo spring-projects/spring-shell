@@ -36,6 +36,12 @@
 			<artifactId>spring-shell-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+        <!-- FIXME revisit this dependency (might need new module test-jline) -->
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-jline</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>

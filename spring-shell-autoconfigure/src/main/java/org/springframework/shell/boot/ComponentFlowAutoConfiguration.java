@@ -27,9 +27,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.shell.core.tui.component.flow.ComponentFlow;
-import org.springframework.shell.core.tui.component.flow.ComponentFlow.Builder;
-import org.springframework.shell.core.tui.style.TemplateExecutor;
+import org.springframework.shell.jline.tui.component.flow.ComponentFlow;
+import org.springframework.shell.jline.tui.component.flow.ComponentFlow.Builder;
+import org.springframework.shell.jline.tui.style.TemplateExecutor;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for {@link ComponentFlow}.

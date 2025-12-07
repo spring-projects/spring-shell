@@ -20,12 +20,12 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.tui.style.TemplateExecutor;
-import org.springframework.shell.core.tui.style.Theme;
-import org.springframework.shell.core.tui.style.ThemeActive;
-import org.springframework.shell.core.tui.style.ThemeRegistry;
-import org.springframework.shell.core.tui.style.ThemeResolver;
-import org.springframework.shell.core.tui.style.ThemeSettings;
+import org.springframework.shell.jline.tui.style.TemplateExecutor;
+import org.springframework.shell.jline.tui.style.Theme;
+import org.springframework.shell.jline.tui.style.ThemeActive;
+import org.springframework.shell.jline.tui.style.ThemeRegistry;
+import org.springframework.shell.jline.tui.style.ThemeResolver;
+import org.springframework.shell.jline.tui.style.ThemeSettings;
 import org.springframework.util.StringUtils;
 
 @AutoConfiguration

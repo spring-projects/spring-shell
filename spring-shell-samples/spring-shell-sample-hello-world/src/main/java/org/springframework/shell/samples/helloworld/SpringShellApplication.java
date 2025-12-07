@@ -3,8 +3,6 @@ package org.springframework.shell.samples.helloworld;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.jline.utils.AttributedStringBuilder;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +10,6 @@ import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.annotation.*;
 import org.springframework.shell.core.commands.AbstractCommand;
-
-import static org.jline.utils.AttributedStyle.BOLD;
-import static org.jline.utils.AttributedStyle.GREEN;
 
 @EnableCommand(SpringShellApplication.class)
 public class SpringShellApplication {
@@ -57,9 +52,7 @@ public class SpringShellApplication {
 			.group("greetings")
 			.help("A command that greets the user with 'Good morning!'")
 			.execute(commandContext -> {
-				String ansiString = new AttributedStringBuilder().append("Good morning!", BOLD.foreground(GREEN))
-					.append("!")
-					.toAnsi();
+				String ansiString = "Good morning!";
 				try (PrintWriter outputWriter = commandContext.outputWriter()) {
 					outputWriter.println(ansiString);
 					outputWriter.flush();

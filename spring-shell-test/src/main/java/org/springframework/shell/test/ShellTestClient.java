@@ -33,8 +33,8 @@ import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.SystemShellRunner;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.DefaultCommandParser;
-import org.springframework.shell.core.jline.JLineInputProvider;
-import org.springframework.shell.core.jline.PromptProvider;
+import org.springframework.shell.jline.JLineInputProvider;
+import org.springframework.shell.jline.PromptProvider;
 import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
 
 /**

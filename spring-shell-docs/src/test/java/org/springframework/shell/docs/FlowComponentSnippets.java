@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.core.tui.component.flow.ComponentFlow;
-import org.springframework.shell.core.tui.component.flow.SelectItem;
+import org.springframework.shell.jline.tui.component.flow.ComponentFlow;
+import org.springframework.shell.jline.tui.component.flow.SelectItem;
 
 public class FlowComponentSnippets {
 

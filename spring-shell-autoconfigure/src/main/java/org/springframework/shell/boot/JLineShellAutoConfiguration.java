@@ -40,7 +40,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,8 +48,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.config.UserConfigPathProvider;
-import org.springframework.shell.core.jline.ExtendedDefaultParser;
-import org.springframework.shell.core.jline.PromptProvider;
+import org.springframework.shell.jline.ExtendedDefaultParser;
+import org.springframework.shell.jline.JLineInputProvider;
+import org.springframework.shell.jline.PromptProvider;
 import org.springframework.util.StringUtils;
 
 /**
@@ -62,16 +62,9 @@ import org.springframework.util.StringUtils;
  */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
-@ConditionalOnProperty(prefix = "spring.shell.interactive.type", name = "jline", havingValue = "true")
 public class JLineShellAutoConfiguration {
 
 	private final static Log log = LogFactory.getLog(JLineShellAutoConfiguration.class);
-
-	private Terminal terminal;
-
-	private Parser parser;
-
-	private CommandRegistry commandRegistry;
 
 	private org.jline.reader.History jLineHistory;
 
@@ -82,12 +75,8 @@ public class JLineShellAutoConfiguration {
 
 	private UserConfigPathProvider userConfigPathProvider;
 
-	public JLineShellAutoConfiguration(Terminal terminal, Parser parser, CommandRegistry commandRegistry,
-			org.jline.reader.History jLineHistory, SpringShellProperties springShellProperties,
-			UserConfigPathProvider userConfigPathProvider) {
-		this.terminal = terminal;
-		this.parser = parser;
-		this.commandRegistry = commandRegistry;
+	public JLineShellAutoConfiguration(org.jline.reader.History jLineHistory,
+			SpringShellProperties springShellProperties, UserConfigPathProvider userConfigPathProvider) {
 		this.jLineHistory = jLineHistory;
 		this.springShellProperties = springShellProperties;
 		this.userConfigPathProvider = userConfigPathProvider;
@@ -99,7 +88,7 @@ public class JLineShellAutoConfiguration {
 	}
 
 	@Bean
-	public LineReader lineReader() {
+	public LineReader lineReader(Terminal terminal, Parser parser, CommandRegistry commandRegistry) {
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 			.terminal(terminal)
 			.appName("Spring Shell")
@@ -156,6 +145,11 @@ public class JLineShellAutoConfiguration {
 		// inserting a tab
 		jLineHistory.attach(lineReader);
 		return lineReader;
+	}
+
+	@Bean
+	public JLineInputProvider inputProvider(LineReader lineReader) {
+		return new JLineInputProvider(lineReader);
 	}
 
 	@Bean(destroyMethod = "close")

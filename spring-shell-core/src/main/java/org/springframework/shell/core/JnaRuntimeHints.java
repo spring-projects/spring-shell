@@ -35,6 +35,8 @@ import org.springframework.aot.hint.TypeReference;
  */
 public class JnaRuntimeHints implements RuntimeHintsRegistrar {
 
+	// TODO move JLine related hints to spring-shell-jline module
+
 	@Override
 	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 		ResourceHints resource = hints.resources();

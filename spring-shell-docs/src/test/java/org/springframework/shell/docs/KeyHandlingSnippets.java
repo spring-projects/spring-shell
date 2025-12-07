@@ -15,8 +15,8 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.tui.component.view.event.EventLoop;
-import org.springframework.shell.core.tui.component.view.event.KeyEvent;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
+import org.springframework.shell.jline.tui.component.view.event.KeyEvent;
 
 class KeyHandlingSnippets {
 

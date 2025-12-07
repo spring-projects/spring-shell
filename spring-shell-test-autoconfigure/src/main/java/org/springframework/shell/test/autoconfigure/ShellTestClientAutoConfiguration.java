@@ -22,7 +22,7 @@ import org.jline.terminal.Terminal;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.jline.PromptProvider;
+import org.springframework.shell.jline.PromptProvider;
 import org.springframework.shell.test.ShellTestClient;
 import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
 
