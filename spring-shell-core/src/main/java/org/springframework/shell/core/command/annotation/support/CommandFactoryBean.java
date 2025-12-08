@@ -22,12 +22,14 @@ import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.commands.adapter.MethodInvokerCommandAdapter;
 import org.springframework.util.Assert;
 
@@ -64,7 +66,19 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		String group = command.group();
 		log.debug("Creating command bean for method '" + this.method + "' with name '" + name + "'");
 		Class<?> declaringClass = this.method.getDeclaringClass();
-		Object targetObject = this.applicationContext.getBean(declaringClass);
+		Object targetObject;
+		try {
+			targetObject = this.applicationContext.getBean(declaringClass);
+		}
+		catch (NoSuchBeanDefinitionException e) {
+			String errorMessage = """
+					Unable to create command for method '%s' because no bean of type '%s' is defined in the application context.
+					Ensure that the declaring class is annotated with a Spring stereotype annotation (e.g., @Component) or
+					is otherwise registered as a bean in the application context.
+					"""
+				.formatted(this.method.getName(), declaringClass.getName());
+			throw new CommandCreationException(errorMessage, e);
+		}
 		ConfigurableConversionService configurableConversionService = new DefaultConversionService();
 		try {
 			configurableConversionService = this.applicationContext.getBean(ConfigurableConversionService.class);
