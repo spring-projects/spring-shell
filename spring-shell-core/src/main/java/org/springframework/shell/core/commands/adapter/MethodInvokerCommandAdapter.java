@@ -15,7 +15,6 @@
  */
 package org.springframework.shell.core.commands.adapter;
 
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -79,6 +78,8 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 
 		// prepare method parameters
 		Class<?>[] parameterTypes = this.method.getParameterTypes();
+
+		// TODO should be able to mix CommandContext and other parameters
 		if (parameterTypes.length == 1
 				&& parameterTypes[0].equals(org.springframework.shell.core.command.CommandContext.class)) {
 			methodInvoker.setArguments(commandContext);
@@ -91,20 +92,20 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 
 		// invoke method
 		methodInvoker.invoke();
-		try (PrintWriter outputWriter = commandContext.outputWriter()) {
-			outputWriter.flush();
-		}
+		commandContext.outputWriter().flush();
+
 		return ExitStatus.OK;
 	}
 
 	private List<Object> prepareArguments(CommandContext commandContext) {
-		log.debug("Preparing method arguments for method: " + method.getName() + " of class: "
-				+ method.getDeclaringClass().getName() + " with context: " + commandContext);
+		log.debug("Preparing method arguments for method: " + this.method.getName() + " of class: "
+				+ this.method.getDeclaringClass().getName() + " with context: " + commandContext);
 		List<Object> args = new ArrayList<>();
 		ParsedInput parsedInput = commandContext.parsedInput();
 		List<CommandOption> options = parsedInput.options();
-		Parameter[] parameters = method.getParameters();
-		Class<?>[] methodParameterTypes = method.getParameterTypes();
+		List<CommandArgument> arguments = parsedInput.arguments();
+		Parameter[] parameters = this.method.getParameters();
+		Class<?>[] parameterTypes = this.method.getParameterTypes();
 		for (int i = 0; i < parameters.length; i++) {
 			Option optionAnnotation = parameters[i].getAnnotation(Option.class);
 			if (optionAnnotation != null) {
@@ -116,13 +117,13 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 				if (commandOption == null) {
 					// Option not provided, use default value
 					String defaultValue = optionAnnotation.defaultValue();
-					Class<?> parameterType = methodParameterTypes[i];
+					Class<?> parameterType = parameterTypes[i];
 					Object value = this.conversionService.convert(defaultValue, parameterType);
 					args.add(value);
 				}
 				else {
 					String rawValue = commandOption.value();
-					Class<?> parameterType = methodParameterTypes[i];
+					Class<?> parameterType = parameterTypes[i];
 					Object value = this.conversionService.convert(rawValue, parameterType);
 					args.add(value);
 				}
@@ -131,16 +132,22 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 			if (argumentAnnotation != null) {
 				log.debug("Processing argument for parameter: " + parameters[i].getName());
 				int index = argumentAnnotation.index();
-				String rawValue = parsedInput.arguments().get(index).value();
-				Class<?> parameterType = methodParameterTypes[i];
+				String rawValue;
+				try {
+					rawValue = arguments.get(index).value();
+				}
+				catch (Exception e) {
+					rawValue = argumentAnnotation.defaultValue();
+				}
+				Class<?> parameterType = parameterTypes[i];
 				Object value = this.conversionService.convert(rawValue, parameterType);
 				args.add(value);
 			}
 			Arguments argumentsAnnotation = parameters[i].getAnnotation(Arguments.class);
 			if (argumentsAnnotation != null) {
 				log.debug("Processing arguments for parameter: " + parameters[i].getName());
-				List<String> rawValues = parsedInput.arguments().stream().map(CommandArgument::value).toList();
-				Class<?> parameterType = methodParameterTypes[i];
+				List<String> rawValues = arguments.stream().map(CommandArgument::value).toList();
+				Class<?> parameterType = parameterTypes[i];
 				// TODO check for collection types
 				Object value = this.conversionService.convert(rawValues, parameterType);
 				args.add(value);
