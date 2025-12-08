@@ -49,13 +49,23 @@ public class CommandUtils {
 	public static String formatAvailableCommands(CommandRegistry commandRegistry) {
 		StringBuilder stringBuilder = new StringBuilder("Available commands: ");
 		stringBuilder.append(System.lineSeparator());
-		// TODO list commands by their groups
-		for (Command command : commandRegistry.getCommands()) {
-			stringBuilder.append("\t")
-				.append(command.getName())
-				.append(": ")
-				.append(command.getDescription())
-				.append(System.lineSeparator());
+		List<String> groups = commandRegistry.getCommands()
+			.stream()
+			.map(Command::getGroup)
+			.distinct()
+			.sorted()
+			.toList();
+		for (String group : groups) {
+			stringBuilder.append(group).append(System.lineSeparator());
+			for (Command command : commandRegistry.getCommands()) {
+				if (command.getGroup().equals(group)) {
+					stringBuilder.append("\t")
+						.append(command.getName())
+						.append(": ")
+						.append(command.getDescription())
+						.append(System.lineSeparator());
+				}
+			}
 		}
 		return stringBuilder.toString();
 	}
