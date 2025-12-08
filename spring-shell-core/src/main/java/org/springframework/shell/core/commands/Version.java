@@ -36,6 +36,11 @@ public class Version implements Command {
 	}
 
 	@Override
+	public String getGroup() {
+		return "Built-In Commands";
+	}
+
+	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		Package pkg = Version.class.getPackage();
 		String version = "N/A";

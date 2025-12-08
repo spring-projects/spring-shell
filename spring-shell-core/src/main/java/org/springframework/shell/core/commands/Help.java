@@ -38,6 +38,11 @@ public class Help implements Command {
 	}
 
 	@Override
+	public String getGroup() {
+		return "Built-In Commands";
+	}
+
+	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		String helpMessage = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
 		PrintWriter outputWriter = commandContext.outputWriter();

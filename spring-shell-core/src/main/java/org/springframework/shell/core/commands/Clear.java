@@ -37,6 +37,11 @@ public class Clear implements Command {
 	}
 
 	@Override
+	public String getGroup() {
+		return "Built-In Commands";
+	}
+
+	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		PrintWriter printWriter = commandContext.outputWriter();
 		printWriter.print("\033[H\033[2J");
