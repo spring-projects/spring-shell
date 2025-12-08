@@ -46,12 +46,12 @@ public class VetsListCommand extends AbstractCommand {
 		List<@Nullable Vet> vets = this.jdbcClient.sql("SELECT id, first_name, last_name FROM VETS")
 			.query(new DataClassRowMapper<>(Vet.class))
 			.list();
-		try (PrintWriter writer = commandContext.outputWriter()) {
-			for (Vet vet : vets) {
-				writer.println(vet);
-			}
-			writer.flush();
+		PrintWriter writer = commandContext.outputWriter();
+		for (Vet vet : vets) {
+			writer.println(vet);
 		}
+		writer.flush();
+
 		return ExitStatus.OK;
 	}
 

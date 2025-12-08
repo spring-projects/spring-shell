@@ -42,43 +42,42 @@ public class VetDetailsCommand extends AbstractCommand {
 
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) {
-		try (PrintWriter writer = commandContext.outputWriter()) {
-			if (commandContext.parsedInput().options().isEmpty()) {
-				writer.println("Veterinarian ID is required");
-				writer.println("Usage: vets info --vetId=<id>");
-				writer.flush();
-				return ExitStatus.USAGE_ERROR;
-			}
-			CommandOption commandOption = commandContext.parsedInput().options().get(0);
-			String longName = commandOption.longName();
-			if (!"vetId".equalsIgnoreCase(longName)) {
-				writer.println("Unrecognized option: " + longName);
-				writer.println("Usage: vets info --vetId=<id>");
-				writer.flush();
-				return ExitStatus.USAGE_ERROR;
-			}
-			String vetId = commandOption.value();
-			try {
-				Integer.parseInt(vetId);
-			}
-			catch (NumberFormatException e) {
-				writer.println("Invalid veterinarian ID: " + vetId + ". It must be a number.");
-				writer.println("Usage: vets info --vetId=<id>");
-				writer.flush();
-				return ExitStatus.USAGE_ERROR;
-			}
-			try {
-				Vet vet = this.jdbcClient.sql("SELECT * FROM VETS where id = " + vetId)
-					.query(new DataClassRowMapper<>(Vet.class))
-					.single();
-				writer.println(vet);
-			}
-			catch (EmptyResultDataAccessException exception) {
-				writer.println("No veterinarian found with ID: " + vetId);
-			}
-			finally {
-				writer.flush();
-			}
+		PrintWriter writer = commandContext.outputWriter();
+		if (commandContext.parsedInput().options().isEmpty()) {
+			writer.println("Veterinarian ID is required");
+			writer.println("Usage: vets info --vetId=<id>");
+			writer.flush();
+			return ExitStatus.USAGE_ERROR;
+		}
+		CommandOption commandOption = commandContext.parsedInput().options().get(0);
+		String longName = commandOption.longName();
+		if (!"vetId".equalsIgnoreCase(longName)) {
+			writer.println("Unrecognized option: " + longName);
+			writer.println("Usage: vets info --vetId=<id>");
+			writer.flush();
+			return ExitStatus.USAGE_ERROR;
+		}
+		String vetId = commandOption.value();
+		try {
+			Integer.parseInt(vetId);
+		}
+		catch (NumberFormatException e) {
+			writer.println("Invalid veterinarian ID: " + vetId + ". It must be a number.");
+			writer.println("Usage: vets info --vetId=<id>");
+			writer.flush();
+			return ExitStatus.USAGE_ERROR;
+		}
+		try {
+			Vet vet = this.jdbcClient.sql("SELECT * FROM VETS where id = " + vetId)
+				.query(new DataClassRowMapper<>(Vet.class))
+				.single();
+			writer.println(vet);
+		}
+		catch (EmptyResultDataAccessException exception) {
+			writer.println("No veterinarian found with ID: " + vetId);
+		}
+		finally {
+			writer.flush();
 		}
 		return ExitStatus.OK;
 	}

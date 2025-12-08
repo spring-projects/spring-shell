@@ -98,10 +98,10 @@ public abstract class AbstractCommand implements Command {
 	}
 
 	protected void println(String message, CommandContext commandContext) {
-		try (PrintWriter outputWriter = commandContext.outputWriter()) {
-			outputWriter.println(message);
-			outputWriter.flush();
-		}
+		PrintWriter outputWriter = commandContext.outputWriter();
+		outputWriter.println(message);
+		outputWriter.flush();
+
 	}
 
 	protected boolean isHelp(CommandOption option) {

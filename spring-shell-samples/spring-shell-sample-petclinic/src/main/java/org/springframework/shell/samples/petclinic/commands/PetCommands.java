@@ -43,12 +43,11 @@ public class PetCommands {
 		List<@Nullable Pet> pets = jdbcClient.sql("SELECT id, name FROM PETS")
 			.query(new DataClassRowMapper<>(Pet.class))
 			.list();
-		try (PrintWriter writer = commandContext.outputWriter()) {
-			for (Pet pet : pets) {
-				writer.println(pet);
-			}
-			writer.flush();
+		PrintWriter writer = commandContext.outputWriter();
+		for (Pet pet : pets) {
+			writer.println(pet);
 		}
+		writer.flush();
 	}
 
 	// TODO inject context and use output writer instead of System.out and System.err

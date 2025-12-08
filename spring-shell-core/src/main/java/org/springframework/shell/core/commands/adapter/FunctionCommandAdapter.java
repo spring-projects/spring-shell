@@ -23,7 +23,8 @@ import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.commands.AbstractCommand;
 
 /**
- * An adapter to adapt a {@link Function} as a command.
+ * An adapter to adapt a {@link Function} as a command. The String output of the function
+ * is printed to the command output.
  *
  * @author Mahmoud Ben Hassine
  * @since 4.0.0
@@ -49,10 +50,9 @@ public class FunctionCommandAdapter extends AbstractCommand {
 	@Override
 	public ExitStatus doExecute(CommandContext commandContext) {
 		String commandOutput = this.commandFunction.apply(commandContext);
-		try (PrintWriter outputWriter = commandContext.outputWriter()) {
-			outputWriter.println(commandOutput);
-			outputWriter.flush();
-		}
+		PrintWriter outputWriter = commandContext.outputWriter();
+		outputWriter.println(commandOutput);
+		outputWriter.flush();
 		return ExitStatus.OK;
 	}
 
