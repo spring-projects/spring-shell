@@ -28,7 +28,10 @@ import org.springframework.context.ApplicationContextAware;
 
 /**
  * Class representing a registry of {@link Command}s. If defined as a Spring bean, it will
- * be automatically populated by Spring with all available commands.
+ * be automatically populated by Spring with all available commands. Commands can also be
+ * registered and unregistered at runtime.
+ * <p>
+ * Commands are uniquely identified by their name.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski

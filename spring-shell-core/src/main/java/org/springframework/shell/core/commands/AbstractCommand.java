@@ -18,6 +18,7 @@ package org.springframework.shell.core.commands;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
@@ -109,5 +110,18 @@ public abstract class AbstractCommand implements Command {
 	}
 
 	public abstract ExitStatus doExecute(CommandContext commandContext) throws Exception;
+
+	// Commands are uniquely identified by their name in a command registry
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof AbstractCommand that))
+			return false;
+		return Objects.equals(getName(), that.getName());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getName());
+	}
 
 }
