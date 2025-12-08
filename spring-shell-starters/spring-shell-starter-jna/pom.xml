@@ -35,6 +35,11 @@
 			<artifactId>spring-shell-starter</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-jline</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.jline</groupId>
 			<artifactId>jline-terminal-jna</artifactId>
