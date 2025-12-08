@@ -15,6 +15,9 @@
  */
 package org.springframework.shell.core.command;
 
+import java.io.PrintWriter;
+import java.util.List;
+
 /**
  * Executes commands based on parsed input.
  *
@@ -42,10 +45,27 @@ public class CommandExecutor {
 	 */
 	public ExitStatus execute(CommandContext commandContext)
 			throws CommandNotFoundException, CommandExecutionException {
-		String commandName = commandContext.parsedInput().commandName();
+		ParsedInput parsedInput = commandContext.parsedInput();
+		String commandName = parsedInput.commandName();
+		if (!parsedInput.subCommands().isEmpty()) {
+			commandName += " " + String.join(" ", parsedInput.subCommands());
+		}
 		Command command = this.commandRegistry.getCommandByName(commandName);
 		if (command == null) {
-			throw new CommandNotFoundException(commandName);
+			List<Command> candidateSubCommands = this.commandRegistry.getCommandsByPrefix(commandName);
+			if (!candidateSubCommands.isEmpty()) {
+				PrintWriter outputWriter = commandContext.outputWriter();
+				outputWriter.println("Available sub-commands for '" + commandName + "':");
+				for (Command candidateSubCommand : candidateSubCommands) {
+					outputWriter
+						.println("  " + candidateSubCommand.getName() + " - " + candidateSubCommand.getDescription());
+				}
+				outputWriter.flush();
+				return ExitStatus.OK;
+			}
+			else {
+				throw new CommandNotFoundException(commandName);
+			}
 		}
 		try {
 			return command.execute(commandContext);

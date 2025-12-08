@@ -17,6 +17,7 @@ package org.springframework.shell.core.command;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
@@ -58,6 +59,10 @@ public class CommandRegistry implements SmartInitializingSingleton, ApplicationC
 
 	@Nullable public Command getCommandByName(String name) {
 		return commands.stream().filter(command -> command.getName().equals(name)).findFirst().orElse(null);
+	}
+
+	public List<Command> getCommandsByPrefix(String prefix) {
+		return commands.stream().filter(command -> command.getName().startsWith(prefix)).toList();
 	}
 
 	public void registerCommand(Command command) {
