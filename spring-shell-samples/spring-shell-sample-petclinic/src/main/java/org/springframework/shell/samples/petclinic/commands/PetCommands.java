@@ -38,7 +38,7 @@ public class PetCommands {
 		this.jdbcClient = jdbcClient;
 	}
 
-	@Command(name = { "pets", "list" }, description = "List pets", group = "pets", help = "List pets in Pet Clinic")
+	@Command(name = { "pets", "list" }, description = "List pets", group = "Pets", help = "List pets in Pet Clinic")
 	public void listPets(CommandContext commandContext) {
 		List<@Nullable Pet> pets = jdbcClient.sql("SELECT id, name FROM PETS")
 			.query(new DataClassRowMapper<>(Pet.class))
@@ -51,7 +51,7 @@ public class PetCommands {
 	}
 
 	// TODO inject context and use output writer instead of System.out and System.err
-	@Command(name = { "pets", "info" }, description = "Show detail about a given pet", group = "pets",
+	@Command(name = { "pets", "info" }, description = "Show detail about a given pet", group = "Pets",
 			help = "Show the details about a given pet")
 	public void showPet(@Option(longName = "petId", description = "The pet ID") int id) {
 		try {

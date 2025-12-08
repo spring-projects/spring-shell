@@ -36,7 +36,7 @@ public class OwnerDetailsCommand extends AbstractCommand {
 	private final JdbcClient jdbcClient;
 
 	public OwnerDetailsCommand(JdbcClient jdbcClient) {
-		super("owners info", "Show details of a given owner", "owners", "show the details of a given owner");
+		super("owners info", "Show details of a given owner", "Owners", "show the details of a given owner");
 		this.jdbcClient = jdbcClient;
 	}
 
