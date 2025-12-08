@@ -33,6 +33,11 @@ import org.apache.commons.logging.LogFactory;
  * Argument       ::= String
  *
  * Example: mycommand mysubcommand --option1=value1 arg1 -o2=value2 arg2
+ *
+ *  If subcommands are used without options, then arguments must be separated using "--" (POSIX style):
+ *  CommandSyntax  ::= CommandName [SubCommandName]* '--' [Argument]*
+ *
+ *  Example: mycommand mysubcommand -- arg1 arg2
  * </pre>
  *
  * @author Mahmoud Ben Hassine
@@ -80,7 +85,9 @@ public class DefaultCommandParser implements CommandParser {
 			parsedInputBuilder.addOption(commandOption);
 		}
 		// parse arguments
-		List<String> arguments = remainingWords.stream().filter(word -> !isOption(word)).toList();
+		List<String> arguments = remainingWords.stream()
+			.filter(word -> !isOption(word) && !isArgumentSeparator(word))
+			.toList();
 		for (int i = 0; i < arguments.size(); i++) {
 			CommandArgument commandArgument = parseArgument(i, arguments.get(i));
 			parsedInputBuilder.addArgument(commandArgument);
@@ -96,7 +103,7 @@ public class DefaultCommandParser implements CommandParser {
 	}
 
 	private boolean isOption(String word) {
-		return word.startsWith("-") || (word.startsWith("--") && !isArgumentSeparator(word));
+		return (word.startsWith("-") || word.startsWith("--")) && !isArgumentSeparator(word);
 	}
 
 	private CommandOption parseOption(String word) {
