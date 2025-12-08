@@ -81,7 +81,6 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 				}
 			}
 			catch (Exception e) {
-				print("Unable to read input");
 				// TODO print e.stacktrace if in debug/verbose mode
 				break;
 			}
