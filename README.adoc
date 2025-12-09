@@ -2,7 +2,8 @@
 
 == Latest news
 
-* October 24, 2025: https://spring.io/blog/2025/10/24/spring-shell-4-0-0-m1-released[Spring Shell 4.0.0-M1 is out!]
+* December 9, 2025: https://spring.io/blog/2025/12/09/spring-shell-4-0-0-m2-released[Spring Shell 4.0.0-M2 is out!]
+* October 24, 2025: https://spring.io/blog/2025/10/24/spring-shell-4-0-0-m1-released[Spring Shell 4.0.0-M1 is available!]
 * August 4, 2025: https://spring.io/blog/2025/08/04/spring-shell-3-4-1-available[Spring Shell 3.4.1 is now available]
 
 == About Spring Shell
