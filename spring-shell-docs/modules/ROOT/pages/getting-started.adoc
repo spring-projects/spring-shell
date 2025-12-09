@@ -1,152 +1,79 @@
 [[getting-started]]
 = Getting Started
 
-To see what Spring Shell has to offer, we can write a trivial _hello world_
-shell application that has a simple argument.
+To see what Spring Shell has to offer, we will write a trivial _hello world_
+shell application that has a simple command.
 
 [[creating-a-project]]
 == Creating a Project
 
-For the purpose of this tutorial, we create a simple Spring Boot application by
-using https://start.spring.io where you can choose _Spring Shell_ dependency.
-This minimal application depends only on `spring-boot-starter` and
-`spring-shell-starter`.
+For the purpose of this quick tutorial, clone and build the project with the following commands:
 
-NOTE: _Spring Shell_ version on `start.spring.io` is usually latest release.
-
-With _maven_ you're expected to have something like:
-
-[source, xml, subs=attributes+]
+[source,shell]
 ----
-<properties>
-    <spring-shell.version>{project-version}</spring-shell.version>
-</properties>
-
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.shell</groupId>
-        <artifactId>spring-shell-starter</artifactId>
-    </dependency>
-</dependencies>
-
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.shell</groupId>
-            <artifactId>spring-shell-dependencies</artifactId>
-            <version>${spring-shell.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
+$>git clone git@github.com:spring-projects/spring-shell.git
+$>cd spring-shell
+$>./mvnw install -DskipTests
 ----
-
-With _gradle_ you're expected to have something like:
-
-[source, groovy, subs=attributes+]
-----
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.shell:spring-shell-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.shell:spring-shell-dependencies:{project-version}"
-    }
-}
-----
-
-IMPORTANT: Versions up to `3.2.x` had all runners enabled by default, starting from `3.3.x`
-only `NonInteractiveShellRunner` is enabled by default. This means you need to enable
-`InteractiveShellRunner` to get REPL.
-
-[source, yaml]
-----
-spring:
-  shell:
-    interactive:
-      enabled: true
-----
-
-CAUTION: Given that Spring Shell starts the REPL (Read-Eval-Print-Loop) because this
-dependency is present, you need to either skip tests when you build (`-DskipTests`)
-throughout this tutorial or remove the sample integration test that was generated
-by https://start.spring.io. If you do not remove it, the integration test creates
-the Spring `ApplicationContext` and, depending on your build tool, stays stuck in
-the eval loop or crashes with a NPE.
-
-Once compiled it can be run either in interactive mode:
-
-[source, text, subs=attributes+]
-----
-include::example$getting-started-run-interactive.out[]
-----
-
-Or in non-interactive mode:
-
-[source, text, subs=attributes+]
-----
-include::example$getting-started-run-noninteractive.out[]
-----
-
-TIP: Check out xref:/customization/logging.adoc[Logging] making logging to work
-better with shell apps.
 
 [[using-spring-shell-your-first-command]]
 == Your First Command
 
-Now we can add our first command. To do so, create a new class (named whatever you want) and
-annotate it with `@Command` which is a variation of `@Component` that is used to restrict
-the set of classes that are scanned for candidate commands.
-
-Then we can create a `helloWorld` method that takes `String` as an argument and
-returns it with "Hello world". Add `@Command` and optionally change command name
-using `command` parameter. You can use `@Option` to define argument default value
-if it's not given when running a command.
+In your favorite IDE, open the `org.springframework.shell.samples.helloworld.SpringShellApplication`:
 
 [source,java]
 ----
-package com.example.demo;
+@EnableCommand(SpringShellApplication.class)
+public class SpringShellApplication {
 
-import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.core.command.annotation.Option;
-
-@Command
-public class MyCommands {
-
-	@Command(command = "hello-world")
-	public String helloWorld(
-		@Option(defaultValue = "spring") String arg
-	) {
-		return "Hello world " + arg;
+	public static void main(String[] args) throws Exception {
+		ApplicationContext context = new AnnotationConfigApplicationContext(SpringShellApplication.class);
+		ShellRunner runner = context.getBean(ShellRunner.class);
+		runner.run(args);
 	}
+
+	@Command(name = "hello", description = "Say hello to a given name", group = "Greetings",
+			help = "A command that greets the user with 'Hello ${name}!'. Usage: hello [-n | --name]=<name>")
+	public void sayHello(@Option(shortName = 'n', longName = "name", description = "the name of the person to greet",
+			defaultValue = "World") String name) {
+		System.out.println("Hello " + name + "!");
+	}
+
 }
 ----
 
-New _hello-world_ command becomes visible to _help_:
+This class defines a single command, `hello`, that takes an optional argument, `name`, and prints a greeting message to standard output.
+
+The main method bootstraps a Spring application context and runs the shell. To run the application, execute the `SpringShellApplication` class with the following command:
+
+[source,shell]
+----
+./mvnw -pl org.springframework.shell:spring-shell-sample-hello-world exec:java -Dexec.mainClass=org.springframework.shell.samples.helloworld.SpringShellApplication
+----
+
+This will start the shell, and you should see a prompt and be able to type commands like this:
 
 [source, text]
 ----
-My Commands
-       hello-world:
+$>help
+Available commands:
+Built-In Commands
+	clear: Clear the terminal screen
+	help: Display help about available commands
+	version: Show version info
+Greetings
+	hello: Say hello to a given name
+
+$>hello --name=foo
+Hello foo!
+$>exit
+Exiting the shell
+
 ----
 
-And you can run it:
+Congratulations, you have created and run your first Spring Shell application!
 
-[source, text]
-----
-shell:>hello-world
-Hello world spring
-
-shell:>hello-world --arg boot
-Hello world boot
-----
+[[next-steps]]
+== Next Steps
 
 The rest of this document delves deeper into the whole Spring Shell programming model.

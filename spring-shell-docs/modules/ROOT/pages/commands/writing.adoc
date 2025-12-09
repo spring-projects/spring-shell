@@ -5,29 +5,10 @@ ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/
 
 When something needs to get written into your console you can always
 use JDK's `System.out` which then goes directly into JDK's own streams.
-Other recommended way is to use JLine's `Terminal` and get _writer_
-instance from there.
-
-If using target endpoints, i.e. _consumer_ which is not expected
-to return anything given `CommandContext` contains reference to
-`Terminal` and writer can be accessed from there.
+The recommended way is to use `PrintWriter` obtained from command context
+and use it for writing:
 
 [source, java, indent=0]
 ----
-include::{snippets}/WritingSnippets.java[tag=reg-terminal-writer]
-----
-
-If using `@Command` you can get access to `CommandContext` and get
-`Terminal` from there.
-
-[source, java, indent=0]
-----
-include::{snippets}/WritingSnippets.java[tag=anno-terminal-writer]
-----
-
-It's possible to autowire `Terminal` to get access to its writer.
-
-[source, java, indent=0]
-----
-include::{snippets}/WritingSnippets.java[tag=inject-terminal-writer]
+include::{snippets}/WritingSnippets.java[tag=print-writer]
 ----

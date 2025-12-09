@@ -1,0 +1,18 @@
+[[command-context]]
+= Command Context
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+The `CommandContext` interface gives you access to the context of the currently running
+command. It provides access to the parsed command input, command registry, and
+other useful information.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandContextSnippets.java[tag=command-context]
+----
+
+If you need to print something into a shell, you can get a `PrintWriter` from
+the `CommandContext` and use it to print text. You can find more details about
+writing into a shell in the xref:commands/writing.adoc[] section.

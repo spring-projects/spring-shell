@@ -10,37 +10,28 @@ To alleviate this possible confusion, Spring Shell provides the ability to group
 with reasonable defaults. Related commands would then end up in the same group (for example, `User Management Commands`)
 and be displayed together in the help screen and other places.
 
-By default, commands are grouped into the `Default` group. However, you can override the group for
-a command in the following ways, in order of priority:
-
-. Specify a `group()` in the `@Command` annotation on the method.
-
-. Specify a `group()` in the `@Command` annotation on the class in which the command is defined. This applies
-the group for all commands defined in that class (unless overridden, as explained earlier).
-
-The following listing shows an example:
+Commands can be grouped by specifying a `group` attribute in the `@Command` annotation:
 
 [source,java]
 ----
-@Command
-public class UserCommands {
-    @Command(description = "This command ends up in the 'Default' group")
-    public void foo() {}
-
-    @Command(description = "This command ends up in the 'Other Commands' group",
-    	group = "Other Commands")
-    public void bar() {}
+@Command(name = "example", group = "My Commands")
+public String example() {
+    return "Hello";
 }
+----
 
-...
+The group can also be specified programmatically when using the programmatic registration model
+using the `Command.Builder.group(String)` method:
 
-@Command(group = "Other Commands")
-public class SomeCommands {
-	@Command(description = "This one is in 'Other Commands'")
-	public void wizz() {}
-
-	@Command(description = "And this one is 'Yet Another Group'",
-		group = "Yet Another Group")
-	public void last() {}
+[source,java]
+----
+@Bean
+Command myCommand() {
+    return Command.builder()
+            .name("mycommand")
+            .group("My Commands")
+            .execute(context -> {
+                System.out.println("This is my command!");
+            });
 }
 ----

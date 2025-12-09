@@ -4,9 +4,7 @@
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-In this section, we go through an actual command registration and leave command options
-and execution for a later section in the documentation. You can find more details in
-xref:appendices/techintro/registration.adoc[Command Registration].
+In this section, we go through an actual command definition and parsing rules.
 
 
 

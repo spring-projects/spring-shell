@@ -7,11 +7,11 @@ we need to go through some of the fundamental concepts of Spring Shell.
 
 Essentially, a few things needs to happen before you have a working Spring Shell application:
 
-- Create a Spring Boot application.
+- Create a Spring (Boot) application.
 - Define commands and options.
 - Package the application.
 - Run the application, either interactively or non-interactively.
 
-You can get a full working Spring Shell application without defining any user-level commands
-as some basic built-in commands (such as `help` and `history`) are provided.
+You can get a fully working Spring Shell application without defining any user-level commands
+as some basic built-in commands (such as `help` and `clear`) are provided.
 

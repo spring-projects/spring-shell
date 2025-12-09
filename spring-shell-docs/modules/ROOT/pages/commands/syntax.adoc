@@ -1,0 +1,49 @@
+[[syntax]]
+= Command syntax
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+== Options and arguments
+
+Command options and arguments can be defined using method parameters:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=command-option-arg]
+----
+
+Options are defined using `@Option` annotation, while arguments are defined using `@Argument` annotation.
+Options are named, while arguments are positional.
+
+== Parsing rules
+
+Spring Shell follows the same parsing rules as Spring Boot, with enhanced capabilities following the POSIX style.
+Options can be specified in the form `-o=value` and `--option=value`. Options and arguments can be specified in any order.
+Arguments are 0-based indexed among other arguments:
+
+[source,shell]
+----
+CommandSyntax  ::= CommandName [SubCommandName]* [Option | Argument]*
+CommandName    ::= String
+SubCommandName ::= String
+Option         ::= ShortOption | LongOption
+ShortOption    ::= '-' Char ('=' String)?
+LongOption     ::= '--' String ('=' String)?
+Argument       ::= String
+----
+
+For example:
+
+[source,shell]
+----
+$>mycommand mysubcommand --option1=value1 arg1 -o2=value2 arg2
+----
+
+If your command defines subcommands and a subcommand is used without options, then arguments must be separated using "--" (POSIX style):
+
+[source,shell]
+----
+$>mycommand mysubcommand -- arg1 arg2
+----
+
+This is required to avoid ambiguity between options and arguments.

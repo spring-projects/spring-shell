@@ -1,0 +1,12 @@
+[[commands-helpoptions]]
+= Help Options
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+It's common in many CLI frameworks for every command having options _--help_ and _-h_
+to print out command help. _Spring Shell_ has a built-in `help` command.
+
+Extensions of `AbstractCommand` will get help functionality (ie handling options
+_--help_ and _-h_), which if present in a given command will automatically
+short circuit command execution into an existing `help` command regardless
+what other command-line options are typed.

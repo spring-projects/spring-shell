@@ -3,34 +3,19 @@
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-In the programmatic model, `CommandRegistration` can be defined as a `@Bean`
-and it will be automatically registered.
+In the programmatic model, commands can be defined as beans of type `Command`:
 
 [source, java, indent=0]
 ----
 include::{snippets}/CommandRegistrationBeanSnippets.java[tag=plain]
 ----
 
-If all your commands have something in common, an instance of
-a _CommandRegistration.BuilderSupplier_ is created which can
-be autowired. Default implementation of this supplier returns
-a new builder so you don't need to worry about its internal state.
-
-IMPORTANT: Commands registered programmatically automatically
-add _help options_ mentioned in xref:commands/helpoptions.adoc[Help Options].
-
-If a bean of this supplier type is defined then auto-configuration
-will back off giving you an option to redefine default functionality.
+You can also use the `AbstractCommand` class to simplify command definitions:
 
 [source, java, indent=0]
 ----
-include::{snippets}/CommandRegistrationBeanSnippets.java[tag=fromsupplier]
+include::{snippets}/CommandRegistrationBeanSnippets.java[tag=abstractcommand]
 ----
 
-`CommandRegistrationCustomizer` beans can be defined if you want to centrally
-modify builder instance given to you by a supplier as mentioned below:
-
-[source, java, indent=0]
-----
-include::{snippets}/CommandRegistrationBeanSnippets.java[tag=customizer]
-----
+`AbstractCommand` provides some utility methods to simplify command creation like
+handling help options (`-h` and `--help`) and printing messages to the shell output.
