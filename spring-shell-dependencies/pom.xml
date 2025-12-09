@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.springframework.shell</groupId>
 		<artifactId>spring-shell</artifactId>
-		<version>4.0.0-M2</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>spring-shell-dependencies</artifactId>
