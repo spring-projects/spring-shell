@@ -58,11 +58,18 @@ public class CommandRegistry implements SmartInitializingSingleton, ApplicationC
 	}
 
 	@Nullable public Command getCommandByName(String name) {
-		return commands.stream().filter(command -> command.getName().equals(name)).findFirst().orElse(null);
+		return commands.stream()
+			.filter(command -> !command.isHidden())
+			.filter(command -> command.getName().equals(name))
+			.findFirst()
+			.orElse(null);
 	}
 
 	public List<Command> getCommandsByPrefix(String prefix) {
-		return commands.stream().filter(command -> command.getName().startsWith(prefix)).toList();
+		return commands.stream()
+			.filter(command -> !command.isHidden())
+			.filter(command -> command.getName().startsWith(prefix))
+			.toList();
 	}
 
 	public void registerCommand(Command command) {

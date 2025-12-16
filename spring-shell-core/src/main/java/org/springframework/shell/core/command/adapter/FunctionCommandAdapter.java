@@ -39,11 +39,12 @@ public class FunctionCommandAdapter extends AbstractCommand {
 	 * @param description the description of the command
 	 * @param group the group of the command
 	 * @param help the help text of the command
+	 * @param hidden whether the command is hidden or not
 	 * @param commandFunction the function to adapt as a command
 	 */
-	public FunctionCommandAdapter(String name, String description, String group, String help,
+	public FunctionCommandAdapter(String name, String description, String group, String help, boolean hidden,
 			Function<CommandContext, String> commandFunction) {
-		super(name, description, group, help);
+		super(name, description, group, help, hidden);
 		this.commandFunction = commandFunction;
 	}
 

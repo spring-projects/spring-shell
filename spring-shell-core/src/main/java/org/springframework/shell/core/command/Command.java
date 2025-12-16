@@ -59,6 +59,14 @@ public interface Command {
 	}
 
 	/**
+	 * Check if the command is hidden.
+	 * @return true if the command is hidden, false otherwise
+	 */
+	default boolean isHidden() {
+		return false;
+	}
+
+	/**
 	 * Get the group of the command.
 	 * @return the group of the command
 	 */
@@ -106,6 +114,8 @@ public interface Command {
 
 		private String help = "";
 
+		private boolean hidden = false;
+
 		private List<String> aliases = new ArrayList<>();
 
 		public Builder name(String name) {
@@ -128,6 +138,11 @@ public interface Command {
 			return this;
 		}
 
+		public Builder hidden(boolean hidden) {
+			this.hidden = hidden;
+			return this;
+		}
+
 		public Builder aliases(String... aliases) {
 			this.aliases = Arrays.asList(aliases);
 			return this;
@@ -136,7 +151,7 @@ public interface Command {
 		public AbstractCommand execute(Consumer<CommandContext> commandExecutor) {
 			Assert.hasText(name, "'name' must be specified");
 
-			ConsumerCommandAdapter command = new ConsumerCommandAdapter(name, description, group, help,
+			ConsumerCommandAdapter command = new ConsumerCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
 
 			initAliases(command);
@@ -147,7 +162,7 @@ public interface Command {
 		public AbstractCommand execute(Function<CommandContext, String> commandExecutor) {
 			Assert.hasText(name, "'name' must be specified");
 
-			FunctionCommandAdapter command = new FunctionCommandAdapter(name, description, group, help,
+			FunctionCommandAdapter command = new FunctionCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
 
 			initAliases(command);

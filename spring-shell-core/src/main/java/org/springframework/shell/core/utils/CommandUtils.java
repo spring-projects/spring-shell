@@ -42,7 +42,7 @@ public class CommandUtils {
 	}
 
 	/**
-	 * Get a formatted string of available commands from the command registry.
+	 * Get a formatted string of available non-hidden commands from the command registry.
 	 * @param commandRegistry the command registry
 	 * @return a string of available commands with their descriptions
 	 */
@@ -51,6 +51,7 @@ public class CommandUtils {
 		stringBuilder.append(System.lineSeparator());
 		List<String> groups = commandRegistry.getCommands()
 			.stream()
+			.filter(command -> !command.isHidden())
 			.map(Command::getGroup)
 			.distinct()
 			.sorted()

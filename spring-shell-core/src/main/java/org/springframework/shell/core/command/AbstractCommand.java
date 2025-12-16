@@ -37,21 +37,24 @@ public abstract class AbstractCommand implements Command {
 
 	private final String group;
 
+	private final boolean hidden;
+
 	private List<String> aliases = new ArrayList<>();
 
 	public AbstractCommand(String name, String description) {
-		this(name, description, "", "");
+		this(name, description, "", "", false);
 	}
 
 	public AbstractCommand(String name, String description, String group) {
-		this(name, description, group, "");
+		this(name, description, group, "", false);
 	}
 
-	public AbstractCommand(String name, String description, String group, String help) {
+	public AbstractCommand(String name, String description, String group, String help, boolean hidden) {
 		this.name = name;
 		this.description = description;
 		this.group = group;
 		this.help = help;
+		this.hidden = hidden;
 	}
 
 	@Override
@@ -72,6 +75,11 @@ public abstract class AbstractCommand implements Command {
 	@Override
 	public String getHelp() {
 		return this.help;
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
 	}
 
 	@Override

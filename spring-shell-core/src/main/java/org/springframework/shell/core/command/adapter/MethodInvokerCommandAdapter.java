@@ -55,13 +55,14 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 	 * @param description the description of the command
 	 * @param group the group of the command
 	 * @param help the help text of the command
+	 * @param hidden whether the command is hidden or not
 	 * @param method the method to invoke
 	 * @param targetObject the target object on which to invoke the method
 	 * @param conversionService the conversion service to use for parameter conversion
 	 */
-	public MethodInvokerCommandAdapter(String name, String description, String group, String help, Method method,
-			Object targetObject, ConfigurableConversionService conversionService) {
-		super(name, description, group, help);
+	public MethodInvokerCommandAdapter(String name, String description, String group, String help, boolean hidden,
+			Method method, Object targetObject, ConfigurableConversionService conversionService) {
+		super(name, description, group, help, hidden);
 		this.method = method;
 		this.targetObject = targetObject;
 		this.conversionService = conversionService;

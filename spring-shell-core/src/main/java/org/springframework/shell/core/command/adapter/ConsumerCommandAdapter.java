@@ -37,11 +37,12 @@ public class ConsumerCommandAdapter extends AbstractCommand {
 	 * @param description the description of the command
 	 * @param group the group of the command
 	 * @param help the help text of the command
+	 * @param hidden whether the command is hidden or not
 	 * @param commandExecutor the consumer to adapt as a command
 	 */
-	public ConsumerCommandAdapter(String name, String description, String group, String help,
+	public ConsumerCommandAdapter(String name, String description, String group, String help, boolean hidden,
 			Consumer<CommandContext> commandExecutor) {
-		super(name, description, group, help);
+		super(name, description, group, help, hidden);
 		this.commandExecutor = commandExecutor;
 	}
 
