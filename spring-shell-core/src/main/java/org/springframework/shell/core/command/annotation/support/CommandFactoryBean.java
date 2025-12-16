@@ -16,6 +16,7 @@
 package org.springframework.shell.core.command.annotation.support;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,12 +60,12 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		org.springframework.shell.core.command.annotation.Command command = MergedAnnotations.from(this.method)
 			.get(org.springframework.shell.core.command.annotation.Command.class)
 			.synthesize();
-		// TODO handle aliases
 		String name = String.join(" ", command.name());
 		String description = command.description();
 		String help = command.help();
 		String group = command.group();
 		boolean hidden = command.hidden();
+		String[] aliases = command.alias();
 		log.debug("Creating command bean for method '" + this.method + "' with name '" + name + "'");
 		Class<?> declaringClass = this.method.getDeclaringClass();
 		Object targetObject;
@@ -87,8 +88,10 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		catch (BeansException e) {
 			log.debug("No ConfigurableConversionService bean found, using a default conversion service.");
 		}
-		return new MethodInvokerCommandAdapter(name, description, group, help, hidden, this.method, targetObject,
-				configurableConversionService);
+		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
+				group, help, hidden, this.method, targetObject, configurableConversionService);
+		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
+		return methodInvokerCommandAdapter;
 	}
 
 	@Override

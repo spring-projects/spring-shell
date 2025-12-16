@@ -62,7 +62,18 @@ public class CommandRegistry implements SmartInitializingSingleton, ApplicationC
 			.filter(command -> !command.isHidden())
 			.filter(command -> command.getName().equals(name))
 			.findFirst()
-			.orElse(null);
+			.orElseGet(() -> getCommandByAlias(name));
+	}
+
+	@Nullable public Command getCommandByAlias(String name) {
+		return commands.stream().filter(command -> !command.isHidden()).filter(command -> {
+			for (String alias : command.getAliases()) {
+				if (alias.equals(name)) {
+					return true;
+				}
+			}
+			return false;
+		}).findFirst().orElse(null);
 	}
 
 	public List<Command> getCommandsByPrefix(String prefix) {
@@ -72,6 +83,7 @@ public class CommandRegistry implements SmartInitializingSingleton, ApplicationC
 			.toList();
 	}
 
+	// TODO check alias conflicts when registering commands
 	public void registerCommand(Command command) {
 		commands.add(command);
 	}

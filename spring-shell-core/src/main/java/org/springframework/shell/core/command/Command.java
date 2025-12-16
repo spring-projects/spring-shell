@@ -153,8 +153,7 @@ public interface Command {
 
 			ConsumerCommandAdapter command = new ConsumerCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
-
-			initAliases(command);
+			command.setAliases(aliases);
 
 			return command;
 		}
@@ -164,16 +163,9 @@ public interface Command {
 
 			FunctionCommandAdapter command = new FunctionCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
-
-			initAliases(command);
+			command.setAliases(aliases);
 
 			return command;
-		}
-
-		private void initAliases(AbstractCommand command) {
-			if (aliases != null) {
-				command.setAliases(aliases);
-			}
 		}
 
 	}

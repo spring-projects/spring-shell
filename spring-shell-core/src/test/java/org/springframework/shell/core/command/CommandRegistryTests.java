@@ -124,4 +124,38 @@ class CommandRegistryTests {
 		assertTrue(commands.stream().anyMatch(cmd -> cmd.getName().equals("status")));
 	}
 
+	@Test
+	void getCommandByAlias() {
+		// given
+		commandRegistry.registerCommand(new Command() {
+
+			@Override
+			public String getName() {
+				return "list";
+			}
+
+			@Override
+			public java.util.List<String> getAliases() {
+				return java.util.List.of("ls", "dir");
+			}
+
+			@Override
+			public ExitStatus execute(CommandContext commandContext) {
+				return ExitStatus.OK;
+			}
+		});
+
+		// when
+		Command cmdLs = commandRegistry.getCommandByAlias("ls");
+		Command cmdDir = commandRegistry.getCommandByAlias("dir");
+		Command cmdUnknown = commandRegistry.getCommandByAlias("unknown");
+
+		// then
+		assertNotNull(cmdLs);
+		assertEquals("list", cmdLs.getName());
+		assertNotNull(cmdDir);
+		assertEquals("list", cmdDir.getName());
+		assertNull(cmdUnknown);
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,12 +51,11 @@ public @interface Command {
 	String[] name() default {};
 
 	/**
-	 * Define alias as an array. Given that alias should be {@code alias1 sub1} it can be
-	 * defined as:
+	 * Define aliases as an array that can be defined as:
 	 *
 	 * <pre class="code">
-	 * alias = { "alias1", "sub1" }
-	 * alias = "alias1 sub1"
+	 * alias = { "alias1", "alias2" }
+	 * alias = "alias1 alias2"
 	 * </pre>
 	 *
 	 * Values are split and trimmed meaning spaces doesn't matter.
