@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.commands;
+package org.springframework.shell.core.command;
 
 import java.io.PrintWriter;
-
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.ExitStatus;
 
 /**
  * Command to print the current version of Spring Shell.

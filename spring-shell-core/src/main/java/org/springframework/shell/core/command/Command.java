@@ -22,9 +22,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.springframework.shell.core.commands.AbstractCommand;
-import org.springframework.shell.core.commands.adapter.ConsumerCommandAdapter;
-import org.springframework.shell.core.commands.adapter.FunctionCommandAdapter;
+import org.springframework.shell.core.command.adapter.ConsumerCommandAdapter;
+import org.springframework.shell.core.command.adapter.FunctionCommandAdapter;
 import org.springframework.util.Assert;
 
 /**

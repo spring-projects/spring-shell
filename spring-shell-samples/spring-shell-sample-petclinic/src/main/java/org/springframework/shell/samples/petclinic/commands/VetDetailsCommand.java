@@ -23,7 +23,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.ExitStatus;
-import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.shell.samples.petclinic.domain.Vet;
 
 /**

@@ -27,7 +27,6 @@ import org.jline.utils.AttributedStringBuilder;
 
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.core.commands.AbstractCommand;
 import org.springframework.shell.jline.tui.component.ConfirmationInput;
 import org.springframework.shell.jline.tui.component.MultiItemSelector;
 import org.springframework.shell.jline.tui.component.NumberInput;

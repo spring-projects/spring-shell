@@ -28,8 +28,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.shell.core.ConsoleInputProvider;
 import org.springframework.shell.core.SystemShellRunner;
-import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.DefaultCommandParser;
+import org.springframework.shell.core.command.*;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.EnableCommand;
 import org.springframework.util.ReflectionUtils;
@@ -46,12 +45,9 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 	public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
 		EnableCommand shellAnnotation = metadata.getAnnotations().get(EnableCommand.class).synthesize();
 		// register built-in commands
-		registry.registerBeanDefinition("help",
-				new RootBeanDefinition(org.springframework.shell.core.commands.Help.class));
-		registry.registerBeanDefinition("clear",
-				new RootBeanDefinition(org.springframework.shell.core.commands.Clear.class));
-		registry.registerBeanDefinition("version",
-				new RootBeanDefinition(org.springframework.shell.core.commands.Version.class));
+		registry.registerBeanDefinition("help", new RootBeanDefinition(Help.class));
+		registry.registerBeanDefinition("clear", new RootBeanDefinition(Clear.class));
+		registry.registerBeanDefinition("version", new RootBeanDefinition(Version.class));
 
 		// register user defined commands
 		Class<?>[] candidateClasses = shellAnnotation.value();

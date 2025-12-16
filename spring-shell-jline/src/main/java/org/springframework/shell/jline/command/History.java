@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.core.commands.Script;
+import org.springframework.shell.core.command.Script;
 
 /**
  * A command that displays all previously run commands, optionally dumping to a file

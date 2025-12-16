@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.commands;
+package org.springframework.shell.core.command;
 
 import java.io.File;
 import java.util.List;
 
 import org.springframework.shell.core.FileInputProvider;
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandArgument;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandNotFoundException;
-import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.utils.CommandUtils;
 
 /**

@@ -30,7 +30,7 @@ import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandCreationException;
-import org.springframework.shell.core.commands.adapter.MethodInvokerCommandAdapter;
+import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
 import org.springframework.util.Assert;
 
 /**

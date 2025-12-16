@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.commands.adapter;
+package org.springframework.shell.core.command.adapter;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -28,7 +28,7 @@ import org.springframework.shell.core.command.*;
 import org.springframework.shell.core.command.annotation.Argument;
 import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.util.MethodInvoker;
 
 import static org.springframework.shell.core.utils.CommandUtils.getOptionByName;

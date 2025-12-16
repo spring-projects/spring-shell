@@ -13,28 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.commands;
+
+package org.springframework.shell.core.command;
 
 import java.io.PrintWriter;
 
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.ExitStatus;
-import org.springframework.shell.core.utils.CommandUtils;
-
 /**
- * A command to display help about all available commands.
+ * ANSI console clear command.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
- * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  */
-public class Help implements Command {
+public class Clear implements Command {
 
 	@Override
 	public String getDescription() {
-		return "Display help about available commands";
+		return "Clear the terminal screen";
 	}
 
 	@Override
@@ -44,10 +39,9 @@ public class Help implements Command {
 
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		String helpMessage = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
-		PrintWriter outputWriter = commandContext.outputWriter();
-		outputWriter.println(helpMessage);
-		outputWriter.flush();
+		PrintWriter printWriter = commandContext.outputWriter();
+		printWriter.print("\033[H\033[2J");
+		printWriter.flush();
 		return ExitStatus.OK;
 	}
 

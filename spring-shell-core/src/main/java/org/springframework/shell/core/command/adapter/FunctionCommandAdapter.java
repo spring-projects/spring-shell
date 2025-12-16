@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.commands.adapter;
+package org.springframework.shell.core.command.adapter;
 
 import java.io.PrintWriter;
 import java.util.function.Function;
 
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.ExitStatus;
-import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.command.AbstractCommand;
 
 /**
  * An adapter to adapt a {@link Function} as a command. The String output of the function

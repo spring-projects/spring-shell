@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.ExitStatus;
-import org.springframework.shell.core.commands.AbstractCommand;
+import org.springframework.shell.core.command.AbstractCommand;
 
 public class CommandRegistrationBeanSnippets {
 

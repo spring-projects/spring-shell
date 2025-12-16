@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.core.commands;
+package org.springframework.shell.core.command;
 
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.ExitStatus;
+import java.io.PrintWriter;
+
+import org.springframework.shell.core.utils.CommandUtils;
 
 /**
- * A command to display the full stacktrace when an error occurs.
+ * A command to display help about all available commands.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  */
-public class Stacktrace implements Command {
+public class Help implements Command {
 
 	@Override
 	public String getDescription() {
-		return "Display the full stacktrace of the last error.";
+		return "Display help about available commands";
+	}
+
+	@Override
+	public String getGroup() {
+		return "Built-In Commands";
 	}
 
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		// Think of this like $? in bash
-		// TODO check to best place to store this global state
+		String helpMessage = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
+		PrintWriter outputWriter = commandContext.outputWriter();
+		outputWriter.println(helpMessage);
+		outputWriter.flush();
 		return ExitStatus.OK;
 	}
 

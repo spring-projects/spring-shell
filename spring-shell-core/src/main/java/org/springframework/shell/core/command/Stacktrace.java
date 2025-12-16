@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.shell.core.command;
 
 /**
- * Contains default commands that ought to apply to each shell app.
+ * A command to display the full stacktrace when an error occurs.
  *
  * @author Eric Bottard
+ * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
-@NullMarked
-package org.springframework.shell.core.commands;
+public class Stacktrace implements Command {
 
-import org.jspecify.annotations.NullMarked;
+	@Override
+	public String getDescription() {
+		return "Display the full stacktrace of the last error.";
+	}
+
+	@Override
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
+		// Think of this like $? in bash
+		// TODO check to best place to store this global state
+		return ExitStatus.OK;
+	}
+
+}

@@ -20,7 +20,10 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.shell.core.command.Clear;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.Help;
+import org.springframework.shell.core.command.Version;
 
 /**
  * Creates beans for standard commands.
@@ -36,19 +39,19 @@ public class StandardCommandsAutoConfiguration {
 	@Bean
 	@ConditionalOnProperty(value = "spring.shell.command.help.enabled", havingValue = "true", matchIfMissing = true)
 	public Command helpCommand() {
-		return new org.springframework.shell.core.commands.Help();
+		return new Help();
 	}
 
 	@Bean
 	@ConditionalOnProperty(value = "spring.shell.command.clear.enabled", havingValue = "true", matchIfMissing = true)
 	public Command clearCommand() {
-		return new org.springframework.shell.core.commands.Clear();
+		return new Clear();
 	}
 
 	@Bean
 	@ConditionalOnProperty(value = "spring.shell.command.version.enabled", havingValue = "true", matchIfMissing = true)
 	public Command versionCommand() {
-		return new org.springframework.shell.core.commands.Version();
+		return new Version();
 	}
 
 }
