@@ -15,15 +15,12 @@
  */
 package org.springframework.shell.docs;
 
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
-import org.springframework.shell.core.utils.CommandUtils;
 import org.springframework.stereotype.Component;
 
 class CommandAvailabilitySnippets {
@@ -64,9 +61,8 @@ class CommandAvailabilitySnippets {
 		@Bean
 		public AbstractCommand connect() {
 			return org.springframework.shell.core.command.Command.builder().name("connect").execute(ctx -> {
-				List<CommandOption> options = ctx.parsedInput().options();
-				CommandOption commandOption = CommandUtils.getOptionByName(options, "connected");
-				this.connected = Boolean.parseBoolean(commandOption.value());
+				CommandOption connectedOption = ctx.getOptionByName("connected");
+				this.connected = Boolean.parseBoolean(connectedOption.value());
 			});
 		}
 

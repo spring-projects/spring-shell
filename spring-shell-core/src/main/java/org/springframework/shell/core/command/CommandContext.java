@@ -17,6 +17,8 @@ package org.springframework.shell.core.command;
 
 import java.io.PrintWriter;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Interface containing runtime information about the current command invocation.
  *
@@ -25,4 +27,29 @@ import java.io.PrintWriter;
  */
 public record CommandContext(ParsedInput parsedInput, CommandRegistry commandRegistry, PrintWriter outputWriter) {
 
+	/**
+	 * Retrieve a command option by its name (long or short).
+	 * @param optionName the name of the option to retrieve
+	 * @return the matching {@link CommandOption} or null if not found
+	 */
+	@Nullable public CommandOption getOptionByName(String optionName) {
+		return this.parsedInput.options()
+			.stream()
+			.filter(option -> option.longName().equals(optionName) || option.shortName() == optionName.charAt(0))
+			.findFirst()
+			.orElse(null);
+	}
+
+	/**
+	 * Retrieve a command argument by its index.
+	 * @param index the index of the argument to retrieve
+	 * @return the matching {@link CommandArgument}
+	 */
+	@Nullable public CommandArgument getArgumentByIndex(int index) {
+		return this.parsedInput.arguments()
+			.stream()
+			.filter(argument -> argument.index() == index)
+			.findAny()
+			.orElse(null);
+	}
 }
