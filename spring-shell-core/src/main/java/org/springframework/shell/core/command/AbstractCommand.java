@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.shell.core.command.availability.Availability;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
+
 /**
  * Base class helping to build shell commands.
  *
@@ -38,6 +41,8 @@ public abstract class AbstractCommand implements Command {
 	private final String group;
 
 	private final boolean hidden;
+
+	private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
 
 	private List<String> aliases = new ArrayList<>();
 
@@ -92,7 +97,22 @@ public abstract class AbstractCommand implements Command {
 	}
 
 	@Override
+	public AvailabilityProvider getAvailabilityProvider() {
+		return availabilityProvider;
+	}
+
+	public void setAvailabilityProvider(AvailabilityProvider availabilityProvider) {
+		this.availabilityProvider = availabilityProvider;
+	}
+
+	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
+		Availability availability = getAvailabilityProvider().get();
+		if (!availability.isAvailable()) {
+			println("Command '" + getName() + "' exists but is not currently available because "
+					+ availability.reason(), commandContext);
+			return ExitStatus.AVAILABILITY_ERROR;
+		}
 		List<CommandOption> options = commandContext.parsedInput().options();
 		if (options.size() == 1 && isHelp(options.get(0))) {
 			println(getHelp(), commandContext);

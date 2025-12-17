@@ -24,6 +24,7 @@ import java.util.function.Function;
 
 import org.springframework.shell.core.command.adapter.ConsumerCommandAdapter;
 import org.springframework.shell.core.command.adapter.FunctionCommandAdapter;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.util.Assert;
 
 /**
@@ -83,6 +84,14 @@ public interface Command {
 	}
 
 	/**
+	 * Get the availability provider of the command. Defaults to always available.
+	 * @return the availability provider of the command
+	 */
+	default AvailabilityProvider getAvailabilityProvider() {
+		return AvailabilityProvider.alwaysAvailable();
+	}
+
+	/**
 	 * Execute the command within the given context.
 	 * @param commandContext the context of the command
 	 * @return the exit status of the command
@@ -116,6 +125,8 @@ public interface Command {
 
 		private boolean hidden = false;
 
+		private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
+
 		private List<String> aliases = new ArrayList<>();
 
 		public Builder name(String name) {
@@ -143,6 +154,11 @@ public interface Command {
 			return this;
 		}
 
+		public Builder availabilityProvider(AvailabilityProvider availabilityProvider) {
+			this.availabilityProvider = availabilityProvider;
+			return this;
+		}
+
 		public Builder aliases(String... aliases) {
 			this.aliases = Arrays.asList(aliases);
 			return this;
@@ -154,6 +170,7 @@ public interface Command {
 			ConsumerCommandAdapter command = new ConsumerCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
 			command.setAliases(aliases);
+			command.setAvailabilityProvider(availabilityProvider);
 
 			return command;
 		}
@@ -164,6 +181,7 @@ public interface Command {
 			FunctionCommandAdapter command = new FunctionCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
 			command.setAliases(aliases);
+			command.setAvailabilityProvider(availabilityProvider);
 
 			return command;
 		}

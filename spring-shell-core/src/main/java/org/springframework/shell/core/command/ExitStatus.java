@@ -30,4 +30,6 @@ public record ExitStatus(int code, String description) {
 
 	public static ExitStatus USAGE_ERROR = new ExitStatus(-2, "USAGE_ERROR");
 
+	public static ExitStatus AVAILABILITY_ERROR = new ExitStatus(-3, "AVAILABILITY_ERROR");
+
 }

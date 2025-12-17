@@ -32,6 +32,7 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.util.Assert;
 
 /**
@@ -66,6 +67,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		String group = command.group();
 		boolean hidden = command.hidden();
 		String[] aliases = command.alias();
+		String availabilityProvider = command.availabilityProvider();
 		log.debug("Creating command bean for method '" + this.method + "' with name '" + name + "'");
 		Class<?> declaringClass = this.method.getDeclaringClass();
 		Object targetObject;
@@ -88,9 +90,21 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		catch (BeansException e) {
 			log.debug("No ConfigurableConversionService bean found, using a default conversion service.");
 		}
+		AvailabilityProvider availabilityProviderBean = AvailabilityProvider.alwaysAvailable();
+		if (!availabilityProvider.isEmpty()) {
+			try {
+				availabilityProviderBean = this.applicationContext.getBean(availabilityProvider,
+						AvailabilityProvider.class);
+			}
+			catch (BeansException e) {
+				log.debug("No AvailabilityProvider bean found with name '" + availabilityProvider
+						+ "', using always available provider.");
+			}
+		}
 		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
 				group, help, hidden, this.method, targetObject, configurableConversionService);
 		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
+		methodInvokerCommandAdapter.setAvailabilityProvider(availabilityProviderBean);
 		return methodInvokerCommandAdapter;
 	}
 

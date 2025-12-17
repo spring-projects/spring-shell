@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,14 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Indicates whether or not a command is currently available. When not available, provides
+ * Indicates whether a command is currently available or not. When not available, provides
  * a reason.
  *
  * @author Eric Bottard
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
-public class Availability {
-
-	private final @Nullable String reason;
-
-	private Availability(@Nullable String reason) {
-		this.reason = reason;
-	}
+public record Availability(@Nullable String reason) {
 
 	public static Availability available() {
 		return new Availability(null);
@@ -45,10 +40,6 @@ public class Availability {
 
 	public boolean isAvailable() {
 		return reason == null;
-	}
-
-	public @Nullable String getReason() {
-		return reason;
 	}
 
 }

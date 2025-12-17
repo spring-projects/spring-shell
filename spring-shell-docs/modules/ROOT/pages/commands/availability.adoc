@@ -1,0 +1,51 @@
+[[dynamic-command-availability]]
+= Command Availability
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+Registered commands do not always make sense, due to the internal state of the application.
+For example, there may be a `download` command, but it only works once the user has used `connect` on a remote
+server. Now, if the user tries to use the `download` command, the shell should explain that
+the command exists but that it is not available at the time.
+Spring Shell lets you do that, even letting you provide a short explanation of the reason for
+the command not being available.
+
+== Programmatic
+
+With programmatic registration you can use the `availabilityProvider` method which takes
+an `AvailabilityProvider`.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-programmatic]
+----
+
+== Annotation
+
+With annotation based commands you can use the `availabilityProvider` attribute to specify
+the name of the `AvailabilityProvider` bean to use.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAvailabilitySnippets.java[tag=availability-method-annotation]
+----
+
+The `connect` method is used to connect to the server (details omitted), altering the state
+of the command through the `connected` boolean when done.
+The `download` command will be unavailable until the user has connected.
+The availability provider returns an instance of `Availability`, constructed with one of the two factory methods.
+If the command is not available, an explanation has to be provided.
+Now, if the user tries to invoke the command while not being connected, here is what happens:
+
+[source]
+----
+shell:>download
+Command 'download' exists but is not currently available because you are not connected.
+----
+
+TIP: The reason provided when the command is not available should read nicely if appended after "`because`".
+You should not start the sentence with a capital or add a final period
+
+TIP: Spring Shell does not impose many constraints on how to write commands and how to organize classes.
+However, it is often good practice to put related commands in the same class, and the availability indicators
+can benefit from that.

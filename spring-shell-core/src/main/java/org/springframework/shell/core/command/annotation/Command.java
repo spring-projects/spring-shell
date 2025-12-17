@@ -87,4 +87,10 @@ public @interface Command {
 	 */
 	String help() default "";
 
+	/**
+	 * Define availability provider bean name.
+	 * @return the availability provider bean name
+	 */
+	String availabilityProvider() default "";
+
 }
