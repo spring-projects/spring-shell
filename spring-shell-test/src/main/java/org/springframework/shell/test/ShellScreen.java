@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,9 @@ import java.util.List;
  * Interface representing a shell screen.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
-public interface ShellScreen {
-
-	/**
-	 * Gets a visible lines in a screen.
-	 * @return visible lines in a screen
-	 */
-	List<String> lines();
+public record ShellScreen(List<String> lines) {
 
 	/**
 	 * Get {@code ShellScreen} out of lines.
@@ -36,22 +31,7 @@ public interface ShellScreen {
 	 * @return instance of shell screen
 	 */
 	static ShellScreen of(List<String> lines) {
-		return new DefaultShellScreen(lines);
-	}
-
-	class DefaultShellScreen implements ShellScreen {
-
-		List<String> lines;
-
-		DefaultShellScreen(List<String> lines) {
-			this.lines = lines;
-		}
-
-		@Override
-		public List<String> lines() {
-			return lines;
-		}
-
+		return new ShellScreen(lines);
 	}
 
 }

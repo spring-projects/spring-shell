@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,13 @@
  */
 package org.springframework.shell.test;
 
-import org.assertj.core.api.InstanceOfAssertFactory;
-
 /**
  * Entry point for assertion methods for shell components.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public class ShellAssertions {
-
-	/**
-	 * Instance of a assert factory for {@link ShellScreen}.
-	 */
-	public static final InstanceOfAssertFactory<ShellScreen, ShellScreenAssert> SHELLSCREEN = new InstanceOfAssertFactory<>(
-			ShellScreen.class, ShellAssertions::assertThat);
 
 	/**
 	 * Creates an instance of {@link ShellScreenAssert}.

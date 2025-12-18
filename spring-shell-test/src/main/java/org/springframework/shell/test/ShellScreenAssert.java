@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.springframework.shell.test;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.assertj.core.api.AbstractAssert;
 
@@ -24,6 +23,7 @@ import org.assertj.core.api.AbstractAssert;
  * Asserts for {@link ShellScreen}.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public class ShellScreenAssert extends AbstractAssert<ShellScreenAssert, ShellScreen> {
 
@@ -32,17 +32,16 @@ public class ShellScreenAssert extends AbstractAssert<ShellScreenAssert, ShellSc
 	}
 
 	/**
-	 * Verifies that text if found from a screen.
+	 * Verifies that text if found in a screen.
 	 * @param text the text to look for
 	 * @return this assertion object
 	 */
 	public ShellScreenAssert containsText(String text) {
 		isNotNull();
 		List<String> lines = actual.lines();
-		boolean match = lines.stream().filter(n -> n.contains(text)).findFirst().isPresent();
+		boolean match = lines.stream().anyMatch(n -> n.contains(text));
 		if (!match) {
-			failWithMessage("Expected to find %s from screen but was %s", text,
-					lines.stream().collect(Collectors.joining("\n")));
+			failWithMessage("Expected to find %s in screen but was %s", text, String.join("\n", lines));
 		}
 		return this;
 	}
