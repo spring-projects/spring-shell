@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,11 @@
  */
 package org.springframework.shell.test;
 
-import org.jline.keymap.KeyMap;
-import org.jline.terminal.Terminal;
-import org.jline.utils.InfoCmp;
-
 /**
  * Interface sequencing various things into terminal aware text types.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public interface ShellWriteSequence {
 
@@ -100,97 +97,5 @@ public interface ShellWriteSequence {
 	 * @return the result
 	 */
 	String build();
-
-	/**
-	 * Get a new instance of a {@code ShellWriteSequence}.
-	 * @param terminal the terminal
-	 * @return instance of a write sequence
-	 */
-	static ShellWriteSequence of(Terminal terminal) {
-		return new DefaultShellWriteSequence(terminal);
-	}
-
-	static class DefaultShellWriteSequence implements ShellWriteSequence {
-
-		private final Terminal terminal;
-
-		private StringBuilder buf = new StringBuilder();
-
-		DefaultShellWriteSequence(Terminal terminal) {
-			this.terminal = terminal;
-		}
-
-		@Override
-		public ShellWriteSequence carriageReturn() {
-			this.buf.append(KeyMap.key(this.terminal, InfoCmp.Capability.carriage_return));
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence clearScreen() {
-			String ansiClearScreen = KeyMap.key(this.terminal, InfoCmp.Capability.clear_screen);
-			this.buf.append(ansiClearScreen);
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence ctrl(char c) {
-			String ctrl = KeyMap.ctrl(c);
-			this.buf.append(ctrl);
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence command(String command) {
-			this.text(command);
-			return carriageReturn();
-		}
-
-		@Override
-		public ShellWriteSequence cr() {
-			return carriageReturn();
-		}
-
-		@Override
-		public ShellWriteSequence keyUp() {
-			this.buf.append(KeyMap.key(this.terminal, InfoCmp.Capability.key_up));
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence keyDown() {
-			this.buf.append(KeyMap.key(this.terminal, InfoCmp.Capability.key_down));
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence keyLeft() {
-			this.buf.append(KeyMap.key(this.terminal, InfoCmp.Capability.key_left));
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence keyRight() {
-			this.buf.append(KeyMap.key(this.terminal, InfoCmp.Capability.key_right));
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence text(String text) {
-			this.buf.append(text);
-			return this;
-		}
-
-		@Override
-		public ShellWriteSequence space() {
-			return this.text(" ");
-		}
-
-		@Override
-		public String build() {
-			return buf.toString();
-		}
-
-	}
 
 }

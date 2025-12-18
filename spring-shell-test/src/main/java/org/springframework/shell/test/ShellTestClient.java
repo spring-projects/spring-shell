@@ -241,7 +241,7 @@ public interface ShellTestClient extends Closeable {
 
 		@Override
 		public ShellWriteSequence writeSequence() {
-			return ShellWriteSequence.of(terminal);
+			return new JLineShellWriteSequence(terminal);
 		}
 
 		@Override
@@ -297,7 +297,7 @@ public interface ShellTestClient extends Closeable {
 
 		@Override
 		public ShellWriteSequence writeSequence() {
-			return ShellWriteSequence.of(terminal);
+			return new JLineShellWriteSequence(terminal);
 		}
 
 		@Override
