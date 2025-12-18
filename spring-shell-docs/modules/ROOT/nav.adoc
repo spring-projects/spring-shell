@@ -9,6 +9,7 @@
 ** xref:commands/registration/annotation.adoc[]
 ** xref:commands/organize.adoc[]
 ** xref:commands/syntax.adoc[]
+** xref:commands/validation.adoc[]
 ** xref:commands/context.adoc[]
 ** xref:commands/registry.adoc[]
 ** xref:commands/availability.adoc[]

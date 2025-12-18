@@ -20,8 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.validation.Path;
+
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.shell.core.ParameterValidationException;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
@@ -134,6 +137,17 @@ public abstract class AbstractCommand implements Command {
 		try {
 			return doExecute(commandContext);
 		}
+		catch (ParameterValidationException parameterValidationException) {
+			PrintWriter outputWriter = commandContext.outputWriter();
+			outputWriter.println("The following constraints were not met:");
+			parameterValidationException.getConstraintViolations().forEach(violation -> {
+				Path propertyPath = violation.getPropertyPath();
+				String violationMessage = violation.getMessage();
+				String errorMessage = String.format("\t--%s: %s", extractPropertyName(propertyPath), violationMessage);
+				outputWriter.println(errorMessage);
+			});
+			return ExitStatus.USAGE_ERROR;
+		}
 		catch (Exception e) {
 			if (getExitStatusExceptionMapper() != null) {
 				return getExitStatusExceptionMapper().apply(e);
@@ -142,6 +156,12 @@ public abstract class AbstractCommand implements Command {
 				throw e;
 			}
 		}
+	}
+
+	private String extractPropertyName(Path propertyPath) {
+		String path = propertyPath.toString();
+		int lastIndexOfDot = path.lastIndexOf(".");
+		return lastIndexOfDot == -1 ? path : path.substring(lastIndexOfDot + 1);
 	}
 
 	protected void println(String message, CommandContext commandContext) {

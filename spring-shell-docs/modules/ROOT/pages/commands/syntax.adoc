@@ -13,7 +13,9 @@ include::{snippets}/CommandAnnotationSnippets.java[tag=command-option-arg]
 ----
 
 Options are defined using `@Option` annotation, while arguments are defined using `@Argument` annotation.
-Options are named, while arguments are positional.
+Options are named, while arguments are positional. Options can have short names (single character) and long names (multi-character).
+
+Options can be validated using the Bean Validation API by adding validation annotations to the method parameters, see the xref:commands/validation.adoc[Validating Command Options] section for more details.
 
 == Parsing rules
 

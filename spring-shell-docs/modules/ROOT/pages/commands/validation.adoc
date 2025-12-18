@@ -1,0 +1,28 @@
+[[validating-command-options]]
+= Option Validation
+
+Spring Shell integrates with the https://beanvalidation.org/[Bean Validation API] to support
+automatic and self-documenting constraints on command parameters.
+
+Annotations found on command parameters are honored and trigger validation prior to the command executing.
+Consider the following command:
+
+[source, java]
+----
+@Command(name = "change-password", description = "Change password", group = "User Management",
+		help = "A command that changes the user password. Usage: change-password [-p | --password]=<password>")
+public String changePassword(
+		@Option(shortName = 'p', longName = "password") @Size(min = 8, max = 40) String password) {
+	return "Password successfully set to " + password;
+}
+----
+
+From the preceding example, you get the following behavior for free:
+
+[source, bash]
+----
+$>change-password --password=hello
+The following constraints were not met:
+	--password: size must be between 8 and 40
+Error while executing command change-password: USAGE_ERROR
+----

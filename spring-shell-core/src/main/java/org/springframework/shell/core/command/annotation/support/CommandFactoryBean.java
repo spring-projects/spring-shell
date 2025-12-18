@@ -18,6 +18,8 @@ package org.springframework.shell.core.command.annotation.support;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import jakarta.validation.Validator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,6 +36,7 @@ import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
+import org.springframework.shell.core.utils.Utils;
 import org.springframework.util.Assert;
 
 /**
@@ -114,8 +117,15 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 						+ "', using default exception mapping strategy.");
 			}
 		}
+		Validator validator = Utils.defaultValidator();
+		try {
+			validator = this.applicationContext.getBean(Validator.class);
+		}
+		catch (BeansException e) {
+			log.debug("No Validator bean found, using default validator.");
+		}
 		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
-				group, help, hidden, this.method, targetObject, configurableConversionService);
+				group, help, hidden, this.method, targetObject, configurableConversionService, validator);
 		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
 		methodInvokerCommandAdapter.setAvailabilityProvider(availabilityProviderBean);
 		if (exitStatusExceptionMapperBean != null) {

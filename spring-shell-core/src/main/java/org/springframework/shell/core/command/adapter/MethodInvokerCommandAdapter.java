@@ -19,16 +19,24 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.core.convert.support.ConfigurableConversionService;
-import org.springframework.shell.core.command.*;
+import org.springframework.shell.core.ParameterValidationException;
+import org.springframework.shell.core.command.AbstractCommand;
+import org.springframework.shell.core.command.CommandArgument;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandOption;
+import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.annotation.Argument;
 import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.util.MethodInvoker;
 
 /**
@@ -45,6 +53,8 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 
 	private final Object targetObject;
 
+	private final Validator validator;
+
 	private final ConfigurableConversionService conversionService;
 
 	/**
@@ -59,11 +69,12 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 	 * @param conversionService the conversion service to use for parameter conversion
 	 */
 	public MethodInvokerCommandAdapter(String name, String description, String group, String help, boolean hidden,
-			Method method, Object targetObject, ConfigurableConversionService conversionService) {
+			Method method, Object targetObject, ConfigurableConversionService conversionService, Validator validator) {
 		super(name, description, group, help, hidden);
 		this.method = method;
 		this.targetObject = targetObject;
 		this.conversionService = conversionService;
+		this.validator = validator;
 	}
 
 	@Override
@@ -79,15 +90,24 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 		Class<?>[] parameterTypes = this.method.getParameterTypes();
 
 		// TODO should be able to mix CommandContext and other parameters
+		Object[] argumentsArray = null;
 		if (parameterTypes.length == 1
 				&& parameterTypes[0].equals(org.springframework.shell.core.command.CommandContext.class)) {
-			methodInvoker.setArguments(commandContext);
+			argumentsArray = new Object[] { commandContext };
 		}
 		else {
 			List<Object> arguments = prepareArguments(commandContext);
-			methodInvoker.setArguments(arguments.toArray());
+			argumentsArray = arguments.toArray();
 		}
+		methodInvoker.setArguments(argumentsArray);
 		methodInvoker.prepare();
+
+		// validate parameters
+		Set<ConstraintViolation<Object>> constraintViolations = validator.forExecutables()
+			.validateParameters(targetObject, method, argumentsArray);
+		if (!constraintViolations.isEmpty()) {
+			throw new ParameterValidationException(constraintViolations);
+		}
 
 		// invoke method
 		methodInvoker.invoke();
