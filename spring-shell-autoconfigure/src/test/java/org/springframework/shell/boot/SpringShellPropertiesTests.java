@@ -44,7 +44,6 @@ class SpringShellPropertiesTests {
 			assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isNotNull();
 			assertThat(properties.getCommand().getHistory().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getScript().isEnabled()).isTrue();
-			assertThat(properties.getCommand().getStacktrace().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getCompletion().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getCompletion().getRootCommand()).isNull();
 			assertThat(properties.getCommand().getVersion().isEnabled()).isTrue();
@@ -80,7 +79,6 @@ class SpringShellPropertiesTests {
 			.withPropertyValues("spring.shell.command.history.enabled=false")
 			.withPropertyValues("spring.shell.command.quit.enabled=false")
 			.withPropertyValues("spring.shell.command.script.enabled=false")
-			.withPropertyValues("spring.shell.command.stacktrace.enabled=false")
 			.withPropertyValues("spring.shell.command.completion.enabled=false")
 			.withPropertyValues("spring.shell.command.completion.root-command=fake")
 			.withPropertyValues("spring.shell.command.version.enabled=false")
@@ -116,7 +114,6 @@ class SpringShellPropertiesTests {
 				assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isEqualTo("fake2");
 				assertThat(properties.getCommand().getHistory().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getScript().isEnabled()).isFalse();
-				assertThat(properties.getCommand().getStacktrace().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getCompletion().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getCompletion().getRootCommand()).isEqualTo("fake");
 				assertThat(properties.getCommand().getVersion().isEnabled()).isFalse();

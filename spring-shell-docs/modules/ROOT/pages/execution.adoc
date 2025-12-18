@@ -62,3 +62,11 @@ default boolean run(String[] args) throws Exception {
 
 IMPORTANT: This will be the main api going forward and other existing methods taking boot's
 `ApplicationArguments` have been deprecated and will be removed in a future release.
+
+[[debug-mode]]
+== Debug Mode
+
+Spring Shell provides a debug mode that can be enabled by setting the
+`spring.shell.debug.enabled` property to `true`. When enabled, this mode
+provides additional debugging information for command execution by printing
+stack traces of errors, which can be useful for troubleshooting and development purposes.

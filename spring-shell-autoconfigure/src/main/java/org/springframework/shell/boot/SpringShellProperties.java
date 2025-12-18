@@ -219,20 +219,6 @@ public class SpringShellProperties {
 
 	}
 
-	public static class StacktraceCommand {
-
-		private boolean enabled = true;
-
-		public boolean isEnabled() {
-			return enabled;
-		}
-
-		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-
-	}
-
 	public static class ScriptCommand {
 
 		private boolean enabled = true;
@@ -291,8 +277,6 @@ public class SpringShellProperties {
 
 		private ClearCommand clear = new ClearCommand();
 
-		private StacktraceCommand stacktrace = new StacktraceCommand();
-
 		private ScriptCommand script = new ScriptCommand();
 
 		private HistoryCommand history = new HistoryCommand();
@@ -315,14 +299,6 @@ public class SpringShellProperties {
 
 		public void setClear(ClearCommand clear) {
 			this.clear = clear;
-		}
-
-		public StacktraceCommand getStacktrace() {
-			return stacktrace;
-		}
-
-		public void setStacktrace(StacktraceCommand stacktrace) {
-			this.stacktrace = stacktrace;
 		}
 
 		public ScriptCommand getScript() {

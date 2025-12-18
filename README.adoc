@@ -56,7 +56,6 @@ AVAILABLE COMMANDS
 
 Built-In Commands
        help: Display help about available commands
-       stacktrace: Display the full stacktrace of the last error.
        clear: Clear the shell screen.
        quit, exit: Exit the shell.
        history: Display or save the history of previously run commands

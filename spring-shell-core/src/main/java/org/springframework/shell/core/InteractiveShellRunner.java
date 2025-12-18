@@ -49,6 +49,9 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 
 	private final InputProvider inputProvider;
 
+	private final boolean debugMode = System.getProperty("spring.shell.debug.enabled", "false")
+		.equalsIgnoreCase("true");
+
 	/**
 	 * Create a new {@link InteractiveShellRunner} instance.
 	 * @param inputProvider the input provider
@@ -81,7 +84,9 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 				}
 			}
 			catch (Exception e) {
-				// TODO print e.stacktrace if in debug/verbose mode
+				if (this.debugMode) {
+					e.printStackTrace();
+				}
 				break;
 			}
 			finally {
@@ -98,8 +103,9 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 			}
 			catch (CommandExecutionException executionException) { // technical error
 				print("Unable to run command " + parsedInput.commandName());
-				// TODO print e.stacktrace if in debug/verbose mode
-				executionException.printStackTrace();
+				if (this.debugMode) {
+					executionException.printStackTrace();
+				}
 			}
 			catch (CommandNotFoundException exception) {
 				print(String.format("Command %s not found", exception.getCommandName()));
