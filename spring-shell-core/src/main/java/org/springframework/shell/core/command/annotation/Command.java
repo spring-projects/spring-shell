@@ -93,4 +93,10 @@ public @interface Command {
 	 */
 	String availabilityProvider() default "";
 
+	/**
+	 * Define exit status exception mapper bean name.
+	 * @return the exit status exception mapper bean name
+	 */
+	String exitStatusExceptionMapper() default "";
+
 }

@@ -22,9 +22,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.shell.core.command.adapter.ConsumerCommandAdapter;
 import org.springframework.shell.core.command.adapter.FunctionCommandAdapter;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
 import org.springframework.util.Assert;
 
 /**
@@ -127,6 +130,8 @@ public interface Command {
 
 		private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
 
+		@Nullable ExitStatusExceptionMapper exitStatusExceptionMapper;
+
 		private List<String> aliases = new ArrayList<>();
 
 		public Builder name(String name) {
@@ -159,6 +164,11 @@ public interface Command {
 			return this;
 		}
 
+		public Builder exitStatusExceptionMapper(ExitStatusExceptionMapper exitStatusExceptionMapper) {
+			this.exitStatusExceptionMapper = exitStatusExceptionMapper;
+			return this;
+		}
+
 		public Builder aliases(String... aliases) {
 			this.aliases = Arrays.asList(aliases);
 			return this;
@@ -171,6 +181,9 @@ public interface Command {
 					commandExecutor);
 			command.setAliases(aliases);
 			command.setAvailabilityProvider(availabilityProvider);
+			if (exitStatusExceptionMapper != null) {
+				command.setExitStatusExceptionMapper(exitStatusExceptionMapper);
+			}
 
 			return command;
 		}
@@ -182,6 +195,9 @@ public interface Command {
 					commandExecutor);
 			command.setAliases(aliases);
 			command.setAvailabilityProvider(availabilityProvider);
+			if (exitStatusExceptionMapper != null) {
+				command.setExitStatusExceptionMapper(exitStatusExceptionMapper);
+			}
 
 			return command;
 		}

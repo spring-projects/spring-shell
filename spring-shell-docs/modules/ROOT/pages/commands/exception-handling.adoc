@@ -1,0 +1,72 @@
+[[exception-handling]]
+= Exception Handling
+
+When writing commands, it is important to handle exceptions properly to ensure that your application behaves predictably in the face of errors.
+Spring Shell allows you to manage exceptions effectively and map them to specific exit codes and user-friendly messages thanks to the `ExitStatusExceptionMapper` interface.
+
+The `ExitStatusExceptionMapper` interface provides a way to map exceptions thrown during command execution to specific exit codes and messages.
+By implementing this interface, you can define custom behavior for different types of exceptions, allowing you to provide meaningful feedback to users and control the exit status of your application.
+
+== Implementing ExitStatusExceptionMapper
+
+The `ExitStatusExceptionMapper` is a functional interface that extends `java.util.Function`, and which takes an `Exception` as input and returns an `ExitStatus`.
+You can implement this method to handle specific exceptions and return appropriate exit codes and messages. For example:
+
+[source, java, indent=0]
+----
+@Bean
+public ExitStatusExceptionMapper myCustomExceptionMapper() {
+	return exception -> new ExitStatus(42, "42! The answer to life, the universe and everything!");
+}
+----
+
+== Registering the Mapper
+
+=== Programmatic Registration
+
+When registering commands programmatically, you can set the `ExitStatusExceptionMapper` using the `exitStatusExceptionMapper` method on the `Command.Builder`. For example:
+
+[source, java, indent=0]
+----
+@Bean
+public Command sayHello() {
+	return Command.builder()
+			.name("hello")
+			.description("Say hello to a given name")
+			.group("Greetings")
+			.help("A command that greets the user with 'Hello ${name}!'. Usage: hello [-n | --name]=<name>")
+			.exitStatusExceptionMapper(exception -> new ExitStatus(42, "42! The answer to life, the universe and everything!"))
+			.execute(context -> {
+				String name = context.getOptionByName("name").value();
+				if (name.equals("42")) {
+					throw new RuntimeException("Error!");
+				}
+				System.out.println("Hello " + name + "!");
+			});
+}
+----
+
+=== Annotation-Based Registration
+
+When using annotation-based command registration, you can specify the custom `ExitStatusExceptionMapper` by using the `exitStatusExceptionMapper` attribute of the `@Command` annotation. For example:
+
+[source, java, indent=0]
+----
+@Command(name = "hello", description = "Say hello to a given name", group = "Greetings",
+		help = "A command that greets the user with 'Hello ${name}!'. Usage: hello [-n | --name]=<name>",
+		exitStatusExceptionMapper = "myCustomExceptionMapper")
+public void sayHello(@Option(shortName = 'n', longName = "name", description = "the name of the person to greet",
+		defaultValue = "World") String name) {
+	if (name.equals("42")) {
+		throw new RuntimeException("Error!");
+	}
+	System.out.println("Hello " + name + "!");
+}
+
+@Bean
+public ExitStatusExceptionMapper myCustomExceptionMapper() {
+	return exception -> new ExitStatus(42, "42! The answer to life, the universe and everything!");
+}
+----
+
+The custom mapper should be defined as a Spring bean so that it can be referenced by name in the `@Command` annotation.

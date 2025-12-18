@@ -20,8 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
 
 /**
  * Base class helping to build shell commands.
@@ -43,6 +46,8 @@ public abstract class AbstractCommand implements Command {
 	private final boolean hidden;
 
 	private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
+
+	@Nullable private ExitStatusExceptionMapper exitStatusExceptionMapper;
 
 	private List<String> aliases = new ArrayList<>();
 
@@ -105,6 +110,14 @@ public abstract class AbstractCommand implements Command {
 		this.availabilityProvider = availabilityProvider;
 	}
 
+	@Nullable public ExitStatusExceptionMapper getExitStatusExceptionMapper() {
+		return exitStatusExceptionMapper;
+	}
+
+	public void setExitStatusExceptionMapper(ExitStatusExceptionMapper exitStatusExceptionMapper) {
+		this.exitStatusExceptionMapper = exitStatusExceptionMapper;
+	}
+
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		Availability availability = getAvailabilityProvider().get();
@@ -118,7 +131,17 @@ public abstract class AbstractCommand implements Command {
 			println(getHelp(), commandContext);
 			return ExitStatus.OK;
 		}
-		return doExecute(commandContext);
+		try {
+			return doExecute(commandContext);
+		}
+		catch (Exception e) {
+			if (getExitStatusExceptionMapper() != null) {
+				return getExitStatusExceptionMapper().apply(e);
+			}
+			else {
+				throw e;
+			}
+		}
 	}
 
 	protected void println(String message, CommandContext commandContext) {

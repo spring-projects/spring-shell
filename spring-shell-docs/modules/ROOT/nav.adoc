@@ -12,6 +12,7 @@
 ** xref:commands/context.adoc[]
 ** xref:commands/registry.adoc[]
 ** xref:commands/availability.adoc[]
+** xref:commands/exception-handling.adoc[]
 ** xref:commands/help.adoc[]
 ** xref:commands/builtin/index.adoc[]
 *** xref:commands/builtin/help.adoc[]

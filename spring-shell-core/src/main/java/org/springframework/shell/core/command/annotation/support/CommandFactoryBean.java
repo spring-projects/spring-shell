@@ -33,6 +33,7 @@ import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
 import org.springframework.util.Assert;
 
 /**
@@ -68,6 +69,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		boolean hidden = command.hidden();
 		String[] aliases = command.alias();
 		String availabilityProvider = command.availabilityProvider();
+		String exitStatusExceptionMapper = command.exitStatusExceptionMapper();
 		log.debug("Creating command bean for method '" + this.method + "' with name '" + name + "'");
 		Class<?> declaringClass = this.method.getDeclaringClass();
 		Object targetObject;
@@ -101,10 +103,24 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 						+ "', using always available provider.");
 			}
 		}
+		ExitStatusExceptionMapper exitStatusExceptionMapperBean = null;
+		if (!exitStatusExceptionMapper.isEmpty()) {
+			try {
+				exitStatusExceptionMapperBean = this.applicationContext.getBean(exitStatusExceptionMapper,
+						ExitStatusExceptionMapper.class);
+			}
+			catch (BeansException e) {
+				log.debug("No ExitStatusExceptionMapper bean found with name '" + exitStatusExceptionMapper
+						+ "', using default exception mapping strategy.");
+			}
+		}
 		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
 				group, help, hidden, this.method, targetObject, configurableConversionService);
 		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
 		methodInvokerCommandAdapter.setAvailabilityProvider(availabilityProviderBean);
+		if (exitStatusExceptionMapperBean != null) {
+			methodInvokerCommandAdapter.setExitStatusExceptionMapper(exitStatusExceptionMapperBean);
+		}
 		return methodInvokerCommandAdapter;
 	}
 
