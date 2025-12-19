@@ -29,7 +29,7 @@ public class CommandRegistrationBeanSnippets {
 		@Bean
 		Command myCommand() {
 			return Command.builder().name("mycommand").execute(context -> {
-				System.out.println("This is my command!");
+				context.outputWriter().println("This is my command!");
 			});
 		}
 		// end::plain[]

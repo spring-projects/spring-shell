@@ -1,5 +1,5 @@
 [[writing]]
-= Writing
+= Writing Output
 
 ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 

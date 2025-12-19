@@ -1,5 +1,5 @@
 [[syntax]]
-= Command syntax
+= Command Syntax
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 

@@ -4,7 +4,7 @@
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
-In this section, we go through an actual command definition and parsing rules.
+In this section, we go through the actual command definition and parsing rules.
 
 
 

@@ -20,48 +20,19 @@ Some commands may not have any useful meanings when they run in interactive mode
 or (conversely) in non-interactive mode. For example, a built-in `exit` command would
 have no meaning in non-interactive mode, because it is used to exit interactive mode.
 
-The `@Command` annotation has a field called `interactionMode` that you can use to inform
-shell about when a particular command is available.
-
 [[using-shell-execution-shellrunner]]
 == Shell Runners
 
-`ShellApplicationRunner` is a main interface where Boot's `ApplicationArguments` are passed
-and its default implementation makes a choice which `ShellRunner` is used. There can be
-only one `ShellApplicationRunner` but it can be redefined if needed for some reason.
+`ShellRunner` is the main interface to run a shell. There can be only one `ShellRunner`
+per application context.
 
-Three `ShellRunner` implementation exists, named `InteractiveShellRunner`,
-`NonInteractiveShellRunner` and `ScriptShellRunner`. Only `NonInteractiveShellRunner`
-is enabled by default. Enabled state can be modified using properties
-`spring.shell.interactive.enabled`, `spring.shell.noninteractive.enabled` and
-`spring.shell.script.enabled` respecively.
+Three `ShellRunner` implementations exist, named `SystemShellRunner`,
+`JLineShellRunner` and `NonInteractiveShellRunner`. By default, it is
+the interactive `SystemShellRunner` that is used.
 
-For example enabling interactive and script runners use properties:
-
-[source, yaml]
-----
-spring:
-  shell:
-    interactive:
-      enabled: true
-    script:
-      enabled: true
-----
-
-NOTE: Versions up to `3.2.x` had all runners enabled by default, starting from `3.3.x`
-      only `NonInteractiveShellRunner` is enabled by default.
-
-Starting from `3.3.x` a `ShellRunner` interface has a new method:
-
-[source, java]
-----
-default boolean run(String[] args) throws Exception {
-  return false;
-}
-----
-
-IMPORTANT: This will be the main api going forward and other existing methods taking boot's
-`ApplicationArguments` have been deprecated and will be removed in a future release.
+To enable non-interactive mode, you can set the `spring.shell.interactive.enabled`
+property to `false`. This will switch the `ShellRunner` implementation to
+`NonInteractiveShellRunner`.
 
 [[debug-mode]]
 == Debug Mode

@@ -10,7 +10,7 @@ Typing `help` + `ENTER` lists all the commands known to the shell and a short de
 [source, bash]
 ----
 my-shell:>help
-AVAILABLE COMMANDS
+Available commands:
 
 Built-In Commands
        help: Display help about available commands
@@ -18,5 +18,5 @@ Built-In Commands
        version: Show version info
 ----
 
-Typing `<command> -h` `<command> --help` or  shows more detailed information about a command, including the available parameters, their
+Typing `<command> -h` or `<command> --help` shows more information about a command, including the available parameters, their
 type, whether they are mandatory or not, and other details.

@@ -42,7 +42,7 @@ public class SpringShellApplication {
 }
 ----
 
-This class defines a single command, `hello`, that takes an optional argument, `name`, and prints a greeting message to standard output.
+This class defines a single command named `hello`, that takes an optional argument, `name`, and prints a greeting message to the standard output.
 
 The main method bootstraps a Spring application context and runs the shell. To run the application, execute the `SpringShellApplication` class with the following command:
 

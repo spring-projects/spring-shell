@@ -5,8 +5,6 @@
 Throughout this documentation, we make references to configuring something by using
 annotations or programmatic examples.
 
-The annotation model relates to the use of `@Command`.
+The annotation model relates to the use of `@Command` annotation. The programmatic model relates to creating commands using APIs such as `Command.Builder`.
 
-The programmatic model relates to creating commands using APIs such as `Command.Builder`.
-
-These approaches can be mixed in the same application.
+These two approaches can be mixed in the same application.

@@ -1,0 +1,63 @@
+[[registration]]
+= Command Registration
+:page-section-summary-toc: 1
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+There are two different ways to define a command, through an annotation model and through a programmatic model:
+
+- In the annotation model, you define your methods in a `@Component` class and the methods with specific annotations.
+- In the programmatic model, you use a more low level approach, defining commands as beans.
+
+[[commands-registration-annotation]]
+== Annotation-Based Registration
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+The `@Command` annotation marks a method as a candidate for command registration.
+In below example a command `example` is defined.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=command-anno-in-method]
+----
+
+TIP: The command name optional, if not provided the method name will be used as command name.
+When the command returns a value, it will be printed to the shell output.
+
+Using a `@Command` will not automatically register command targets, instead it is required to use
+`@EnableCommand` annotations. This model is familiar from other parts  of Spring umbrella and
+provides better flexibility for a user being inclusive rather than exclusive for command targets.
+
+You can define target classes using `@EnableCommand`. It will get picked from all _Configuration_
+classes.
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=enablecommand-with-class]
+----
+
+TIP: `@EnableCommand` is not required in a Spring Boot application, as Spring Boot auto-configuration
+will take care of that.
+
+[[commands-registration-programmatic]]
+== Programmatic Registration
+
+ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+
+In the programmatic model, commands can be defined as beans of type `Command`:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationBeanSnippets.java[tag=plain]
+----
+
+You can also use the `AbstractCommand` class to simplify command definitions:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandRegistrationBeanSnippets.java[tag=abstractcommand]
+----
+
+`AbstractCommand` provides some utility methods to simplify command creation like
+handling help options (`-h` and `--help`) and printing messages to the shell output.
