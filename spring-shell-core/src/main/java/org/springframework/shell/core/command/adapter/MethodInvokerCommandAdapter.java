@@ -99,9 +99,12 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 		}
 
 		// invoke method
-		methodInvoker.invoke();
-		commandContext.outputWriter().flush();
-
+		Object result = methodInvoker.invoke();
+		if (result != null) {
+			// print method result to command output
+			commandContext.outputWriter().println(result);
+			commandContext.outputWriter().flush();
+		}
 		return ExitStatus.OK;
 	}
 
