@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -376,6 +376,21 @@ public class ExtendedDefaultParser implements Parser {
 				}
 			};
 		}
+	}
+
+	/**
+	 * An extension of {@link ParsedLine} that, being aware of the quoting and escaping
+	 * rules of the {@link Parser} that produced it, knows if and how a completion
+	 * candidate should be escaped/quoted.
+	 *
+	 * @author Eric Bottard
+	 * @author Piotr Olaszewski
+	 */
+	@FunctionalInterface
+	interface CompletingParsedLine {
+
+		CharSequence emit(CharSequence candidate);
+
 	}
 
 }
