@@ -66,9 +66,12 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 			.get(org.springframework.shell.core.command.annotation.Command.class)
 			.synthesize();
 		String name = String.join(" ", command.name());
+		name = name.isEmpty() ? this.method.getName() : name;
 		String description = command.description();
+		description = description.isEmpty() ? "N/A" : description;
 		String help = command.help();
 		String group = command.group();
+		group = group.isEmpty() ? this.method.getDeclaringClass().getSimpleName() + " Commands" : group;
 		boolean hidden = command.hidden();
 		String[] aliases = command.alias();
 		String availabilityProvider = command.availabilityProvider();
