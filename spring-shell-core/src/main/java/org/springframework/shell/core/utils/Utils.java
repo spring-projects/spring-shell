@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,13 +34,47 @@ import jakarta.validation.ValidatorFactory;
 
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistry;
 
 /**
  * Some text utilities.
  *
  * @author Eric Bottard
+ * @author Mahmoud Ben Hassine
  */
 public class Utils {
+
+	/**
+	 * Get a formatted string of available non-hidden commands from the command registry.
+	 * @param commandRegistry the command registry
+	 * @return a string of available commands with their descriptions
+	 * @since 4.0.0
+	 */
+	public static String formatAvailableCommands(CommandRegistry commandRegistry) {
+		StringBuilder stringBuilder = new StringBuilder("Available commands: ");
+		stringBuilder.append(System.lineSeparator());
+		List<String> groups = commandRegistry.getCommands()
+			.stream()
+			.filter(command -> !command.isHidden())
+			.map(Command::getGroup)
+			.distinct()
+			.sorted()
+			.toList();
+		for (String group : groups) {
+			stringBuilder.append(group).append(System.lineSeparator());
+			for (Command command : commandRegistry.getCommands()) {
+				if (command.getGroup().equals(group)) {
+					stringBuilder.append("\t")
+						.append(command.getName())
+						.append(": ")
+						.append(command.getDescription())
+						.append(System.lineSeparator());
+				}
+			}
+		}
+		return stringBuilder.toString();
+	}
 
 	/**
 	 * Turn CamelCaseText into gnu-style-lowercase.

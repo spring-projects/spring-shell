@@ -17,7 +17,7 @@ package org.springframework.shell.core.command;
 
 import java.io.PrintWriter;
 
-import org.springframework.shell.core.utils.CommandUtils;
+import org.springframework.shell.core.utils.Utils;
 
 /**
  * A command to display help about all available commands.
@@ -41,7 +41,7 @@ public class Help implements Command {
 
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		String helpMessage = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
+		String helpMessage = Utils.formatAvailableCommands(commandContext.commandRegistry());
 		PrintWriter outputWriter = commandContext.outputWriter();
 		outputWriter.println(helpMessage);
 		outputWriter.flush();

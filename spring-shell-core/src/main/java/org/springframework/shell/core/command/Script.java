@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.shell.core.FileInputProvider;
-import org.springframework.shell.core.utils.CommandUtils;
+import org.springframework.shell.core.utils.Utils;
 
 /**
  * A command that can read and execute other commands from a file.
@@ -50,7 +50,7 @@ public class Script extends AbstractCommand {
 	private void executeCommand(CommandContext commandContext, String input) throws Exception {
 		Command command = commandContext.commandRegistry().getCommandByName(input);
 		if (command == null) {
-			String availableCommands = CommandUtils.formatAvailableCommands(commandContext.commandRegistry());
+			String availableCommands = Utils.formatAvailableCommands(commandContext.commandRegistry());
 			throw new CommandNotFoundException("No command found for name: " + input + ". " + availableCommands);
 		}
 		CommandContext singleCommandContext = new CommandContext(commandContext.parsedInput(),

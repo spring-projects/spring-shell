@@ -28,7 +28,7 @@ import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.ParsedInput;
-import org.springframework.shell.core.utils.CommandUtils;
+import org.springframework.shell.core.utils.Utils;
 
 /**
  * Base class for interactive shell runners. Implementations must provide concrete methods
@@ -111,7 +111,7 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 			}
 			catch (CommandNotFoundException exception) {
 				print(String.format("Command %s not found", exception.getCommandName()));
-				print(CommandUtils.formatAvailableCommands(this.commandRegistry));
+				print(Utils.formatAvailableCommands(this.commandRegistry));
 			}
 			finally {
 				flush();
