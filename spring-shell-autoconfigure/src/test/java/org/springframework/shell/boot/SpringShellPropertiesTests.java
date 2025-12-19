@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.shell.boot.SpringShellProperties.HelpCommand.GroupingMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,24 +38,9 @@ class SpringShellPropertiesTests {
 			assertThat(properties.getTheme().getName()).isNull();
 			assertThat(properties.getCommand().getClear().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getHelp().isEnabled()).isTrue();
-			assertThat(properties.getCommand().getHelp().getGroupingMode()).isEqualTo(GroupingMode.GROUP);
-			assertThat(properties.getCommand().getHelp().getCommandTemplate()).isNotNull();
-			assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isNotNull();
 			assertThat(properties.getCommand().getHistory().isEnabled()).isTrue();
 			assertThat(properties.getCommand().getScript().isEnabled()).isTrue();
-			assertThat(properties.getCommand().getCompletion().isEnabled()).isTrue();
-			assertThat(properties.getCommand().getCompletion().getRootCommand()).isNull();
 			assertThat(properties.getCommand().getVersion().isEnabled()).isTrue();
-			assertThat(properties.getCommand().getVersion().getTemplate()).isNotNull();
-			assertThat(properties.getCommand().getVersion().isShowBuildArtifact()).isFalse();
-			assertThat(properties.getCommand().getVersion().isShowBuildGroup()).isFalse();
-			assertThat(properties.getCommand().getVersion().isShowBuildName()).isFalse();
-			assertThat(properties.getCommand().getVersion().isShowBuildTime()).isFalse();
-			assertThat(properties.getCommand().getVersion().isShowBuildVersion()).isTrue();
-			assertThat(properties.getCommand().getVersion().isShowGitBranch()).isFalse();
-			assertThat(properties.getCommand().getVersion().isShowGitCommitId()).isFalse();
-			assertThat(properties.getCommand().getVersion().isShowGitShortCommitId()).isFalse();
-			assertThat(properties.getCommand().getVersion().isShowGitCommitTime()).isFalse();
 		});
 	}
 
@@ -68,35 +52,15 @@ class SpringShellPropertiesTests {
 			.withPropertyValues("spring.shell.config.env=FAKE_ENV")
 			.withPropertyValues("spring.shell.script.enabled=true")
 			.withPropertyValues("spring.shell.interactive.enabled=true")
-			.withPropertyValues("spring.shell.noninteractive.enabled=false")
-			.withPropertyValues("spring.shell.noninteractive.primary-command=fakecommand")
 			.withPropertyValues("spring.shell.theme.name=fake")
 			.withPropertyValues("spring.shell.command.clear.enabled=false")
 			.withPropertyValues("spring.shell.command.help.enabled=false")
-			.withPropertyValues("spring.shell.command.help.grouping-mode=flat")
-			.withPropertyValues("spring.shell.command.help.command-template=fake1")
-			.withPropertyValues("spring.shell.command.help.commands-template=fake2")
 			.withPropertyValues("spring.shell.command.history.enabled=false")
 			.withPropertyValues("spring.shell.command.quit.enabled=false")
 			.withPropertyValues("spring.shell.command.script.enabled=false")
-			.withPropertyValues("spring.shell.command.completion.enabled=false")
-			.withPropertyValues("spring.shell.command.completion.root-command=fake")
 			.withPropertyValues("spring.shell.command.version.enabled=false")
-			.withPropertyValues("spring.shell.command.version.template=fake")
-			.withPropertyValues("spring.shell.command.version.show-build-artifact=true")
-			.withPropertyValues("spring.shell.command.version.show-build-group=true")
-			.withPropertyValues("spring.shell.command.version.show-build-name=true")
-			.withPropertyValues("spring.shell.command.version.show-build-time=true")
-			.withPropertyValues("spring.shell.command.version.show-build-version=false")
-			.withPropertyValues("spring.shell.command.version.show-git-branch=true")
-			.withPropertyValues("spring.shell.command.version.show-git-commit-id=true")
-			.withPropertyValues("spring.shell.command.version.show-git-short-commit-id=true")
-			.withPropertyValues("spring.shell.command.version.show-git-commit-time=true")
 			.withPropertyValues("spring.shell.help.enabled=false")
 			.withPropertyValues("spring.shell.help.command=fake")
-			.withPropertyValues("spring.shell.help.long-names=fake")
-			.withPropertyValues("spring.shell.help.short-names=f")
-			.withPropertyValues("spring.shell.option.naming.case-type=camel")
 			.withPropertyValues("spring.shell.context.close=true")
 			.withUserConfiguration(Config1.class)
 			.run(context -> {
@@ -109,24 +73,9 @@ class SpringShellPropertiesTests {
 				assertThat(properties.getTheme().getName()).isEqualTo("fake");
 				assertThat(properties.getCommand().getClear().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getHelp().isEnabled()).isFalse();
-				assertThat(properties.getCommand().getHelp().getGroupingMode()).isEqualTo(GroupingMode.FLAT);
-				assertThat(properties.getCommand().getHelp().getCommandTemplate()).isEqualTo("fake1");
-				assertThat(properties.getCommand().getHelp().getCommandsTemplate()).isEqualTo("fake2");
 				assertThat(properties.getCommand().getHistory().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getScript().isEnabled()).isFalse();
-				assertThat(properties.getCommand().getCompletion().isEnabled()).isFalse();
-				assertThat(properties.getCommand().getCompletion().getRootCommand()).isEqualTo("fake");
 				assertThat(properties.getCommand().getVersion().isEnabled()).isFalse();
-				assertThat(properties.getCommand().getVersion().getTemplate()).isEqualTo("fake");
-				assertThat(properties.getCommand().getVersion().isShowBuildArtifact()).isTrue();
-				assertThat(properties.getCommand().getVersion().isShowBuildGroup()).isTrue();
-				assertThat(properties.getCommand().getVersion().isShowBuildName()).isTrue();
-				assertThat(properties.getCommand().getVersion().isShowBuildTime()).isTrue();
-				assertThat(properties.getCommand().getVersion().isShowBuildVersion()).isFalse();
-				assertThat(properties.getCommand().getVersion().isShowGitBranch()).isTrue();
-				assertThat(properties.getCommand().getVersion().isShowGitCommitId()).isTrue();
-				assertThat(properties.getCommand().getVersion().isShowGitShortCommitId()).isTrue();
-				assertThat(properties.getCommand().getVersion().isShowGitCommitTime()).isTrue();
 			});
 	}
 

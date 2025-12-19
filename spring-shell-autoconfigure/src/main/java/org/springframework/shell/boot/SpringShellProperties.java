@@ -75,6 +75,14 @@ public class SpringShellProperties {
 		return command;
 	}
 
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
 	public void setCommand(Command command) {
 		this.command = command;
 	}
@@ -159,48 +167,12 @@ public class SpringShellProperties {
 
 		private boolean enabled = true;
 
-		private String commandTemplate = "classpath:template/help-command-default.stg";
-
-		private String commandsTemplate = "classpath:template/help-commands-default.stg";
-
-		private GroupingMode groupingMode = GroupingMode.GROUP;
-
 		public boolean isEnabled() {
 			return enabled;
 		}
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
-		}
-
-		public String getCommandTemplate() {
-			return commandTemplate;
-		}
-
-		public void setCommandTemplate(String commandTemplate) {
-			this.commandTemplate = commandTemplate;
-		}
-
-		public String getCommandsTemplate() {
-			return commandsTemplate;
-		}
-
-		public void setCommandsTemplate(String commandsTemplate) {
-			this.commandsTemplate = commandsTemplate;
-		}
-
-		public GroupingMode getGroupingMode() {
-			return groupingMode;
-		}
-
-		public void setGroupingMode(GroupingMode groupingMode) {
-			this.groupingMode = groupingMode;
-		}
-
-		public enum GroupingMode {
-
-			GROUP, FLAT
-
 		}
 
 	}
@@ -247,30 +219,6 @@ public class SpringShellProperties {
 
 	}
 
-	public static class CompletionCommand {
-
-		private boolean enabled = true;
-
-		private String rootCommand;
-
-		public boolean isEnabled() {
-			return enabled;
-		}
-
-		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-
-		public String getRootCommand() {
-			return rootCommand;
-		}
-
-		public void setRootCommand(String rootCommand) {
-			this.rootCommand = rootCommand;
-		}
-
-	}
-
 	public static class Command {
 
 		private HelpCommand help = new HelpCommand();
@@ -280,8 +228,6 @@ public class SpringShellProperties {
 		private ScriptCommand script = new ScriptCommand();
 
 		private HistoryCommand history = new HistoryCommand();
-
-		private CompletionCommand completion = new CompletionCommand();
 
 		private VersionCommand version = new VersionCommand();
 
@@ -317,14 +263,6 @@ public class SpringShellProperties {
 			this.history = history;
 		}
 
-		public CompletionCommand getCompletion() {
-			return completion;
-		}
-
-		public void setCompletion(CompletionCommand completion) {
-			this.completion = completion;
-		}
-
 		public VersionCommand getVersion() {
 			return version;
 		}
@@ -339,112 +277,12 @@ public class SpringShellProperties {
 
 		private boolean enabled = true;
 
-		private String template = "classpath:template/version-default.st";
-
-		private boolean showBuildGroup = false;
-
-		private boolean showBuildArtifact = false;
-
-		private boolean showBuildName = false;
-
-		private boolean showBuildVersion = true;
-
-		private boolean showBuildTime = false;
-
-		private boolean showGitBranch = false;
-
-		private boolean showGitCommitId = false;
-
-		private boolean showGitShortCommitId = false;
-
-		private boolean showGitCommitTime = false;
-
 		public boolean isEnabled() {
 			return enabled;
 		}
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
-		}
-
-		public String getTemplate() {
-			return template;
-		}
-
-		public void setTemplate(String template) {
-			this.template = template;
-		}
-
-		public boolean isShowBuildGroup() {
-			return showBuildGroup;
-		}
-
-		public void setShowBuildGroup(boolean showBuildGroup) {
-			this.showBuildGroup = showBuildGroup;
-		}
-
-		public boolean isShowBuildArtifact() {
-			return showBuildArtifact;
-		}
-
-		public void setShowBuildArtifact(boolean showBuildArtifact) {
-			this.showBuildArtifact = showBuildArtifact;
-		}
-
-		public boolean isShowBuildName() {
-			return showBuildName;
-		}
-
-		public void setShowBuildName(boolean showBuildName) {
-			this.showBuildName = showBuildName;
-		}
-
-		public boolean isShowBuildVersion() {
-			return showBuildVersion;
-		}
-
-		public void setShowBuildVersion(boolean showBuildVersion) {
-			this.showBuildVersion = showBuildVersion;
-		}
-
-		public boolean isShowBuildTime() {
-			return showBuildTime;
-		}
-
-		public void setShowBuildTime(boolean showBuildTime) {
-			this.showBuildTime = showBuildTime;
-		}
-
-		public boolean isShowGitBranch() {
-			return showGitBranch;
-		}
-
-		public void setShowGitBranch(boolean showGitBranch) {
-			this.showGitBranch = showGitBranch;
-		}
-
-		public boolean isShowGitCommitId() {
-			return showGitCommitId;
-		}
-
-		public void setShowGitCommitId(boolean showGitCommitId) {
-			this.showGitCommitId = showGitCommitId;
-		}
-
-		public boolean isShowGitShortCommitId() {
-			return showGitShortCommitId;
-		}
-
-		public void setShowGitShortCommitId(boolean showGitShortCommitId) {
-			this.showGitShortCommitId = showGitShortCommitId;
-		}
-
-		public boolean isShowGitCommitTime() {
-			return showGitCommitTime;
-		}
-
-		public void setShowGitCommitTime(boolean showGitCommitTime) {
-			this.showGitCommitTime = showGitCommitTime;
 		}
 
 	}
