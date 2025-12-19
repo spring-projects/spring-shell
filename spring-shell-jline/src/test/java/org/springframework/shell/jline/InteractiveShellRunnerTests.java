@@ -28,9 +28,9 @@ import org.jline.terminal.impl.ExternalTerminal;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.core.ExitRequest;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Disabled("Hands intermittently")
 class InteractiveShellRunnerTests {
@@ -102,7 +102,7 @@ class InteractiveShellRunnerTests {
 			}
 		});
 		Thread readThread = new Thread(() -> {
-			assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
+			assertDoesNotThrow(jLineInputProvider::readInput);
 			endLatch.countDown();
 		});
 		readThread.start();
@@ -131,7 +131,7 @@ class InteractiveShellRunnerTests {
 			}
 		});
 		Thread readThread = new Thread(() -> {
-			assertThatThrownBy(jLineInputProvider::readInput).isInstanceOf(ExitRequest.class);
+			assertDoesNotThrow(jLineInputProvider::readInput);
 			endLatch.countDown();
 		});
 		readThread.start();
