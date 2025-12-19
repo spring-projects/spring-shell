@@ -87,24 +87,13 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 		methodInvoker.setTargetMethod(method.getName());
 
 		// prepare method parameters
-		Class<?>[] parameterTypes = this.method.getParameterTypes();
-
-		// TODO should be able to mix CommandContext and other parameters
-		Object[] argumentsArray = null;
-		if (parameterTypes.length == 1
-				&& parameterTypes[0].equals(org.springframework.shell.core.command.CommandContext.class)) {
-			argumentsArray = new Object[] { commandContext };
-		}
-		else {
-			List<Object> arguments = prepareArguments(commandContext);
-			argumentsArray = arguments.toArray();
-		}
-		methodInvoker.setArguments(argumentsArray);
+		List<Object> arguments = prepareArguments(commandContext);
+		methodInvoker.setArguments(arguments.toArray());
 		methodInvoker.prepare();
 
 		// validate parameters
 		Set<ConstraintViolation<Object>> constraintViolations = validator.forExecutables()
-			.validateParameters(targetObject, method, argumentsArray);
+			.validateParameters(targetObject, method, arguments.toArray());
 		if (!constraintViolations.isEmpty()) {
 			throw new ParameterValidationException(constraintViolations);
 		}
@@ -123,6 +112,11 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 		Parameter[] parameters = this.method.getParameters();
 		Class<?>[] parameterTypes = this.method.getParameterTypes();
 		for (int i = 0; i < parameters.length; i++) {
+			if (parameterTypes[i].equals(CommandContext.class)) {
+				log.debug("Injecting CommandContext for parameter: " + parameters[i].getName());
+				args.add(commandContext);
+				continue;
+			}
 			Option optionAnnotation = parameters[i].getAnnotation(Option.class);
 			if (optionAnnotation != null) {
 				log.debug("Processing option for parameter: " + parameters[i].getName());
