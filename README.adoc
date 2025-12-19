@@ -28,11 +28,10 @@ Here is a quick teaser of a complete Spring Shell application in Java:
 ----
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Command;
 
 @SpringBootApplication
-@Command
-public class DemoApplication {
+public class SpringShellApplication {
 
 	@Command
 	public String hi() {
@@ -40,8 +39,9 @@ public class DemoApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(SpringShellApplication.class, args);
 	}
+
 }
 ----
 
@@ -52,31 +52,25 @@ Running it as an executable _jar_ in an interactive mode:
 $ java -jar demo.jar
 
 shell:>help
-AVAILABLE COMMANDS
-
+Available commands:
 Built-In Commands
-       help: Display help about available commands
-       clear: Clear the shell screen.
-       quit, exit: Exit the shell.
-       history: Display or save the history of previously run commands
-       version: Show version info
-       script: Read and execute commands from a file.
-
-Demo Application
-       hi:
+	clear: Clear the terminal screen
+	version: Show version info
+	help: Display help about available commands
+SpringShellApplication Commands
+	hi: N/A
 
 shell:>hi
 hi
 ----
 
-Or running it in a non-interactive mode:
+== Tutorials and Sample apps
 
-[source,bash]
-----
-$ java -jar demo.jar hi
+You can find complete tutorials and sample applications in the `spring-shell-samples` repository:
 
-hi
-----
+- https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/spring-shell-sample-hello-world[Hello World Spring Shell application]
+- https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/spring-shell-sample-spring-boot[Hello World Spring Shell application with Spring Boot]
+- https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/spring-shell-sample-petclinic[Spring Pet Clinic CLI application]
 
 == Getting Help
 Are you having trouble with Spring Shell? We want to help!
@@ -101,27 +95,6 @@ Building and running tests:
 
 [source,bash]
 ----
-./mvnw install
-----
-
-If you want to build the project in a Docker container, you can proceed as follows:
-
-[source,bash]
-----
-docker run -it --mount type=bind,source="$(pwd)",target=/spring-shell maven:3-openjdk-17 bash
-cd spring-shell
-./mvnw install
-----
-
-This will mount the source code that you cloned previously on the host inside the container.
-If you want to work on a copy of the source code inside the container (no side effects on the host),
-you can proceed as follows:
-
-[source,bash]
-----
-docker run -it maven:3-openjdk-17 bash
-git clone https://github.com/spring-projects/spring-shell.git
-cd spring-shell
 ./mvnw install
 ----
 
