@@ -28,8 +28,13 @@ public class DefaultJLineShellConfiguration {
 	}
 
 	@Bean
-	public LineReader lineReader(Terminal terminal) {
-		return LineReaderBuilder.builder().terminal(terminal).build();
+	public LineReader lineReader(Terminal terminal, CommandCompleter commandCompleter) {
+		return LineReaderBuilder.builder().terminal(terminal).completer(commandCompleter).build();
+	}
+
+	@Bean
+	public CommandCompleter commandCompleter(CommandRegistry commandRegistry) {
+		return new CommandCompleter(commandRegistry);
 	}
 
 	@Bean

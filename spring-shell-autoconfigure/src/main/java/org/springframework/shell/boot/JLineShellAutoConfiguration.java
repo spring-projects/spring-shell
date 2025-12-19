@@ -48,6 +48,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.config.UserConfigPathProvider;
+import org.springframework.shell.jline.CommandCompleter;
 import org.springframework.shell.jline.ExtendedDefaultParser;
 import org.springframework.shell.jline.JLineInputProvider;
 import org.springframework.shell.jline.PromptProvider;
@@ -88,10 +89,12 @@ public class JLineShellAutoConfiguration {
 	}
 
 	@Bean
-	public LineReader lineReader(Terminal terminal, Parser parser, CommandRegistry commandRegistry) {
+	public LineReader lineReader(Terminal terminal, Parser parser, CommandCompleter commandCompleter,
+			CommandRegistry commandRegistry) {
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 			.terminal(terminal)
 			.appName("Spring Shell")
+			.completer(commandCompleter)
 			.history(jLineHistory)
 			.highlighter(new Highlighter() {
 
@@ -177,6 +180,12 @@ public class JLineShellAutoConfiguration {
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
 		return parser;
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public CommandCompleter commandCompleter(CommandRegistry commandRegistry) {
+		return new CommandCompleter(commandRegistry);
 	}
 
 	@Configuration
