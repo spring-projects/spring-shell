@@ -67,6 +67,41 @@
 				<artifactId>spring-shell-test-autoconfigure</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-jline</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-starter</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-starter-ffm</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-starter-jansi</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-starter-jna</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-starter-jni</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.shell</groupId>
+				<artifactId>spring-shell-starter-test</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
