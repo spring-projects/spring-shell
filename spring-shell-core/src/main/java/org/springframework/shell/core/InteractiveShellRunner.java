@@ -102,7 +102,9 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 				}
 			}
 			catch (CommandExecutionException executionException) { // technical error
-				print("Unable to run command " + parsedInput.commandName());
+				Throwable cause = executionException.getCause();
+				String errorMessage = "Unable to run command " + parsedInput.commandName();
+				print(cause == null ? errorMessage : errorMessage + ": " + cause.getMessage());
 				if (this.debugMode) {
 					executionException.printStackTrace();
 				}
