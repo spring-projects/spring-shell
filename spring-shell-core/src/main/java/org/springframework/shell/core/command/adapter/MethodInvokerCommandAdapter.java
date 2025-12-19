@@ -112,11 +112,21 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 		Parameter[] parameters = this.method.getParameters();
 		Class<?>[] parameterTypes = this.method.getParameterTypes();
 		for (int i = 0; i < parameters.length; i++) {
+			// Handle CommandContext injection
 			if (parameterTypes[i].equals(CommandContext.class)) {
 				log.debug("Injecting CommandContext for parameter: " + parameters[i].getName());
 				args.add(commandContext);
 				continue;
 			}
+
+			// Ensure parameter is not annotated with both Option and Argument
+			if (parameters[i].getAnnotation(Option.class) != null
+					&& parameters[i].getAnnotation(Argument.class) != null) {
+				throw new IllegalArgumentException("Parameter " + parameters[i].getName()
+						+ " cannot be annotated with @Option and @Argument at the same time.");
+			}
+
+			// Handle Option injection
 			Option optionAnnotation = parameters[i].getAnnotation(Option.class);
 			if (optionAnnotation != null) {
 				log.debug("Processing option for parameter: " + parameters[i].getName());
@@ -137,7 +147,9 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 					Object value = this.conversionService.convert(rawValue, parameterType);
 					args.add(value);
 				}
+				continue;
 			}
+			// Handle Argument injection
 			Argument argumentAnnotation = parameters[i].getAnnotation(Argument.class);
 			if (argumentAnnotation != null) {
 				log.debug("Processing argument for parameter: " + parameters[i].getName());
@@ -152,7 +164,9 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 				Class<?> parameterType = parameterTypes[i];
 				Object value = this.conversionService.convert(rawValue, parameterType);
 				args.add(value);
+				continue;
 			}
+			// Handle Arguments list injection
 			Arguments argumentsAnnotation = parameters[i].getAnnotation(Arguments.class);
 			if (argumentsAnnotation != null) {
 				log.debug("Processing arguments for parameter: " + parameters[i].getName());
