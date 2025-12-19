@@ -28,6 +28,7 @@ import org.springframework.shell.core.command.adapter.ConsumerCommandAdapter;
 import org.springframework.shell.core.command.adapter.FunctionCommandAdapter;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
+import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.util.Assert;
 
 /**
@@ -95,6 +96,14 @@ public interface Command {
 	}
 
 	/**
+	 * Get the completion provider of the command.
+	 * @return the completion provider of the command
+	 */
+	default CompletionProvider getCompletionProvider() {
+		return context -> Collections.emptyList();
+	}
+
+	/**
 	 * Execute the command within the given context.
 	 * @param commandContext the context of the command
 	 * @return the exit status of the command
@@ -129,6 +138,8 @@ public interface Command {
 		private boolean hidden = false;
 
 		private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
+
+		private CompletionProvider completionProvider = context -> Collections.emptyList();
 
 		@Nullable ExitStatusExceptionMapper exitStatusExceptionMapper;
 
@@ -169,6 +180,11 @@ public interface Command {
 			return this;
 		}
 
+		public Builder completionProvider(CompletionProvider completionProvider) {
+			this.completionProvider = completionProvider;
+			return this;
+		}
+
 		public Builder aliases(String... aliases) {
 			this.aliases = Arrays.asList(aliases);
 			return this;
@@ -181,6 +197,7 @@ public interface Command {
 					commandExecutor);
 			command.setAliases(aliases);
 			command.setAvailabilityProvider(availabilityProvider);
+			command.setCompletionProvider(completionProvider);
 			if (exitStatusExceptionMapper != null) {
 				command.setExitStatusExceptionMapper(exitStatusExceptionMapper);
 			}
@@ -195,6 +212,7 @@ public interface Command {
 					commandExecutor);
 			command.setAliases(aliases);
 			command.setAvailabilityProvider(availabilityProvider);
+			command.setCompletionProvider(completionProvider);
 			if (exitStatusExceptionMapper != null) {
 				command.setExitStatusExceptionMapper(exitStatusExceptionMapper);
 			}

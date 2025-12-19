@@ -17,6 +17,7 @@ package org.springframework.shell.core.command.annotation.support;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 
 import jakarta.validation.Validator;
 
@@ -36,6 +37,7 @@ import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
+import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.core.utils.Utils;
 import org.springframework.util.Assert;
 
@@ -76,6 +78,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		String[] aliases = command.alias();
 		String availabilityProvider = command.availabilityProvider();
 		String exitStatusExceptionMapper = command.exitStatusExceptionMapper();
+		String completionProviderBeanName = command.completionProvider();
 		log.debug("Creating command bean for method '" + this.method + "' with name '" + name + "'");
 		Class<?> declaringClass = this.method.getDeclaringClass();
 		Object targetObject;
@@ -127,10 +130,23 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		catch (BeansException e) {
 			log.debug("No Validator bean found, using default validator.");
 		}
+		CompletionProvider completionProvider = CompletionContext -> Collections.emptyList();
+		if (!completionProviderBeanName.isEmpty()) {
+			try {
+				completionProvider = this.applicationContext.getBean(completionProviderBeanName,
+						CompletionProvider.class);
+			}
+			catch (BeansException e) {
+				log.debug("No CompletionProvider bean found with name '" + completionProviderBeanName
+						+ "', using default completion provider.");
+			}
+		}
+
 		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
 				group, help, hidden, this.method, targetObject, configurableConversionService, validator);
 		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
 		methodInvokerCommandAdapter.setAvailabilityProvider(availabilityProviderBean);
+		methodInvokerCommandAdapter.setCompletionProvider(completionProvider);
 		if (exitStatusExceptionMapperBean != null) {
 			methodInvokerCommandAdapter.setExitStatusExceptionMapper(exitStatusExceptionMapperBean);
 		}

@@ -99,4 +99,10 @@ public @interface Command {
 	 */
 	String exitStatusExceptionMapper() default "";
 
+	/**
+	 * Define completion provider bean name.
+	 * @return the completion provider bean name
+	 */
+	String completionProvider() default "";
+
 }

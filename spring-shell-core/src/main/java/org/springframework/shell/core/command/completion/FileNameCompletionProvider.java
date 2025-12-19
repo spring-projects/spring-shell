@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core;
+package org.springframework.shell.core.command.completion;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,24 +25,23 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.shell.core.completion.CompletionContext;
-import org.springframework.shell.core.completion.CompletionProposal;
 import org.springframework.util.StringUtils;
 
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 
 /**
- * A {@link ValueProvider} that can populate names of local {@link File}s, either absolute
- * or relative to the current working directory.
+ * A {@link CompletionProvider} that can populate names of local {@link File}s, either
+ * absolute or relative to the current working directory.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Mahmoud Ben Hassine
  */
-public class FileValueProvider implements ValueProvider {
+public class FileNameCompletionProvider implements CompletionProvider {
 
 	@Override
-	public List<CompletionProposal> complete(CompletionContext completionContext) {
+	public List<CompletionProposal> apply(CompletionContext completionContext) {
 		String input = completionContext.currentWordUpToCursor();
 
 		Path dir = Paths.get("");

@@ -10,6 +10,9 @@ import org.jline.reader.ParsedLine;
 
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.completion.CompletionContext;
+import org.springframework.shell.core.command.completion.CompletionProposal;
+import org.springframework.shell.core.command.completion.CompletionProvider;
 
 /**
  * A JLine {@link Completer} that completes command names from a {@link CommandRegistry}.
@@ -32,9 +35,21 @@ public class CommandCompleter implements Completer {
 	@Override
 	public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
 		Set<Command> commands = this.commandRegistry.getCommands();
-		for (Command command : commands) {
-			candidates.add(new Candidate(command.getName(), command.getName() + ": " + command.getDescription(),
-					command.getGroup(), command.getHelp(), null, null, true));
+		if (this.commandRegistry.getCommandByName(line.word().trim()) != null) {
+			Command command = this.commandRegistry.getCommandByName(line.word().trim());
+			CompletionProvider completionProvider = command.getCompletionProvider();
+			CompletionContext context = new CompletionContext(line.words(), line.wordIndex(), line.wordCursor(), null,
+					null);
+			List<CompletionProposal> proposals = completionProvider.apply(context);
+			for (CompletionProposal proposal : proposals) {
+				candidates.add(new Candidate(proposal.value()));
+			}
+		}
+		else {
+			for (Command command : commands) {
+				candidates.add(new Candidate(command.getName(), command.getName() + ": " + command.getDescription(),
+						command.getGroup(), command.getHelp(), null, null, true));
+			}
 		}
 	}
 

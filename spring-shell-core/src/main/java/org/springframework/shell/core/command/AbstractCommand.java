@@ -17,6 +17,7 @@ package org.springframework.shell.core.command;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +29,7 @@ import org.springframework.shell.core.ParameterValidationException;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
+import org.springframework.shell.core.command.completion.CompletionProvider;
 
 /**
  * Base class helping to build shell commands.
@@ -51,6 +53,8 @@ public abstract class AbstractCommand implements Command {
 	private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
 
 	@Nullable private ExitStatusExceptionMapper exitStatusExceptionMapper;
+
+	private CompletionProvider completionProvider = context -> Collections.emptyList();
 
 	private List<String> aliases = new ArrayList<>();
 
@@ -119,6 +123,15 @@ public abstract class AbstractCommand implements Command {
 
 	public void setExitStatusExceptionMapper(ExitStatusExceptionMapper exitStatusExceptionMapper) {
 		this.exitStatusExceptionMapper = exitStatusExceptionMapper;
+	}
+
+	@Override
+	public CompletionProvider getCompletionProvider() {
+		return completionProvider;
+	}
+
+	public void setCompletionProvider(CompletionProvider completionProvider) {
+		this.completionProvider = completionProvider;
 	}
 
 	@Override

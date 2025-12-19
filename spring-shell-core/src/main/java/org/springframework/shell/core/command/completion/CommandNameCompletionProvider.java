@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
-package org.springframework.shell.core;
+package org.springframework.shell.core.command.completion;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.completion.CompletionContext;
-import org.springframework.shell.core.completion.CompletionProposal;
 
 /**
- * A {@link ValueProvider} that can be used to auto-complete names of shell commands.
+ * A {@link CompletionProvider} that can be used to auto-complete names of shell commands.
  *
  * @author Eric Bottard
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
  */
-public class CommandValueProvider implements ValueProvider {
+public class CommandNameCompletionProvider implements CompletionProvider {
 
 	private final CommandRegistry commandRegistry;
 
-	public CommandValueProvider(CommandRegistry commandRegistry) {
+	public CommandNameCompletionProvider(CommandRegistry commandRegistry) {
 		this.commandRegistry = commandRegistry;
 	}
 
 	@Override
-	public List<CompletionProposal> complete(CompletionContext completionContext) {
+	public List<CompletionProposal> apply(CompletionContext completionContext) {
 		return commandRegistry.getCommands()
 			.stream()
 			.map(command -> new CompletionProposal(command.getName()))
