@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.shell.core.FileInputProvider;
-import org.springframework.shell.core.utils.Utils;
+import org.springframework.shell.core.NonInteractiveShellRunner;
 
 /**
  * A command that can read and execute other commands from a file.
@@ -28,16 +28,29 @@ import org.springframework.shell.core.utils.Utils;
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
  */
-public class Script extends AbstractCommand {
+public class Script implements Command {
 
-	public Script(String name, String description) {
-		super(name, description);
+	private CommandParser commandParser = new DefaultCommandParser();
+
+	@Override
+	public String getDescription() {
+		return "Execute commands from a script file";
 	}
 
 	@Override
-	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
+	public String getGroup() {
+		return "Built-In Commands";
+	}
+
+	@Override
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		List<CommandArgument> arguments = commandContext.parsedInput().arguments();
-		File file = new File(arguments.get(0).value());
+		if (arguments.size() != 1) {
+			throw new IllegalArgumentException(
+					"Script command expects exactly one argument: the absolute path to the script file to execute.");
+		}
+		String scriptFile = arguments.get(0).value();
+		File file = new File(scriptFile);
 		try (FileInputProvider inputProvider = new FileInputProvider(file)) {
 			String input;
 			while ((input = inputProvider.readInput()) != null) {
@@ -48,14 +61,18 @@ public class Script extends AbstractCommand {
 	}
 
 	private void executeCommand(CommandContext commandContext, String input) throws Exception {
-		Command command = commandContext.commandRegistry().getCommandByName(input);
-		if (command == null) {
-			String availableCommands = Utils.formatAvailableCommands(commandContext.commandRegistry());
-			throw new CommandNotFoundException("No command found for name: " + input + ". " + availableCommands);
-		}
-		CommandContext singleCommandContext = new CommandContext(commandContext.parsedInput(),
-				commandContext.commandRegistry(), commandContext.outputWriter());
-		command.execute(singleCommandContext);
+		String[] commandTokens = input.split(" ");
+		NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(this.commandParser,
+				commandContext.commandRegistry());
+		shellRunner.run(commandTokens);
+	}
+
+	/**
+	 * Set the command parser to use to parse commands in the script.
+	 * @param commandParser the command parser to set
+	 */
+	public void setCommandParser(CommandParser commandParser) {
+		this.commandParser = commandParser;
 	}
 
 }

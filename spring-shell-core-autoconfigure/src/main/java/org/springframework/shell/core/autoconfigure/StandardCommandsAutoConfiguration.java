@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.command.Clear;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.Help;
+import org.springframework.shell.core.command.Script;
 import org.springframework.shell.core.command.Version;
 
 /**
@@ -52,6 +53,12 @@ public class StandardCommandsAutoConfiguration {
 	@ConditionalOnProperty(value = "spring.shell.command.version.enabled", havingValue = "true", matchIfMissing = true)
 	public Command versionCommand() {
 		return new Version();
+	}
+
+	@Bean
+	@ConditionalOnProperty(value = "spring.shell.command.script.enabled", havingValue = "true", matchIfMissing = true)
+	public Command scriptCommand() {
+		return new Script();
 	}
 
 }

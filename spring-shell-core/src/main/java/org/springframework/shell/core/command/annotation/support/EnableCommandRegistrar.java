@@ -48,6 +48,7 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 		registry.registerBeanDefinition("help", new RootBeanDefinition(Help.class));
 		registry.registerBeanDefinition("clear", new RootBeanDefinition(Clear.class));
 		registry.registerBeanDefinition("version", new RootBeanDefinition(Version.class));
+		registry.registerBeanDefinition("script", new RootBeanDefinition(Script.class));
 
 		// register user defined commands
 		Class<?>[] candidateClasses = shellAnnotation.value();

@@ -18,6 +18,7 @@
 *** xref:commands/builtin/clear.adoc[]
 *** xref:commands/builtin/exit.adoc[]
 *** xref:commands/builtin/version.adoc[]
+*** xref:commands/builtin/script.adoc[]
 ** xref:commands/writing.adoc[]
 * xref:building.adoc[]
 * xref:components/index.adoc[]
