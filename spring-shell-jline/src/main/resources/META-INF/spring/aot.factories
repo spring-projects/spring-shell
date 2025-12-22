@@ -1,2 +1,1 @@
-org.springframework.aot.hint.RuntimeHintsRegistrar=\
-org.springframework.shell.jline.JLineRuntimeHints
+org.springframework.aot.hint.RuntimeHintsRegistrar=org.springframework.shell.jline.JLineRuntimeHints
