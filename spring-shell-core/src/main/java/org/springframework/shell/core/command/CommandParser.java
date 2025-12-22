@@ -16,13 +16,16 @@
 package org.springframework.shell.core.command;
 
 /**
- * Interface parsing arguments for a {@link Command}. A command is always identified by a
- * set of words like {@code command subcommand1 subcommand2} and remaining part of it are
- * options which this interface intercepts and translates into format we can understand.
+ * Interface for parsing input for a {@link Command}. A command is always identified by a
+ * set of words like {@code command subcommand1 subcommand2} and where the remaining part
+ * is expected to be a set of arguments and/or key/value pairs of options. The
+ * {@link ParsedInput} API holds the parsed result.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @since 4.0.0
+ * @see ParsedInput
  */
 public interface CommandParser {
 
