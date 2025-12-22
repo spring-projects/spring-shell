@@ -43,6 +43,8 @@ public class ShellRunnerAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingClass("org.springframework.shell.jline.DefaultJLineShellConfiguration")
+	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public ShellRunner systemShellRunner(ConsoleInputProvider consoleInputProvider, CommandParser commandParser,
 			CommandRegistry commandRegistry) {
 		return new SystemShellRunner(consoleInputProvider, commandParser, commandRegistry);
@@ -50,6 +52,8 @@ public class ShellRunnerAutoConfiguration {
 
 	@Bean
 	@ConditionalOnClass(name = "org.springframework.shell.jline.JLineInputProvider")
+	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "true",
+			matchIfMissing = true)
 	public ShellRunner jlineShellRunner(JLineInputProvider inputProvider, CommandParser commandParser,
 			CommandRegistry commandRegistry) {
 		return new JLineShellRunner(inputProvider, commandParser, commandRegistry);
