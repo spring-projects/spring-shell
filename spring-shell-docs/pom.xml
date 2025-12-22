@@ -15,7 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-autoconfigure</artifactId>
+			<artifactId>spring-shell-core-autoconfigure</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 

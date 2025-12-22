@@ -8,10 +8,10 @@
 		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>spring-shell-test-autoconfigure</artifactId>
-	<name>Spring Shell Test Autoconfiguration</name>
+	<artifactId>spring-shell-core-autoconfigure</artifactId>
+	<name>Spring Shell Core Autoconfiguration</name>
 	<packaging>jar</packaging>
-	<description>Spring Boot Test Auto Configuration for Spring Shell testing module</description>
+	<description>Spring Boot Auto Configuration for Spring Shell core module</description>
 	<url>https://github.com/spring-projects/spring-shell</url>
 	<organization>
 		<name>Spring</name>
@@ -33,30 +33,34 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-test</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-core-autoconfigure</artifactId>
+			<artifactId>spring-shell-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-test-autoconfigure</artifactId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>${junit-jupiter.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<version>${spring-boot.version}</version>
+			<optional>true</optional>
 		</dependency>
+
+        <!-- Optional dependencies -->
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-jline</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+        </dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>org.awaitility</groupId>
-			<artifactId>awaitility</artifactId>
-			<version>${awaitility.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring-boot.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -69,12 +73,6 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.el</artifactId>
 			<version>${jakarta.el.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -91,7 +91,7 @@
 		<module>spring-shell-core</module>
 		<module>spring-shell-jline</module>
 		<module>spring-shell-test</module>
-		<module>spring-shell-autoconfigure</module>
+		<module>spring-shell-core-autoconfigure</module>
 		<module>spring-shell-test-autoconfigure</module>
 		<module>spring-shell-docs</module>
 		<module>spring-shell-dependencies</module>

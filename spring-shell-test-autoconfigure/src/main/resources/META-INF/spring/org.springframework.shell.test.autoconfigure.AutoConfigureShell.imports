@@ -1,9 +1,9 @@
 org.springframework.shell.test.autoconfigure.ShellAutoConfiguration
 org.springframework.shell.test.autoconfigure.ShellTestClientAutoConfiguration
-org.springframework.shell.boot.CommandRegistryAutoConfiguration
-org.springframework.shell.boot.ComponentFlowAutoConfiguration
-org.springframework.shell.boot.JLineShellAutoConfiguration
-org.springframework.shell.boot.SpringShellAutoConfiguration
-org.springframework.shell.boot.StandardCommandsAutoConfiguration
-org.springframework.shell.boot.ThemingAutoConfiguration
-org.springframework.shell.boot.UserConfigAutoConfiguration
+org.springframework.shell.core.autoconfigure.CommandRegistryAutoConfiguration
+org.springframework.shell.core.autoconfigure.ComponentFlowAutoConfiguration
+org.springframework.shell.core.autoconfigure.JLineShellAutoConfiguration
+org.springframework.shell.core.autoconfigure.SpringShellAutoConfiguration
+org.springframework.shell.core.autoconfigure.StandardCommandsAutoConfiguration
+org.springframework.shell.core.autoconfigure.ThemingAutoConfiguration
+org.springframework.shell.core.autoconfigure.UserConfigAutoConfiguration
