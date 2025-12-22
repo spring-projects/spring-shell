@@ -42,7 +42,7 @@ import org.springframework.util.ReflectionUtils;
 @AutoConfiguration
 public class CommandRegistryAutoConfiguration {
 
-	private static final Log log = LogFactory.getLog(SpringShellAutoConfiguration.class);
+	private static final Log log = LogFactory.getLog(CommandRegistryAutoConfiguration.class);
 
 	@Bean
 	@ConditionalOnMissingBean
@@ -69,6 +69,9 @@ public class CommandRegistryAutoConfiguration {
 			if (className == null) {
 				log.warn(String.format("Skipping candidate component %s with null class name", candidateComponent));
 				continue;
+			}
+			else {
+				log.debug("Registering commands from component: " + className);
 			}
 			try {
 				Class<?> cls = ClassUtils.forName(className, applicationContext.getClassLoader());
