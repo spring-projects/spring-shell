@@ -52,7 +52,8 @@ public class PetCommands {
 
 	@Command(name = { "pets", "info" }, description = "Show detail about a given pet", group = "Pets",
 			help = "Show the details about a given pet")
-	public void showPet(@Option(longName = "petId", description = "The pet ID") int id, CommandContext commandContext) {
+	public void showPet(@Option(longName = "petId", description = "The pet ID", required = true) int id,
+			CommandContext commandContext) {
 		try {
 			Pet pet = this.jdbcClient.sql("SELECT * FROM PETS where id = " + id)
 				.query(new DataClassRowMapper<>(Pet.class))

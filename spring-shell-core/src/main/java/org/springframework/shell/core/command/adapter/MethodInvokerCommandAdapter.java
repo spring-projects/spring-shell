@@ -135,20 +135,32 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 				log.debug("Processing option for parameter: " + parameters[i].getName());
 				char shortName = optionAnnotation.shortName();
 				String longName = optionAnnotation.longName();
+				boolean required = optionAnnotation.required();
 				CommandOption commandOption = commandContext
 					.getOptionByName(longName.isEmpty() ? String.valueOf(shortName) : longName);
-				if (commandOption == null) {
-					// Option not provided, use default value
-					String defaultValue = optionAnnotation.defaultValue();
-					Class<?> parameterType = parameterTypes[i];
-					Object value = this.conversionService.convert(defaultValue, parameterType);
-					args.add(value);
-				}
-				else {
+				if (commandOption != null) {
 					String rawValue = commandOption.value();
 					Class<?> parameterType = parameterTypes[i];
 					Object value = this.conversionService.convert(rawValue, parameterType);
 					args.add(value);
+				}
+				else {
+					if (required) {
+						throw new IllegalArgumentException(
+								"Required option '--" + (longName.isEmpty() ? shortName : longName) + "' is missing.");
+					}
+					else {
+						// try to use default value
+						String defaultValue = optionAnnotation.defaultValue();
+						if (defaultValue.isEmpty()) {
+							log.warn("No value provided for optional option '--"
+									+ (longName.isEmpty() ? shortName : longName)
+									+ "' and no default value specified.");
+						}
+						Class<?> parameterType = parameterTypes[i];
+						Object value = this.conversionService.convert(defaultValue, parameterType);
+						args.add(value);
+					}
 				}
 				continue;
 			}
