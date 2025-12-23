@@ -18,6 +18,7 @@
 		<module>spring-shell-sample-petclinic</module>
 		<module>spring-shell-sample-spring-boot</module>
 		<module>spring-shell-sample-non-interactive</module>
+		<module>spring-shell-sample-secure-input</module>
 	</modules>
 
 	<build>

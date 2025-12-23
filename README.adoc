@@ -73,6 +73,7 @@ You can find complete tutorials and sample applications in the `spring-shell-sam
 - https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/spring-shell-sample-spring-boot[Hello World Spring Shell application with Spring Boot]
 - https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/spring-shell-sample-petclinic[Spring Pet Clinic CLI application]
 - https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/spring-shell-sample-non-interactive[Non-interactive Spring Shell application]
+- https://github.com/spring-projects/spring-shell/tree/main/spring-shell-samples/spring-shell-sample-secure-input[Spring Shell application to demonstrate secure input]
 
 == Getting Help
 Are you having trouble with Spring Shell? We want to help!
