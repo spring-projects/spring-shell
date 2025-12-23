@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,358 +15,60 @@
  */
 package org.springframework.shell.test;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
-import org.jline.reader.LineReader;
-import org.jline.reader.Parser;
-import org.jline.terminal.Terminal;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.shell.core.ConsoleInputProvider;
-import org.springframework.shell.core.NonInteractiveShellRunner;
-import org.springframework.shell.core.ShellRunner;
-import org.springframework.shell.core.SystemShellRunner;
+import org.springframework.shell.core.InputReader;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandExecutor;
+import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.DefaultCommandParser;
-import org.springframework.shell.jline.JLineInputProvider;
-import org.springframework.shell.jline.PromptProvider;
-import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
+import org.springframework.shell.core.command.ParsedInput;
 
 /**
- * Client for terminal session which can be used as a programmatic way to interact with a
- * shell application. In a typical test it is required to write into a shell and read what
- * is visible in a shell.
+ * Client for shell session which can be used as a programmatic way to interact with a
+ * shell application. In a typical test, it is required to send a command to the shell as
+ * if a user typed it and then verify the shell output.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
-public interface ShellTestClient extends Closeable {
+public class ShellTestClient {
+
+	private final CommandParser commandParser;
+
+	private final CommandRegistry commandRegistry;
+
+	private final CommandExecutor commandExecutor;
 
 	/**
-	 * Run interactive shell session.
-	 * @return session for chaining
+	 * Create a {@link ShellTestClient} using the given {@link CommandParser} and
+	 * {@link CommandRegistry}.
+	 * @param commandParser the command parser
+	 * @param commandRegistry the command registry
 	 */
-	InteractiveShellSession interactive();
-
-	/**
-	 * Run non-interactive command session.
-	 * @param args the command arguments
-	 * @return session for chaining
-	 */
-	NonInteractiveShellSession nonInteractive(String... args);
-
-	/**
-	 * Read the screen.
-	 * @return the screen
-	 */
-	ShellScreen screen();
-
-	/**
-	 * Get an instance of a builder.
-	 * @param terminalSession the terminal session
-	 * @param promptProvider the prompt provider
-	 * @param lineReader the line reader
-	 * @param terminal the terminal
-	 * @return a Builder
-	 */
-	static Builder builder(TerminalSession terminalSession, PromptProvider promptProvider, LineReader lineReader,
-			Terminal terminal, Parser parser) {
-		return new Builder(terminalSession, promptProvider, lineReader, terminal, parser);
+	public ShellTestClient(CommandParser commandParser, CommandRegistry commandRegistry) {
+		this.commandParser = commandParser;
+		this.commandRegistry = commandRegistry;
+		this.commandExecutor = new CommandExecutor(commandRegistry);
 	}
 
 	/**
-	 * Builder interface for {@code ShellClient}.
+	 * Execute a command and write its result to the shell screen.
+	 * @param input the raw input command
+	 * @return the shell screen after command execution
+	 * @throws Exception if an error occurred during command execution
 	 */
-	class Builder {
-
-		private TerminalSession terminalSession;
-
-		private PromptProvider promptProvider;
-
-		private LineReader lineReader;
-
-		private Terminal terminal;
-
-		private Parser parser;
-
-		/**
-		 * Build a shell client.
-		 * @return a shell client
-		 */
-		Builder(TerminalSession terminalSession, PromptProvider promptProvider, LineReader lineReader,
-				Terminal terminal, Parser parser) {
-			this.terminalSession = terminalSession;
-			this.promptProvider = promptProvider;
-			this.lineReader = lineReader;
-			this.terminal = terminal;
-			this.parser = parser;
-		}
-
-		public ShellTestClient build() {
-			return new DefaultShellClient(terminalSession, promptProvider, lineReader, terminal, parser);
-		}
-
-	}
-
-	interface BaseShellSession<T extends BaseShellSession<T>> {
-
-		/**
-		 * Get a write sequencer.
-		 * @return a write sequencer
-		 */
-		ShellWriteSequence writeSequence();
-
-		/**
-		 * Read the screen.
-		 * @return the screen
-		 */
-		ShellScreen screen();
-
-		/**
-		 * Write plain text into a shell.
-		 * @param text the text
-		 * @return client for chaining
-		 */
-		T write(String text);
-
-		/**
-		 * Run a session.
-		 * @return client for chaining
-		 */
-		T run();
-
-		boolean isComplete();
-
-	}
-
-	interface InteractiveShellSession extends BaseShellSession<InteractiveShellSession> {
-
-	}
-
-	interface NonInteractiveShellSession extends BaseShellSession<NonInteractiveShellSession> {
-
-	}
-
-	class DefaultShellClient implements ShellTestClient {
-
-		private final static Log log = LogFactory.getLog(DefaultShellClient.class);
-
-		private TerminalSession terminalSession;
-
-		private PromptProvider promptProvider;
-
-		private LineReader lineReader;
-
-		private Thread runnerThread;
-
-		private Terminal terminal;
-
-		private Parser parser;
-
-		private final BlockingQueue<ShellRunnerTaskData> blockingQueue = new LinkedBlockingDeque<>(10);
-
-		DefaultShellClient(TerminalSession terminalSession, PromptProvider promptProvider, LineReader lineReader,
-				Terminal terminal, Parser parser) {
-			this.terminalSession = terminalSession;
-			this.promptProvider = promptProvider;
-			this.lineReader = lineReader;
-			this.terminal = terminal;
-			this.parser = parser;
-		}
-
-		@Override
-		public InteractiveShellSession interactive() {
-			terminalSession.start();
-			if (runnerThread == null) {
-				runnerThread = new Thread(new ShellRunnerTask(this.blockingQueue));
-				runnerThread.start();
-			}
-			return new DefaultInteractiveShellSession(promptProvider, lineReader, blockingQueue, terminalSession,
-					terminal);
-		}
-
-		@Override
-		public NonInteractiveShellSession nonInteractive(String... args) {
-			terminalSession.start();
-			if (runnerThread == null) {
-				runnerThread = new Thread(new ShellRunnerTask(this.blockingQueue));
-				runnerThread.start();
-			}
-			return new DefaultNonInteractiveShellSession(parser, args, blockingQueue, terminalSession, terminal);
-		}
-
-		@Override
-		public ShellScreen screen() {
-			return ShellScreen.of(terminalSession.getTerminalTextBuffer().getScreen());
-		}
-
-		@Override
-		public void close() throws IOException {
-			log.debug("Closing ShellClient");
-			if (runnerThread != null) {
-				runnerThread.interrupt();
-			}
-			runnerThread = null;
-			terminalSession.close();
-		}
-
-	}
-
-	class DefaultInteractiveShellSession implements InteractiveShellSession {
-
-		private PromptProvider promptProvider;
-
-		private LineReader lineReader;
-
-		private BlockingQueue<ShellRunnerTaskData> blockingQueue;
-
-		private TerminalSession terminalSession;
-
-		private Terminal terminal;
-
-		private final AtomicInteger state = new AtomicInteger(-2);
-
-		public DefaultInteractiveShellSession(PromptProvider promptProvider, LineReader lineReader,
-				BlockingQueue<ShellRunnerTaskData> blockingQueue, TerminalSession terminalSession, Terminal terminal) {
-			this.promptProvider = promptProvider;
-			this.lineReader = lineReader;
-			this.blockingQueue = blockingQueue;
-			this.terminalSession = terminalSession;
-			this.terminal = terminal;
-		}
-
-		@Override
-		public ShellWriteSequence writeSequence() {
-			return new JLineShellWriteSequence(terminal);
-		}
-
-		@Override
-		public InteractiveShellSession write(String text) {
-			terminalSession.getTerminalStarter().sendString(text);
-			return this;
-		}
-
-		@Override
-		public ShellScreen screen() {
-			return ShellScreen.of(terminalSession.getTerminalTextBuffer().getScreen());
-		}
-
-		@Override
-		public InteractiveShellSession run() {
-			JLineInputProvider inputProvider = new JLineInputProvider(lineReader);
-			inputProvider.setPromptProvider(promptProvider);
-			ShellRunner runner = new SystemShellRunner(new ConsoleInputProvider(), new DefaultCommandParser(),
-					new CommandRegistry());
-			this.blockingQueue.add(new ShellRunnerTaskData(runner, new String[] {}, state));
-			return this;
-		}
-
-		@Override
-		public boolean isComplete() {
-			return state.get() >= 0;
-		}
-
-	}
-
-	class DefaultNonInteractiveShellSession implements NonInteractiveShellSession {
-
-		private String[] args;
-
-		private BlockingQueue<ShellRunnerTaskData> blockingQueue;
-
-		private TerminalSession terminalSession;
-
-		private Terminal terminal;
-
-		private Parser parser;
-
-		private final AtomicInteger state = new AtomicInteger(-2);
-
-		public DefaultNonInteractiveShellSession(Parser parser, String[] args,
-				BlockingQueue<ShellRunnerTaskData> blockingQueue, TerminalSession terminalSession, Terminal terminal) {
-			this.args = args;
-			this.blockingQueue = blockingQueue;
-			this.terminalSession = terminalSession;
-			this.terminal = terminal;
-			this.parser = parser;
-		}
-
-		@Override
-		public ShellWriteSequence writeSequence() {
-			return new JLineShellWriteSequence(terminal);
-		}
-
-		@Override
-		public NonInteractiveShellSession write(String text) {
-			terminalSession.getTerminalStarter().sendString(text);
-			return this;
-		}
-
-		@Override
-		public ShellScreen screen() {
-			return ShellScreen.of(terminalSession.getTerminalTextBuffer().getScreen());
-		}
-
-		@Override
-		public NonInteractiveShellSession run() {
-			ShellRunner runner = new NonInteractiveShellRunner(new DefaultCommandParser(), new CommandRegistry());
-			this.blockingQueue.add(new ShellRunnerTaskData(runner, args, state));
-			return this;
-		}
-
-		@Override
-		public boolean isComplete() {
-			return state.get() >= 0;
-		}
-
-	}
-
-	record ShellRunnerTaskData(ShellRunner runner, String[] args, AtomicInteger state) {
-	}
-
-	class ShellRunnerTask implements Runnable {
-
-		private final static Log log = LogFactory.getLog(ShellRunnerTask.class);
-
-		private BlockingQueue<ShellRunnerTaskData> blockingQueue;
-
-		ShellRunnerTask(BlockingQueue<ShellRunnerTaskData> blockingQueue) {
-			this.blockingQueue = blockingQueue;
-		}
-
-		@Override
-		public void run() {
-			log.trace("ShellRunnerTask start");
-			try {
-				Thread.currentThread().setName("ShellRunnerTask");
-				while (true) {
-					ShellRunnerTaskData data = blockingQueue.take();
-					if (data.runner == null) {
-						return;
-					}
-					try {
-						log.trace("Running " + data.runner());
-						data.state().set(-1);
-						data.runner().run(data.args());
-						data.state().set(0);
-						log.trace("Running done " + data.runner());
-					}
-					catch (Exception e) {
-						data.state().set(1);
-						log.trace("ShellRunnerThread ex", e);
-					}
-				}
-			}
-			catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			log.trace("ShellRunnerTask end");
-		}
-
+	public ShellScreen sendCommand(String input) throws Exception {
+		StringWriter stringWriter = new StringWriter();
+		ParsedInput parsedInput = this.commandParser.parse(input);
+		PrintWriter outputWriter = new PrintWriter(stringWriter);
+		InputReader inputReader = new InputReader() {
+		};
+		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, outputWriter,
+				inputReader);
+		this.commandExecutor.execute(commandContext);
+		return ShellScreen.of(stringWriter.toString().lines().toList());
 	}
 
 }

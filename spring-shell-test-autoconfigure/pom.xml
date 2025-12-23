@@ -52,13 +52,15 @@
 			<version>${junit-jupiter.version}</version>
 		</dependency>
 
-		<!-- Test dependencies -->
+		<!-- Optional dependencies -->
 		<dependency>
-			<groupId>org.awaitility</groupId>
-			<artifactId>awaitility</artifactId>
-			<version>${awaitility.version}</version>
-			<scope>test</scope>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-jline</artifactId>
+			<version>${project.parent.version}</version>
+			<optional>true</optional>
 		</dependency>
+
+		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>

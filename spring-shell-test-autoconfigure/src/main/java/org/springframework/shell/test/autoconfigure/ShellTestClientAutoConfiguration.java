@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,37 @@
  */
 package org.springframework.shell.test.autoconfigure;
 
-import org.jline.reader.LineReader;
-import org.jline.reader.Parser;
-import org.jline.terminal.Terminal;
-
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.jline.PromptProvider;
+import org.springframework.shell.core.command.CommandParser;
+import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.DefaultCommandParser;
 import org.springframework.shell.test.ShellTestClient;
-import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
 
 /**
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 @AutoConfiguration
 public class ShellTestClientAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	ShellTestClient shellTestClient(TerminalSession widget, PromptProvider promptProvider, LineReader lineReader,
-			Terminal terminal, Parser parser) {
-		return ShellTestClient.builder(widget, promptProvider, lineReader, terminal, parser).build();
+	ShellTestClient shellTestClient(CommandParser commandParser, CommandRegistry commandRegistry) {
+		return new ShellTestClient(commandParser, commandRegistry);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public CommandRegistry commandRegistry() {
+		return new CommandRegistry();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public CommandParser commandParser() {
+		return new DefaultCommandParser();
 	}
 
 }

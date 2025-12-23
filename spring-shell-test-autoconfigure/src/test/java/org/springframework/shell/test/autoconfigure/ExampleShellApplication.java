@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.shell.test.jediterm.terminal.ui;
+package org.springframework.shell.test.autoconfigure;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.shell.core.command.annotation.Command;
 
 /**
- * @author jediterm authors
+ * Example {@link SpringBootApplication @SpringBootApplication} for use with
+ * {@link ShellTest @ShellTest} tests.
+ *
+ * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
-final class Cell {
+@SpringBootApplication
+public class ExampleShellApplication {
 
-	private final int myLine;
-
-	private final int myColumn;
-
-	public Cell(int line, int column) {
-		myLine = line;
-		myColumn = column;
-	}
-
-	public int getLine() {
-		return myLine;
-	}
-
-	public int getColumn() {
-		return myColumn;
+	@Command(name = "hi", description = "Says hello")
+	public String hello() {
+		return "hello";
 	}
 
 }

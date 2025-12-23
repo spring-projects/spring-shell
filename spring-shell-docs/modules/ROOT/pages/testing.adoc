@@ -1,0 +1,70 @@
+[[shell-testing]]
+= Testing
+
+Spring Shell provides several utilities to facilitate testing of shell applications. These utilities help simulate user input, capture output, and verify command behavior in a controlled environment.
+
+== Test assertions
+
+Spring Shell offers the following test assertion APIs to validate command execution and output:
+
+- `ShellScreen`: This class represents the shell screen and allows you to capture and analyze the output displayed to the user.
+- `ShellAssertions`: This class provides static methods to assert the results of shell command executions.
+- `ShellTestClient`: This class allows you to simulate user input and execute shell commands programmatically.
+
+Here is an example of how to use these APIs in a test:
+
+[source,java]
+----
+@ExtendWith(SpringExtension.class)
+class ShellTestClientTests {
+
+	@Test
+	void testCommandExecution(@Autowired ShellTestClient shellTestClient) throws Exception {
+		// when
+		ShellScreen shellScreen = shellTestClient.sendCommand("test");
+
+		// then
+		ShellAssertions.assertThat(shellScreen).containsText("Test command executed");
+	}
+}
+----
+
+== Test annotations
+
+Spring Shell provides the `@ShellTest` annotation which is used to indicate that a test class is a Spring Shell test. It sets up the necessary context for testing shell commands. This annotation is defined in the `spring-shell-test-autoconfigure` module, and is designed to be used with Spring Boot applications.
+
+Once you define your Spring Boot application class, you can create a test class annotated with `@ShellTest` to test your shell commands. Here is an example:
+
+[source,java]
+----
+@SpringBootApplication
+public class ExampleShellApplication {
+
+	@Command(name = "hi", description = "Says hello")
+	public String hello() {
+		return "hello";
+	}
+
+}
+
+@ShellTest
+@ContextConfiguration(classes = ExampleShellApplication.class)
+class ShellTestIntegrationTests {
+
+	@Test
+	void testCommandExecution(@Autowired ShellTestClient client) throws Exception {
+		// when
+		ShellScreen shellScreen = client.sendCommand("hi");
+
+		// then
+		ShellAssertions.assertThat(shellScreen).containsText("hello");
+	}
+
+	@Test
+	void testUnknownCommandExecution(@Autowired ShellTestClient client) {
+		Assertions.assertThatThrownBy(() -> client.sendCommand("foo"))
+                  .isInstanceOf(CommandNotFoundException.class);
+	}
+
+}
+----
