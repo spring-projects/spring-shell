@@ -50,18 +50,20 @@ public class PetCommands {
 		writer.flush();
 	}
 
-	// TODO inject context and use output writer instead of System.out and System.err
 	@Command(name = { "pets", "info" }, description = "Show detail about a given pet", group = "Pets",
 			help = "Show the details about a given pet")
-	public void showPet(@Option(longName = "petId", description = "The pet ID") int id) {
+	public void showPet(@Option(longName = "petId", description = "The pet ID") int id, CommandContext commandContext) {
 		try {
 			Pet pet = this.jdbcClient.sql("SELECT * FROM PETS where id = " + id)
 				.query(new DataClassRowMapper<>(Pet.class))
 				.single();
-			System.out.println(pet);
+			commandContext.outputWriter().println(pet);
 		}
 		catch (EmptyResultDataAccessException exception) {
-			System.err.println("No pet found with ID: " + id);
+			commandContext.outputWriter().println("No pet found with ID: " + id);
+		}
+		finally {
+			commandContext.outputWriter().flush();
 		}
 	}
 
