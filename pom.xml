@@ -52,7 +52,8 @@
 		<spring-boot.version>4.0.1</spring-boot.version>
 		<jline.version>3.30.6</jline.version>
 		<antlr-st4.version>4.3.4</antlr-st4.version>
-		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
+		<hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
+		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<jspecify.version>1.0.0</jspecify.version>
 
 		<!-- test dependencies -->
@@ -61,8 +62,6 @@
 		<junit-jupiter.version>6.0.1</junit-jupiter.version>
 		<mockito.version>5.20.0</mockito.version>
 		<awaitility.version>4.3.0</awaitility.version>
-		<hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
-		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<log4j.version>2.25.2</log4j.version>
 
         <!-- samples dependencies -->
