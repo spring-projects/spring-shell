@@ -60,4 +60,9 @@ public class SystemShellRunner extends InteractiveShellRunner {
 		return this.console.writer();
 	}
 
+	@Override
+	public InputReader getReader() {
+		return new ConsoleInputReader(this.console);
+	}
+
 }

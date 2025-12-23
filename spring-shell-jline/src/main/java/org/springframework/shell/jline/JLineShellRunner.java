@@ -18,8 +18,9 @@ package org.springframework.shell.jline;
 import java.io.Console;
 import java.io.PrintWriter;
 
-import org.jline.terminal.Terminal;
+import org.jline.reader.LineReader;
 
+import org.springframework.shell.core.InputReader;
 import org.springframework.shell.core.InteractiveShellRunner;
 import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
@@ -32,7 +33,7 @@ import org.springframework.shell.core.command.CommandRegistry;
  */
 public class JLineShellRunner extends InteractiveShellRunner {
 
-	private final Terminal terminal;
+	private final LineReader lineReader;
 
 	/**
 	 * Create a new {@link JLineShellRunner} instance.
@@ -43,22 +44,27 @@ public class JLineShellRunner extends InteractiveShellRunner {
 	public JLineShellRunner(JLineInputProvider inputProvider, CommandParser commandParser,
 			CommandRegistry commandRegistry) {
 		super(inputProvider, commandParser, commandRegistry);
-		this.terminal = inputProvider.getTerminal();
+		this.lineReader = inputProvider.getLineReader();
 	}
 
 	@Override
 	public void print(String message) {
-		this.terminal.writer().println(message);
+		this.lineReader.getTerminal().writer().println(message);
 	}
 
 	@Override
 	public void flush() {
-		this.terminal.flush();
+		lineReader.getTerminal().flush();
 	}
 
 	@Override
 	public PrintWriter getWriter() {
-		return this.terminal.writer();
+		return this.lineReader.getTerminal().writer();
+	}
+
+	@Override
+	public InputReader getReader() {
+		return new JLineInputReader(this.lineReader);
 	}
 
 }

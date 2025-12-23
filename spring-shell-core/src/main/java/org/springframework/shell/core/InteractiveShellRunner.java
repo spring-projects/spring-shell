@@ -94,7 +94,8 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 			}
 			ParsedInput parsedInput = this.commandParser.parse(input);
 			try {
-				CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, getWriter());
+				CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, getWriter(),
+						getReader());
 				ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
 				if (ExitStatus.OK.code() != exitStatus.code()) { // business error
 					print("Error while executing command " + parsedInput.commandName() + ": "
@@ -135,5 +136,11 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 	 * @return the print writer
 	 */
 	public abstract PrintWriter getWriter();
+
+	/**
+	 * Get the input reader.
+	 * @return the input reader
+	 */
+	public abstract InputReader getReader();
 
 }

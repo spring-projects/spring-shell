@@ -19,13 +19,16 @@ import java.io.PrintWriter;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.shell.core.InputReader;
+
 /**
  * Interface containing runtime information about the current command invocation.
  *
  * @author Mahmoud Ben Hassine
  * @since 4.0.0
  */
-public record CommandContext(ParsedInput parsedInput, CommandRegistry commandRegistry, PrintWriter outputWriter) {
+public record CommandContext(ParsedInput parsedInput, CommandRegistry commandRegistry, PrintWriter outputWriter,
+		InputReader inputReader) {
 
 	/**
 	 * Retrieve a command option by its name (long or short).

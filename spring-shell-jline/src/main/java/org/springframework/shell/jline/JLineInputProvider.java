@@ -1,7 +1,6 @@
 package org.springframework.shell.jline;
 
 import org.jline.reader.LineReader;
-import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
@@ -33,8 +32,8 @@ public class JLineInputProvider implements InputProvider {
 		this.promptProvider = promptProvider;
 	}
 
-	public Terminal getTerminal() {
-		return this.lineReader.getTerminal();
+	public LineReader getLineReader() {
+		return this.lineReader;
 	}
 
 }

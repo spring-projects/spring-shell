@@ -20,6 +20,7 @@ import java.io.StringWriter;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.shell.core.InputReader;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 
@@ -50,7 +51,7 @@ public class CommandAvailabilityTests {
 		};
 		StringWriter stringWriter = new StringWriter();
 		CommandContext commandContext = new CommandContext(mock(ParsedInput.class), mock(CommandRegistry.class),
-				new PrintWriter(stringWriter));
+				new PrintWriter(stringWriter), mock(InputReader.class));
 
 		// when
 		ExitStatus exitStatus = command.execute(commandContext);

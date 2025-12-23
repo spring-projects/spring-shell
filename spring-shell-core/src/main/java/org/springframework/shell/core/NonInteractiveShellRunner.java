@@ -51,6 +51,10 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	// Use a no-op PrintWriter since output is not needed in non-interactive mode
 	private final PrintWriter outputWriter = new PrintWriter(PrintWriter.nullWriter());
 
+	// Use a no-op InputReader since input is not needed in non-interactive mode
+	private final InputReader inputReader = new InputReader() {
+	};
+
 	/**
 	 * Create a new {@link NonInteractiveShellRunner} instance.
 	 * @param commandParser the command parser
@@ -105,7 +109,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 				break;
 			}
 			ParsedInput parsedInput = this.commandParser.parse(input);
-			CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter);
+			CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
+					this.inputReader);
 			ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
 			if (ExitStatus.OK.code() != exitStatus.code()) { // business error
 				log.error("Command " + parsedInput.commandName() + " returned an error: " + exitStatus.description()
@@ -117,7 +122,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private void executeCommand(String primaryCommand) {
 		ParsedInput parsedInput = this.commandParser.parse(primaryCommand);
-		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter);
+		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
+				this.inputReader);
 		ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
 		if (ExitStatus.OK.code() != exitStatus.code()) {
 			log.error("Command " + parsedInput.commandName() + " returned an error: " + exitStatus.description());
