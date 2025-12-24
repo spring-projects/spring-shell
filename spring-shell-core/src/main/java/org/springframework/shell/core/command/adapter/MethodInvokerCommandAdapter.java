@@ -135,6 +135,11 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 				log.debug("Processing option for parameter: " + parameters[i].getName());
 				char shortName = optionAnnotation.shortName();
 				String longName = optionAnnotation.longName();
+				if (shortName == ' ' && longName.isEmpty()) {
+					throw new IllegalArgumentException(
+							"Either shortName or longName (or both) must be provided for option on parameter '"
+									+ parameters[i].getName() + "'");
+				}
 				boolean required = optionAnnotation.required();
 				CommandOption commandOption = commandContext
 					.getOptionByName(longName.isEmpty() ? String.valueOf(shortName) : longName);
