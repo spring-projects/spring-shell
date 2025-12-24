@@ -151,8 +151,10 @@ public class JLineShellAutoConfiguration {
 	}
 
 	@Bean
-	public JLineInputProvider inputProvider(LineReader lineReader) {
-		return new JLineInputProvider(lineReader);
+	public JLineInputProvider inputProvider(LineReader lineReader, PromptProvider promptProvider) {
+		JLineInputProvider inputProvider = new JLineInputProvider(lineReader);
+		inputProvider.setPromptProvider(promptProvider);
+		return inputProvider;
 	}
 
 	@Bean(destroyMethod = "close")
