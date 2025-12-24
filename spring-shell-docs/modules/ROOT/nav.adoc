@@ -55,6 +55,7 @@
 ** xref:customization/styling.adoc[]
 ** xref:customization/logging.adoc[]
 ** xref:customization/contextclose.adoc[]
+** xref:customization/custom-prompt.adoc[]
 * xref:execution.adoc[]
 * xref:testing.adoc[]
 * Appendices

@@ -1,0 +1,28 @@
+[[custom-prompt]]
+= Custom Prompt
+
+Spring Shell provides various ways to customize the shell prompt and output appearance.
+
+When using the JLine-based shell with Spring Boot, you can customize the shell prompt by implementing the `PromptProvider` interface. This allows you to define your own prompt format.
+
+Here is an example of how to create a custom prompt in a Spring Boot application:
+
+[source,java]
+----
+@SpringBootApplication
+static class SpringShellApplication {
+
+	@Command
+	public void hi() {
+		System.out.println("Hello world!");
+	}
+
+	@Bean
+	public PromptProvider myPromptProvider() {
+		return () -> new AttributedString("myprompt:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
+	}
+
+}
+----
+
+Adding the above `PromptProvider` bean will change the shell prompt to "myprompt:>" displayed in yellow color.
