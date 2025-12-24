@@ -1,0 +1,73 @@
+// selector rows
+truncate(name,model) ::= <%
+<name; format={truncate-width:<model.terminalWidth>-prefix:5}>
+%>
+
+// used to select style if item is selected/unselected
+selected_style(flag) ::= <%
+<if(flag)>style-item-selected<else>style-item-unselected<endif>
+%>
+
+// selector rows
+select_item(item,model) ::= <%
+<if(item.onrow)>
+  <({<figures.rightPointingQuotation> }); format="style-item-selector">
+<else>
+  <("  ")>
+<endif>
+
+<if(item.enabled)>
+  <if(item.selected)>
+    <({<figures.checkboxOn> }); format=selected_style(item.selected)> <truncate(item.name,model)>
+  <else>
+    <({<figures.checkboxOff> }); format=selected_style(item.selected)> <truncate(item.name,model)>
+  <endif>
+<else>
+  <if(item.selected)>
+     <({<figures.checkboxOn> }); format="style-item-disabled"> <({<truncate(item.name,model)>}); format="style-item-disabled">
+  <else>
+    <({<figures.checkboxOff> }); format="style-item-disabled"> <({<truncate(item.name,model)>}); format="style-item-disabled">
+  <endif>
+<endif>
+%>
+
+// start '? xxx' shows both running and result
+question_name(model) ::= <<
+<({<figures.questionMark>}); format="style-list-value"> <model.name; format="style-title">
+>>
+
+// within info section, dedicated instructions for user
+info_filter(model) ::= <%
+<if(model.input)>
+, filtering '<model.input>'
+<else>
+, type to filter
+<endif>
+%>
+
+// info section after '? xxx'
+info(model) ::= <<
+[Use arrows to move]<info_filter(model)>
+>>
+
+// get comma delited string
+comma_delimited(values) ::= <%
+<values; separator=",">
+%>
+
+// component result
+result(model) ::= <<
+<question_name(model)> <(comma_delimited(model.values)); format="style-value">
+>>
+
+// component is running
+running(model) ::= <<
+<question_name(model)> <info(model)>
+<model.rows:{x|<select_item(x,model)>}; separator="\n">
+>>
+
+// main - hardcoded name
+// model - model built by MultiItemSelectorContext
+main(model) ::= <<
+<if(model.isResult)><result(model)><else><running(model)><endif>
+>>
