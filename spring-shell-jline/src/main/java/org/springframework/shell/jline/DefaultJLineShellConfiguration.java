@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.Parser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -28,8 +29,8 @@ public class DefaultJLineShellConfiguration {
 	}
 
 	@Bean
-	public LineReader lineReader(Terminal terminal, CommandCompleter commandCompleter) {
-		return LineReaderBuilder.builder().terminal(terminal).completer(commandCompleter).build();
+	public LineReader lineReader(Terminal terminal, Parser parser, CommandCompleter commandCompleter) {
+		return LineReaderBuilder.builder().terminal(terminal).completer(commandCompleter).parser(parser).build();
 	}
 
 	@Bean
@@ -45,6 +46,14 @@ public class DefaultJLineShellConfiguration {
 		catch (IOException e) {
 			throw new ShellConfigurationException("Unable to configure JLine terminal", e);
 		}
+	}
+
+	@Bean
+	public Parser parser() {
+		ExtendedDefaultParser parser = new ExtendedDefaultParser();
+		parser.setEofOnUnclosedQuote(true);
+		parser.setEofOnEscapedNewLine(true);
+		return parser;
 	}
 
 }
