@@ -16,6 +16,7 @@
 package org.springframework.shell.samples.petclinic.commands;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.DataClassRowMapper;
@@ -24,6 +25,8 @@ import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.AbstractCommand;
+import org.springframework.shell.core.command.completion.CompletionProposal;
+import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.samples.petclinic.domain.Vet;
 
 /**
@@ -81,6 +84,11 @@ public class VetDetailsCommand extends AbstractCommand {
 			writer.flush();
 		}
 		return ExitStatus.OK;
+	}
+
+	@Override
+	public CompletionProvider getCompletionProvider() {
+		return completionContext -> List.of(new CompletionProposal("--vetId="));
 	}
 
 }
