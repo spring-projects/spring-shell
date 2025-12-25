@@ -1,18 +1,17 @@
 package org.springframework.shell.jline;
 
-import java.util.List;
-import java.util.Set;
-
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
-
+import org.jspecify.annotations.Nullable;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.completion.CompletionContext;
 import org.springframework.shell.core.command.completion.CompletionProposal;
 import org.springframework.shell.core.command.completion.CompletionProvider;
+
+import java.util.List;
 
 /**
  * A JLine {@link Completer} that completes command names from a {@link CommandRegistry}.
@@ -34,10 +33,9 @@ public class CommandCompleter implements Completer {
 
 	@Override
 	public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
-		Set<Command> commands = this.commandRegistry.getCommands();
-		if (this.commandRegistry.getCommandByName(line.word().trim()) != null) {
-			Command command = this.commandRegistry.getCommandByName(line.word().trim());
-			CompletionProvider completionProvider = command.getCompletionProvider();
+		Command commandByName = findCommandByWords(line.words());
+		if (commandByName != null) {
+			CompletionProvider completionProvider = commandByName.getCompletionProvider();
 			CompletionContext context = new CompletionContext(line.words(), line.wordIndex(), line.wordCursor(), null,
 					null);
 			List<CompletionProposal> proposals = completionProvider.apply(context);
@@ -46,11 +44,22 @@ public class CommandCompleter implements Completer {
 			}
 		}
 		else {
-			for (Command command : commands) {
+			for (Command command : this.commandRegistry.getCommands()) {
 				candidates.add(new Candidate(command.getName(), command.getName() + ": " + command.getDescription(),
 						command.getGroup(), command.getHelp(), null, null, true));
 			}
 		}
+	}
+
+	@Nullable private Command findCommandByWords(List<String> words) {
+		StringBuilder commandName = new StringBuilder();
+		for (String word : words) {
+			if (word.startsWith("-")) {
+				break;
+			}
+			commandName.append(word).append(" ");
+		}
+		return this.commandRegistry.getCommandByName(commandName.toString().trim());
 	}
 
 }
