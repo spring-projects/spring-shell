@@ -61,3 +61,12 @@ include::{snippets}/CommandRegistrationBeanSnippets.java[tag=abstractcommand]
 
 `AbstractCommand` provides some utility methods to simplify command creation like
 handling help options (`-h` and `--help`) and printing messages to the shell output.
+
+[[command-registry]]
+== Command Registry
+
+The `CommandRegistry` interface holds the set of commands known to the Shell application.
+It is possible to dynamically register and unregister commands.
+
+By default, Spring Shell will populate the `CommandRegistry` with commands defined in the
+application context.
