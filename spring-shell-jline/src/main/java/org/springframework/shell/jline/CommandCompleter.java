@@ -12,12 +12,15 @@ import org.springframework.shell.core.command.completion.CompletionContext;
 import org.springframework.shell.core.command.completion.CompletionProposal;
 import org.springframework.shell.core.command.completion.CompletionProvider;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * A JLine {@link Completer} that completes command names from a {@link CommandRegistry}.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 public class CommandCompleter implements Completer {
@@ -46,10 +49,11 @@ public class CommandCompleter implements Completer {
 					candidates.add(new Candidate("-" + option.shortName()));
 				}
 			}
+			CommandOption commandOption = findOptionByWords(line.words(), options);
 			// add custom completions from the command's completion provider
 			CompletionProvider completionProvider = commandByName.getCompletionProvider();
-			CompletionContext context = new CompletionContext(line.words(), line.wordIndex(), line.wordCursor(), null,
-					null);
+			CompletionContext context = new CompletionContext(line.words(), line.wordIndex(), line.wordCursor(),
+					commandByName, commandOption);
 			List<CompletionProposal> proposals = completionProvider.apply(context);
 			for (CompletionProposal proposal : proposals) {
 				candidates.add(new Candidate(proposal.value()));
@@ -72,6 +76,20 @@ public class CommandCompleter implements Completer {
 			commandName.append(word).append(" ");
 		}
 		return this.commandRegistry.getCommandByName(commandName.toString().trim());
+	}
+
+	@Nullable private CommandOption findOptionByWords(List<String> words, List<CommandOption> options) {
+		List<String> reversed = new ArrayList<>(words);
+		Collections.reverse(reversed);
+		String optionName = reversed.stream().filter(word -> !word.trim().isEmpty()).findFirst().orElse("");
+
+		for (CommandOption option : options) {
+			if (option.longName() != null && optionName.equals("--" + option.longName())
+					|| option.shortName() != ' ' && optionName.equals("-" + option.shortName())) {
+				return option;
+			}
+		}
+		return null;
 	}
 
 }
