@@ -25,8 +25,6 @@ import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.AbstractCommand;
-import org.springframework.shell.core.command.completion.CompletionProposal;
-import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.samples.petclinic.domain.Vet;
 
 /**
@@ -39,8 +37,8 @@ public class VetDetailsCommand extends AbstractCommand {
 	private final JdbcClient jdbcClient;
 
 	public VetDetailsCommand(JdbcClient jdbcClient) {
-		super("vets info", "Show details of a given veterinarian", "Vets", "show the details of a given veterinarian",
-				false);
+		super("vets info", "Show details of a given veterinarian", "Vets",
+				"show the details of a given veterinarian. Usage: vets info --vetId=<id>", false);
 		this.jdbcClient = jdbcClient;
 	}
 
@@ -87,8 +85,13 @@ public class VetDetailsCommand extends AbstractCommand {
 	}
 
 	@Override
-	public CompletionProvider getCompletionProvider() {
-		return completionContext -> List.of(new CompletionProposal("--vetId="));
+	public List<CommandOption> getOptions() {
+		CommandOption vetIdOption = CommandOption.with()
+			.longName("vetId")
+			.description("The veterinarian ID")
+			.required(true)
+			.build();
+		return List.of(vetIdOption);
 	}
 
 }

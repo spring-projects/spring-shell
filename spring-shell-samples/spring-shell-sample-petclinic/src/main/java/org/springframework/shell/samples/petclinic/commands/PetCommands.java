@@ -20,15 +20,12 @@ import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.core.command.completion.CompletionProposal;
-import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.samples.petclinic.domain.Pet;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +38,8 @@ public class PetCommands {
 		this.jdbcClient = jdbcClient;
 	}
 
-	@Command(name = { "pets", "list" }, description = "List pets", group = "Pets", help = "List pets in Pet Clinic")
+	@Command(name = { "pets", "list" }, description = "List pets", group = "Pets",
+			help = "List pets in Pet Clinic. Usage: pets list")
 	public void listPets(CommandContext commandContext) {
 		List<@Nullable Pet> pets = jdbcClient.sql("SELECT id, name FROM PETS")
 			.query(new DataClassRowMapper<>(Pet.class))
@@ -54,7 +52,7 @@ public class PetCommands {
 	}
 
 	@Command(name = { "pets", "info" }, description = "Show detail about a given pet", group = "Pets",
-			help = "Show the details about a given pet", completionProvider = "petsInfoCompletionProvider")
+			help = "Show the details about a given pet. Usage: pets info --petId=<id>")
 	public void showPet(@Option(longName = "petId", description = "The pet ID", required = true) int id,
 			CommandContext commandContext) {
 		try {
@@ -69,11 +67,6 @@ public class PetCommands {
 		finally {
 			commandContext.outputWriter().flush();
 		}
-	}
-
-	@Bean
-	public CompletionProvider petsInfoCompletionProvider() {
-		return completionContext -> List.of(new CompletionProposal("--petId="));
 	}
 
 }

@@ -25,8 +25,6 @@ import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.AbstractCommand;
-import org.springframework.shell.core.command.completion.CompletionProposal;
-import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.samples.petclinic.domain.Owner;
 
 /**
@@ -39,7 +37,8 @@ public class OwnerDetailsCommand extends AbstractCommand {
 	private final JdbcClient jdbcClient;
 
 	public OwnerDetailsCommand(JdbcClient jdbcClient) {
-		super("owners info", "Show details of a given owner", "Owners", "show the details of a given owner", false);
+		super("owners info", "Show details of a given owner", "Owners",
+				"show the details of a given owner. Usage: owners info --ownerId=<id>", false);
 		this.jdbcClient = jdbcClient;
 	}
 
@@ -86,8 +85,13 @@ public class OwnerDetailsCommand extends AbstractCommand {
 	}
 
 	@Override
-	public CompletionProvider getCompletionProvider() {
-		return completionContext -> List.of(new CompletionProposal("--ownerId="));
+	public List<CommandOption> getOptions() {
+		CommandOption ownerIdOption = CommandOption.with()
+			.longName("ownerId")
+			.description("The ID of the owner")
+			.required(true)
+			.build();
+		return List.of(ownerIdOption);
 	}
 
 }

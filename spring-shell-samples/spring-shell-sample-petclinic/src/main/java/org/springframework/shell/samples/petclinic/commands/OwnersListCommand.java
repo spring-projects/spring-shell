@@ -37,7 +37,7 @@ public class OwnersListCommand extends AbstractCommand {
 	private final JdbcClient jdbcClient;
 
 	public OwnersListCommand(JdbcClient jdbcClient) {
-		super("owners list", "List owners", "Owners", "Command to list owners", false);
+		super("owners list", "List owners", "Owners", "Command to list owners. Usage: owners list", false);
 		this.jdbcClient = jdbcClient;
 	}
 

@@ -37,7 +37,7 @@ public class VetsListCommand extends AbstractCommand {
 	private final JdbcClient jdbcClient;
 
 	public VetsListCommand(JdbcClient jdbcClient) {
-		super("vets list", "List veterinarians", "Vets", "Command to list veterinarians", false);
+		super("vets list", "List veterinarians", "Vets", "Command to list veterinarians. Usage: vets list", false);
 		this.jdbcClient = jdbcClient;
 	}
 
