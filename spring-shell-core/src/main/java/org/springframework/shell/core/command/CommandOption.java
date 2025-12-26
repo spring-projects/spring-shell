@@ -15,13 +15,70 @@
  */
 package org.springframework.shell.core.command;
 
+import org.jspecify.annotations.Nullable;
+
 /**
- * Record representing the runtime information about an option of a command.
+ * Record representing the definition as well as the runtime information about a command
+ * option.
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  */
-public record CommandOption(char shortName, String longName, String value) {
+public record CommandOption(char shortName, @Nullable String longName, @Nullable String description,
+		@Nullable Boolean required, @Nullable String defaultValue, @Nullable String value) {
 
+	public static Builder with() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private char shortName = ' ';
+
+		private @Nullable String longName;
+
+		private @Nullable String description;
+
+		private @Nullable Boolean required;
+
+		private @Nullable String defaultValue;
+
+		private @Nullable String value;
+
+		public Builder shortName(char shortName) {
+			this.shortName = shortName;
+			return this;
+		}
+
+		public Builder longName(String longName) {
+			this.longName = longName;
+			return this;
+		}
+
+		public Builder description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public Builder required(Boolean required) {
+			this.required = required;
+			return this;
+		}
+
+		public Builder defaultValue(String defaultValue) {
+			this.defaultValue = defaultValue;
+			return this;
+		}
+
+		public Builder value(String value) {
+			this.value = value;
+			return this;
+		}
+
+		public CommandOption build() {
+			return new CommandOption(shortName, longName, description, required, defaultValue, value);
+		}
+
+	}
 }

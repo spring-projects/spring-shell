@@ -16,8 +16,11 @@
 package org.springframework.shell.core.command.annotation.support;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import jakarta.validation.Validator;
 
@@ -34,7 +37,9 @@ import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandCreationException;
+import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
 import org.springframework.shell.core.command.completion.CompletionProvider;
@@ -150,6 +155,27 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		if (exitStatusExceptionMapperBean != null) {
 			methodInvokerCommandAdapter.setExitStatusExceptionMapper(exitStatusExceptionMapperBean);
 		}
+		// introspect command options
+		List<CommandOption> commandOptions = new ArrayList<>();
+		for (Parameter parameter : this.method.getParameters()) {
+			Option optionAnnotation = parameter.getAnnotation(Option.class);
+			if (optionAnnotation != null) {
+				char shortName = optionAnnotation.shortName();
+				String longName = optionAnnotation.longName();
+				String optionDescription = optionAnnotation.description();
+				boolean required = optionAnnotation.required();
+				String defaultValue = optionAnnotation.defaultValue();
+				if (shortName == ' ' && longName.isEmpty()) {
+					throw new IllegalArgumentException(
+							"Either shortName or longName (or both) must be provided for option on parameter '"
+									+ parameter.getName() + "'");
+				}
+				CommandOption commandOption = new CommandOption(shortName, longName, optionDescription, required,
+						defaultValue, null);
+				commandOptions.add(commandOption);
+			}
+		}
+		methodInvokerCommandAdapter.setOptions(commandOptions);
 		return methodInvokerCommandAdapter;
 	}
 

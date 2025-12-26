@@ -126,7 +126,7 @@ public class DefaultCommandParser implements CommandParser {
 				value = tokens[1];
 			}
 		}
-		return new CommandOption(shortName, longName, value);
+		return CommandOption.with().shortName(shortName).longName(longName).value(value).build();
 	}
 
 	private CommandArgument parseArgument(int index, String word) {

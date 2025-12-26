@@ -56,6 +56,8 @@ public abstract class AbstractCommand implements Command {
 
 	private CompletionProvider completionProvider = context -> Collections.emptyList();
 
+	private List<CommandOption> options = new ArrayList<>();
+
 	private List<String> aliases = new ArrayList<>();
 
 	public AbstractCommand(String name, String description) {
@@ -106,6 +108,15 @@ public abstract class AbstractCommand implements Command {
 
 	public void setAliases(List<String> aliases) {
 		this.aliases = aliases;
+	}
+
+	@Override
+	public List<CommandOption> getOptions() {
+		return options;
+	}
+
+	public void setOptions(List<CommandOption> options) {
+		this.options = options;
 	}
 
 	@Override

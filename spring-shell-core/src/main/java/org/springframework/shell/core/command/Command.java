@@ -88,6 +88,14 @@ public interface Command {
 	}
 
 	/**
+	 * Get the options of the command.
+	 * @return the options of the command
+	 */
+	default List<CommandOption> getOptions() {
+		return Collections.emptyList();
+	}
+
+	/**
 	 * Get the availability provider of the command. Defaults to always available.
 	 * @return the availability provider of the command
 	 */
@@ -145,6 +153,8 @@ public interface Command {
 
 		private List<String> aliases = new ArrayList<>();
 
+		private List<CommandOption> options = new ArrayList<>();
+
 		public Builder name(String name) {
 			this.name = name;
 			return this;
@@ -190,12 +200,18 @@ public interface Command {
 			return this;
 		}
 
+		public Builder options(CommandOption... options) {
+			this.options = Arrays.asList(options);
+			return this;
+		}
+
 		public AbstractCommand execute(Consumer<CommandContext> commandExecutor) {
 			Assert.hasText(name, "'name' must be specified");
 
 			ConsumerCommandAdapter command = new ConsumerCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
 			command.setAliases(aliases);
+			command.setOptions(options);
 			command.setAvailabilityProvider(availabilityProvider);
 			command.setCompletionProvider(completionProvider);
 			if (exitStatusExceptionMapper != null) {
@@ -211,6 +227,7 @@ public interface Command {
 			FunctionCommandAdapter command = new FunctionCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
 			command.setAliases(aliases);
+			command.setOptions(options);
 			command.setAvailabilityProvider(availabilityProvider);
 			command.setCompletionProvider(completionProvider);
 			if (exitStatusExceptionMapper != null) {
