@@ -6,6 +6,7 @@ import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
 import org.jspecify.annotations.Nullable;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.completion.CompletionContext;
 import org.springframework.shell.core.command.completion.CompletionProposal;
@@ -35,6 +36,17 @@ public class CommandCompleter implements Completer {
 	public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
 		Command commandByName = findCommandByWords(line.words());
 		if (commandByName != null) {
+			// add option completions for the command
+			List<CommandOption> options = commandByName.getOptions();
+			for (CommandOption option : options) {
+				if (option.longName() != null && !line.line().contains("--" + option.longName())) {
+					candidates.add(new Candidate("--" + option.longName()));
+				}
+				if (option.shortName() != ' ' && !line.line().contains("-" + option.shortName())) {
+					candidates.add(new Candidate("-" + option.shortName()));
+				}
+			}
+			// add custom completions from the command's completion provider
 			CompletionProvider completionProvider = commandByName.getCompletionProvider();
 			CompletionContext context = new CompletionContext(line.words(), line.wordIndex(), line.wordCursor(), null,
 					null);
