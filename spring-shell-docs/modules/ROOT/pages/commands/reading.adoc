@@ -1,0 +1,12 @@
+[[reading]]
+= Reading Input
+
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
+
+When you need to read input from the shell in your command implementation, you can do it
+by using the `InputReader` obtained from the command context:
+
+[source, java, indent=0]
+----
+include::{snippets}/ReadingSnippets.java[tag=input-reader]
+----
