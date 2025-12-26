@@ -1,5 +1,5 @@
 [[commands-helpoptions]]
-= Help Options
+= Option Help
 
 ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
 
