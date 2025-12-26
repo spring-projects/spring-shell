@@ -65,7 +65,7 @@ public class CommandCompleter implements Completer {
 		else {
 			for (Command command : this.commandRegistry.getCommands()) {
 				candidates.add(new Candidate(command.getName(), command.getName() + ": " + command.getDescription(),
-						command.getGroup(), command.getHelp(), null, null, true));
+						command.getGroup(), null, null, null, true));
 			}
 		}
 	}

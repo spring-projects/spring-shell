@@ -52,7 +52,7 @@ public interface Command {
 	 * @return the description of the command
 	 */
 	default String getDescription() {
-		return "";
+		return "N/A";
 	}
 
 	/**
@@ -137,7 +137,7 @@ public interface Command {
 
 		private String name = "";
 
-		private String description = "";
+		private String description = "N/A";
 
 		private String group = "";
 
