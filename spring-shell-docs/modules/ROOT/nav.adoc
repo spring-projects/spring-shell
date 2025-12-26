@@ -11,6 +11,7 @@
 ** xref:commands/context.adoc[]
 ** xref:commands/registry.adoc[]
 ** xref:commands/availability.adoc[]
+** xref:commands/completion.adoc[]
 ** xref:commands/exception-handling.adoc[]
 ** xref:commands/help.adoc[]
 ** xref:commands/builtin/index.adoc[]

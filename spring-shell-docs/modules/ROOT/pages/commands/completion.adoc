@@ -1,0 +1,51 @@
+[[completion]]
+= Command Completion
+
+Spring Shell provides a powerful command completion mechanism that helps users
+discover available commands and their options. Command completion is available
+with the JLine-based Shell and can be triggered by pressing the `Tab` key while
+typing a command.
+
+By default, command completion suggests available commands and options based on
+the current input. However, you can also customize the completion behavior for
+your own commands by implementing the `CompletionProvider` interface.
+This interface allows you to define how completion suggestions are generated based
+on the current input.
+
+Spring Shell provides several built-in completion providers, such as:
+
+* `FileNameCompletionProvider`: Suggests file and directory names based on the current directory.
+* `EnumCompletionProvider`: Suggests values from a specified enum type.
+* `CompositeCompletionProvider`: Combines multiple completion providers into one.
+
+To use a custom completion provider, you need to declare it as a bean and set it on your command
+method with the `completionProvider` attribute of the `@Command` annotation. For example:
+
+[source,java]
+----
+public enum Gender {
+	MALE, FEMALE
+}
+
+@Command(name = "hello", description = "Say hello to a given name", group = "Greetings",
+		help = "A command that greets the user with 'Hello [Mr.|Ms.] ${name}!'. Usage: hello [-n | --name]=<name> [-g | --gender]=<gender>",
+		completionProvider = "helloCompletionProvider")
+public void sayHello(
+		@Option(shortName = 'n', longName = "name", description = "the name of the person to greet", defaultValue = "World") String name,
+		@Option(shortName = 'g', longName = "gender", description = "the gender of the person to greet") Gender gender) {
+	String prefix = switch (gender) {
+		case MALE -> "Mr. ";
+		case FEMALE -> "Ms. ";
+	};
+	System.out.println("Hello " + prefix + name + "!");
+}
+
+@Bean
+public CompletionProvider helloCompletionProvider() {
+	EnumCompletionProvider genderCompletionProvider = new EnumCompletionProvider(Gender.class, "--gender");
+	CompletionProvider nameCompletionProvider = completionContext -> List.of(new CompletionProposal("--name=Bob"), new CompletionProposal("--name=Alice"));
+	return new CompositeCompletionProvider(nameCompletionProvider, genderCompletionProvider);
+}
+----
+
+With the programmatic approach, you can set the completion provider on the command using the `Command.Builder.completionProvider` API.
