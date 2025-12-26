@@ -210,13 +210,7 @@ public interface Command {
 
 			ConsumerCommandAdapter command = new ConsumerCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
-			command.setAliases(aliases);
-			command.setOptions(options);
-			command.setAvailabilityProvider(availabilityProvider);
-			command.setCompletionProvider(completionProvider);
-			if (exitStatusExceptionMapper != null) {
-				command.setExitStatusExceptionMapper(exitStatusExceptionMapper);
-			}
+			init(command);
 
 			return command;
 		}
@@ -226,6 +220,12 @@ public interface Command {
 
 			FunctionCommandAdapter command = new FunctionCommandAdapter(name, description, group, help, hidden,
 					commandExecutor);
+			init(command);
+
+			return command;
+		}
+
+		private void init(AbstractCommand command) {
 			command.setAliases(aliases);
 			command.setOptions(options);
 			command.setAvailabilityProvider(availabilityProvider);
@@ -233,8 +233,6 @@ public interface Command {
 			if (exitStatusExceptionMapper != null) {
 				command.setExitStatusExceptionMapper(exitStatusExceptionMapper);
 			}
-
-			return command;
 		}
 
 	}
