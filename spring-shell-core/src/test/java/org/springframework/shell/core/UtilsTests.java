@@ -15,52 +15,16 @@
  */
 package org.springframework.shell.core;
 
-import java.util.List;
-import java.util.function.Predicate;
-
-import org.junit.jupiter.api.Test;
-
 import org.springframework.shell.core.utils.Utils;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link Utils}.
  *
  * @author Eric Bottard
+ * @author Mahmoud Ben Hassine
  */
 class UtilsTests {
 
-	@Test
-	void testUnCamelify() {
-		assertThat(Utils.unCamelify("HelloWorld")).isEqualTo("hello-world");
-		assertThat(Utils.unCamelify("helloWorld")).isEqualTo("hello-world");
-		assertThat(Utils.unCamelify("helloWorldHowAreYou")).isEqualTo("hello-world-how-are-you");
-		assertThat(Utils.unCamelify("URL")).isEqualTo("url");
-	}
-
-	@Test
-	void testSplit() {
-		Predicate<String> predicate = t -> t.startsWith("-");
-		List<List<String>> split;
-
-		split = Utils.split(new String[] { "-a1", "a1" }, predicate);
-		assertThat(split).containsExactly(List.of("-a1", "a1"));
-
-		split = Utils.split(new String[] { "-a1", "a1", "-a2", "a2" }, predicate);
-		assertThat(split).containsExactly(List.of("-a1", "a1"), List.of("-a2", "a2"));
-
-		split = Utils.split(new String[] { "a0", "-a1", "a1" }, predicate);
-		assertThat(split).containsExactly(List.of("a0"), List.of("-a1", "a1"));
-
-		split = Utils.split(new String[] { "-a1", "-a2" }, predicate);
-		assertThat(split).containsExactly(List.of("-a1"), List.of("-a2"));
-
-		split = Utils.split(new String[] { "a1", "a2" }, predicate);
-		assertThat(split).containsExactly(List.of("a1", "a2"));
-
-		split = Utils.split(new String[] { "-a1", "a1", "a2" }, predicate);
-		assertThat(split).containsExactly(List.of("-a1", "a1", "a2"));
-	}
+	// TODO add tests for available command formatting
 
 }

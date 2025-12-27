@@ -51,7 +51,6 @@ public class DefaultCommandParser implements CommandParser {
 	@Override
 	public ParsedInput parse(String input) {
 		log.debug("Parsing input: " + input);
-		// TODO use Utils.sanitizeInput ?
 		List<String> words = List.of(input.split(" "));
 
 		// the first word is the (root) command name

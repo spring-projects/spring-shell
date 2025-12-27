@@ -16,24 +16,12 @@
 
 package org.springframework.shell.core.utils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import org.springframework.core.DefaultParameterNameDiscoverer;
-import org.springframework.core.MethodParameter;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 
@@ -76,76 +64,6 @@ public class Utils {
 		return stringBuilder.toString();
 	}
 
-	/**
-	 * Turn CamelCaseText into gnu-style-lowercase.
-	 */
-	public static String unCamelify(CharSequence original) {
-		StringBuilder result = new StringBuilder(original.length());
-		boolean wasLowercase = false;
-		for (int i = 0; i < original.length(); i++) {
-			char ch = original.charAt(i);
-			if (Character.isUpperCase(ch) && wasLowercase) {
-				result.append('-');
-			}
-			wasLowercase = Character.isLowerCase(ch);
-			result.append(Character.toLowerCase(ch));
-		}
-		return result.toString();
-	}
-
-	/**
-	 * Convert from JDK {@link Parameter} to Spring {@link MethodParameter}.
-	 */
-	public static MethodParameter createMethodParameter(Parameter parameter) {
-		Parameter[] parameters = parameter.getDeclaringExecutable().getParameters();
-		for (int i = 0; i < parameters.length; i++) {
-			if (parameters[i].equals(parameter)) {
-				return createMethodParameter(parameter.getDeclaringExecutable(), i);
-			}
-		}
-		throw new AssertionError("Can't happen");
-	}
-
-	/**
-	 * Return a properly initialized MethodParameter for the given executable and index.
-	 */
-	public static MethodParameter createMethodParameter(Executable executable, int i) {
-		MethodParameter methodParameter;
-		if (executable instanceof Method) {
-			methodParameter = new MethodParameter((Method) executable, i);
-		}
-		else if (executable instanceof Constructor) {
-			methodParameter = new MethodParameter((Constructor<?>) executable, i);
-		}
-		else {
-			throw new IllegalArgumentException("Unsupported Executable: " + executable);
-		}
-		methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
-		return methodParameter;
-	}
-
-	/**
-	 * Return MethodParameters for each parameter of the given method/constructor.
-	 */
-	public static Stream<MethodParameter> createMethodParameters(Executable executable) {
-		return IntStream.range(0, executable.getParameterCount()).mapToObj(i -> createMethodParameter(executable, i));
-	}
-
-	/**
-	 * Sanitize the buffer input given the customizations applied to the JLine parser
-	 * (<em>e.g.</em> support for line continuations, <em>etc.</em>)
-	 */
-	public static List<String> sanitizeInput(List<String> words) {
-		words = words.stream()
-			.map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line
-														// introduced by backslash
-														// continuation
-			.map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by
-													// return inside a quoted string
-			.collect(Collectors.toList());
-		return words;
-	}
-
 	private final static ValidatorFactory DEFAULT_VALIDATOR_FACTORY;
 
 	private final static Validator DEFAULT_VALIDATOR;
@@ -169,38 +87,6 @@ public class Utils {
 	 */
 	public static Validator defaultValidator() {
 		return DEFAULT_VALIDATOR;
-	}
-
-	/**
-	 * Split array into list of lists by predicate
-	 * @param array the array
-	 * @param predicate the predicate
-	 * @return the list of lists
-	 */
-	public static <T> List<List<T>> split(T[] array, Predicate<T> predicate) {
-		List<T> list = Arrays.asList(array);
-		boolean[] boundaries = new boolean[array.length];
-		List<List<T>> split = new ArrayList<>();
-
-		for (int i = 0; i < array.length; i++) {
-			boundaries[i] = predicate.test(array[i]);
-		}
-
-		int tail = 0;
-		for (int i = 0; i < boundaries.length; i++) {
-			if (boundaries[i]) {
-				if (tail < i) {
-					split.add(list.subList(tail, i));
-				}
-				tail = i;
-			}
-		}
-
-		if (tail < array.length) {
-			split.add(list.subList(tail, array.length));
-		}
-
-		return split;
 	}
 
 }
