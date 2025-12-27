@@ -92,7 +92,17 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 			finally {
 				flush();
 			}
-			ParsedInput parsedInput = this.commandParser.parse(input);
+			ParsedInput parsedInput;
+			try {
+				parsedInput = this.commandParser.parse(input);
+			}
+			catch (Exception exception) {
+				print("Error while parsing command: " + exception.getMessage());
+				if (this.debugMode) {
+					exception.printStackTrace();
+				}
+				continue;
+			}
 			try {
 				CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, getWriter(),
 						getReader());

@@ -108,7 +108,15 @@ public class NonInteractiveShellRunner implements ShellRunner {
 				// break on end of file
 				break;
 			}
-			ParsedInput parsedInput = this.commandParser.parse(input);
+			ParsedInput parsedInput;
+			try {
+				parsedInput = this.commandParser.parse(input);
+			}
+			catch (Exception exception) {
+				log.error("Command " + input + " parsed with error: " + exception.getMessage()
+						+ ". Skipping next commands in the script");
+				break;
+			}
 			CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
 					this.inputReader);
 			ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
@@ -121,7 +129,14 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	}
 
 	private void executeCommand(String primaryCommand) {
-		ParsedInput parsedInput = this.commandParser.parse(primaryCommand);
+		ParsedInput parsedInput;
+		try {
+			parsedInput = this.commandParser.parse(primaryCommand);
+		}
+		catch (Exception exception) {
+			log.error("Command " + primaryCommand + " parsed with error: " + exception.getMessage());
+			return;
+		}
 		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
 				this.inputReader);
 		ExitStatus exitStatus = this.commandExecutor.execute(commandContext);

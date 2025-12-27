@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.core.command;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,21 +25,44 @@ class DefaultCommandParserTests {
 	private final CommandParser parser = new DefaultCommandParser();
 
 	@Test
-	void testParseWithoutSubCommand() {
-		ParsedInput parsedInput = parser.parse("mycommand --option1=value1 -o2=value2 arg1 arg2");
+	void testParseLongOptionWithoutValue() {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> parser.parse("mycommand --optionA -b=value2 arg1"));
+	}
+
+	@Test
+	void testParseShortOptionWithoutValue() {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> parser.parse("mycommand -a --optionB=value2 arg1"));
+	}
+
+	@Test
+	void testParseCommandWithoutSubCommand() {
+		ParsedInput parsedInput = parser
+			.parse("mycommand --optionA=value1 arg1 -b=value2 arg2 --optionC value3 -d value4");
 		assertEquals("mycommand", parsedInput.commandName());
-		assertEquals(2, parsedInput.options().size());
+		assertEquals(4, parsedInput.options().size());
 		assertEquals(2, parsedInput.arguments().size());
 
-		CommandOption option1 = parsedInput.options().get(0);
-		assertEquals(' ', option1.shortName());
-		assertEquals("option1", option1.longName());
-		assertEquals("value1", option1.value());
+		CommandOption optionA = parsedInput.options().get(0);
+		assertEquals(' ', optionA.shortName());
+		assertEquals("optionA", optionA.longName());
+		assertEquals("value1", optionA.value());
 
-		CommandOption option2 = parsedInput.options().get(1);
-		assertEquals('o', option2.shortName());
-		assertEquals("", option2.longName());
-		assertEquals("value2", option2.value());
+		CommandOption optionB = parsedInput.options().get(1);
+		assertEquals('b', optionB.shortName());
+		assertEquals("", optionB.longName());
+		assertEquals("value2", optionB.value());
+
+		CommandOption optionC = parsedInput.options().get(2);
+		assertEquals(' ', optionC.shortName());
+		assertEquals("optionC", optionC.longName());
+		assertEquals("value3", optionC.value());
+
+		CommandOption optionD = parsedInput.options().get(3);
+		assertEquals('d', optionD.shortName());
+		assertEquals("", optionD.longName());
+		assertEquals("value4", optionD.value());
 
 		CommandArgument argument1 = parsedInput.arguments().get(0);
 		assertEquals(0, argument1.index());
@@ -50,49 +74,23 @@ class DefaultCommandParserTests {
 	}
 
 	@Test
-	void testParseWithoutSubCommandWithMixedOptionsAndArguments() {
-		ParsedInput parsedInput = parser.parse("mycommand --option1=value1 arg1 -o2=value2 arg2");
-		assertEquals("mycommand", parsedInput.commandName());
-		assertEquals(2, parsedInput.options().size());
-		assertEquals(2, parsedInput.arguments().size());
-
-		CommandOption option1 = parsedInput.options().get(0);
-		assertEquals(' ', option1.shortName());
-		assertEquals("option1", option1.longName());
-		assertEquals("value1", option1.value());
-
-		CommandOption option2 = parsedInput.options().get(1);
-		assertEquals('o', option2.shortName());
-		assertEquals("", option2.longName());
-		assertEquals("value2", option2.value());
-
-		CommandArgument argument1 = parsedInput.arguments().get(0);
-		assertEquals(0, argument1.index());
-		assertEquals("arg1", argument1.value());
-
-		CommandArgument argument2 = parsedInput.arguments().get(1);
-		assertEquals(1, argument2.index());
-		assertEquals("arg2", argument2.value());
-	}
-
-	@Test
-	void testParseWithSubCommand() {
-		ParsedInput parsedInput = parser.parse("mycommand mysubcommand --option1=value1 arg1 -o2=value2 arg2");
+	void testParseCommandWithSubCommand() {
+		ParsedInput parsedInput = parser.parse("mycommand mysubcommand --optionA=value1 arg1 -b=value2 arg2");
 		assertEquals("mycommand", parsedInput.commandName());
 		assertEquals(1, parsedInput.subCommands().size());
 		assertEquals("mysubcommand", parsedInput.subCommands().get(0));
 		assertEquals(2, parsedInput.options().size());
 		assertEquals(2, parsedInput.arguments().size());
 
-		CommandOption option1 = parsedInput.options().get(0);
-		assertEquals(' ', option1.shortName());
-		assertEquals("option1", option1.longName());
-		assertEquals("value1", option1.value());
+		CommandOption optionA = parsedInput.options().get(0);
+		assertEquals(' ', optionA.shortName());
+		assertEquals("optionA", optionA.longName());
+		assertEquals("value1", optionA.value());
 
-		CommandOption option2 = parsedInput.options().get(1);
-		assertEquals('o', option2.shortName());
-		assertEquals("", option2.longName());
-		assertEquals("value2", option2.value());
+		CommandOption optionB = parsedInput.options().get(1);
+		assertEquals('b', optionB.shortName());
+		assertEquals("", optionB.longName());
+		assertEquals("value2", optionB.value());
 
 		CommandArgument argument1 = parsedInput.arguments().get(0);
 		assertEquals(0, argument1.index());
@@ -106,7 +104,7 @@ class DefaultCommandParserTests {
 	@Test
 	void testParseWithMultipleSubCommands() {
 		ParsedInput parsedInput = parser
-			.parse("mycommand mysubcommand1 mysubcommand2 --option1=value1 arg1 -o2=value2 arg2");
+			.parse("mycommand mysubcommand1 mysubcommand2 --optionA=value1 arg1 -b=value2 arg2");
 		assertEquals("mycommand", parsedInput.commandName());
 		assertEquals(2, parsedInput.subCommands().size());
 		assertEquals("mysubcommand1", parsedInput.subCommands().get(0));
@@ -114,15 +112,15 @@ class DefaultCommandParserTests {
 		assertEquals(2, parsedInput.options().size());
 		assertEquals(2, parsedInput.arguments().size());
 
-		CommandOption option1 = parsedInput.options().get(0);
-		assertEquals(' ', option1.shortName());
-		assertEquals("option1", option1.longName());
-		assertEquals("value1", option1.value());
+		CommandOption optionA = parsedInput.options().get(0);
+		assertEquals(' ', optionA.shortName());
+		assertEquals("optionA", optionA.longName());
+		assertEquals("value1", optionA.value());
 
-		CommandOption option2 = parsedInput.options().get(1);
-		assertEquals('o', option2.shortName());
-		assertEquals("", option2.longName());
-		assertEquals("value2", option2.value());
+		CommandOption optionB = parsedInput.options().get(1);
+		assertEquals('b', optionB.shortName());
+		assertEquals("", optionB.longName());
+		assertEquals("value2", optionB.value());
 
 		CommandArgument argument1 = parsedInput.arguments().get(0);
 		assertEquals(0, argument1.index());

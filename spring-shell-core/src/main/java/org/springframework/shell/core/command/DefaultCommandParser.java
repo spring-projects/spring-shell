@@ -21,18 +21,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Default implementation of {@link CommandParser}. Supports options in the form -o=value
- * and --option=value. Options and arguments can be specified in any order. Arguments are
- * 0-based indexed among other arguments. <pre>
+ * Default implementation of {@link CommandParser}. Supports options in the long form of
+ * --key=value or --key value as well in the short form of -k=value or -k value. Options
+ * and arguments can be specified in any order. Arguments are 0-based indexed among other
+ * arguments. <pre>
  * CommandSyntax  ::= CommandName [SubCommandName]* [Option | Argument]*
  * CommandName    ::= String
  * SubCommandName ::= String
  * Option         ::= ShortOption | LongOption
- * ShortOption    ::= '-' Char ('=' String)?
- * LongOption     ::= '--' String ('=' String)?
+ * ShortOption    ::= '-' Char ['='|' ']? String
+ * LongOption     ::= '--' String ['='|' ']? String
  * Argument       ::= String
  *
- * Example: mycommand mysubcommand --option1=value1 arg1 -o2=value2 arg2
+ * Example: mycommand mysubcommand --optionA=value1 arg1 -b=value2 arg2 --optionC value3 -d value4
  *
  *  If subcommands are used without options, then arguments must be separated using "--" (POSIX style):
  *  CommandSyntax  ::= CommandName [SubCommandName]* '--' [Argument]*
@@ -53,7 +54,7 @@ public class DefaultCommandParser implements CommandParser {
 		// TODO use Utils.sanitizeInput ?
 		List<String> words = List.of(input.split(" "));
 
-		// the first word is the command name
+		// the first word is the (root) command name
 		String commandName = words.get(0);
 		ParsedInput.Builder parsedInputBuilder = ParsedInput.builder().commandName(commandName);
 		if (words.size() == 1) {
@@ -78,19 +79,40 @@ public class DefaultCommandParser implements CommandParser {
 			remainingWords = remainingWords.subList(subCommandCount, remainingWords.size());
 		}
 
-		// parse options
-		List<String> options = remainingWords.stream().filter(this::isOption).toList();
-		for (String option : options) {
-			CommandOption commandOption = parseOption(option);
-			parsedInputBuilder.addOption(commandOption);
+		// if first remaining word is argument separator, skip it and parse remaining
+		// words as arguments
+		if (!remainingWords.isEmpty() && isArgumentSeparator(remainingWords.get(0))) {
+			remainingWords = remainingWords.subList(1, remainingWords.size());
+			int argumentIndex = 0;
+			for (String remainingWord : remainingWords) {
+				CommandArgument commandArgument = parseArgument(argumentIndex++, remainingWord);
+				parsedInputBuilder.addArgument(commandArgument);
+			}
 		}
-		// parse arguments
-		List<String> arguments = remainingWords.stream()
-			.filter(word -> !isOption(word) && !isArgumentSeparator(word))
-			.toList();
-		for (int i = 0; i < arguments.size(); i++) {
-			CommandArgument commandArgument = parseArgument(i, arguments.get(i));
-			parsedInputBuilder.addArgument(commandArgument);
+		else { // parse remaining words as options and arguments
+			int argumentIndex = 0;
+			for (int i = 0; i < remainingWords.size(); i++) {
+				String currentWord = remainingWords.get(i);
+				String nextWord = i + 1 < remainingWords.size() ? remainingWords.get(i + 1) : null;
+				if (isOption(currentWord)) {
+					if (currentWord.contains("=")) {
+						CommandOption commandOption = parseOption(currentWord);
+						parsedInputBuilder.addOption(commandOption);
+					}
+					else { // use next word as option value
+						if (nextWord == null || isOption(nextWord) || isArgumentSeparator(nextWord)) {
+							throw new IllegalArgumentException("Option '" + currentWord + "' requires a value");
+						}
+						CommandOption commandOption = parseOption(currentWord + "=" + nextWord);
+						parsedInputBuilder.addOption(commandOption);
+						i++; // skip next word as it was used as option value
+					}
+				}
+				else {
+					CommandArgument commandArgument = parseArgument(argumentIndex++, currentWord);
+					parsedInputBuilder.addArgument(commandArgument);
+				}
+			}
 		}
 		ParsedInput parsedInput = parsedInputBuilder.build();
 		log.debug("Parsed input: " + parsedInput);
