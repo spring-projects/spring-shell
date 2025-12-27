@@ -16,6 +16,7 @@ import org.springframework.shell.core.command.completion.CompletionProvider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,9 +25,9 @@ import static org.mockito.Mockito.when;
 
 class CommandCompleterTest {
 
-	private CommandRegistry registry;
-
 	private CommandCompleter completer;
+
+	private Command command;
 
 	private final CompletionProvider completionProvider = completionContext -> {
 		CommandOption option = completionContext.getCommandOption();
@@ -54,8 +55,11 @@ class CommandCompleterTest {
 
 	@BeforeEach
 	public void before() {
-		registry = new CommandRegistry();
-		completer = new CommandCompleter(registry);
+		command = mock(Command.class);
+		when(command.getName()).thenReturn("hello");
+		when(command.getCompletionProvider()).thenReturn(completionProvider);
+
+		completer = new CommandCompleter(new CommandRegistry(Set.of(command)));
 	}
 
 	private List<String> toCandidateNames(List<Candidate> candidates) {
@@ -66,13 +70,9 @@ class CommandCompleterTest {
 	@MethodSource("testCompleteData")
 	public void testComplete(List<String> words, List<String> expectedValues) {
 		// given
-		Command command = mock(Command.class);
 		when(command.getOptions())
 			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
 					new CommandOption.Builder().longName("last").shortName('l').build()));
-		when(command.getName()).thenReturn("hello");
-		when(command.getCompletionProvider()).thenReturn(completionProvider);
-		registry.registerCommand(command);
 
 		List<Candidate> candidates = new ArrayList<>();
 		ParsedLine line = mock(ParsedLine.class);
@@ -156,12 +156,8 @@ class CommandCompleterTest {
 	@MethodSource("testCompleteCommandWithLongNamesData")
 	public void testCompleteCommandWithLongNames(List<String> words, List<String> expectedValues) {
 		// given
-		Command command = mock(Command.class);
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().longName("first").build(),
 				new CommandOption.Builder().longName("last").build()));
-		when(command.getName()).thenReturn("hello");
-		when(command.getCompletionProvider()).thenReturn(completionProvider);
-		registry.registerCommand(command);
 
 		List<Candidate> candidates = new ArrayList<>();
 		ParsedLine line = mock(ParsedLine.class);
@@ -214,12 +210,8 @@ class CommandCompleterTest {
 	@MethodSource("testCompleteCommandWithShortNamesData")
 	public void testCompleteCommandWithShortNames(List<String> words, List<String> expectedValues) {
 		// given
-		Command command = mock(Command.class);
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().shortName('f').build(),
 				new CommandOption.Builder().shortName('l').build()));
-		when(command.getName()).thenReturn("hello");
-		when(command.getCompletionProvider()).thenReturn(completionProvider);
-		registry.registerCommand(command);
 
 		List<Candidate> candidates = new ArrayList<>();
 		ParsedLine line = mock(ParsedLine.class);
