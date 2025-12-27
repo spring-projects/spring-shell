@@ -15,6 +15,12 @@
  */
 package org.springframework.shell.core;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.shell.core.command.AbstractCommand;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.utils.Utils;
 
 /**
@@ -25,6 +31,31 @@ import org.springframework.shell.core.utils.Utils;
  */
 class UtilsTests {
 
-	// TODO add tests for available command formatting
+	@Test
+	void testFormatAvailableCommandsForEmptyRegistry() {
+		CommandRegistry commandRegistry = new CommandRegistry();
+		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
+		Assertions.assertEquals("Available commands: " + System.lineSeparator(), availableCommands);
+	}
+
+	@Test
+	void testFormatAvailableCommands() {
+		CommandRegistry commandRegistry = new CommandRegistry();
+		Command helloCommand = new Command.Builder().name("hello")
+			.group("greetings")
+			.description("Say hello")
+			.execute(commandContext -> "hello");
+		commandRegistry.registerCommand(helloCommand);
+		AbstractCommand secretCommand = new Command.Builder().name("secret")
+			.group("greetings")
+			.description("A hidden command")
+			.hidden(true)
+			.execute(commandContext -> "secret");
+		commandRegistry.registerCommand(secretCommand);
+		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
+		String expected = "Available commands: " + System.lineSeparator() + "greetings" + System.lineSeparator()
+				+ "\thello: Say hello" + System.lineSeparator();
+		Assertions.assertEquals(expected, availableCommands);
+	}
 
 }

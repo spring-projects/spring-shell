@@ -51,14 +51,16 @@ public class Utils {
 			.toList();
 		for (String group : groups) {
 			stringBuilder.append(group).append(System.lineSeparator());
-			for (Command command : commandRegistry.getCommands()) {
-				if (command.getGroup().equals(group)) {
-					stringBuilder.append("\t")
-						.append(command.getName())
-						.append(": ")
-						.append(command.getDescription())
-						.append(System.lineSeparator());
-				}
+			for (Command command : commandRegistry.getCommands()
+				.stream()
+				.filter(c -> !c.isHidden())
+				.filter(c -> c.getGroup().equals(group))
+				.toList()) {
+				stringBuilder.append("\t")
+					.append(command.getName())
+					.append(": ")
+					.append(command.getDescription())
+					.append(System.lineSeparator());
 			}
 		}
 		return stringBuilder.toString();
