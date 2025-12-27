@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.shell.jline;
 
 import org.jline.reader.Candidate;
@@ -23,6 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author David Pilar
+ */
 class CommandCompleterTest {
 
 	private CommandCompleter completer;
@@ -67,9 +85,10 @@ class CommandCompleterTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("testCompleteData")
+	@MethodSource("completeData")
 	public void testComplete(List<String> words, List<String> expectedValues) {
 		// given
+		when(command.getName()).thenReturn("hello");
 		when(command.getOptions())
 			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
 					new CommandOption.Builder().longName("last").shortName('l').build()));
@@ -87,7 +106,7 @@ class CommandCompleterTest {
 		assertEquals(expectedValues, toCandidateNames(candidates));
 	}
 
-	static Stream<Arguments> testCompleteData() {
+	static Stream<Arguments> completeData() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
 				Arguments.of(List.of("he", ""), List.of("hello")),
 
@@ -153,7 +172,7 @@ class CommandCompleterTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("testCompleteCommandWithLongNamesData")
+	@MethodSource("completeCommandWithLongNamesData")
 	public void testCompleteCommandWithLongNames(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().longName("first").build(),
@@ -172,7 +191,7 @@ class CommandCompleterTest {
 		assertEquals(expectedValues, toCandidateNames(candidates));
 	}
 
-	static Stream<Arguments> testCompleteCommandWithLongNamesData() {
+	static Stream<Arguments> completeCommandWithLongNamesData() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
 				Arguments.of(List.of("he", ""), List.of("hello")),
 
@@ -207,7 +226,7 @@ class CommandCompleterTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("testCompleteCommandWithShortNamesData")
+	@MethodSource("completeCommandWithShortNamesData")
 	public void testCompleteCommandWithShortNames(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().shortName('f').build(),
@@ -226,7 +245,7 @@ class CommandCompleterTest {
 		assertEquals(expectedValues, toCandidateNames(candidates));
 	}
 
-	static Stream<Arguments> testCompleteCommandWithShortNamesData() {
+	static Stream<Arguments> completeCommandWithShortNamesData() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
 				Arguments.of(List.of("he", ""), List.of("hello")),
 
@@ -256,6 +275,48 @@ class CommandCompleterTest {
 				Arguments.of(List.of("hello", "-f=Paul", "-l=Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "-f=Paul", "-l", "Noris"), List.of()),
 				Arguments.of(List.of("hello", "-f", "Paul", "-l=Noris", ""), List.of()));
+	}
+
+	@ParameterizedTest
+	@MethodSource("completeWithSubCommandsData")
+	public void testCompleteWithSubCommands(List<String> words, List<String> expectedValues) {
+		// given
+		when(command.getName()).thenReturn("hello world");
+		when(command.getOptions())
+			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
+					new CommandOption.Builder().longName("last").shortName('l').build()));
+
+		List<Candidate> candidates = new ArrayList<>();
+		ParsedLine line = mock(ParsedLine.class);
+		when(line.words()).thenReturn(words);
+		when(line.word()).thenReturn(words.get(words.size() - 1));
+		when(line.line()).thenReturn(String.join(" ", words));
+
+		// when
+		completer.complete(mock(LineReader.class), line, candidates);
+
+		// then
+		assertEquals(expectedValues, toCandidateNames(candidates));
+	}
+
+	static Stream<Arguments> completeWithSubCommandsData() {
+		return Stream.of(Arguments.of(List.of(""), List.of("hello world")),
+				Arguments.of(List.of("he"), List.of("hello world")),
+				Arguments.of(List.of("he", ""), List.of("hello world")),
+				Arguments.of(List.of("hello"), List.of("hello world")),
+				Arguments.of(List.of("hello wo"), List.of("hello world")),
+
+				Arguments.of(List.of("hello world"), List.of("--first", "-f", "--last", "-l")),
+				Arguments.of(List.of("hello world", ""), List.of("--first", "-f", "--last", "-l")),
+
+				Arguments.of(List.of("hello world", "--"), List.of("--first", "-f", "--last", "-l")),
+				Arguments.of(List.of("hello world", "-"), List.of("--first", "-f", "--last", "-l")),
+				Arguments.of(List.of("hello world", "--fi"), List.of("--first", "-f", "--last", "-l")),
+				Arguments.of(List.of("hello world", "--la"), List.of("--first", "-f", "--last", "-l")),
+
+				Arguments.of(List.of("hello world", "--first", ""), List.of("Peter", "Paul", "Mary")),
+				Arguments.of(List.of("hello world", "--last", ""), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello world", "--first", "Paul", "--last", "Noris"), List.of()));
 	}
 
 }
