@@ -319,4 +319,49 @@ class CommandCompleterTest {
 				Arguments.of(List.of("hello world", "--first", "Paul", "--last", "Noris"), List.of()));
 	}
 
+	@ParameterizedTest
+	@MethodSource("completeWithTwoOptionsWhereOneIsSubsetOfOtherData")
+	public void testCompleteWithTwoOptionsWhereOneIsSubsetOfOther(List<String> words, List<String> expectedValues) {
+		// given
+		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().longName("first").build(),
+				new CommandOption.Builder().longName("firstname").build()));
+
+		List<Candidate> candidates = new ArrayList<>();
+		ParsedLine line = mock(ParsedLine.class);
+		when(line.words()).thenReturn(words);
+		when(line.word()).thenReturn(words.get(words.size() - 1));
+		when(line.line()).thenReturn(String.join(" ", words));
+
+		// when
+		completer.complete(mock(LineReader.class), line, candidates);
+
+		// then
+		assertEquals(expectedValues, toCandidateNames(candidates));
+	}
+
+	static Stream<Arguments> completeWithTwoOptionsWhereOneIsSubsetOfOtherData() {
+		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
+				Arguments.of(List.of("he", ""), List.of("hello")),
+
+				Arguments.of(List.of("hello"), List.of("--first", "--firstname")),
+				Arguments.of(List.of("hello", ""), List.of("--first", "--firstname")),
+
+				Arguments.of(List.of("hello", "--"), List.of("--first", "--firstname")),
+				Arguments.of(List.of("hello", "-"), List.of("--first", "--firstname")),
+				Arguments.of(List.of("hello", "--fi"), List.of("--first", "--firstname")),
+
+				Arguments.of(List.of("hello", "--first=Peter", ""), List.of("--firstname")),
+				Arguments.of(List.of("hello", "--first", "Peter", ""), List.of("--firstname")),
+				Arguments.of(List.of("hello", "--first", "Peter"), List.of("--firstname")),
+
+				Arguments.of(List.of("hello", "--firstname=Peter", ""), List.of("--first")),
+				Arguments.of(List.of("hello", "--firstname", "Peter", ""), List.of("--first")),
+				Arguments.of(List.of("hello", "--firstname", "Peter"), List.of("--first")),
+
+				Arguments.of(List.of("hello", "--firstname=Peter", "--first=Paul", ""), List.of()),
+				Arguments.of(List.of("hello", "--firstname=Peter", "--first", "Paul"), List.of()),
+				Arguments.of(List.of("hello", "--firstname", "Peter", "--first=Paul", ""), List.of()),
+				Arguments.of(List.of("hello", "--firstname", "Peter", "--first", "Paul"), List.of()));
+	}
+
 }
