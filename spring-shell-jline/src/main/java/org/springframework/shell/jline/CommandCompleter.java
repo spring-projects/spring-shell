@@ -71,8 +71,11 @@ public class CommandCompleter implements Completer {
 	}
 
 	private boolean isOptionPresent(ParsedLine line, CommandOption option) {
-		return option.longName() != null && line.line().contains(" --" + option.longName() + " ")
-				|| option.shortName() != ' ' && line.line().contains(" -" + option.shortName() + " ");
+		return option.longName() != null
+				&& (line.line().contains(" --" + option.longName() + " ")
+						|| line.line().contains(" --" + option.longName() + "="))
+				|| option.shortName() != ' ' && (line.line().contains(" -" + option.shortName() + " ")
+						|| line.line().contains(" -" + option.shortName() + "="));
 	}
 
 	@Nullable private Command findCommandByWords(List<String> words) {
@@ -89,15 +92,21 @@ public class CommandCompleter implements Completer {
 	@Nullable private CommandOption findOptionByWords(List<String> words, List<CommandOption> options) {
 		List<String> reversed = new ArrayList<>(words);
 		Collections.reverse(reversed);
-		String optionName = reversed.stream().filter(word -> !word.trim().isEmpty()).findFirst().orElse("");
+		String optionName = reversed.stream()
+			.filter(word -> !word.trim().isEmpty())
+			.findFirst()
+			.filter(word -> !word.contains("=") || !reversed.get(0).isEmpty())
+			.orElse("");
 
-		for (CommandOption option : options) {
-			if (option.longName() != null && optionName.equals("--" + option.longName())
-					|| option.shortName() != ' ' && optionName.equals("-" + option.shortName())) {
-				return option;
-			}
-		}
-		return null;
+		return options.stream().filter(option -> isOptionEqual(optionName, option)).findFirst().orElse(null);
+	}
+
+	private static boolean isOptionEqual(String optionName, CommandOption option) {
+		return option.longName() != null
+				&& (optionName.equals("--" + option.longName())
+						|| optionName.startsWith("--" + option.longName() + "="))
+				|| option.shortName() != ' ' && (optionName.equals("-" + option.shortName())
+						|| optionName.startsWith("-" + option.shortName() + "="));
 	}
 
 }
