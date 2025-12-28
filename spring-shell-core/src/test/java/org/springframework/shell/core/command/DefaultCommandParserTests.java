@@ -17,6 +17,11 @@ package org.springframework.shell.core.command;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -158,6 +163,83 @@ class DefaultCommandParserTests {
 		assertEquals("mysubcommand", parsedInput.subCommands().get(0));
 		assertEquals("arg1", parsedInput.subCommands().get(1));
 		assertEquals("arg2", parsedInput.subCommands().get(2));
+	}
+
+	@ParameterizedTest
+	@MethodSource("parseWithQuotedOptionData")
+	void testParseWithQuotedOption(String input, String longName, char shortName, String expectedValue) {
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(1, parsedInput.options().size());
+		assertEquals(longName, parsedInput.options().get(0).longName());
+		assertEquals(shortName, parsedInput.options().get(0).shortName());
+		assertEquals(expectedValue, parsedInput.options().get(0).value());
+	}
+
+	static Stream<Arguments> parseWithQuotedOptionData() {
+		return Stream.of(Arguments.of("mycommand --option=value", "option", ' ', "value"),
+				Arguments.of("mycommand --option=\\\"value\\\"", "option", ' ', "\\\"value\\\""),
+				Arguments.of("mycommand --option=\"value\"", "option", ' ', "value"),
+				Arguments.of("mycommand --option=\"value1 value2\"", "option", ' ', "value1 value2"),
+				Arguments.of("mycommand --option=value1\"inside\"value2", "option", ' ', "value1\"inside\"value2"),
+				Arguments.of("mycommand --option=\"value1 \\\"inside\\\" value2\"", "option", ' ',
+						"value1 \"inside\" value2"),
+				Arguments.of("mycommand --option=value1'inside'value2", "option", ' ', "value1'inside'value2"),
+				Arguments.of("mycommand --option=\"value1 'inside' value2\"", "option", ' ', "value1 'inside' value2"),
+
+				Arguments.of("mycommand --option value", "option", ' ', "value"),
+				Arguments.of("mycommand --option \\\"value\\\"", "option", ' ', "\\\"value\\\""),
+				Arguments.of("mycommand --option \"value\"", "option", ' ', "value"),
+				Arguments.of("mycommand --option \"value1 value2\"", "option", ' ', "value1 value2"),
+				Arguments.of("mycommand --option value1\"inside\"value2", "option", ' ', "value1\"inside\"value2"),
+				Arguments.of("mycommand --option \"value1 \\\"inside\\\" value2\"", "option", ' ',
+						"value1 \"inside\" value2"),
+				Arguments.of("mycommand --option value1'inside'value2", "option", ' ', "value1'inside'value2"),
+				Arguments.of("mycommand --option \"value1 'inside' value2\"", "option", ' ', "value1 'inside' value2"),
+
+				Arguments.of("mycommand -o=value", "", 'o', "value"),
+				Arguments.of("mycommand -o=\\\"value\\\"", "", 'o', "\\\"value\\\""),
+				Arguments.of("mycommand -o=\"value\"", "", 'o', "value"),
+				Arguments.of("mycommand -o=\"value1 value2\"", "", 'o', "value1 value2"),
+				Arguments.of("mycommand -o=value1\"inside\"value2", "", 'o', "value1\"inside\"value2"),
+				Arguments.of("mycommand -o=\"value1 \\\"inside\\\" value2\"", "", 'o', "value1 \"inside\" value2"),
+				Arguments.of("mycommand -o=value1'inside'value2", "", 'o', "value1'inside'value2"),
+				Arguments.of("mycommand -o=\"value1 'inside' value2\"", "", 'o', "value1 'inside' value2"),
+
+				Arguments.of("mycommand -o value", "", 'o', "value"),
+				Arguments.of("mycommand -o \\\"value\\\"", "", 'o', "\\\"value\\\""),
+				Arguments.of("mycommand -o \"value\"", "", 'o', "value"),
+				Arguments.of("mycommand -o \"value1 value2\"", "", 'o', "value1 value2"),
+				Arguments.of("mycommand -o value1\"inside\"value2", "", 'o', "value1\"inside\"value2"),
+				Arguments.of("mycommand -o \"value1 \\\"inside\\\" value2\"", "", 'o', "value1 \"inside\" value2"),
+				Arguments.of("mycommand -o value1'inside'value2", "", 'o', "value1'inside'value2"),
+				Arguments.of("mycommand -o \"value1 'inside' value2\"", "", 'o', "value1 'inside' value2"));
+	}
+
+	@ParameterizedTest
+	@MethodSource("parseWithQuotedArgumentData")
+	void testParseWithQuotedArgument(String input, String expectedValue) {
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(expectedValue, parsedInput.arguments().get(0).value());
+		assertEquals(1, parsedInput.arguments().size());
+	}
+
+	static Stream<Arguments> parseWithQuotedArgumentData() {
+		return Stream.of(Arguments.of("mycommand -- value", "value"),
+				Arguments.of("mycommand -- \\\"value\\\"", "\\\"value\\\""),
+				Arguments.of("mycommand -- \"value\"", "value"),
+				Arguments.of("mycommand -- \"value1 value2\"", "value1 value2"),
+				Arguments.of("mycommand -- value1\"inside\"value2", "value1\"inside\"value2"),
+				Arguments.of("mycommand -- \"value1 \\\"inside\\\" value2\"", "value1 \"inside\" value2"),
+				Arguments.of("mycommand -- value1'inside'value2", "value1'inside'value2"),
+				Arguments.of("mycommand -- \"value1 'inside' value2\"", "value1 'inside' value2"));
 	}
 
 }
