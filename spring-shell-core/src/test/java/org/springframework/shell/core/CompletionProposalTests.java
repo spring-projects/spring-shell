@@ -22,7 +22,7 @@ import org.springframework.shell.core.command.completion.CompletionProposal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CompletionProposalTest {
+public class CompletionProposalTests {
 
 	private final String PROPOSAL = "test proposal";
 
