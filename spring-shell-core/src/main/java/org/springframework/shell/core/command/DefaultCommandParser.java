@@ -42,6 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * </pre>
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 public class DefaultCommandParser implements CommandParser {
@@ -51,7 +52,7 @@ public class DefaultCommandParser implements CommandParser {
 	@Override
 	public ParsedInput parse(String input) {
 		log.debug("Parsing input: " + input);
-		List<String> words = List.of(input.split(" "));
+		List<String> words = List.of(input.split(" (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
 
 		// the first word is the (root) command name
 		String commandName = words.get(0);
@@ -156,11 +157,26 @@ public class DefaultCommandParser implements CommandParser {
 				value = tokens[1];
 			}
 		}
-		return CommandOption.with().shortName(shortName).longName(longName).value(value).build();
+		return CommandOption.with()
+			.shortName(shortName)
+			.longName(longName)
+			.value(unquoteAndUnescapeQuoted(value))
+			.build();
 	}
 
 	private CommandArgument parseArgument(int index, String word) {
-		return new CommandArgument(index, word);
+		return new CommandArgument(index, unquoteAndUnescapeQuoted(word));
+	}
+
+	private String unquoteAndUnescapeQuoted(String s) {
+		// only process quoted strings
+		if (s.length() >= 2 && s.startsWith("\"") && s.endsWith("\"")) {
+			s = s.substring(1, s.length() - 1);
+
+			// unescape only inside quoted strings
+			s = s.replace("\\\"", "\"").replace("\\\\", "\\");
+		}
+		return s;
 	}
 
 }
