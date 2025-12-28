@@ -57,7 +57,16 @@ public class DefaultCommandParser implements CommandParser {
 		String commandName = words.get(0);
 		ParsedInput.Builder parsedInputBuilder = ParsedInput.builder().commandName(commandName);
 		if (words.size() == 1) {
-			return parsedInputBuilder.build();
+			ParsedInput parsedInput = parsedInputBuilder.build();
+			log.debug("Parsed input: " + parsedInput);
+			return parsedInput;
+		}
+
+		if (words.size() == 2 && (words.get(1).equals("--help") || words.get(1).equals("-h"))) {
+			parsedInputBuilder.addOption(CommandOption.with().shortName('h').longName("help").value("true").build());
+			ParsedInput parsedInput = parsedInputBuilder.build();
+			log.debug("Parsed input: " + parsedInput);
+			return parsedInput;
 		}
 
 		List<String> remainingWords = words.subList(1, words.size());
