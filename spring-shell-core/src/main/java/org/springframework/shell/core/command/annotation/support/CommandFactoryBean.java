@@ -26,6 +26,7 @@ import jakarta.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -72,6 +73,8 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		org.springframework.shell.core.command.annotation.Command command = MergedAnnotations.from(this.method)
 			.get(org.springframework.shell.core.command.annotation.Command.class)
 			.synthesize();
+
+		// get command metadata
 		String name = String.join(" ", command.name());
 		name = name.isEmpty() ? this.method.getName() : name;
 		String description = command.description();
@@ -81,60 +84,63 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		group = group.isEmpty() ? this.method.getDeclaringClass().getSimpleName() + " Commands" : group;
 		boolean hidden = command.hidden();
 		String[] aliases = command.alias();
-		String availabilityProvider = command.availabilityProvider();
-		String exitStatusExceptionMapper = command.exitStatusExceptionMapper();
+		String availabilityProviderBeanName = command.availabilityProvider();
+		String exitStatusExceptionMapperBeanName = command.exitStatusExceptionMapper();
 		String completionProviderBeanName = command.completionProvider();
-		log.debug("Creating command bean for method '" + this.method + "' with name '" + name + "'");
 		Class<?> declaringClass = this.method.getDeclaringClass();
-		Object targetObject;
-		try {
-			targetObject = this.applicationContext.getBean(declaringClass);
+		log.debug("Creating command bean for method '%s' defined in class '%s' with name '%s'"
+			.formatted(this.method.getName(), declaringClass.getName(), name));
+		Object targetObject = getTagetObject(declaringClass);
+		ConfigurableConversionService configurableConversionService = getConfigurableConversionService();
+		AvailabilityProvider availabilityProviderBean = getAvailabilityProvider(availabilityProviderBeanName);
+		ExitStatusExceptionMapper exitStatusExceptionMapperBean = getExitStatusExceptionMapper(
+				exitStatusExceptionMapperBeanName);
+		Validator validator = getValidator();
+		CompletionProvider completionProvider = getCompletionProvider(completionProviderBeanName);
+		List<CommandOption> commandOptions = getCommandOptions();
+
+		// create command adapter
+		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
+				group, help, hidden, this.method, targetObject, configurableConversionService, validator);
+		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
+		methodInvokerCommandAdapter.setOptions(commandOptions);
+		methodInvokerCommandAdapter.setAvailabilityProvider(availabilityProviderBean);
+		methodInvokerCommandAdapter.setCompletionProvider(completionProvider);
+		if (exitStatusExceptionMapperBean != null) {
+			methodInvokerCommandAdapter.setExitStatusExceptionMapper(exitStatusExceptionMapperBean);
 		}
-		catch (NoSuchBeanDefinitionException e) {
-			String errorMessage = """
-					Unable to create command for method '%s' because no bean of type '%s' is defined in the application context.
-					Ensure that the declaring class is annotated with a Spring stereotype annotation (e.g., @Component) or
-					is otherwise registered as a bean in the application context.
-					"""
-				.formatted(this.method.getName(), declaringClass.getName());
-			throw new CommandCreationException(errorMessage, e);
-		}
-		ConfigurableConversionService configurableConversionService = new DefaultConversionService();
-		try {
-			configurableConversionService = this.applicationContext.getBean(ConfigurableConversionService.class);
-		}
-		catch (BeansException e) {
-			log.debug("No ConfigurableConversionService bean found, using a default conversion service.");
-		}
-		AvailabilityProvider availabilityProviderBean = AvailabilityProvider.alwaysAvailable();
-		if (!availabilityProvider.isEmpty()) {
-			try {
-				availabilityProviderBean = this.applicationContext.getBean(availabilityProvider,
-						AvailabilityProvider.class);
+		return methodInvokerCommandAdapter;
+	}
+
+	private List<CommandOption> getCommandOptions() {
+		List<CommandOption> commandOptions = new ArrayList<>();
+		for (Parameter parameter : this.method.getParameters()) {
+			Option optionAnnotation = parameter.getAnnotation(Option.class);
+			if (optionAnnotation != null) {
+				char shortName = optionAnnotation.shortName();
+				String longName = optionAnnotation.longName();
+				String description = optionAnnotation.description();
+				boolean required = optionAnnotation.required();
+				String defaultValue = optionAnnotation.defaultValue();
+				if (shortName == ' ' && longName.isEmpty()) {
+					throw new IllegalArgumentException(
+							"Either shortName or longName (or both) must be provided for option on parameter '"
+									+ parameter.getName() + "'");
+				}
+				CommandOption commandOption = CommandOption.with()
+					.shortName(shortName)
+					.longName(longName)
+					.description(description)
+					.required(required)
+					.defaultValue(defaultValue)
+					.build();
+				commandOptions.add(commandOption);
 			}
-			catch (BeansException e) {
-				log.debug("No AvailabilityProvider bean found with name '" + availabilityProvider
-						+ "', using always available provider.");
-			}
 		}
-		ExitStatusExceptionMapper exitStatusExceptionMapperBean = null;
-		if (!exitStatusExceptionMapper.isEmpty()) {
-			try {
-				exitStatusExceptionMapperBean = this.applicationContext.getBean(exitStatusExceptionMapper,
-						ExitStatusExceptionMapper.class);
-			}
-			catch (BeansException e) {
-				log.debug("No ExitStatusExceptionMapper bean found with name '" + exitStatusExceptionMapper
-						+ "', using default exception mapping strategy.");
-			}
-		}
-		Validator validator = Utils.defaultValidator();
-		try {
-			validator = this.applicationContext.getBean(Validator.class);
-		}
-		catch (BeansException e) {
-			log.debug("No Validator bean found, using default validator.");
-		}
+		return commandOptions;
+	}
+
+	private CompletionProvider getCompletionProvider(String completionProviderBeanName) {
 		CompletionProvider completionProvider = CompletionContext -> Collections.emptyList();
 		if (!completionProviderBeanName.isEmpty()) {
 			try {
@@ -146,37 +152,64 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 						+ "', using default completion provider.");
 			}
 		}
+		return completionProvider;
+	}
 
-		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
-				group, help, hidden, this.method, targetObject, configurableConversionService, validator);
-		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
-		methodInvokerCommandAdapter.setAvailabilityProvider(availabilityProviderBean);
-		methodInvokerCommandAdapter.setCompletionProvider(completionProvider);
-		if (exitStatusExceptionMapperBean != null) {
-			methodInvokerCommandAdapter.setExitStatusExceptionMapper(exitStatusExceptionMapperBean);
+	private Validator getValidator() {
+		try {
+			return this.applicationContext.getBean(Validator.class);
 		}
-		// introspect command options
-		List<CommandOption> commandOptions = new ArrayList<>();
-		for (Parameter parameter : this.method.getParameters()) {
-			Option optionAnnotation = parameter.getAnnotation(Option.class);
-			if (optionAnnotation != null) {
-				char shortName = optionAnnotation.shortName();
-				String longName = optionAnnotation.longName();
-				String optionDescription = optionAnnotation.description();
-				boolean required = optionAnnotation.required();
-				String defaultValue = optionAnnotation.defaultValue();
-				if (shortName == ' ' && longName.isEmpty()) {
-					throw new IllegalArgumentException(
-							"Either shortName or longName (or both) must be provided for option on parameter '"
-									+ parameter.getName() + "'");
-				}
-				CommandOption commandOption = new CommandOption(shortName, longName, optionDescription, required,
-						defaultValue, null);
-				commandOptions.add(commandOption);
-			}
+		catch (BeansException e) {
+			log.debug("No Validator bean found, using default validator.");
+			return Utils.defaultValidator();
 		}
-		methodInvokerCommandAdapter.setOptions(commandOptions);
-		return methodInvokerCommandAdapter;
+	}
+
+	private @Nullable ExitStatusExceptionMapper getExitStatusExceptionMapper(String exitStatusExceptionMapper) {
+		try {
+			return this.applicationContext.getBean(exitStatusExceptionMapper, ExitStatusExceptionMapper.class);
+		}
+		catch (BeansException e) {
+			log.debug("No ExitStatusExceptionMapper bean found with name '" + exitStatusExceptionMapper
+					+ "', using default exception mapping strategy.");
+			return null;
+		}
+	}
+
+	private AvailabilityProvider getAvailabilityProvider(String availabilityProvider) {
+		try {
+			return this.applicationContext.getBean(availabilityProvider, AvailabilityProvider.class);
+		}
+		catch (BeansException e) {
+			log.debug("No AvailabilityProvider bean found with name '" + availabilityProvider
+					+ "', using always available provider.");
+			return AvailabilityProvider.alwaysAvailable();
+		}
+	}
+
+	private ConfigurableConversionService getConfigurableConversionService() {
+		try {
+			return this.applicationContext.getBean(ConfigurableConversionService.class);
+		}
+		catch (BeansException e) {
+			log.debug("No ConfigurableConversionService bean found, using a default conversion service.");
+			return new DefaultConversionService();
+		}
+	}
+
+	private Object getTagetObject(Class<?> declaringClass) {
+		try {
+			return this.applicationContext.getBean(declaringClass);
+		}
+		catch (NoSuchBeanDefinitionException e) {
+			String errorMessage = """
+					Unable to create command for method '%s' because no bean of type '%s' is defined in the application context.
+					Ensure that the declaring class is annotated with a Spring stereotype annotation (e.g., @Component) or
+					is otherwise registered as a bean in the application context.
+					"""
+				.formatted(this.method.getName(), declaringClass.getName());
+			throw new CommandCreationException(errorMessage, e);
+		}
 	}
 
 	@Override
