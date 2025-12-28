@@ -40,6 +40,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +53,7 @@ import org.springframework.shell.jline.CommandCompleter;
 import org.springframework.shell.jline.ExtendedDefaultParser;
 import org.springframework.shell.jline.JLineInputProvider;
 import org.springframework.shell.jline.PromptProvider;
+import org.springframework.shell.jline.command.History;
 import org.springframework.util.StringUtils;
 
 /**
@@ -188,6 +190,12 @@ public class JLineShellAutoConfiguration {
 	@ConditionalOnMissingBean
 	public CommandCompleter commandCompleter(CommandRegistry commandRegistry) {
 		return new CommandCompleter(commandRegistry);
+	}
+
+	@Bean
+	@ConditionalOnProperty(value = "spring.shell.command.history.enabled", havingValue = "true", matchIfMissing = true)
+	public Command historyCommand(org.jline.reader.History jLineHistory) {
+		return new History(jLineHistory);
 	}
 
 	@Configuration

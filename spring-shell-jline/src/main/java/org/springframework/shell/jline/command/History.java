@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2018-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,23 @@
 
 package org.springframework.shell.jline.command;
 
-import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.PrintWriter;
 
-import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.core.command.annotation.Option;
+import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandOption;
+import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.Script;
 
 /**
- * A command that displays all previously run commands, optionally dumping to a file
+ * A command that displays all previously run commands, optionally dumping them to a file
  * readable by {@link Script}.
  *
  * @author Eric Bottard
  * @author Mahmoud Ben Hassine
  */
-public class History {
+public class History implements Command {
 
 	private final org.jline.reader.History jLineHistory;
 
@@ -42,21 +40,42 @@ public class History {
 		this.jLineHistory = jLineHistory;
 	}
 
-	@Command(name = "history", description = "Display or save the history of previously run commands")
-	public List<String> history(@Option(description = "A file to save history to.") File file) throws IOException {
-		if (file == null) {
-			List<String> result = new ArrayList<>(jLineHistory.size());
-			jLineHistory.forEach(e -> result.add(e.line()));
-			return result;
+	@Override
+	public String getName() {
+		return "history";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Display or save the history of previously run commands";
+	}
+
+	@Override
+	public String getGroup() {
+		return "Built-In Commands";
+	}
+
+	@Override
+	public ExitStatus execute(CommandContext commandContext) throws Exception {
+		PrintWriter outputWriter = commandContext.outputWriter();
+		CommandOption fileOption = commandContext.getOptionByName("file");
+		if (fileOption == null) {
+			jLineHistory.forEach(e -> outputWriter.println(e.line()));
 		}
 		else {
-			try (FileWriter w = new FileWriter(file)) {
+			String fileName = fileOption.value();
+			if (fileName == null || fileName.isEmpty()) {
+				throw new IllegalArgumentException("File name must be provided");
+			}
+			try (FileWriter w = new FileWriter(fileName)) {
 				for (org.jline.reader.History.Entry entry : jLineHistory) {
 					w.append(entry.line()).append(System.lineSeparator());
 				}
 			}
-			return Collections.singletonList(String.format("Wrote %d entries to %s", jLineHistory.size(), file));
+			outputWriter.println(String.format("Wrote %d entries to %s", jLineHistory.size(), fileName));
 		}
+		outputWriter.flush();
+		return ExitStatus.OK;
 	}
 
 }
