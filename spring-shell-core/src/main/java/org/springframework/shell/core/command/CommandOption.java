@@ -26,7 +26,8 @@ import org.jspecify.annotations.Nullable;
  * @author Mahmoud Ben Hassine
  */
 public record CommandOption(char shortName, @Nullable String longName, @Nullable String description,
-		@Nullable Boolean required, @Nullable String defaultValue, @Nullable String value, Class<?> type) {
+		@Nullable Boolean required, @Nullable String defaultValue, @Nullable String value, Class<?> type,
+		boolean completion) {
 
 	public static Builder with() {
 		return new Builder();
@@ -47,6 +48,8 @@ public record CommandOption(char shortName, @Nullable String longName, @Nullable
 		private @Nullable String value;
 
 		private Class<?> type = Object.class;
+
+		private boolean completion = true;
 
 		public Builder shortName(char shortName) {
 			this.shortName = shortName;
@@ -83,8 +86,13 @@ public record CommandOption(char shortName, @Nullable String longName, @Nullable
 			return this;
 		}
 
+		public Builder completion(boolean completion) {
+			this.completion = completion;
+			return this;
+		}
+
 		public CommandOption build() {
-			return new CommandOption(shortName, longName, description, required, defaultValue, value, type);
+			return new CommandOption(shortName, longName, description, required, defaultValue, value, type, completion);
 		}
 
 	}

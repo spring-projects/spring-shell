@@ -126,6 +126,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 				String description = optionAnnotation.description();
 				boolean required = optionAnnotation.required();
 				String defaultValue = optionAnnotation.defaultValue();
+				boolean completion = optionAnnotation.completion();
 				CommandOption commandOption = CommandOption.with()
 					.shortName(shortName)
 					.longName(longName)
@@ -133,6 +134,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 					.required(required)
 					.defaultValue(defaultValue)
 					.type(parameter.getType())
+					.completion(completion)
 					.build();
 				commandOptions.add(commandOption);
 			}
