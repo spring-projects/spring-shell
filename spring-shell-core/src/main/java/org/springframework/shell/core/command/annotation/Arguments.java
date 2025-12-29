@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.aot.hint.annotation.Reflective;
-
 /**
  * Annotation marking a method parameter as a target for a collection of arguments to a
  * {@link Command}. The parameter type must be an array or a collection.
@@ -33,7 +31,6 @@ import org.springframework.aot.hint.annotation.Reflective;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @Documented
-@Reflective
 public @interface Arguments {
 
 }
