@@ -16,14 +16,19 @@
 
 package org.springframework.shell.core.utils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
+import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.ExitStatus;
 
 /**
  * Some text utilities.
@@ -42,8 +47,8 @@ public class Utils {
 	public static String formatAvailableCommands(CommandRegistry commandRegistry) {
 		StringBuilder stringBuilder = new StringBuilder("AVAILABLE COMMANDS");
 		stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
-		List<String> groups = commandRegistry.getCommands()
-			.stream()
+		Set<Command> commands = getCommands(commandRegistry);
+		List<String> groups = commands.stream()
 			.filter(command -> !command.isHidden())
 			.map(Command::getGroup)
 			.distinct()
@@ -51,8 +56,7 @@ public class Utils {
 			.toList();
 		for (String group : groups) {
 			stringBuilder.append(group).append(System.lineSeparator());
-			for (Command command : commandRegistry.getCommands()
-				.stream()
+			for (Command command : commands.stream()
 				.filter(c -> !c.isHidden())
 				.filter(c -> c.getGroup().equals(group))
 				.toList()) {
@@ -66,6 +70,25 @@ public class Utils {
 		}
 		return stringBuilder.toString();
 	}
+
+	private static Set<Command> getCommands(CommandRegistry commandRegistry) {
+		Set<Command> commands = new HashSet<>(commandRegistry.getCommands());
+		commands.add(QUIT_COMMAND);
+		return commands;
+	}
+
+	// Dummy exit command to show in available commands
+	private static final Command QUIT_COMMAND = new AbstractCommand("quit", "Exit the shell", "Built-In Commands") {
+		@Override
+		public List<String> getAliases() {
+			return List.of("exit");
+		}
+
+		@Override
+		public ExitStatus doExecute(CommandContext commandContext) {
+			return ExitStatus.OK;
+		}
+	};
 
 	private final static ValidatorFactory DEFAULT_VALIDATOR_FACTORY;
 

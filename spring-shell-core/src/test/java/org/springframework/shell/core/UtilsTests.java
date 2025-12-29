@@ -32,14 +32,6 @@ import org.springframework.shell.core.utils.Utils;
 class UtilsTests {
 
 	@Test
-	void testFormatAvailableCommandsForEmptyRegistry() {
-		CommandRegistry commandRegistry = new CommandRegistry();
-		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
-		Assertions.assertEquals("AVAILABLE COMMANDS" + System.lineSeparator() + System.lineSeparator(),
-				availableCommands);
-	}
-
-	@Test
 	void testFormatAvailableCommands() {
 		CommandRegistry commandRegistry = new CommandRegistry();
 		Command helloCommand = new Command.Builder().name("hello")
@@ -55,7 +47,8 @@ class UtilsTests {
 			.execute(commandContext -> "secret");
 		commandRegistry.registerCommand(secretCommand);
 		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
-		String expected = "AVAILABLE COMMANDS" + System.lineSeparator() + System.lineSeparator() + "greetings"
+		String expected = "AVAILABLE COMMANDS" + System.lineSeparator() + System.lineSeparator() + "Built-In Commands"
+				+ System.lineSeparator() + "\tquit, exit: Exit the shell" + System.lineSeparator() + "greetings"
 				+ System.lineSeparator() + "\thello, hi, hey: Say hello" + System.lineSeparator();
 		Assertions.assertEquals(expected, availableCommands);
 	}
