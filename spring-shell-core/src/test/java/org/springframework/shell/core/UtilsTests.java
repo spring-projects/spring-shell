@@ -45,6 +45,7 @@ class UtilsTests {
 		Command helloCommand = new Command.Builder().name("hello")
 			.group("greetings")
 			.description("Say hello")
+			.aliases("hi", "hey")
 			.execute(commandContext -> "hello");
 		commandRegistry.registerCommand(helloCommand);
 		AbstractCommand secretCommand = new Command.Builder().name("secret")
@@ -55,7 +56,7 @@ class UtilsTests {
 		commandRegistry.registerCommand(secretCommand);
 		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
 		String expected = "AVAILABLE COMMANDS" + System.lineSeparator() + System.lineSeparator() + "greetings"
-				+ System.lineSeparator() + "\thello: Say hello" + System.lineSeparator();
+				+ System.lineSeparator() + "\thello, hi, hey: Say hello" + System.lineSeparator();
 		Assertions.assertEquals(expected, availableCommands);
 	}
 

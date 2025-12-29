@@ -58,6 +58,7 @@ public class Utils {
 				.toList()) {
 				stringBuilder.append("\t")
 					.append(command.getName())
+					.append(command.getAliases().isEmpty() ? "" : ", " + String.join(", ", command.getAliases()))
 					.append(": ")
 					.append(command.getDescription())
 					.append(System.lineSeparator());
