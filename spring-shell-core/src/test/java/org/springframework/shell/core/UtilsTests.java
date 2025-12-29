@@ -35,7 +35,8 @@ class UtilsTests {
 	void testFormatAvailableCommandsForEmptyRegistry() {
 		CommandRegistry commandRegistry = new CommandRegistry();
 		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
-		Assertions.assertEquals("Available commands: " + System.lineSeparator(), availableCommands);
+		Assertions.assertEquals("AVAILABLE COMMANDS" + System.lineSeparator() + System.lineSeparator(),
+				availableCommands);
 	}
 
 	@Test
@@ -53,8 +54,8 @@ class UtilsTests {
 			.execute(commandContext -> "secret");
 		commandRegistry.registerCommand(secretCommand);
 		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
-		String expected = "Available commands: " + System.lineSeparator() + "greetings" + System.lineSeparator()
-				+ "\thello: Say hello" + System.lineSeparator();
+		String expected = "AVAILABLE COMMANDS" + System.lineSeparator() + System.lineSeparator() + "greetings"
+				+ System.lineSeparator() + "\thello: Say hello" + System.lineSeparator();
 		Assertions.assertEquals(expected, availableCommands);
 	}
 

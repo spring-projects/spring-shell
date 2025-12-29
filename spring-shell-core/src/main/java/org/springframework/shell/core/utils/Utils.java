@@ -40,8 +40,8 @@ public class Utils {
 	 * @since 4.0.0
 	 */
 	public static String formatAvailableCommands(CommandRegistry commandRegistry) {
-		StringBuilder stringBuilder = new StringBuilder("Available commands: ");
-		stringBuilder.append(System.lineSeparator());
+		StringBuilder stringBuilder = new StringBuilder("AVAILABLE COMMANDS");
+		stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
 		List<String> groups = commandRegistry.getCommands()
 			.stream()
 			.filter(command -> !command.isHidden())
