@@ -63,11 +63,18 @@ public class CommandCompleter implements Completer {
 			}
 		}
 		else {
-			for (Command command : this.commandRegistry.getCommands()) {
-				candidates.add(new Candidate(command.getName(), command.getName() + ": " + command.getDescription(),
-						command.getGroup(), null, null, null, true));
-			}
+			this.commandRegistry.getCommands()
+				.stream()
+				.filter(command -> command.getName().startsWith(line.line()))
+				.map(command -> toCommandCandidate(command, line.words()))
+				.forEach(candidates::add);
 		}
+	}
+
+	private Candidate toCommandCandidate(Command command, List<String> words) {
+		String prefix = words.size() > 1 ? String.join(" ", words.subList(0, words.size() - 1)) : "";
+		return new Candidate(command.getName().substring(prefix.length()).trim(),
+				command.getName() + ": " + command.getDescription(), command.getGroup(), null, null, null, true);
 	}
 
 	private boolean isOptionPresent(ParsedLine line, CommandOption option) {
