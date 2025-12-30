@@ -2,6 +2,7 @@
 
 == Latest news
 
+* December 30, 2025: https://spring.io/blog/2025/12/30/spring-shell-4-0-0-ga-released[Spring Shell 4.0.0 released!]
 * December 19, 2025: https://spring.io/blog/2025/12/19/spring-shell-4-0-0-rc1-released[Spring Shell 4.0.0-RC1 available now]
 * December 9, 2025: https://spring.io/blog/2025/12/09/spring-shell-4-0-0-m2-released[Spring Shell 4.0.0-M2 is out!]
 * October 24, 2025: https://spring.io/blog/2025/10/24/spring-shell-4-0-0-m1-released[Spring Shell 4.0.0-M1 is available!]
@@ -53,11 +54,15 @@ Running it as an executable _jar_ in an interactive mode:
 $ java -jar demo.jar
 
 shell:>help
-Available commands:
+AVAILABLE COMMANDS
+
 Built-In Commands
+	history: Display or save the history of previously run commands
 	clear: Clear the terminal screen
-	version: Show version info
 	help: Display help about available commands
+	quit, exit: Exit the shell
+	version: Show version info
+	script: Execute commands from a script file
 SpringShellApplication Commands
 	hi: N/A
 
