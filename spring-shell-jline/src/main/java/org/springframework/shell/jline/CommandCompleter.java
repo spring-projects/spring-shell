@@ -63,9 +63,8 @@ public class CommandCompleter implements Completer {
 			}
 		}
 		else {
-			this.commandRegistry.getCommands()
+			this.commandRegistry.getCommandsByPrefix(line.line())
 				.stream()
-				.filter(command -> command.getName().startsWith(line.line()))
 				.map(command -> toCommandCandidate(command, line.words()))
 				.forEach(candidates::add);
 		}
