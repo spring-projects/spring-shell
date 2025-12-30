@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>spring-shell-sample-secure-input</artifactId>
-	<name>Spring Shell Samples - Secure input sample application </name>
+	<name>Spring Shell Samples - Secure input Application </name>
 	<packaging>jar</packaging>
 	<description>Spring Shell application to show how to read secure input</description>
 
