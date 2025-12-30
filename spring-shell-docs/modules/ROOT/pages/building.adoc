@@ -156,3 +156,8 @@ under `target` directory.
 
 If everything went well this binary can be run as is instead of executing
 boot application jar via jvm.
+
+IMPORTANT: As of v4.0.0, the declarative annotation-based commands registration is not supported
+for native compilation, only the programmatic approach of defining commands is supported at
+this time.
+
