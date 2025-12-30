@@ -59,7 +59,8 @@ public class CommandCompleter implements Completer {
 					commandByName, commandOption);
 			List<CompletionProposal> proposals = completionProvider.apply(context);
 			for (CompletionProposal proposal : proposals) {
-				candidates.add(new Candidate(proposal.value()));
+				candidates.add(new Candidate(proposal.value(), proposal.displayText(), proposal.category(),
+						proposal.description(), null, null, proposal.complete(), 0));
 			}
 		}
 		else {

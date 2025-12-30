@@ -68,13 +68,14 @@ class CommandCompleterTests {
 			options = Stream.of("Chan", "Noris");
 		}
 
-		return options.map(str -> prefix + str).map(CompletionProposal::new).toList();
+		return options.map(str -> new CompletionProposal(prefix + str).displayText(str)).toList();
 	};
 
 	@BeforeEach
 	public void before() {
 		command = mock(Command.class);
 		when(command.getName()).thenReturn("hello");
+		when(command.getDescription()).thenReturn("Says Hello.");
 		when(command.getCompletionProvider()).thenReturn(completionProvider);
 
 		completer = new CommandCompleter(new CommandRegistry(Set.of(command)));
@@ -84,11 +85,14 @@ class CommandCompleterTests {
 		return candidates.stream().map(Candidate::value).sorted().toList();
 	}
 
+	private List<String> toCandidateDisplayText(List<Candidate> candidates) {
+		return candidates.stream().map(Candidate::displ).sorted().toList();
+	}
+
 	@ParameterizedTest
 	@MethodSource("completeData")
 	public void testComplete(List<String> words, List<String> expectedValues) {
 		// given
-		when(command.getName()).thenReturn("hello");
 		when(command.getOptions())
 			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
 					new CommandOption.Builder().longName("last").shortName('l').build()));
@@ -409,6 +413,44 @@ class CommandCompleterTests {
 				Arguments.of(List.of("hello"), List.of("hello shown", "hello visible")),
 				Arguments.of(List.of("hello vi"), List.of("hello visible")),
 				Arguments.of(List.of("hello hi"), List.of()));
+	}
+
+	@ParameterizedTest
+	@MethodSource("completeForProposalDisplayText")
+	public void testCompleteForProposalDisplayText(List<String> words, List<String> expectedValues) {
+		// given
+		when(command.getOptions())
+			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
+					new CommandOption.Builder().longName("last").shortName('l').build()));
+
+		List<Candidate> candidates = new ArrayList<>();
+		ParsedLine line = mock(ParsedLine.class);
+		when(line.words()).thenReturn(words);
+		when(line.word()).thenReturn(words.get(words.size() - 1));
+		when(line.line()).thenReturn(String.join(" ", words));
+
+		// when
+		completer.complete(mock(LineReader.class), line, candidates);
+
+		// then
+		assertEquals(expectedValues, toCandidateDisplayText(candidates));
+	}
+
+	static Stream<Arguments> completeForProposalDisplayText() {
+		return Stream.of(Arguments.of(List.of(""), List.of("hello: Says Hello.")),
+
+				Arguments.of(List.of("hello"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", ""), List.of("--first", "--last", "-f", "-l")),
+
+				Arguments.of(List.of("hello", "-f="), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "--first="), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "-l="), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "--last="), List.of("Chan", "Noris")),
+
+				Arguments.of(List.of("hello", "-f", ""), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "--first", ""), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "-l", ""), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "--last", ""), List.of("Chan", "Noris")));
 	}
 
 }
