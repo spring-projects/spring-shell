@@ -6,7 +6,7 @@
 	<artifactId>spring-shell</artifactId>
 	<name>Spring Shell</name>
 	<description>Parent POM for Spring Shell</description>
-	<version>4.0.0</version>
+	<version>4.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>https://github.com/spring-projects/spring-shell</url>
 	<organization>
