@@ -27,8 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
 
-import org.springframework.messaging.Message;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.KeyBindingConsumer;
 import org.springframework.shell.jline.tui.component.view.event.KeyBindingConsumerArgs;
@@ -421,15 +420,15 @@ public abstract class AbstractView extends AbstractControl implements View {
 	}
 
 	/**
-	 * Dispatch a {@link Message} into an event loop.
-	 * @param message the message to dispatch
+	 * Dispatch a {@link TerminalEvent} into an event loop.
+	 * @param terminalEvent the message to dispatch
 	 */
-	protected void dispatch(Message<?> message) {
+	protected void dispatch(TerminalEvent<?> terminalEvent) {
 		if (eventLoop != null) {
-			eventLoop.dispatch(message);
+			eventLoop.dispatch(terminalEvent);
 		}
 		else {
-			log.warn("Can't dispatch message " + message + " as eventloop is not set");
+			log.warn("Can't dispatch event " + terminalEvent + " as eventloop is not set");
 		}
 	}
 
@@ -437,8 +436,8 @@ public abstract class AbstractView extends AbstractControl implements View {
 		if (eventLoop == null) {
 			return false;
 		}
-		Message<Runnable> message = ShellMessageBuilder.withPayload(runnable).setEventType(EventLoop.Type.TASK).build();
-		dispatch(message);
+		TerminalEvent<Runnable> terminalEvent = new TerminalEvent<>(runnable, EventLoop.Type.TASK);
+		dispatch(terminalEvent);
 		return true;
 	}
 
@@ -450,10 +449,8 @@ public abstract class AbstractView extends AbstractControl implements View {
 		if (command != null) {
 			Runnable runnable = commands.get(command);
 			if (runnable != null) {
-				Message<Runnable> message = ShellMessageBuilder.withPayload(runnable)
-					.setEventType(EventLoop.Type.TASK)
-					.build();
-				dispatch(message);
+				TerminalEvent<Runnable> terminalEvent = new TerminalEvent<>(runnable, EventLoop.Type.TASK);
+				dispatch(terminalEvent);
 				return true;
 			}
 		}
@@ -470,19 +467,15 @@ public abstract class AbstractView extends AbstractControl implements View {
 		}
 		Runnable keyRunnable = keyBindingValue.keyRunnable();
 		if (keyRunnable != null) {
-			Message<Runnable> message = ShellMessageBuilder.withPayload(keyRunnable)
-				.setEventType(EventLoop.Type.TASK)
-				.build();
-			dispatch(message);
+			TerminalEvent<Runnable> terminalEvent = new TerminalEvent<>(keyRunnable, EventLoop.Type.TASK);
+			dispatch(terminalEvent);
 			return true;
 		}
 		KeyBindingConsumer keyConsumer = keyBindingValue.keyConsumer();
 		if (keyConsumer != null) {
-			Message<KeyBindingConsumerArgs> message = ShellMessageBuilder
-				.withPayload(new KeyBindingConsumerArgs(keyConsumer, event))
-				.setEventType(EventLoop.Type.TASK)
-				.build();
-			dispatch(message);
+			TerminalEvent<KeyBindingConsumerArgs> terminalEvent = new TerminalEvent<>(
+					new KeyBindingConsumerArgs(keyConsumer, event), EventLoop.Type.TASK);
+			dispatch(terminalEvent);
 			return true;
 		}
 		return false;
@@ -498,19 +491,15 @@ public abstract class AbstractView extends AbstractControl implements View {
 		}
 		Runnable mouseRunnable = mouseBindingValue.mouseRunnable();
 		if (mouseRunnable != null) {
-			Message<Runnable> message = ShellMessageBuilder.withPayload(mouseRunnable)
-				.setEventType(EventLoop.Type.TASK)
-				.build();
-			dispatch(message);
+			TerminalEvent<Runnable> terminalEvent = new TerminalEvent<>(mouseRunnable, EventLoop.Type.TASK);
+			dispatch(terminalEvent);
 			return true;
 		}
 		MouseBindingConsumer mouseConsumer = mouseBindingValue.mouseConsumer();
 		if (mouseConsumer != null) {
-			Message<MouseBindingConsumerArgs> message = ShellMessageBuilder
-				.withPayload(new MouseBindingConsumerArgs(mouseConsumer, event))
-				.setEventType(EventLoop.Type.TASK)
-				.build();
-			dispatch(message);
+			TerminalEvent<MouseBindingConsumerArgs> terminalEvent = new TerminalEvent<>(
+					new MouseBindingConsumerArgs(mouseConsumer, event), EventLoop.Type.TASK);
+			dispatch(terminalEvent);
 			return true;
 		}
 		return false;

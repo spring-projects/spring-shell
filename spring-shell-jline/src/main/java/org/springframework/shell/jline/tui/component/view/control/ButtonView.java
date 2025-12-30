@@ -16,8 +16,10 @@
 package org.springframework.shell.jline.tui.component.view.control;
 
 import org.jspecify.annotations.Nullable;
+
+import org.springframework.shell.jline.tui.component.TerminalEvent;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.KeyEvent.Key;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.jline.tui.component.view.event.KeyHandler;
 import org.springframework.shell.jline.tui.component.view.event.MouseEvent;
 import org.springframework.shell.jline.tui.component.view.event.MouseHandler;
@@ -108,7 +110,10 @@ public class ButtonView extends BoxView {
 	}
 
 	private void dispatch() {
-		dispatch(ShellMessageBuilder.ofView(this, ButtonViewSelectEvent.of(this)));
+		ButtonViewSelectEvent buttonViewSelectEvent = ButtonViewSelectEvent.of(this);
+		TerminalEvent<ButtonViewSelectEvent> terminalEvent = new TerminalEvent<>(buttonViewSelectEvent,
+				EventLoop.Type.VIEW, this, null);
+		dispatch(terminalEvent);
 		if (action != null) {
 			dispatchRunnable(action);
 		}
