@@ -371,4 +371,44 @@ class CommandCompleterTests {
 				Arguments.of(List.of("hello", "--firstname", "Peter", "--first", "Paul"), List.of()));
 	}
 
+	@ParameterizedTest
+	@MethodSource("completeWithHiddenCommandsData")
+	public void testCompleteWithHiddenCommands(List<String> words, List<String> expectedValues) {
+		// given
+		when(command.getName()).thenReturn("hello visible");
+		when(command.getOptions()).thenReturn(List.of());
+
+		Command visibleCommand = mock(Command.class);
+		when(visibleCommand.getName()).thenReturn("hello shown");
+		when(visibleCommand.getOptions()).thenReturn(List.of());
+
+		Command hiddenCommand = mock(Command.class);
+		when(hiddenCommand.getName()).thenReturn("hello hidden");
+		when(hiddenCommand.getOptions()).thenReturn(List.of());
+		when(hiddenCommand.isHidden()).thenReturn(true);
+
+		completer = new CommandCompleter(new CommandRegistry(Set.of(command, visibleCommand, hiddenCommand)));
+
+		List<Candidate> candidates = new ArrayList<>();
+		ParsedLine line = mock(ParsedLine.class);
+		when(line.words()).thenReturn(words);
+		when(line.word()).thenReturn(words.get(words.size() - 1));
+		when(line.line()).thenReturn(String.join(" ", words));
+
+		// when
+		completer.complete(mock(LineReader.class), line, candidates);
+
+		// then
+		assertEquals(expectedValues, toCandidateNames(candidates));
+	}
+
+	static Stream<Arguments> completeWithHiddenCommandsData() {
+		return Stream.of(Arguments.of(List.of(""), List.of("hello shown", "hello visible")),
+				Arguments.of(List.of("he"), List.of("hello shown", "hello visible")),
+				Arguments.of(List.of("he", ""), List.of()),
+				Arguments.of(List.of("hello"), List.of("hello shown", "hello visible")),
+				Arguments.of(List.of("hello vi"), List.of("hello visible")),
+				Arguments.of(List.of("hello hi"), List.of()));
+	}
+
 }
