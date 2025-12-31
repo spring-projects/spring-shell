@@ -16,7 +16,7 @@
 package org.springframework.shell.core;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.commons.logging.Log;
@@ -83,14 +83,15 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	}
 
 	private void executeScript(File script) {
-		InputProvider inputProvider;
-		try {
-			inputProvider = new FileInputProvider(script);
+		try (FileInputProvider inputProvider = new FileInputProvider(script)) {
+			executeScript(inputProvider);
 		}
-		catch (FileNotFoundException e) {
+		catch (IOException e) {
 			log.error("Unable to locate script file", e);
-			return;
 		}
+	}
+
+	private void executeScript(InputProvider inputProvider) {
 		while (true) {
 			String input;
 			try {
@@ -100,13 +101,13 @@ public class NonInteractiveShellRunner implements ShellRunner {
 				log.error("Unable to read command", e);
 				break;
 			}
-			if (input.isEmpty()) {
-				// ignore empty lines
-				continue;
-			}
 			if (input == null) {
 				// break on end of file
 				break;
+			}
+			if (input.isEmpty()) {
+				// ignore empty lines
+				continue;
 			}
 			ParsedInput parsedInput;
 			try {
