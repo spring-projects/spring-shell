@@ -54,10 +54,7 @@ class CommandCompleterTests {
 		}
 
 		String word = completionContext.getWords().get(completionContext.getWords().size() - 1);
-		if (word.contains("=")) {
-			word = word.substring(0, word.indexOf('='));
-		}
-		String prefix = word.isEmpty() ? word : word + "=";
+		String prefix = word.contains("=") ? word.substring(0, word.indexOf('=') + 1) : "";
 
 		Stream<String> options = Stream.empty();
 
@@ -112,22 +109,20 @@ class CommandCompleterTests {
 
 	static Stream<Arguments> completeData() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
-				Arguments.of(List.of("he", ""), List.of()),
+				Arguments.of(List.of("he", ""), List.of()), Arguments.of(List.of("hello"), List.of("hello")),
 
-				Arguments.of(List.of("hello"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", ""), List.of("--first", "--last", "-f", "-l")),
-
 				Arguments.of(List.of("hello", "--"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", "-"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", "--fi"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", "--la"), List.of("--first", "--last", "-f", "-l")),
 
-				Arguments.of(List.of("hello", "-f"), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
+				Arguments.of(List.of("hello", "-f"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", "-f="), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
 				Arguments.of(List.of("hello", "-f=Pe"), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
 				Arguments.of(List.of("hello", "-f=Pe", ""), List.of("--last", "-l")),
 
-				Arguments.of(List.of("hello", "--first"), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
+				Arguments.of(List.of("hello", "--first"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", "--first="), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
 				Arguments.of(List.of("hello", "--first=Pe"), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
 				Arguments.of(List.of("hello", "--first=Pe", ""), List.of("--last", "-l")),
@@ -135,15 +130,17 @@ class CommandCompleterTests {
 				Arguments.of(List.of("hello", "-f", ""), List.of("Mary", "Paul", "Peter")),
 				Arguments.of(List.of("hello", "--first", ""), List.of("Mary", "Paul", "Peter")),
 
-				Arguments.of(List.of("hello", "-f", "Pe"), List.of("--last", "-l")),
-				Arguments.of(List.of("hello", "--first", "Pe"), List.of("--last", "-l")),
+				Arguments.of(List.of("hello", "-f", "Pe"), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "-f", "Pe", ""), List.of("--last", "-l")),
+				Arguments.of(List.of("hello", "--first", "Pe"), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "--first", "Pe", ""), List.of("--last", "-l")),
 
-				Arguments.of(List.of("hello", "-l"), List.of("-l=Chan", "-l=Noris")),
+				Arguments.of(List.of("hello", "-l"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", "-l="), List.of("-l=Chan", "-l=Noris")),
 				Arguments.of(List.of("hello", "-l=No"), List.of("-l=Chan", "-l=Noris")),
 				Arguments.of(List.of("hello", "-l=No", ""), List.of("--first", "-f")),
 
-				Arguments.of(List.of("hello", "--last"), List.of("--last=Chan", "--last=Noris")),
+				Arguments.of(List.of("hello", "--last"), List.of("--first", "--last", "-f", "-l")),
 				Arguments.of(List.of("hello", "--last="), List.of("--last=Chan", "--last=Noris")),
 				Arguments.of(List.of("hello", "--last=No"), List.of("--last=Chan", "--last=Noris")),
 				Arguments.of(List.of("hello", "--last=No", ""), List.of("--first", "-f")),
@@ -151,23 +148,25 @@ class CommandCompleterTests {
 				Arguments.of(List.of("hello", "-l", ""), List.of("Chan", "Noris")),
 				Arguments.of(List.of("hello", "--last", ""), List.of("Chan", "Noris")),
 
-				Arguments.of(List.of("hello", "-l", "No"), List.of("--first", "-f")),
-				Arguments.of(List.of("hello", "--last", "No"), List.of("--first", "-f")),
+				Arguments.of(List.of("hello", "-l", "No"), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "-l", "No", ""), List.of("--first", "-f")),
+				Arguments.of(List.of("hello", "--last", "No"), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "--last", "No", ""), List.of("--first", "-f")),
 
-				Arguments.of(List.of("hello", "--first", "Paul", "--last", "Noris"), List.of()),
-				Arguments.of(List.of("hello", "--first", "Paul", "-l", "Noris"), List.of()),
-				Arguments.of(List.of("hello", "-f", "Paul", "--last", "Noris"), List.of()),
-				Arguments.of(List.of("hello", "-f", "Paul", "-l", "Noris"), List.of()),
+				Arguments.of(List.of("hello", "--first", "Paul", "--last", "Noris", ""), List.of()),
+				Arguments.of(List.of("hello", "--first", "Paul", "-l", "Noris", ""), List.of()),
+				Arguments.of(List.of("hello", "-f", "Paul", "--last", "Noris", ""), List.of()),
+				Arguments.of(List.of("hello", "-f", "Paul", "-l", "Noris", ""), List.of()),
 
 				Arguments.of(List.of("hello", "--first=Paul", "--last=Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "--first=Paul", "-l=Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "-f=Paul", "--last=Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "-f=Paul", "-l=Noris", ""), List.of()),
 
-				Arguments.of(List.of("hello", "--first=Paul", "--last", "Noris"), List.of()),
-				Arguments.of(List.of("hello", "--first=Paul", "-l", "Noris"), List.of()),
-				Arguments.of(List.of("hello", "-f=Paul", "--last", "Noris"), List.of()),
-				Arguments.of(List.of("hello", "-f=Paul", "-l", "Noris"), List.of()),
+				Arguments.of(List.of("hello", "--first=Paul", "--last", "Noris", ""), List.of()),
+				Arguments.of(List.of("hello", "--first=Paul", "-l", "Noris", ""), List.of()),
+				Arguments.of(List.of("hello", "-f=Paul", "--last", "Noris", ""), List.of()),
+				Arguments.of(List.of("hello", "-f=Paul", "-l", "Noris", ""), List.of()),
 
 				Arguments.of(List.of("hello", "--first", "Paul", "--last=Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "--first", "Paul", "-l=Noris", ""), List.of()),
@@ -197,35 +196,35 @@ class CommandCompleterTests {
 
 	static Stream<Arguments> completeCommandWithLongNamesData() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
-				Arguments.of(List.of("he", ""), List.of()),
+				Arguments.of(List.of("he", ""), List.of()), Arguments.of(List.of("hello"), List.of("hello")),
 
-				Arguments.of(List.of("hello"), List.of("--first", "--last")),
 				Arguments.of(List.of("hello", ""), List.of("--first", "--last")),
-
 				Arguments.of(List.of("hello", "--"), List.of("--first", "--last")),
 				Arguments.of(List.of("hello", "-"), List.of("--first", "--last")),
 				Arguments.of(List.of("hello", "--fi"), List.of("--first", "--last")),
 				Arguments.of(List.of("hello", "--la"), List.of("--first", "--last")),
 
-				Arguments.of(List.of("hello", "--first"), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
+				Arguments.of(List.of("hello", "--first"), List.of("--first", "--last")),
+				Arguments.of(List.of("hello", "--first", ""), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "--first", "Pe"), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "--first", "Pe", ""), List.of("--last")),
+
 				Arguments.of(List.of("hello", "--first="), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
 				Arguments.of(List.of("hello", "--first=Pe"), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
 				Arguments.of(List.of("hello", "--first=Pe", ""), List.of("--last")),
 
-				Arguments.of(List.of("hello", "--first", ""), List.of("Mary", "Paul", "Peter")),
-				Arguments.of(List.of("hello", "--first", "Pe"), List.of("--last")),
+				Arguments.of(List.of("hello", "--last"), List.of("--first", "--last")),
+				Arguments.of(List.of("hello", "--last", ""), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "--last", "No"), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "--last", "No", ""), List.of("--first")),
 
-				Arguments.of(List.of("hello", "--last"), List.of("--last=Chan", "--last=Noris")),
 				Arguments.of(List.of("hello", "--last="), List.of("--last=Chan", "--last=Noris")),
 				Arguments.of(List.of("hello", "--last=No"), List.of("--last=Chan", "--last=Noris")),
 				Arguments.of(List.of("hello", "--last=No", ""), List.of("--first")),
 
-				Arguments.of(List.of("hello", "--last", ""), List.of("Chan", "Noris")),
-				Arguments.of(List.of("hello", "--last", "No"), List.of("--first")),
-
-				Arguments.of(List.of("hello", "--first", "Paul", "--last", "Noris"), List.of()),
+				Arguments.of(List.of("hello", "--first", "Paul", "--last", "Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "--first=Paul", "--last=Noris", ""), List.of()),
-				Arguments.of(List.of("hello", "--first=Paul", "--last", "Noris"), List.of()),
+				Arguments.of(List.of("hello", "--first=Paul", "--last", "Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "--first", "Paul", "--last=Noris", ""), List.of()));
 	}
 
@@ -251,33 +250,33 @@ class CommandCompleterTests {
 
 	static Stream<Arguments> completeCommandWithShortNamesData() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
-				Arguments.of(List.of("he", ""), List.of()),
+				Arguments.of(List.of("he", ""), List.of()), Arguments.of(List.of("hello"), List.of("hello")),
 
-				Arguments.of(List.of("hello"), List.of("-f", "-l")),
 				Arguments.of(List.of("hello", ""), List.of("-f", "-l")),
-
 				Arguments.of(List.of("hello", "--"), List.of("-f", "-l")),
 				Arguments.of(List.of("hello", "-"), List.of("-f", "-l")),
 
-				Arguments.of(List.of("hello", "-f"), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
+				Arguments.of(List.of("hello", "-f"), List.of("-f", "-l")),
+				Arguments.of(List.of("hello", "-f", ""), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "-f", "Pe"), List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "-f", "Pe", ""), List.of("-l")),
+
 				Arguments.of(List.of("hello", "-f="), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
 				Arguments.of(List.of("hello", "-f=Pe"), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
 				Arguments.of(List.of("hello", "-f=Pe", ""), List.of("-l")),
 
-				Arguments.of(List.of("hello", "-f", ""), List.of("Mary", "Paul", "Peter")),
-				Arguments.of(List.of("hello", "-f", "Pe"), List.of("-l")),
+				Arguments.of(List.of("hello", "-l"), List.of("-f", "-l")),
+				Arguments.of(List.of("hello", "-l", ""), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "-l", "No"), List.of("Chan", "Noris")),
+				Arguments.of(List.of("hello", "-l", "No", ""), List.of("-f")),
 
-				Arguments.of(List.of("hello", "-l"), List.of("-l=Chan", "-l=Noris")),
 				Arguments.of(List.of("hello", "-l="), List.of("-l=Chan", "-l=Noris")),
 				Arguments.of(List.of("hello", "-l=No"), List.of("-l=Chan", "-l=Noris")),
 				Arguments.of(List.of("hello", "-l=No", ""), List.of("-f")),
 
-				Arguments.of(List.of("hello", "-l", ""), List.of("Chan", "Noris")),
-				Arguments.of(List.of("hello", "-l", "No"), List.of("-f")),
-
-				Arguments.of(List.of("hello", "-f", "Paul", "-l", "Noris"), List.of()),
+				Arguments.of(List.of("hello", "-f", "Paul", "-l", "Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "-f=Paul", "-l=Noris", ""), List.of()),
-				Arguments.of(List.of("hello", "-f=Paul", "-l", "Noris"), List.of()),
+				Arguments.of(List.of("hello", "-f=Paul", "-l", "Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "-f", "Paul", "-l=Noris", ""), List.of()));
 	}
 
@@ -317,7 +316,7 @@ class CommandCompleterTests {
 				Arguments.of(List.of("hello wo"), List.of("hello world")),
 				Arguments.of(List.of("hello co"), List.of("hello country")),
 
-				Arguments.of(List.of("hello world"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello world"), List.of("hello world")),
 				Arguments.of(List.of("hello world", ""), List.of("--first", "--last", "-f", "-l")),
 
 				Arguments.of(List.of("hello world", "--"), List.of("--first", "--last", "-f", "-l")),
@@ -327,7 +326,7 @@ class CommandCompleterTests {
 
 				Arguments.of(List.of("hello world", "--first", ""), List.of("Mary", "Paul", "Peter")),
 				Arguments.of(List.of("hello world", "--last", ""), List.of("Chan", "Noris")),
-				Arguments.of(List.of("hello world", "--first", "Paul", "--last", "Noris"), List.of()));
+				Arguments.of(List.of("hello world", "--first", "Paul", "--last", "Noris", ""), List.of()));
 	}
 
 	@ParameterizedTest
@@ -352,27 +351,27 @@ class CommandCompleterTests {
 
 	static Stream<Arguments> completeWithTwoOptionsWhereOneIsSubsetOfOtherData() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
-				Arguments.of(List.of("he", ""), List.of()),
+				Arguments.of(List.of("he", ""), List.of()), Arguments.of(List.of("hello"), List.of("hello")),
 
-				Arguments.of(List.of("hello"), List.of("--first", "--firstname")),
 				Arguments.of(List.of("hello", ""), List.of("--first", "--firstname")),
-
 				Arguments.of(List.of("hello", "--"), List.of("--first", "--firstname")),
 				Arguments.of(List.of("hello", "-"), List.of("--first", "--firstname")),
 				Arguments.of(List.of("hello", "--fi"), List.of("--first", "--firstname")),
 
 				Arguments.of(List.of("hello", "--first=Peter", ""), List.of("--firstname")),
 				Arguments.of(List.of("hello", "--first", "Peter", ""), List.of("--firstname")),
-				Arguments.of(List.of("hello", "--first", "Peter"), List.of("--firstname")),
+				Arguments.of(List.of("hello", "--first", "Peter"), List.of("Mary", "Paul", "Peter")),
 
 				Arguments.of(List.of("hello", "--firstname=Peter", ""), List.of("--first")),
+				Arguments.of(List.of("hello", "--firstname=Peter"), List.of()),
 				Arguments.of(List.of("hello", "--firstname", "Peter", ""), List.of("--first")),
-				Arguments.of(List.of("hello", "--firstname", "Peter"), List.of("--first")),
+				Arguments.of(List.of("hello", "--firstname", "Peter"), List.of()),
 
 				Arguments.of(List.of("hello", "--firstname=Peter", "--first=Paul", ""), List.of()),
-				Arguments.of(List.of("hello", "--firstname=Peter", "--first", "Paul"), List.of()),
-				Arguments.of(List.of("hello", "--firstname", "Peter", "--first=Paul", ""), List.of()),
-				Arguments.of(List.of("hello", "--firstname", "Peter", "--first", "Paul"), List.of()));
+				Arguments.of(List.of("hello", "--firstname=Peter", "--first", "Paul"),
+						List.of("Mary", "Paul", "Peter")),
+				Arguments.of(List.of("hello", "--firstname", "Peter", "--first=Paul", ""), List.of()), Arguments
+					.of(List.of("hello", "--firstname", "Peter", "--first", "Paul"), List.of("Mary", "Paul", "Peter")));
 	}
 
 	@ParameterizedTest
@@ -439,7 +438,7 @@ class CommandCompleterTests {
 	static Stream<Arguments> completeForProposalDisplayText() {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello: Says Hello.")),
 
-				Arguments.of(List.of("hello"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello"), List.of("hello: Says Hello.")),
 				Arguments.of(List.of("hello", ""), List.of("--first", "--last", "-f", "-l")),
 
 				Arguments.of(List.of("hello", "-f="), List.of("Mary", "Paul", "Peter")),

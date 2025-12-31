@@ -15,6 +15,7 @@ import org.springframework.shell.core.command.completion.CompletionProvider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * A JLine {@link Completer} that completes command names from a {@link CommandRegistry}.
@@ -93,27 +94,49 @@ public class CommandCompleter implements Completer {
 			}
 			commandName.append(word).append(" ");
 		}
-		return this.commandRegistry.getCommandByName(commandName.toString().trim());
+
+		Command command = this.commandRegistry.getCommandByName(commandName.toString().trim());
+		// the command is found but was not completed on the line
+		if (command != null && command.getName().equals(String.join(" ", words))) {
+			command = null;
+		}
+		return command;
 	}
 
 	@Nullable private CommandOption findOptionByWords(List<String> words, List<CommandOption> options) {
 		List<String> reversed = new ArrayList<>(words);
 		Collections.reverse(reversed);
-		String optionName = reversed.stream()
-			.filter(word -> !word.trim().isEmpty())
-			.findFirst()
-			.filter(word -> !word.contains("=") || !reversed.get(0).isEmpty())
-			.orElse("");
 
-		return options.stream().filter(option -> isOptionEqual(optionName, option)).findFirst().orElse(null);
+		CommandOption option;
+		if (reversed.get(0).isEmpty()) {
+			// the option name was completed, but no value provided ---> "--optionName "
+			option = findOption(options, o -> isOptionEqual(reversed.get(1), o));
+		}
+		else {
+			// the option uses key-value pair ---> "--optionName=someValue"
+			option = findOption(options, o -> isOptionStartWith(reversed.get(0), o));
+
+			// the option uses completion on the value level ---> "--optionName someValue"
+			if (option == null) {
+				option = findOption(options, o -> isOptionEqual(reversed.get(1), o));
+			}
+		}
+
+		return option;
+	}
+
+	@Nullable private CommandOption findOption(List<CommandOption> options, Predicate<CommandOption> optionFilter) {
+		return options.stream().filter(optionFilter).findFirst().orElse(null);
 	}
 
 	private static boolean isOptionEqual(String optionName, CommandOption option) {
-		return option.longName() != null
-				&& (optionName.equals("--" + option.longName())
-						|| optionName.startsWith("--" + option.longName() + "="))
-				|| option.shortName() != ' ' && (optionName.equals("-" + option.shortName())
-						|| optionName.startsWith("-" + option.shortName() + "="));
+		return option.longName() != null && optionName.equals("--" + option.longName())
+				|| option.shortName() != ' ' && optionName.equals("-" + option.shortName());
+	}
+
+	private static boolean isOptionStartWith(String optionName, CommandOption option) {
+		return option.longName() != null && optionName.startsWith("--" + option.longName() + "=")
+				|| option.shortName() != ' ' && optionName.startsWith("-" + option.shortName() + "=");
 	}
 
 }
