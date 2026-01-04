@@ -63,7 +63,7 @@ public class Script implements Command {
 	private void executeCommand(CommandContext commandContext, String input) throws Exception {
 		String[] commandTokens = input.split(" ");
 		NonInteractiveShellRunner shellRunner = new NonInteractiveShellRunner(this.commandParser,
-				commandContext.commandRegistry());
+				commandContext.commandRegistry(), commandContext.outputWriter());
 		shellRunner.run(commandTokens);
 	}
 

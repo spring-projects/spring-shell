@@ -49,7 +49,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 	private final CommandRegistry commandRegistry;
 
 	// Use a no-op PrintWriter since output is not needed in non-interactive mode
-	private final PrintWriter outputWriter = new PrintWriter(PrintWriter.nullWriter());
+	private PrintWriter outputWriter = new PrintWriter(PrintWriter.nullWriter());
 
 	// Use a no-op InputReader since input is not needed in non-interactive mode
 	private final InputReader inputReader = new InputReader() {
@@ -64,6 +64,19 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		this.commandParser = commandParser;
 		this.commandRegistry = commandRegistry;
 		this.commandExecutor = new CommandExecutor(commandRegistry);
+	}
+
+	/**
+	 * Create a new {@link NonInteractiveShellRunner} instance.
+	 * @param commandParser the command parser
+	 * @param commandRegistry the command registry
+	 * @param outputWriter the output writer
+	 * @since 4.0.1
+	 */
+	public NonInteractiveShellRunner(CommandParser commandParser, CommandRegistry commandRegistry,
+			PrintWriter outputWriter) {
+		this(commandParser, commandRegistry);
+		this.outputWriter = outputWriter;
 	}
 
 	@Override
