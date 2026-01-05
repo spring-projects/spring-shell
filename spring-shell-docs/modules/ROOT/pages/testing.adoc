@@ -68,3 +68,41 @@ class ShellTestIntegrationTests {
 
 }
 ----
+
+== End-to-End Testing
+
+For end-to-end (ie black-box) testing of shell applications without using Spring Shell testing facilities, you can use the test utilities provided by Spring Boot. Once you have defined your Spring Boot application class, you can create a test class annotated with `@SpringBootTest` to test your shell commands. Here is an example:
+
+[source,java]
+----
+@SpringBootApplication
+public class MyShellApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MyShellApplication.class, args);
+	}
+
+	@Command
+	public void hi() {
+		System.out.println("Hello world!");
+	}
+
+}
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
+		useMainMethod = SpringBootTest.UseMainMethod.ALWAYS,
+		classes = { MyShellApplication.class },
+		properties = { "spring.shell.interactive.enabled=false" },
+        args = "hi")
+@ExtendWith(OutputCaptureExtension.class)
+public class ShellApplicationEndToEndTests {
+
+	@Test
+	void testCommandOutput(CapturedOutput output) {
+		assertThat(output).contains("Hello world!");
+	}
+
+}
+----
+
+This example demonstrates how to run a Spring Shell application in a test context and verify the output of a command using Spring Boot's `OutputCaptureExtension`.
