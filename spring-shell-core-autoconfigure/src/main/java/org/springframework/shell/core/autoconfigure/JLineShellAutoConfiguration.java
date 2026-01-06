@@ -19,11 +19,9 @@ package org.springframework.shell.core.autoconfigure;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jline.reader.Highlighter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.Parser;
@@ -32,7 +30,6 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.TerminalBuilder.SystemOutput;
 import org.jline.utils.AttributedString;
-import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.factory.BeanCreationException;
@@ -55,6 +52,7 @@ import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.config.UserConfigPathProvider;
 import org.springframework.shell.jline.CommandCompleter;
+import org.springframework.shell.jline.CommandHighlighter;
 import org.springframework.shell.jline.ExtendedDefaultParser;
 import org.springframework.shell.jline.JLineInputProvider;
 import org.springframework.shell.jline.JLineShellRunner;
@@ -68,6 +66,7 @@ import org.springframework.util.StringUtils;
  * @author Eric Bottard
  * @author Florent Biville
  * @author Mahmoud Ben Hassine
+ * @author Piotr Olaszewski
  */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
@@ -118,36 +117,7 @@ public class JLineShellAutoConfiguration {
 			.appName("Spring Shell")
 			.completer(commandCompleter)
 			.history(jLineHistory)
-			.highlighter(new Highlighter() {
-
-				@Override
-				public AttributedString highlight(LineReader reader, String buffer) {
-					int l = 0;
-					String best = null;
-					for (Command command : commandRegistry.getCommands()) {
-						if (buffer.startsWith(command.getName()) && command.getName().length() > l) {
-							l = command.getName().length();
-							best = command.getName();
-						}
-					}
-					if (best != null) {
-						return new AttributedStringBuilder(buffer.length()).append(best, AttributedStyle.BOLD)
-							.append(buffer.substring(l))
-							.toAttributedString();
-					}
-					else {
-						return new AttributedString(buffer, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
-					}
-				}
-
-				@Override
-				public void setErrorPattern(Pattern errorPattern) {
-				}
-
-				@Override
-				public void setErrorIndex(int errorIndex) {
-				}
-			})
+			.highlighter(new CommandHighlighter(commandRegistry))
 			.parser(parser);
 
 		LineReader lineReader = lineReaderBuilder.build();
