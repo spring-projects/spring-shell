@@ -49,7 +49,7 @@
 		<!-- production dependencies -->
 		<reactor.version>3.8.2-SNAPSHOT</reactor.version>
 		<spring-framework.version>7.0.3-SNAPSHOT</spring-framework.version>
-		<spring-boot.version>4.0.2-SNAPSHOT</spring-boot.version>
+		<spring-boot.version>4.0.1</spring-boot.version>
 		<jline.version>3.30.6</jline.version>
 		<antlr-st4.version>4.3.4</antlr-st4.version>
 		<hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
