@@ -15,7 +15,7 @@ To build the project, navigate to the project's root directory and run the follo
 To run the application and invoke the `hi` command in a non-interactive way, use the following command:
 
 ```bash
-./mvnw -pl org.springframework.shell:spring-shell-sample-non-interactive exec:java -Dexec.mainClass=org.springframework.shell.samples.noninteractive.SpringShellApplication -Dexec.args=hi
+./mvnw -pl org.springframework.shell:spring-shell-sample-non-interactive spring-boot:run -Dspring-boot.run.arguments=hi
 ```
 
 You should see the result of the `hi` command printed in the console output.
