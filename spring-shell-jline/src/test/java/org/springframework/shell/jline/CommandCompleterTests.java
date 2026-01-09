@@ -72,7 +72,7 @@ class CommandCompleterTests {
 	};
 
 	@BeforeEach
-	public void before() {
+	void before() {
 		command = mock(Command.class);
 		when(command.getName()).thenReturn("hello");
 		when(command.getCompletionProvider()).thenReturn(completionProvider);
@@ -86,7 +86,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeData")
-	public void testComplete(List<String> words, List<String> expectedValues) {
+	void testComplete(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getName()).thenReturn("hello");
 		when(command.getOptions())
@@ -173,7 +173,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeCommandWithLongNamesData")
-	public void testCompleteCommandWithLongNames(List<String> words, List<String> expectedValues) {
+	void testCompleteCommandWithLongNames(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().longName("first").build(),
 				new CommandOption.Builder().longName("last").build()));
@@ -227,7 +227,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeCommandWithShortNamesData")
-	public void testCompleteCommandWithShortNames(List<String> words, List<String> expectedValues) {
+	void testCompleteCommandWithShortNames(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().shortName('f').build(),
 				new CommandOption.Builder().shortName('l').build()));
@@ -279,7 +279,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeWithSubCommandsData")
-	public void testCompleteWithSubCommands(List<String> words, List<String> expectedValues) {
+	void testCompleteWithSubCommands(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getName()).thenReturn("hello world");
 		when(command.getOptions())
@@ -328,7 +328,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeWithTwoOptionsWhereOneIsSubsetOfOtherData")
-	public void testCompleteWithTwoOptionsWhereOneIsSubsetOfOther(List<String> words, List<String> expectedValues) {
+	void testCompleteWithTwoOptionsWhereOneIsSubsetOfOther(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().longName("first").build(),
 				new CommandOption.Builder().longName("firstname").build()));
@@ -373,7 +373,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeWithHiddenCommandsData")
-	public void testCompleteWithHiddenCommands(List<String> words, List<String> expectedValues) {
+	void testCompleteWithHiddenCommands(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getName()).thenReturn("hello visible");
 		when(command.getOptions()).thenReturn(List.of());
