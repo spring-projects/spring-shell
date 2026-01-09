@@ -122,6 +122,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 				String description = optionAnnotation.description();
 				boolean required = optionAnnotation.required();
 				String defaultValue = optionAnnotation.defaultValue();
+				boolean completion = optionAnnotation.completion();
 				if (shortName == ' ' && longName.isEmpty()) {
 					throw new IllegalArgumentException(
 							"Either shortName or longName (or both) must be provided for option on parameter '"
@@ -133,6 +134,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 					.description(description)
 					.required(required)
 					.defaultValue(defaultValue)
+					.completion(completion)
 					.build();
 				commandOptions.add(commandOption);
 			}

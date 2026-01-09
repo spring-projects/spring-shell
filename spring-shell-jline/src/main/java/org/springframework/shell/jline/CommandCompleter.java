@@ -45,11 +45,14 @@ public class CommandCompleter implements Completer {
 				// add option completions for the command
 				for (CommandOption option : options) {
 					boolean present = isOptionPresent(line, option);
+					String separator = option.completion() ? "" : "=";
 					if (option.longName() != null && !present) {
-						candidates.add(new Candidate("--" + option.longName()));
+						candidates.add(new Candidate("--" + option.longName() + separator, "--" + option.longName(),
+								null, null, null, null, option.completion(), 0));
 					}
 					if (option.shortName() != ' ' && !present) {
-						candidates.add(new Candidate("-" + option.shortName()));
+						candidates.add(new Candidate("-" + option.shortName() + separator, "-" + option.shortName(),
+								null, null, null, null, option.completion(), 0));
 					}
 				}
 			}
@@ -59,7 +62,8 @@ public class CommandCompleter implements Completer {
 					commandByName, commandOption);
 			List<CompletionProposal> proposals = completionProvider.apply(context);
 			for (CompletionProposal proposal : proposals) {
-				candidates.add(new Candidate(proposal.value()));
+				candidates.add(new Candidate(proposal.value(), proposal.displayText(), proposal.category(),
+						proposal.description(), null, null, proposal.complete(), 0));
 			}
 		}
 		else {
