@@ -18,6 +18,9 @@ This section covers how to build a Spring Shell application.
 |spring-shell-starter-test| Spring Shell testing support
 |===
 
+All Spring Shell starters import _spring-boot-starter_, so there is no need to
+import _spring-boot-starter_ when using a Spring Shell starter.
+
 == Terminal Providers
 
 Interacting with an underlying terminal where your program is running has
