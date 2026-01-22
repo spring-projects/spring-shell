@@ -24,7 +24,10 @@ Our primary goals are:
 
 == Installation and Getting Started
 
-Here is a quick teaser of a complete Spring Shell application in Java:
+Go to https://start.spring.io[start.spring.io] and generate a new project with Spring Shell dependency.
+Here is a quick link to generate a Maven project with Spring Shell dependency: https://start.spring.io/#!type=maven-project&language=java&platformVersion=4.0.1&packaging=jar&configurationFileFormat=properties&jvmVersion=17&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=spring-shell[Spring Initializr link].
+
+Unzip the generated project and open it in your favorite IDE. Now edit the main application class `DemoApplication` and add the following command:
 
 [source,java,indent=0]
 ----
@@ -33,7 +36,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.shell.core.command.annotation.Command;
 
 @SpringBootApplication
-public class SpringShellApplication {
+public class DemoApplication {
 
 	@Command
 	public String hi() {
@@ -41,17 +44,24 @@ public class SpringShellApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringShellApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 	}
 
 }
+----
+
+Build the application using Maven:
+
+[source,bash]
+----
+$>./mvnw package -DskipTests
 ----
 
 After building the application, you can run it in interactive mode as an executable _jar_:
 
 [source,bash]
 ----
-$>java -jar demo.jar
+$>java -jar target/demo-0.0.1-SNAPSHOT.jar
 
 shell:>help
 AVAILABLE COMMANDS
