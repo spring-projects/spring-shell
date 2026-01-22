@@ -52,7 +52,9 @@ public class SystemShellRunner extends InteractiveShellRunner {
 
 	@Override
 	public void flush() {
-		this.console.flush();
+		if (this.console != null) {
+			this.console.flush();
+		}
 	}
 
 	@Override
