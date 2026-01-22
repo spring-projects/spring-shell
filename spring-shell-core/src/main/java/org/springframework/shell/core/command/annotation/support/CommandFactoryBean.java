@@ -133,6 +133,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 					.description(description)
 					.required(required)
 					.defaultValue(defaultValue)
+					.type(parameter.getType())
 					.build();
 				commandOptions.add(commandOption);
 			}

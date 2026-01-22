@@ -16,6 +16,7 @@
 package org.springframework.shell.core.command;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.springframework.shell.core.utils.Utils;
 
@@ -41,11 +42,106 @@ public class Help implements Command {
 
 	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		String helpMessage = Utils.formatAvailableCommands(commandContext.commandRegistry());
 		PrintWriter outputWriter = commandContext.outputWriter();
+		CommandRegistry commandRegistry = commandContext.commandRegistry();
+		String helpMessage = Utils.formatAvailableCommands(commandRegistry);
+		List<CommandArgument> arguments = commandContext.parsedInput().arguments();
+		String commandName = String.join(" ", arguments.stream().map(CommandArgument::value).toList());
+		Command command = commandRegistry.getCommandByName(commandName);
+		if (command != null) {
+			helpMessage = getHelpMessageForCommand(command);
+		}
+		else {
+			Command aliasCommand = commandRegistry.getCommandByAlias(commandName);
+			if (aliasCommand != null) {
+				helpMessage = getHelpMessageForCommand(aliasCommand);
+			}
+		}
 		outputWriter.println(helpMessage);
 		outputWriter.flush();
 		return ExitStatus.OK;
+	}
+
+	private String getHelpMessageForCommand(Command command) {
+		StringBuilder helpMessageBuilder = new StringBuilder();
+		appendName(command, helpMessageBuilder);
+		appendSynopsis(command, helpMessageBuilder);
+		appendOptions(command, helpMessageBuilder);
+		appendAliases(command, helpMessageBuilder);
+		return helpMessageBuilder.toString();
+	}
+
+	private void appendName(Command command, StringBuilder helpMessageBuilder) {
+		helpMessageBuilder.append("NAME\n")
+			.append("\t")
+			.append(command.getName())
+			.append(" - ")
+			.append(command.getDescription())
+			.append("\n\n");
+	}
+
+	private void appendSynopsis(Command command, StringBuilder helpMessageBuilder) {
+		List<CommandOption> options = command.getOptions();
+		helpMessageBuilder.append("SYNOPSIS\n").append("\t").append(command.getName()).append(" ");
+		if (!options.isEmpty()) {
+			for (CommandOption option : options) {
+				if (option.required()) {
+					helpMessageBuilder.append("[");
+				}
+				if (option.longName() != null) {
+					helpMessageBuilder.append("--").append(option.longName());
+				}
+				else {
+					helpMessageBuilder.append("-").append(option.shortName());
+				}
+				helpMessageBuilder.append(" ").append(option.type().getSimpleName());
+				if (option.required()) {
+					helpMessageBuilder.append("] ");
+				}
+			}
+			helpMessageBuilder.append(" --help\n\n");
+		}
+	}
+
+	private void appendOptions(Command command, StringBuilder helpMessageBuilder) {
+		List<CommandOption> options = command.getOptions();
+		if (!options.isEmpty()) {
+			helpMessageBuilder.append("OPTIONS\n");
+			for (CommandOption option : options) {
+				helpMessageBuilder.append("\t");
+				if (option.longName() != null) {
+					helpMessageBuilder.append("--").append(option.longName());
+				}
+				if (option.shortName() != ' ') {
+					helpMessageBuilder.append(" or -").append(option.shortName());
+				}
+				helpMessageBuilder.append(" ").append(option.type().getSimpleName()).append("\n");
+				helpMessageBuilder.append("\t").append(option.description()).append("\n");
+				if (option.required()) {
+					helpMessageBuilder.append("\t").append("[Mandatory]").append("\n\n");
+				}
+				else {
+					helpMessageBuilder.append("\t").append("[Optional");
+					if (option.defaultValue() != null) {
+						helpMessageBuilder.append(", default = ").append(option.defaultValue()).append("]\n\n");
+					}
+					else {
+						helpMessageBuilder.append("]\n\n");
+					}
+				}
+			}
+			helpMessageBuilder.append("\t--help or -h").append("\n");
+			helpMessageBuilder.append("\thelp for ").append(command.getName()).append("\n");
+			helpMessageBuilder.append("\t").append("[Optional]").append("\n").append("\n");
+		}
+	}
+
+	private static void appendAliases(Command command, StringBuilder helpMessageBuilder) {
+		List<String> aliases = command.getAliases();
+		if (!aliases.isEmpty()) {
+			helpMessageBuilder.append("ALIASES\n");
+			helpMessageBuilder.append("\t").append(String.join(", ", aliases)).append("\n");
+		}
 	}
 
 }
