@@ -19,7 +19,7 @@ You can use Spring Shell to create stand-alone Java applications that can be sta
 
 Our primary goals are:
 
-* Provide a radically faster and widely accessible getting started experience for shell development.
+* Provide a fast and accessible getting started experience for shell development.
 * Be opinionated, but get out of the way quickly as requirements start to diverge from the defaults.
 
 == Installation and Getting Started
@@ -47,11 +47,11 @@ public class SpringShellApplication {
 }
 ----
 
-Running it as an executable _jar_ in an interactive mode:
+After building the application, you can run it in interactive mode as an executable _jar_:
 
 [source,bash]
 ----
-$ java -jar demo.jar
+$>java -jar demo.jar
 
 shell:>help
 AVAILABLE COMMANDS
@@ -83,27 +83,26 @@ You can find complete tutorials and sample applications in the `spring-shell-sam
 == Getting Help
 Are you having trouble with Spring Shell? We want to help!
 
-* Join our GitHub Discussion section and post your question there.
+Join our https://github.com/spring-projects/spring-shell/discussions[GitHub Discussion] section and post your question there.
 
 == Reporting Issues
-Spring Shell uses GitHub's integrated issue tracking system to record bugs and feature requests.
+Spring Shell uses https://github.com/spring-projects/spring-shell/issues[GitHub Issues] to record bugs and feature requests.
 If you want to raise an issue, please follow the recommendations below:
 
 * Before you log a bug, please search the issue tracker to see if someone has already reported the problem.
 * If the issue doesn't already exist, create a new issue.
-* Please provide as much information as possible with the issue report. We need to know the Spring Boot and Shell version, operating system, and JVM version you're using.
+* Please provide as much information as possible with the issue report. We need to know the Spring Boot and Shell version, operating system, and the JVM version you're using.
 * If you need to paste code or include a stack trace, please use Markdown's +++```+++ escapes before and after your text.
 * If possible, try to create a test case or project that replicates the problem and attach it to the issue.
 
 == Building from Source
-
-The `main` branch contains the work for the next major release `4.0.0`.
-
 Building and running tests:
 
 [source,bash]
 ----
-./mvnw install
+$>git clone git@github.com:spring-projects/spring-shell.git
+$>cd spring-shell
+$>./mvnw install
 ----
 
 == Building the Documentation
@@ -112,7 +111,7 @@ The documentation is built using Antora and can be run using the Antora Maven pl
 
 [source,bash]
 ----
-./mvnw antora -pl spring-shell-docs
+$>./mvnw antora -pl spring-shell-docs
 ----
 
 After running the command, you can view the site for this branch in `spring-shell-docs/target/site`.
