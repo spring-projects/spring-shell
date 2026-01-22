@@ -39,6 +39,8 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -46,12 +48,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.config.UserConfigPathProvider;
 import org.springframework.shell.jline.CommandCompleter;
 import org.springframework.shell.jline.ExtendedDefaultParser;
 import org.springframework.shell.jline.JLineInputProvider;
+import org.springframework.shell.jline.JLineShellRunner;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.shell.jline.command.History;
 import org.springframework.util.StringUtils;
@@ -65,6 +70,9 @@ import org.springframework.util.StringUtils;
  */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
+@ConditionalOnClass(org.jline.reader.History.class)
+@ImportAutoConfiguration(classes = { ThemingAutoConfiguration.class, TerminalUIAutoConfiguration.class,
+		ComponentFlowAutoConfiguration.class })
 public class JLineShellAutoConfiguration {
 
 	private final static Log log = LogFactory.getLog(JLineShellAutoConfiguration.class);
@@ -88,6 +96,14 @@ public class JLineShellAutoConfiguration {
 	@EventListener
 	public void onContextClosedEvent(ContextClosedEvent event) throws IOException {
 		jLineHistory.save();
+	}
+
+	@Bean
+	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "true",
+			matchIfMissing = true)
+	public ShellRunner jlineShellRunner(JLineInputProvider inputProvider, CommandParser commandParser,
+			CommandRegistry commandRegistry) {
+		return new JLineShellRunner(inputProvider, commandParser, commandRegistry);
 	}
 
 	@Bean

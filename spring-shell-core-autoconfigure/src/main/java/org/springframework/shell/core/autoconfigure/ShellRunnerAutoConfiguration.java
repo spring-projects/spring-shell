@@ -17,7 +17,6 @@ package org.springframework.shell.core.autoconfigure;
 
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,8 +28,6 @@ import org.springframework.shell.core.SystemShellRunner;
 import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.DefaultCommandParser;
-import org.springframework.shell.jline.JLineInputProvider;
-import org.springframework.shell.jline.JLineShellRunner;
 
 @AutoConfiguration
 public class ShellRunnerAutoConfiguration {
@@ -48,15 +45,6 @@ public class ShellRunnerAutoConfiguration {
 	public ShellRunner systemShellRunner(ConsoleInputProvider consoleInputProvider, CommandParser commandParser,
 			CommandRegistry commandRegistry) {
 		return new SystemShellRunner(consoleInputProvider, commandParser, commandRegistry);
-	}
-
-	@Bean
-	@ConditionalOnClass(name = "org.springframework.shell.jline.JLineInputProvider")
-	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "true",
-			matchIfMissing = true)
-	public ShellRunner jlineShellRunner(JLineInputProvider inputProvider, CommandParser commandParser,
-			CommandRegistry commandRegistry) {
-		return new JLineShellRunner(inputProvider, commandParser, commandRegistry);
 	}
 
 	@Bean
