@@ -15,16 +15,17 @@
  */
 package org.springframework.shell.core.command;
 
-import java.io.PrintWriter;
-
 import org.jspecify.annotations.Nullable;
-
 import org.springframework.shell.core.InputReader;
+
+import java.io.PrintWriter;
+import java.util.function.Predicate;
 
 /**
  * Interface containing runtime information about the current command invocation.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 public record CommandContext(ParsedInput parsedInput, CommandRegistry commandRegistry, PrintWriter outputWriter,
@@ -36,11 +37,38 @@ public record CommandContext(ParsedInput parsedInput, CommandRegistry commandReg
 	 * @return the matching {@link CommandOption} or null if not found
 	 */
 	@Nullable public CommandOption getOptionByName(String optionName) {
-		return this.parsedInput.options()
-			.stream()
-			.filter(option -> option.longName().equals(optionName) || option.shortName() == optionName.charAt(0))
-			.findFirst()
-			.orElse(null);
+		CommandOption option = getOptionByLongName(optionName);
+		if (option == null && optionName.length() == 1) {
+			option = getOptionByShortName(optionName.charAt(0));
+		}
+		return option;
+	}
+
+	/**
+	 * Retrieve a command option by its long name.
+	 * @param longName the long name of the option to retrieve
+	 * @return the matching {@link CommandOption} or null if not found
+	 */
+	@Nullable public CommandOption getOptionByLongName(String longName) {
+		return getOptionByPredicate(option -> longName.equals(option.longName()));
+	}
+
+	/**
+	 * Retrieve a command option by its short name.
+	 * @param shortName the short name of the option to retrieve
+	 * @return the matching {@link CommandOption} or null if not found
+	 */
+	@Nullable public CommandOption getOptionByShortName(char shortName) {
+		return getOptionByPredicate(option -> option.shortName() == shortName);
+	}
+
+	/**
+	 * Retrieve a command option by a custom predicate.
+	 * @param predicate the predicate to filter options
+	 * @return the matching {@link CommandOption} or {@code null} if not found
+	 */
+	@Nullable private CommandOption getOptionByPredicate(Predicate<CommandOption> predicate) {
+		return this.parsedInput.options().stream().filter(predicate).findFirst().orElse(null);
 	}
 
 	/**
