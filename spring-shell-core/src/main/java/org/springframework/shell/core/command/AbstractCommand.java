@@ -17,7 +17,6 @@ package org.springframework.shell.core.command;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +27,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.shell.core.ParameterValidationException;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
 import org.springframework.shell.core.command.completion.CompletionProvider;
 
@@ -54,7 +54,7 @@ public abstract class AbstractCommand implements Command {
 
 	@Nullable private ExitStatusExceptionMapper exitStatusExceptionMapper;
 
-	private CompletionProvider completionProvider = context -> Collections.emptyList();
+	private CompletionProvider completionProvider = new DefaultCompletionProvider();
 
 	private List<CommandOption> options = new ArrayList<>();
 

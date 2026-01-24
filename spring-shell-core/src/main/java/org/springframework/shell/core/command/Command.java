@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.shell.core.command.adapter.ConsumerCommandAdapter;
 import org.springframework.shell.core.command.adapter.FunctionCommandAdapter;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
 import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.util.Assert;
@@ -108,7 +109,7 @@ public interface Command {
 	 * @return the completion provider of the command
 	 */
 	default CompletionProvider getCompletionProvider() {
-		return context -> Collections.emptyList();
+		return context -> new DefaultCompletionProvider().apply(context);
 	}
 
 	/**
@@ -147,7 +148,7 @@ public interface Command {
 
 		private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
 
-		private CompletionProvider completionProvider = context -> Collections.emptyList();
+		private CompletionProvider completionProvider = new DefaultCompletionProvider();
 
 		@Nullable ExitStatusExceptionMapper exitStatusExceptionMapper;
 
