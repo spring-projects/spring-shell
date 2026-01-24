@@ -184,39 +184,50 @@ class DefaultCommandParserTests {
 				Arguments.of("mycommand --option=\\\"value\\\"", "option", ' ', "\\\"value\\\""),
 				Arguments.of("mycommand --option=\"value\"", "option", ' ', "value"),
 				Arguments.of("mycommand --option=\"value1 value2\"", "option", ' ', "value1 value2"),
+				Arguments.of("mycommand --option=\"value1=value2\"", "option", ' ', "value1=value2"),
 				Arguments.of("mycommand --option=value1\"inside\"value2", "option", ' ', "value1\"inside\"value2"),
 				Arguments.of("mycommand --option=\"value1 \\\"inside\\\" value2\"", "option", ' ',
 						"value1 \"inside\" value2"),
 				Arguments.of("mycommand --option=value1'inside'value2", "option", ' ', "value1'inside'value2"),
 				Arguments.of("mycommand --option=\"value1 'inside' value2\"", "option", ' ', "value1 'inside' value2"),
+				Arguments.of("mycommand   --option=value", "option", ' ', "value"),
+				Arguments.of("mycommand   --option=\"value\"", "option", ' ', "value"),
 
 				Arguments.of("mycommand --option value", "option", ' ', "value"),
 				Arguments.of("mycommand --option \\\"value\\\"", "option", ' ', "\\\"value\\\""),
 				Arguments.of("mycommand --option \"value\"", "option", ' ', "value"),
 				Arguments.of("mycommand --option \"value1 value2\"", "option", ' ', "value1 value2"),
+				Arguments.of("mycommand --option \"value1=value2\"", "option", ' ', "value1=value2"),
 				Arguments.of("mycommand --option value1\"inside\"value2", "option", ' ', "value1\"inside\"value2"),
 				Arguments.of("mycommand --option \"value1 \\\"inside\\\" value2\"", "option", ' ',
 						"value1 \"inside\" value2"),
 				Arguments.of("mycommand --option value1'inside'value2", "option", ' ', "value1'inside'value2"),
 				Arguments.of("mycommand --option \"value1 'inside' value2\"", "option", ' ', "value1 'inside' value2"),
+				Arguments.of("mycommand   --option   value", "option", ' ', "value"),
+				Arguments.of("mycommand   --option   \"value\"", "option", ' ', "value"),
 
 				Arguments.of("mycommand -o=value", "", 'o', "value"),
 				Arguments.of("mycommand -o=\\\"value\\\"", "", 'o', "\\\"value\\\""),
 				Arguments.of("mycommand -o=\"value\"", "", 'o', "value"),
 				Arguments.of("mycommand -o=\"value1 value2\"", "", 'o', "value1 value2"),
+				Arguments.of("mycommand -o=\"value1=value2\"", "", 'o', "value1=value2"),
 				Arguments.of("mycommand -o=value1\"inside\"value2", "", 'o', "value1\"inside\"value2"),
 				Arguments.of("mycommand -o=\"value1 \\\"inside\\\" value2\"", "", 'o', "value1 \"inside\" value2"),
 				Arguments.of("mycommand -o=value1'inside'value2", "", 'o', "value1'inside'value2"),
 				Arguments.of("mycommand -o=\"value1 'inside' value2\"", "", 'o', "value1 'inside' value2"),
+				Arguments.of("mycommand   -o=value", "", 'o', "value"),
+				Arguments.of("mycommand   -o=\"value\"", "", 'o', "value"),
 
 				Arguments.of("mycommand -o value", "", 'o', "value"),
 				Arguments.of("mycommand -o \\\"value\\\"", "", 'o', "\\\"value\\\""),
 				Arguments.of("mycommand -o \"value\"", "", 'o', "value"),
 				Arguments.of("mycommand -o \"value1 value2\"", "", 'o', "value1 value2"),
+				Arguments.of("mycommand -o \"value1=value2\"", "", 'o', "value1=value2"),
 				Arguments.of("mycommand -o value1\"inside\"value2", "", 'o', "value1\"inside\"value2"),
 				Arguments.of("mycommand -o \"value1 \\\"inside\\\" value2\"", "", 'o', "value1 \"inside\" value2"),
 				Arguments.of("mycommand -o value1'inside'value2", "", 'o', "value1'inside'value2"),
-				Arguments.of("mycommand -o \"value1 'inside' value2\"", "", 'o', "value1 'inside' value2"));
+				Arguments.of("mycommand -o \"value1 'inside' value2\"", "", 'o', "value1 'inside' value2"),
+				Arguments.of("mycommand   -o   \"value\"", "", 'o', "value"));
 	}
 
 	@ParameterizedTest
@@ -236,10 +247,12 @@ class DefaultCommandParserTests {
 				Arguments.of("mycommand -- \\\"value\\\"", "\\\"value\\\""),
 				Arguments.of("mycommand -- \"value\"", "value"),
 				Arguments.of("mycommand -- \"value1 value2\"", "value1 value2"),
+				Arguments.of("mycommand -- \"value1=value2\"", "value1=value2"),
 				Arguments.of("mycommand -- value1\"inside\"value2", "value1\"inside\"value2"),
 				Arguments.of("mycommand -- \"value1 \\\"inside\\\" value2\"", "value1 \"inside\" value2"),
 				Arguments.of("mycommand -- value1'inside'value2", "value1'inside'value2"),
-				Arguments.of("mycommand -- \"value1 'inside' value2\"", "value1 'inside' value2"));
+				Arguments.of("mycommand -- \"value1 'inside' value2\"", "value1 'inside' value2"),
+				Arguments.of("mycommand  --  value", "value"), Arguments.of("mycommand  --  \"value\"", "value"));
 	}
 
 }
