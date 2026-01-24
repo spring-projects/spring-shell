@@ -52,7 +52,7 @@ public class DefaultCommandParser implements CommandParser {
 	@Override
 	public ParsedInput parse(String input) {
 		log.debug("Parsing input: " + input);
-		List<String> words = List.of(input.split(" (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
+		List<String> words = List.of(input.split("\\s+(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
 
 		// the first word is the (root) command name
 		String commandName = words.get(0);
@@ -143,7 +143,7 @@ public class DefaultCommandParser implements CommandParser {
 		String value = "";
 		if (word.startsWith("--")) {
 			word = word.substring(2);
-			String[] tokens = word.split("=");
+			String[] tokens = word.split("=", 2);
 			longName = tokens[0];
 			if (tokens.length > 1) {
 				value = tokens[1];
@@ -151,7 +151,7 @@ public class DefaultCommandParser implements CommandParser {
 		}
 		else if (word.startsWith("-")) {
 			word = word.substring(1);
-			String[] tokens = word.split("=");
+			String[] tokens = word.split("=", 2);
 			shortName = tokens[0].charAt(0);
 			if (tokens.length > 1) {
 				value = tokens[1];
