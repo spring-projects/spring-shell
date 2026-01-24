@@ -43,6 +43,7 @@ import org.springframework.util.MethodInvoker;
  * An adapter to adapt a method as a command.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 public class MethodInvokerCommandAdapter extends AbstractCommand {
@@ -141,8 +142,13 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 									+ parameters[i].getName() + "'");
 				}
 				boolean required = optionAnnotation.required();
-				CommandOption commandOption = commandContext
-					.getOptionByName(longName.isEmpty() ? String.valueOf(shortName) : longName);
+				CommandOption commandOption = null;
+				if (!longName.isEmpty()) {
+					commandOption = commandContext.getOptionByLongName(longName);
+				}
+				if (commandOption == null && shortName != ' ') {
+					commandOption = commandContext.getOptionByShortName(shortName);
+				}
 				if (commandOption != null) {
 					String rawValue = commandOption.value();
 					Class<?> parameterType = parameterTypes[i];
