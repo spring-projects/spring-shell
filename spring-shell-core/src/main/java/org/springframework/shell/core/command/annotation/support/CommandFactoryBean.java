@@ -53,6 +53,7 @@ import org.springframework.util.Assert;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @author Jay Choi
  */
 public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<Command> {
 
@@ -126,6 +127,11 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 					throw new IllegalArgumentException(
 							"Either shortName or longName (or both) must be provided for option on parameter '"
 									+ parameter.getName() + "'");
+				}
+				if (!required && defaultValue.isEmpty()) {
+					String optionName = longName.isEmpty() ? "-" + shortName : "--" + longName;
+					throw new IllegalArgumentException("Optional option '" + optionName + "' on parameter '"
+							+ parameter.getName() + "' must have a default value.");
 				}
 				CommandOption commandOption = CommandOption.with()
 					.shortName(shortName)
