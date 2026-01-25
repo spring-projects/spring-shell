@@ -79,7 +79,8 @@ public class CommandRegistry implements SmartInitializingSingleton, ApplicationC
 	public List<Command> getCommandsByPrefix(String prefix) {
 		return commands.stream()
 			.filter(command -> !command.isHidden())
-			.filter(command -> command.getName().startsWith(prefix))
+			.filter(command -> command.getName().startsWith(prefix)
+					|| command.getAliases().stream().anyMatch(alias -> alias.startsWith(prefix)))
 			.toList();
 	}
 

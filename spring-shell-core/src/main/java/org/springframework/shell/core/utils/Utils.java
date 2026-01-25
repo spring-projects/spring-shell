@@ -78,7 +78,7 @@ public class Utils {
 	}
 
 	// Dummy exit command to show in available commands
-	private static final Command QUIT_COMMAND = new AbstractCommand("quit", "Exit the shell", "Built-In Commands") {
+	public static final Command QUIT_COMMAND = new AbstractCommand("quit", "Exit the shell", "Built-In Commands") {
 		@Override
 		public List<String> getAliases() {
 			return List.of("exit");

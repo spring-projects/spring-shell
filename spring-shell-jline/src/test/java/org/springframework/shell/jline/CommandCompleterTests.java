@@ -69,7 +69,7 @@ class CommandCompleterTests {
 	};
 
 	@BeforeEach
-	public void before() {
+	void before() {
 		command = mock(Command.class);
 		when(command.getName()).thenReturn("hello");
 		when(command.getDescription()).thenReturn("Says Hello.");
@@ -88,7 +88,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeData")
-	public void testComplete(List<String> words, List<String> expectedValues) {
+	void testComplete(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions())
 			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
@@ -176,7 +176,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeCommandWithLongNamesData")
-	public void testCompleteCommandWithLongNames(List<String> words, List<String> expectedValues) {
+	void testCompleteCommandWithLongNames(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().longName("first").build(),
 				new CommandOption.Builder().longName("last").build()));
@@ -230,7 +230,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeCommandWithShortNamesData")
-	public void testCompleteCommandWithShortNames(List<String> words, List<String> expectedValues) {
+	void testCompleteCommandWithShortNames(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().shortName('f').build(),
 				new CommandOption.Builder().shortName('l').build()));
@@ -282,7 +282,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeWithSubCommandsData")
-	public void testCompleteWithSubCommands(List<String> words, List<String> expectedValues) {
+	void testCompleteWithSubCommands(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getName()).thenReturn("hello world");
 		when(command.getOptions())
@@ -331,7 +331,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeWithTwoOptionsWhereOneIsSubsetOfOtherData")
-	public void testCompleteWithTwoOptionsWhereOneIsSubsetOfOther(List<String> words, List<String> expectedValues) {
+	void testCompleteWithTwoOptionsWhereOneIsSubsetOfOther(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions()).thenReturn(List.of(new CommandOption.Builder().longName("first").build(),
 				new CommandOption.Builder().longName("firstname").build()));
@@ -376,7 +376,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeWithHiddenCommandsData")
-	public void testCompleteWithHiddenCommands(List<String> words, List<String> expectedValues) {
+	void testCompleteWithHiddenCommands(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getName()).thenReturn("hello visible");
 		when(command.getOptions()).thenReturn(List.of());
@@ -416,7 +416,7 @@ class CommandCompleterTests {
 
 	@ParameterizedTest
 	@MethodSource("completeForProposalDisplayText")
-	public void testCompleteForProposalDisplayText(List<String> words, List<String> expectedValues) {
+	void testCompleteForProposalDisplayText(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions())
 			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
@@ -450,6 +450,40 @@ class CommandCompleterTests {
 				Arguments.of(List.of("hello", "--first", ""), List.of("Mary", "Paul", "Peter")),
 				Arguments.of(List.of("hello", "-l", ""), List.of("Chan", "Noris")),
 				Arguments.of(List.of("hello", "--last", ""), List.of("Chan", "Noris")));
+	}
+
+	@ParameterizedTest
+	@MethodSource("completeForCommandAlias")
+	void testCompleteForCommandAlias(List<String> words, List<String> expectedValues) {
+		// given
+		when(command.getAliases()).thenReturn(List.of("hi", "bye"));
+
+		List<Candidate> candidates = new ArrayList<>();
+		ParsedLine line = mock(ParsedLine.class);
+		when(line.words()).thenReturn(words);
+		when(line.word()).thenReturn(words.get(words.size() - 1));
+		when(line.line()).thenReturn(String.join(" ", words));
+
+		// when
+		completer.complete(mock(LineReader.class), line, candidates);
+
+		// then
+		assertEquals(expectedValues, toCandidateDisplayText(candidates));
+	}
+
+	static Stream<Arguments> completeForCommandAlias() {
+		return Stream.of(
+				Arguments.of(List.of(""), List.of("bye: Says Hello.", "hello: Says Hello.", "hi: Says Hello.")),
+
+				Arguments.of(List.of("h"), List.of("hello: Says Hello.", "hi: Says Hello.")),
+				Arguments.of(List.of("he"), List.of("hello: Says Hello.")),
+				Arguments.of(List.of("hello"), List.of("hello: Says Hello.")),
+				Arguments.of(List.of("hi"), List.of("hi: Says Hello.")),
+				Arguments.of(List.of("b"), List.of("bye: Says Hello.")),
+				Arguments.of(List.of("bye"), List.of("bye: Says Hello.")),
+
+				Arguments.of(List.of("hello", ""), List.of()), Arguments.of(List.of("hi", ""), List.of()),
+				Arguments.of(List.of("bye", ""), List.of()));
 	}
 
 }

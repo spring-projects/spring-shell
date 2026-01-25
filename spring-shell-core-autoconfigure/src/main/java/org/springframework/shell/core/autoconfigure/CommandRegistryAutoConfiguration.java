@@ -36,6 +36,7 @@ import org.springframework.shell.core.ShellConfigurationException;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.annotation.support.CommandFactoryBean;
+import org.springframework.shell.core.utils.Utils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -50,6 +51,7 @@ public class CommandRegistryAutoConfiguration {
 		CommandRegistry commandRegistry = new CommandRegistry();
 		registerProgrammaticCommands(applicationContext, commandRegistry);
 		registerAnnotatedCommands(applicationContext, commandRegistry);
+		commandRegistry.registerCommand(Utils.QUIT_COMMAND);
 		return commandRegistry;
 	}
 
