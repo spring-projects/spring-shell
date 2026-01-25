@@ -16,15 +16,14 @@
 
 package org.springframework.shell.core.autoconfigure;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.command.Clear;
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.Help;
-import org.springframework.shell.core.command.Script;
-import org.springframework.shell.core.command.Version;
+import org.springframework.shell.core.command.*;
 
 /**
  * Creates beans for standard commands.
@@ -51,8 +50,27 @@ public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnProperty(value = "spring.shell.command.version.enabled", havingValue = "true", matchIfMissing = true)
-	public Command versionCommand() {
-		return new Version();
+	public Command versionCommand(SpringShellProperties shellProperties,
+			ObjectProvider<BuildProperties> buildProperties, ObjectProvider<GitProperties> gitProperties) {
+		SpringShellProperties.VersionCommand properties = shellProperties.getCommand().getVersion();
+		Version version = new Version();
+		version.setShowBuildGroup(properties.isShowBuildGroup());
+		version.setShowBuildArtifact(properties.isShowBuildArtifact());
+		version.setShowBuildName(properties.isShowBuildName());
+		version.setShowBuildVersion(properties.isShowBuildVersion());
+		version.setShowBuildTime(properties.isShowBuildTime());
+		version.setShowGitBranch(properties.isShowGitBranch());
+		version.setShowGitCommitId(properties.isShowGitCommitId());
+		version.setShowGitShortCommitId(properties.isShowGitShortCommitId());
+		version.setShowGitCommitTime(properties.isShowGitCommitTime());
+
+		buildProperties.ifAvailable(props -> version.setBuildProperties(new Version.BuildProperties(props.getGroup(),
+				props.getArtifact(), props.getName(), props.getVersion(), props.getTime())));
+
+		gitProperties.ifAvailable(props -> version.setGitProperties(new Version.GitProperties(props.getBranch(),
+				props.getCommitId(), props.getShortCommitId(), props.getCommitTime())));
+
+		return version;
 	}
 
 	@Bean
