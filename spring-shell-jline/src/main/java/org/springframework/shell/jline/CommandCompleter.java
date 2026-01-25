@@ -11,11 +11,11 @@ import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.completion.CompletionContext;
 import org.springframework.shell.core.command.completion.CompletionProposal;
 import org.springframework.shell.core.command.completion.CompletionProvider;
+import org.springframework.shell.core.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * A JLine {@link Completer} that completes command names from a {@link CommandRegistry}.
@@ -67,15 +67,20 @@ public class CommandCompleter implements Completer {
 		else {
 			this.commandRegistry.getCommandsByPrefix(line.line())
 				.stream()
-				.map(command -> toCommandCandidate(command, line.words()))
+				.map(command -> toCommandCandidates(command, line.words()))
+				.flatMap(List::stream)
+				.sorted(Candidate::compareTo)
 				.forEach(candidates::add);
 		}
 	}
 
-	private Candidate toCommandCandidate(Command command, List<String> words) {
+	private List<Candidate> toCommandCandidates(Command command, List<String> words) {
 		String prefix = words.size() > 1 ? String.join(" ", words.subList(0, words.size() - 1)) : "";
-		return new Candidate(command.getName().substring(prefix.length()).trim(),
-				command.getName() + ": " + command.getDescription(), command.getGroup(), null, null, null, true);
+		return getCommandNames(command).filter(name -> name.startsWith(words.get(0)))
+			.filter(name -> name.startsWith(prefix))
+			.map(cmd -> new Candidate(cmd.substring(prefix.length()).trim(), cmd + ": " + command.getDescription(),
+					command.getGroup(), null, null, null, !Utils.QUIT_COMMAND.equals(command)))
+			.toList();
 	}
 
 	private boolean isOptionPresent(ParsedLine line, CommandOption option) {
@@ -97,7 +102,7 @@ public class CommandCompleter implements Completer {
 
 		Command command = this.commandRegistry.getCommandByName(commandName.toString().trim());
 		// the command is found but was not completed on the line
-		if (command != null && command.getName().equals(String.join(" ", words))) {
+		if (command != null && getCommandNames(command).toList().contains(String.join(" ", words))) {
 			command = null;
 		}
 		return command;
@@ -137,6 +142,10 @@ public class CommandCompleter implements Completer {
 	private static boolean isOptionStartWith(String optionName, CommandOption option) {
 		return option.longName() != null && optionName.startsWith("--" + option.longName() + "=")
 				|| option.shortName() != ' ' && optionName.startsWith("-" + option.shortName() + "=");
+	}
+
+	private Stream<String> getCommandNames(Command command) {
+		return Stream.concat(Stream.of(command.getName()), command.getAliases().stream());
 	}
 
 }
