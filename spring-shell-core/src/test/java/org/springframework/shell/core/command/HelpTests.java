@@ -49,7 +49,7 @@ class HelpTests {
 					quit, exit: Exit the shell
 
 				""";
-		Assertions.assertEquals(expectedOutput, actualOutput);
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
 	}
 
 	@Test
@@ -118,7 +118,7 @@ class HelpTests {
 
 
 				""";
-		Assertions.assertEquals(expectedOutput, actualOutput);
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
 	}
 
 	@Test
@@ -190,7 +190,7 @@ class HelpTests {
 					hello, hey
 
 				""";
-		Assertions.assertEquals(expectedOutput, actualOutput);
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
 	}
 
 }
