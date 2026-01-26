@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.shell.core.ConsoleInputProvider;
 import org.springframework.shell.core.NonInteractiveShellRunner;
 import org.springframework.shell.core.ShellRunner;
@@ -43,8 +44,12 @@ public class ShellRunnerAutoConfiguration {
 	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "true",
 			matchIfMissing = true)
 	public ShellRunner systemShellRunner(ConsoleInputProvider consoleInputProvider, CommandParser commandParser,
-			CommandRegistry commandRegistry) {
-		return new SystemShellRunner(consoleInputProvider, commandParser, commandRegistry);
+			CommandRegistry commandRegistry, Environment environment) {
+		SystemShellRunner systemShellRunner = new SystemShellRunner(consoleInputProvider, commandParser,
+				commandRegistry);
+		Boolean debugMode = environment.getProperty("spring.shell.debug.enabled", Boolean.class, false);
+		systemShellRunner.setDebugMode(debugMode);
+		return systemShellRunner;
 	}
 
 	@Bean

@@ -52,6 +52,7 @@ class SpringShellPropertiesTests {
 			.withPropertyValues("spring.shell.config.env=FAKE_ENV")
 			.withPropertyValues("spring.shell.script.enabled=true")
 			.withPropertyValues("spring.shell.interactive.enabled=true")
+			.withPropertyValues("spring.shell.debug.enabled=true")
 			.withPropertyValues("spring.shell.theme.name=fake")
 			.withPropertyValues("spring.shell.command.clear.enabled=false")
 			.withPropertyValues("spring.shell.command.help.enabled=false")
@@ -70,6 +71,7 @@ class SpringShellPropertiesTests {
 				assertThat(properties.getConfig().getLocation()).isEqualTo("fakelocation");
 				assertThat(properties.getConfig().getEnv()).isEqualTo("FAKE_ENV");
 				assertThat(properties.getInteractive().isEnabled()).isTrue();
+				assertThat(properties.getDebug().isEnabled()).isTrue();
 				assertThat(properties.getTheme().getName()).isEqualTo("fake");
 				assertThat(properties.getCommand().getClear().isEnabled()).isFalse();
 				assertThat(properties.getCommand().getHelp().isEnabled()).isFalse();

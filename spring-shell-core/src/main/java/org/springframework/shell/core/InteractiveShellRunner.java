@@ -49,8 +49,7 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 
 	private final InputProvider inputProvider;
 
-	private final boolean debugMode = System.getProperty("spring.shell.debug.enabled", "false")
-		.equalsIgnoreCase("true");
+	private boolean debugMode = false;
 
 	/**
 	 * Create a new {@link InteractiveShellRunner} instance.
@@ -160,5 +159,13 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 	 * @return the input reader
 	 */
 	public abstract InputReader getReader();
+
+	/**
+	 * Set debug mode.
+	 * @param debugMode true to enable debug mode, false otherwise
+	 */
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
+	}
 
 }

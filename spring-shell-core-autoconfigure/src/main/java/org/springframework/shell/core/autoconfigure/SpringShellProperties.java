@@ -33,6 +33,8 @@ public class SpringShellProperties {
 
 	private Interactive interactive = new Interactive();
 
+	private Debug debug = new Debug();
+
 	private Theme theme = new Theme();
 
 	private Command command = new Command();
@@ -61,6 +63,14 @@ public class SpringShellProperties {
 
 	public Interactive getInteractive() {
 		return interactive;
+	}
+
+	public Debug getDebug() {
+		return debug;
+	}
+
+	public void setDebug(Debug debug) {
+		this.debug = debug;
 	}
 
 	public Theme getTheme() {
@@ -138,6 +148,20 @@ public class SpringShellProperties {
 	public static class Interactive {
 
 		private boolean enabled = true;
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+
+	}
+
+	public static class Debug {
+
+		private boolean enabled = false;
 
 		public boolean isEnabled() {
 			return enabled;
