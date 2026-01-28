@@ -301,12 +301,102 @@ public class SpringShellProperties {
 
 		private boolean enabled = true;
 
+		private boolean showBuildGroup = false;
+
+		private boolean showBuildArtifact = false;
+
+		private boolean showBuildName = false;
+
+		private boolean showBuildVersion = true;
+
+		private boolean showBuildTime = false;
+
+		private boolean showGitBranch = false;
+
+		private boolean showGitCommitId = false;
+
+		private boolean showGitShortCommitId = false;
+
+		private boolean showGitCommitTime = false;
+
 		public boolean isEnabled() {
 			return enabled;
 		}
 
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
+		}
+
+		public boolean isShowBuildGroup() {
+			return showBuildGroup;
+		}
+
+		public void setShowBuildGroup(boolean showBuildGroup) {
+			this.showBuildGroup = showBuildGroup;
+		}
+
+		public boolean isShowBuildArtifact() {
+			return showBuildArtifact;
+		}
+
+		public void setShowBuildArtifact(boolean showBuildArtifact) {
+			this.showBuildArtifact = showBuildArtifact;
+		}
+
+		public boolean isShowBuildName() {
+			return showBuildName;
+		}
+
+		public void setShowBuildName(boolean showBuildName) {
+			this.showBuildName = showBuildName;
+		}
+
+		public boolean isShowBuildVersion() {
+			return showBuildVersion;
+		}
+
+		public void setShowBuildVersion(boolean showBuildVersion) {
+			this.showBuildVersion = showBuildVersion;
+		}
+
+		public boolean isShowBuildTime() {
+			return showBuildTime;
+		}
+
+		public void setShowBuildTime(boolean showBuildTime) {
+			this.showBuildTime = showBuildTime;
+		}
+
+		public boolean isShowGitBranch() {
+			return showGitBranch;
+		}
+
+		public void setShowGitBranch(boolean showGitBranch) {
+			this.showGitBranch = showGitBranch;
+		}
+
+		public boolean isShowGitCommitId() {
+			return showGitCommitId;
+		}
+
+		public void setShowGitCommitId(boolean showGitCommitId) {
+			this.showGitCommitId = showGitCommitId;
+		}
+
+		public boolean isShowGitShortCommitId() {
+			return showGitShortCommitId;
+		}
+
+		public void setShowGitShortCommitId(boolean showGitShortCommitId) {
+			this.showGitShortCommitId = showGitShortCommitId;
+		}
+
+		public boolean isShowGitCommitTime() {
+			return showGitCommitTime;
+		}
+
+		public void setShowGitCommitTime(boolean showGitCommitTime) {
+			this.showGitCommitTime = showGitCommitTime;
 		}
 
 	}
