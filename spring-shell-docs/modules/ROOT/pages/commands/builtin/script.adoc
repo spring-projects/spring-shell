@@ -3,13 +3,11 @@
 
 The `script` command allows you to execute a series of commands from a specified script file. This is useful for automating repetitive tasks or setting up an environment quickly.
 
-This command expects a file path as an argument, which points to the script file containing the commands to be executed. For example:
+This command expects a file absolute path as an option, which points to the script file containing the commands to be executed. For example:
 
 [source,shell]
 ----
-$>script -- /path/to/your/script.txt
+$>script --file /absolute/path/to/your/script.txt
 ----
-
-Since the script command does not define any options, you need to use the `--` separator before specifying the script file path to avoid ambiguity. Please refer to the xref:commands/syntax.adoc[] section fpr more details about command syntax.
 
 The script file should contain one command per line, and the commands will be executed in the order they appear in the file. Comments can be added to the script file by starting a line with a `#` character.

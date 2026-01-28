@@ -17,6 +17,7 @@ package org.springframework.shell.core.command;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.shell.core.FileInputProvider;
 import org.springframework.shell.core.NonInteractiveShellRunner;
@@ -27,6 +28,7 @@ import org.springframework.shell.core.NonInteractiveShellRunner;
  * @author Eric Bottard
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 public class Script implements Command {
 
@@ -43,14 +45,28 @@ public class Script implements Command {
 	}
 
 	@Override
+	public List<CommandOption> getOptions() {
+		return List.of(CommandOption.with()
+			.type(String.class)
+			.shortName('f')
+			.longName("file")
+			.required(true)
+			.description("The absolute path to the script file to execute")
+			.build());
+	}
+
+	@Override
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
-		List<CommandArgument> arguments = commandContext.parsedInput().arguments();
-		if (arguments.size() != 1) {
-			throw new IllegalArgumentException(
-					"Script command expects exactly one argument: the absolute path to the script file to execute.");
-		}
-		String scriptFile = arguments.get(0).value();
-		File file = new File(scriptFile);
+		String scriptFile = commandContext.parsedInput()
+			.options()
+			.stream()
+			.filter(o -> "file".equals(o.longName()) || 'f' == o.shortName())
+			.map(CommandOption::value)
+			.filter(Objects::nonNull)
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException(
+					"Script command expects option --file or -f with exactly one argument: the absolute path to the script file to execute."));
+		File file = new File(Objects.requireNonNull(scriptFile));
 		try (FileInputProvider inputProvider = new FileInputProvider(file)) {
 			String input;
 			while ((input = inputProvider.readInput()) != null) {
