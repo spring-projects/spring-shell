@@ -111,13 +111,13 @@ public class JLineShellAutoConfiguration {
 
 	@Bean
 	public LineReader lineReader(Terminal terminal, Parser parser, CommandCompleter commandCompleter,
-			CommandRegistry commandRegistry) {
+			CommandHighlighter commandHighlighter) {
 		LineReaderBuilder lineReaderBuilder = LineReaderBuilder.builder()
 			.terminal(terminal)
 			.appName("Spring Shell")
 			.completer(commandCompleter)
 			.history(jLineHistory)
-			.highlighter(new CommandHighlighter(commandRegistry))
+			.highlighter(commandHighlighter)
 			.parser(parser);
 
 		LineReader lineReader = lineReaderBuilder.build();
@@ -174,6 +174,12 @@ public class JLineShellAutoConfiguration {
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
 		return parser;
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public CommandHighlighter commandHighlighter(CommandRegistry commandRegistry) {
+		return new CommandHighlighter(commandRegistry);
 	}
 
 	@Bean
