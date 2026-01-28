@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import jakarta.validation.Validator;
@@ -42,6 +41,7 @@ import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
 import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.core.utils.Utils;
@@ -142,7 +142,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	}
 
 	private CompletionProvider getCompletionProvider(String completionProviderBeanName) {
-		CompletionProvider completionProvider = CompletionContext -> Collections.emptyList();
+		CompletionProvider completionProvider = new DefaultCompletionProvider();
 		if (!completionProviderBeanName.isEmpty()) {
 			try {
 				completionProvider = this.applicationContext.getBean(completionProviderBeanName,
