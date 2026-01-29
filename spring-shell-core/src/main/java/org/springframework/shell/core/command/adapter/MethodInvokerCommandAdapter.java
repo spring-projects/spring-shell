@@ -136,16 +136,11 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 				log.debug("Processing option for parameter: " + parameters[i].getName());
 				char shortName = optionAnnotation.shortName();
 				String longName = optionAnnotation.longName();
-				if (shortName == ' ' && longName.isEmpty()) {
-					throw new IllegalArgumentException(
-							"Either shortName or longName (or both) must be provided for option on parameter '"
-									+ parameters[i].getName() + "'");
+				if (longName.isEmpty()) {
+					longName = parameters[i].getName();
 				}
 				boolean required = optionAnnotation.required();
-				CommandOption commandOption = null;
-				if (!longName.isEmpty()) {
-					commandOption = commandContext.getOptionByLongName(longName);
-				}
+				CommandOption commandOption = commandContext.getOptionByLongName(longName);
 				if (commandOption == null && shortName != ' ') {
 					commandOption = commandContext.getOptionByShortName(shortName);
 				}
@@ -157,15 +152,13 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 				}
 				else {
 					if (required) {
-						throw new IllegalArgumentException(
-								"Required option '--" + (longName.isEmpty() ? shortName : longName) + "' is missing.");
+						throw new IllegalArgumentException("Required option '--" + longName + "' is missing.");
 					}
 					else {
 						// try to use default value
 						String defaultValue = optionAnnotation.defaultValue();
 						if (defaultValue.isEmpty()) {
-							log.warn("No value provided for optional option '--"
-									+ (longName.isEmpty() ? shortName : longName)
+							log.warn("No value provided for optional option '--" + longName
 									+ "' and no default value specified.");
 						}
 						Class<?> parameterType = parameterTypes[i];

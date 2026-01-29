@@ -12,6 +12,7 @@ import org.springframework.shell.core.command.completion.CompletionContext;
 import org.springframework.shell.core.command.completion.CompletionProposal;
 import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.core.utils.Utils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -46,7 +47,7 @@ public class CommandCompleter implements Completer {
 				// add option completions for the command
 				for (CommandOption option : options) {
 					boolean present = isOptionPresent(line, option);
-					if (option.longName() != null && !present) {
+					if (StringUtils.hasLength(option.longName()) && !present) {
 						candidates.add(new Candidate("--" + option.longName()));
 					}
 					if (option.shortName() != ' ' && !present) {
