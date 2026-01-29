@@ -54,7 +54,6 @@
 *** xref:tui/events/mouse.adoc[]
 * xref:customization/index.adoc[]
 ** xref:customization/styling.adoc[]
-** xref:customization/logging.adoc[]
 ** xref:customization/contextclose.adoc[]
 ** xref:customization/custom-prompt.adoc[]
 * xref:execution.adoc[]
