@@ -48,8 +48,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
 	private final CommandRegistry commandRegistry;
 
-	// Use a no-op PrintWriter since output is not needed in non-interactive mode
-	private PrintWriter outputWriter = new PrintWriter(PrintWriter.nullWriter());
+	// Use System.out as default output writer
+	private PrintWriter outputWriter = new PrintWriter(System.out);
 
 	// Use a no-op InputReader since input is not needed in non-interactive mode
 	private final InputReader inputReader = new InputReader() {
