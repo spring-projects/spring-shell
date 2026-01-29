@@ -16,15 +16,14 @@
 
 package org.springframework.shell.core.autoconfigure;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.core.command.Clear;
-import org.springframework.shell.core.command.Command;
-import org.springframework.shell.core.command.Help;
-import org.springframework.shell.core.command.Script;
-import org.springframework.shell.core.command.Version;
+import org.springframework.shell.core.command.*;
 
 /**
  * Creates beans for standard commands.
@@ -51,8 +50,25 @@ public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnProperty(value = "spring.shell.command.version.enabled", havingValue = "true", matchIfMissing = true)
-	public Command versionCommand() {
-		return new Version();
+	public Command versionCommand(SpringShellProperties shellProperties,
+			ObjectProvider<BuildProperties> buildProperties, ObjectProvider<GitProperties> gitProperties) {
+		SpringShellProperties.VersionCommand properties = shellProperties.getCommand().getVersion();
+		Version version = new Version();
+
+		buildProperties.ifAvailable(props -> version
+			.setBuildProperties(new Version.BuildProperties(properties.isShowBuildGroup() ? props.getGroup() : null,
+					properties.isShowBuildArtifact() ? props.getArtifact() : null,
+					properties.isShowBuildName() ? props.getName() : null,
+					properties.isShowBuildVersion() ? props.getVersion() : null,
+					properties.isShowBuildTime() ? props.getTime() : null)));
+
+		gitProperties.ifAvailable(props -> version
+			.setGitProperties(new Version.GitProperties(properties.isShowGitBranch() ? props.getBranch() : null,
+					properties.isShowGitCommitId() ? props.getCommitId() : null,
+					properties.isShowGitShortCommitId() ? props.getShortCommitId() : null,
+					properties.isShowGitCommitTime() ? props.getCommitTime() : null)));
+
+		return version;
 	}
 
 	@Bean

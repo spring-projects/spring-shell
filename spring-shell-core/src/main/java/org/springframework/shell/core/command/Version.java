@@ -15,7 +15,15 @@
  */
 package org.springframework.shell.core.command;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.StringUtils;
+
 import java.io.PrintWriter;
+import java.time.Instant;
 
 /**
  * Command to print the current version of Spring Shell.
@@ -23,8 +31,31 @@ import java.io.PrintWriter;
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
  * @author Piotr Olaszewski
+ * @author David Pilar
  */
-public class Version implements Command {
+public class Version implements Command, InitializingBean, ApplicationContextAware {
+
+	public record BuildProperties(@Nullable String group, @Nullable String artifact, @Nullable String name,
+			@Nullable String version, @Nullable Instant time) {
+	}
+
+	public record GitProperties(@Nullable String branch, @Nullable String commitId, @Nullable String shortCommitId,
+			@Nullable Instant commitTime) {
+	}
+
+	private ApplicationContext applicationContext;
+
+	private @Nullable BuildProperties buildProperties;
+
+	private @Nullable GitProperties gitProperties;
+
+	public void setBuildProperties(BuildProperties buildProperties) {
+		this.buildProperties = buildProperties;
+	}
+
+	public void setGitProperties(GitProperties gitProperties) {
+		this.gitProperties = gitProperties;
+	}
 
 	@Override
 	public String getDescription() {
@@ -40,13 +71,57 @@ public class Version implements Command {
 	public ExitStatus execute(CommandContext commandContext) throws Exception {
 		Package pkg = Version.class.getPackage();
 		String version = "N/A";
-		if (pkg != null && pkg.getImplementationVersion() != null) {
+		if (buildProperties != null && StringUtils.hasText(buildProperties.version())) {
+			version = buildProperties.version();
+		}
+		else if (pkg != null && pkg.getImplementationVersion() != null) {
 			version = pkg.getImplementationVersion();
 		}
 		PrintWriter printWriter = commandContext.outputWriter();
 		printWriter.println("Version: " + version);
+
+		if (buildProperties != null) {
+			if (StringUtils.hasText(buildProperties.group())) {
+				printWriter.println("Build Group: " + buildProperties.group());
+			}
+			if (StringUtils.hasText(buildProperties.artifact())) {
+				printWriter.println("Build Artifact: " + buildProperties.artifact());
+			}
+			if (StringUtils.hasText(buildProperties.name())) {
+				printWriter.println("Build Name: " + buildProperties.name());
+			}
+			if (buildProperties.time() != null) {
+				printWriter.println("Build Time: " + buildProperties.time());
+			}
+		}
+		if (gitProperties != null) {
+			if (StringUtils.hasText(gitProperties.shortCommitId())) {
+				printWriter.println("Git Short Commit ID: " + gitProperties.shortCommitId());
+			}
+			if (StringUtils.hasText(gitProperties.commitId())) {
+				printWriter.println("Git Commit ID: " + gitProperties.commitId());
+			}
+			if (StringUtils.hasText(gitProperties.branch())) {
+				printWriter.println("Git Branch: " + gitProperties.branch());
+			}
+			if (gitProperties.commitTime() != null) {
+				printWriter.println("Git Commit Time: " + gitProperties.commitTime());
+			}
+		}
+
 		printWriter.flush();
 		return ExitStatus.OK;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+	@Override
+	public void afterPropertiesSet() {
+		applicationContext.getBeanProvider(Version.BuildProperties.class).ifAvailable(this::setBuildProperties);
+		applicationContext.getBeanProvider(Version.GitProperties.class).ifAvailable(this::setGitProperties);
 	}
 
 }
