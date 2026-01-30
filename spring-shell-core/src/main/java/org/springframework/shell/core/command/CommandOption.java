@@ -16,6 +16,7 @@
 package org.springframework.shell.core.command;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.util.StringUtils;
 
 /**
  * Record representing the definition as well as the runtime information about a command
@@ -24,9 +25,15 @@ import org.jspecify.annotations.Nullable;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 public record CommandOption(char shortName, @Nullable String longName, @Nullable String description,
 		@Nullable Boolean required, @Nullable String defaultValue, @Nullable String value, Class<?> type) {
+
+	public boolean isOptionEqual(String optionName) {
+		return StringUtils.hasLength(longName) && optionName.equals("--" + longName)
+				|| shortName != ' ' && optionName.equals("-" + shortName);
+	}
 
 	public static Builder with() {
 		return new Builder();

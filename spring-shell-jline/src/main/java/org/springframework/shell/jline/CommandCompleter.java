@@ -116,7 +116,7 @@ public class CommandCompleter implements Completer {
 		CommandOption option;
 		if (reversed.get(0).isEmpty()) {
 			// the option name was completed, but no value provided ---> "--optionName "
-			option = findOption(options, o -> isOptionEqual(reversed.get(1), o));
+			option = findOption(options, o -> o.isOptionEqual(reversed.get(1)));
 		}
 		else {
 			// the option uses key-value pair ---> "--optionName=someValue"
@@ -124,7 +124,7 @@ public class CommandCompleter implements Completer {
 
 			// the option uses completion on the value level ---> "--optionName someValue"
 			if (option == null) {
-				option = findOption(options, o -> isOptionEqual(reversed.get(1), o));
+				option = findOption(options, o -> o.isOptionEqual(reversed.get(1)));
 			}
 		}
 
@@ -135,13 +135,8 @@ public class CommandCompleter implements Completer {
 		return options.stream().filter(optionFilter).findFirst().orElse(null);
 	}
 
-	private static boolean isOptionEqual(String optionName, CommandOption option) {
-		return option.longName() != null && optionName.equals("--" + option.longName())
-				|| option.shortName() != ' ' && optionName.equals("-" + option.shortName());
-	}
-
 	private static boolean isOptionStartWith(String optionName, CommandOption option) {
-		return option.longName() != null && optionName.startsWith("--" + option.longName() + "=")
+		return StringUtils.hasLength(option.longName()) && optionName.startsWith("--" + option.longName() + "=")
 				|| option.shortName() != ' ' && optionName.startsWith("-" + option.shortName() + "=");
 	}
 
