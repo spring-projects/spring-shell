@@ -37,6 +37,7 @@ import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.annotation.Argument;
 import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Option;
+import org.springframework.shell.core.utils.Utils;
 import org.springframework.util.MethodInvoker;
 
 /**
@@ -155,15 +156,20 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 						throw new IllegalArgumentException("Required option '--" + longName + "' is missing.");
 					}
 					else {
-						// try to use default value
-						String defaultValue = optionAnnotation.defaultValue();
-						if (defaultValue.isEmpty()) {
-							log.warn("No value provided for optional option '--" + longName
-									+ "' and no default value specified.");
-						}
 						Class<?> parameterType = parameterTypes[i];
-						Object value = this.conversionService.convert(defaultValue, parameterType);
-						args.add(value);
+						// check if the option type is primitive or not
+						if (!parameterType.isPrimitive()) {
+							// try to convert default value if present
+							String defaultValue = optionAnnotation.defaultValue();
+							if (!defaultValue.isEmpty()) {
+								Object value = this.conversionService.convert(defaultValue, parameterType);
+								args.add(value);
+							}
+						}
+						else {
+							// for primitive types, add default value of the primitive
+							args.add(Utils.getDefaultValueForPrimitiveType(parameterType));
+						}
 					}
 				}
 				continue;

@@ -29,6 +29,7 @@ import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.ExitStatus;
+import org.springframework.util.Assert;
 
 /**
  * Some text utilities.
@@ -69,6 +70,20 @@ public class Utils {
 			}
 		}
 		return stringBuilder.toString();
+	}
+
+	public static Object getDefaultValueForPrimitiveType(Class<?> type) {
+		Assert.isTrue(type.isPrimitive(), "Type must be a primitive type");
+		if (type == boolean.class) {
+			return false;
+		}
+		else if (type == char.class) {
+			return '\u0000';
+		}
+		else if (type == byte.class || type == short.class || type == int.class || type == long.class) {
+			return 0;
+		} // otherwise it's float or double
+		return 0.0;
 	}
 
 	private static Set<Command> getCommands(CommandRegistry commandRegistry) {

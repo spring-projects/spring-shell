@@ -121,13 +121,13 @@ public class Help implements Command {
 					helpMessageBuilder.append("\t").append("[Mandatory]").append("\n\n");
 				}
 				else {
-					helpMessageBuilder.append("\t").append("[Optional");
-					if (option.defaultValue() != null) {
-						helpMessageBuilder.append(", default = ").append(option.defaultValue()).append("]\n\n");
+					helpMessageBuilder.append("\t").append("[Optional, default = ");
+					String defaultValue = option.defaultValue();
+					Class<?> optionType = option.type();
+					if (defaultValue == null && optionType.isPrimitive()) {
+						defaultValue = Utils.getDefaultValueForPrimitiveType(optionType).toString();
 					}
-					else {
-						helpMessageBuilder.append("]\n\n");
-					}
+					helpMessageBuilder.append(defaultValue).append("]\n\n");
 				}
 			}
 			helpMessageBuilder.append("\t--help or -h").append("\n");

@@ -65,7 +65,7 @@ class HelpTests {
 		CommandOption timesOption = CommandOption.with()
 			.shortName('t')
 			.longName("times")
-			.type(Integer.class)
+			.type(int.class)
 			.required(false)
 			.defaultValue("1")
 			.description("Number of times to greet")
@@ -101,14 +101,14 @@ class HelpTests {
 					hi - Say hi
 
 				SYNOPSIS
-					hi [--name String] --times Integer --help
+					hi [--name String] --times int --help
 
 				OPTIONS
 					--name or -n String
 					Name of the person to greet
 					[Mandatory]
 
-					--times or -t Integer
+					--times or -t int
 					Number of times to greet
 					[Optional, default = 1]
 
@@ -134,7 +134,7 @@ class HelpTests {
 		CommandOption timesOption = CommandOption.with()
 			.shortName('t')
 			.longName("times")
-			.type(Integer.class)
+			.type(int.class)
 			.required(false)
 			.defaultValue("1")
 			.description("Number of times to greet")
@@ -171,14 +171,14 @@ class HelpTests {
 					hi - Say hi
 
 				SYNOPSIS
-					hi [--name String] --times Integer --help
+					hi [--name String] --times int --help
 
 				OPTIONS
 					--name or -n String
 					Name of the person to greet
 					[Mandatory]
 
-					--times or -t Integer
+					--times or -t int
 					Number of times to greet
 					[Optional, default = 1]
 
