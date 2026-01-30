@@ -17,6 +17,7 @@ package org.springframework.shell.core.command;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -102,11 +103,16 @@ public class DefaultCommandParser implements CommandParser {
 					}
 					else { // use next word as option value
 						if (nextWord == null || isOption(nextWord) || isArgumentSeparator(nextWord)) {
-							throw new IllegalArgumentException("Option '" + currentWord + "' requires a value");
+							if (!isBooleanOption(commandName, currentWord)) {
+								throw new IllegalArgumentException("Option '" + currentWord + "' requires a value");
+							}
+							nextWord = "true";
+						}
+						else {
+							i++; // skip next word as it was used as option value
 						}
 						CommandOption commandOption = parseOption(currentWord + "=" + nextWord);
 						parsedInputBuilder.addOption(commandOption);
-						i++; // skip next word as it was used as option value
 					}
 				}
 				else {
@@ -169,6 +175,15 @@ public class DefaultCommandParser implements CommandParser {
 			s = s.replace("\\\"", "\"").replace("\\\\", "\\");
 		}
 		return s;
+	}
+
+	private boolean isBooleanOption(String commandName, String currentWord) {
+		return Optional.ofNullable(commandRegistry.getCommandByName(commandName))
+			.map(Command::getOptions)
+			.orElse(List.of())
+			.stream()
+			.filter(o -> o.isOptionEqual(currentWord))
+			.anyMatch(o -> o.type() == boolean.class || o.type() == Boolean.class);
 	}
 
 }

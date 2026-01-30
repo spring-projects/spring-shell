@@ -269,6 +269,51 @@ class DefaultCommandParserTests {
 				Arguments.of("mycommand  --  value", "value"), Arguments.of("mycommand  --  \"value\"", "value"));
 	}
 
+	@ParameterizedTest
+	@MethodSource("parseWithBooleanOptionData")
+	void testParseWithBooleanOption(String input, String longName, char shortName, Class<?> type,
+			String expectedValue) {
+		// given
+		Command command = createCommand("mycommand", "My test command");
+		command.getOptions().add(CommandOption.with().longName(longName).shortName(shortName).type(type).build());
+		commandRegistry.registerCommand(command);
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(1, parsedInput.options().size());
+		assertEquals(longName, parsedInput.options().get(0).longName());
+		assertEquals(shortName, parsedInput.options().get(0).shortName());
+		assertEquals(expectedValue, parsedInput.options().get(0).value());
+	}
+
+	static Stream<Arguments> parseWithBooleanOptionData() {
+		return Stream.of(Arguments.of("mycommand --option=true", "option", ' ', boolean.class, "true"),
+				Arguments.of("mycommand --option=false", "option", ' ', boolean.class, "false"),
+				Arguments.of("mycommand --option true", "option", ' ', boolean.class, "true"),
+				Arguments.of("mycommand --option false", "option", ' ', boolean.class, "false"),
+				Arguments.of("mycommand --option", "option", ' ', boolean.class, "true"),
+
+				Arguments.of("mycommand -on=true", "", 'o', boolean.class, "true"),
+				Arguments.of("mycommand -o=false", "", 'o', boolean.class, "false"),
+				Arguments.of("mycommand -o true", "", 'o', boolean.class, "true"),
+				Arguments.of("mycommand -o false", "", 'o', boolean.class, "false"),
+				Arguments.of("mycommand -o", "", 'o', boolean.class, "true"),
+
+				Arguments.of("mycommand --option=true", "option", ' ', Boolean.class, "true"),
+				Arguments.of("mycommand --option=false", "option", ' ', Boolean.class, "false"),
+				Arguments.of("mycommand --option true", "option", ' ', Boolean.class, "true"),
+				Arguments.of("mycommand --option false", "option", ' ', Boolean.class, "false"),
+				Arguments.of("mycommand --option", "option", ' ', Boolean.class, "true"),
+
+				Arguments.of("mycommand -on=true", "", 'o', Boolean.class, "true"),
+				Arguments.of("mycommand -o=false", "", 'o', Boolean.class, "false"),
+				Arguments.of("mycommand -o true", "", 'o', Boolean.class, "true"),
+				Arguments.of("mycommand -o false", "", 'o', Boolean.class, "false"),
+				Arguments.of("mycommand -o", "", 'o', Boolean.class, "true"));
+	}
+
 	private static Command createCommand(String name, String description) {
 		return new AbstractCommand(name, description) {
 			@Override
