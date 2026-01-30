@@ -16,6 +16,7 @@
 package org.springframework.shell.core.command;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -27,7 +28,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DefaultCommandParserTests {
 
-	private final CommandParser parser = new DefaultCommandParser();
+	private CommandParser parser;
+
+	private CommandRegistry commandRegistry;
+
+	@BeforeEach
+	void setUp() {
+		this.commandRegistry = new CommandRegistry();
+		this.parser = new DefaultCommandParser(this.commandRegistry);
+	}
 
 	@Test
 	void testParseLongOptionWithoutValue() {
@@ -80,6 +89,7 @@ class DefaultCommandParserTests {
 
 	@Test
 	void testParseCommandWithSubCommand() {
+		commandRegistry.registerCommand(createCommand("mycommand mysubcommand", "My test command"));
 		ParsedInput parsedInput = parser.parse("mycommand mysubcommand --optionA=value1 arg1 -b=value2 arg2");
 		assertEquals("mycommand", parsedInput.commandName());
 		assertEquals(1, parsedInput.subCommands().size());
@@ -108,6 +118,7 @@ class DefaultCommandParserTests {
 
 	@Test
 	void testParseWithMultipleSubCommands() {
+		commandRegistry.registerCommand(createCommand("mycommand mysubcommand1 mysubcommand2", "My test command"));
 		ParsedInput parsedInput = parser
 			.parse("mycommand mysubcommand1 mysubcommand2 --optionA=value1 arg1 -b=value2 arg2");
 		assertEquals("mycommand", parsedInput.commandName());
@@ -138,6 +149,7 @@ class DefaultCommandParserTests {
 
 	@Test
 	void testParseWithSubCommandWithoutOptions() {
+		commandRegistry.registerCommand(createCommand("mycommand mysubcommand", "My test command"));
 		ParsedInput parsedInput = parser.parse("mycommand mysubcommand -- arg1 arg2");
 		assertEquals("mycommand", parsedInput.commandName());
 		assertEquals(1, parsedInput.subCommands().size());
@@ -154,15 +166,17 @@ class DefaultCommandParserTests {
 		assertEquals("arg2", argument2.value());
 	}
 
-	// In this case, arguments are considered as subcommands since there's no separator
+	// In this case, subcommands should still be parsed, and the rest considered as
+	// arguments
 	@Test
 	void testParseWithSubCommandWithoutOptionsAndWithoutSeparator() {
+		commandRegistry.registerCommand(createCommand("mycommand mysubcommand", "My test command"));
 		ParsedInput parsedInput = parser.parse("mycommand mysubcommand arg1 arg2");
 		assertEquals("mycommand", parsedInput.commandName());
-		assertEquals(3, parsedInput.subCommands().size());
+		assertEquals(1, parsedInput.subCommands().size());
 		assertEquals("mysubcommand", parsedInput.subCommands().get(0));
-		assertEquals("arg1", parsedInput.subCommands().get(1));
-		assertEquals("arg2", parsedInput.subCommands().get(2));
+		assertEquals("arg1", parsedInput.arguments().get(0).value());
+		assertEquals("arg2", parsedInput.arguments().get(1).value());
 	}
 
 	@ParameterizedTest
@@ -253,6 +267,15 @@ class DefaultCommandParserTests {
 				Arguments.of("mycommand -- value1'inside'value2", "value1'inside'value2"),
 				Arguments.of("mycommand -- \"value1 'inside' value2\"", "value1 'inside' value2"),
 				Arguments.of("mycommand  --  value", "value"), Arguments.of("mycommand  --  \"value\"", "value"));
+	}
+
+	private static Command createCommand(String name, String description) {
+		return new AbstractCommand(name, description) {
+			@Override
+			public ExitStatus doExecute(CommandContext commandContext) {
+				return ExitStatus.OK;
+			}
+		};
 	}
 
 }

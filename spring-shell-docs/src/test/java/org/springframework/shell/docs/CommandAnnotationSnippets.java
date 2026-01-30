@@ -51,7 +51,7 @@ class CommandAnnotationSnippets {
 					@Argument(index = 0, description = "the name of the person to greet",
 							defaultValue = "world") String name,
 					@Option(shortName = 's', longName = "suffix", description = "the suffix of the greeting message",
-							defaultValue = "!") char suffix) {
+							defaultValue = "!") String suffix) {
 				System.out.println("Hi " + name + suffix);
 			}
 

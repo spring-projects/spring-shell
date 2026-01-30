@@ -32,7 +32,11 @@ import org.springframework.shell.core.NonInteractiveShellRunner;
  */
 public class Script implements Command {
 
-	private CommandParser commandParser = new DefaultCommandParser();
+	private CommandParser commandParser;
+
+	public Script(CommandRegistry commandRegistry) {
+		this.commandParser = new DefaultCommandParser(commandRegistry);
+	}
 
 	@Override
 	public String getDescription() {

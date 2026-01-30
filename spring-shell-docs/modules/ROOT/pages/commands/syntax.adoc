@@ -43,20 +43,6 @@ $>mycommand mysubcommand --optionA=value1 arg1 -b=value2 arg2 --optionC value3 -
 
 IMPORTANT: When an option is specified, it is always expected to have a value for that option, even if it is a boolean one. This is necessary to be able to distinguish option values from arguments. Moreover, short options cannot be grouped (e.g., `-abc` is not supported).
 
-If your command does not have options, then arguments must be separated using "--" (POSIX style) to avoid ambiguity between arguments and subcommands:
-
-[source,shell]
-----
-$>mycommand -- arg1 arg2
-----
-
-Similarly, if your command defines subcommands that are used without options, then arguments must also be separated using "--" (POSIX style) to avoid ambiguity between arguments and subcommands:
-
-[source,shell]
-----
-$>mycommand mysubcommand -- arg1 arg2
-----
-
 TIP: To avoid ambiguity, named options should be preferred over positional arguments whenever possible, especially when subcommands are involved (see https://clig.dev/#arguments-and-flags[Command Line Interface Guidelines]).
 
 == Customizing parsing rules

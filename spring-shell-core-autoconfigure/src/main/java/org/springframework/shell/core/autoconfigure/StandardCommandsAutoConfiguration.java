@@ -73,8 +73,8 @@ public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnProperty(value = "spring.shell.command.script.enabled", havingValue = "true", matchIfMissing = true)
-	public Command scriptCommand() {
-		return new Script();
+	public Command scriptCommand(CommandRegistry commandRegistry) {
+		return new Script(commandRegistry);
 	}
 
 }

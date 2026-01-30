@@ -15,6 +15,7 @@
  */
 package org.springframework.shell.core.command;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -34,11 +35,6 @@ import org.apache.commons.logging.LogFactory;
  * Argument       ::= String
  *
  * Example: mycommand mysubcommand --optionA=value1 arg1 -b=value2 arg2 --optionC value3 -d value4
- *
- *  If subcommands are used without options, then arguments must be separated using "--" (POSIX style):
- *  CommandSyntax  ::= CommandName [SubCommandName]* '--' [Argument]*
- *
- *  Example: mycommand mysubcommand -- arg1 arg2
  * </pre>
  *
  * @author Mahmoud Ben Hassine
@@ -49,6 +45,12 @@ public class DefaultCommandParser implements CommandParser {
 
 	private static final Log log = LogFactory.getLog(DefaultCommandParser.class);
 
+	private final CommandRegistry commandRegistry;
+
+	public DefaultCommandParser(CommandRegistry commandRegistry) {
+		this.commandRegistry = commandRegistry;
+	}
+
 	@Override
 	public ParsedInput parse(String input) {
 		log.debug("Parsing input: " + input);
@@ -56,53 +58,43 @@ public class DefaultCommandParser implements CommandParser {
 
 		// the first word is the (root) command name
 		String commandName = words.get(0);
-		ParsedInput.Builder parsedInputBuilder = ParsedInput.builder().commandName(commandName);
-		if (words.size() == 1) {
-			ParsedInput parsedInput = parsedInputBuilder.build();
-			log.debug("Parsed input: " + parsedInput);
-			return parsedInput;
-		}
-
-		if (words.size() == 2 && (words.get(1).equals("--help") || words.get(1).equals("-h"))) {
-			parsedInputBuilder.addOption(CommandOption.with().shortName('h').longName("help").value("true").build());
-			ParsedInput parsedInput = parsedInputBuilder.build();
-			log.debug("Parsed input: " + parsedInput);
-			return parsedInput;
-		}
-
 		List<String> remainingWords = words.subList(1, words.size());
 
-		// parse sub commands: if no options, then need to use -- to separate sub commands
-		// from arguments (POSIX style)
-		int subCommandCount = 0;
-		for (String word : remainingWords) {
-			if (!isOption(word) && !isArgumentSeparator(word)) {
-				subCommandCount++;
-				parsedInputBuilder.addSubCommand(word);
-			}
-			else {
+		int firstNonCommandWordIndex = 1;
+		String prefix = commandName;
+		for (String remainingWord : remainingWords) {
+			String potentialCommandName = prefix + " " + remainingWord;
+			List<Command> commands = commandRegistry.getCommandsByPrefix(potentialCommandName);
+			if (commands.isEmpty()) {
 				break;
 			}
+			prefix = potentialCommandName;
+			firstNonCommandWordIndex++;
 		}
-		if (subCommandCount > 0) {
-			remainingWords = remainingWords.subList(subCommandCount, remainingWords.size());
+		List<String> subCommands = firstNonCommandWordIndex == 1 ? Collections.emptyList()
+				: words.subList(1, firstNonCommandWordIndex);
+
+		// add command and sub commands
+		ParsedInput.Builder parsedInputBuilder = ParsedInput.builder().commandName(commandName);
+		for (String subCommand : subCommands) {
+			parsedInputBuilder.addSubCommand(subCommand);
 		}
 
-		// if first remaining word is argument separator, skip it and parse remaining
-		// words as arguments
-		if (!remainingWords.isEmpty() && isArgumentSeparator(remainingWords.get(0))) {
-			remainingWords = remainingWords.subList(1, remainingWords.size());
+		// parse options and arguments
+		List<String> optionsAndArguments = words.subList(firstNonCommandWordIndex, words.size());
+		if (!optionsAndArguments.isEmpty() && isArgumentSeparator(optionsAndArguments.get(0))) {
+			optionsAndArguments = optionsAndArguments.subList(1, optionsAndArguments.size());
 			int argumentIndex = 0;
-			for (String remainingWord : remainingWords) {
+			for (String remainingWord : optionsAndArguments) {
 				CommandArgument commandArgument = parseArgument(argumentIndex++, remainingWord);
 				parsedInputBuilder.addArgument(commandArgument);
 			}
 		}
 		else { // parse remaining words as options and arguments
 			int argumentIndex = 0;
-			for (int i = 0; i < remainingWords.size(); i++) {
-				String currentWord = remainingWords.get(i);
-				String nextWord = i + 1 < remainingWords.size() ? remainingWords.get(i + 1) : null;
+			for (int i = 0; i < optionsAndArguments.size(); i++) {
+				String currentWord = optionsAndArguments.get(i);
+				String nextWord = i + 1 < optionsAndArguments.size() ? optionsAndArguments.get(i + 1) : null;
 				if (isOption(currentWord)) {
 					if (currentWord.contains("=")) {
 						CommandOption commandOption = parseOption(currentWord);

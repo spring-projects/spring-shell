@@ -20,7 +20,7 @@ public class DefaultJLineShellConfiguration {
 
 	@Bean
 	public ShellRunner shellRunner(JLineInputProvider inputProvider, CommandRegistry commandRegistry) {
-		return new JLineShellRunner(inputProvider, new DefaultCommandParser(), commandRegistry);
+		return new JLineShellRunner(inputProvider, new DefaultCommandParser(commandRegistry), commandRegistry);
 	}
 
 	@Bean

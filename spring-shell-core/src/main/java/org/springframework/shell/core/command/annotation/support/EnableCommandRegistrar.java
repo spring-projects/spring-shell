@@ -63,13 +63,21 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 			registry.registerBeanDefinition("commandRegistry", beanDefinition);
 		}
 
+		// register command parser
+		if (!registry.containsBeanDefinition("commandParser")) {
+			BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder
+				.genericBeanDefinition(DefaultCommandParser.class)
+				.addConstructorArgReference("commandRegistry");
+			registry.registerBeanDefinition("commandParser", beanDefinitionBuilder.getBeanDefinition());
+		}
+
 		// register shell runner (default to interactive if none is defined)
 		if (!registry.containsBeanDefinition("shellRunner")) {
 			boolean debugModeValue = System.getProperty("spring.shell.debug.enabled", "false").equalsIgnoreCase("true");
 			BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder
 				.genericBeanDefinition(SystemShellRunner.class)
 				.addConstructorArgValue(new ConsoleInputProvider())
-				.addConstructorArgValue(new DefaultCommandParser())
+				.addConstructorArgReference("commandParser")
 				.addConstructorArgReference("commandRegistry")
 				.addPropertyValue("debugMode", debugModeValue);
 			registry.registerBeanDefinition("shellRunner", beanDefinitionBuilder.getBeanDefinition());

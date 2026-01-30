@@ -44,8 +44,8 @@ public class ShellTestClientAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public CommandParser commandParser() {
-		return new DefaultCommandParser();
+	public CommandParser commandParser(CommandRegistry commandRegistry) {
+		return new DefaultCommandParser(commandRegistry);
 	}
 
 }
