@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.aot.hint.annotation.Reflective;
+import org.springframework.core.annotation.AliasFor;
 
 /**
  * Annotation marking a method to be a shell command. The declaring class should be
@@ -35,6 +36,13 @@ import org.springframework.aot.hint.annotation.Reflective;
 @Documented
 @Reflective
 public @interface Command {
+
+	/**
+	 * Alias for {@link #description}. Allows using
+	 * {@code @Command("My command description")} as shorthand.
+	 */
+	@AliasFor(attribute = "description")
+	String value() default "";
 
 	/**
 	 * Define command as an array. Given that command should be {@code command1 sub1} it
@@ -73,6 +81,7 @@ public @interface Command {
 	 * Define a command description.
 	 * @return the command description
 	 */
+	@AliasFor(attribute = "value")
 	String description() default "";
 
 	/**
