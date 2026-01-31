@@ -165,6 +165,10 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 								Object value = this.conversionService.convert(defaultValue, parameterType);
 								args.add(value);
 							}
+							else {
+								// for non-primitive types, add null
+								args.add(null);
+							}
 						}
 						else {
 							// for primitive types, add default value of the primitive
