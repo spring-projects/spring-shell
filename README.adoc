@@ -2,11 +2,8 @@
 
 == Latest news
 
+* January 31, 2026: https://spring.io/blog/2026/01/31/spring-shell-4-0-1-is-out[Spring Shell 4.0.1 is out!]
 * December 30, 2025: https://spring.io/blog/2025/12/30/spring-shell-4-0-0-ga-released[Spring Shell 4.0.0 released!]
-* December 19, 2025: https://spring.io/blog/2025/12/19/spring-shell-4-0-0-rc1-released[Spring Shell 4.0.0-RC1 available now]
-* December 9, 2025: https://spring.io/blog/2025/12/09/spring-shell-4-0-0-m2-released[Spring Shell 4.0.0-M2 is out!]
-* October 24, 2025: https://spring.io/blog/2025/10/24/spring-shell-4-0-0-m1-released[Spring Shell 4.0.0-M1 is available!]
-* August 4, 2025: https://spring.io/blog/2025/08/04/spring-shell-3-4-1-available[Spring Shell 3.4.1 is now available]
 
 == About Spring Shell
 
@@ -25,7 +22,7 @@ Our primary goals are:
 == Installation and Getting Started
 
 Go to https://start.spring.io[start.spring.io] and generate a new project with Spring Shell dependency.
-Here is a quick link to generate a Maven project with Spring Shell dependency: https://start.spring.io/#!type=maven-project&language=java&platformVersion=4.0.1&packaging=jar&configurationFileFormat=properties&jvmVersion=17&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=spring-shell[Spring Initializr link].
+Here is a quick link to generate a Maven project with Spring Shell dependency: https://start.spring.io/#!type=maven-project&language=java&platformVersion=4.0.2&packaging=jar&configurationFileFormat=properties&jvmVersion=17&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=spring-shell[Spring Initializr link].
 
 Unzip the generated project and open it in your favorite IDE. Now edit the main application class `DemoApplication` and add the following command:
 
