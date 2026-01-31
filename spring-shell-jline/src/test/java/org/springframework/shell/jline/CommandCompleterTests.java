@@ -87,8 +87,8 @@ class CommandCompleterTests {
 	}
 
 	@ParameterizedTest
-	@MethodSource("completeData")
-	void testComplete(List<String> words, List<String> expectedValues) {
+	@MethodSource("completeWithCompletionData")
+	void testCompleteWithCompletion(List<String> words, List<String> expectedValues) {
 		// given
 		when(command.getOptions())
 			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').build(),
@@ -107,51 +107,85 @@ class CommandCompleterTests {
 		assertEquals(expectedValues, toCandidateNames(candidates));
 	}
 
-	static Stream<Arguments> completeData() {
+	static Stream<Arguments> completeWithCompletionData() {
+		return completeData("");
+	}
+
+	@ParameterizedTest
+	@MethodSource("completeWithoutCompletionData")
+	void testCompleteWithoutCompletion(List<String> words, List<String> expectedValues) {
+		// given
+		when(command.getName()).thenReturn("hello");
+		when(command.getOptions())
+			.thenReturn(List.of(new CommandOption.Builder().longName("first").shortName('f').completion(false).build(),
+					new CommandOption.Builder().longName("last").shortName('l').completion(false).build()));
+
+		List<Candidate> candidates = new ArrayList<>();
+		ParsedLine line = mock(ParsedLine.class);
+		when(line.words()).thenReturn(words);
+		when(line.word()).thenReturn(words.get(words.size() - 1));
+		when(line.line()).thenReturn(String.join(" ", words));
+
+		// when
+		completer.complete(mock(LineReader.class), line, candidates);
+
+		// then
+		assertEquals(expectedValues, toCandidateNames(candidates));
+	}
+
+	static Stream<Arguments> completeWithoutCompletionData() {
+		return completeData("=");
+	}
+
+	static Stream<Arguments> completeData(String sep) {
 		return Stream.of(Arguments.of(List.of(""), List.of("hello")), Arguments.of(List.of("he"), List.of("hello")),
 				Arguments.of(List.of("he", ""), List.of()), Arguments.of(List.of("hello"), List.of("hello")),
 
-				Arguments.of(List.of("hello", ""), List.of("--first", "--last", "-f", "-l")),
-				Arguments.of(List.of("hello", "--"), List.of("--first", "--last", "-f", "-l")),
-				Arguments.of(List.of("hello", "-"), List.of("--first", "--last", "-f", "-l")),
-				Arguments.of(List.of("hello", "--fi"), List.of("--first", "--last", "-f", "-l")),
-				Arguments.of(List.of("hello", "--la"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", ""), List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
+				Arguments.of(List.of("hello", "--"), List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
+				Arguments.of(List.of("hello", "-"), List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
+				Arguments.of(List.of("hello", "--fi"),
+						List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
+				Arguments.of(List.of("hello", "--la"),
+						List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
 
-				Arguments.of(List.of("hello", "-f"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", "-f"), List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
 				Arguments.of(List.of("hello", "-f="), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
 				Arguments.of(List.of("hello", "-f=Pe"), List.of("-f=Mary", "-f=Paul", "-f=Peter")),
-				Arguments.of(List.of("hello", "-f=Pe", ""), List.of("--last", "-l")),
+				Arguments.of(List.of("hello", "-f=Pe", ""), List.of("--last" + sep, "-l" + sep)),
 
-				Arguments.of(List.of("hello", "--first"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", "--first"),
+						List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
 				Arguments.of(List.of("hello", "--first="), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
 				Arguments.of(List.of("hello", "--first=Pe"), List.of("--first=Mary", "--first=Paul", "--first=Peter")),
-				Arguments.of(List.of("hello", "--first=Pe", ""), List.of("--last", "-l")),
+				Arguments.of(List.of("hello", "--first=Pe", ""), List.of("--last" + sep, "-l" + sep)),
 
 				Arguments.of(List.of("hello", "-f", ""), List.of("Mary", "Paul", "Peter")),
 				Arguments.of(List.of("hello", "--first", ""), List.of("Mary", "Paul", "Peter")),
 
 				Arguments.of(List.of("hello", "-f", "Pe"), List.of("Mary", "Paul", "Peter")),
-				Arguments.of(List.of("hello", "-f", "Pe", ""), List.of("--last", "-l")),
+				Arguments.of(List.of("hello", "-f", "Pe", ""), List.of("--last" + sep, "-l" + sep)),
 				Arguments.of(List.of("hello", "--first", "Pe"), List.of("Mary", "Paul", "Peter")),
-				Arguments.of(List.of("hello", "--first", "Pe", ""), List.of("--last", "-l")),
+				Arguments.of(List.of("hello", "--first", "Pe", ""), List.of("--last" + sep, "-l" + sep)),
 
-				Arguments.of(List.of("hello", "-l"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", "-l"), List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
 				Arguments.of(List.of("hello", "-l="), List.of("-l=Chan", "-l=Noris")),
 				Arguments.of(List.of("hello", "-l=No"), List.of("-l=Chan", "-l=Noris")),
-				Arguments.of(List.of("hello", "-l=No", ""), List.of("--first", "-f")),
+				Arguments.of(List.of("hello", "-l=No", ""), List.of("--first" + sep, "-f" + sep)),
 
-				Arguments.of(List.of("hello", "--last"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", "--last"),
+						List.of("--first" + sep, "--last" + sep, "-f" + sep, "-l" + sep)),
 				Arguments.of(List.of("hello", "--last="), List.of("--last=Chan", "--last=Noris")),
 				Arguments.of(List.of("hello", "--last=No"), List.of("--last=Chan", "--last=Noris")),
-				Arguments.of(List.of("hello", "--last=No", ""), List.of("--first", "-f")),
+				Arguments.of(List.of("hello", "--last=No", ""), List.of("--first" + sep, "-f" + sep)),
 
 				Arguments.of(List.of("hello", "-l", ""), List.of("Chan", "Noris")),
 				Arguments.of(List.of("hello", "--last", ""), List.of("Chan", "Noris")),
 
 				Arguments.of(List.of("hello", "-l", "No"), List.of("Chan", "Noris")),
-				Arguments.of(List.of("hello", "-l", "No", ""), List.of("--first", "-f")),
+				Arguments.of(List.of("hello", "-l", "No", ""), List.of("--first" + sep, "-f" + sep)),
 				Arguments.of(List.of("hello", "--last", "No"), List.of("Chan", "Noris")),
-				Arguments.of(List.of("hello", "--last", "No", ""), List.of("--first", "-f")),
+				Arguments.of(List.of("hello", "--last", "No", ""), List.of("--first" + sep, "-f" + sep)),
 
 				Arguments.of(List.of("hello", "--first", "Paul", "--last", "Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "--first", "Paul", "-l", "Noris", ""), List.of()),
