@@ -47,9 +47,9 @@
 		<java.version>17</java.version>
 
 		<!-- production dependencies -->
-		<reactor.version>3.8.3-SNAPSHOT</reactor.version>
-		<spring-framework.version>7.0.4-SNAPSHOT</spring-framework.version>
-		<spring-boot.version>4.0.1</spring-boot.version>
+		<reactor.version>3.8.2</reactor.version>
+		<spring-framework.version>7.0.3</spring-framework.version>
+		<spring-boot.version>4.0.2</spring-boot.version>
 		<jline.version>3.30.6</jline.version>
 		<antlr-st4.version>4.3.4</antlr-st4.version>
 		<hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
@@ -57,7 +57,7 @@
 
 		<!-- test dependencies -->
 		<jimfs.version>1.3.1</jimfs.version>
-		<assertj.version>3.27.6</assertj.version>
+		<assertj.version>3.27.7</assertj.version>
 		<junit-jupiter.version>6.0.2</junit-jupiter.version>
 		<mockito.version>5.21.0</mockito.version>
 		<awaitility.version>4.3.0</awaitility.version>
@@ -65,7 +65,7 @@
 
         <!-- samples dependencies -->
         <h2-database.version>2.4.240</h2-database.version>
-        <logback.version>1.5.25</logback.version>
+        <logback.version>1.5.26</logback.version>
 
 		<!-- documentation dependencies -->
 		<antora-maven-plugin.version>1.0.0-alpha.5</antora-maven-plugin.version>
@@ -79,10 +79,10 @@
 		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
 		<maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+		<maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
 	</properties>
 
 	<modules>
