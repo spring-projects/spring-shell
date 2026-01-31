@@ -47,8 +47,8 @@
 		<java.version>17</java.version>
 
 		<!-- production dependencies -->
-		<reactor.version>3.8.2</reactor.version>
-		<spring-framework.version>7.0.3</spring-framework.version>
+		<reactor.version>3.8.3-SNAPSHOT</reactor.version>
+		<spring-framework.version>7.0.4-SNAPSHOT</spring-framework.version>
 		<spring-boot.version>4.0.2</spring-boot.version>
 		<jline.version>3.30.6</jline.version>
 		<antlr-st4.version>4.3.4</antlr-st4.version>
