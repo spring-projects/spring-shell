@@ -82,7 +82,16 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		description = description.isEmpty() ? "N/A" : description;
 		String help = command.help();
 		String group = command.group();
-		group = group.isEmpty() ? this.method.getDeclaringClass().getSimpleName() + " Commands" : group;
+		if (group.isEmpty()) {
+			String simpleName = Utils.splitCamelCase(this.method.getDeclaringClass().getSimpleName());
+			if (!simpleName.endsWith(" Commands")) {
+				group = simpleName + " Commands";
+			}
+			else {
+				group = simpleName;
+			}
+
+		}
 		boolean hidden = command.hidden();
 		String[] aliases = command.alias();
 		String availabilityProviderBeanName = command.availabilityProvider();

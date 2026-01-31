@@ -30,6 +30,7 @@ import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Some text utilities.
@@ -38,6 +39,17 @@ import org.springframework.util.Assert;
  * @author Mahmoud Ben Hassine
  */
 public class Utils {
+
+	/**
+	 * Split a CamelCase class name into separate words. Used to derive command group
+	 * names. For example, "MyCommands" becomes "My Commands".
+	 * @param className the simple class name
+	 * @return the split string
+	 */
+	public static String splitCamelCase(String className) {
+		String[] tokens = className.split("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])");
+		return StringUtils.arrayToDelimitedString(tokens, " ");
+	}
 
 	/**
 	 * Turn CamelCaseText into gnu-style-lowercase.

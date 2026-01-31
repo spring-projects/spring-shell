@@ -34,6 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UtilsTests {
 
 	@Test
+	void testSplitCamelCase() {
+		assertThat(Utils.splitCamelCase("MyCommands")).isEqualTo("My Commands");
+		assertThat(Utils.splitCamelCase("MyAppCommands")).isEqualTo("My App Commands");
+	}
+
+	@Test
 	public void testUnCamelify() throws Exception {
 		assertThat(Utils.unCamelify("HelloWorld")).isEqualTo("hello-world");
 		assertThat(Utils.unCamelify("helloWorld")).isEqualTo("hello-world");
