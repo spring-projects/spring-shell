@@ -23,6 +23,8 @@ import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.utils.Utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests for {@link Utils}.
  *
@@ -30,6 +32,14 @@ import org.springframework.shell.core.utils.Utils;
  * @author Mahmoud Ben Hassine
  */
 class UtilsTests {
+
+	@Test
+	public void testUnCamelify() throws Exception {
+		assertThat(Utils.unCamelify("HelloWorld")).isEqualTo("hello-world");
+		assertThat(Utils.unCamelify("helloWorld")).isEqualTo("hello-world");
+		assertThat(Utils.unCamelify("helloWorldHowAreYou")).isEqualTo("hello-world-how-are-you");
+		assertThat(Utils.unCamelify("URL")).isEqualTo("url");
+	}
 
 	@Test
 	void testFormatAvailableCommands() {

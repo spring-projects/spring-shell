@@ -40,6 +40,23 @@ import org.springframework.util.Assert;
 public class Utils {
 
 	/**
+	 * Turn CamelCaseText into gnu-style-lowercase.
+	 */
+	public static String unCamelify(CharSequence original) {
+		StringBuilder result = new StringBuilder(original.length());
+		boolean wasLowercase = false;
+		for (int i = 0; i < original.length(); i++) {
+			char ch = original.charAt(i);
+			if (Character.isUpperCase(ch) && wasLowercase) {
+				result.append('-');
+			}
+			wasLowercase = Character.isLowerCase(ch);
+			result.append(Character.toLowerCase(ch));
+		}
+		return result.toString();
+	}
+
+	/**
 	 * Get a formatted string of available non-hidden commands from the command registry.
 	 * @param commandRegistry the command registry
 	 * @return a string of available commands with their descriptions

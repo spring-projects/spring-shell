@@ -77,7 +77,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 
 		// get command metadata
 		String name = String.join(" ", command.name());
-		name = name.isEmpty() ? this.method.getName() : name;
+		name = name.isEmpty() ? Utils.unCamelify(this.method.getName()) : name;
 		String description = command.description();
 		description = description.isEmpty() ? "N/A" : description;
 		String help = command.help();
