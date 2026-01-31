@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
@@ -312,6 +313,24 @@ class DefaultCommandParserTests {
 				Arguments.of("mycommand -o true", "", 'o', Boolean.class, "true"),
 				Arguments.of("mycommand -o false", "", 'o', Boolean.class, "false"),
 				Arguments.of("mycommand -o", "", 'o', Boolean.class, "true"));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "mycommand --help", "mycommand -h" })
+	void testParseWithHelpOption(String input) {
+		// given
+		Command command = createCommand("mycommand", "My test command");
+		command.getOptions().add(CommandOption.with().longName("option").shortName('o').build());
+		commandRegistry.registerCommand(command);
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(1, parsedInput.options().size());
+		assertEquals("help", parsedInput.options().get(0).longName());
+		assertEquals('h', parsedInput.options().get(0).shortName());
+		assertEquals("true", parsedInput.options().get(0).value());
 	}
 
 	private static Command createCommand(String name, String description) {
