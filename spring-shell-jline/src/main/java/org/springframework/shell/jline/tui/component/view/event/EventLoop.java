@@ -21,7 +21,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.messaging.Message;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.control.View;
 import org.springframework.shell.jline.tui.component.view.control.ViewEvent;
 
@@ -30,19 +30,17 @@ import org.springframework.shell.jline.tui.component.view.control.ViewEvent;
  * lifecycle of a component. Orchestration is usually needed around timings of redraws and
  * and component state updates.
  *
- * Generic message type is a Spring {@link Message} and it's up to an {@code EventLoop}
- * implementation how those are processed.
- *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public interface EventLoop {
 
 	/**
-	 * Return a {@link Flux} of {@link Message} events. When subscribed events will be
-	 * received until disposed or {@code EventLoop} terminates.
+	 * Return a {@link Flux} of {@link TerminalEvent} events. When subscribed events will
+	 * be received until disposed or {@code EventLoop} terminates.
 	 * @return the events from an event loop
 	 */
-	Flux<? extends Message<?>> events();
+	Flux<? extends TerminalEvent<?>> events();
 
 	/**
 	 * Specialisation of {@link #events()} which returns type safe {@link KeyEvent}s.
@@ -123,17 +121,17 @@ public interface EventLoop {
 	<T> Flux<T> events(EventLoop.Type type, ParameterizedTypeReference<T> typeRef);
 
 	/**
-	 * Dispatch {@link Message}s into an {@code EventLoop} from a {@link Publisher}.
+	 * Dispatch {@link TerminalEvent}s into an {@code EventLoop} from a {@link Publisher}.
 	 * Usually type is either {@link Mono} or {@link Flux}.
-	 * @param messages the messages to dispatch
+	 * @param publisher the messages to dispatch
 	 */
-	void dispatch(Publisher<? extends Message<?>> messages);
+	void dispatch(Publisher<? extends TerminalEvent<?>> publisher);
 
 	/**
-	 * Dispatch a {@link Message} into an {@code EventLoop}.
-	 * @param message the message to dispatch
+	 * Dispatch a {@link TerminalEvent} into an {@code EventLoop}.
+	 * @param terminalEvent the message to dispatch
 	 */
-	void dispatch(Message<?> message);
+	void dispatch(TerminalEvent<?> terminalEvent);
 
 	/**
 	 * Register {@link Disposable} to get disposed when event loop terminates.
@@ -188,20 +186,20 @@ public interface EventLoop {
 
 		/**
 		 * Checks if this processor can process an event. If this method returns
-		 * {@code true} it's quaranteed that {@link #process(Message)} is called to
+		 * {@code true} it's quaranteed that {@link #process(TerminalEvent)} is called to
 		 * resolve translation of a message.
-		 * @param message the message
+		 * @param terminalEvent the message
 		 * @return true if processor can process an event
 		 */
-		boolean canProcess(Message<?> message);
+		boolean canProcess(TerminalEvent<?> terminalEvent);
 
 		/**
-		 * Process a message and transform it into a new {@link Flux} of {@link Message}
-		 * instances.
-		 * @param message the message to process
+		 * Process a message and transform it into a new {@link Flux} of
+		 * {@link TerminalEvent} instances.
+		 * @param terminalEvent the message to process
 		 * @return a flux of messages
 		 */
-		Flux<? extends Message<?>> process(Message<?> message);
+		Flux<? extends TerminalEvent<?>> process(TerminalEvent<?> terminalEvent);
 
 	}
 

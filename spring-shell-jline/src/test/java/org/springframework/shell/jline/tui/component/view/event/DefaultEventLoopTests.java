@@ -18,21 +18,19 @@ package org.springframework.shell.jline.tui.component.view.event;
 import java.time.Duration;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.event.EventLoop.EventLoopProcessor;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 class DefaultEventLoopTests {
 
@@ -61,24 +59,24 @@ class DefaultEventLoopTests {
 	@Test
 	void eventsGetIntoSingleSubscriber() {
 		initDefault();
-		Message<String> message = MessageBuilder.withPayload("TEST").build();
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("TEST", EventLoop.Type.SIGNAL);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 	}
 
 	@Test
 	void eventsGetIntoMultipleSubscriber() {
 		initDefault();
-		Message<String> message = MessageBuilder.withPayload("TEST").build();
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("TEST", EventLoop.Type.SIGNAL);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
 		StepVerifier verifier2 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 		verifier2.verify(Duration.ofSeconds(1));
 	}
@@ -86,8 +84,8 @@ class DefaultEventLoopTests {
 	@Test
 	void canDispatchFlux() {
 		initDefault();
-		Message<String> message = MessageBuilder.withPayload("TEST").build();
-		Flux<Message<String>> flux = Flux.just(message);
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("TEST", EventLoop.Type.SIGNAL);
+		Flux<TerminalEvent<String>> flux = Flux.just(terminalEvent);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
@@ -98,8 +96,8 @@ class DefaultEventLoopTests {
 	@Test
 	void canDispatchMono() {
 		initDefault();
-		Message<String> message = MessageBuilder.withPayload("TEST").build();
-		Mono<Message<String>> mono = Mono.just(message);
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("TEST", EventLoop.Type.SIGNAL);
+		Mono<TerminalEvent<String>> mono = Mono.just(terminalEvent);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
 
@@ -110,9 +108,9 @@ class DefaultEventLoopTests {
 	@Test
 	void dispatchNoSubscribersDoesNotError() {
 		initDefault();
-		Message<String> message = MessageBuilder.withPayload("TEST").build();
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("TEST", EventLoop.Type.SIGNAL);
 
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 	}
 
 	@Test
@@ -129,14 +127,14 @@ class DefaultEventLoopTests {
 		int count;
 
 		@Override
-		public boolean canProcess(Message<?> message) {
+		public boolean canProcess(TerminalEvent<?> terminalEvent) {
 			return true;
 		}
 
 		@Override
-		public Flux<? extends Message<?>> process(Message<?> message) {
-			Message<?> m = MessageBuilder.fromMessage(message).setHeader("count", count++).build();
-			return Flux.just(m);
+		public Flux<? extends TerminalEvent<?>> process(TerminalEvent<?> terminalEvent) {
+			return Flux.just(new TerminalEvent<>(terminalEvent.payload(), EventLoop.Type.SIGNAL, null,
+					Map.of("count", count++)));
 		}
 
 	}
@@ -147,17 +145,17 @@ class DefaultEventLoopTests {
 		loop = new DefaultEventLoop(List.of(processor));
 
 		StepVerifier verifier1 = StepVerifier.create(loop.events()).assertNext(m -> {
-			Integer count = m.getHeaders().get("count", Integer.class);
+			Integer count = (Integer) m.attributes().get("count");
 			assertThat(count).isZero();
 		}).thenCancel().verifyLater();
 
 		StepVerifier verifier2 = StepVerifier.create(loop.events()).assertNext(m -> {
-			Integer count = m.getHeaders().get("count", Integer.class);
+			Integer count = (Integer) m.attributes().get("count");
 			assertThat(count).isZero();
 		}).thenCancel().verifyLater();
 
-		Message<String> message = MessageBuilder.withPayload("TEST").build();
-		loop.dispatch(message);
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("TEST", EventLoop.Type.SIGNAL);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 		verifier2.verify(Duration.ofSeconds(1));
 	}
@@ -166,9 +164,9 @@ class DefaultEventLoopTests {
 	void taskRunnableShouldExecute() {
 		initDefault();
 		TestRunnable task = new TestRunnable();
-		Message<TestRunnable> message = ShellMessageBuilder.withPayload(task).setEventType(EventLoop.Type.TASK).build();
+		TerminalEvent<TestRunnable> terminalEvent = new TerminalEvent<>(task, EventLoop.Type.TASK);
 		StepVerifier verifier1 = StepVerifier.create(loop.events()).expectNextCount(1).thenCancel().verifyLater();
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 		assertThat(task.count).isEqualTo(1);
 	}
@@ -189,11 +187,11 @@ class DefaultEventLoopTests {
 		initDefault();
 
 		KeyEvent event = KeyEvent.of(KeyEvent.Key.a);
-		Message<KeyEvent> message = ShellMessageBuilder.ofKeyEvent(event);
+		TerminalEvent<KeyEvent> terminalEvent = new TerminalEvent<>(event, EventLoop.Type.KEY);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.keyEvents()).expectNextCount(1).thenCancel().verifyLater();
 
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 	}
 
@@ -205,11 +203,11 @@ class DefaultEventLoopTests {
 				org.jline.terminal.MouseEvent.Type.Released, org.jline.terminal.MouseEvent.Button.Button1,
 				EnumSet.noneOf(org.jline.terminal.MouseEvent.Modifier.class), 0, 0);
 		MouseEvent event = MouseEvent.of(jlineMouseEvent);
-		Message<MouseEvent> message = ShellMessageBuilder.ofMouseEvent(event);
+		TerminalEvent<MouseEvent> terminalEvent = new TerminalEvent<>(event, EventLoop.Type.MOUSE);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.mouseEvents()).expectNextCount(1).thenCancel().verifyLater();
 
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 	}
 
@@ -217,11 +215,11 @@ class DefaultEventLoopTests {
 	void systemEvents() {
 		initDefault();
 
-		Message<String> message = ShellMessageBuilder.ofRedraw();
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("redraw", EventLoop.Type.SYSTEM);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.systemEvents()).expectNextCount(1).thenCancel().verifyLater();
 
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 	}
 
@@ -229,11 +227,11 @@ class DefaultEventLoopTests {
 	void signalEvents() {
 		initDefault();
 
-		Message<String> message = ShellMessageBuilder.ofSignal("WINCH");
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("WINCH", EventLoop.Type.SIGNAL);
 
 		StepVerifier verifier1 = StepVerifier.create(loop.signalEvents()).expectNextCount(1).thenCancel().verifyLater();
 
-		loop.dispatch(message);
+		loop.dispatch(terminalEvent);
 		verifier1.verify(Duration.ofSeconds(1));
 	}
 
