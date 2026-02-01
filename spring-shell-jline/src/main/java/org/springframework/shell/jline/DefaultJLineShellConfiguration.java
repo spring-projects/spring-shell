@@ -1,6 +1,7 @@
 package org.springframework.shell.jline;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -10,6 +11,7 @@ import org.jline.terminal.TerminalBuilder;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.shell.core.ShellConfigurationException;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.CommandRegistry;
@@ -19,8 +21,10 @@ import org.springframework.shell.core.command.DefaultCommandParser;
 public class DefaultJLineShellConfiguration {
 
 	@Bean
-	public ShellRunner shellRunner(JLineInputProvider inputProvider, CommandRegistry commandRegistry) {
-		return new JLineShellRunner(inputProvider, new DefaultCommandParser(commandRegistry), commandRegistry);
+	public ShellRunner shellRunner(JLineInputProvider inputProvider, CommandRegistry commandRegistry,
+			Optional<ConfigurableConversionService> conversionService) {
+		return new JLineShellRunner(inputProvider, new DefaultCommandParser(commandRegistry, conversionService),
+				commandRegistry);
 	}
 
 	@Bean

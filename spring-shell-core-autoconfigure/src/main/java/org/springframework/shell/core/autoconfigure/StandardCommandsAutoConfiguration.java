@@ -23,7 +23,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.shell.core.command.*;
+
+import java.util.Optional;
 
 /**
  * Creates beans for standard commands.
@@ -73,8 +76,9 @@ public class StandardCommandsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnProperty(value = "spring.shell.command.script.enabled", havingValue = "true", matchIfMissing = true)
-	public Command scriptCommand(CommandRegistry commandRegistry) {
-		return new Script(commandRegistry);
+	public Command scriptCommand(CommandRegistry commandRegistry,
+			Optional<ConfigurableConversionService> conversionService) {
+		return new Script(commandRegistry, conversionService);
 	}
 
 }
