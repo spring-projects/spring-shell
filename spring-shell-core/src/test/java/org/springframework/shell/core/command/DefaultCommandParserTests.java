@@ -316,6 +316,58 @@ class DefaultCommandParserTests {
 	}
 
 	@ParameterizedTest
+	@MethodSource("parseWithBooleanOptionAndArgumentData")
+	void testParseWithBooleanOptionAndArgument(String input, String expectedValue, int expectedArguments,
+			String expectedArgumentValue) {
+		// given
+		Command command = createCommand("mycommand", "My test command");
+		command.getOptions().add(CommandOption.with().longName("option").type(boolean.class).build());
+		commandRegistry.registerCommand(command);
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(1, parsedInput.options().size());
+		assertEquals(expectedValue, parsedInput.options().get(0).value());
+		assertEquals(expectedArguments, parsedInput.arguments().size());
+		if (expectedArguments > 0) {
+			assertEquals(expectedArgumentValue, parsedInput.arguments().get(0).value());
+		}
+	}
+
+	static Stream<Arguments> parseWithBooleanOptionAndArgumentData() {
+		return Stream.of(Arguments.of("mycommand --option=false", "false", 0, null),
+				Arguments.of("mycommand --option=true", "true", 0, null),
+				Arguments.of("mycommand --option false", "false", 0, null),
+				Arguments.of("mycommand --option true", "true", 0, null),
+				Arguments.of("mycommand --option", "true", 0, null),
+
+				Arguments.of("mycommand --option=false argument", "false", 1, "argument"),
+				Arguments.of("mycommand --option=true argument", "true", 1, "argument"),
+				Arguments.of("mycommand --option false argument", "false", 1, "argument"),
+				Arguments.of("mycommand --option true argument", "true", 1, "argument"),
+				Arguments.of("mycommand --option argument", "true", 1, "argument"),
+
+				Arguments.of("mycommand argument --option=false", "false", 1, "argument"),
+				Arguments.of("mycommand argument --option=true", "true", 1, "argument"),
+				Arguments.of("mycommand argument --option false", "false", 1, "argument"),
+				Arguments.of("mycommand argument --option true", "true", 1, "argument"),
+				Arguments.of("mycommand argument --option", "true", 1, "argument"),
+
+				Arguments.of("mycommand --option=false true", "false", 1, "true"),
+				Arguments.of("mycommand --option=true true", "true", 1, "true"),
+				Arguments.of("mycommand --option false false", "false", 1, "false"),
+				Arguments.of("mycommand --option true false", "true", 1, "false"),
+
+				Arguments.of("mycommand false --option=false", "false", 1, "false"),
+				Arguments.of("mycommand false --option=true", "true", 1, "false"),
+				Arguments.of("mycommand true --option false", "false", 1, "true"),
+				Arguments.of("mycommand true --option true", "true", 1, "true"),
+				Arguments.of("mycommand true --option", "true", 1, "true"));
+	}
+
+	@ParameterizedTest
 	@ValueSource(strings = { "mycommand --help", "mycommand -h" })
 	void testParseWithHelpOption(String input) {
 		// given

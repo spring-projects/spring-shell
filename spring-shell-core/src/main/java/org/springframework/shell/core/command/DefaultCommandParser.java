@@ -121,6 +121,9 @@ public class DefaultCommandParser implements CommandParser {
 							}
 							nextWord = "true";
 						}
+						else if (isBooleanOption(commandName, currentWord) && !isBooleanValue(nextWord)) {
+							nextWord = "true";
+						}
 						else {
 							i++; // skip next word as it was used as option value
 						}
@@ -197,6 +200,10 @@ public class DefaultCommandParser implements CommandParser {
 			.stream()
 			.filter(o -> o.isOptionEqual(currentWord))
 			.anyMatch(o -> o.type() == boolean.class || o.type() == Boolean.class);
+	}
+
+	private boolean isBooleanValue(String rawValue) {
+		return "true".equalsIgnoreCase(rawValue) || "false".equalsIgnoreCase(rawValue);
 	}
 
 }
