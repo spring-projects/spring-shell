@@ -18,7 +18,9 @@ package org.springframework.shell.core.command;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.shell.core.FileInputProvider;
 import org.springframework.shell.core.NonInteractiveShellRunner;
 
@@ -34,8 +36,8 @@ public class Script implements Command {
 
 	private CommandParser commandParser;
 
-	public Script(CommandRegistry commandRegistry) {
-		this.commandParser = new DefaultCommandParser(commandRegistry);
+	public Script(CommandRegistry commandRegistry, Optional<ConfigurableConversionService> conversionService) {
+		this.commandParser = new DefaultCommandParser(commandRegistry, conversionService);
 	}
 
 	@Override

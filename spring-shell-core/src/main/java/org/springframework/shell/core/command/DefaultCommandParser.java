@@ -21,6 +21,9 @@ import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.core.convert.support.ConfigurableConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 
 /**
  * Default implementation of {@link CommandParser}. Supports options in the long form of
@@ -48,8 +51,12 @@ public class DefaultCommandParser implements CommandParser {
 
 	private final CommandRegistry commandRegistry;
 
-	public DefaultCommandParser(CommandRegistry commandRegistry) {
+	private final ConfigurableConversionService conversionService;
+
+	public DefaultCommandParser(CommandRegistry commandRegistry,
+			Optional<ConfigurableConversionService> conversionService) {
 		this.commandRegistry = commandRegistry;
+		this.conversionService = conversionService.orElse(new DefaultConversionService());
 	}
 
 	@Override
@@ -119,6 +126,9 @@ public class DefaultCommandParser implements CommandParser {
 							if (!isBooleanOption(commandName, currentWord)) {
 								throw new IllegalArgumentException("Option '" + currentWord + "' requires a value");
 							}
+							nextWord = "true";
+						}
+						else if (isBooleanOption(commandName, currentWord) && !isBooleanValue(nextWord)) {
 							nextWord = "true";
 						}
 						else {
@@ -197,6 +207,15 @@ public class DefaultCommandParser implements CommandParser {
 			.stream()
 			.filter(o -> o.isOptionEqual(currentWord))
 			.anyMatch(o -> o.type() == boolean.class || o.type() == Boolean.class);
+	}
+
+	private boolean isBooleanValue(String rawValue) {
+		try {
+			return conversionService.convert(rawValue, boolean.class) != null;
+		}
+		catch (ConversionFailedException e) {
+			return false;
+		}
 	}
 
 }

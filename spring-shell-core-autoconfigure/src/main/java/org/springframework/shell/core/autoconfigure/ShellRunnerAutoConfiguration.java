@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.shell.core.ConsoleInputProvider;
 import org.springframework.shell.core.NonInteractiveShellRunner;
@@ -29,6 +30,8 @@ import org.springframework.shell.core.SystemShellRunner;
 import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.DefaultCommandParser;
+
+import java.util.Optional;
 
 @AutoConfiguration
 public class ShellRunnerAutoConfiguration {
@@ -66,8 +69,9 @@ public class ShellRunnerAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public CommandParser commandParser(CommandRegistry commandRegistry) {
-		return new DefaultCommandParser(commandRegistry);
+	public CommandParser commandParser(CommandRegistry commandRegistry,
+			Optional<ConfigurableConversionService> conversionService) {
+		return new DefaultCommandParser(commandRegistry, conversionService);
 	}
 
 }

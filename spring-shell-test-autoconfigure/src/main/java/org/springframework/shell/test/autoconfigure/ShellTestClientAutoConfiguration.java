@@ -18,10 +18,13 @@ package org.springframework.shell.test.autoconfigure;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.DefaultCommandParser;
 import org.springframework.shell.test.ShellTestClient;
+
+import java.util.Optional;
 
 /**
  * @author Janne Valkealahti
@@ -44,8 +47,9 @@ public class ShellTestClientAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public CommandParser commandParser(CommandRegistry commandRegistry) {
-		return new DefaultCommandParser(commandRegistry);
+	public CommandParser commandParser(CommandRegistry commandRegistry,
+			Optional<ConfigurableConversionService> conversionService) {
+		return new DefaultCommandParser(commandRegistry, conversionService);
 	}
 
 }

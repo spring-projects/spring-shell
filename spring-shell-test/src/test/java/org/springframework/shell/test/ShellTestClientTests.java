@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
@@ -16,6 +17,8 @@ import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.DefaultCommandParser;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 class ShellTestClientTests {
@@ -56,8 +59,9 @@ class ShellTestClientTests {
 		}
 
 		@Bean
-		public CommandParser commandParser(CommandRegistry commandRegistry) {
-			return new DefaultCommandParser(commandRegistry);
+		public CommandParser commandParser(CommandRegistry commandRegistry,
+				Optional<ConfigurableConversionService> conversionService) {
+			return new DefaultCommandParser(commandRegistry, conversionService);
 		}
 
 		@Bean
