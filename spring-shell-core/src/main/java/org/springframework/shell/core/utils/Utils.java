@@ -16,6 +16,7 @@
 
 package org.springframework.shell.core.utils;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -89,6 +90,7 @@ public class Utils {
 			for (Command command : commands.stream()
 				.filter(c -> !c.isHidden())
 				.filter(c -> c.getGroup().equals(group))
+				.sorted(Comparator.comparing(Command::getName))
 				.toList()) {
 				stringBuilder.append("\t")
 					.append(command.getName())
