@@ -47,11 +47,14 @@ public class CommandCompleter implements Completer {
 				// add option completions for the command
 				for (CommandOption option : options) {
 					boolean present = isOptionPresent(line, option);
+					String separator = option.completion() ? "" : "=";
 					if (StringUtils.hasLength(option.longName()) && !present) {
-						candidates.add(new Candidate("--" + option.longName()));
+						candidates.add(new Candidate("--" + option.longName() + separator, "--" + option.longName(),
+								null, null, null, null, option.completion(), 0));
 					}
 					if (option.shortName() != ' ' && !present) {
-						candidates.add(new Candidate("-" + option.shortName()));
+						candidates.add(new Candidate("-" + option.shortName() + separator, "-" + option.shortName(),
+								null, null, null, null, option.completion(), 0));
 					}
 				}
 			}

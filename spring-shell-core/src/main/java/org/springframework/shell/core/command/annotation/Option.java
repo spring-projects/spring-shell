@@ -62,4 +62,10 @@ public @interface Option {
 	 */
 	String defaultValue() default "";
 
+	/**
+	 * Indicates whether this option should be completed in the command completer.
+	 * @return true if the option should be completed, defaults to true.
+	 */
+	boolean completion() default true;
+
 }
