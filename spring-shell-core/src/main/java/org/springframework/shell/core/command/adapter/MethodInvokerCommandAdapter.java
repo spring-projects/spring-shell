@@ -45,6 +45,7 @@ import org.springframework.util.MethodInvoker;
  *
  * @author Mahmoud Ben Hassine
  * @author David Pilar
+ * @author Andrey Litvitski
  * @since 4.0.0
  */
 public class MethodInvokerCommandAdapter extends AbstractCommand {
@@ -157,22 +158,20 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 					}
 					else {
 						Class<?> parameterType = parameterTypes[i];
-						// check if the option type is primitive or not
-						if (!parameterType.isPrimitive()) {
-							// try to convert default value if present
-							String defaultValue = optionAnnotation.defaultValue();
-							if (!defaultValue.isEmpty()) {
-								Object value = this.conversionService.convert(defaultValue, parameterType);
-								args.add(value);
+						String defaultValue = optionAnnotation.defaultValue();
+						if (!defaultValue.isEmpty()) {
+							Object value = this.conversionService.convert(defaultValue, parameterType);
+							args.add(value);
+						}
+						else {
+							if (parameterType.isPrimitive()) {
+								// for primitive types, add default value of the primitive
+								args.add(Utils.getDefaultValueForPrimitiveType(parameterType));
 							}
 							else {
 								// for non-primitive types, add null
 								args.add(null);
 							}
-						}
-						else {
-							// for primitive types, add default value of the primitive
-							args.add(Utils.getDefaultValueForPrimitiveType(parameterType));
 						}
 					}
 				}
