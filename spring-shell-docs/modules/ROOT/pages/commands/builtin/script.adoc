@@ -10,4 +10,4 @@ This command expects a file absolute path as an option, which points to the scri
 $>script --file /absolute/path/to/your/script.txt
 ----
 
-The script file should contain one command per line, and the commands will be executed in the order they appear in the file. Comments can be added to the script file by starting a line with a `#` character.
+The script file should contain one command per line, and the commands will be executed in the order they appear in the file. Comments can be added to the script file by starting a line with `//` characters.

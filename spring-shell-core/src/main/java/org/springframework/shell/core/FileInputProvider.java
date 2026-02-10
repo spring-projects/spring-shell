@@ -19,6 +19,7 @@ package org.springframework.shell.core;
 import java.io.*;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.util.StringUtils;
 
 /**
  * An {@link InputProvider} that reads input from a file.
@@ -29,6 +30,7 @@ import org.jspecify.annotations.Nullable;
  * @author Eric Bottard
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 public class FileInputProvider implements InputProvider, AutoCloseable {
 
@@ -59,8 +61,11 @@ public class FileInputProvider implements InputProvider, AutoCloseable {
 			sb.append(line.replaceFirst(BACKSLASH_AT_EOL_REGEX, "$1 "));
 		}
 		while (continued);
-		if (line == null || isComment(line)) {
+		if (line == null) {
 			return null;
+		}
+		else if (!StringUtils.hasLength(line) || isComment(line)) {
+			return readInput();
 		}
 		else {
 			return sb.toString();
