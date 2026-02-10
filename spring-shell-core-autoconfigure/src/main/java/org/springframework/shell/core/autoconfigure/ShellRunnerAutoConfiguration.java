@@ -53,6 +53,7 @@ public class ShellRunnerAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingClass("org.springframework.shell.jline.DefaultJLineShellConfiguration")
 	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "false")
 	public ShellRunner nonInteractiveShellRunner(CommandParser commandParser, CommandRegistry commandRegistry) {
 		return new NonInteractiveShellRunner(commandParser, commandRegistry);
