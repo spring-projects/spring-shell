@@ -46,6 +46,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.shell.core.NonInteractiveShellRunner;
 import org.springframework.shell.core.ShellRunner;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandParser;
@@ -67,6 +68,7 @@ import org.springframework.util.StringUtils;
  * @author Florent Biville
  * @author Mahmoud Ben Hassine
  * @author Piotr Olaszewski
+ * @author David Pilar
  */
 @AutoConfiguration
 @EnableConfigurationProperties(SpringShellProperties.class)
@@ -107,6 +109,13 @@ public class JLineShellAutoConfiguration {
 		Boolean debugMode = environment.getProperty("spring.shell.debug.enabled", Boolean.class, false);
 		jLineShellRunner.setDebugMode(debugMode);
 		return jLineShellRunner;
+	}
+
+	@Bean
+	@ConditionalOnProperty(prefix = "spring.shell.interactive", name = "enabled", havingValue = "false")
+	public ShellRunner jlineNonInteractiveShellRunner(CommandParser commandParser, CommandRegistry commandRegistry,
+			Terminal terminal) {
+		return new NonInteractiveShellRunner(commandParser, commandRegistry, terminal.writer());
 	}
 
 	@Bean
