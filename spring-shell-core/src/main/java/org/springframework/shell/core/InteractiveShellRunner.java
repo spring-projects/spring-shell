@@ -74,12 +74,13 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 			String input;
 			try {
 				input = this.inputProvider.readInput();
-				if (input.isEmpty()) { // ignore empty lines
-					continue;
-				}
 				if (input == null || input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("exit")) {
 					print("Exiting the shell");
 					break;
+				}
+				if (input.isEmpty()) {
+					// ignore empty lines
+					continue;
 				}
 			}
 			catch (Exception e) {
