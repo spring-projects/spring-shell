@@ -15,15 +15,11 @@
  */
 package org.springframework.shell.test;
 
+import org.springframework.shell.core.InputReader;
+import org.springframework.shell.core.command.*;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import org.springframework.shell.core.InputReader;
-import org.springframework.shell.core.command.CommandContext;
-import org.springframework.shell.core.command.CommandExecutor;
-import org.springframework.shell.core.command.CommandParser;
-import org.springframework.shell.core.command.CommandRegistry;
-import org.springframework.shell.core.command.ParsedInput;
 
 /**
  * Client for shell session which can be used as a programmatic way to interact with a
@@ -32,6 +28,7 @@ import org.springframework.shell.core.command.ParsedInput;
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 public class ShellTestClient {
 
@@ -60,10 +57,36 @@ public class ShellTestClient {
 	 * @throws Exception if an error occurred during command execution
 	 */
 	public ShellScreen sendCommand(String input) throws Exception {
+		return sendCommand(input, ShellInputProvider.builder().build());
+	}
+
+	/**
+	 * Sends a command to the shell, processes user inputs or passwords as needed, and
+	 * returns the resulting shell screen output.
+	 * @param input the raw command string to be sent to the shell
+	 * @param inputProvider a provider containing simulated user inputs and passwords
+	 * @return a {@code ShellScreen} object containing the output of the shell after
+	 * command execution
+	 * @throws Exception if an error occurs during the command execution
+	 */
+	public ShellScreen sendCommand(String input, ShellInputProvider inputProvider) throws Exception {
 		StringWriter stringWriter = new StringWriter();
 		ParsedInput parsedInput = this.commandParser.parse(input);
 		PrintWriter outputWriter = new PrintWriter(stringWriter);
 		InputReader inputReader = new InputReader() {
+			@Override
+			public String readInput(String prompt) {
+				outputWriter.print(prompt);
+				String in = inputProvider.inputs().pollFirst();
+				return in == null ? "" : in;
+			}
+
+			@Override
+			public char[] readPassword(String prompt) {
+				outputWriter.print(prompt);
+				String pwd = inputProvider.passwords().pollFirst();
+				return pwd == null ? new char[] {} : pwd.toCharArray();
+			}
 		};
 		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, outputWriter,
 				inputReader);
