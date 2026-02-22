@@ -17,6 +17,8 @@ import org.springframework.shell.core.command.DefaultCommandParser;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.PrintWriter;
+
 @ExtendWith(SpringExtension.class)
 class ShellTestClientTests {
 
@@ -36,6 +38,18 @@ class ShellTestClientTests {
 			.isInstanceOf(CommandNotFoundException.class);
 	}
 
+	@Test
+	void testCommandExecutionWithInputReader(@Autowired ShellTestClient client) throws Exception {
+		ShellScreen screen = client.sendCommand("hello");
+		ShellAssertions.assertThat(screen).containsText("You said: ");
+
+		screen = client.sendCommand("hello", "hi");
+		ShellAssertions.assertThat(screen).containsText("You said: hi");
+
+		screen = client.sendCommand("hello", "hi", "to", "you");
+		ShellAssertions.assertThat(screen).containsText("You said: hi to you");
+	}
+
 	@Configuration
 	static class TestCommands {
 
@@ -45,6 +59,18 @@ class ShellTestClientTests {
 				@Override
 				public ExitStatus doExecute(CommandContext commandContext) {
 					commandContext.outputWriter().println("Test command executed");
+					return ExitStatus.OK;
+				}
+			};
+		}
+
+		@Bean
+		public Command hello() {
+			return new AbstractCommand("hello", "A hello command") {
+				@Override
+				public ExitStatus doExecute(CommandContext commandContext) throws Exception {
+					String message = commandContext.inputReader().readInput();
+					commandContext.outputWriter().println("You said: " + message);
 					return ExitStatus.OK;
 				}
 			};

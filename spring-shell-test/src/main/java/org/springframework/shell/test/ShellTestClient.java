@@ -32,6 +32,7 @@ import org.springframework.shell.core.command.ParsedInput;
  *
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 public class ShellTestClient {
 
@@ -56,14 +57,20 @@ public class ShellTestClient {
 	/**
 	 * Execute a command and write its result to the shell screen.
 	 * @param input the raw input command
+	 * @param inputResponses the responses to the command input
 	 * @return the shell screen after command execution
 	 * @throws Exception if an error occurred during command execution
 	 */
-	public ShellScreen sendCommand(String input) throws Exception {
+	public ShellScreen sendCommand(String input, String... inputResponses) throws Exception {
 		StringWriter stringWriter = new StringWriter();
 		ParsedInput parsedInput = this.commandParser.parse(input);
 		PrintWriter outputWriter = new PrintWriter(stringWriter);
 		InputReader inputReader = new InputReader() {
+			@Override
+			public String readInput(String prompt) {
+				outputWriter.print(prompt);
+				return String.join(" ", inputResponses);
+			}
 		};
 		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, outputWriter,
 				inputReader);
