@@ -23,4 +23,6 @@ to define _hidden_ state.
 include::{snippets}/CommandRegistrationHiddenSnippets.java[tag=snippet1]
 ----
 
-NOTE: Defining hidden commands is not supported with annotation based configuration
+NOTE: Hidden commands are supported when using annotation-based configuration.
+Use `hidden = true` in the `@Command` annotation to hide a command from the help listing.
+
