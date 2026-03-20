@@ -65,7 +65,7 @@ public class AbstractSampleTests {
 		}
 		else {
 			String[] commands = command.split(" ");
-			NonInteractiveShellSession session = client.nonInterative(commands).run();
+			NonInteractiveShellSession session = client.nonInteractive(commands).run();
 			return session;
 		}
 	}

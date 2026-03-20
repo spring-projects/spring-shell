@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import org.springframework.shell.test.jediterm.terminal.ui.TerminalSession;
  * to write into a shell and read what is visible in a shell.
  *
  * @author Janne Valkealahti
+ * @author Mahmoud Ben Hassine
  */
 public interface ShellTestClient extends Closeable {
 
@@ -57,8 +58,19 @@ public interface ShellTestClient extends Closeable {
 	 *
 	 * @param args the command arguments
 	 * @return session for chaining
+	 * @deprecated since 3.4.2 in favor of {@link #nonInteractive(String...)}
 	 */
+	@Deprecated(since = "3.4.2")
 	NonInteractiveShellSession nonInterative(String... args);
+
+	/**
+	 * Run non-interactive command session.
+	 *
+	 * @param args the command arguments
+	 * @return session for chaining
+	 * @since 3.4.2
+	 */
+	NonInteractiveShellSession nonInteractive(String... args);
 
 	/**
 	 * Read the screen.
@@ -190,6 +202,11 @@ public interface ShellTestClient extends Closeable {
 
 		@Override
 		public NonInteractiveShellSession nonInterative(String... args) {
+			return nonInteractive(args);
+		}
+
+		@Override
+		public NonInteractiveShellSession nonInteractive(String... args) {
 			terminalSession.start();
 			if (runnerThread == null) {
 				runnerThread = new Thread(new ShellRunnerTask(this.blockingQueue));

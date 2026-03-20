@@ -71,7 +71,7 @@ class TestingSnippets {
 		@Test
 		void test() {
 			NonInteractiveShellSession session = client
-				.nonInterative("help")
+				.nonInteractive("help")
 				.run();
 
 			await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
