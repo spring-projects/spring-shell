@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,13 @@
 
 package org.springframework.shell.jline.tui.table;
 
+import org.jline.utils.AttributedString;
+
 /**
  * An horizontal alignment strategy that allows alignment to the left, center or right.
  *
  * @author Eric Bottard
+ * @author Mahmoud Ben Hassine
  */
 public enum SimpleHorizontalAligner implements Aligner {
 
@@ -31,7 +34,7 @@ public enum SimpleHorizontalAligner implements Aligner {
 		for (int i = 0; i < cellHeight; i++) {
 			String line = (i < text.length && text[i] != null) ? text[i].trim() : "";
 
-			int paddingToDistribute = cellWidth - line.length();
+			int paddingToDistribute = cellWidth - AttributedString.fromAnsi(line).columnLength();
 
 			int padLeft;
 			int padRight;

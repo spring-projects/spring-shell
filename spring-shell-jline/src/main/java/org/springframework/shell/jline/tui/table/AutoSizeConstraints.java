@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,14 @@
 
 package org.springframework.shell.jline.tui.table;
 
+import org.jline.utils.AttributedString;
+
 /**
  * A SizeConstraints implementation that splits lines at space boundaries and returns an
  * extent with minimal and maximal width requirements.
  *
  * @author Eric Bottard
+ * @author Mahmoud Ben Hassine
  */
 public class AutoSizeConstraints implements SizeConstraints {
 
@@ -31,9 +34,9 @@ public class AutoSizeConstraints implements SizeConstraints {
 		for (String line : raw) {
 			String[] words = line.split(" ");
 			for (String word : words) {
-				min = Math.max(min, word.length());
+				min = Math.max(min, AttributedString.fromAnsi(word).columnLength());
 			}
-			max = Math.max(max, line.length());
+			max = Math.max(max, AttributedString.fromAnsi(line).columnLength());
 		}
 		return new Extent(min, max);
 	}
