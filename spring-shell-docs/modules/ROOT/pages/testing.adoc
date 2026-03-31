@@ -69,6 +69,42 @@ class ShellTestIntegrationTests {
 }
 ----
 
+Spring Shell also provides the `ShellInputProvider` API which can be used to provide custom input for testing purposes. This allows you to simulate user input (clear texts and passwords) in a more flexible way.
+
+For example, if your command expects input as follows:
+
+[source,java]
+----
+@Bean
+public Command ask() {
+    return new AbstractCommand("ask", "Ask for user input") {
+        @Override
+        public ExitStatus doExecute(CommandContext commandContext) throws Exception {
+            String message = commandContext.inputReader().readInput();
+            commandContext.outputWriter().println("You said: " + message);
+            return ExitStatus.OK;
+        }
+    };
+}
+----
+
+then you can simulate the user's input by using `ShellInputProvider` to supply the necessary input during testing:
+
+[source,java]
+----
+@Test
+void testCommandExecutionWithReadingInput(@Autowired ShellTestClient client) throws Exception {
+    // given
+    ShellInputProvider inputProvider = ShellInputProvider.providerFor("ask").withInput("hi").build();
+
+    // when
+    ShellScreen screen = client.sendCommand(inputProvider);
+
+    // then
+    ShellAssertions.assertThat(screen).containsText("You said: hi");
+}
+----
+
 == End-to-End Testing
 
 For end-to-end (ie black-box) testing of shell applications without using Spring Shell testing facilities, you can use the test utilities provided by Spring Boot. Once you have defined your Spring Boot application class, you can create a test class annotated with `@SpringBootTest` to test your shell commands. Here is an example:

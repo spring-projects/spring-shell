@@ -1,3 +1,18 @@
+/*
+ * Copyright 2026-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.shell.test;
 
 import org.assertj.core.api.Assertions;
@@ -16,8 +31,6 @@ import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.DefaultCommandParser;
 import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.io.PrintWriter;
 
 @ExtendWith(SpringExtension.class)
 class ShellTestClientTests {
@@ -40,8 +53,11 @@ class ShellTestClientTests {
 
 	@Test
 	void testCommandExecutionWithReadingInput(@Autowired ShellTestClient client) throws Exception {
+		// given
+		ShellInputProvider inputProvider = ShellInputProvider.providerFor("hello").withInput("hi").build();
+
 		// when
-		ShellScreen screen = client.sendCommand("hello", ShellInputProvider.builder().input("hi").build());
+		ShellScreen screen = client.sendCommand(inputProvider);
 
 		// then
 		ShellAssertions.assertThat(screen).containsText("You said: hi");
@@ -49,8 +65,11 @@ class ShellTestClientTests {
 
 	@Test
 	void testCommandExecutionWithReadingPassword(@Autowired ShellTestClient client) throws Exception {
+		// given
+		ShellInputProvider inputProvider = ShellInputProvider.providerFor("password").withPassword("secret123").build();
+
 		// when
-		ShellScreen screen = client.sendCommand("password", ShellInputProvider.builder().password("secret123").build());
+		ShellScreen screen = client.sendCommand(inputProvider);
 
 		// then
 		ShellAssertions.assertThat(screen).containsText("Your password is: secret123");
@@ -59,13 +78,13 @@ class ShellTestClientTests {
 	@Test
 	void testCommandExecutionWithComplexInputs(@Autowired ShellTestClient client) throws Exception {
 		// given
-		ShellInputProvider inputProvider = ShellInputProvider.builder()
-			.input("One", "Two")
-			.password("secret1", "secret2")
+		ShellInputProvider inputProvider = ShellInputProvider.providerFor("complex")
+			.withInput("One", "Two")
+			.withPassword("secret1", "secret2")
 			.build();
 
 		// when
-		ShellScreen screen = client.sendCommand("complex", inputProvider);
+		ShellScreen screen = client.sendCommand(inputProvider);
 
 		// then
 		ShellAssertions.assertThat(screen).containsText("First input is: One");
