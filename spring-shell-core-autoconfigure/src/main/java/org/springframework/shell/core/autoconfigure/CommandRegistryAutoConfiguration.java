@@ -26,8 +26,11 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.annotation.support.CommandFactoryBean;
@@ -65,7 +68,8 @@ public class CommandRegistryAutoConfiguration {
 			}
 			log.debug("Registering commands from component: " + className);
 			ReflectionUtils.MethodFilter filter = method -> AnnotatedElementUtils.hasAnnotation(method,
-					org.springframework.shell.core.command.annotation.Command.class);
+					org.springframework.shell.core.command.annotation.Command.class)
+					&& isProfileActive(method, applicationContext.getEnvironment());
 			Set<Method> methods = MethodIntrospector.selectMethods(type, filter);
 			for (Method method : methods) {
 				CommandFactoryBean factoryBean = new CommandFactoryBean(method);
@@ -73,6 +77,11 @@ public class CommandRegistryAutoConfiguration {
 				commandRegistry.registerCommand(factoryBean.getObject());
 			}
 		}
+	}
+
+	private boolean isProfileActive(Method method, Environment environment) {
+		Profile profile = AnnotatedElementUtils.findMergedAnnotation(method, Profile.class);
+		return profile == null || environment.acceptsProfiles(Profiles.of(profile.value()));
 	}
 
 }
