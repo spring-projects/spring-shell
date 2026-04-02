@@ -34,7 +34,7 @@ import org.springframework.shell.core.command.DefaultCommandParser;
 public class ShellRunnerAutoConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean
+	@ConditionalOnMissingBean(name = "springShellApplicationRunner")
 	public ApplicationRunner springShellApplicationRunner(ShellRunner shellRunner) {
 		return args -> shellRunner.run(args.getSourceArgs());
 	}
