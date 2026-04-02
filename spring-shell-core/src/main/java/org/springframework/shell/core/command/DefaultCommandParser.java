@@ -88,6 +88,7 @@ public class DefaultCommandParser implements CommandParser {
 		}
 		List<String> subCommands = firstNonCommandWordIndex == 1 ? Collections.emptyList()
 				: words.subList(1, firstNonCommandWordIndex);
+		String fullCommandName = firstNonCommandWordIndex == 1 ? commandName : prefix;
 
 		// add command and sub commands
 		for (String subCommand : subCommands) {
@@ -116,12 +117,12 @@ public class DefaultCommandParser implements CommandParser {
 					}
 					else { // use next word as option value
 						if (nextWord == null || isOption(nextWord) || isArgumentSeparator(nextWord)) {
-							if (!isBooleanOption(commandName, currentWord)) {
+							if (!isBooleanOption(fullCommandName, currentWord)) {
 								throw new IllegalArgumentException("Option '" + currentWord + "' requires a value");
 							}
 							nextWord = "true";
 						}
-						else if (isBooleanOption(commandName, currentWord) && !isBooleanValue(nextWord)) {
+						else if (isBooleanOption(fullCommandName, currentWord) && !isBooleanValue(nextWord)) {
 							nextWord = "true";
 						}
 						else {

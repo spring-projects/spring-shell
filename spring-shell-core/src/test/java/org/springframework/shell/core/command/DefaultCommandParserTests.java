@@ -272,17 +272,21 @@ class DefaultCommandParserTests {
 
 	@ParameterizedTest
 	@MethodSource("parseWithBooleanOptionData")
-	void testParseWithBooleanOption(String input, String longName, char shortName, Class<?> type,
+	void testParseWithBooleanOption(String input, String commandName, String longName, char shortName, Class<?> type,
 			String expectedValue) {
 		// given
-		Command command = createCommand("mycommand", "My test command");
+		Command command = createCommand(commandName, "My test command");
 		command.getOptions().add(CommandOption.with().longName(longName).shortName(shortName).type(type).build());
 		commandRegistry.registerCommand(command);
+
 		// when
 		ParsedInput parsedInput = parser.parse(input);
+		String commandWithSubcommands = String
+			.join(" ", parsedInput.commandName(), String.join(" ", parsedInput.subCommands()))
+			.trim();
 
 		// then
-		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(commandName, commandWithSubcommands);
 		assertEquals(1, parsedInput.options().size());
 		assertEquals(longName, parsedInput.options().get(0).longName());
 		assertEquals(shortName, parsedInput.options().get(0).shortName());
@@ -290,44 +294,90 @@ class DefaultCommandParserTests {
 	}
 
 	static Stream<Arguments> parseWithBooleanOptionData() {
-		return Stream.of(Arguments.of("mycommand --option=true", "option", ' ', boolean.class, "true"),
-				Arguments.of("mycommand --option=false", "option", ' ', boolean.class, "false"),
-				Arguments.of("mycommand --option true", "option", ' ', boolean.class, "true"),
-				Arguments.of("mycommand --option false", "option", ' ', boolean.class, "false"),
-				Arguments.of("mycommand --option", "option", ' ', boolean.class, "true"),
+		return Stream.of(Arguments.of("mycommand --option=true", "mycommand", "option", ' ', boolean.class, "true"),
+				Arguments.of("mycommand --option=false", "mycommand", "option", ' ', boolean.class, "false"),
+				Arguments.of("mycommand --option true", "mycommand", "option", ' ', boolean.class, "true"),
+				Arguments.of("mycommand --option false", "mycommand", "option", ' ', boolean.class, "false"),
+				Arguments.of("mycommand --option", "mycommand", "option", ' ', boolean.class, "true"),
 
-				Arguments.of("mycommand -on=true", "", 'o', boolean.class, "true"),
-				Arguments.of("mycommand -o=false", "", 'o', boolean.class, "false"),
-				Arguments.of("mycommand -o true", "", 'o', boolean.class, "true"),
-				Arguments.of("mycommand -o false", "", 'o', boolean.class, "false"),
-				Arguments.of("mycommand -o", "", 'o', boolean.class, "true"),
+				Arguments.of("mycommand -on=true", "mycommand", "", 'o', boolean.class, "true"),
+				Arguments.of("mycommand -o=false", "mycommand", "", 'o', boolean.class, "false"),
+				Arguments.of("mycommand -o true", "mycommand", "", 'o', boolean.class, "true"),
+				Arguments.of("mycommand -o false", "mycommand", "", 'o', boolean.class, "false"),
+				Arguments.of("mycommand -o", "mycommand", "", 'o', boolean.class, "true"),
 
-				Arguments.of("mycommand --option=true", "option", ' ', Boolean.class, "true"),
-				Arguments.of("mycommand --option=false", "option", ' ', Boolean.class, "false"),
-				Arguments.of("mycommand --option true", "option", ' ', Boolean.class, "true"),
-				Arguments.of("mycommand --option false", "option", ' ', Boolean.class, "false"),
-				Arguments.of("mycommand --option", "option", ' ', Boolean.class, "true"),
+				Arguments.of("mycommand --option=true", "mycommand", "option", ' ', Boolean.class, "true"),
+				Arguments.of("mycommand --option=false", "mycommand", "option", ' ', Boolean.class, "false"),
+				Arguments.of("mycommand --option true", "mycommand", "option", ' ', Boolean.class, "true"),
+				Arguments.of("mycommand --option false", "mycommand", "option", ' ', Boolean.class, "false"),
+				Arguments.of("mycommand --option", "mycommand", "option", ' ', Boolean.class, "true"),
 
-				Arguments.of("mycommand -on=true", "", 'o', Boolean.class, "true"),
-				Arguments.of("mycommand -o=false", "", 'o', Boolean.class, "false"),
-				Arguments.of("mycommand -o true", "", 'o', Boolean.class, "true"),
-				Arguments.of("mycommand -o false", "", 'o', Boolean.class, "false"),
-				Arguments.of("mycommand -o", "", 'o', Boolean.class, "true"));
+				Arguments.of("mycommand -on=true", "mycommand", "", 'o', Boolean.class, "true"),
+				Arguments.of("mycommand -o=false", "mycommand", "", 'o', Boolean.class, "false"),
+				Arguments.of("mycommand -o true", "mycommand", "", 'o', Boolean.class, "true"),
+				Arguments.of("mycommand -o false", "mycommand", "", 'o', Boolean.class, "false"),
+				Arguments.of("mycommand -o", "mycommand", "", 'o', Boolean.class, "true"),
+
+				Arguments.of("thecommand mysubcommand --option=true", "thecommand mysubcommand", "option", ' ',
+						boolean.class, "true"),
+				Arguments.of("thecommand mysubcommand --option=false", "thecommand mysubcommand", "option", ' ',
+						boolean.class, "false"),
+				Arguments.of("thecommand mysubcommand --option true", "thecommand mysubcommand", "option", ' ',
+						boolean.class, "true"),
+				Arguments.of("thecommand mysubcommand --option false", "thecommand mysubcommand", "option", ' ',
+						boolean.class, "false"),
+				Arguments.of("thecommand mysubcommand --option", "thecommand mysubcommand", "option", ' ',
+						boolean.class, "true"),
+
+				Arguments.of("thecommand mysubcommand -on=true", "thecommand mysubcommand", "", 'o', boolean.class,
+						"true"),
+				Arguments.of("thecommand mysubcommand -o=false", "thecommand mysubcommand", "", 'o', boolean.class,
+						"false"),
+				Arguments.of("thecommand mysubcommand -o true", "thecommand mysubcommand", "", 'o', boolean.class,
+						"true"),
+				Arguments.of("thecommand mysubcommand -o false", "thecommand mysubcommand", "", 'o', boolean.class,
+						"false"),
+				Arguments.of("thecommand mysubcommand -o", "thecommand mysubcommand", "", 'o', boolean.class, "true"),
+
+				Arguments.of("thecommand mysubcommand --option=true", "thecommand mysubcommand", "option", ' ',
+						Boolean.class, "true"),
+				Arguments.of("thecommand mysubcommand --option=false", "thecommand mysubcommand", "option", ' ',
+						Boolean.class, "false"),
+				Arguments.of("thecommand mysubcommand --option true", "thecommand mysubcommand", "option", ' ',
+						Boolean.class, "true"),
+				Arguments.of("thecommand mysubcommand --option false", "thecommand mysubcommand", "option", ' ',
+						Boolean.class, "false"),
+				Arguments.of("thecommand mysubcommand --option", "thecommand mysubcommand", "option", ' ',
+						Boolean.class, "true"),
+
+				Arguments.of("thecommand mysubcommand -on=true", "thecommand mysubcommand", "", 'o', Boolean.class,
+						"true"),
+				Arguments.of("thecommand mysubcommand -o=false", "thecommand mysubcommand", "", 'o', Boolean.class,
+						"false"),
+				Arguments.of("thecommand mysubcommand -o true", "thecommand mysubcommand", "", 'o', Boolean.class,
+						"true"),
+				Arguments.of("thecommand mysubcommand -o false", "thecommand mysubcommand", "", 'o', Boolean.class,
+						"false"),
+				Arguments.of("thecommand mysubcommand -o", "thecommand mysubcommand", "", 'o', Boolean.class, "true"));
 	}
 
 	@ParameterizedTest
 	@MethodSource("parseWithBooleanOptionAndArgumentData")
-	void testParseWithBooleanOptionAndArgument(String input, String expectedValue, int expectedArguments,
-			String expectedArgumentValue) {
+	void testParseWithBooleanOptionAndArgument(String input, String commandName, String expectedValue,
+			int expectedArguments, String expectedArgumentValue) {
 		// given
-		Command command = createCommand("mycommand", "My test command");
+		Command command = createCommand(commandName, "My test command");
 		command.getOptions().add(CommandOption.with().longName("option").type(boolean.class).build());
 		commandRegistry.registerCommand(command);
+
 		// when
 		ParsedInput parsedInput = parser.parse(input);
+		String commandWithSubcommands = String
+			.join(" ", parsedInput.commandName(), String.join(" ", parsedInput.subCommands()))
+			.trim();
 
 		// then
-		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(commandName, commandWithSubcommands);
 		assertEquals(1, parsedInput.options().size());
 		assertEquals(expectedValue, parsedInput.options().get(0).value());
 		assertEquals(expectedArguments, parsedInput.arguments().size());
@@ -337,34 +387,81 @@ class DefaultCommandParserTests {
 	}
 
 	static Stream<Arguments> parseWithBooleanOptionAndArgumentData() {
-		return Stream.of(Arguments.of("mycommand --option=false", "false", 0, null),
-				Arguments.of("mycommand --option=true", "true", 0, null),
-				Arguments.of("mycommand --option false", "false", 0, null),
-				Arguments.of("mycommand --option true", "true", 0, null),
-				Arguments.of("mycommand --option", "true", 0, null),
+		return Stream.of(Arguments.of("mycommand --option=false", "mycommand", "false", 0, null),
+				Arguments.of("mycommand --option=true", "mycommand", "true", 0, null),
+				Arguments.of("mycommand --option false", "mycommand", "false", 0, null),
+				Arguments.of("mycommand --option true", "mycommand", "true", 0, null),
+				Arguments.of("mycommand --option", "mycommand", "true", 0, null),
 
-				Arguments.of("mycommand --option=false argument", "false", 1, "argument"),
-				Arguments.of("mycommand --option=true argument", "true", 1, "argument"),
-				Arguments.of("mycommand --option false argument", "false", 1, "argument"),
-				Arguments.of("mycommand --option true argument", "true", 1, "argument"),
-				Arguments.of("mycommand --option argument", "true", 1, "argument"),
+				Arguments.of("mycommand --option=false argument", "mycommand", "false", 1, "argument"),
+				Arguments.of("mycommand --option=true argument", "mycommand", "true", 1, "argument"),
+				Arguments.of("mycommand --option false argument", "mycommand", "false", 1, "argument"),
+				Arguments.of("mycommand --option true argument", "mycommand", "true", 1, "argument"),
+				Arguments.of("mycommand --option argument", "mycommand", "true", 1, "argument"),
 
-				Arguments.of("mycommand argument --option=false", "false", 1, "argument"),
-				Arguments.of("mycommand argument --option=true", "true", 1, "argument"),
-				Arguments.of("mycommand argument --option false", "false", 1, "argument"),
-				Arguments.of("mycommand argument --option true", "true", 1, "argument"),
-				Arguments.of("mycommand argument --option", "true", 1, "argument"),
+				Arguments.of("mycommand argument --option=false", "mycommand", "false", 1, "argument"),
+				Arguments.of("mycommand argument --option=true", "mycommand", "true", 1, "argument"),
+				Arguments.of("mycommand argument --option false", "mycommand", "false", 1, "argument"),
+				Arguments.of("mycommand argument --option true", "mycommand", "true", 1, "argument"),
+				Arguments.of("mycommand argument --option", "mycommand", "true", 1, "argument"),
 
-				Arguments.of("mycommand --option=false true", "false", 1, "true"),
-				Arguments.of("mycommand --option=true true", "true", 1, "true"),
-				Arguments.of("mycommand --option false false", "false", 1, "false"),
-				Arguments.of("mycommand --option true false", "true", 1, "false"),
+				Arguments.of("mycommand --option=false true", "mycommand", "false", 1, "true"),
+				Arguments.of("mycommand --option=true true", "mycommand", "true", 1, "true"),
+				Arguments.of("mycommand --option false false", "mycommand", "false", 1, "false"),
+				Arguments.of("mycommand --option true false", "mycommand", "true", 1, "false"),
 
-				Arguments.of("mycommand false --option=false", "false", 1, "false"),
-				Arguments.of("mycommand false --option=true", "true", 1, "false"),
-				Arguments.of("mycommand true --option false", "false", 1, "true"),
-				Arguments.of("mycommand true --option true", "true", 1, "true"),
-				Arguments.of("mycommand true --option", "true", 1, "true"));
+				Arguments.of("mycommand false --option=false", "mycommand", "false", 1, "false"),
+				Arguments.of("mycommand false --option=true", "mycommand", "true", 1, "false"),
+				Arguments.of("mycommand true --option false", "mycommand", "false", 1, "true"),
+				Arguments.of("mycommand true --option true", "mycommand", "true", 1, "true"),
+				Arguments.of("mycommand true --option", "mycommand", "true", 1, "true"),
+
+				Arguments.of("thecommand mysubcommand --option=false", "thecommand mysubcommand", "false", 0, null),
+				Arguments.of("thecommand mysubcommand --option=true", "thecommand mysubcommand", "true", 0, null),
+				Arguments.of("thecommand mysubcommand --option false", "thecommand mysubcommand", "false", 0, null),
+				Arguments.of("thecommand mysubcommand --option true", "thecommand mysubcommand", "true", 0, null),
+				Arguments.of("thecommand mysubcommand --option", "thecommand mysubcommand", "true", 0, null),
+
+				Arguments.of("thecommand mysubcommand --option=false argument", "thecommand mysubcommand", "false", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand --option=true argument", "thecommand mysubcommand", "true", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand --option false argument", "thecommand mysubcommand", "false", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand --option true argument", "thecommand mysubcommand", "true", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand --option argument", "thecommand mysubcommand", "true", 1,
+						"argument"),
+
+				Arguments.of("thecommand mysubcommand argument --option=false", "thecommand mysubcommand", "false", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand argument --option=true", "thecommand mysubcommand", "true", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand argument --option false", "thecommand mysubcommand", "false", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand argument --option true", "thecommand mysubcommand", "true", 1,
+						"argument"),
+				Arguments.of("thecommand mysubcommand argument --option", "thecommand mysubcommand", "true", 1,
+						"argument"),
+
+				Arguments.of("thecommand mysubcommand --option=false true", "thecommand mysubcommand", "false", 1,
+						"true"),
+				Arguments.of("thecommand mysubcommand --option=true true", "thecommand mysubcommand", "true", 1,
+						"true"),
+				Arguments.of("thecommand mysubcommand --option false false", "thecommand mysubcommand", "false", 1,
+						"false"),
+				Arguments.of("thecommand mysubcommand --option true false", "thecommand mysubcommand", "true", 1,
+						"false"),
+
+				Arguments.of("thecommand mysubcommand false --option=false", "thecommand mysubcommand", "false", 1,
+						"false"),
+				Arguments.of("thecommand mysubcommand false --option=true", "thecommand mysubcommand", "true", 1,
+						"false"),
+				Arguments.of("thecommand mysubcommand true --option false", "thecommand mysubcommand", "false", 1,
+						"true"),
+				Arguments.of("thecommand mysubcommand true --option true", "thecommand mysubcommand", "true", 1,
+						"true"),
+				Arguments.of("thecommand mysubcommand true --option", "thecommand mysubcommand", "true", 1, "true"));
 	}
 
 	@ParameterizedTest
