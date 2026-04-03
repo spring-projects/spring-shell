@@ -9,6 +9,8 @@ There are two different ways to define a command, through an annotation model an
 - In the annotation model, you define your methods in a `@Component` class and the methods with specific annotations.
 - In the programmatic model, you use a more low level approach, defining commands as beans.
 
+IMPORTANT: With the annotation model, the class containing command definitions should *not* be excluded from component scanning, otherwise the commands will not be registered. This is a common mistake when using `@ComponentScan` with `excludeFilters` and excluding the package containing command classes.
+
 [[commands-registration-annotation]]
 == Annotation-Based Registration
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,22 @@ import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.annotation.Argument;
 import org.springframework.shell.core.command.annotation.EnableCommand;
+import org.springframework.stereotype.Component;
 
 class CommandAnnotationSnippets {
 
 	class Dump1 {
 
 		// tag::enablecommand-with-class[]
-		@EnableCommand({ Example1.class, Example2.class })
+		@EnableCommand({ MyCommands.class })
 		class App {
 
 		}
 		// end::enablecommand-with-class[]
 
 		// tag::command-anno-in-method[]
-		class Example1 {
+		@Component
+		class MyCommands {
 
 			@Command(name = "example")
 			public String example() {
@@ -43,7 +45,8 @@ class CommandAnnotationSnippets {
 		// end::command-anno-in-method[]
 
 		// tag::command-option-arg[]
-		class Example2 {
+		@Component
+		class GreetingCommands {
 
 			@Command(name = "hi", description = "Say hi to a given name", group = "greetings",
 					help = "A command that greets the user with 'Hi ${name}!' with a configurable suffix. Example usage: hi -s=! John")
