@@ -16,6 +16,7 @@
 
 package org.springframework.shell.core.utils;
 
+import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,10 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandContext;
@@ -40,6 +45,19 @@ import org.springframework.util.StringUtils;
  * @author Mahmoud Ben Hassine
  */
 public class Utils {
+
+	/**
+	 * Check if a method is annotated with an active {@link Profile} in the given
+	 * environment.
+	 * @param method the method to check
+	 * @param environment the environment
+	 * @return true if the method has an active profile, false otherwise
+	 * @since 4.0.2
+	 */
+	public static boolean isProfileActive(Method method, Environment environment) {
+		Profile profile = AnnotatedElementUtils.findMergedAnnotation(method, Profile.class);
+		return profile == null || environment.acceptsProfiles(Profiles.of(profile.value()));
+	}
 
 	/**
 	 * Split a CamelCase class name into separate words. Used to derive command group

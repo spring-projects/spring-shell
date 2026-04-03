@@ -24,11 +24,9 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.shell.core.ConsoleInputProvider;
 import org.springframework.shell.core.SystemShellRunner;
@@ -36,6 +34,8 @@ import org.springframework.shell.core.command.*;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.EnableCommand;
 import org.springframework.util.ReflectionUtils;
+
+import static org.springframework.shell.core.utils.Utils.isProfileActive;
 
 /**
  * {@link ImportBeanDefinitionRegistrar} for {@link EnableCommand @EnableCommands}.
@@ -108,7 +108,7 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 
 	private void registerAnnotatedMethods(Class<?> candidateClass, BeanDefinitionRegistry registry) {
 		ReflectionUtils.MethodFilter filter = method -> AnnotatedElementUtils.hasAnnotation(method, Command.class)
-				&& isProfileActive(method);
+				&& isProfileActive(method, this.environment);
 		Set<Method> methods = MethodIntrospector.selectMethods(candidateClass, filter);
 		for (Method method : methods) {
 			BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder
@@ -116,11 +116,6 @@ public final class EnableCommandRegistrar implements ImportBeanDefinitionRegistr
 			beanDefinitionBuilder.addConstructorArgValue(method);
 			registry.registerBeanDefinition(method.getName(), beanDefinitionBuilder.getBeanDefinition());
 		}
-	}
-
-	private boolean isProfileActive(Method method) {
-		Profile profile = AnnotatedElementUtils.findMergedAnnotation(method, Profile.class);
-		return profile == null || environment.acceptsProfiles(Profiles.of(profile.value()));
 	}
 
 }
