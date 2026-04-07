@@ -34,6 +34,9 @@ To enable non-interactive mode, you can set the `spring.shell.interactive.enable
 property to `false`. This will switch the `ShellRunner` implementation to
 `NonInteractiveShellRunner`.
 
+NOTE: In a Spring Boot application, Spring Shell registers an `ApplicationRunner` bean named `springShellApplicationRunner`
+that runs the interactive shell runner. If you want to use a different `ShellRunner` implementation, you need to override the default `ApplicationRunner`.
+
 [[debug-mode]]
 == Debug Mode
 
