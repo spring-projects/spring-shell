@@ -15,7 +15,7 @@ To build the project, navigate to the project's root directory and run the follo
 To run the application, use the following command:
 
 ```bash
-./mvnw -pl org.springframework.shell:spring-shell-sample-petclinic exec:java -Dexec.mainClass=org.springframework.shell.samples.petclinic.SpringShellApplication
+java -jar spring-shell-samples/spring-shell-sample-petclinic/target/petclinic.jar
 ```
 
 You should see a prompt where you can enter commands.

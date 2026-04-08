@@ -27,4 +27,25 @@
         </dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>org.springframework.shell.samples.helloworld.SpringShellApplication</mainClass>
+					<layout>JAR</layout>
+					<finalName>hello-world</finalName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

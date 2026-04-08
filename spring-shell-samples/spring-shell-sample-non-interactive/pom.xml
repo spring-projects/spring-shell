@@ -26,4 +26,25 @@
         </dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>org.springframework.shell.samples.noninteractive.SpringShellApplication</mainClass>
+					<layout>JAR</layout>
+					<finalName>non-interactive</finalName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

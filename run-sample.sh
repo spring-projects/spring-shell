@@ -19,32 +19,27 @@ case "$choice" in
   1)
     echo ""
     echo "Running: hello-world"
-    ./mvnw -pl org.springframework.shell:spring-shell-sample-hello-world \
-      exec:java -Dexec.mainClass=org.springframework.shell.samples.helloworld.SpringShellApplication
+    java -jar spring-shell-samples/spring-shell-sample-hello-world/target/hello-world.jar
     ;;
   2)
     echo ""
     echo "Running: non-interactive"
-    ./mvnw -pl org.springframework.shell:spring-shell-sample-non-interactive \
-      spring-boot:run -Dspring-boot.run.arguments=hi
+    java -jar spring-shell-samples/spring-shell-sample-non-interactive/target/non-interactive.jar hi
     ;;
   3)
     echo ""
     echo "Running: petclinic"
-    ./mvnw -pl org.springframework.shell:spring-shell-sample-petclinic \
-      exec:java -Dexec.mainClass=org.springframework.shell.samples.petclinic.SpringShellApplication
+    java -jar spring-shell-samples/spring-shell-sample-petclinic/target/petclinic.jar
     ;;
   4)
     echo ""
     echo "Running: secure-input"
-    ./mvnw -pl org.springframework.shell:spring-shell-sample-secure-input \
-      spring-boot:run
+    java -jar spring-shell-samples/spring-shell-sample-secure-input/target/secure-input.jar
     ;;
   5)
     echo ""
     echo "Running: spring-boot"
-    ./mvnw -pl org.springframework.shell:spring-shell-sample-spring-boot \
-      spring-boot:run
+    java -jar spring-shell-samples/spring-shell-sample-spring-boot/target/hello-world-boot.jar
     ;;
   *)
     echo "Invalid choice: '$choice'. Please enter a number between 1 and 5." >&2

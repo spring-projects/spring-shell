@@ -15,7 +15,7 @@ To build the project, navigate to the project's root directory and run the follo
 To run the application, use the following command:
 
 ```bash
-./mvnw -pl org.springframework.shell:spring-shell-sample-spring-boot spring-boot:run
+java -jar spring-shell-samples/spring-shell-sample-spring-boot/target/hello-world-boot.jar
 ```
 
 You should see a prompt where you can enter commands.

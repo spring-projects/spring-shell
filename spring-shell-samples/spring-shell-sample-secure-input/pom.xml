@@ -26,4 +26,25 @@
         </dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>org.springframework.shell.samples.secure.input.SpringShellApplication</mainClass>
+					<layout>JAR</layout>
+					<finalName>secure-input</finalName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

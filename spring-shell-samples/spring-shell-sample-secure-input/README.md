@@ -15,7 +15,7 @@ To build the project, navigate to the project's root directory and run the follo
 To run the application, use the following command:
 
 ```bash
-./mvnw -pl org.springframework.shell:spring-shell-sample-secure-input spring-boot:run
+java -jar spring-shell-samples/spring-shell-sample-secure-input/target/secure-input.jar
 ```
 
 You should see a prompt where you can use the `change-password` command to securely input and change a password.
