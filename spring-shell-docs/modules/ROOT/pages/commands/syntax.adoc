@@ -17,6 +17,22 @@ Options are named, while arguments are positional. Options can have short names 
 
 Options can be validated using the Bean Validation API by adding validation annotations to the method parameters, see the xref:commands/validation.adoc[Validating Command Options] section for more details.
 
+Multi-valued arguments can be defined by using the `@Arguments` annotation on an array or a collection type (e.g., `List`, `Set`) as the method parameter type. In this case, all the remaining command line tokens will be collected into the collection:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=multi-valued-argument]
+----
+
+The `@Arguments` annotation provides an attribute called `arity` that allows you to specify the number of arguments to be collected into the collection.
+By default, the arity is not bound, which means that all remaining tokens will be collected. If you set the arity to a specific number, only that many tokens will be collected, and the rest will be treated as separate arguments or options.
+Here is an example of using the `arity` attribute:
+
+[source, java, indent=0]
+----
+include::{snippets}/CommandAnnotationSnippets.java[tag=multi-valued-argument-with-arity]
+----
+
 == Parsing rules
 
 Spring Shell follows the same parsing rules as Spring Boot, with enhanced capabilities following the POSIX style.

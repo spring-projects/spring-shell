@@ -117,6 +117,7 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 		List<Object> args = new ArrayList<>();
 		Parameter[] parameters = this.method.getParameters();
 		Class<?>[] parameterTypes = this.method.getParameterTypes();
+		int processedArgumentsCount = 0;
 		for (int i = 0; i < parameters.length; i++) {
 			// Handle CommandContext injection
 			if (parameterTypes[i].equals(CommandContext.class)) {
@@ -192,21 +193,26 @@ public class MethodInvokerCommandAdapter extends AbstractCommand {
 				Class<?> parameterType = parameterTypes[i];
 				Object value = this.conversionService.convert(rawValue, parameterType);
 				args.add(value);
+				processedArgumentsCount++;
 				continue;
 			}
 			// Handle Arguments list injection
 			Arguments argumentsAnnotation = parameters[i].getAnnotation(Arguments.class);
 			if (argumentsAnnotation != null) {
 				log.debug("Processing arguments for parameter: " + parameters[i].getName());
+				int arity = argumentsAnnotation.arity();
 				List<String> rawValues = commandContext.parsedInput()
 					.arguments()
 					.stream()
+					.skip(processedArgumentsCount)
+					.limit(arity)
 					.map(CommandArgument::value)
 					.toList();
 				Class<?> parameterType = parameterTypes[i];
 				// TODO check for collection types
 				Object value = this.conversionService.convert(rawValues, parameterType);
 				args.add(value);
+				processedArgumentsCount += rawValues.size();
 			}
 
 		}

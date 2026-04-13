@@ -15,10 +15,7 @@
  */
 package org.springframework.shell.docs;
 
-import org.springframework.shell.core.command.annotation.Command;
-import org.springframework.shell.core.command.annotation.Option;
-import org.springframework.shell.core.command.annotation.Argument;
-import org.springframework.shell.core.command.annotation.EnableCommand;
+import org.springframework.shell.core.command.annotation.*;
 import org.springframework.stereotype.Component;
 
 class CommandAnnotationSnippets {
@@ -60,6 +57,39 @@ class CommandAnnotationSnippets {
 
 		}
 		// end::command-option-arg[]
+
+		// tag::multi-valued-argument[]
+		@Component
+		class ArgumentsCommands {
+
+			@Command(name = "hi", description = "Say hi to given names", group = "greetings",
+					help = "A command that greets users with a configurable suffix. Example usage: hi -s=! Foo Bar")
+			public void sayHi(@Option(shortName = 's', longName = "suffix",
+					description = "the suffix of the greeting message", defaultValue = "!") String suffix,
+					@Arguments String[] names) {
+				System.out.println("Hi " + String.join(", ", names) + suffix);
+			}
+
+		}
+		// end::multi-valued-argument[]
+
+		// tag::multi-valued-argument-with-arity[]
+		@Component
+		class ArgumentsWithArityCommands {
+
+			/**
+			 * Real part of (a + bi)(c + di) = ac − bd.
+			 */
+			@Command(name = "real-part", description = "Calculate the real part of the product of two complex numbers",
+					group = "math",
+					help = "Calculate the real part of the product of two complex numbers. Example usage: real-part 1 2 3 4")
+			public double realPartOfComplexProduct(@Arguments(arity = 2) double[] realParts,
+					@Arguments(arity = 2) double[] imaginaryParts) {
+				return realParts[0] * realParts[1] - imaginaryParts[0] * imaginaryParts[1];
+			}
+
+		}
+		// end::multi-valued-argument-with-arity[]
 
 	}
 

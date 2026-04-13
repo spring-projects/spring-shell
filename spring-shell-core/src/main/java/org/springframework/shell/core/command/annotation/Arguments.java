@@ -33,4 +33,12 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Arguments {
 
+	/**
+	 * Define the maximum number of arguments to be collected. By default, all remaining
+	 * arguments are collected.
+	 * @return the maximum number of arguments to be collected
+	 * @since 4.0.2
+	 */
+	int arity() default Integer.MAX_VALUE;
+
 }
