@@ -131,8 +131,13 @@ public class Utils {
 		}
 		else if (type == byte.class || type == short.class || type == int.class || type == long.class) {
 			return 0;
-		} // otherwise it's float or double
-		return 0.0;
+		}
+		else if (type == float.class) {
+			return 0f;
+		}
+		else {
+			return 0d;
+		}
 	}
 
 	private static Set<Command> getCommands(CommandRegistry commandRegistry) {
