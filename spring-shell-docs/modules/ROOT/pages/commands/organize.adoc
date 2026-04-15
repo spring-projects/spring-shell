@@ -35,3 +35,33 @@ Command myCommand() {
             });
 }
 ----
+
+Typically, related commands are defined in the same class (to easily share state between commands), and the group name and prefix are specified at the class level,
+which means that all commands defined in that class will belong to the same group. Here is an example of how to do that:
+
+[source,java]
+----
+@CommandGroup(name = "Authentication Commands", prefix = "auth")
+public class AuthenticationCommands {
+
+	private boolean authenticated = false;
+
+	@Command(name = "login", description = "Log in to the system")
+	public void login() {
+        // Authentication logic here
+        authenticated = true;
+        System.out.println("Logged in successfully!");
+    }
+
+    @Command(name = "logout", description = "Log out of the system")
+    public void logout() {
+        // Logout logic here
+        authenticated = false;
+        System.out.println("Logged out successfully!");
+    }
+}
+----
+
+In this example, both the `login` and `logout` commands belong to the `Authentication Commands` group, and they will be displayed together in the help screen under that group. The `prefix` attribute specifies a common prefix for all commands in that group, which can be used to invoke the commands (e.g., `auth login` and `auth logout`).
+
+NOTE: If a command provides a `group` attribute, it will take precedence over the group specified at the class level. This allows you to override the group for specific commands if needed.

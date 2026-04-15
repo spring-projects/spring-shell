@@ -15,12 +15,15 @@
  */
 package org.springframework.shell.core.command.annotation.support;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.CommandGroup;
 import org.springframework.shell.core.command.annotation.Option;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,12 +64,69 @@ class CommandFactoryBeanTests {
 		assertEquals(' ', options.get(3).shortName());
 	}
 
+	@Test
+	public void testCommandGroup() {
+		// given
+		ApplicationContext context = mock(ApplicationContext.class);
+		when(context.getBean(GreetingCommands.class)).thenReturn(new GreetingCommands());
+		Method[] declaredMethods = GreetingCommands.class.getDeclaredMethods();
+		Method hiMethod = Arrays.stream(declaredMethods)
+			.filter(m -> m.getName().equals("hi"))
+			.findFirst()
+			.orElseThrow();
+		CommandFactoryBean commandFactoryBean = new CommandFactoryBean(hiMethod);
+		commandFactoryBean.setApplicationContext(context);
+
+		// when
+		org.springframework.shell.core.command.Command result = commandFactoryBean.getObject();
+
+		// then
+		assertEquals("greeting hi", result.getName());
+		assertEquals("Greeting Commands", result.getGroup());
+	}
+
+	@Test
+	public void testCommandGroupOverride() {
+		// given
+		ApplicationContext context = mock(ApplicationContext.class);
+		when(context.getBean(GreetingCommands.class)).thenReturn(new GreetingCommands());
+		Method[] declaredMethods = GreetingCommands.class.getDeclaredMethods();
+		Method byeMethod = Arrays.stream(declaredMethods)
+			.filter(m -> m.getName().equals("bye"))
+			.findFirst()
+			.orElseThrow();
+		CommandFactoryBean commandFactoryBean = new CommandFactoryBean(byeMethod);
+		commandFactoryBean.setApplicationContext(context);
+
+		// when
+		org.springframework.shell.core.command.Command result = commandFactoryBean.getObject();
+
+		// then
+		assertEquals("greeting bye", result.getName());
+		assertEquals("Farewell Commands", result.getGroup());
+	}
+
 	static class TestClass {
 
 		@Command(name = "hello")
 		public void helloMethod(@Option String myOption1, @Option(shortName = 'm') String myOption2,
 				@Option(longName = "longNameOption3", shortName = 'l') String myOption3,
 				@Option(longName = "longNameOption4") String myOption4) {
+			// no-op
+		}
+
+	}
+
+	@CommandGroup(name = "Greeting Commands", prefix = "greeting")
+	static class GreetingCommands {
+
+		@Command(name = "hi")
+		public void hi() {
+			// no-op
+		}
+
+		@Command(name = "bye", group = "Farewell Commands")
+		public void bye() {
 			// no-op
 		}
 

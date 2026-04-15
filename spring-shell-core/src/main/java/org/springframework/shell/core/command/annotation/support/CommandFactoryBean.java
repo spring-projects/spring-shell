@@ -39,6 +39,7 @@ import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
+import org.springframework.shell.core.command.annotation.CommandGroup;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
@@ -75,15 +76,24 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 			.get(org.springframework.shell.core.command.annotation.Command.class)
 			.synthesize();
 
+		Class<?> declaringClass = this.method.getDeclaringClass();
+		String groupName = "";
+		String groupPrefix = "";
+		if (declaringClass.isAnnotationPresent(CommandGroup.class)) {
+			CommandGroup commandGroup = MergedAnnotations.from(declaringClass).get(CommandGroup.class).synthesize();
+			groupName = commandGroup.name();
+			groupPrefix = commandGroup.prefix();
+		}
+
 		// get command metadata
-		String name = String.join(" ", command.name());
+		String name = groupPrefix + (groupPrefix.isEmpty() ? "" : " ") + String.join(" ", command.name());
 		name = name.isEmpty() ? Utils.unCamelify(this.method.getName()) : name;
 		String description = command.description();
 		description = description.isEmpty() ? "N/A" : description;
 		String help = command.help();
-		String group = command.group();
+		String group = !command.group().isEmpty() ? command.group() : groupName;
 		if (group.isEmpty()) {
-			String simpleName = Utils.splitCamelCase(this.method.getDeclaringClass().getSimpleName());
+			String simpleName = Utils.splitCamelCase(declaringClass.getSimpleName());
 			if (!simpleName.endsWith(" Commands")) {
 				group = simpleName + " Commands";
 			}
@@ -97,7 +107,6 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		String availabilityProviderBeanName = command.availabilityProvider();
 		String exitStatusExceptionMapperBeanName = command.exitStatusExceptionMapper();
 		String completionProviderBeanName = command.completionProvider();
-		Class<?> declaringClass = this.method.getDeclaringClass();
 		log.debug("Creating command bean for method '%s' defined in class '%s' with name '%s'"
 			.formatted(this.method.getName(), declaringClass.getName(), name));
 		Object targetObject = getTagetObject(declaringClass);

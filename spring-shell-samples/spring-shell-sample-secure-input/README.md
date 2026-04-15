@@ -18,4 +18,11 @@ To run the application, use the following command:
 java -jar spring-shell-samples/spring-shell-sample-secure-input/target/secure-input.jar
 ```
 
-You should see a prompt where you can use the `change-password` command to securely input and change a password.
+You should see a prompt where you can login with `auth login`. This command will ask you to enter a username and password securely.
+
+The sample application uses an in-memory user store with a single user `foo` with the password `bar`. You can use these credentials to log in.
+
+After logging in, you can use the `auth change-password` command to securely change the password.
+
+This sample also shows how to use the `AvailabilityProvider` API to restrict access to certain commands based on the user's authentication status.
+For example, the `auth change-password` command is only available when the user is authenticated.

@@ -25,11 +25,11 @@ import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.CommandGroup;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.samples.petclinic.domain.Pet;
-import org.springframework.stereotype.Component;
 
-@Component
+@CommandGroup(name = "Pets commands", description = "Commands to manage pets", prefix = "pets")
 public class PetCommands {
 
 	private final JdbcClient jdbcClient;
@@ -38,8 +38,7 @@ public class PetCommands {
 		this.jdbcClient = jdbcClient;
 	}
 
-	@Command(name = { "pets", "list" }, description = "List pets", group = "Pets",
-			help = "List pets in Pet Clinic. Usage: pets list")
+	@Command(name = { "list" }, description = "List pets", help = "List pets in Pet Clinic. Usage: pets list")
 	public void listPets(CommandContext commandContext) {
 		List<@Nullable Pet> pets = jdbcClient.sql("SELECT id, name FROM PETS")
 			.query(new DataClassRowMapper<>(Pet.class))
@@ -51,7 +50,7 @@ public class PetCommands {
 		writer.flush();
 	}
 
-	@Command(name = { "pets", "info" }, description = "Show detail about a given pet", group = "Pets",
+	@Command(name = { "info" }, description = "Show detail about a given pet",
 			help = "Show the details about a given pet. Usage: pets info --petId=<id>")
 	public void showPet(@Option(longName = "petId", description = "The pet ID", required = true) int id,
 			CommandContext commandContext) {
