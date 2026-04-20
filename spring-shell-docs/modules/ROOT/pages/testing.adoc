@@ -142,3 +142,62 @@ public class ShellApplicationEndToEndTests {
 ----
 
 This example demonstrates how to run a Spring Shell application in a test context and verify the output of a command using Spring Boot's `OutputCaptureExtension`.
+
+The caveat with this approach is that it is not convenient for testing multiple commands in the same test class due to the fact that the command is passed through the `args` property of the `@SpringBootTest` annotation. For testing multiple commands, it is recommended to use the Spring Shell testing utilities as described in the previous sections. Here is an example of how to test multiple commands using the Spring Shell testing utilities:
+
+[source,java]
+----
+@SpringBootApplication
+public class GreetingShellApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(GreetingShellApplication.class, args);
+	}
+
+	@Command
+	public void hi(CommandContext context) {
+		context.outputWriter().println("Hello world!");
+	}
+
+	@Command
+	public void bye(CommandContext context) {
+		context.outputWriter().println("Goodbye world!");
+	}
+
+}
+
+@ShellTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
+		useMainMethod = SpringBootTest.UseMainMethod.ALWAYS, classes = { GreetingShellApplication.class },
+		properties = { "spring.shell.interactive.enabled=false" })
+public class ShellApplicationEndToEndMultipleCommandsTests {
+
+	@Test
+	void testCommandExecution(@Autowired ShellTestClient client) throws Exception {
+		// when
+		ShellScreen shellScreen = client.sendCommand("help");
+
+		// then
+		ShellAssertions.assertThat(shellScreen).containsText("AVAILABLE COMMANDS");
+	}
+
+	@Test
+	void testHiCommandExecution(@Autowired ShellTestClient client) throws Exception {
+		// when
+		ShellScreen shellScreen = client.sendCommand("hi");
+
+		// then
+		ShellAssertions.assertThat(shellScreen).containsText("Hello world!");
+	}
+
+	@Test
+	void testByeCommandExecution(@Autowired ShellTestClient client) throws Exception {
+		// when
+		ShellScreen shellScreen = client.sendCommand("bye");
+
+		// then
+		ShellAssertions.assertThat(shellScreen).containsText("Goodbye world!");
+	}
+
+}
+----
