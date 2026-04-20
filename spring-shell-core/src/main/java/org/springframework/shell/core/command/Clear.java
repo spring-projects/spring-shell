@@ -25,20 +25,19 @@ import java.io.PrintWriter;
  * @author Janne Valkealahti
  * @author Mahmoud Ben Hassine
  */
-public class Clear implements Command {
+public class Clear extends AbstractCommand {
 
-	@Override
-	public String getDescription() {
-		return "Clear the terminal screen";
+	public Clear() {
+		super("clear", "Clear the terminal screen", "Built-In Commands");
 	}
 
 	@Override
-	public String getGroup() {
-		return "Built-In Commands";
+	public String getHelp() {
+		return "Clear the terminal screen.";
 	}
 
 	@Override
-	public ExitStatus execute(CommandContext commandContext) throws Exception {
+	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
 		PrintWriter printWriter = commandContext.outputWriter();
 		printWriter.print("\033[H\033[2J");
 		printWriter.flush();

@@ -19,7 +19,7 @@ package org.springframework.shell.jline.command;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.AbstractCommand;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.ExitStatus;
@@ -32,31 +32,23 @@ import org.springframework.shell.core.command.Script;
  * @author Eric Bottard
  * @author Mahmoud Ben Hassine
  */
-public class History implements Command {
+public class History extends AbstractCommand {
 
 	private final org.jline.reader.History jLineHistory;
 
 	public History(org.jline.reader.History jLineHistory) {
+		super("history", "Display or save the history of previously run commands", "Built-In Commands");
 		this.jLineHistory = jLineHistory;
 	}
 
 	@Override
-	public String getName() {
-		return "history";
+	public String getHelp() {
+		return "history [-f <file>]\n\n"
+				+ "Display the history of previously run commands. If a file is specified, write the history to that file instead.";
 	}
 
 	@Override
-	public String getDescription() {
-		return "Display or save the history of previously run commands";
-	}
-
-	@Override
-	public String getGroup() {
-		return "Built-In Commands";
-	}
-
-	@Override
-	public ExitStatus execute(CommandContext commandContext) throws Exception {
+	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
 		PrintWriter outputWriter = commandContext.outputWriter();
 		CommandOption fileOption = commandContext.getOptionByName("file");
 		if (fileOption == null) {

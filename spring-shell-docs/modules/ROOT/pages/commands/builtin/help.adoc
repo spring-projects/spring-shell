@@ -13,10 +13,25 @@ my-shell:>help
 Available commands:
 
 Built-In Commands
-       help: Display help about available commands
-       clear: Clear the shell screen.
+       clear: Clear the terminal screen
+	   help: Show help about available commands
        version: Show version info
 ----
 
-Typing `<command> -h` or `<command> --help` shows more information about a command, including the available parameters, their
-type, whether they are mandatory or not, and other details.
+Typing `<command> -h` or `<command> --help` shows the short help string for the given command. For more details about a command, like available parameters, their
+type, whether they are mandatory or not, use the `help <command>` syntax:
+
+[source, bash]
+----
+my-shell:>help version
+NAME
+	version - Show version info
+
+SYNOPSIS
+	version  --help
+
+OPTIONS
+	--help or -h
+	help for version
+	[Optional]
+----

@@ -33,7 +33,11 @@ import java.time.Instant;
  * @author Piotr Olaszewski
  * @author David Pilar
  */
-public class Version implements Command, InitializingBean, ApplicationContextAware {
+public class Version extends AbstractCommand implements InitializingBean, ApplicationContextAware {
+
+	public Version() {
+		super("version", "Show version info", "Built-In Commands");
+	}
 
 	public record BuildProperties(@Nullable String group, @Nullable String artifact, @Nullable String name,
 			@Nullable String version, @Nullable Instant time) {
@@ -58,17 +62,12 @@ public class Version implements Command, InitializingBean, ApplicationContextAwa
 	}
 
 	@Override
-	public String getDescription() {
-		return "Show version info";
+	public String getHelp() {
+		return "This command displays the version of Spring Shell, as well as build and git information if available.";
 	}
 
 	@Override
-	public String getGroup() {
-		return "Built-In Commands";
-	}
-
-	@Override
-	public ExitStatus execute(CommandContext commandContext) throws Exception {
+	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
 		Package pkg = Version.class.getPackage();
 		String version = "N/A";
 		if (buildProperties != null && StringUtils.hasText(buildProperties.version())) {

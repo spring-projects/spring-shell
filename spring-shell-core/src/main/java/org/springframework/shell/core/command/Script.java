@@ -30,22 +30,19 @@ import org.springframework.shell.core.NonInteractiveShellRunner;
  * @author Mahmoud Ben Hassine
  * @author David Pilar
  */
-public class Script implements Command {
+public class Script extends AbstractCommand {
 
 	private CommandParser commandParser;
 
 	public Script(CommandRegistry commandRegistry) {
+		super("script", "Execute commands from a script file", "Built-In Commands");
 		this.commandParser = new DefaultCommandParser(commandRegistry);
 	}
 
 	@Override
-	public String getDescription() {
-		return "Execute commands from a script file";
-	}
-
-	@Override
-	public String getGroup() {
-		return "Built-In Commands";
+	public String getHelp() {
+		return "script -f <file>\n\n"
+				+ "Execute commands from a script file. The file should contain one command per line.";
 	}
 
 	@Override
@@ -60,7 +57,7 @@ public class Script implements Command {
 	}
 
 	@Override
-	public ExitStatus execute(CommandContext commandContext) throws Exception {
+	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
 		String scriptFile = commandContext.parsedInput()
 			.options()
 			.stream()

@@ -28,20 +28,20 @@ import org.springframework.shell.core.utils.Utils;
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  */
-public class Help implements Command {
+public class Help extends AbstractCommand {
 
-	@Override
-	public String getDescription() {
-		return "Display help about available commands";
+	public Help() {
+		super("help", "Show help about available commands", "Built-In Commands");
 	}
 
 	@Override
-	public String getGroup() {
-		return "Built-In Commands";
+	public String getHelp() {
+		return "help [command]\n\n"
+				+ "Display help about available commands. If a command is specified, display detailed help about that command.";
 	}
 
 	@Override
-	public ExitStatus execute(CommandContext commandContext) throws Exception {
+	public ExitStatus doExecute(CommandContext commandContext) throws Exception {
 		PrintWriter outputWriter = commandContext.outputWriter();
 		CommandRegistry commandRegistry = commandContext.commandRegistry();
 		String helpMessage = Utils.formatAvailableCommands(commandRegistry);
@@ -99,14 +99,14 @@ public class Help implements Command {
 					helpMessageBuilder.append("] ");
 				}
 			}
-			helpMessageBuilder.append(" --help\n\n");
 		}
+		helpMessageBuilder.append(" --help\n\n");
 	}
 
 	private void appendOptions(Command command, StringBuilder helpMessageBuilder) {
 		List<CommandOption> options = command.getOptions();
+		helpMessageBuilder.append("OPTIONS\n");
 		if (!options.isEmpty()) {
-			helpMessageBuilder.append("OPTIONS\n");
 			for (CommandOption option : options) {
 				helpMessageBuilder.append("\t");
 				if (option.longName() != null) {
@@ -130,10 +130,10 @@ public class Help implements Command {
 					helpMessageBuilder.append(defaultValue).append("]\n\n");
 				}
 			}
-			helpMessageBuilder.append("\t--help or -h").append("\n");
-			helpMessageBuilder.append("\thelp for ").append(command.getName()).append("\n");
-			helpMessageBuilder.append("\t").append("[Optional]").append("\n").append("\n");
 		}
+		helpMessageBuilder.append("\t--help or -h").append("\n");
+		helpMessageBuilder.append("\thelp for ").append(command.getName()).append("\n");
+		helpMessageBuilder.append("\t").append("[Optional]").append("\n").append("\n");
 	}
 
 	private static void appendAliases(Command command, StringBuilder helpMessageBuilder) {

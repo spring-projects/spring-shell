@@ -61,11 +61,15 @@ public abstract class AbstractCommand implements Command {
 	private List<String> aliases = new ArrayList<>();
 
 	public AbstractCommand(String name, String description) {
-		this(name, description, "", "", false);
+		this(name, description, "");
 	}
 
 	public AbstractCommand(String name, String description, String group) {
-		this(name, description, group, "", false);
+		this(name, description, group, "");
+	}
+
+	public AbstractCommand(String name, String description, String group, String help) {
+		this(name, description, group, help, false);
 	}
 
 	public AbstractCommand(String name, String description, String group, String help, boolean hidden) {
