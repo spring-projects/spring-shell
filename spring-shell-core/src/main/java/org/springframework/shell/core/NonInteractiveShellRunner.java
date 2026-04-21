@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandExecutionException;
 import org.springframework.shell.core.command.CommandExecutor;
 import org.springframework.shell.core.command.CommandParser;
 import org.springframework.shell.core.command.CommandRegistry;
@@ -137,7 +138,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			if (ExitStatus.OK.code() != exitStatus.code()) { // business error
 				log.error("Command " + parsedInput.commandName() + " returned an error: " + exitStatus.description()
 						+ ". Skipping next commands in the script");
-				break;
+				throw new CommandExecutionException("Unable to execute command " + parsedInput.commandName() + ": "
+						+ exitStatus.description() + ". Skipping next commands in the script");
 			}
 		}
 	}
@@ -156,6 +158,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
 		if (ExitStatus.OK.code() != exitStatus.code()) {
 			log.error("Command " + parsedInput.commandName() + " returned an error: " + exitStatus.description());
+			throw new CommandExecutionException(
+					"Unable to execute command " + primaryCommand + ": " + exitStatus.description(), exitStatus.code());
 		}
 	}
 

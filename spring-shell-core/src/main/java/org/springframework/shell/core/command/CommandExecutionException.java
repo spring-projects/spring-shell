@@ -24,12 +24,44 @@ package org.springframework.shell.core.command;
  */
 public class CommandExecutionException extends RuntimeException {
 
+	private int exitCode = ExitStatus.EXECUTION_ERROR.code();
+
+	/**
+	 * Create a new {@code CommandExecutionException} with the given message.
+	 * @param message the detail message
+	 */
 	public CommandExecutionException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Create a new {@code CommandExecutionException} with the given message and exit
+	 * code.
+	 * @param message the detail message
+	 * @param exitCode the exit code associated with this exception
+	 * @since 4.0.2
+	 */
+	public CommandExecutionException(String message, int exitCode) {
+		super(message);
+		this.exitCode = exitCode;
+	}
+
+	/**
+	 * Create a new {@code CommandExecutionException} with the given message and cause.
+	 * @param message the detail message
+	 * @param cause the cause
+	 */
 	public CommandExecutionException(String message, Throwable cause) {
 		super(message, cause);
+	}
+
+	/**
+	 * Return the exit code associated with this exception.
+	 * @return the exit code
+	 * @since 4.0.2
+	 */
+	public int getExitCode() {
+		return this.exitCode;
 	}
 
 }
