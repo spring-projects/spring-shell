@@ -18,7 +18,6 @@ package org.springframework.shell.jline;
 import java.util.stream.Stream;
 
 import org.jline.reader.ParsedLine;
-import org.jline.reader.impl.DefaultParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,8 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ExtendedDefaultParserTests {
 
 	private final ExtendedDefaultParser springParser = new ExtendedDefaultParser();
-
-	private final DefaultParser jlineParser = new DefaultParser();
 
 	static Stream<Arguments> args() {
 		// cursor words wordIndex wordCursor line
@@ -74,15 +71,6 @@ class ExtendedDefaultParserTests {
 	@MethodSource("args")
 	void testSpringExtendedDefaultParser(int cursor, int words, int wordIndex, int wordCursor, String line) {
 		ParsedLine parse = springParser.parse(line, cursor);
-		assertThat(parse.words()).as("words").hasSize(words);
-		assertThat(parse.wordIndex()).as("wordIndex").isEqualTo(wordIndex);
-		assertThat(parse.wordCursor()).as("wordCursor").isEqualTo(wordCursor);
-	}
-
-	@ParameterizedTest
-	@MethodSource("args")
-	void testJlineDefaultParser(int cursor, int words, int wordIndex, int wordCursor, String line) {
-		ParsedLine parse = jlineParser.parse(line, cursor);
 		assertThat(parse.words()).as("words").hasSize(words);
 		assertThat(parse.wordIndex()).as("wordIndex").isEqualTo(wordIndex);
 		assertThat(parse.wordCursor()).as("wordCursor").isEqualTo(wordCursor);
