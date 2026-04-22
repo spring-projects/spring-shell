@@ -1,4 +1,4 @@
-name: Stage Release 3.4.x in Artifactory
+name: Stage Release in Artifactory
 
 on:
   workflow_dispatch:
