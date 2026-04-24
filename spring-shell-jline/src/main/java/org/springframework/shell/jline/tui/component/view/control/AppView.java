@@ -16,7 +16,9 @@
 package org.springframework.shell.jline.tui.component.view.control;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+
+import org.springframework.shell.jline.tui.component.TerminalEvent;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.KeyEvent;
 import org.springframework.shell.jline.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.jline.tui.component.view.event.KeyHandler;
@@ -166,11 +168,17 @@ public class AppView extends BoxView {
 			KeyEvent event = args.event();
 			boolean consumed = false;
 			if (event.isKey(Key.CursorLeft)) {
-				dispatch(ShellMessageBuilder.ofView(this, AppViewEvent.of(this, AppViewEventArgs.Direction.PREVIOUS)));
+				AppViewEvent appViewEvent = AppViewEvent.of(this, AppViewEventArgs.Direction.PREVIOUS);
+				TerminalEvent<AppViewEvent> terminalEvent = new TerminalEvent<>(appViewEvent, EventLoop.Type.VIEW, this,
+						null);
+				dispatch(terminalEvent);
 				consumed = true;
 			}
 			else if (event.isKey(Key.CursorRight)) {
-				dispatch(ShellMessageBuilder.ofView(this, AppViewEvent.of(this, AppViewEventArgs.Direction.NEXT)));
+				AppViewEvent appViewEvent = AppViewEvent.of(this, AppViewEventArgs.Direction.NEXT);
+				TerminalEvent<AppViewEvent> terminalEvent = new TerminalEvent<>(appViewEvent, EventLoop.Type.VIEW, this,
+						null);
+				dispatch(terminalEvent);
 				consumed = true;
 			}
 			return KeyHandler.resultOf(event, consumed, null);
