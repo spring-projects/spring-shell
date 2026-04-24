@@ -1,7 +1,7 @@
 = Spring Shell image:https://github.com/spring-projects/spring-shell/actions/workflows/ci.yml/badge.svg["CI", link="https://github.com/spring-projects/spring-shell/actions/workflows/ci.yml"]
 
 == Latest news
-
+* April 24, 2026: https://spring.io/blog/2026/04/24/spring-shell-4-0-2-is-out[Spring Shell 4.0.2 is out!]
 * January 31, 2026: https://spring.io/blog/2026/01/31/spring-shell-4-0-1-is-out[Spring Shell 4.0.1 is out!]
 * December 30, 2025: https://spring.io/blog/2025/12/30/spring-shell-4-0-0-ga-released[Spring Shell 4.0.0 released!]
 
