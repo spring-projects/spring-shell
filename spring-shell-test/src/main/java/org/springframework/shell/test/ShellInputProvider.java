@@ -40,11 +40,11 @@ public record ShellInputProvider(String command, Deque<String> inputs, Deque<Str
 	 * @param command the command for which the input provider is to be created
 	 * @return a new {@link Builder} instance initialized with the given command
 	 */
-	static Builder providerFor(String command) {
+	public static Builder providerFor(String command) {
 		return Builder.builder(command);
 	}
 
-	final static class Builder {
+	public static final class Builder {
 
 		private final String command;
 
