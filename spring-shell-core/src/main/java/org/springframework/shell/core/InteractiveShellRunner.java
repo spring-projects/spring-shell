@@ -118,7 +118,7 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 				while (cause != null && cause.getCause() != null) {
 					cause = cause.getCause();
 				}
-				String errorMessage = "Unable to run command " + parsedInput.commandName()
+				String errorMessage = "Unable to run command " + parsedInput.commandName() + " "
 						+ String.join(" ", parsedInput.subCommands());
 				if (cause != null && cause.getMessage() != null) {
 					errorMessage += ": " + cause.getMessage();
