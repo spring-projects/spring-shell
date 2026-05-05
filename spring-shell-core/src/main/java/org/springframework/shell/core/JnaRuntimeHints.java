@@ -26,6 +26,7 @@ import org.springframework.aot.hint.ReflectionHints;
 import org.springframework.aot.hint.ResourceHints;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
+import org.springframework.aot.hint.TypeHint;
 import org.springframework.aot.hint.TypeReference;
 
 /**
@@ -61,11 +62,9 @@ public class JnaRuntimeHints implements RuntimeHintsRegistrar {
 	}
 
 	private void registerForMostReflection(ReflectionHints reflection, String... classNames) {
-		reflection.registerTypes(typeReferences(classNames), hint -> {
-			hint.withMembers(MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
-					MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
-					MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS);
-		});
+		reflection.registerTypes(typeReferences(classNames),
+				TypeHint.builtWith(MemberCategory.ACCESS_DECLARED_FIELDS, MemberCategory.ACCESS_PUBLIC_FIELDS,
+						MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS));
 	}
 
 	private List<TypeReference> typeReferences(String... classNames) {

@@ -67,11 +67,9 @@ public class JLineRuntimeHints implements RuntimeHintsRegistrar {
 	}
 
 	private void registerForMostReflection(ReflectionHints reflection, String... classNames) {
-		reflection.registerTypes(typeReferences(classNames), hint -> {
-			hint.withMembers(MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
-					MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
-					MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS);
-		});
+		reflection.registerTypes(typeReferences(classNames),
+				TypeHint.builtWith(MemberCategory.ACCESS_DECLARED_FIELDS, MemberCategory.ACCESS_PUBLIC_FIELDS,
+						MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS));
 	}
 
 	private void registerJni(ReflectionHints jni) {
