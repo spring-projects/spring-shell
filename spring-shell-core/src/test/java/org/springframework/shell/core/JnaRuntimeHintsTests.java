@@ -44,9 +44,9 @@ class JnaRuntimeHintsTests {
 			TypeHint typeHint = hints.getTypeHint(typeReference);
 			assertThat(typeHint).withFailMessage(() -> "No hints found for typeReference " + typeReference).isNotNull();
 			Set<MemberCategory> memberCategories = typeHint.getMemberCategories();
-			assertThat(memberCategories).containsExactlyInAnyOrder(MemberCategory.DECLARED_CLASSES,
-					MemberCategory.DECLARED_FIELDS, MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
-					MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS);
+			assertThat(memberCategories).containsExactlyInAnyOrder(MemberCategory.ACCESS_DECLARED_FIELDS,
+					MemberCategory.ACCESS_PUBLIC_FIELDS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS,
+					MemberCategory.INVOKE_PUBLIC_METHODS);
 		});
 	}
 
