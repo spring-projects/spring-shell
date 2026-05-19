@@ -32,7 +32,6 @@ import org.springframework.shell.core.command.Command;
 import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.annotation.support.CommandFactoryBean;
 import org.springframework.shell.core.utils.Utils;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import static org.springframework.shell.core.utils.Utils.isProfileActive;
@@ -58,18 +57,26 @@ public class CommandRegistryAutoConfiguration {
 	}
 
 	private void registerAnnotatedCommands(ApplicationContext applicationContext, CommandRegistry commandRegistry) {
-		Map<String, Object> components = applicationContext.getBeansWithAnnotation(Component.class);
-		for (Object candidateComponent : components.values()) {
-			Class<?> type = candidateComponent.getClass();
+		ReflectionUtils.MethodFilter filter = method -> AnnotatedElementUtils.hasAnnotation(method,
+				org.springframework.shell.core.command.annotation.Command.class)
+				&& isProfileActive(method, applicationContext.getEnvironment());
+
+		for (String beanName : applicationContext.getBeanDefinitionNames()) {
+			Class<?> type = applicationContext.getType(beanName, false);
+			if (type == null) {
+				continue;
+			}
 			String className = type.getName();
 			if (className.startsWith("org.springframework.boot")) {
 				continue;
 			}
-			log.debug("Registering commands from component: " + className);
-			ReflectionUtils.MethodFilter filter = method -> AnnotatedElementUtils.hasAnnotation(method,
-					org.springframework.shell.core.command.annotation.Command.class)
-					&& isProfileActive(method, applicationContext.getEnvironment());
+
 			Set<Method> methods = MethodIntrospector.selectMethods(type, filter);
+			if (methods.isEmpty()) {
+				continue;
+			}
+
+			log.debug("Registering commands from component: " + className);
 			for (Method method : methods) {
 				CommandFactoryBean factoryBean = new CommandFactoryBean(method);
 				factoryBean.setApplicationContext(applicationContext);
