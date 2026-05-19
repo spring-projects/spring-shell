@@ -18,7 +18,10 @@ package org.springframework.shell.jline;
 import java.io.Console;
 import java.io.PrintWriter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jline.reader.LineReader;
+import org.jline.terminal.Terminal;
 
 import org.springframework.shell.core.InputReader;
 import org.springframework.shell.core.InteractiveShellRunner;
@@ -29,9 +32,12 @@ import org.springframework.shell.core.command.CommandRegistry;
  * Interactive shell runner based on the JVM's system {@link Console}.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 public class JLineShellRunner extends InteractiveShellRunner {
+
+	private static final Log log = LogFactory.getLog(JLineShellRunner.class);
 
 	private final LineReader lineReader;
 
@@ -65,6 +71,22 @@ public class JLineShellRunner extends InteractiveShellRunner {
 	@Override
 	public InputReader getReader() {
 		return new JLineInputReader(this.lineReader);
+	}
+
+	/**
+	 * Raise {@code INT} on the terminal so the blocked {@link LineReader#readLine()}
+	 * throws.
+	 */
+	@Override
+	protected void wakeup() {
+		try {
+			this.lineReader.getTerminal().raise(Terminal.Signal.INT);
+		}
+		catch (Exception ex) {
+			if (log.isDebugEnabled()) {
+				log.debug("Failed to raise INT on terminal to wake up line reader", ex);
+			}
+		}
 	}
 
 }
