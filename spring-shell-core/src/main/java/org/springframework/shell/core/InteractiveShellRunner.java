@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandExecutionException;
 import org.springframework.shell.core.command.CommandExecutor;
@@ -35,11 +36,14 @@ import org.springframework.shell.core.utils.Utils;
  * to print messages and flush the output.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
-public abstract class InteractiveShellRunner implements ShellRunner {
+public abstract class InteractiveShellRunner implements ShellRunner, DisposableBean {
 
 	private static final Log log = LogFactory.getLog(InteractiveShellRunner.class);
+
+	private static final long STOP_JOIN_TIMEOUT_MS = 2000L;
 
 	private final CommandParser commandParser;
 
@@ -50,6 +54,10 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 	private final InputProvider inputProvider;
 
 	private boolean debugMode = false;
+
+	private volatile boolean running = true;
+
+	private volatile Thread runnerThread;
 
 	/**
 	 * Create a new {@link InteractiveShellRunner} instance.
@@ -70,7 +78,17 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 		if (args.length != 0) {
 			log.warn("Running in interactive mode, arguments will be ignored");
 		}
-		while (true) {
+		this.runnerThread = Thread.currentThread();
+		try {
+			doRun();
+		}
+		finally {
+			this.runnerThread = null;
+		}
+	}
+
+	private void doRun() {
+		while (this.running) {
 			String input;
 			try {
 				input = this.inputProvider.readInput();
@@ -84,7 +102,7 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 				}
 			}
 			catch (Exception e) {
-				if (this.debugMode) {
+				if (this.running && this.debugMode) {
 					e.printStackTrace();
 				}
 				break;
@@ -167,6 +185,44 @@ public abstract class InteractiveShellRunner implements ShellRunner {
 	 */
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
+	}
+
+	/**
+	 * Signal the runner to stop and wait briefly for its thread to exit.
+	 */
+	public void stop() {
+		if (!this.running) {
+			return;
+		}
+		this.running = false;
+		try {
+			wakeup();
+		}
+		catch (Exception ex) {
+			if (log.isDebugEnabled()) {
+				log.debug("Failed to wake up shell runner", ex);
+			}
+		}
+		Thread thread = this.runnerThread;
+		if (thread != null && thread != Thread.currentThread()) {
+			try {
+				thread.join(STOP_JOIN_TIMEOUT_MS);
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+		}
+	}
+
+	/**
+	 * Unblock a parked {@link InputProvider#readInput()} so {@link #stop()} can return.
+	 */
+	protected void wakeup() {
+	}
+
+	@Override
+	public void destroy() {
+		stop();
 	}
 
 }
