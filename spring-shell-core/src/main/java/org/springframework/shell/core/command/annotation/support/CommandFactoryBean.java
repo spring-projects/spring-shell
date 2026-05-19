@@ -32,7 +32,12 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.MergedAnnotations;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterFactory;
+import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.Command;
@@ -211,8 +216,42 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		}
 		catch (BeansException e) {
 			log.debug("No ConfigurableConversionService bean found, using a default conversion service.");
-			return new DefaultConversionService();
+			DefaultConversionService conversionService = new DefaultConversionService();
+			registerConverterBeans(conversionService);
+			return conversionService;
 		}
+	}
+
+	private void registerConverterBeans(ConfigurableConversionService conversionService) {
+		this.applicationContext.getBeansOfType(GenericConverter.class)
+			.values()
+			.forEach(conversionService::addConverter);
+		this.applicationContext.getBeansOfType(ConverterFactory.class)
+			.values()
+			.forEach(conversionService::addConverterFactory);
+		this.applicationContext.getBeansOfType(Converter.class)
+			.forEach((name, converter) -> addConverter(conversionService, name, converter));
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void addConverter(ConfigurableConversionService conversionService, String beanName, Converter converter) {
+		ResolvableType type = beanType(beanName, converter).as(Converter.class);
+		Class<?> source = type.getGeneric(0).resolve();
+		Class<?> target = type.getGeneric(1).resolve();
+		if (source != null && target != null) {
+			conversionService.addConverter(source, target, converter);
+		}
+		else {
+			conversionService.addConverter(converter);
+		}
+	}
+
+	private ResolvableType beanType(String beanName, Object bean) {
+		if (this.applicationContext instanceof ConfigurableApplicationContext cac
+				&& cac.getBeanFactory().containsBeanDefinition(beanName)) {
+			return cac.getBeanFactory().getMergedBeanDefinition(beanName).getResolvableType();
+		}
+		return ResolvableType.forClass(bean.getClass());
 	}
 
 	private Object getTagetObject(Class<?> declaringClass) {
