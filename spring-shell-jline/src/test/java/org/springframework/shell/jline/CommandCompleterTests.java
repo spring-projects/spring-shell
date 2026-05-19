@@ -171,7 +171,13 @@ class CommandCompleterTests {
 				Arguments.of(List.of("hello", "--first", "Paul", "--last=Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "--first", "Paul", "-l=Noris", ""), List.of()),
 				Arguments.of(List.of("hello", "-f", "Paul", "--last=Noris", ""), List.of()),
-				Arguments.of(List.of("hello", "-f", "Paul", "-l=Noris", ""), List.of()));
+				Arguments.of(List.of("hello", "-f", "Paul", "-l=Noris", ""), List.of()),
+
+				// positional arguments after the command should not break completion
+				// (gh-1346)
+				Arguments.of(List.of("hello", "IN"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", "INBOUND"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello", "IN", ""), List.of("--first", "--last", "-f", "-l")));
 	}
 
 	@ParameterizedTest
@@ -326,7 +332,12 @@ class CommandCompleterTests {
 
 				Arguments.of(List.of("hello world", "--first", ""), List.of("Mary", "Paul", "Peter")),
 				Arguments.of(List.of("hello world", "--last", ""), List.of("Chan", "Noris")),
-				Arguments.of(List.of("hello world", "--first", "Paul", "--last", "Noris", ""), List.of()));
+				Arguments.of(List.of("hello world", "--first", "Paul", "--last", "Noris", ""), List.of()),
+
+				// positional arguments after a multi-word command should not break
+				// completion (gh-1346)
+				Arguments.of(List.of("hello world", "IN"), List.of("--first", "--last", "-f", "-l")),
+				Arguments.of(List.of("hello world", "IN", ""), List.of("--first", "--last", "-f", "-l")));
 	}
 
 	@ParameterizedTest
@@ -484,6 +495,44 @@ class CommandCompleterTests {
 
 				Arguments.of(List.of("hello", ""), List.of()), Arguments.of(List.of("hi", ""), List.of()),
 				Arguments.of(List.of("bye", ""), List.of()));
+	}
+
+	@ParameterizedTest
+	@MethodSource("completeForPositionalArgumentData")
+	void testCompleteForPositionalArgument(List<String> words, List<String> expectedValues) {
+		// given
+		CompletionProvider positionalProvider = completionContext -> {
+			if (completionContext.getCommandOption() != null) {
+				return Collections.emptyList();
+			}
+			String typed = completionContext.getWords().get(completionContext.getWordIndex());
+			return Stream.of("INBOUND", "OUTBOUND", "INTERNAL")
+				.filter(v -> v.startsWith(typed))
+				.map(CompletionProposal::new)
+				.toList();
+		};
+		when(command.getCompletionProvider()).thenReturn(positionalProvider);
+		when(command.getOptions()).thenReturn(List.of());
+
+		List<Candidate> candidates = new ArrayList<>();
+		ParsedLine line = mock(ParsedLine.class);
+		when(line.words()).thenReturn(words);
+		when(line.wordIndex()).thenReturn(words.size() - 1);
+		when(line.word()).thenReturn(words.get(words.size() - 1));
+		when(line.line()).thenReturn(String.join(" ", words));
+
+		// when
+		completer.complete(mock(LineReader.class), line, candidates);
+
+		// then
+		assertEquals(expectedValues, toCandidateNames(candidates));
+	}
+
+	static Stream<Arguments> completeForPositionalArgumentData() {
+		return Stream.of(Arguments.of(List.of("hello", ""), List.of("INBOUND", "INTERNAL", "OUTBOUND")),
+				Arguments.of(List.of("hello", "IN"), List.of("INBOUND", "INTERNAL")),
+				Arguments.of(List.of("hello", "INBOUND"), List.of("INBOUND")),
+				Arguments.of(List.of("hello", "OUT"), List.of("OUTBOUND")));
 	}
 
 }

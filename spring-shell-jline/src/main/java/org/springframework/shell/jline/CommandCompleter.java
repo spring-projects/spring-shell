@@ -93,20 +93,23 @@ public class CommandCompleter implements Completer {
 	}
 
 	@Nullable private Command findCommandByWords(List<String> words) {
+		Command match = null;
 		StringBuilder commandName = new StringBuilder();
 		for (String word : words) {
 			if (word.startsWith("-")) {
 				break;
 			}
 			commandName.append(word).append(" ");
+			Command candidate = this.commandRegistry.getCommandByName(commandName.toString().trim());
+			if (candidate != null) {
+				match = candidate;
+			}
 		}
-
-		Command command = this.commandRegistry.getCommandByName(commandName.toString().trim());
 		// the command is found but was not completed on the line
-		if (command != null && getCommandNames(command).toList().contains(String.join(" ", words))) {
-			command = null;
+		if (match != null && getCommandNames(match).toList().contains(String.join(" ", words))) {
+			match = null;
 		}
-		return command;
+		return match;
 	}
 
 	@Nullable private CommandOption findOptionByWords(List<String> words, List<CommandOption> options) {
