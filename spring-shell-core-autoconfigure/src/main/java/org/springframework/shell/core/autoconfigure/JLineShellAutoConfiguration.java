@@ -79,6 +79,11 @@ public class JLineShellAutoConfiguration {
 
 	private final static Log log = LogFactory.getLog(JLineShellAutoConfiguration.class);
 
+	// Reused across context restarts (e.g. DevTools) to keep one reader of stdin.
+	private static volatile Terminal sharedTerminal;
+
+	private static final Object sharedTerminalLock = new Object();
+
 	private org.jline.reader.History jLineHistory;
 
 	@Value("${spring.application.name:spring-shell}.log")
@@ -158,16 +163,40 @@ public class JLineShellAutoConfiguration {
 		return inputProvider;
 	}
 
-	@Bean(destroyMethod = "close")
+	// Not closed on context close (shared); closed on JVM shutdown instead.
+	@Bean(destroyMethod = "")
 	public Terminal terminal(ObjectProvider<TerminalCustomizer> customizers) {
-		try {
-			TerminalBuilder builder = TerminalBuilder.builder();
-			builder.systemOutput(SystemOutput.SysOut);
-			customizers.orderedStream().forEach(customizer -> customizer.customize(builder));
-			return builder.build();
+		Terminal terminal = sharedTerminal;
+		if (terminal != null) {
+			return terminal;
 		}
-		catch (IOException e) {
-			throw new BeanCreationException("Could not create Terminal", e);
+		synchronized (sharedTerminalLock) {
+			if (sharedTerminal == null) {
+				try {
+					TerminalBuilder builder = TerminalBuilder.builder();
+					builder.systemOutput(SystemOutput.SysOut);
+					customizers.orderedStream().forEach(customizer -> customizer.customize(builder));
+					Terminal built = builder.build();
+					Runtime.getRuntime()
+						.addShutdownHook(new Thread(() -> closeTerminal(built), "spring-shell-terminal-close"));
+					sharedTerminal = built;
+				}
+				catch (IOException e) {
+					throw new BeanCreationException("Could not create Terminal", e);
+				}
+			}
+			return sharedTerminal;
+		}
+	}
+
+	private static void closeTerminal(Terminal terminal) {
+		try {
+			terminal.close();
+		}
+		catch (IOException ex) {
+			if (log.isDebugEnabled()) {
+				log.debug("Failed to close terminal on shutdown", ex);
+			}
 		}
 	}
 
