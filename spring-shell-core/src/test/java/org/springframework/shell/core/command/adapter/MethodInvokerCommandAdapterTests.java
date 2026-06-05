@@ -15,15 +15,10 @@
  */
 package org.springframework.shell.core.command.adapter;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
-
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.CommandArgument;
 import org.springframework.shell.core.command.CommandContext;
@@ -32,6 +27,10 @@ import org.springframework.shell.core.command.ExitStatus;
 import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -106,10 +105,16 @@ class MethodInvokerCommandAdapterTests {
 			.thenReturn(CommandOption.with().longName("base").value("10").build());
 		StringWriter out = new StringWriter();
 		Mockito.when(ctx.parsedInput().arguments())
-			.thenReturn(java.util.List.of(new CommandArgument(0, "1"), new CommandArgument(1, "2"),
-					new CommandArgument(2, "3"), new CommandArgument(3, "4"), new CommandArgument(4, "5"),
-					new CommandArgument(5, "6"), new CommandArgument(6, "7"), new CommandArgument(7, "8"),
-					new CommandArgument(8, "9"), new CommandArgument(9, "10")));
+			.thenReturn(java.util.List.of(CommandArgument.with().index(0).value("1").build(),
+					CommandArgument.with().index(1).value("2").build(),
+					CommandArgument.with().index(2).value("3").build(),
+					CommandArgument.with().index(3).value("4").build(),
+					CommandArgument.with().index(4).value("5").build(),
+					CommandArgument.with().index(5).value("6").build(),
+					CommandArgument.with().index(6).value("7").build(),
+					CommandArgument.with().index(7).value("8").build(),
+					CommandArgument.with().index(8).value("9").build(),
+					CommandArgument.with().index(9).value("10").build()));
 		Mockito.when(ctx.outputWriter()).thenReturn(new PrintWriter(out));
 		MethodInvokerCommandAdapter adapter = new MethodInvokerCommandAdapter("name", "desc", "group", "help", false,
 				method, target, conversionService, validator);

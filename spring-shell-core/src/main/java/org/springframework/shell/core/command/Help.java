@@ -15,10 +15,11 @@
  */
 package org.springframework.shell.core.command;
 
+import org.springframework.shell.core.utils.Utils;
+import org.springframework.util.StringUtils;
+
 import java.io.PrintWriter;
 import java.util.List;
-
-import org.springframework.shell.core.utils.Utils;
 
 /**
  * A command to display help about all available commands.
@@ -67,6 +68,7 @@ public class Help extends AbstractCommand {
 		appendName(command, helpMessageBuilder);
 		appendSynopsis(command, helpMessageBuilder);
 		appendOptions(command, helpMessageBuilder);
+		appendArguments(command, helpMessageBuilder);
 		appendAliases(command, helpMessageBuilder);
 		return helpMessageBuilder.toString();
 	}
@@ -82,9 +84,11 @@ public class Help extends AbstractCommand {
 
 	private void appendSynopsis(Command command, StringBuilder helpMessageBuilder) {
 		List<CommandOption> options = command.getOptions();
-		helpMessageBuilder.append("SYNOPSIS\n").append("\t").append(command.getName()).append(" ");
+		List<CommandArgument> arguments = command.getArguments();
+		helpMessageBuilder.append("SYNOPSIS\n").append("\t").append(command.getName());
 		if (!options.isEmpty()) {
 			for (CommandOption option : options) {
+				helpMessageBuilder.append(" ");
 				if (option.required()) {
 					helpMessageBuilder.append("[");
 				}
@@ -96,14 +100,24 @@ public class Help extends AbstractCommand {
 				}
 				helpMessageBuilder.append(" ").append(option.type().getSimpleName());
 				if (option.required()) {
-					helpMessageBuilder.append("] ");
-				}
-				else {
-					helpMessageBuilder.append(" ");
+					helpMessageBuilder.append("]");
 				}
 			}
 		}
-		helpMessageBuilder.append("--help\n\n");
+		if (!arguments.isEmpty()) {
+			for (CommandArgument argument : arguments) {
+				helpMessageBuilder.append(" ");
+				boolean hasDefaultValue = StringUtils.hasText(argument.defaultValue());
+				if (hasDefaultValue) {
+					helpMessageBuilder.append("[");
+				}
+				helpMessageBuilder.append("(").append(argument.type().getSimpleName()).append(")");
+				if (hasDefaultValue) {
+					helpMessageBuilder.append("]");
+				}
+			}
+		}
+		helpMessageBuilder.append(" ").append("--help\n\n");
 	}
 
 	private void appendOptions(Command command, StringBuilder helpMessageBuilder) {
@@ -137,6 +151,27 @@ public class Help extends AbstractCommand {
 		helpMessageBuilder.append("\t--help or -h").append("\n");
 		helpMessageBuilder.append("\thelp for ").append(command.getName()).append("\n");
 		helpMessageBuilder.append("\t").append("[Optional]").append("\n").append("\n");
+	}
+
+	private void appendArguments(Command command, StringBuilder helpMessageBuilder) {
+		List<CommandArgument> arguments = command.getArguments();
+		if (!arguments.isEmpty()) {
+			helpMessageBuilder.append("ARGUMENTS [Positional]\n");
+			int index = 0;
+			for (CommandArgument argument : arguments) {
+				helpMessageBuilder.append("\t");
+				helpMessageBuilder.append("[Index ").append(index++).append("]");
+				helpMessageBuilder.append(" ").append(argument.type().getSimpleName()).append("\n");
+				helpMessageBuilder.append("\t").append(argument.description()).append("\n");
+				String defaultValue = argument.defaultValue();
+				helpMessageBuilder.append("\t").append("[default = ");
+				Class<?> optionType = argument.type();
+				if (defaultValue == null && optionType.isPrimitive()) {
+					defaultValue = Utils.getDefaultValueForPrimitiveType(optionType).toString();
+				}
+				helpMessageBuilder.append(defaultValue).append("]\n\n");
+			}
+		}
 	}
 
 	private static void appendAliases(Command command, StringBuilder helpMessageBuilder) {

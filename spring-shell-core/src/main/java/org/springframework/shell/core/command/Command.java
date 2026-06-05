@@ -15,22 +15,21 @@
  */
 package org.springframework.shell.core.command;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.shell.core.command.adapter.ConsumerCommandAdapter;
+import org.springframework.shell.core.command.adapter.FunctionCommandAdapter;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.completion.CompletionProvider;
+import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
+import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
+import org.springframework.util.Assert;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import org.jspecify.annotations.Nullable;
-
-import org.springframework.shell.core.command.adapter.ConsumerCommandAdapter;
-import org.springframework.shell.core.command.adapter.FunctionCommandAdapter;
-import org.springframework.shell.core.command.availability.AvailabilityProvider;
-import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
-import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
-import org.springframework.shell.core.command.completion.CompletionProvider;
-import org.springframework.util.Assert;
 
 /**
  * @author Eric Bottard
@@ -97,6 +96,14 @@ public interface Command {
 	}
 
 	/**
+	 * Get the arguments of the command.
+	 * @return the arguments of the command
+	 */
+	default List<CommandArgument> getArguments() {
+		return Collections.emptyList();
+	}
+
+	/**
 	 * Get the availability provider of the command. Defaults to always available.
 	 * @return the availability provider of the command
 	 */
@@ -156,6 +163,8 @@ public interface Command {
 
 		private List<CommandOption> options = new ArrayList<>();
 
+		private List<CommandArgument> arguments = new ArrayList<>();
+
 		public Builder name(String name) {
 			this.name = name;
 			return this;
@@ -206,6 +215,11 @@ public interface Command {
 			return this;
 		}
 
+		public Builder arguments(CommandArgument... arguments) {
+			this.arguments = Arrays.asList(arguments);
+			return this;
+		}
+
 		public AbstractCommand execute(Consumer<CommandContext> commandExecutor) {
 			Assert.hasText(name, "'name' must be specified");
 
@@ -229,6 +243,7 @@ public interface Command {
 		private void init(AbstractCommand command) {
 			command.setAliases(aliases);
 			command.setOptions(options);
+			command.setArguments(arguments);
 			command.setAvailabilityProvider(availabilityProvider);
 			command.setCompletionProvider(completionProvider);
 			if (exitStatusExceptionMapper != null) {
