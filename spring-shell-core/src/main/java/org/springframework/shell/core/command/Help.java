@@ -98,9 +98,12 @@ public class Help extends AbstractCommand {
 				if (option.required()) {
 					helpMessageBuilder.append("] ");
 				}
+				else {
+					helpMessageBuilder.append(" ");
+				}
 			}
 		}
-		helpMessageBuilder.append(" --help\n\n");
+		helpMessageBuilder.append("--help\n\n");
 	}
 
 	private void appendOptions(Command command, StringBuilder helpMessageBuilder) {

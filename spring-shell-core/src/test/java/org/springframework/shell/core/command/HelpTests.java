@@ -122,6 +122,87 @@ class HelpTests {
 	}
 
 	@Test
+	void testSynopsisSpaceBetweenNonRequiredOptions() throws Exception {
+		// given
+		CommandOption nameOption = CommandOption.with()
+			.shortName('n')
+			.longName("name")
+			.type(String.class)
+			.required(true)
+			.description("Name of the person to greet")
+			.build();
+		CommandOption timesOption = CommandOption.with()
+			.shortName('t')
+			.longName("times")
+			.type(int.class)
+			.required(false)
+			.defaultValue("1")
+			.description("Number of times to greet")
+			.build();
+		CommandOption suffixOption = CommandOption.with()
+			.shortName('s')
+			.longName("suffix")
+			.type(String.class)
+			.required(false)
+			.defaultValue("!")
+			.description("Suffix to use in the greeting")
+			.build();
+		Command command = Command.builder()
+			.name("hi")
+			.description("Say hi")
+			.group("Greetings")
+			.help("This command says hi to the user.")
+			.options(nameOption, timesOption, suffixOption)
+			.execute(commandContext -> {
+			});
+		ParsedInput parsedInput = ParsedInput.builder()
+			.commandName("hi")
+			.addArgument(new CommandArgument(0, "hi"))
+			.build();
+		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(command);
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter outputWriter = new PrintWriter(stringWriter);
+		InputReader inputReader = new InputReader() {
+		};
+		CommandContext commandContext = new CommandContext(parsedInput, commandRegistry, outputWriter, inputReader);
+
+		// when
+		Help help = new Help();
+		help.execute(commandContext);
+
+		// then
+		String actualOutput = stringWriter.toString();
+		String expectedOutput = """
+				NAME
+					hi - Say hi
+
+				SYNOPSIS
+					hi [--name String] --times int --suffix String --help
+
+				OPTIONS
+					--name or -n String
+					Name of the person to greet
+					[Mandatory]
+
+					--times or -t int
+					Number of times to greet
+					[Optional, default = 1]
+
+					--suffix or -s String
+					Suffix to use in the greeting
+					[Optional, default = !]
+
+					--help or -h
+					help for hi
+					[Optional]
+
+
+				""";
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+	}
+
+	@Test
 	void testHelpMessageForCommandAlias() throws Exception {
 		// given
 		CommandOption nameOption = CommandOption.with()
