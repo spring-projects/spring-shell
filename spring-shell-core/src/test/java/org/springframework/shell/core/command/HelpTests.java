@@ -15,13 +15,12 @@
  */
 package org.springframework.shell.core.command;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.shell.core.InputReader;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 class HelpTests {
 
@@ -80,7 +79,7 @@ class HelpTests {
 			});
 		ParsedInput parsedInput = ParsedInput.builder()
 			.commandName("hi")
-			.addArgument(new CommandArgument(0, "hi"))
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
 			.build();
 		CommandRegistry commandRegistry = new CommandRegistry();
 		commandRegistry.registerCommand(command);
@@ -115,6 +114,85 @@ class HelpTests {
 					--help or -h
 					help for hi
 					[Optional]
+
+
+				""";
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+	}
+
+	@Test
+	void testHelpMessageForCommandWithArgs() throws Exception {
+		// given
+		CommandArgument nameArgument = CommandArgument.with()
+			.index(0)
+			.type(String.class)
+			.defaultValue("world")
+			.description("the name of the person to greet")
+			.build();
+		CommandArgument suffixArgument = CommandArgument.with()
+			.index(1)
+			.type(String.class)
+			.defaultValue("!")
+			.description("the suffix of the greeting message")
+			.build();
+		CommandOption timesOption = CommandOption.with()
+			.shortName('t')
+			.longName("times")
+			.type(int.class)
+			.required(false)
+			.defaultValue("1")
+			.description("Number of times to greet")
+			.build();
+		Command command = Command.builder()
+			.name("hi")
+			.description("Say hi")
+			.group("Greetings")
+			.help("This command says hi to the user.")
+			.options(timesOption)
+			.arguments(nameArgument, suffixArgument)
+			.execute(commandContext -> {
+			});
+		ParsedInput parsedInput = ParsedInput.builder()
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
+			.build();
+		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(command);
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter outputWriter = new PrintWriter(stringWriter);
+		InputReader inputReader = new InputReader() {
+		};
+		CommandContext commandContext = new CommandContext(parsedInput, commandRegistry, outputWriter, inputReader);
+
+		// when
+		Help help = new Help();
+		help.execute(commandContext);
+
+		// then
+		String actualOutput = stringWriter.toString();
+		String expectedOutput = """
+				NAME
+					hi - Say hi
+
+				SYNOPSIS
+					hi --times int [(String)] [(String)] --help
+
+				OPTIONS
+					--times or -t int
+					Number of times to greet
+					[Optional, default = 1]
+
+					--help or -h
+					help for hi
+					[Optional]
+
+				ARGUMENTS [Positional]
+					[Index 0] String
+					the name of the person to greet
+					[default = world]
+
+					[Index 1] String
+					the suffix of the greeting message
+					[default = !]
 
 
 				""";
@@ -157,7 +235,7 @@ class HelpTests {
 			});
 		ParsedInput parsedInput = ParsedInput.builder()
 			.commandName("hi")
-			.addArgument(new CommandArgument(0, "hi"))
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
 			.build();
 		CommandRegistry commandRegistry = new CommandRegistry();
 		commandRegistry.registerCommand(command);
@@ -231,7 +309,7 @@ class HelpTests {
 			});
 		ParsedInput parsedInput = ParsedInput.builder()
 			.commandName("hello")
-			.addArgument(new CommandArgument(0, "hello"))
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
 			.build();
 		CommandRegistry commandRegistry = new CommandRegistry();
 		commandRegistry.registerCommand(command);

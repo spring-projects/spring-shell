@@ -15,18 +15,10 @@
  */
 package org.springframework.shell.core.command.annotation.support;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import jakarta.validation.Validator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -41,17 +33,25 @@ import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.shell.core.command.Command;
+import org.springframework.shell.core.command.CommandArgument;
 import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
+import org.springframework.shell.core.command.annotation.Argument;
 import org.springframework.shell.core.command.annotation.CommandGroup;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
-import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.core.utils.Utils;
 import org.springframework.util.Assert;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Factory bean to build instances of {@link Command}.
@@ -122,12 +122,14 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		Validator validator = getValidator();
 		CompletionProvider completionProvider = getCompletionProvider(completionProviderBeanName);
 		List<CommandOption> commandOptions = getCommandOptions();
+		List<CommandArgument> commandArguments = getCommandArguments();
 
 		// create command adapter
 		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
 				group, help, hidden, this.method, targetObject, configurableConversionService, validator);
 		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
 		methodInvokerCommandAdapter.setOptions(commandOptions);
+		methodInvokerCommandAdapter.setArguments(commandArguments);
 		methodInvokerCommandAdapter.setAvailabilityProvider(availabilityProviderBean);
 		methodInvokerCommandAdapter.setCompletionProvider(completionProvider);
 		if (exitStatusExceptionMapperBean != null) {
@@ -161,6 +163,26 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 			}
 		}
 		return commandOptions;
+	}
+
+	private List<CommandArgument> getCommandArguments() {
+		List<CommandArgument> commandArguments = new ArrayList<>();
+		for (Parameter parameter : this.method.getParameters()) {
+			Argument argumentAnnotation = parameter.getAnnotation(Argument.class);
+			if (argumentAnnotation != null) {
+				int index = argumentAnnotation.index();
+				String description = argumentAnnotation.description();
+				String defaultValue = argumentAnnotation.defaultValue();
+				CommandArgument commandArgument = CommandArgument.with()
+					.index(index)
+					.description(description)
+					.defaultValue(defaultValue)
+					.type(parameter.getType())
+					.build();
+				commandArguments.add(commandArgument);
+			}
+		}
+		return commandArguments;
 	}
 
 	private CompletionProvider getCompletionProvider(String completionProviderBeanName) {

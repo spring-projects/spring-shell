@@ -15,12 +15,12 @@
  */
 package org.springframework.shell.core.command;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Default implementation of {@link CommandParser}. Supports options in the long form of
@@ -180,7 +180,7 @@ public class DefaultCommandParser implements CommandParser {
 	}
 
 	private CommandArgument parseArgument(int index, String word) {
-		return new CommandArgument(index, unquoteAndUnescapeQuoted(word));
+		return CommandArgument.with().index(index).value(unquoteAndUnescapeQuoted(word)).build();
 	}
 
 	private String unquoteAndUnescapeQuoted(String s) {

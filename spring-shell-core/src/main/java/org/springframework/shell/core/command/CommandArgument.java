@@ -15,12 +15,62 @@
  */
 package org.springframework.shell.core.command;
 
+import org.jspecify.annotations.Nullable;
+
 /**
- * Record representing a runtime argument to a command.
+ * Record representing the definition as well as the runtime information about a command
+ * argument.
  *
  * @author Mahmoud Ben Hassine
  * @since 4.0.0
  */
-public record CommandArgument(int index, String value) {
+public record CommandArgument(int index, @Nullable String description, @Nullable String defaultValue,
+		@Nullable String value, Class<?> type) {
 
+	public static CommandArgument.Builder with() {
+		return new CommandArgument.Builder();
+	}
+
+	public static class Builder {
+
+		private int index = 0;
+
+		private @Nullable String description;
+
+		private @Nullable String defaultValue;
+
+		private @Nullable String value;
+
+		private Class<?> type = Object.class;
+
+		public CommandArgument.Builder index(int index) {
+			this.index = index;
+			return this;
+		}
+
+		public CommandArgument.Builder description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public CommandArgument.Builder defaultValue(String defaultValue) {
+			this.defaultValue = defaultValue;
+			return this;
+		}
+
+		public CommandArgument.Builder value(String value) {
+			this.value = value;
+			return this;
+		}
+
+		public CommandArgument.Builder type(Class<?> type) {
+			this.type = type;
+			return this;
+		}
+
+		public CommandArgument build() {
+			return new CommandArgument(index, description, defaultValue, value, type);
+		}
+
+	}
 }

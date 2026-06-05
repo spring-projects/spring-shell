@@ -15,21 +15,19 @@
  */
 package org.springframework.shell.core.command;
 
+import jakarta.validation.Path;
+import org.jspecify.annotations.Nullable;
+import org.springframework.shell.core.ParameterValidationException;
+import org.springframework.shell.core.command.availability.Availability;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.shell.core.command.completion.CompletionProvider;
+import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
+import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import jakarta.validation.Path;
-
-import org.jspecify.annotations.Nullable;
-
-import org.springframework.shell.core.ParameterValidationException;
-import org.springframework.shell.core.command.availability.Availability;
-import org.springframework.shell.core.command.availability.AvailabilityProvider;
-import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
-import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
-import org.springframework.shell.core.command.completion.CompletionProvider;
 
 /**
  * Base class helping to build shell commands.
@@ -57,6 +55,8 @@ public abstract class AbstractCommand implements Command {
 	private CompletionProvider completionProvider = new DefaultCompletionProvider();
 
 	private List<CommandOption> options = new ArrayList<>();
+
+	private List<CommandArgument> arguments = new ArrayList<>();
 
 	private List<String> aliases = new ArrayList<>();
 
@@ -121,6 +121,15 @@ public abstract class AbstractCommand implements Command {
 
 	public void setOptions(List<CommandOption> options) {
 		this.options = options;
+	}
+
+	@Override
+	public List<CommandArgument> getArguments() {
+		return arguments;
+	}
+
+	public void setArguments(List<CommandArgument> arguments) {
+		this.arguments = arguments;
 	}
 
 	@Override
