@@ -25,6 +25,7 @@ import org.springframework.aot.hint.ExecutableMode;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.ProxyHints;
 import org.springframework.aot.hint.ReflectionHints;
+import org.springframework.aot.hint.ResourceHints;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.aot.hint.TypeHint;
@@ -37,6 +38,7 @@ public class JLineRuntimeHints implements RuntimeHintsRegistrar {
 		ProxyHints proxy = hints.proxies();
 		ReflectionHints reflection = hints.reflection();
 		ReflectionHints jni = hints.jni();
+		ResourceHints resource = hints.resources();
 		registerProxies(proxy, "org.jline.terminal.impl.jna.win.Kernel32",
 				"org.jline.terminal.impl.jna.linux.CLibrary");
 		registerForMostReflection(reflection, "org.jline.terminal.impl.jna.win.Kernel32$CHAR_INFO",
@@ -55,6 +57,7 @@ public class JLineRuntimeHints implements RuntimeHintsRegistrar {
 		registerForMostReflection(reflection, "org.jline.terminal.impl.jna.linux.CLibrary$termios",
 				"org.jline.terminal.impl.jna.linux.CLibrary$winsize");
 		registerJni(jni);
+		resource.registerPattern("org/springframework/shell/component/*.stg");
 	}
 
 	private void registerProxies(ProxyHints proxy, String... classNames) {
