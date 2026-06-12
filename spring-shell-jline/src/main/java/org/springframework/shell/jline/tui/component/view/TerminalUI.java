@@ -33,7 +33,7 @@ import org.jspecify.annotations.Nullable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.control.View;
 import org.springframework.shell.jline.tui.component.view.control.ViewService;
 import org.springframework.shell.jline.tui.component.view.event.DefaultEventLoop;
@@ -148,7 +148,8 @@ public class TerminalUI implements ViewService {
 	 * is handled as soon as possible.
 	 */
 	public void redraw() {
-		getEventLoop().dispatch(ShellMessageBuilder.ofRedraw());
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("redraw", EventLoop.Type.SYSTEM);
+		getEventLoop().dispatch(terminalEvent);
 	}
 
 	/**
@@ -308,7 +309,8 @@ public class TerminalUI implements ViewService {
 	}
 
 	private void dispatchWinch() {
-		eventLoop.dispatch(ShellMessageBuilder.ofSignal("WINCH"));
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("WINCH", EventLoop.Type.SIGNAL);
+		eventLoop.dispatch(terminalEvent);
 	}
 
 	private void registerEventHandling() {
@@ -475,12 +477,14 @@ public class TerminalUI implements ViewService {
 
 	private void dispatchKeyEvent(KeyEvent event) {
 		log.debug("Dispatch key event: " + event);
-		eventLoop.dispatch(ShellMessageBuilder.ofKeyEvent(event));
+		TerminalEvent<KeyEvent> terminalEvent = new TerminalEvent<>(event, EventLoop.Type.KEY);
+		eventLoop.dispatch(terminalEvent);
 	}
 
 	private void dispatchMouse(MouseEvent event) {
 		log.debug("Dispatch mouse event: " + event);
-		eventLoop.dispatch(ShellMessageBuilder.ofMouseEvent(event));
+		TerminalEvent<MouseEvent> terminalEvent = new TerminalEvent<>(event, EventLoop.Type.MOUSE);
+		eventLoop.dispatch(terminalEvent);
 	}
 
 	private void mouseEvent() {

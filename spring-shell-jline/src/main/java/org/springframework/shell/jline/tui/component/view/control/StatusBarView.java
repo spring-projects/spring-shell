@@ -21,11 +21,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.jspecify.annotations.Nullable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.MouseEvent;
 import org.springframework.shell.jline.tui.component.view.event.MouseHandler;
 import org.springframework.shell.jline.tui.component.view.screen.Screen;
@@ -140,7 +141,11 @@ public class StatusBarView extends BoxView {
 				int y = event.y();
 				StatusItem item = itemAt(x, y);
 				if (item != null) {
-					dispatch(ShellMessageBuilder.ofView(this, StatusBarViewOpenSelectedItemEvent.of(this, item)));
+					StatusBarViewOpenSelectedItemEvent selectedItemEvent = StatusBarViewOpenSelectedItemEvent.of(this,
+							item);
+					TerminalEvent<StatusBarViewOpenSelectedItemEvent> terminalEvent = new TerminalEvent<>(
+							selectedItemEvent, EventLoop.Type.VIEW, this, null);
+					dispatch(terminalEvent);
 					if (item.getAction() != null) {
 						dispatchRunnable(item.getAction());
 					}
