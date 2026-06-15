@@ -206,8 +206,8 @@ class CommandFactoryBeanTests {
 	}
 
 	@Test
-	void commandGroupPrefixTakesPrecedenceOverGlobalPrefix() throws Exception {
-		ApplicationContext context = mockApplicationContext("global");
+	void globalAndCommandGroupPrefixesAreChained() throws Exception {
+		ApplicationContext context = mockApplicationContext("shell");
 		when(context.getBean(GreetingCommands.class)).thenReturn(new GreetingCommands());
 		Method method = Arrays.stream(GreetingCommands.class.getDeclaredMethods())
 			.filter(m -> m.getName().equals("hi"))
@@ -218,7 +218,7 @@ class CommandFactoryBeanTests {
 
 		org.springframework.shell.core.command.Command result = factory.getObject();
 
-		assertEquals("greeting hi", result.getName());
+		assertEquals("shell greeting hi", result.getName());
 	}
 
 	@Test

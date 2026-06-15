@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.shell.core.command.annotation.support;
 
 import jakarta.validation.Validator;
@@ -102,8 +103,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 			String simpleName = Utils.splitCamelCase(declaringClass.getSimpleName());
 			if (!simpleName.endsWith(" Commands")) {
 				group = simpleName + " Commands";
-			}
-			else {
+			} else {
 				group = simpleName;
 			}
 
@@ -119,7 +119,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		ConfigurableConversionService configurableConversionService = getConfigurableConversionService();
 		AvailabilityProvider availabilityProviderBean = getAvailabilityProvider(availabilityProviderBeanName);
 		ExitStatusExceptionMapper exitStatusExceptionMapperBean = getExitStatusExceptionMapper(
-				exitStatusExceptionMapperBeanName);
+			exitStatusExceptionMapperBeanName);
 		Validator validator = getValidator();
 		CompletionProvider completionProvider = getCompletionProvider(completionProviderBeanName);
 		List<CommandOption> commandOptions = getCommandOptions();
@@ -127,7 +127,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 
 		// create command adapter
 		MethodInvokerCommandAdapter methodInvokerCommandAdapter = new MethodInvokerCommandAdapter(name, description,
-				group, help, hidden, this.method, targetObject, configurableConversionService, validator);
+			group, help, hidden, this.method, targetObject, configurableConversionService, validator);
 		methodInvokerCommandAdapter.setAliases(Arrays.stream(aliases).toList());
 		methodInvokerCommandAdapter.setOptions(commandOptions);
 		methodInvokerCommandAdapter.setArguments(commandArguments);
@@ -140,11 +140,16 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	}
 
 	private String resolveName(String groupPrefix, org.springframework.shell.core.command.annotation.Command command) {
-		String effectivePrefix = groupPrefix;
-		if (effectivePrefix.isEmpty()) {
-			effectivePrefix = this.applicationContext.getEnvironment().getProperty("spring.shell.command.prefix", "");
+		String globalPrefix = this.applicationContext.getEnvironment().getProperty("spring.shell.command.prefix", "");
+		List<String> parts = new ArrayList<>();
+		if (!globalPrefix.isEmpty()) {
+			parts.add(globalPrefix);
 		}
-		return effectivePrefix + (effectivePrefix.isEmpty() ? "" : " ") + String.join(" ", command.name());
+		if (!groupPrefix.isEmpty()) {
+			parts.add(groupPrefix);
+		}
+		parts.add(String.join(" ", command.name()));
+		return String.join(" ", parts);
 	}
 
 	private List<CommandOption> getCommandOptions() {
@@ -199,11 +204,10 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		if (!completionProviderBeanName.isEmpty()) {
 			try {
 				completionProvider = this.applicationContext.getBean(completionProviderBeanName,
-						CompletionProvider.class);
-			}
-			catch (BeansException e) {
+					CompletionProvider.class);
+			} catch (BeansException e) {
 				log.debug("No CompletionProvider bean found with name '" + completionProviderBeanName
-						+ "', using default completion provider.");
+				          + "', using default completion provider.");
 			}
 		}
 		return completionProvider;
@@ -212,8 +216,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	private Validator getValidator() {
 		try {
 			return this.applicationContext.getBean(Validator.class);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			log.debug("No Validator bean found, using default validator.");
 			return Utils.defaultValidator();
 		}
@@ -222,10 +225,9 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	private @Nullable ExitStatusExceptionMapper getExitStatusExceptionMapper(String exitStatusExceptionMapper) {
 		try {
 			return this.applicationContext.getBean(exitStatusExceptionMapper, ExitStatusExceptionMapper.class);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			log.debug("No ExitStatusExceptionMapper bean found with name '" + exitStatusExceptionMapper
-					+ "', using default exception mapping strategy.");
+			          + "', using default exception mapping strategy.");
 			return null;
 		}
 	}
@@ -233,10 +235,9 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	private AvailabilityProvider getAvailabilityProvider(String availabilityProvider) {
 		try {
 			return this.applicationContext.getBean(availabilityProvider, AvailabilityProvider.class);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			log.debug("No AvailabilityProvider bean found with name '" + availabilityProvider
-					+ "', using always available provider.");
+			          + "', using always available provider.");
 			return AvailabilityProvider.alwaysAvailable();
 		}
 	}
@@ -244,8 +245,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	private ConfigurableConversionService getConfigurableConversionService() {
 		try {
 			return this.applicationContext.getBean(ConfigurableConversionService.class);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			log.debug("No ConfigurableConversionService bean found, using a default conversion service.");
 			DefaultConversionService conversionService = new DefaultConversionService();
 			registerConverterBeans(conversionService);
@@ -264,22 +264,21 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 			.forEach((name, converter) -> addConverter(conversionService, name, converter));
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void addConverter(ConfigurableConversionService conversionService, String beanName, Converter converter) {
 		ResolvableType type = beanType(beanName, converter).as(Converter.class);
 		Class<?> source = type.getGeneric(0).resolve();
 		Class<?> target = type.getGeneric(1).resolve();
 		if (source != null && target != null) {
 			conversionService.addConverter(source, target, converter);
-		}
-		else {
+		} else {
 			conversionService.addConverter(converter);
 		}
 	}
 
 	private ResolvableType beanType(String beanName, Object bean) {
 		if (this.applicationContext instanceof ConfigurableApplicationContext cac
-				&& cac.getBeanFactory().containsBeanDefinition(beanName)) {
+		    && cac.getBeanFactory().containsBeanDefinition(beanName)) {
 			return cac.getBeanFactory().getMergedBeanDefinition(beanName).getResolvableType();
 		}
 		return ResolvableType.forClass(bean.getClass());
@@ -288,13 +287,12 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 	private Object getTagetObject(Class<?> declaringClass) {
 		try {
 			return this.applicationContext.getBean(declaringClass);
-		}
-		catch (NoSuchBeanDefinitionException e) {
+		} catch (NoSuchBeanDefinitionException e) {
 			String errorMessage = """
-					Unable to create command for method '%s' because no bean of type '%s' is defined in the application context.
-					Ensure that the declaring class is annotated with a Spring stereotype annotation (e.g., @Component) or
-					is otherwise registered as a bean in the application context.
-					"""
+				Unable to create command for method '%s' because no bean of type '%s' is defined in the application context.
+				Ensure that the declaring class is annotated with a Spring stereotype annotation (e.g., @Component) or
+				is otherwise registered as a bean in the application context.
+				"""
 				.formatted(this.method.getName(), declaringClass.getName());
 			throw new CommandCreationException(errorMessage, e);
 		}
