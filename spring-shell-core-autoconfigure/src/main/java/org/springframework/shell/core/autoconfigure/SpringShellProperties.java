@@ -245,6 +245,8 @@ public class SpringShellProperties {
 
 	public static class Command {
 
+		private String prefix = "";
+
 		private HelpCommand help = new HelpCommand();
 
 		private ClearCommand clear = new ClearCommand();
@@ -254,6 +256,14 @@ public class SpringShellProperties {
 		private HistoryCommand history = new HistoryCommand();
 
 		private VersionCommand version = new VersionCommand();
+
+		public String getPrefix() {
+			return prefix;
+		}
+
+		public void setPrefix(String prefix) {
+			this.prefix = prefix;
+		}
 
 		public void setHelp(HelpCommand help) {
 			this.help = help;

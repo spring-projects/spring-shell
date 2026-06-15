@@ -18,6 +18,7 @@ package org.springframework.shell.core.command.annotation.support;
 import jakarta.validation.Validator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -91,7 +92,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		}
 
 		// get command metadata
-		String name = groupPrefix + (groupPrefix.isEmpty() ? "" : " ") + String.join(" ", command.name());
+		var name = resolveName(groupPrefix, command);
 		name = name.isEmpty() ? Utils.unCamelify(this.method.getName()) : name;
 		String description = command.description();
 		description = description.isEmpty() ? "N/A" : description;
@@ -136,6 +137,14 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 			methodInvokerCommandAdapter.setExitStatusExceptionMapper(exitStatusExceptionMapperBean);
 		}
 		return methodInvokerCommandAdapter;
+	}
+
+	private String resolveName(String groupPrefix, org.springframework.shell.core.command.annotation.Command command) {
+		String effectivePrefix = groupPrefix;
+		if (effectivePrefix.isEmpty()) {
+			effectivePrefix = this.applicationContext.getEnvironment().getProperty("spring.shell.command.prefix", "");
+		}
+		return effectivePrefix + (effectivePrefix.isEmpty() ? "" : " ") + String.join(" ", command.name());
 	}
 
 	private List<CommandOption> getCommandOptions() {
