@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.env.Environment;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.converter.GenericConverter;
@@ -51,10 +52,17 @@ import static org.mockito.Mockito.when;
 class CommandFactoryBeanTests {
 
 	private static ApplicationContext mockApplicationContext() {
+		return mockApplicationContext("");
+	}
+
+	private static ApplicationContext mockApplicationContext(String globalPrefix) {
 		ApplicationContext context = mock(ApplicationContext.class);
 		when(context.getBeansOfType(Converter.class)).thenReturn(Collections.emptyMap());
 		when(context.getBeansOfType(GenericConverter.class)).thenReturn(Collections.emptyMap());
 		when(context.getBeansOfType(ConverterFactory.class)).thenReturn(Collections.emptyMap());
+		Environment environment = mock(Environment.class);
+		when(environment.getProperty("spring.shell.command.prefix", "")).thenReturn(globalPrefix);
+		when(context.getEnvironment()).thenReturn(environment);
 		return context;
 	}
 
@@ -237,6 +245,62 @@ class CommandFactoryBeanTests {
 
 		assertThat(ConverterTarget.lastSeen).isNotNull();
 		assertThat(ConverterTarget.lastSeen.text).isEqualTo("hello");
+	}
+
+	@Test
+	void globalPrefixAppliedWhenNoCommandGroupPrefix() throws Exception {
+		ApplicationContext context = mockApplicationContext("app");
+		when(context.getBean(NoGroupCommands.class)).thenReturn(new NoGroupCommands());
+		Method method = Arrays.stream(NoGroupCommands.class.getDeclaredMethods())
+			.filter(m -> m.getName().equals("ping"))
+			.findFirst()
+			.orElseThrow();
+		CommandFactoryBean factory = new CommandFactoryBean(method);
+		factory.setApplicationContext(context);
+
+		org.springframework.shell.core.command.Command result = factory.getObject();
+
+		assertEquals("app ping", result.getName());
+	}
+
+	@Test
+	void globalAndCommandGroupPrefixesAreChained() throws Exception {
+		ApplicationContext context = mockApplicationContext("shell");
+		when(context.getBean(GreetingCommands.class)).thenReturn(new GreetingCommands());
+		Method method = Arrays.stream(GreetingCommands.class.getDeclaredMethods())
+			.filter(m -> m.getName().equals("hi"))
+			.findFirst()
+			.orElseThrow();
+		CommandFactoryBean factory = new CommandFactoryBean(method);
+		factory.setApplicationContext(context);
+
+		org.springframework.shell.core.command.Command result = factory.getObject();
+
+		assertEquals("shell greeting hi", result.getName());
+	}
+
+	@Test
+	void noPrefixesLeaveNameUnchanged() throws Exception {
+		ApplicationContext context = mockApplicationContext("");
+		when(context.getBean(NoGroupCommands.class)).thenReturn(new NoGroupCommands());
+		Method method = Arrays.stream(NoGroupCommands.class.getDeclaredMethods())
+			.filter(m -> m.getName().equals("ping"))
+			.findFirst()
+			.orElseThrow();
+		CommandFactoryBean factory = new CommandFactoryBean(method);
+		factory.setApplicationContext(context);
+
+		org.springframework.shell.core.command.Command result = factory.getObject();
+
+		assertEquals("ping", result.getName());
+	}
+
+	static class NoGroupCommands {
+
+		@Command(name = "ping")
+		public void ping() {
+		}
+
 	}
 
 	static class Message {

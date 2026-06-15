@@ -92,7 +92,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		}
 
 		// get command metadata
-		String name = groupPrefix + (groupPrefix.isEmpty() ? "" : " ") + String.join(" ", command.name());
+		var name = resolveName(groupPrefix, command);
 		name = name.isEmpty() ? Utils.unCamelify(this.method.getName()) : name;
 		String description = command.description();
 		description = description.isEmpty() ? "N/A" : description;
@@ -137,6 +137,19 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 			methodInvokerCommandAdapter.setExitStatusExceptionMapper(exitStatusExceptionMapperBean);
 		}
 		return methodInvokerCommandAdapter;
+	}
+
+	private String resolveName(String groupPrefix, org.springframework.shell.core.command.annotation.Command command) {
+		String globalPrefix = this.applicationContext.getEnvironment().getProperty("spring.shell.command.prefix", "");
+		List<String> parts = new ArrayList<>();
+		if (!globalPrefix.isEmpty()) {
+			parts.add(globalPrefix);
+		}
+		if (!groupPrefix.isEmpty()) {
+			parts.add(groupPrefix);
+		}
+		parts.add(String.join(" ", command.name()));
+		return String.join(" ", parts);
 	}
 
 	private List<CommandOption> getCommandOptions() {
