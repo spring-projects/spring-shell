@@ -23,9 +23,18 @@ public class JLineInputProvider implements InputProvider {
 
 	@Override
 	public String readInput() {
-		AttributedString prompt = this.promptProvider.getPrompt();
-		String ansiPrompt = prompt.toAnsi(this.lineReader.getTerminal());
-		return this.lineReader.readLine(ansiPrompt);
+		try {
+			AttributedString prompt = this.promptProvider.getPrompt();
+			String ansiPrompt = prompt.toAnsi(this.lineReader.getTerminal());
+			return this.lineReader.readLine(ansiPrompt);
+		}
+		catch (IllegalStateException ex) {
+			// Terminal closed externally (e.g. process killed from an IDE): treat as EOF.
+			if (ex.getMessage() != null && ex.getMessage().contains("closed")) {
+				return null;
+			}
+			throw ex;
+		}
 	}
 
 	public void setPromptProvider(PromptProvider promptProvider) {
