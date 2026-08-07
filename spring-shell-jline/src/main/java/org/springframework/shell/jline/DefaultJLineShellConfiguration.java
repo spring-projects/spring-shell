@@ -1,5 +1,6 @@
 package org.springframework.shell.jline;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.jline.reader.LineReader;
@@ -53,6 +54,12 @@ public class DefaultJLineShellConfiguration {
 		ExtendedDefaultParser parser = new ExtendedDefaultParser();
 		parser.setEofOnUnclosedQuote(true);
 		parser.setEofOnEscapedNewLine(true);
+		// Backslash is both the DefaultParser escape character and the Windows path
+		// separator. Disable escapes on Windows so path tab-completion works (see
+		// gh-1169 / gh-240).
+		if (File.separatorChar == '\\') {
+			parser.setEscapeChars(null);
+		}
 		return parser;
 	}
 
