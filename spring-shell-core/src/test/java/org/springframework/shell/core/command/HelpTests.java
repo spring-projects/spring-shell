@@ -22,6 +22,9 @@ import org.springframework.shell.core.InputReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * @author David Pilar
+ */
 class HelpTests {
 
 	@Test
@@ -193,6 +196,72 @@ class HelpTests {
 					[Index 1] String
 					the suffix of the greeting message
 					[default = !]
+
+
+				""";
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+	}
+
+	@Test
+	void testHelpMessageForCommandWithVariadicArgs() throws Exception {
+		// given
+		CommandArgument valuesArgument = CommandArgument.with()
+			.index(0)
+			.type(Integer.class)
+			.description("the values to sum up")
+			.variadic(true)
+			.build();
+		CommandOption nameOption = CommandOption.with()
+			.longName("name")
+			.type(String.class)
+			.required(false)
+			.description("Name of the person to greet")
+			.build();
+		Command command = Command.builder()
+			.name("hi")
+			.description("Say hi")
+			.group("Greetings")
+			.help("This command says hi to the user.")
+			.options(nameOption)
+			.arguments(valuesArgument)
+			.execute(commandContext -> {
+			});
+		ParsedInput parsedInput = ParsedInput.builder()
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
+			.build();
+		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(command);
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter outputWriter = new PrintWriter(stringWriter);
+		InputReader inputReader = new InputReader() {
+		};
+		CommandContext commandContext = new CommandContext(parsedInput, commandRegistry, outputWriter, inputReader);
+
+		// when
+		Help help = new Help();
+		help.execute(commandContext);
+
+		// then
+		String actualOutput = stringWriter.toString();
+		String expectedOutput = """
+				NAME
+					hi - Say hi
+
+				SYNOPSIS
+					hi --name String (Integer...) --help
+
+				OPTIONS
+					--name String
+					Name of the person to greet
+					[Optional, default = null]
+
+					--help or -h
+					help for hi
+					[Optional]
+
+				ARGUMENTS [Positional]
+					[Index 0...] Integer
+					the values to sum up
 
 
 				""";

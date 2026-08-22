@@ -28,6 +28,7 @@ import java.util.List;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 public class Help extends AbstractCommand {
 
@@ -111,7 +112,11 @@ public class Help extends AbstractCommand {
 				if (hasDefaultValue) {
 					helpMessageBuilder.append("[");
 				}
-				helpMessageBuilder.append("(").append(argument.type().getSimpleName()).append(")");
+				helpMessageBuilder.append("(").append(argument.type().getSimpleName());
+				if (argument.variadic()) {
+					helpMessageBuilder.append("...");
+				}
+				helpMessageBuilder.append(")");
 				if (hasDefaultValue) {
 					helpMessageBuilder.append("]");
 				}
@@ -160,9 +165,19 @@ public class Help extends AbstractCommand {
 			int index = 0;
 			for (CommandArgument argument : arguments) {
 				helpMessageBuilder.append("\t");
-				helpMessageBuilder.append("[Index ").append(index++).append("]");
+				helpMessageBuilder.append("[Index ").append(index++);
+				if (argument.variadic()) {
+					helpMessageBuilder.append("...");
+				}
+				helpMessageBuilder.append("]");
 				helpMessageBuilder.append(" ").append(argument.type().getSimpleName()).append("\n");
 				helpMessageBuilder.append("\t").append(argument.description()).append("\n");
+				if (argument.variadic()) {
+					// a variadic argument collects the remaining values, a default value
+					// does not apply to it
+					helpMessageBuilder.append("\n");
+					continue;
+				}
 				String defaultValue = argument.defaultValue();
 				helpMessageBuilder.append("\t").append("[default = ");
 				Class<?> optionType = argument.type();
