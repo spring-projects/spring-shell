@@ -23,6 +23,7 @@ import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.shell.core.command.completion.CompletionProvider;
 import org.springframework.shell.core.command.completion.DefaultCompletionProvider;
 import org.springframework.shell.core.command.exit.ExitStatusExceptionMapper;
+import org.springframework.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import java.util.Objects;
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 public abstract class AbstractCommand implements Command {
 
@@ -167,7 +169,7 @@ public abstract class AbstractCommand implements Command {
 			return ExitStatus.AVAILABILITY_ERROR;
 		}
 		List<CommandOption> options = commandContext.parsedInput().options();
-		if (options.size() == 1 && isHelp(options.get(0))) {
+		if (options.stream().anyMatch(this::isHelp)) {
 			println(getHelp(), commandContext);
 			return ExitStatus.OK;
 		}
@@ -209,7 +211,13 @@ public abstract class AbstractCommand implements Command {
 	}
 
 	protected boolean isHelp(CommandOption option) {
-		return option.longName().equalsIgnoreCase("help") || option.shortName() == 'h';
+		return !isDeclaredOption(option) && ("help".equals(option.longName()) || option.shortName() == 'h');
+	}
+
+	private boolean isDeclaredOption(CommandOption option) {
+		String optionName = StringUtils.hasLength(option.longName()) ? "--" + option.longName()
+				: "-" + option.shortName();
+		return getOptions().stream().anyMatch(o -> o.isOptionEqual(optionName));
 	}
 
 	public abstract ExitStatus doExecute(CommandContext commandContext) throws Exception;
