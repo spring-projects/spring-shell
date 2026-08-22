@@ -195,12 +195,20 @@ public class DefaultCommandParser implements CommandParser {
 	}
 
 	private boolean isBooleanOption(String commandName, String currentWord) {
-		return Optional.ofNullable(commandRegistry.getCommandByName(commandName))
+		List<CommandOption> declaredOptions = Optional.ofNullable(commandRegistry.getCommandByName(commandName))
 			.map(Command::getOptions)
 			.orElse(List.of())
 			.stream()
 			.filter(o -> o.isOptionEqual(currentWord))
-			.anyMatch(o -> o.type() == boolean.class || o.type() == Boolean.class);
+			.toList();
+		if (declaredOptions.isEmpty()) {
+			return isHelpOption(currentWord);
+		}
+		return declaredOptions.stream().anyMatch(o -> o.type() == boolean.class || o.type() == Boolean.class);
+	}
+
+	private boolean isHelpOption(String word) {
+		return word.equals("--help") || word.equals("-h");
 	}
 
 	private boolean isBooleanValue(String rawValue) {

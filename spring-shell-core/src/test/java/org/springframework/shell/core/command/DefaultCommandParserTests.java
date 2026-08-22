@@ -482,6 +482,25 @@ class DefaultCommandParserTests {
 		assertEquals("true", parsedInput.options().get(0).value());
 	}
 
+	@ParameterizedTest
+	@ValueSource(strings = { "mycommand mysubcommand --help", "mycommand mysubcommand -h",
+			"mycommand --help arg1 --option value1", "mycommand -h arg1" })
+	void testParseWithImplicitHelpOption(String input) {
+		// given
+		Command command = createCommand("mycommand", "My test command");
+		command.getOptions().add(CommandOption.with().longName("option").shortName('o').build());
+		commandRegistry.registerCommand(command);
+		Command subCommand = createCommand("mycommand mysubcommand", "My test sub command");
+		subCommand.getOptions().add(CommandOption.with().longName("option").shortName('o').build());
+		commandRegistry.registerCommand(subCommand);
+
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("true", parsedInput.options().get(0).value());
+	}
+
 	private static Command createCommand(String name, String description) {
 		return new AbstractCommand(name, description) {
 			@Override
