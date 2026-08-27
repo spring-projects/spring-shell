@@ -132,7 +132,10 @@ public class JLineShellAutoConfiguration {
 			.completer(commandCompleter)
 			.history(jLineHistory)
 			.highlighter(commandHighlighter)
-			.parser(parser);
+			.parser(parser)
+			// keep backslashes in the returned line, escapes are resolved by the
+			// command parser
+			.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true);
 
 		LineReader lineReader = lineReaderBuilder.build();
 		if (this.springShellProperties.getHistory().isEnabled()) {

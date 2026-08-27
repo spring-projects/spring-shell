@@ -30,7 +30,14 @@ public class DefaultJLineShellConfiguration {
 
 	@Bean
 	public LineReader lineReader(Terminal terminal, Parser parser, CommandCompleter commandCompleter) {
-		return LineReaderBuilder.builder().terminal(terminal).completer(commandCompleter).parser(parser).build();
+		return LineReaderBuilder.builder()
+			.terminal(terminal)
+			.completer(commandCompleter)
+			.parser(parser)
+			// keep backslashes in the returned line, escapes are resolved by the
+			// command parser
+			.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+			.build();
 	}
 
 	@Bean

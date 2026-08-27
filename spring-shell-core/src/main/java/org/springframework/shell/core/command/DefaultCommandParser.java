@@ -18,6 +18,7 @@ package org.springframework.shell.core.command;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,10 @@ import java.util.Optional;
  * Default implementation of {@link CommandParser}. Supports options in the long form of
  * --key=value or --key value as well in the short form of -k=value or -k value. Options
  * and arguments can be specified in any order. Arguments are 0-based indexed among other
- * arguments. <pre>
+ * arguments. Option values and arguments can be quoted with double or single quotes to
+ * include whitespace, and quote characters can be escaped with a backslash inside quoted
+ * values (e.g. greet "she said \" and left"). Unbalanced quotes are rejected with an
+ * {@link IllegalArgumentException}. <pre>
  * CommandSyntax  ::= CommandName [SubCommandName]* [Option | Argument]*
  * CommandName    ::= String
  * SubCommandName ::= String
@@ -55,7 +59,10 @@ public class DefaultCommandParser implements CommandParser {
 	@Override
 	public ParsedInput parse(String input) {
 		log.debug("Parsing input: " + input);
-		List<String> words = List.of(input.split("\\s+(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
+		List<String> words = tokenize(input);
+		if (words.isEmpty()) {
+			words = List.of("");
+		}
 
 		// the first word is the (root) command name
 		String commandName = words.get(0);
@@ -143,6 +150,57 @@ public class DefaultCommandParser implements CommandParser {
 		return parsedInput;
 	}
 
+	/**
+	 * Split the input into words on whitespace, keeping quoted sections together. This is
+	 * a character-by-character state machine tracking the currently open quote (none,
+	 * double or single). A backslash makes the following character part of the current
+	 * word without any special meaning, so an escaped quote neither opens nor closes a
+	 * quoted section. Words are kept verbatim (quotes and escape sequences included),
+	 * quote removal and escape resolution happen later in
+	 * {@link #unquoteAndUnescapeQuoted(String)}.
+	 * @param input the raw input line
+	 * @return the list of words
+	 * @throws IllegalArgumentException if the input contains an unbalanced quote
+	 * @since 4.0.4
+	 */
+	protected List<String> tokenize(String input) {
+		List<String> words = new ArrayList<>();
+		StringBuilder currentWord = new StringBuilder();
+		char openingQuote = 0;
+		for (int i = 0; i < input.length(); i++) {
+			char currentChar = input.charAt(i);
+			if (currentChar == '\\' && i + 1 < input.length()) {
+				currentWord.append(currentChar).append(input.charAt(++i));
+			}
+			else if (openingQuote != 0) {
+				currentWord.append(currentChar);
+				if (currentChar == openingQuote) {
+					openingQuote = 0;
+				}
+			}
+			else if (currentChar == '"' || currentChar == '\'') {
+				openingQuote = currentChar;
+				currentWord.append(currentChar);
+			}
+			else if (Character.isWhitespace(currentChar)) {
+				if (!currentWord.isEmpty()) {
+					words.add(currentWord.toString());
+					currentWord.setLength(0);
+				}
+			}
+			else {
+				currentWord.append(currentChar);
+			}
+		}
+		if (openingQuote != 0) {
+			throw new IllegalArgumentException("Unbalanced quote (" + openingQuote + ") in input: " + input);
+		}
+		if (!currentWord.isEmpty()) {
+			words.add(currentWord.toString());
+		}
+		return words;
+	}
+
 	// Check if the word is the argument separator, ie empty "--" (POSIX style)
 	private boolean isArgumentSeparator(String word) {
 		return word.equals("--");
@@ -185,11 +243,14 @@ public class DefaultCommandParser implements CommandParser {
 
 	private String unquoteAndUnescapeQuoted(String s) {
 		// only process quoted strings
-		if (s.length() >= 2 && s.startsWith("\"") && s.endsWith("\"")) {
-			s = s.substring(1, s.length() - 1);
+		if (s.length() >= 2) {
+			char quote = s.charAt(0);
+			if ((quote == '"' || quote == '\'') && s.charAt(s.length() - 1) == quote) {
+				s = s.substring(1, s.length() - 1);
 
-			// unescape only inside quoted strings
-			s = s.replace("\\\"", "\"").replace("\\\\", "\\");
+				// unescape only inside quoted strings
+				s = s.replace("\\" + quote, String.valueOf(quote)).replace("\\\\", "\\");
+			}
 		}
 		return s;
 	}

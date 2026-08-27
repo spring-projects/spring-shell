@@ -63,6 +63,47 @@ IMPORTANT: When an option is specified, it is always expected to have a value fo
 
 TIP: To avoid ambiguity, named options should be preferred over positional arguments whenever possible, especially when subcommands are involved (see https://clig.dev/#arguments-and-flags[Command Line Interface Guidelines]).
 
+== Quoting and escaping
+
+The input is split into words on whitespace. To provide an option value or an argument that contains whitespace,
+the value needs to be quoted. Both single (`'`) and double (`"`) quotes are supported, and the enclosing quotes
+will not be part of the value:
+
+[source,shell]
+----
+$>mycommand --message='Hello World' <1>
+$>mycommand --message="Hello World" <2>
+$>mycommand "arg1 with spaces" <3>
+----
+<1> option value is `Hello World`
+<2> option value is `Hello World`
+<3> argument value is `arg1 with spaces`
+
+Supporting both types of quotes allows one type of quote to be embedded in a value quoted with the other type:
+
+[source,shell]
+----
+$>mycommand --message="I'm here!" <1>
+$>mycommand --message='He said "Hi!"' <2>
+----
+<1> option value is `I'm here!`
+<2> option value is `He said "Hi!"`
+
+To embed the same kind of quote that was used to quote the whole value, escape it with the backslash (`\`)
+character. A literal backslash inside a quoted value can be escaped as `\\`:
+
+[source,shell]
+----
+$>mycommand --message="He said \"Hi!\"" <1>
+$>mycommand --message='I\'m here!' <2>
+----
+<1> option value is `He said "Hi!"`
+<2> option value is `I'm here!`
+
+Quotes are only removed when the whole value is enclosed in them. Quote characters in the middle of a value
+are kept as-is (e.g., `value1"inside"value2` stays unchanged), and escape sequences are only resolved inside
+quoted values. An input with an unbalanced quote is rejected with an error.
+
 == Customizing parsing rules
 
 Spring Shell 4 provides a new API called `CommandParser` that allows you to customize the command parsing rules.

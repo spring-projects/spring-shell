@@ -271,6 +271,108 @@ class DefaultCommandParserTests {
 	}
 
 	@ParameterizedTest
+	@MethodSource("parseWithEscapedQuotedArgumentData")
+	void testParseWithEscapedQuotedArgument(String input, String expectedValue) {
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(1, parsedInput.arguments().size());
+		assertEquals(expectedValue, parsedInput.arguments().get(0).value());
+	}
+
+	static Stream<Arguments> parseWithEscapedQuotedArgumentData() {
+		return Stream.of(
+				// escaped quote inside a double quoted argument (odd number of escaped
+				// quotes)
+				Arguments.of("mycommand \"she said \\\" and left\"", "she said \" and left"),
+				Arguments.of("mycommand \"a \\\" b \\\" c \\\" d\"", "a \" b \" c \" d"),
+				Arguments.of("mycommand \"it's here\"", "it's here"),
+				// single quoted arguments group words
+				Arguments.of("mycommand 'value1 value2'", "value1 value2"),
+				Arguments.of("mycommand 'she said \" and left'", "she said \" and left"),
+				Arguments.of("mycommand 'don\\'t stop'", "don't stop"),
+				// escaped backslash inside a quoted argument
+				Arguments.of("mycommand \"a\\\\b\"", "a\\b"),
+				// empty quoted argument
+				Arguments.of("mycommand \"\"", ""), Arguments.of("mycommand ''", ""),
+				// quoted words are not treated as options
+				Arguments.of("mycommand \"--option=value\"", "--option=value"),
+				// trailing backslash is kept as-is
+				Arguments.of("mycommand arg\\", "arg\\"),
+				// any whitespace separates words
+				Arguments.of("mycommand\t\"value1 value2\"", "value1 value2"));
+	}
+
+	@Test
+	void testParseWithMultipleQuotedArguments() {
+		// when
+		ParsedInput parsedInput = parser.parse("mycommand \"value1 value2\" 'value3 value4'");
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(2, parsedInput.arguments().size());
+		assertEquals("value1 value2", parsedInput.arguments().get(0).value());
+		assertEquals("value3 value4", parsedInput.arguments().get(1).value());
+	}
+
+	@Test
+	void testParseWithQuotedOptionValueFollowedByArgument() {
+		// when
+		ParsedInput parsedInput = parser.parse("mycommand --option \"value1 value2\" arg1");
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(1, parsedInput.options().size());
+		assertEquals("value1 value2", parsedInput.options().get(0).value());
+		assertEquals(1, parsedInput.arguments().size());
+		assertEquals("arg1", parsedInput.arguments().get(0).value());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "", "   " })
+	void testParseEmptyInput(String input) {
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("", parsedInput.commandName());
+		assertEquals(0, parsedInput.options().size());
+		assertEquals(0, parsedInput.arguments().size());
+	}
+
+	@ParameterizedTest
+	@MethodSource("parseWithEscapedQuotedOptionData")
+	void testParseWithEscapedQuotedOption(String input, String expectedValue) {
+		// when
+		ParsedInput parsedInput = parser.parse(input);
+
+		// then
+		assertEquals("mycommand", parsedInput.commandName());
+		assertEquals(1, parsedInput.options().size());
+		assertEquals("option", parsedInput.options().get(0).longName());
+		assertEquals(expectedValue, parsedInput.options().get(0).value());
+	}
+
+	static Stream<Arguments> parseWithEscapedQuotedOptionData() {
+		return Stream.of(Arguments.of("mycommand --option=\"she said \\\" and left\"", "she said \" and left"),
+				Arguments.of("mycommand --option \"she said \\\" and left\"", "she said \" and left"),
+				Arguments.of("mycommand --option='value1 value2'", "value1 value2"),
+				Arguments.of("mycommand --option 'value1 value2'", "value1 value2"),
+				Arguments.of("mycommand --option=\"\"", ""), Arguments.of("mycommand --option=''", ""));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "mycommand \"unbalanced value", "mycommand 'unbalanced value",
+			"mycommand --option=\"unbalanced value", "mycommand don't" })
+	void testParseWithUnbalancedQuotes(String input) {
+		IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
+				() -> parser.parse(input));
+		Assertions.assertTrue(exception.getMessage().contains("quote"));
+	}
+
+	@ParameterizedTest
 	@MethodSource("parseWithBooleanOptionData")
 	void testParseWithBooleanOption(String input, String commandName, String longName, char shortName, Class<?> type,
 			String expectedValue) {
