@@ -18,6 +18,7 @@ package org.springframework.shell.core.command;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.shell.core.InputReader;
+import org.springframework.shell.core.utils.Utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -49,6 +50,35 @@ class HelpTests {
 
 				""";
 		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+	}
+
+	@Test
+	void testDefaultHelpMessageWithoutQuit() throws Exception {
+		// given
+		CommandRegistry commandRegistry = new CommandRegistry();
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter outputWriter = new PrintWriter(stringWriter);
+		InputReader inputReader = new InputReader() {
+		};
+		ParsedInput parsedInput = ParsedInput.builder().build();
+		CommandContext commandContext = new CommandContext(parsedInput, commandRegistry, outputWriter, inputReader);
+
+		((AbstractCommand) Utils.QUIT_COMMAND).setHidden(true);
+
+		// when
+		Help help = new Help();
+		help.execute(commandContext);
+
+		// then
+		String actualOutput = stringWriter.toString();
+		String expectedOutput = """
+				AVAILABLE COMMANDS
+
+
+				""";
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+
+		((AbstractCommand) Utils.QUIT_COMMAND).setHidden(false);
 	}
 
 	@Test
