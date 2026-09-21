@@ -104,6 +104,9 @@ class HelpTests {
 				NAME
 					hi - Say hi
 
+				DESCRIPTION
+					This command says hi to the user.
+
 				SYNOPSIS
 					hi [--name String] --times int --help
 
@@ -178,6 +181,9 @@ class HelpTests {
 				NAME
 					hi - Say hi
 
+				DESCRIPTION
+					This command says hi to the user.
+
 				SYNOPSIS
 					hi --times int [(String)] [(String)] --help
 
@@ -248,6 +254,9 @@ class HelpTests {
 		String expectedOutput = """
 				NAME
 					hi - Say hi
+
+				DESCRIPTION
+					This command says hi to the user.
 
 				SYNOPSIS
 					hi --name String (Integer...) --help
@@ -326,6 +335,9 @@ class HelpTests {
 				NAME
 					hi - Say hi
 
+				DESCRIPTION
+					This command says hi to the user.
+
 				SYNOPSIS
 					hi [--name String] --times int --suffix String --help
 
@@ -400,6 +412,9 @@ class HelpTests {
 				NAME
 					hi - Say hi
 
+				DESCRIPTION
+					This command says hi to the user.
+
 				SYNOPSIS
 					hi [--name String] --times int --help
 
@@ -421,6 +436,164 @@ class HelpTests {
 
 				""";
 		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+	}
+
+	@Test
+	void testHelpMessageForCommandWithoutHelpText() throws Exception {
+		// given
+		CommandOption nameOption = CommandOption.with()
+			.shortName('n')
+			.longName("name")
+			.type(String.class)
+			.required(true)
+			.description("Name of the person to greet")
+			.build();
+		Command command = Command.builder()
+			.name("hi")
+			.description("Say hi")
+			.group("Greetings")
+			.options(nameOption)
+			.execute(commandContext -> {
+			});
+		ParsedInput parsedInput = ParsedInput.builder()
+			.commandName("hi")
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
+			.build();
+		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(command);
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter outputWriter = new PrintWriter(stringWriter);
+		InputReader inputReader = new InputReader() {
+		};
+		CommandContext commandContext = new CommandContext(parsedInput, commandRegistry, outputWriter, inputReader);
+
+		// when
+		Help help = new Help();
+		help.execute(commandContext);
+
+		// then
+		String actualOutput = stringWriter.toString();
+		String expectedOutput = """
+				NAME
+					hi - Say hi
+
+				SYNOPSIS
+					hi [--name String] --help
+
+				OPTIONS
+					--name or -n String
+					Name of the person to greet
+					[Mandatory]
+
+					--help or -h
+					help for hi
+					[Optional]
+
+
+				""";
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+	}
+
+	@Test
+	void testHelpMessageForCommandWithMultiLineHelpText() throws Exception {
+		// given
+		Command command = Command.builder()
+			.name("hi")
+			.description("Say hi")
+			.group("Greetings")
+			.help("This command says hi to the user.\nIt is meant to be friendly.")
+			.execute(commandContext -> {
+			});
+		ParsedInput parsedInput = ParsedInput.builder()
+			.commandName("hi")
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
+			.build();
+		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(command);
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter outputWriter = new PrintWriter(stringWriter);
+		InputReader inputReader = new InputReader() {
+		};
+		CommandContext commandContext = new CommandContext(parsedInput, commandRegistry, outputWriter, inputReader);
+
+		// when
+		Help help = new Help();
+		help.execute(commandContext);
+
+		// then
+		String actualOutput = stringWriter.toString();
+		String expectedOutput = """
+				NAME
+					hi - Say hi
+
+				DESCRIPTION
+					This command says hi to the user.
+					It is meant to be friendly.
+
+				SYNOPSIS
+					hi --help
+
+				OPTIONS
+					--help or -h
+					help for hi
+					[Optional]
+
+
+				""";
+		Assertions.assertEquals(expectedOutput.replaceAll("\\R", "\n"), actualOutput.replaceAll("\\R", "\n"));
+	}
+
+	@Test
+	void testHelpOptionRendersSameMessageAsHelpCommand() throws Exception {
+		// given
+		CommandOption nameOption = CommandOption.with()
+			.shortName('n')
+			.longName("name")
+			.type(String.class)
+			.required(true)
+			.description("Name of the person to greet")
+			.build();
+		CommandArgument suffixArgument = CommandArgument.with()
+			.index(0)
+			.type(String.class)
+			.defaultValue("!")
+			.description("the suffix of the greeting message")
+			.build();
+		Command command = Command.builder()
+			.name("hi")
+			.description("Say hi")
+			.aliases("hello")
+			.group("Greetings")
+			.help("This command says hi to the user.")
+			.options(nameOption)
+			.arguments(suffixArgument)
+			.execute(commandContext -> {
+			});
+		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(command);
+		InputReader inputReader = new InputReader() {
+		};
+
+		// when
+		StringWriter helpCommandWriter = new StringWriter();
+		ParsedInput helpCommandInput = ParsedInput.builder()
+			.commandName("help")
+			.addArgument(CommandArgument.with().index(0).value("hi").build())
+			.build();
+		new Help().execute(
+				new CommandContext(helpCommandInput, commandRegistry, new PrintWriter(helpCommandWriter), inputReader));
+
+		StringWriter helpOptionWriter = new StringWriter();
+		ParsedInput helpOptionInput = ParsedInput.builder()
+			.commandName("hi")
+			.addOption(CommandOption.with().shortName(' ').longName("help").value("true").build())
+			.build();
+		command.execute(
+				new CommandContext(helpOptionInput, commandRegistry, new PrintWriter(helpOptionWriter), inputReader));
+
+		// then
+		Assertions.assertEquals(helpCommandWriter.toString().replaceAll("\\R", "\n"),
+				helpOptionWriter.toString().replaceAll("\\R", "\n"));
 	}
 
 }

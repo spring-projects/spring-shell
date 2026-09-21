@@ -170,7 +170,7 @@ public abstract class AbstractCommand implements Command {
 		}
 		List<CommandOption> options = commandContext.parsedInput().options();
 		if (options.stream().anyMatch(this::isHelp)) {
-			println(getHelp(), commandContext);
+			println(CommandHelpRenderer.render(this), commandContext);
 			return ExitStatus.OK;
 		}
 		try {
