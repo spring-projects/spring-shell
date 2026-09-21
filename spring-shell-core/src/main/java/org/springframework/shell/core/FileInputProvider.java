@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
  * @author Piotr Olaszewski
  * @author Mahmoud Ben Hassine
  * @author David Pilar
+ * @author Ezequiel Primon
  */
 public class FileInputProvider implements InputProvider, AutoCloseable {
 
@@ -45,6 +46,14 @@ public class FileInputProvider implements InputProvider, AutoCloseable {
 	 */
 	public FileInputProvider(File file) throws FileNotFoundException {
 		this.reader = new BufferedReader(new FileReader(file));
+	}
+
+	/**
+	 * Create a new {@link FileInputProvider} instance.
+	 * @param reader the reader to read input from
+	 */
+	public FileInputProvider(Reader reader) {
+		this.reader = new BufferedReader(reader);
 	}
 
 	@Override

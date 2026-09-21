@@ -1,0 +1,3 @@
+say-hello
+// This is a comment
+say-hello
