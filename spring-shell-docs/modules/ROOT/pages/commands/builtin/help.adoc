@@ -10,7 +10,7 @@ Typing `help` + `ENTER` lists all the commands known to the shell and a short de
 [source, bash]
 ----
 my-shell:>help
-Available commands:
+AVAILABLE COMMANDS
 
 Built-In Commands
        clear: Clear the terminal screen
@@ -18,8 +18,9 @@ Built-In Commands
        version: Show version info
 ----
 
-Typing `<command> -h` or `<command> --help` shows the short help string for the given command. For more details about a command, like available parameters, their
-type, whether they are mandatory or not, use the `help <command>` syntax:
+Typing `help <command>`, `<command> --help` or `<command> -h` shows the detailed help of
+a given command: what it does, the parameters it accepts, their type and whether they are
+mandatory or not:
 
 [source, bash]
 ----
@@ -27,8 +28,11 @@ my-shell:>help version
 NAME
 	version - Show version info
 
+DESCRIPTION
+	This command displays the version of Spring Shell, as well as build and git information if available.
+
 SYNOPSIS
-	version  --help
+	version --help
 
 OPTIONS
 	--help or -h

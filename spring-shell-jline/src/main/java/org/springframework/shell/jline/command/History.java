@@ -43,8 +43,7 @@ public class History extends AbstractCommand {
 
 	@Override
 	public String getHelp() {
-		return "history [-f <file>]\n\n"
-				+ "Display the history of previously run commands. If a file is specified, write the history to that file instead.";
+		return "Display the history of previously run commands. If a file is specified, write the history to that file instead.";
 	}
 
 	@Override

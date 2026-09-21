@@ -41,8 +41,7 @@ public class Script extends AbstractCommand {
 
 	@Override
 	public String getHelp() {
-		return "script -f <file>\n\n"
-				+ "Execute commands from a script file. The file should contain one command per line.";
+		return "Execute commands from a script file. The file should contain one command per line.";
 	}
 
 	@Override

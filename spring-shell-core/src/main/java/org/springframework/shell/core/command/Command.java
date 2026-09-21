@@ -56,11 +56,15 @@ public interface Command {
 	}
 
 	/**
-	 * Get the help text of the command.
-	 * @return the help text of the command
+	 * Get the help text of the command. It is reported as the DESCRIPTION section of the
+	 * detailed help message of the command, which is omitted when the text is empty.
+	 * Unlike {@link #getDescription()}, which is a one liner shown in the list of
+	 * available commands, the help text is meant to be a longer explanation of what the
+	 * command does.
+	 * @return the help text of the command, empty when the command does not define one
 	 */
 	default String getHelp() {
-		return getName() + "(" + String.join(",", getAliases()) + "): " + getDescription();
+		return "";
 	}
 
 	/**
