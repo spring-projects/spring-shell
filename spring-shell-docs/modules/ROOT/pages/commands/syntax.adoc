@@ -24,6 +24,8 @@ Multi-valued arguments can be defined by using the `@Arguments` annotation on an
 include::{snippets}/CommandAnnotationSnippets.java[tag=multi-valued-argument]
 ----
 
+Like `@Argument`, `@Arguments` accepts a `description` attribute. It is reported in the `help` output for the command, both in the `SYNOPSIS` line (as `(ElementType...)`, using the collection's or array's element type rather than the declared parameter type) and as a dedicated entry in the `ARGUMENTS` section.
+
 The `@Arguments` annotation provides an attribute called `arity` that allows you to specify the number of arguments to be collected into the collection.
 By default, the arity is not bound, which means that all remaining tokens will be collected. If you set the arity to a specific number, only that many tokens will be collected, and the rest will be treated as separate arguments or options.
 Here is an example of using the `arity` attribute:

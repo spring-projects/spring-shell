@@ -64,9 +64,10 @@ class CommandAnnotationSnippets {
 
 			@Command(name = "hi", description = "Say hi to given names", group = "greetings",
 					help = "A command that greets users with a configurable suffix. Example usage: hi -s=! Foo Bar")
-			public void sayHi(@Option(shortName = 's', longName = "suffix",
-					description = "the suffix of the greeting message", defaultValue = "!") String suffix,
-					@Arguments String[] names) {
+			public void sayHi(
+					@Option(shortName = 's', longName = "suffix", description = "the suffix of the greeting message",
+							defaultValue = "!") String suffix,
+					@Arguments(description = "the names of the persons to greet") String[] names) {
 				System.out.println("Hi " + String.join(", ", names) + suffix);
 			}
 
