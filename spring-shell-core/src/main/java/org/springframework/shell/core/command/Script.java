@@ -16,9 +16,13 @@
 package org.springframework.shell.core.command;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.shell.core.FileInputProvider;
 import org.springframework.shell.core.NonInteractiveShellRunner;
 
@@ -68,13 +72,32 @@ public class Script extends AbstractCommand {
 			.orElseThrow(() -> new IllegalArgumentException(
 					"Script command expects option --file or -f with exactly one argument: the absolute path to the script file to execute."));
 		File file = new File(Objects.requireNonNull(scriptFile));
-		try (FileInputProvider inputProvider = new FileInputProvider(file)) {
+		try (FileInputProvider inputProvider = createInputProvider(file, scriptFile)) {
 			String input;
 			while ((input = inputProvider.readInput()) != null) {
 				executeCommand(commandContext, input);
 			}
 		}
 		return ExitStatus.OK;
+	}
+
+	/**
+	 * Create the {@link FileInputProvider} for the given script reference. An existing
+	 * file is used as-is (backward compatible); otherwise the reference is resolved as a
+	 * Spring resource (e.g. {@code classpath:} or {@code file:}).
+	 * @param file the script reference as a file
+	 * @param scriptFile the raw script reference
+	 * @return the input provider for the script
+	 */
+	private FileInputProvider createInputProvider(File file, String scriptFile) throws Exception {
+		if (file.exists()) {
+			return new FileInputProvider(file);
+		}
+		Resource resource = new DefaultResourceLoader().getResource(scriptFile);
+		if (!resource.exists()) {
+			throw new FileNotFoundException("Script file does not exist: " + scriptFile);
+		}
+		return new FileInputProvider(new InputStreamReader(resource.getInputStream()));
 	}
 
 	private void executeCommand(CommandContext commandContext, String input) throws Exception {
