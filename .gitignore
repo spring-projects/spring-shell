@@ -28,3 +28,7 @@ shell.log.*.tmp
 !.vscode/extensions.json
 .flattened-pom.xml
 /**/*/.flattened-pom.xml
+
+# Claude Code
+.claude/*
+CLAUDE.md
