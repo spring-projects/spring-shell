@@ -48,7 +48,7 @@ public abstract class AbstractCommand implements Command {
 
 	private final String group;
 
-	private final boolean hidden;
+	private boolean hidden;
 
 	private AvailabilityProvider availabilityProvider = AvailabilityProvider.alwaysAvailable();
 
@@ -105,6 +105,10 @@ public abstract class AbstractCommand implements Command {
 	@Override
 	public boolean isHidden() {
 		return this.hidden;
+	}
+
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 
 	@Override
