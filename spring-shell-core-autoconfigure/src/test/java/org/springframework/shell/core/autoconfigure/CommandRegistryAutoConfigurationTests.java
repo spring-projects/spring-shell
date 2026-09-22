@@ -25,6 +25,7 @@ import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.stereotype.Component;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Tests for {@link CommandRegistryAutoConfiguration} command discovery.
  *
  * @author David Pilar
+ * @author Mahmoud Ben Hassine
  */
 class CommandRegistryAutoConfigurationTests {
 
@@ -50,6 +52,43 @@ class CommandRegistryAutoConfigurationTests {
 				CommandRegistry registry = context.getBean(CommandRegistry.class);
 				assertTrue(registry.getCommands().stream().anyMatch(c -> c.getName().equals("greet")),
 						"Annotated command should be registered");
+			});
+	}
+
+	/**
+	 * Regression test for
+	 * <a href= "https://github.com/spring-projects/spring-shell/issues/1377">gh-1377</a>:
+	 * {@code spring.shell.command.quit.enabled=false} must remove the built-in quit
+	 * command from the command registry in a non-interactive shell.
+	 */
+	@Test
+	void quitCommandCanBeDisabledInNonInteractiveMode() {
+		new ApplicationContextRunner().withUserConfiguration(TestConfiguration.class)
+			.withConfiguration(AutoConfigurations.of(SpringShellAutoConfiguration.class))
+			.withPropertyValues("spring.shell.interactive.enabled=false", "spring.shell.command.quit.enabled=false")
+			.run(context -> {
+				CommandRegistry registry = context.getBean(CommandRegistry.class);
+				assertFalse(registry.getCommands().stream().anyMatch(c -> c.getName().equals("quit")),
+						"Quit command should not be registered when disabled in non-interactive mode");
+			});
+	}
+
+	/**
+	 * Regression test for
+	 * <a href= "https://github.com/spring-projects/spring-shell/issues/1377">gh-1377</a>:
+	 * disabling the quit command must have no effect in an interactive shell, since
+	 * typing {@code quit}/{@code exit} always works there regardless of the command
+	 * registry - hiding it from {@code help} would be misleading.
+	 */
+	@Test
+	void quitCommandCannotBeDisabledInInteractiveMode() {
+		new ApplicationContextRunner().withUserConfiguration(TestConfiguration.class)
+			.withConfiguration(AutoConfigurations.of(SpringShellAutoConfiguration.class))
+			.withPropertyValues("spring.shell.command.quit.enabled=false")
+			.run(context -> {
+				CommandRegistry registry = context.getBean(CommandRegistry.class);
+				assertTrue(registry.getCommands().stream().anyMatch(c -> c.getName().equals("quit")),
+						"Quit command should stay registered in interactive mode even when disabled");
 			});
 	}
 

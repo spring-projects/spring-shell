@@ -18,7 +18,6 @@ package org.springframework.shell.core.utils;
 
 import java.lang.reflect.Method;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -96,7 +95,7 @@ public class Utils {
 	public static String formatAvailableCommands(CommandRegistry commandRegistry) {
 		StringBuilder stringBuilder = new StringBuilder("AVAILABLE COMMANDS");
 		stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
-		Set<Command> commands = getCommands(commandRegistry);
+		Set<Command> commands = commandRegistry.getCommands();
 		List<String> groups = commands.stream()
 			.filter(command -> !command.isHidden())
 			.map(Command::getGroup)
@@ -138,12 +137,6 @@ public class Utils {
 		else {
 			return 0d;
 		}
-	}
-
-	private static Set<Command> getCommands(CommandRegistry commandRegistry) {
-		Set<Command> commands = new HashSet<>(commandRegistry.getCommands());
-		commands.add(QUIT_COMMAND);
-		return commands;
 	}
 
 	// Dummy exit command to show in available commands

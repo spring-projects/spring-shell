@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.MethodIntrospector;
@@ -37,17 +38,30 @@ import org.springframework.util.ReflectionUtils;
 import static org.springframework.shell.core.utils.Utils.isProfileActive;
 
 @AutoConfiguration
+@EnableConfigurationProperties(SpringShellProperties.class)
 public class CommandRegistryAutoConfiguration {
 
 	private static final Log log = LogFactory.getLog(CommandRegistryAutoConfiguration.class);
 
 	@Bean
 	@ConditionalOnMissingBean
-	public CommandRegistry commandRegistry(ApplicationContext applicationContext) {
+	public CommandRegistry commandRegistry(ApplicationContext applicationContext,
+			SpringShellProperties springShellProperties) {
 		CommandRegistry commandRegistry = new CommandRegistry();
 		registerProgrammaticCommands(applicationContext, commandRegistry);
 		registerAnnotatedCommands(applicationContext, commandRegistry);
-		commandRegistry.registerCommand(Utils.QUIT_COMMAND);
+		boolean quitCommandEnabled = springShellProperties.getCommand().getQuit().isEnabled();
+		if (!quitCommandEnabled && springShellProperties.getInteractive().isEnabled()) {
+			// in interactive mode, typing quit/exit always works regardless of the
+			// command registry (see InteractiveShellRunner), so keep it listed in help to
+			// avoid hiding a still-functional way to leave the shell
+			log.warn(
+					"spring.shell.command.quit.enabled=false has no effect in interactive mode: the quit/exit command remains registered so it stays discoverable via 'help'");
+			quitCommandEnabled = true;
+		}
+		if (quitCommandEnabled) {
+			commandRegistry.registerCommand(Utils.QUIT_COMMAND);
+		}
 		return commandRegistry;
 	}
 

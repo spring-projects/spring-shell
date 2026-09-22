@@ -50,6 +50,7 @@ class UtilsTests {
 	@Test
 	void testFormatAvailableCommands() {
 		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(Utils.QUIT_COMMAND);
 		Command helloCommand = new Command.Builder().name("hello")
 			.group("greetings")
 			.description("Say hello")
@@ -67,6 +68,24 @@ class UtilsTests {
 				+ System.lineSeparator() + "\tquit, exit: Exit the shell" + System.lineSeparator() + "greetings"
 				+ System.lineSeparator() + "\thello, hi, hey: Say hello" + System.lineSeparator();
 		Assertions.assertEquals(expected, availableCommands);
+	}
+
+	/**
+	 * Regression test for
+	 * <a href= "https://github.com/spring-projects/spring-shell/issues/1377">gh-1377</a>:
+	 * the quit command must not be forced into the available commands list when it was
+	 * not registered in the command registry.
+	 */
+	@Test
+	void testFormatAvailableCommandsWithoutQuitCommand() {
+		CommandRegistry commandRegistry = new CommandRegistry();
+		Command helloCommand = new Command.Builder().name("hello")
+			.group("greetings")
+			.description("Say hello")
+			.execute(commandContext -> "hello");
+		commandRegistry.registerCommand(helloCommand);
+		String availableCommands = Utils.formatAvailableCommands(commandRegistry);
+		assertThat(availableCommands).doesNotContain("quit").doesNotContain("Built-In Commands");
 	}
 
 }

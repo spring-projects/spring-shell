@@ -243,6 +243,20 @@ public class SpringShellProperties {
 
 	}
 
+	public static class QuitCommand {
+
+		private boolean enabled = true;
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+
+	}
+
 	public static class Command {
 
 		private HelpCommand help = new HelpCommand();
@@ -250,6 +264,8 @@ public class SpringShellProperties {
 		private ClearCommand clear = new ClearCommand();
 
 		private ScriptCommand script = new ScriptCommand();
+
+		private QuitCommand quit = new QuitCommand();
 
 		private HistoryCommand history = new HistoryCommand();
 
@@ -285,6 +301,14 @@ public class SpringShellProperties {
 
 		public void setHistory(HistoryCommand history) {
 			this.history = history;
+		}
+
+		public QuitCommand getQuit() {
+			return quit;
+		}
+
+		public void setQuit(QuitCommand quit) {
+			this.quit = quit;
 		}
 
 		public VersionCommand getVersion() {

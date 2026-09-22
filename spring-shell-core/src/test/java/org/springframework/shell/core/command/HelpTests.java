@@ -18,6 +18,7 @@ package org.springframework.shell.core.command;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.shell.core.InputReader;
+import org.springframework.shell.core.utils.Utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -31,6 +32,7 @@ class HelpTests {
 	void testDefaultHelpMessage() throws Exception {
 		// given
 		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(Utils.QUIT_COMMAND);
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter outputWriter = new PrintWriter(stringWriter);
 		InputReader inputReader = new InputReader() {

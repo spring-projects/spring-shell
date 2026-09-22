@@ -3,5 +3,21 @@
 :page-section-summary-toc: 1
 
 The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
-closing the Spring application context. If not overridden, a JLine `History` bean writes a history of all
-commands to disk, so that they are available again on the next launch.
+closing the Spring application context.
+
+In a non-interactive shell (`spring.shell.interactive.enabled=false`), the `quit`
+command can be removed from the command registry (and therefore from the `help`
+output) by setting the `spring.shell.command.quit.enabled` property to `false`:
+
+[source, yaml]
+----
+spring:
+  shell:
+    command:
+      quit:
+        enabled: false
+----
+
+NOTE: This property has no effect in an interactive shell. Typing `quit` or `exit`
+always works there, regardless of the command registry, so the command is always kept
+in the `help` output to avoid hiding a still-functional way to leave the shell.
