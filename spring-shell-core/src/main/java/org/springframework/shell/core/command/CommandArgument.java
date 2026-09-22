@@ -22,10 +22,11 @@ import org.jspecify.annotations.Nullable;
  * argument.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 public record CommandArgument(int index, @Nullable String description, @Nullable String defaultValue,
-		@Nullable String value, Class<?> type) {
+		@Nullable String value, Class<?> type, boolean variadic) {
 
 	public static CommandArgument.Builder with() {
 		return new CommandArgument.Builder();
@@ -42,6 +43,8 @@ public record CommandArgument(int index, @Nullable String description, @Nullable
 		private @Nullable String value;
 
 		private Class<?> type = Object.class;
+
+		private boolean variadic;
 
 		public CommandArgument.Builder index(int index) {
 			this.index = index;
@@ -68,8 +71,13 @@ public record CommandArgument(int index, @Nullable String description, @Nullable
 			return this;
 		}
 
+		public CommandArgument.Builder variadic(boolean variadic) {
+			this.variadic = variadic;
+			return this;
+		}
+
 		public CommandArgument build() {
-			return new CommandArgument(index, description, defaultValue, value, type);
+			return new CommandArgument(index, description, defaultValue, value, type, variadic);
 		}
 
 	}

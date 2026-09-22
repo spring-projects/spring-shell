@@ -60,6 +60,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author David Pilar
  */
 public class TerminalUI implements ViewService {
 
@@ -269,10 +270,14 @@ public class TerminalUI implements ViewService {
 		requireNonNull(display);
 		requireNonNull(size);
 
-		size.copy(terminal.getSize());
+		Size currentSize = terminal.getSize();
+		boolean sizeChanged = size.getRows() != currentSize.getRows() || size.getColumns() != currentSize.getColumns();
+		size.copy(currentSize);
 		if (fullScreen) {
-			display.clear();
-			display.reset();
+			if (sizeChanged) {
+				display.clear();
+				display.reset();
+			}
 			display.resize(size.getRows(), size.getColumns());
 			Rectangle rect = fullScreenViewRect.apply(terminal, rootView);
 			if (rootView != null) {

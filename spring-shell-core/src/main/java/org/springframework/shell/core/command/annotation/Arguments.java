@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
  * {@link Command}. The parameter type must be an array or a collection.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -40,5 +41,12 @@ public @interface Arguments {
 	 * @since 4.0.2
 	 */
 	int arity() default Integer.MAX_VALUE;
+
+	/**
+	 * Return a description of the arguments.
+	 * @return description of the arguments
+	 * @since 4.0.4
+	 */
+	String description() default "";
 
 }

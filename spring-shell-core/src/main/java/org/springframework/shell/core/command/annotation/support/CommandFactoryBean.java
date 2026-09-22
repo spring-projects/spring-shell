@@ -38,6 +38,7 @@ import org.springframework.shell.core.command.CommandCreationException;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
 import org.springframework.shell.core.command.annotation.Argument;
+import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.CommandGroup;
 import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
@@ -167,7 +168,9 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 
 	private List<CommandArgument> getCommandArguments() {
 		List<CommandArgument> commandArguments = new ArrayList<>();
-		for (Parameter parameter : this.method.getParameters()) {
+		Parameter[] parameters = this.method.getParameters();
+		for (int i = 0; i < parameters.length; i++) {
+			Parameter parameter = parameters[i];
 			Argument argumentAnnotation = parameter.getAnnotation(Argument.class);
 			if (argumentAnnotation != null) {
 				int index = argumentAnnotation.index();
@@ -180,9 +183,29 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 					.type(parameter.getType())
 					.build();
 				commandArguments.add(commandArgument);
+				continue;
+			}
+			Arguments argumentsAnnotation = parameter.getAnnotation(Arguments.class);
+			if (argumentsAnnotation != null) {
+				CommandArgument commandArgument = CommandArgument.with()
+					.index(commandArguments.size())
+					.description(argumentsAnnotation.description())
+					.type(getElementType(i))
+					.variadic(true)
+					.build();
+				commandArguments.add(commandArgument);
 			}
 		}
 		return commandArguments;
+	}
+
+	// the declared parameter is a collection or an array, the element type is what is
+	// meaningful to report for a variadic argument
+	private Class<?> getElementType(int parameterIndex) {
+		ResolvableType parameterType = ResolvableType.forMethodParameter(this.method, parameterIndex);
+		Class<?> elementType = parameterType.isArray() ? parameterType.getComponentType().resolve()
+				: parameterType.asCollection().resolveGeneric(0);
+		return elementType != null ? elementType : Object.class;
 	}
 
 	private CompletionProvider getCompletionProvider(String completionProviderBeanName) {

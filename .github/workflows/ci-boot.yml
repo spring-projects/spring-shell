@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         spring-boot-version:
-          - 4.0.6-SNAPSHOT
-          - 4.1.0-SNAPSHOT
+          - 4.1.2-SNAPSHOT
+          - 4.2.0-SNAPSHOT
 
     name: Boot ${{ matrix.spring-boot-version }}
 

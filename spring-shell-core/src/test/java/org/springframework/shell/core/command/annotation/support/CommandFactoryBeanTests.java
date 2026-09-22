@@ -30,8 +30,11 @@ import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.shell.core.command.CommandContext;
+import org.springframework.shell.core.command.CommandArgument;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
+import org.springframework.shell.core.command.annotation.Argument;
+import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.CommandGroup;
 import org.springframework.shell.core.command.annotation.Option;
@@ -82,6 +85,61 @@ class CommandFactoryBeanTests {
 
 		assertEquals("longNameOption4", options.get(3).longName());
 		assertEquals(' ', options.get(3).shortName());
+	}
+
+	@Test
+	void testVariadicArgumentsMetadata() {
+		// given
+		org.springframework.shell.core.command.Command result = buildCommand("collect");
+
+		// then
+		List<CommandArgument> arguments = result.getArguments();
+		assertEquals(1, arguments.size());
+		CommandArgument argument = arguments.get(0);
+		assertEquals(0, argument.index());
+		assertEquals("the values to collect", argument.description());
+		assertEquals(Integer.class, argument.type());
+		assertThat(argument.variadic()).isTrue();
+	}
+
+	@Test
+	void testVariadicArgumentsMetadataForArray() {
+		// given
+		org.springframework.shell.core.command.Command result = buildCommand("collectArray");
+
+		// then
+		List<CommandArgument> arguments = result.getArguments();
+		assertEquals(1, arguments.size());
+		assertEquals(String.class, arguments.get(0).type());
+		assertThat(arguments.get(0).variadic()).isTrue();
+	}
+
+	@Test
+	void testVariadicArgumentsFollowingAnIndexedArgument() {
+		// given
+		org.springframework.shell.core.command.Command result = buildCommand("mixed");
+
+		// then
+		List<CommandArgument> arguments = result.getArguments();
+		assertEquals(2, arguments.size());
+		assertEquals(0, arguments.get(0).index());
+		assertThat(arguments.get(0).variadic()).isFalse();
+		assertEquals(1, arguments.get(1).index());
+		assertEquals("the rest", arguments.get(1).description());
+		assertEquals(String.class, arguments.get(1).type());
+		assertThat(arguments.get(1).variadic()).isTrue();
+	}
+
+	private static org.springframework.shell.core.command.Command buildCommand(String methodName) {
+		ApplicationContext context = mockApplicationContext();
+		when(context.getBean(ArgumentCommands.class)).thenReturn(new ArgumentCommands());
+		Method method = Arrays.stream(ArgumentCommands.class.getDeclaredMethods())
+			.filter(m -> m.getName().equals(methodName))
+			.findFirst()
+			.orElseThrow();
+		CommandFactoryBean commandFactoryBean = new CommandFactoryBean(method);
+		commandFactoryBean.setApplicationContext(context);
+		return commandFactoryBean.getObject();
 	}
 
 	@Test
@@ -249,6 +307,27 @@ class CommandFactoryBeanTests {
 		public void helloMethod(@Option String myOption1, @Option(shortName = 'm') String myOption2,
 				@Option(longName = "longNameOption3", shortName = 'l') String myOption3,
 				@Option(longName = "longNameOption4") String myOption4) {
+			// no-op
+		}
+
+	}
+
+	static class ArgumentCommands {
+
+		@Command(name = "collect")
+		public void collect(@Arguments(description = "the values to collect") List<Integer> values,
+				@Option String name) {
+			// no-op
+		}
+
+		@Command(name = "collectArray")
+		public void collectArray(@Arguments String[] values) {
+			// no-op
+		}
+
+		@Command(name = "mixed")
+		public void mixed(@Argument(index = 0, description = "the target") String target,
+				@Arguments(description = "the rest") List<String> rest) {
 			// no-op
 		}
 

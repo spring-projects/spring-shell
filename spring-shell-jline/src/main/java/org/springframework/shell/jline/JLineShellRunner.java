@@ -55,12 +55,23 @@ public class JLineShellRunner extends InteractiveShellRunner {
 
 	@Override
 	public void print(String message) {
-		this.lineReader.getTerminal().writer().println(message);
+		ignoringClosedTerminal(() -> this.lineReader.getTerminal().writer().println(message));
 	}
 
 	@Override
 	public void flush() {
-		lineReader.getTerminal().flush();
+		ignoringClosedTerminal(() -> this.lineReader.getTerminal().flush());
+	}
+
+	private void ignoringClosedTerminal(Runnable action) {
+		try {
+			action.run();
+		}
+		catch (IllegalStateException ex) {
+			if (ex.getMessage() == null || !ex.getMessage().contains("closed")) {
+				throw ex;
+			}
+		}
 	}
 
 	@Override

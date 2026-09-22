@@ -43,29 +43,30 @@
 
 	<properties>
 		<!-- common properties -->
+		<project.build.outputTimestamp>1980-02-01T00:00:00Z</project.build.outputTimestamp>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>17</java.version>
 
 		<!-- production dependencies -->
-		<reactor.version>3.8.6</reactor.version>
-		<spring-framework.version>7.0.8</spring-framework.version>
-		<spring-boot.version>4.0.7</spring-boot.version>
-		<jline.version>3.30.13</jline.version>
+		<reactor.version>3.8.8-SNAPSHOT</reactor.version>
+		<spring-framework.version>7.0.10-SNAPSHOT</spring-framework.version>
+		<spring-boot.version>4.0.9-SNAPSHOT</spring-boot.version>
+		<jline.version>3.30.17</jline.version>
 		<antlr-st4.version>4.3.4</antlr-st4.version>
-		<hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
+		<hibernate-validator.version>9.1.3.Final</hibernate-validator.version>
 		<jakarta.el.version>4.0.2</jakarta.el.version>
 
 		<!-- test dependencies -->
-		<jimfs.version>1.3.1</jimfs.version>
+		<jimfs.version>1.3.2</jimfs.version>
 		<assertj.version>3.27.7</assertj.version>
-		<junit-jupiter.version>6.1.0</junit-jupiter.version>
+		<junit-jupiter.version>6.1.3</junit-jupiter.version>
 		<mockito.version>5.23.0</mockito.version>
 		<awaitility.version>4.3.0</awaitility.version>
-		<log4j.version>2.26.0</log4j.version>
+		<log4j.version>2.26.1</log4j.version>
 
         <!-- samples dependencies -->
-        <h2-database.version>2.4.240</h2-database.version>
-        <logback.version>1.5.34</logback.version>
+        <h2-database.version>2.5.250</h2-database.version>
+        <logback.version>1.5.38</logback.version>
 
 		<!-- documentation dependencies -->
 		<antora-maven-plugin.version>1.0.0-alpha.5</antora-maven-plugin.version>
@@ -75,14 +76,14 @@
 		<errorprone.version>2.42.0</errorprone.version> <!-- upgrade to 2.43.0 requires Java 21+ -->
 		<nullaway.version>0.12.10</nullaway.version> <!-- upgrade to 0.12.11+ requires Java 22+ -->
 		<spring-javaformat-maven-plugin.version>0.0.47</spring-javaformat-maven-plugin.version>
-		<maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-		<maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
+		<maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>3.6.0</maven-failsafe-plugin.version>
 		<maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
-		<flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
-		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-		<maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
+		<flatten-maven-plugin.version>1.8.0</flatten-maven-plugin.version>
+		<maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
+		<maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
 	</properties>
 
 	<modules>
