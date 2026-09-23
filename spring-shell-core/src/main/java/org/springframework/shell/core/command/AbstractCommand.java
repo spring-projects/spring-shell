@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.springframework.shell.core.command.CommandHelpRenderer.*;
+
 /**
  * Base class helping to build shell commands.
  *
@@ -170,7 +172,7 @@ public abstract class AbstractCommand implements Command {
 		}
 		List<CommandOption> options = commandContext.parsedInput().options();
 		if (options.stream().anyMatch(this::isHelp)) {
-			println(CommandHelpRenderer.render(this), commandContext);
+			println(renderHelp(this), commandContext);
 			return ExitStatus.OK;
 		}
 		try {

@@ -43,7 +43,7 @@ public final class CommandHelpRenderer {
 	 * @param command the command to render
 	 * @return the help message of the command
 	 */
-	public static String render(Command command) {
+	public static String renderHelp(Command command) {
 		StringBuilder helpMessageBuilder = new StringBuilder();
 		appendName(command, helpMessageBuilder);
 		appendDescription(command, helpMessageBuilder);

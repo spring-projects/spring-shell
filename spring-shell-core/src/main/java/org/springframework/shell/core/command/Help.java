@@ -20,6 +20,8 @@ import org.springframework.shell.core.utils.Utils;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static org.springframework.shell.core.command.CommandHelpRenderer.*;
+
 /**
  * A command to display help about all available commands.
  *
@@ -49,12 +51,12 @@ public class Help extends AbstractCommand {
 		String commandName = String.join(" ", arguments.stream().map(CommandArgument::value).toList());
 		Command command = commandRegistry.getCommandByName(commandName);
 		if (command != null) {
-			helpMessage = CommandHelpRenderer.render(command);
+			helpMessage = renderHelp(command);
 		}
 		else {
 			Command aliasCommand = commandRegistry.getCommandByAlias(commandName);
 			if (aliasCommand != null) {
-				helpMessage = CommandHelpRenderer.render(aliasCommand);
+				helpMessage = renderHelp(aliasCommand);
 			}
 		}
 		outputWriter.println(helpMessage);
