@@ -15,19 +15,24 @@
  */
 package org.springframework.shell.jline.tui.component.support;
 
+import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.InfoCmp.Capability;
+import org.jline.utils.NonBlocking;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.shell.core.InputReader;
 import org.springframework.shell.jline.tui.component.context.BaseComponentContext;
 import org.springframework.shell.jline.tui.component.context.ComponentContext;
 import org.springframework.shell.jline.tui.component.support.AbstractTextComponent.TextComponentContext;
+import org.springframework.util.StringUtils;
 
 import static org.jline.keymap.KeyMap.del;
 import static org.jline.keymap.KeyMap.key;
@@ -37,10 +42,13 @@ import static org.jline.keymap.KeyMap.key;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author David Pilar
  */
 public abstract class AbstractTextComponent<T, C extends TextComponentContext<T, C>> extends AbstractComponent<C> {
 
 	private final @Nullable String name;
+
+	private @Nullable InputReader inputReader;
 
 	public AbstractTextComponent(Terminal terminal) {
 		this(terminal, null);
@@ -74,7 +82,23 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 		if (hasTty()) {
 			loop(context);
 		}
+		else if (inputReader != null && isInputReaderFallbackSupported()) {
+			readFromInputReader(context, inputReader);
+		}
 		return context;
+	}
+
+	private void readFromInputReader(C context, InputReader inputReader) {
+		String line;
+		try {
+			line = inputReader.readInput(StringUtils.hasText(name) ? name + " " : "");
+		}
+		catch (Exception ex) {
+			throw new IllegalStateException("Failed to read input for component " + name, ex);
+		}
+		String keys = line + "\r";
+		BindingReader bindingReader = new BindingReader(NonBlocking.nonBlocking("headless", new StringReader(keys)));
+		headlessLoop(context, bindingReader);
 	}
 
 	/**
@@ -83,6 +107,38 @@ public abstract class AbstractTextComponent<T, C extends TextComponentContext<T,
 	 */
 	protected @Nullable String getName() {
 		return name;
+	}
+
+	/**
+	 * Gets an {@link InputReader} used as a fallback source of input when there is no
+	 * tty.
+	 * @return an input reader
+	 * @since 4.0.4
+	 */
+	public @Nullable InputReader getInputReader() {
+		return inputReader;
+	}
+
+	/**
+	 * Sets an {@link InputReader} used as a fallback source of input when there is no
+	 * tty. If set and a component runs without a tty, one line is read from it and
+	 * processed as if it was typed by a user followed by enter.
+	 * @param inputReader the input reader
+	 * @since 4.0.4
+	 */
+	public void setInputReader(@Nullable InputReader inputReader) {
+		this.inputReader = inputReader;
+	}
+
+	/**
+	 * Checks if this component can consume input from an {@link InputReader} when there
+	 * is no tty. Defaults to {@code true}, components which are key driven rather than
+	 * single value inputs should override this to return {@code false}.
+	 * @return true if input reader fallback is supported
+	 * @since 4.0.4
+	 */
+	protected boolean isInputReaderFallbackSupported() {
+		return true;
 	}
 
 	public interface TextComponentContext<T, C extends TextComponentContext<T, C>> extends ComponentContext<C> {
