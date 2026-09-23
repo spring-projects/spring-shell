@@ -125,7 +125,10 @@ public abstract class InteractiveShellRunner implements ShellRunner, DisposableB
 				CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, getWriter(),
 						getReader());
 				ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
-				if (ExitStatus.OK.code() != exitStatus.code()) { // business error
+				boolean businessError = ExitStatus.OK.code() != exitStatus.code();
+				// the command itself already prints a dedicated availability message
+				boolean alreadyReported = ExitStatus.AVAILABILITY_ERROR.code() == exitStatus.code();
+				if (businessError && !alreadyReported) {
 					print("Error while executing command " + parsedInput.commandName() + ": "
 							+ exitStatus.description());
 				}
