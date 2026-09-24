@@ -82,7 +82,7 @@ public final class CommandHelpRenderer {
 		if (!options.isEmpty()) {
 			for (CommandOption option : options) {
 				helpMessageBuilder.append(" ");
-				if (isRequired(option)) {
+				if (!isRequired(option)) {
 					helpMessageBuilder.append("[");
 				}
 				if (option.longName() != null) {
@@ -92,7 +92,7 @@ public final class CommandHelpRenderer {
 					helpMessageBuilder.append("-").append(option.shortName());
 				}
 				helpMessageBuilder.append(" ").append(option.type().getSimpleName());
-				if (isRequired(option)) {
+				if (!isRequired(option)) {
 					helpMessageBuilder.append("]");
 				}
 			}

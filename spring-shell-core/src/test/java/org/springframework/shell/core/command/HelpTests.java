@@ -108,7 +108,7 @@ class HelpTests {
 					This command says hi to the user.
 
 				SYNOPSIS
-					hi [--name String] --times int --help
+					hi --name String [--times int] --help
 
 				OPTIONS
 					--name or -n String
@@ -185,7 +185,7 @@ class HelpTests {
 					This command says hi to the user.
 
 				SYNOPSIS
-					hi --times int [(String)] [(String)] --help
+					hi [--times int] [(String)] [(String)] --help
 
 				OPTIONS
 					--times or -t int
@@ -259,7 +259,7 @@ class HelpTests {
 					This command says hi to the user.
 
 				SYNOPSIS
-					hi --name String (Integer...) --help
+					hi [--name String] (Integer...) --help
 
 				OPTIONS
 					--name String
@@ -339,7 +339,7 @@ class HelpTests {
 					This command says hi to the user.
 
 				SYNOPSIS
-					hi [--name String] --times int --suffix String --help
+					hi --name String [--times int] [--suffix String] --help
 
 				OPTIONS
 					--name or -n String
@@ -416,7 +416,7 @@ class HelpTests {
 					This command says hi to the user.
 
 				SYNOPSIS
-					hi [--name String] --times int --help
+					hi --name String [--times int] --help
 
 				OPTIONS
 					--name or -n String
@@ -478,7 +478,7 @@ class HelpTests {
 					hi - Say hi
 
 				SYNOPSIS
-					hi [--name String] --help
+					hi --name String --help
 
 				OPTIONS
 					--name or -n String
