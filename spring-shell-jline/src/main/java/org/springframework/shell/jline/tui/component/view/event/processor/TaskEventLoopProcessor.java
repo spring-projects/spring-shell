@@ -18,20 +18,21 @@ package org.springframework.shell.jline.tui.component.view.event.processor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.shell.jline.tui.component.message.StaticShellMessageHeaderAccessor;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.event.EventLoop;
-import org.springframework.shell.jline.tui.component.view.event.KeyBindingConsumerArgs;
 import org.springframework.shell.jline.tui.component.view.event.EventLoop.EventLoopProcessor;
+import org.springframework.shell.jline.tui.component.view.event.KeyBindingConsumerArgs;
 import org.springframework.shell.jline.tui.component.view.event.MouseBindingConsumerArgs;
 
+/**
+ * @author Piotr Olaszewski
+ */
 public class TaskEventLoopProcessor implements EventLoopProcessor {
 
 	@Override
-	public boolean canProcess(Message<?> message) {
-		if (EventLoop.Type.TASK.equals(StaticShellMessageHeaderAccessor.getEventType(message))) {
-			Object payload = message.getPayload();
+	public boolean canProcess(TerminalEvent<?> terminalEvent) {
+		if (EventLoop.Type.TASK == terminalEvent.type()) {
+			Object payload = terminalEvent.payload();
 			if (payload instanceof Runnable) {
 				return true;
 			}
@@ -46,46 +47,42 @@ public class TaskEventLoopProcessor implements EventLoopProcessor {
 	}
 
 	@Override
-	public Flux<? extends Message<?>> process(Message<?> message) {
-		Object payload = message.getPayload();
+	public Flux<? extends TerminalEvent<?>> process(TerminalEvent<?> terminalEvent) {
+		Object payload = terminalEvent.payload();
 		if (payload instanceof Runnable) {
-			return processRunnable(message);
+			return processRunnable(terminalEvent);
 		}
 		else if (payload instanceof KeyBindingConsumerArgs) {
-			return processKeyConsumer(message);
+			return processKeyConsumer(terminalEvent);
 		}
 		else if (payload instanceof MouseBindingConsumerArgs) {
-			return processMouseConsumer(message);
+			return processMouseConsumer(terminalEvent);
 		}
 		// should not happen
 		throw new IllegalArgumentException();
 	}
 
-	private Flux<? extends Message<?>> processRunnable(Message<?> message) {
-		return Mono.just(message.getPayload())
+	private Flux<? extends TerminalEvent<?>> processRunnable(TerminalEvent<?> terminalEvent) {
+		return Mono.just(terminalEvent.payload())
 			.ofType(Runnable.class)
 			.flatMap(Mono::fromRunnable)
-			.then(Mono.just(MessageBuilder.withPayload(new Object()).build()))
+			.then(Mono.just(new TerminalEvent<>(new Object(), terminalEvent.type())))
 			.flux();
 	}
 
-	private Flux<? extends Message<?>> processMouseConsumer(Message<?> message) {
-		return Mono.just(message.getPayload())
+	private Flux<? extends TerminalEvent<?>> processMouseConsumer(TerminalEvent<?> terminalEvent) {
+		return Mono.just(terminalEvent.payload())
 			.ofType(MouseBindingConsumerArgs.class)
-			.flatMap(args -> Mono.fromRunnable(() -> {
-				args.consumer().accept(args.event());
-			}))
-			.then(Mono.just(MessageBuilder.withPayload(new Object()).build()))
+			.flatMap(args -> Mono.fromRunnable(() -> args.consumer().accept(args.event())))
+			.then(Mono.just(new TerminalEvent<>(new Object(), terminalEvent.type())))
 			.flux();
 	}
 
-	private Flux<? extends Message<?>> processKeyConsumer(Message<?> message) {
-		return Mono.just(message.getPayload())
+	private Flux<? extends TerminalEvent<?>> processKeyConsumer(TerminalEvent<?> terminalEvent) {
+		return Mono.just(terminalEvent.payload())
 			.ofType(KeyBindingConsumerArgs.class)
-			.flatMap(args -> Mono.fromRunnable(() -> {
-				args.consumer().accept(args.event());
-			}))
-			.then(Mono.just(MessageBuilder.withPayload(new Object()).build()))
+			.flatMap(args -> Mono.fromRunnable(() -> args.consumer().accept(args.event())))
+			.then(Mono.just(new TerminalEvent<>(new Object(), terminalEvent.type())))
 			.flux();
 	}
 

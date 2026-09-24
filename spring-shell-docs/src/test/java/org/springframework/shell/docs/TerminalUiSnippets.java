@@ -18,7 +18,7 @@ package org.springframework.shell.docs;
 import org.jline.terminal.Terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.TerminalUI;
 import org.springframework.shell.jline.tui.component.view.TerminalUIBuilder;
 import org.springframework.shell.jline.tui.component.view.control.BoxView;
@@ -65,7 +65,8 @@ class TerminalUiSnippets {
 			EventLoop eventLoop = ui.getEventLoop();
 			eventLoop.keyEvents().subscribe(event -> {
 				if (event.getPlainKey() == Key.q && event.hasCtrl()) {
-					eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
+					TerminalEvent<String> terminalEvent = new TerminalEvent<>("int", EventLoop.Type.SYSTEM);
+					eventLoop.dispatch(terminalEvent);
 				}
 			});
 			ui.run();

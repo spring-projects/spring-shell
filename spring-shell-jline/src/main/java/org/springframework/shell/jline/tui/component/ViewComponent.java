@@ -20,7 +20,6 @@ import org.jline.terminal.Terminal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.jline.tui.component.view.TerminalUI;
 import org.springframework.shell.jline.tui.component.view.control.View;
 import org.springframework.shell.jline.tui.component.view.control.ViewDoneEvent;
@@ -32,6 +31,7 @@ import org.springframework.util.Assert;
  * Handles view execution in a non-fullscreen setup.
  *
  * @author Janne Valkealahti
+ * @author Piotr Olaszewski
  */
 public class ViewComponent {
 
@@ -118,7 +118,8 @@ public class ViewComponent {
 	 * Request exit from an execution loop.
 	 */
 	public void exit() {
-		eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
+		TerminalEvent<String> terminalEvent = new TerminalEvent<>("int", EventLoop.Type.SYSTEM);
+		eventLoop.dispatch(terminalEvent);
 	}
 
 	/**

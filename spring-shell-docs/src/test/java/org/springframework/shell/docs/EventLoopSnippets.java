@@ -19,7 +19,7 @@ import org.jline.terminal.Terminal;
 import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.TerminalUI;
 import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 
@@ -34,7 +34,7 @@ class EventLoopSnippets {
 			// tag::plainevents[]
 			TerminalUI ui = new TerminalUI(terminal);
 			EventLoop eventLoop = ui.getEventLoop();
-			Flux<? extends Message<?>> events = eventLoop.events();
+			Flux<? extends TerminalEvent<?>> events = eventLoop.events();
 			events.subscribe();
 			// end::plainevents[]
 		}
