@@ -51,6 +51,7 @@ public class FileInputProvider implements InputProvider, AutoCloseable {
 	/**
 	 * Create a new {@link FileInputProvider} instance.
 	 * @param reader the reader to read input from
+	 * @since 4.0.4
 	 */
 	public FileInputProvider(Reader reader) {
 		this.reader = new BufferedReader(reader);

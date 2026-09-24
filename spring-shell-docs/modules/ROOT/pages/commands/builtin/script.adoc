@@ -3,11 +3,13 @@
 
 The `script` command allows you to execute a series of commands from a specified script file. This is useful for automating repetitive tasks or setting up an environment quickly.
 
-This command expects a file absolute path as an option, which points to the script file containing the commands to be executed. For example:
+This command expects the script file location as an option, either an absolute filesystem path or a Spring resource reference such as `classpath:` or `file:`. For example:
 
 [source,shell]
 ----
 $>script --file /absolute/path/to/your/script.txt
+$>script --file classpath:scripts/your-script.txt
+$>script --file file:/absolute/path/to/your/script.txt
 ----
 
 The script file should contain one command per line, and the commands will be executed in the order they appear in the file. Comments can be added to the script file by starting a line with `//` characters.

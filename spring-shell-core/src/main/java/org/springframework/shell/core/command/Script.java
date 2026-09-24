@@ -37,6 +37,10 @@ import org.springframework.shell.core.NonInteractiveShellRunner;
  */
 public class Script extends AbstractCommand {
 
+	private static final String CLASSPATH_URL_PREFIX = "classpath:";
+
+	private static final String FILE_URL_PREFIX = "file:";
+
 	private CommandParser commandParser;
 
 	public Script(CommandRegistry commandRegistry) {
@@ -56,7 +60,8 @@ public class Script extends AbstractCommand {
 			.shortName('f')
 			.longName("file")
 			.required(true)
-			.description("The absolute path to the script file to execute")
+			.description(
+					"The script file to execute, as an absolute path, or a Spring resource reference such as classpath: or file:")
 			.build());
 	}
 
@@ -70,7 +75,7 @@ public class Script extends AbstractCommand {
 			.filter(Objects::nonNull)
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException(
-					"Script command expects option --file or -f with exactly one argument: the absolute path to the script file to execute."));
+					"Script command expects option --file or -f with exactly one argument: the script file to execute."));
 		File file = new File(Objects.requireNonNull(scriptFile));
 		try (FileInputProvider inputProvider = createInputProvider(file, scriptFile)) {
 			String input;
@@ -83,8 +88,11 @@ public class Script extends AbstractCommand {
 
 	/**
 	 * Create the {@link FileInputProvider} for the given script reference. An existing
-	 * file is used as-is (backward compatible); otherwise the reference is resolved as a
-	 * Spring resource (e.g. {@code classpath:} or {@code file:}).
+	 * file is used as-is (backward compatible); otherwise the reference must be prefixed
+	 * with {@code classpath:} or {@code file:} to be resolved as a Spring resource. Any
+	 * other reference is rejected outright, without attempting to resolve it, so only
+	 * local filesystem paths and {@code classpath:}/{@code file:} references are ever
+	 * supported.
 	 * @param file the script reference as a file
 	 * @param scriptFile the raw script reference
 	 * @return the input provider for the script
@@ -92,6 +100,11 @@ public class Script extends AbstractCommand {
 	private FileInputProvider createInputProvider(File file, String scriptFile) throws Exception {
 		if (file.exists()) {
 			return new FileInputProvider(file);
+		}
+		if (!scriptFile.startsWith(CLASSPATH_URL_PREFIX) && !scriptFile.startsWith(FILE_URL_PREFIX)) {
+			throw new IllegalArgumentException("Unsupported script file reference: " + scriptFile
+					+ ". It must be an existing local filesystem path, or be prefixed with \"" + CLASSPATH_URL_PREFIX
+					+ "\" or \"" + FILE_URL_PREFIX + "\".");
 		}
 		Resource resource = new DefaultResourceLoader().getResource(scriptFile);
 		if (!resource.exists()) {

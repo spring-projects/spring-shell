@@ -99,9 +99,28 @@ class ScriptTests {
 	}
 
 	@Test
-	void testScriptWithMissingFile() {
+	void testScriptWithMissingClasspathResource() {
 		// when & then
-		Assertions.assertThrows(FileNotFoundException.class, () -> executeScript("does-not-exist.txt"));
+		Assertions.assertThrows(FileNotFoundException.class, () -> executeScript("classpath:does-not-exist.txt"));
+	}
+
+	@Test
+	void testScriptWithUnsupportedReferenceIsRejected() {
+		// when & then
+		Assertions.assertThrows(IllegalArgumentException.class, () -> executeScript("does-not-exist.txt"));
+	}
+
+	@Test
+	void testScriptWithHttpPrefixIsRejected() {
+		// when & then
+		Assertions.assertThrows(IllegalArgumentException.class, () -> executeScript("https://example.com/script.txt"));
+	}
+
+	@Test
+	void testScriptWithUrlPrefixIsRejected() {
+		// when & then
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> executeScript("url:https://example.com/script.txt"));
 	}
 
 	private void executeScript(String scriptRef) throws Exception {
