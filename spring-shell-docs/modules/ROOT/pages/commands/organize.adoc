@@ -65,3 +65,41 @@ public class AuthenticationCommands {
 In this example, both the `login` and `logout` commands belong to the `Authentication Commands` group, and they will be displayed together in the help screen under that group. The `prefix` attribute specifies a common prefix for all commands in that group, which can be used to invoke the commands (e.g., `auth login` and `auth logout`).
 
 NOTE: If a command provides a `group` attribute, it will take precedence over the group specified at the class level. This allows you to override the group for specific commands if needed.
+
+[[global-command-prefix]]
+== Global Command Prefix
+
+While `@CommandGroup` lets you namespace commands within a single class, the `spring.shell.command.prefix` property lets you apply a prefix to every user-defined command in the application at once. This is useful when embedding a Spring Shell application inside a larger system where all commands need to share a consistent namespace.
+
+[source,yaml]
+----
+spring:
+  shell:
+    command:
+      prefix: myapp
+----
+
+When set, the global prefix is prepended to the name of every user-defined `@Command` method. If a `@CommandGroup` also defines a `prefix` on the declaring class, both are chained together, with the global prefix first, then the group prefix, then the command name:
+
+|===
+| Global prefix | Group prefix | Command name | Resulting command
+
+| `myapp`
+| (none)
+| `hello`
+| `myapp hello`
+
+| `myapp`
+| `my-group`
+| `hello`
+| `myapp my-group hello`
+
+| (none)
+| `my-group`
+| `hello`
+| `my-group hello`
+|===
+
+Built-in commands (`help`, `clear`, `version`, and so on) are not affected by this property.
+
+IMPORTANT: Do not choose a global prefix that matches the name of a built-in command (`help`, `clear`, `version`, `script`, `history`, `exit`/`quit`). Since every prefixed command name now starts with that word, invoking the built-in command with an argument becomes ambiguous. For example, if `spring.shell.command.prefix` is set to `help` and a command `hello` becomes `help hello`, then typing `help hello` invokes your `help hello` command directly instead of showing help for `hello` through the built-in `help` command.

@@ -25,13 +25,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.env.Environment;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.ConfigurableConversionService;
-import org.springframework.shell.core.command.CommandContext;
+import org.springframework.core.env.Environment;
 import org.springframework.shell.core.command.CommandArgument;
+import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
 import org.springframework.shell.core.command.adapter.MethodInvokerCommandAdapter;
 import org.springframework.shell.core.command.annotation.Argument;
@@ -295,10 +295,30 @@ class CommandFactoryBeanTests {
 		assertEquals("ping", result.getName());
 	}
 
+	@Test
+	void globalPrefixIsChainedWithMethodNameFallback() throws Exception {
+		ApplicationContext context = mockApplicationContext("app");
+		when(context.getBean(NoGroupCommands.class)).thenReturn(new NoGroupCommands());
+		Method method = Arrays.stream(NoGroupCommands.class.getDeclaredMethods())
+			.filter(m -> m.getName().equals("unnamed"))
+			.findFirst()
+			.orElseThrow();
+		CommandFactoryBean factory = new CommandFactoryBean(method);
+		factory.setApplicationContext(context);
+
+		org.springframework.shell.core.command.Command result = factory.getObject();
+
+		assertEquals("app unnamed", result.getName());
+	}
+
 	static class NoGroupCommands {
 
 		@Command(name = "ping")
 		public void ping() {
+		}
+
+		@Command
+		public void unnamed() {
 		}
 
 	}

@@ -92,8 +92,9 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		}
 
 		// get command metadata
-		var name = resolveName(groupPrefix, command);
-		name = name.isEmpty() ? Utils.unCamelify(this.method.getName()) : name;
+		String baseName = String.join(" ", command.name());
+		baseName = baseName.isEmpty() ? Utils.unCamelify(this.method.getName()) : baseName;
+		String name = resolveName(groupPrefix, baseName);
 		String description = command.description();
 		description = description.isEmpty() ? "N/A" : description;
 		String help = command.help();
@@ -139,7 +140,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		return methodInvokerCommandAdapter;
 	}
 
-	private String resolveName(String groupPrefix, org.springframework.shell.core.command.annotation.Command command) {
+	private String resolveName(String groupPrefix, String baseName) {
 		String globalPrefix = this.applicationContext.getEnvironment().getProperty("spring.shell.command.prefix", "");
 		List<String> parts = new ArrayList<>();
 		if (!globalPrefix.isEmpty()) {
@@ -148,7 +149,7 @@ public class CommandFactoryBean implements ApplicationContextAware, FactoryBean<
 		if (!groupPrefix.isEmpty()) {
 			parts.add(groupPrefix);
 		}
-		parts.add(String.join(" ", command.name()));
+		parts.add(baseName);
 		return String.join(" ", parts);
 	}
 
