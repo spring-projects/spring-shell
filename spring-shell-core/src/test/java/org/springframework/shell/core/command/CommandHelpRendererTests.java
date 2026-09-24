@@ -127,7 +127,7 @@ class CommandHelpRendererTests {
 					This command says hi to the user.
 
 				SYNOPSIS
-					hi [--name String] --times int --help
+					hi --name String [--times int] --help
 
 				OPTIONS
 					--name or -n String
@@ -173,7 +173,7 @@ class CommandHelpRendererTests {
 					hi - Say hi
 
 				SYNOPSIS
-					hi --times int --help
+					hi [--times int] --help
 
 				OPTIONS
 					--times or -t int
