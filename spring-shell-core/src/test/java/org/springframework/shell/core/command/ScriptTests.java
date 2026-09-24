@@ -32,7 +32,7 @@ import org.springframework.shell.core.InputReader;
 /**
  * Tests for {@link Script}.
  *
- * @author David Pilar
+ * @author Ezequiel Primon
  */
 class ScriptTests {
 
