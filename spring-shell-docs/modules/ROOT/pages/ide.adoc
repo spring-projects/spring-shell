@@ -1,0 +1,20 @@
+[[ide-support]]
+= Developing with an IDE
+
+Spring Shell applications can be started from an IDE, but interactive components need a real
+terminal and the application's runtime resources must be on the classpath.
+
+== Checklist
+
+When an application behaves differently from `./mvnw spring-boot:run`, check the following:
+
+* Use the same Java version and active profile as the command-line launch.
+* Set the working directory to the application project directory.
+* Include `src/main/resources` so component templates and configuration files are available.
+* Run the application in a terminal-capable console when using interactive components or key
+  bindings.
+* Stop any previously running shell before starting a second instance on the same port.
+
+The IDE does not change Spring Shell's component APIs. If a prompt cannot read keys, first compare
+the IDE's console and environment settings with a command-line run before changing the component
+implementation.
