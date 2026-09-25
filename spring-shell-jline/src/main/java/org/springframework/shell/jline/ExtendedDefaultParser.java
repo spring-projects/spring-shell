@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import org.jline.reader.CompletingParsedLine;
 import org.jline.reader.EOFError;
 import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
@@ -135,16 +136,20 @@ public class ExtendedDefaultParser implements Parser {
 			wordCursor = words.get(words.size() - 1).length();
 		}
 
-		if (eofOnEscapedNewLine && (line != null && isEscapeChar(line, line.length() - 1))) {
-			throw new EOFError(-1, -1, "Escaped new line", "newline");
-		}
-		if (eofOnUnclosedQuote && quoteStart >= 0 && context != ParseContext.COMPLETE) {
-			throw new EOFError(-1, -1, "Missing closing quote",
-					(line != null && line.charAt(quoteStart) == '\'') ? "quote" : "dquote");
+		// Match JLine DefaultParser: never treat incomplete lines as EOF during
+		// completion or split-line (e.g. Windows paths ending with '\').
+		if (context != ParseContext.COMPLETE && context != ParseContext.SPLIT_LINE) {
+			if (eofOnEscapedNewLine && line != null && !line.isEmpty() && isEscapeChar(line, line.length() - 1)) {
+				throw new EOFError(-1, -1, "Escaped new line", "newline");
+			}
+			if (eofOnUnclosedQuote && quoteStart >= 0) {
+				throw new EOFError(-1, -1, "Missing closing quote",
+						(line != null && line.charAt(quoteStart) == '\'') ? "quote" : "dquote");
+			}
 		}
 
 		String openingQuote = (quoteStart >= 0 && line != null) ? line.substring(quoteStart, quoteStart + 1) : null;
-		return wrap(new ExtendedArgumentList(line, words, wordIndex, wordCursor, cursor, openingQuote));
+		return new ExtendedArgumentList(line, words, wordIndex, wordCursor, cursor, openingQuote);
 	}
 
 	/**
@@ -226,7 +231,7 @@ public class ExtendedDefaultParser implements Parser {
 	 *
 	 * @author <a href="mailto:mwp1@cornell.edu">Marc Prud'hommeaux</a>
 	 */
-	public class ExtendedArgumentList implements ParsedLine, CompletingParsedLine {
+	public class ExtendedArgumentList implements CompletingParsedLine {
 
 		private final String line;
 
@@ -279,37 +284,65 @@ public class ExtendedDefaultParser implements Parser {
 		}
 
 		@Override
-		public CharSequence emit(CharSequence candidate) {
+		public CharSequence escape(CharSequence candidate, boolean complete) {
 			StringBuilder sb = new StringBuilder(candidate);
 			Predicate<Integer> needToBeEscaped;
+			String quote = openingQuote;
 			// Completion is protected by an opening quote:
 			// Delimiters (spaces) don't need to be escaped, nor do other quotes, but
 			// everything else does.
 			// Also, close the quote at the end
-			if (openingQuote != null) {
-				needToBeEscaped = i -> isRawEscapeChar(sb.charAt(i))
-						|| String.valueOf(sb.charAt(i)).equals(openingQuote);
-			} // No quote protection, need to escape everything: delimiter chars (spaces),
-				// quote chars
-				// and escapes themselves
-			else {
-				needToBeEscaped = i -> isDelimiterChar(sb, i) || isRawEscapeChar(sb.charAt(i))
-						|| isRawQuoteChar(sb.charAt(i));
-			}
-			for (int i = 0; i < sb.length(); i++) {
-				if (needToBeEscaped.test(i)) {
-					sb.insert(i++, escapeChars[0]);
+			if (escapeChars != null && escapeChars.length > 0) {
+				if (openingQuote != null) {
+					needToBeEscaped = i -> isRawEscapeChar(sb.charAt(i))
+							|| String.valueOf(sb.charAt(i)).equals(openingQuote);
+				}
+				// No quote protection, need to escape everything: delimiter chars
+				// (spaces), quote chars and escapes themselves
+				else {
+					needToBeEscaped = i -> isDelimiterChar(sb, i) || isRawEscapeChar(sb.charAt(i))
+							|| isRawQuoteChar(sb.charAt(i));
+				}
+				for (int i = 0; i < sb.length(); i++) {
+					if (needToBeEscaped.test(i)) {
+						sb.insert(i++, escapeChars[0]);
+					}
 				}
 			}
-			if (openingQuote != null) {
-				sb.append(openingQuote);
+			else if (openingQuote == null) {
+				// Without escape characters, quote candidates that contain delimiters
+				for (int i = 0; i < sb.length(); i++) {
+					if (isDelimiterChar(sb, i)) {
+						quote = "'";
+						break;
+					}
+				}
+			}
+			if (quote != null) {
+				sb.insert(0, quote);
+				if (complete) {
+					sb.append(quote);
+				}
 			}
 			return sb;
+		}
+
+		@Override
+		public int rawWordCursor() {
+			return wordCursor();
+		}
+
+		@Override
+		public int rawWordLength() {
+			return word().length();
 		}
 
 	}
 
 	private boolean isRawEscapeChar(char key) {
+		if (escapeChars == null) {
+			return false;
+		}
 		for (char e : escapeChars) {
 			if (e == key) {
 				return true;
@@ -319,78 +352,15 @@ public class ExtendedDefaultParser implements Parser {
 	}
 
 	private boolean isRawQuoteChar(char key) {
+		if (quoteChars == null) {
+			return false;
+		}
 		for (char e : quoteChars) {
 			if (e == key) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Another copy from JLine's {@link org.jline.reader.impl.LineReaderImpl}
-	 *
-	 * Used to wrap {@link org.jline.reader.ParsedLine} into
-	 * {@link org.jline.reader.CompletingParsedLine}
-	 */
-	private static org.jline.reader.CompletingParsedLine wrap(ParsedLine line) {
-		if (line instanceof org.jline.reader.CompletingParsedLine) {
-			return (org.jline.reader.CompletingParsedLine) line;
-		}
-		else {
-			return new org.jline.reader.CompletingParsedLine() {
-				public String word() {
-					return line.word();
-				}
-
-				public int wordCursor() {
-					return line.wordCursor();
-				}
-
-				public int wordIndex() {
-					return line.wordIndex();
-				}
-
-				public List<String> words() {
-					return line.words();
-				}
-
-				public String line() {
-					return line.line();
-				}
-
-				public int cursor() {
-					return line.cursor();
-				}
-
-				public CharSequence escape(CharSequence candidate, boolean complete) {
-					return candidate;
-				}
-
-				public int rawWordCursor() {
-					return wordCursor();
-				}
-
-				public int rawWordLength() {
-					return word().length();
-				}
-			};
-		}
-	}
-
-	/**
-	 * An extension of {@link ParsedLine} that, being aware of the quoting and escaping
-	 * rules of the {@link Parser} that produced it, knows if and how a completion
-	 * candidate should be escaped/quoted.
-	 *
-	 * @author Eric Bottard
-	 * @author Piotr Olaszewski
-	 */
-	@FunctionalInterface
-	interface CompletingParsedLine {
-
-		CharSequence emit(CharSequence candidate);
-
 	}
 
 }
