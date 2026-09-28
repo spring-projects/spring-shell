@@ -105,6 +105,56 @@ void testCommandExecutionWithReadingInput(@Autowired ShellTestClient client) thr
 }
 ----
 
+== Testing component flows
+
+Interactive components such as `StringInput` or `ConfirmationInput`, and `ComponentFlow` built from them, read keystrokes from a JLine `Terminal` rather than from the `InputReader` of a `CommandContext`. When a test runs without a tty, there is nothing to read from and the components finish without a result.
+
+To make such a command testable, pass the `InputReader` of the current `CommandContext` to the flow builder. When there is no tty, single value components (`StringInput`, `NumberInput`, `PathInput` and `ConfirmationInput`) read one line from it and process it as if the user had typed it followed by enter, so default values and validation behave the same as in an interactive session. With a real terminal the `InputReader` is ignored and the components work as usual.
+
+[source,java]
+----
+@Command(name = "example")
+public String example(CommandContext commandContext) {
+    ComponentFlow flow = builder.clone().reset()
+        .inputReader(commandContext.inputReader())
+        .withStringInput("reason")
+            .name("Reason:")
+            .and()
+        .withConfirmationInput("confirm")
+            .name("Confirm?")
+            .and()
+        .build();
+
+    ComponentFlow.ComponentFlowResult result = flow.run();
+    boolean confirmed = result.getContext().get("confirm");
+    return confirmed ? "Confirmed" : "Cancelled";
+}
+----
+
+The queued inputs are then consumed by the components in order:
+
+[source,java]
+----
+@Test
+void testComponentFlow(@Autowired ShellTestClient client) throws Exception {
+    // given
+    ShellInputProvider inputProvider = ShellInputProvider.providerFor("example")
+        .withInput("some reason")
+        .withInput("y")
+        .build();
+
+    // when
+    ShellScreen screen = client.sendCommand(inputProvider);
+
+    // then
+    ShellAssertions.assertThat(screen).containsText("Confirmed");
+}
+----
+
+NOTE: `ConfirmationInput` accepts `y`, `yes` and `1` as a positive answer and `n`, `no` and `0` as a negative one. An empty input selects the default value of the component.
+
+Key driven components such as `SingleItemSelector`, `MultiItemSelector` or `PathSearch` cannot be expressed as a single line of text and do not consume the `InputReader`. A flow containing them cannot be driven this way.
+
 == End-to-End Testing
 
 For end-to-end (ie black-box) testing of shell applications without using Spring Shell testing facilities, you can use the test utilities provided by Spring Boot. Once you have defined your Spring Boot application class, you can create a test class annotated with `@SpringBootTest` to test your shell commands. Here is an example:
