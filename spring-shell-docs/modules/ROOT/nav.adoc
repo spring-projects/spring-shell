@@ -1,5 +1,6 @@
 * xref:index.adoc[Overview]
 * xref:getting-started.adoc[]
+* xref:ide.adoc[Developing with an IDE]
 * xref:upgrading.adoc[]
 * xref:basics/index.adoc[]
 ** xref:basics/reading.adoc[]

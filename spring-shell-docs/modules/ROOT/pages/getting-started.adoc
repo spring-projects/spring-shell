@@ -73,6 +73,19 @@ Exiting the shell
 
 Congratulations, you have created and run your first Spring Shell application!
 
+[[creating-a-component]]
+== Creating a component
+
+For interactive prompts, use one of the built-in components such as `StringInput` or
+`SingleItemSelector`. Components can be composed in a `ComponentFlow`, rendered with a custom
+`Function`, or customized with a StringTemplate resource. See xref:components/ui/index.adoc[Flow
+Components] and xref:components/ui/render.adoc[Component Render] for examples and context
+variables.
+
+When developing a component-based shell in an IDE, run the application with the same classpath and
+working directory as the Maven command. IDE launchers that omit `src/main/resources` will not find
+component templates, and launching without a terminal may prevent interactive key handling.
+
 [[next-steps]]
 == Next Steps
 
