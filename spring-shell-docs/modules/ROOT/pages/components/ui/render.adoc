@@ -13,6 +13,26 @@ Templating is a good choice if you do not need to do anything complex or
 you just want to slightly modify existing component layouts. Rendering
 through code then gives you flexibility to do whatever you need.
 
+== Customizing a component template
+
+Built-in component templates are loaded from the
+`org/springframework/shell/component` classpath location. To customize one, add a template with
+the same name to your application's resources. For example, a custom String Input template can be
+created at `src/main/resources/org/springframework/shell/component/string-input-default.stg`:
+
+[source, antlrv4]
+----
+main(model) ::= <<
+<model.name; format="style-title">: <model.input; format="style-value">
+>>
+----
+
+The template receives the component context as `model`. The available attributes depend on the
+component; for example, `StringInputContext` provides `name`, `input`, `resultValue`,
+`defaultValue`, `maskedInput`, and `maskedResultValue`. See the component-specific page for its
+complete context table. Keep the original template's `main` entry point when replacing a built-in
+template.
+
 The programmatic way to render is to create a `Function`:
 
 [source, java, indent=0]
