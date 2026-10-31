@@ -29,6 +29,8 @@ shell.log.*.tmp
 .flattened-pom.xml
 /**/*/.flattened-pom.xml
 
-# Claude Code
+# AI agent artifacts
 .claude/*
+.codex/*
 CLAUDE.md
+AGENTS.md
