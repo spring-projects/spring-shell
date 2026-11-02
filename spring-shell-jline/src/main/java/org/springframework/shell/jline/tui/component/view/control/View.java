@@ -98,7 +98,7 @@ public interface View extends Control {
 	/**
 	 * Run command.
 	 * @param command the command to run
-	 * @return true if command was succesfully dispatched
+	 * @return true if command was successfully dispatched
 	 * @see ViewCommand
 	 */
 	boolean runViewCommand(String command);

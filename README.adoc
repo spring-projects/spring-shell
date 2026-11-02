@@ -14,7 +14,7 @@ _CLI_ space. It takes an opinionated view of the Spring platform so that new and
 users can quickly get the bits they need.
 
 You can use Spring Shell to create stand-alone Java applications that can be started using
-`java -jar` or more sophisticated GraalVM native ways to create platform dependant apps.
+`java -jar` or more sophisticated GraalVM native ways to create platform dependent apps.
 
 Our primary goals are:
 
