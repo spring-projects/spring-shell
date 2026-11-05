@@ -4,7 +4,7 @@
 
 ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
-The `CommandContext` interface gives you access to the context of the currently running
+The `CommandContext` record gives you access to the context of the currently running
 command. It provides access to the parsed command input, command registry, and
 other useful information.
 

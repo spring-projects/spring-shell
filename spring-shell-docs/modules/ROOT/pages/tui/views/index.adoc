@@ -2,6 +2,6 @@
 = Views
 :page-section-summary-toc: 1
 
-ifndef::snippets[:snippets: ../../../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 Spring Shell provides a built-in views which are documented below.

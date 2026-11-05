@@ -33,7 +33,7 @@ public enum Gender {
 public void sayHello(
 		@Option(shortName = 'n', longName = "name", description = "the name of the person to greet", defaultValue = "World") String name,
 		@Option(shortName = 'g', longName = "gender", description = "the gender of the person to greet") Gender gender) {
-	String prefix = switch (gender) {
+	String prefix = gender == null ? "" : switch (gender) {
 		case MALE -> "Mr. ";
 		case FEMALE -> "Ms. ";
 	};

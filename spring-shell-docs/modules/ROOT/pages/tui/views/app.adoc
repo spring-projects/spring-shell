@@ -7,7 +7,7 @@ _AppView_ is a base implementation providing functionality to draw opinionated _
 This view inherits from xref:tui/views/box.adoc[].
 
 The generic idea is to have menu and status views which typically are xref:tui/views/menubar.adoc[] and
-xref:tui/views/statusbar.adoc[] respectively. Main content view is then whatever user want to show
+xref:tui/views/statusbar.adoc[] respectively. Main content view is then whatever the user wants to show
 in it.
 
 [source, text]

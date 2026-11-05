@@ -2,37 +2,33 @@
 = Command Registration
 :page-section-summary-toc: 1
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 There are two different ways to define a command, through an annotation model and through a programmatic model:
 
-- In the annotation model, you define your methods in a `@Component` class and the methods with specific annotations.
-- In the programmatic model, you use a more low level approach, defining commands as beans.
+- In the annotation model, you define your methods in a `@Component` class and annotate the methods with `@Command`.
+- In the programmatic model, you use a lower-level approach, defining commands as beans.
 
 IMPORTANT: With the annotation model, the class containing command definitions should *not* be excluded from component scanning, otherwise the commands will not be registered. This is a common mistake when using `@ComponentScan` with `excludeFilters` and excluding the package containing command classes.
 
 [[commands-registration-annotation]]
 == Annotation-Based Registration
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 The `@Command` annotation marks a method as a candidate for command registration.
-In below example a command `example` is defined.
+In the following example, a command `example` is defined.
 
 [source, java, indent=0]
 ----
 include::{snippets}/CommandAnnotationSnippets.java[tag=command-anno-in-method]
 ----
 
-TIP: The command name optional, if not provided the method name will be used as command name.
+TIP: The command name is optional. If it is not provided, the method name is used.
 When the command returns a value, it will be printed to the shell output.
 
-Using a `@Command` will not automatically register command targets, instead it is required to use
-`@EnableCommand` annotations. This model is familiar from other parts  of Spring umbrella and
-provides better flexibility for a user being inclusive rather than exclusive for command targets.
-
-You can define target classes using `@EnableCommand`. It will get picked from all _Configuration_
-classes.
+Outside a Spring Boot application, use `@EnableCommand` on a configuration class
+to register the classes containing your `@Command` methods.
 
 [source, java, indent=0]
 ----
@@ -45,7 +41,7 @@ will take care of that.
 [[commands-registration-programmatic]]
 == Programmatic Registration
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
 In the programmatic model, commands can be defined as beans of type `Command`:
 
@@ -67,7 +63,7 @@ handling help options (`-h` and `--help`) and printing messages to the shell out
 [[command-registry]]
 == Command Registry
 
-The `CommandRegistry` interface holds the set of commands known to the Shell application.
+The `CommandRegistry` class holds the set of commands known to the Shell application.
 It is possible to dynamically register and unregister commands.
 
 By default, Spring Shell will populate the `CommandRegistry` with commands defined in the

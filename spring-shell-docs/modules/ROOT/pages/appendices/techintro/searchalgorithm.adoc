@@ -7,7 +7,7 @@ ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/she
 results are in a returned value `SearchMatchResult`. Match result
 contains info about match positions and overall score of a match.
 
-https://github.com/junegunn/fzf[fzf].
+The implementations below are based on algorithms from https://github.com/junegunn/fzf[fzf].
 
 [[implementations]]
 == Implementations
@@ -15,7 +15,7 @@ https://github.com/junegunn/fzf[fzf].
 *FuzzyMatchV2Search*
 
 Port of _fzf FuzzyMatchV2Search_ algorithm. Does a fast fuzzy search and is good
-quickly finding paths.
+for quickly finding paths.
 
 *ExactMatchNaive*
 
@@ -25,10 +25,10 @@ if you know what to search.
 [[searchmatch]]
 == SearchMatch
 
-Algorithms and default syntax are hidden inside package protected classes
-as we don't want to fully open these until we know API's are good to go
+Algorithms and default syntax are hidden inside package-private classes
+as we don't want to fully open these until we know APIs are good to go
 for longer support. You need to construct `SearchMatch` via its
-build-in builder.
+built-in builder.
 
 [source, java, indent=0]
 ----
@@ -36,8 +36,8 @@ include::{snippets}/SearchAlgorithmsSnippets.java[tag=builder]
 ----
 
 It's possible to configure _case sensitivity_, on what _direction_ search
-happens or if text should be _normilized_ before search happens. Normalization
-is handy when different languages have sligh variation for same type
+happens or if text should be _normalized_ before search happens. Normalization
+is handy when different languages have slight variations for same type
 of characters.
 
 Search algorithm is selected based on a search syntax shown in

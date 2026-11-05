@@ -11,5 +11,6 @@ You can subscribe to all mouse events:
 include::{snippets}/MouseHandlingSnippets.java[tag=sample]
 ----
 
-`MouseEvent` is a record wrapping _X_ and _Y_ coordinates and
-`org.jline.terminal.MouseEvent` from JLine library.
+`MouseEvent` is a record containing _X_ and _Y_ coordinates and an integer bit mask
+that encodes the event type, button, and modifiers.
+`MouseEvent.of(org.jline.terminal.MouseEvent)` converts a JLine mouse event into this record.

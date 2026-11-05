@@ -22,11 +22,13 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.jline.tui.component.ConfirmationInput;
 import org.springframework.shell.jline.tui.component.MultiItemSelector;
 import org.springframework.shell.jline.tui.component.NumberInput;
@@ -44,9 +46,8 @@ import org.springframework.shell.jline.tui.component.SingleItemSelector.SingleIt
 import org.springframework.shell.jline.tui.component.StringInput.StringInputContext;
 import org.springframework.shell.jline.tui.component.support.SelectorItem;
 import org.springframework.shell.jline.tui.style.TemplateExecutor;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import static org.jline.jansi.AnsiConsole.getTerminal;
 
 public class UiComponentSnippets {
 
@@ -58,16 +59,16 @@ public class UiComponentSnippets {
 			AttributedStringBuilder builder = new AttributedStringBuilder();
 			builder.append(context.getName());
 			builder.append(" ");
-			if (context.getResultValue() != null) {
-				builder.append(context.getResultValue());
+			if (context.getMaskedResultValue() != null) {
+				builder.append(context.getMaskedResultValue());
 			}
 			else {
-				String input = context.getInput();
+				String input = context.getMaskedInput();
 				if (StringUtils.hasText(input)) {
 					builder.append(input);
 				}
 				else {
-					builder.append("[Default " + context.getDefaultValue() + "]");
+					builder.append("[Enter a value]");
 				}
 			}
 			return Arrays.asList(builder.toAttributedString());
@@ -79,19 +80,35 @@ public class UiComponentSnippets {
 	class Dump1 {
 
 		// tag::snippet2[]
-		@Command(name = "component stringcustom", description = "String input", group = "Components")
-		public String stringInputCustom(boolean mask) {
-			StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue",
-					new StringInputCustomRenderer());
-			ResourceLoader resourceLoader = null; // getResourceLoader();
-			TemplateExecutor templateExecutor = null; // getTemplateExecutor();
-			component.setResourceLoader(resourceLoader);
-			component.setTemplateExecutor(templateExecutor);
-			if (mask) {
-				component.setMaskCharacter('*');
+		@Component
+		public class ComponentCommands {
+
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
 			}
-			StringInputContext context = component.run(StringInputContext.empty());
-			return "Got value " + context.getResultValue();
+
+			@Command(name = "component stringcustom", description = "String input", group = "Components")
+			public String stringInputCustom(@Option(defaultValue = "false") boolean mask) {
+				StringInput component = new StringInput(terminal, "Enter value", "myvalue",
+						new StringInputCustomRenderer());
+				component.setResourceLoader(resourceLoader);
+				component.setTemplateExecutor(templateExecutor);
+				if (mask) {
+					component.setMaskCharacter('*');
+				}
+				StringInputContext context = component.run(StringInputContext.empty());
+				return "Got value " + context.getMaskedResultValue();
+			}
+
 		}
 		// end::snippet2[]
 
@@ -100,20 +117,32 @@ public class UiComponentSnippets {
 	class Dump2 {
 
 		// tag::snippet3[]
+		@Component
 		public class ComponentCommands {
 
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
+
 			@Command(name = "component string", description = "String input", group = "Components")
-			public String stringInput(boolean mask) {
-				StringInput component = new StringInput(getTerminal(), "Enter value", "myvalue");
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+			public String stringInput(@Option(defaultValue = "false") boolean mask) {
+				StringInput component = new StringInput(terminal, "Enter value", "myvalue");
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 				if (mask) {
 					component.setMaskCharacter('*');
 				}
 				StringInputContext context = component.run(StringInputContext.empty());
-				return "Got value " + context.getResultValue();
+				return "Got value " + context.getMaskedResultValue();
 			}
 
 		}
@@ -124,13 +153,25 @@ public class UiComponentSnippets {
 	class Dump3 {
 
 		// tag::snippet4[]
+		@Component
 		public class ComponentCommands {
+
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
 
 			@Command(name = "component path input", description = "Path input", group = "Components")
 			public String pathInput() {
-				PathInput component = new PathInput(getTerminal(), "Enter value");
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+				PathInput component = new PathInput(terminal, "Enter value");
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 				PathInputContext context = component.run(PathInputContext.empty());
@@ -145,13 +186,25 @@ public class UiComponentSnippets {
 	class Dump4 {
 
 		// tag::snippet5[]
+		@Component
 		public class ComponentCommands {
 
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
+
 			@Command(name = "component confirmation", description = "Confirmation input", group = "Components")
-			public String confirmationInput(boolean no) {
-				ConfirmationInput component = new ConfirmationInput(getTerminal(), "Enter value", !no);
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+			public String confirmationInput(@Option(defaultValue = "false") boolean no) {
+				ConfirmationInput component = new ConfirmationInput(terminal, "Enter value", !no);
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 				ConfirmationInputContext context = component.run(ConfirmationInputContext.empty());
@@ -166,17 +219,29 @@ public class UiComponentSnippets {
 	class Dump5 {
 
 		// tag::snippet6[]
+		@Component
 		public class ComponentCommands {
+
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
 
 			@Command(name = "component single", description = "Single selector", group = "Components")
 			public String singleSelector() {
 				SelectorItem<String> i1 = SelectorItem.of("key1", "value1");
 				SelectorItem<String> i2 = SelectorItem.of("key2", "value2");
 				List<SelectorItem<String>> items = Arrays.asList(i1, i2);
-				SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-						items, "testSimple", null);
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+				SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(terminal, items,
+						"testSimple", null);
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 				SingleItemSelectorContext<String, SelectorItem<String>> context = component
@@ -193,7 +258,21 @@ public class UiComponentSnippets {
 	class Dump6 {
 
 		// tag::snippet7[]
+		@Component
 		public class ComponentCommands {
+
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
 
 			@Command(name = "component multi", description = "Multi selector", group = "Components")
 			public String multiSelector() {
@@ -201,10 +280,8 @@ public class UiComponentSnippets {
 				items.add(SelectorItem.of("key1", "value1"));
 				items.add(SelectorItem.of("key2", "value2", false, true));
 				items.add(SelectorItem.of("key3", "value3"));
-				MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(getTerminal(),
-						items, "testSimple", null);
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+				MultiItemSelector<String, SelectorItem<String>> component = new MultiItemSelector<>(terminal, items,
+						"testSimple", null);
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 				MultiItemSelectorContext<String, SelectorItem<String>> context = component
@@ -223,7 +300,21 @@ public class UiComponentSnippets {
 
 	class Dump7 {
 
+		@Component
 		public class ComponentCommands {
+
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
 
 			@Command(name = "component single", description = "Single selector", group = "Components")
 			public String singleSelector() {
@@ -231,12 +322,11 @@ public class UiComponentSnippets {
 				SelectorItem<String> i1 = SelectorItem.of("key1", "value1");
 				SelectorItem<String> i2 = SelectorItem.of("key2", "value2");
 				List<SelectorItem<String>> items = Arrays.asList(i1, i2);
-				SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-						items, "testSimple", null);
+				SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(terminal, items,
+						"testSimple", null);
 				component.setDefaultExpose(i2);
 				// end::snippet8[]
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 				SingleItemSelectorContext<String, SelectorItem<String>> context = component
@@ -251,11 +341,25 @@ public class UiComponentSnippets {
 
 	class Dump8 {
 
+		// tag::snippet9[]
+		@Component
 		public class ComponentCommands {
 
-			@Command(name = "component path input", description = "Path search", group = "Components")
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
+
+			@Command(name = "component path search", description = "Path search", group = "Components")
 			public String pathSearch() {
-				// tag::snippet9[]
 				PathSearchConfig config = new PathSearch.PathSearchConfig();
 				config.setMaxPathsShow(5);
 				config.setMaxPathsSearch(100);
@@ -263,40 +367,52 @@ public class UiComponentSnippets {
 				config.setSearchCaseSensitive(false);
 				config.setSearchNormalize(false);
 
-				PathSearch component = new PathSearch(getTerminal(), "Enter value", config);
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+				PathSearch component = new PathSearch(terminal, "Enter value", config);
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 
 				PathSearchContext context = component.run(PathSearchContext.empty());
 				return "Got value " + context.getResultValue();
-				// end::snippet9[]
 			}
 
 		}
+
+		// end::snippet9[]
 
 	}
 
 	class Dump9 {
 
+		// tag::snippet10[]
+		@Component
 		public class ComponentCommands {
+
+			private final Terminal terminal;
+
+			private final ResourceLoader resourceLoader;
+
+			private final TemplateExecutor templateExecutor;
+
+			public ComponentCommands(Terminal terminal, ResourceLoader resourceLoader,
+					TemplateExecutor templateExecutor) {
+				this.terminal = terminal;
+				this.resourceLoader = resourceLoader;
+				this.templateExecutor = templateExecutor;
+			}
 
 			@Command(name = "component number", description = "Number input", group = "Components")
 			public String numberInput() {
-				// tag::snippet10[]
-				NumberInput component = new NumberInput(getTerminal(), "Enter value", 99.9, Double.class);
-				ResourceLoader resourceLoader = null; // getResourceLoader();
-				TemplateExecutor templateExecutor = null; // getTemplateExecutor();
+				NumberInput component = new NumberInput(terminal, "Enter value", 99.9, Double.class);
 				component.setResourceLoader(resourceLoader);
 				component.setTemplateExecutor(templateExecutor);
 
 				NumberInputContext context = component.run(NumberInputContext.empty());
 				return "Got value " + context.getResultValue();
-				// end::snippet10[]
 			}
 
 		}
+
+		// end::snippet10[]
 
 	}
 

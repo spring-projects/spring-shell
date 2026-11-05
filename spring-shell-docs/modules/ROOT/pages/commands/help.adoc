@@ -1,15 +1,14 @@
 [[commands-helpoptions]]
 = Option Help
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../src/test/java/org/springframework/shell/docs]
 
-It's common in many CLI frameworks for every command having options _--help_ and _-h_
-to print out command help. _Spring Shell_ has a built-in `help` command.
+Many CLI frameworks provide _--help_ and _-h_ options to print command help. _Spring Shell_ has a built-in `help` command.
 
-Extensions of `AbstractCommand` will get help functionality (ie handling options
-_--help_ and _-h_), which if present in a given command will automatically
-short circuit command execution into an existing `help` command regardless
-what other command-line options are typed.
+Commands extending `AbstractCommand` have _--help_ and _-h_ options by default.
+After parsing succeeds, either option renders help instead of executing the command,
+unless the command declares its own option with that name.
+Parsing errors, such as a missing value for a non-boolean option, can still prevent help from being displayed.
 
 Both ways of asking for the help of a command, `<command> --help` (or `<command> -h`)
 and `help <command>`, render the same message. It reports the name and the description

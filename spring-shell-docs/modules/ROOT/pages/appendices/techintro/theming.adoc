@@ -3,7 +3,7 @@
 
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
-Styling in a theming is provided by a use of a _AttributedString_ from `JLine`.
+Theming uses JLine's `AttributedString` to apply styles.
 Unfortunately styling in `JLine` is mostly undocumented but we try to go through
 some of its features here.
 
@@ -14,20 +14,20 @@ define a default within latter spec if former for some reason is invalid.
 
 If spec contains a colon its former part indicates either foreground or background
 and possible values are `foreground`, `fg`, `f`, `background`, `bg`, `b`, `foreground-rgb`,
-`fg-rgb`, `f-rgb`, `background-rgb`, `bg-rgb` or `b-rgb`. Without rbg a color value
+`fg-rgb`, `f-rgb`, `background-rgb`, `bg-rgb` or `b-rgb`. Without RGB a color value
 is name from an allowable colors `black`, `red`, `green`, `yellow`, `blue`, `magenta`,
 `cyan` or `white`. Colors have their short formats `k`, `r`, `g`, `y`, `b`, `m`, `c` and `w`
 respectively. If color is prefixed with either `!` or `bright-`, bright mode is automatically
-applied. Prefixing with `~` will resolve from JLine internal bsd color table.
+applied. Prefixing with `~` will resolve from JLine internal color-name table.
 
 If rgb format is expected and prefixed with either `x` or `#` a normal
 hex format is used.
 
 [source, text]
 ----
-fg-red
-fg-r
-fg-rgb:red
+fg:red
+fg:r
+fg:~red
 fg-rgb:xff3333
 fg-rgb:#ff3333
 ----
@@ -42,8 +42,7 @@ bold
 bold,fg:red
 ----
 
-If spec is a number or numbers separated with semicolon, format is a plain part of an ansi
-ascii codes.
+A number or a list of numbers separated by semicolons is interpreted as ANSI SGR parameters.
 
 [source, text]
 ----

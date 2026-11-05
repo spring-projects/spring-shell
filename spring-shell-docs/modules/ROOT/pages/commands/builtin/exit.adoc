@@ -2,8 +2,9 @@
 = Exit
 :page-section-summary-toc: 1
 
-The `quit` command (also aliased as `exit`) requests the shell to quit, gracefully
-closing the Spring application context.
+The `quit` command (also aliased as `exit`) exits the interactive shell loop.
+To explicitly close the Spring application context after shell execution finishes,
+set `spring.shell.context.close=true`; see xref:customization/contextclose.adoc[].
 
 In a non-interactive shell (`spring.shell.interactive.enabled=false`), the `quit`
 command can be removed from the command registry (and therefore from the `help`

@@ -4,7 +4,7 @@
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 A single select component asks a user to choose one item from a list. It is similar to a simple
-dropbox implementation. The following listing shows an example:
+drop-down list. The following listing shows an example:
 
 [source, java, indent=0]
 ----
@@ -26,13 +26,13 @@ The context object is `SingleItemSelectorContext`. The following table describes
 |Key |Description
 
 |`value`
-|The returned value when the component exists.
+|The returned value when the component exits.
 
 |`rows`
-|The visible items, where rows contains maps of name and selected items.
+|The visible items, where rows contain maps of name and selected items.
 
 |`model`
-|The parent context variables (see xref:/components/ui/render.adoc#selectorcomponentcontext-template-variables[SelectorComponentContext Template Variables]).
+|The parent context variables (see xref:components/ui/render.adoc#selectorcomponentcontext-template-variables[SelectorComponentContext Template Variables]).
 |===
 
 You can pre-select an item by defining it to get exposed. This is

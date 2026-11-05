@@ -4,7 +4,7 @@ This is a sample project demonstrating the use of Spring Shell commands to read 
 
 ### Building the Project
 
-To build the project, navigate to the project's root directory and run the following command:
+To build the project, navigate to the Spring Shell repository root and run the following command:
 
 ```bash
 ./mvnw clean install
@@ -18,7 +18,7 @@ To run the application, use the following command:
 java -jar spring-shell-samples/spring-shell-sample-secure-input/target/secure-input.jar
 ```
 
-You should see a prompt where you can login with `auth login`. This command will ask you to enter a username and password securely.
+You should see a prompt where you can log in with `auth login`. This command will ask you to enter a username and password securely.
 
 The sample application uses an in-memory user store with a single user `foo` with the password `bar`. You can use these credentials to log in.
 

@@ -10,7 +10,11 @@ Here is an example of how to create a custom prompt in a Spring Boot application
 [source,java]
 ----
 @SpringBootApplication
-static class SpringShellApplication {
+public class SpringShellApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringShellApplication.class, args);
+	}
 
 	@Command
 	public void hi() {

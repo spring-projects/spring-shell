@@ -5,7 +5,8 @@ When writing commands, it is important to handle exceptions properly to ensure t
 Spring Shell allows you to manage exceptions effectively and map them to specific exit codes and user-friendly messages thanks to the `ExitStatusExceptionMapper` interface.
 
 The `ExitStatusExceptionMapper` interface provides a way to map exceptions thrown during command execution to specific exit codes and messages.
-By implementing this interface, you can define custom behavior for different types of exceptions, allowing you to provide meaningful feedback to users and control the exit status of your application.
+By implementing this interface, you can define custom behavior for different types of exceptions, allowing you to provide meaningful feedback to users and control the exit status of the command.
+The command status is distinct from the JVM process exit code; configuring this mapper alone does not configure the process exit code.
 
 == Implementing ExitStatusExceptionMapper
 
@@ -34,10 +35,15 @@ public Command sayHello() {
 			.name("hello")
 			.description("Say hello to a given name")
 			.group("Greetings")
+			.options(CommandOption.with().shortName('n').longName("name").type(String.class).build())
 			.help("A command that greets the user with 'Hello ${name}!'. Usage: hello [-n | --name]=<name>")
 			.exitStatusExceptionMapper(exception -> new ExitStatus(42, "42! The answer to life, the universe and everything!"))
 			.execute(context -> {
-				String name = context.getOptionByName("name").value();
+				CommandOption option = context.getOptionByLongName("name");
+				if (option == null) {
+					option = context.getOptionByShortName('n');
+				}
+				String name = option != null && option.value() != null ? option.value() : "World";
 				if (name.equals("42")) {
 					throw new RuntimeException("Error!");
 				}

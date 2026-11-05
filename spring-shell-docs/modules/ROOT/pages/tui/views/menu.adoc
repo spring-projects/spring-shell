@@ -44,9 +44,9 @@ Default _mouse bindings_ are:
 
 == Events
 
-Events are sent depending on a used list type.
+Events report changes to the selected menu item and requests to open it.
 
-.ListView Events
+.MenuView Events
 |===
 |Event |Description
 

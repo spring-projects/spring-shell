@@ -45,5 +45,5 @@ The context object is `StringInputContext`. The following table lists its contex
 |`true` if the input is required. Otherwise, false.
 
 |`model`
-|The parent context variables (see xref:/components/ui/render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
+|The parent context variables (see xref:components/ui/render.adoc#textcomponentcontext-template-variables[TextComponentContext Template Variables]).
 |===

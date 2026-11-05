@@ -4,7 +4,7 @@ This is a sample project demonstrating the use of Spring Shell to create a simpl
 
 ### Building the Project
 
-To build the project, navigate to the project's root directory and run the following command:
+To build the project, navigate to the Spring Shell repository root and run the following command:
 
 ```bash
 ./mvnw clean install

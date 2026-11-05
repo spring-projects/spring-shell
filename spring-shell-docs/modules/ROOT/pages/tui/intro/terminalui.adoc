@@ -25,13 +25,14 @@ include::{snippets}/TerminalUiSnippets.java[tag=configureview]
 
 == Running UI Loop
 Running `TerminalUI` execution loop is a blocking operation. You're going to need
-a way to exit from a loop, for example <<Exiting App>>.
+a way to exit from a loop, for example <<exiting-app,Exiting App>>.
 
 [source, java, indent=0]
 ----
 include::{snippets}/TerminalUiSnippets.java[tag=uirun]
 ----
 
+[[exiting-app]]
 == Exiting App
 
 If you want to exit from an app using normal _CTRL-Q_ key combination, then
@@ -52,5 +53,5 @@ on top of all other views and takes all input events.
 include::{snippets}/TerminalUiSnippets.java[tag=uimodal]
 ----
 
-NOTE: As views should not directly know anything about `TerminalUi` and
-interface `ViewService` exposes modal related functions.
+NOTE: Views should use the `ViewService` interface to access modal-view functions
+without depending directly on `TerminalUI`.

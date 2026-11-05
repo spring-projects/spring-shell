@@ -1,6 +1,6 @@
-### Sign-off commits according to the Developer Certificate of Origin
+= Sign off commits according to the Developer Certificate of Origin
 
-All commits must include a Signed-off-by trailer at the end of each commit message to indicate that the contributor agrees to the [Developer Certificate of Origin](https://developercertificate.org).
+All commits must include a Signed-off-by trailer at the end of each commit message to indicate that the contributor agrees to the https://developercertificate.org[Developer Certificate of Origin].
 
-For additional details, please refer to the blog post [Hello DCO, Goodbye CLA: Simplifying Contributions to Spring](https://spring.io/blog/2025/01/06/hello-dco-goodbye-cla-simplifying-contributions-to-spring).
+For additional details, please refer to the blog post https://spring.io/blog/2025/01/06/hello-dco-goodbye-cla-simplifying-contributions-to-spring[Hello DCO, Goodbye CLA: Simplifying Contributions to Spring].
 

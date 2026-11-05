@@ -1,9 +1,9 @@
 [[using-shell-execution]]
 = Execution
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../src/test/java/org/springframework/shell/docs]
 
-This section describes how to set up a Spring Shell to work in interactive mode.
+This section describes how to run Spring Shell in interactive or non-interactive mode.
 
 [[using-shell-execution-interactionmode]]
 == Interaction Mode
@@ -12,9 +12,9 @@ Version 2.1.x introduced built-in support to distinguish between interactive
 and non-interactive modes. This makes it easier to use the shell as a
 simple command-line tool without requiring customization.
 
-Currently, interactive mode is entered if any command line options are passed when starting
-or running a shell from a command line. This works especially well when a shell application
-is compiled with xref:building.adoc#native[Native Support].
+Interactive mode is enabled by default, including when command-line arguments are supplied.
+To execute a command from the process arguments, set `spring.shell.interactive.enabled=false`.
+This is useful for command-line tools, including applications compiled with xref:building.adoc#native[Native Support].
 
 Some commands may not have any useful meanings when they run in interactive mode
 or (conversely) in non-interactive mode. For example, a built-in `exit` command would
@@ -27,20 +27,22 @@ have no meaning in non-interactive mode, because it is used to exit interactive 
 per application context.
 
 Three `ShellRunner` implementations exist, named `SystemShellRunner`,
-`JLineShellRunner` and `NonInteractiveShellRunner`. By default, it is
-the interactive `SystemShellRunner` that is used.
+`JLineShellRunner`, and `NonInteractiveShellRunner`. With the Spring Shell starter,
+interactive mode uses `JLineShellRunner`. Without JLine on the classpath,
+it uses `SystemShellRunner`.
 
 To enable non-interactive mode, you can set the `spring.shell.interactive.enabled`
 property to `false`. This will switch the `ShellRunner` implementation to
 `NonInteractiveShellRunner`.
 
 NOTE: In a Spring Boot application, Spring Shell registers an `ApplicationRunner` bean named `springShellApplicationRunner`
-that runs the interactive shell runner. If you want to use a different `ShellRunner` implementation, you need to override the default `ApplicationRunner`.
+that invokes the configured `ShellRunner`. To customize the application startup logic,
+provide your own `ApplicationRunner` bean with that name.
 
 [[debug-mode]]
 == Debug Mode
 
 Spring Shell provides a debug mode that can be enabled by setting the
 `spring.shell.debug.enabled` property to `true`. When enabled, this mode
-provides additional debugging information for command execution by printing
+provides additional debugging information in interactive mode by printing
 stack traces of errors, which can be useful for troubleshooting and development purposes.

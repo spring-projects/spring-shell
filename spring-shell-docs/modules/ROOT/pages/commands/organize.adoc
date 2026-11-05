@@ -41,6 +41,7 @@ which means that all commands defined in that class will belong to the same grou
 
 [source,java]
 ----
+@Component
 @CommandGroup(name = "Authentication Commands", prefix = "auth")
 public class AuthenticationCommands {
 
@@ -69,7 +70,7 @@ NOTE: If a command provides a `group` attribute, it will take precedence over th
 [[global-command-prefix]]
 == Global Command Prefix
 
-While `@CommandGroup` lets you namespace commands within a single class, the `spring.shell.command.prefix` property lets you apply a prefix to every user-defined command in the application at once. This is useful when embedding a Spring Shell application inside a larger system where all commands need to share a consistent namespace.
+While `@CommandGroup` lets you namespace commands within a single class, the `spring.shell.command.prefix` property lets you apply a prefix to every user-defined `@Command` method in the application at once. This is useful when embedding a Spring Shell application inside a larger system where all commands need to share a consistent namespace.
 
 [source,yaml]
 ----
@@ -100,6 +101,6 @@ When set, the global prefix is prepended to the name of every user-defined `@Com
 | `my-group hello`
 |===
 
-Built-in commands (`help`, `clear`, `version`, and so on) are not affected by this property.
+Built-in commands (`help`, `clear`, `version`, and so on) and programmatically defined `Command` beans are not affected by this property.
 
 IMPORTANT: Do not choose a global prefix that matches the name of a built-in command (`help`, `clear`, `version`, `script`, `history`, `exit`/`quit`). Since every prefixed command name now starts with that word, invoking the built-in command with an argument becomes ambiguous. For example, if `spring.shell.command.prefix` is set to `help` and a command `hello` becomes `help hello`, then typing `help hello` invokes your `help hello` command directly instead of showing help for `hello` through the built-in `help` command.

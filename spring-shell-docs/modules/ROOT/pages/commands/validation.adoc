@@ -12,8 +12,9 @@ Consider the following command:
 @Command(name = "change-password", description = "Change password", group = "User Management",
 		help = "A command that changes the user password. Usage: change-password [-p | --password]=<password>")
 public String changePassword(
-		@Option(shortName = 'p', longName = "password") @Size(min = 8, max = 40) String password) {
-	return "Password successfully set to " + password;
+		@Option(shortName = 'p', longName = "password", required = true) @Size(min = 8, max = 40) String password) {
+	// Update the password here. Do not print it to the terminal.
+	return "Password successfully set";
 }
 ----
 

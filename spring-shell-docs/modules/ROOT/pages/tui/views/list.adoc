@@ -21,7 +21,7 @@ include::{snippets}/ListViewSnippets.java[tag=snippet1]
 
 Default _item style_ is nocheck but can be changed.
 
-Supports `NOCHECK``, `CHECK`` and `RADIO``
+Supports `NOCHECK`, `CHECK`, and `RADIO`.
 
 [source, java, indent=0]
 ----

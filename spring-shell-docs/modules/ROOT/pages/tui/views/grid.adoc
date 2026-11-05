@@ -3,15 +3,15 @@
 
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
-_GridView_ is a special type of view and its purpose is to layout other views
-using a grid layout algorithms. _GridView_ inherits from xref:tui/views/box.adoc[].
+_GridView_ is a special type of view and its purpose is to lay out other views
+using a grid layout algorithm. _GridView_ inherits from xref:tui/views/box.adoc[].
 
 [source, java, indent=0]
 ----
 include::{snippets}/GridViewSnippets.java[tag=snippet1]
 ----
 
-Will result layout of:
+This produces the following layout:
 
 [source, text]
 ----

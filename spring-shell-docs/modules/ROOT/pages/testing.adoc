@@ -11,20 +11,22 @@ Spring Shell offers the following test assertion APIs to validate command execut
 - `ShellAssertions`: This class provides static methods to assert the results of shell command executions.
 - `ShellTestClient`: This class allows you to simulate user input and execute shell commands programmatically.
 
-Here is an example of how to use these APIs in a test:
+Add `spring-shell-starter-test` as a test dependency. The following test uses
+the `ExampleShellApplication` defined in the next section:
 
 [source,java]
 ----
-@ExtendWith(SpringExtension.class)
+@ShellTest
+@ContextConfiguration(classes = ExampleShellApplication.class)
 class ShellTestClientTests {
 
 	@Test
 	void testCommandExecution(@Autowired ShellTestClient shellTestClient) throws Exception {
 		// when
-		ShellScreen shellScreen = shellTestClient.sendCommand("test");
+		ShellScreen shellScreen = shellTestClient.sendCommand("hi");
 
 		// then
-		ShellAssertions.assertThat(shellScreen).containsText("Test command executed");
+		ShellAssertions.assertThat(shellScreen).containsText("hello");
 	}
 }
 ----

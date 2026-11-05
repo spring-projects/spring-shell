@@ -22,13 +22,13 @@ _DialogView_ inherits from xref:tui/views/box.adoc[].
 Does not have any default bindings.
 
 == Events
-Events are sent depending on a used list type.
+An event is sent when the dialog is requested to close.
 
 .DialogView Events
 |===
 |Event |Description
 
 |DialogViewCloseEvent
-|Dialog requested to get closed.
+|The dialog is requested to close.
 
 |===

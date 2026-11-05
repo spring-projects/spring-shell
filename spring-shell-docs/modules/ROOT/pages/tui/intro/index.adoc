@@ -11,4 +11,4 @@ include::{snippets}/TerminalUiSnippets.java[tag=introsample]
 ----
 
 There is not much to see here other than `TerminalUI` is a class handling
-all logic around views and uses `View` as it's root view.
+all logic around views and uses `View` as its root view.

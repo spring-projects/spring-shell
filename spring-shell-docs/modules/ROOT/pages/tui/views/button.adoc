@@ -46,8 +46,8 @@ Default _mouse bindings_ are:
 |===
 
 == Events
-[[tui-views-list-events]]
-.ListView Events
+[[tui-views-button-events]]
+.ButtonView Events
 |===
 |Event |Description
 

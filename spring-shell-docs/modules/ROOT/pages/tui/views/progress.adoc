@@ -4,7 +4,7 @@
 
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
-_ProgressView_ is a base implementation providing functionality to draw a progress information.
+_ProgressView_ is a base implementation providing functionality to draw progress information.
 _ProgressView_ inherits from xref:tui/views/box.adoc[].
 
 _ProgressView_ draws its content using concepts described below:
@@ -24,7 +24,7 @@ _ProgressView_ draws its content using concepts described below:
 ** Other methods to help with item drawing
 * _ProgressViewItem_: is a representation of a cell used in _ProgressView_
 
-There are few build-in items namely `text`, `spinner` and `percent`.
+The built-in items are `text`, `spinner` and `percent`.
 
 Default _ProgressView_ gives you `text`, `spinner` and `percent`.
 

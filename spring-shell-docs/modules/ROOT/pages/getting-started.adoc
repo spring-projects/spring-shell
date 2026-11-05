@@ -42,7 +42,7 @@ public class SpringShellApplication {
 }
 ----
 
-This class defines a single command named `hello`, that takes an optional argument, `name`, and prints a greeting message to the standard output.
+This class defines a single command named `hello`, that takes an optional named option, `--name`, and prints a greeting message to the standard output.
 
 The main method bootstraps a Spring application context and runs the shell. To run the application, execute the `SpringShellApplication` class with the following command:
 
@@ -56,10 +56,10 @@ This will start the shell, and you should see a prompt and be able to type comma
 [source, text]
 ----
 $>help
-Available commands:
+AVAILABLE COMMANDS
 Built-In Commands
 	clear: Clear the terminal screen
-	help: Display help about available commands
+	help: Show help about available commands
 	version: Show version info
 Greetings
 	hello: Say hello to a given name

@@ -54,7 +54,7 @@ Default _key bindings_ are:
 
 == Events
 
-Events are sent depending on a used list type.
+An event is sent when the input text changes.
 
 .InputView Events
 |===

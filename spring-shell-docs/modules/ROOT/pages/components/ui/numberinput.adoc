@@ -3,14 +3,14 @@
 
 ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
-The number input component asks a user for simple number input. It can be configured to use any implementation of Number.class. The following listing shows an example:
+The number input component asks a user for simple number input. It supports `Byte`, `Short`, `Integer`, `Long`, `Float`, `Double`, `BigInteger`, and `BigDecimal`. The following listing shows an example:
 
 [source, java, indent=0]
 ----
 include::{snippets}/UiComponentSnippets.java[tag=snippet10]
 ----
 
-The following image shows typical output from a number input component:
+The following screencast shows typical output from a number input component:
 
 [asciinema,rows=6]
 ----

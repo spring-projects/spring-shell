@@ -1,12 +1,16 @@
 [[using-shell-components-ui]]
 = Flow Components
 
-ifndef::snippets[:snippets: ../../test/java/org/springframework/shell/docs]
+ifndef::snippets[:snippets: ../../../../../src/test/java/org/springframework/shell/docs]
 
 Starting from version 2.1.x, a new component model provides an
 easier way to create higher-level user interaction for the usual use cases,
 such as asking for input in various forms. These usually are just plain text
 input or choosing something from a list.
+
+The examples use Spring Boot with the JLine starter. Their command classes are
+Spring components and receive `Terminal`, `ResourceLoader`, and `TemplateExecutor`
+through constructor injection.
 
 Templates for built-in components are in the
 `org/springframework/shell/component` classpath.

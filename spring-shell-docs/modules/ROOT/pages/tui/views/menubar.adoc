@@ -16,7 +16,7 @@ _MenuBarView_ inherits from xref:tui/views/box.adoc[].
 
 _MenuBarView_ is constructed with instances of _MenuBarItem_. _MenuBarItem_ itself
 takes instances of _MenuItem_. _MenuItem_ can define its style and action.
-_MenuBarItem_ can also define a hot key which is used to active particular menu.
+_MenuBarItem_ can also define a hot key which is used to activate a particular menu.
 
 [source, java, indent=0]
 ----
