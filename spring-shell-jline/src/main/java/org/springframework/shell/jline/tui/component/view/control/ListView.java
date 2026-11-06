@@ -25,8 +25,10 @@ import java.util.Set;
 import java.util.function.BiFunction;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.control.cell.ListCell;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.jline.tui.component.view.event.MouseEvent;
 import org.springframework.shell.jline.tui.component.view.screen.Screen;
@@ -243,7 +245,10 @@ public class ListView<T> extends BoxView {
 			}
 		}
 		if (active != start + pos) {
-			dispatch(ShellMessageBuilder.ofView(this, ListViewSelectedItemChangedEvent.of(this, selectedItem())));
+			ListViewSelectedItemChangedEvent<?> args = ListViewSelectedItemChangedEvent.of(this, selectedItem());
+			TerminalEvent<ListViewSelectedItemChangedEvent<?>> terminalEvent = new TerminalEvent<>(args,
+					EventLoop.Type.VIEW, this, null);
+			dispatch(terminalEvent);
 		}
 	}
 
@@ -282,7 +287,9 @@ public class ListView<T> extends BoxView {
 
 	private void enter() {
 		if (itemStyle == ItemStyle.NOCHECK) {
-			dispatch(ShellMessageBuilder.ofView(this, ListViewOpenSelectedItemEvent.of(this, selectedItem())));
+			ListViewOpenSelectedItemEvent<?> args = ListViewOpenSelectedItemEvent.of(this, selectedItem());
+			TerminalEvent<?> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW, this, null);
+			dispatch(terminalEvent);
 			return;
 		}
 	}
@@ -297,7 +304,11 @@ public class ListView<T> extends BoxView {
 		if (active >= 0 && active < items.size()) {
 			pos = index;
 			if (itemStyle == ItemStyle.NOCHECK) {
-				dispatch(ShellMessageBuilder.ofView(this, ListViewSelectedItemChangedEvent.of(this, selectedItem())));
+				ListViewSelectedItemChangedEvent<@Nullable T> args = ListViewSelectedItemChangedEvent.of(this,
+						selectedItem());
+				TerminalEvent<ListViewSelectedItemChangedEvent<?>> terminalEvent = new TerminalEvent<>(args,
+						EventLoop.Type.VIEW, this, null);
+				dispatch(terminalEvent);
 				return;
 			}
 		}
