@@ -17,12 +17,18 @@ package org.springframework.shell.jline;
 
 import java.util.stream.Stream;
 
+import org.jline.reader.CompletingParsedLine;
+import org.jline.reader.EOFError;
 import org.jline.reader.ParsedLine;
+import org.jline.reader.Parser;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ExtendedDefaultParserTests {
 
@@ -74,6 +80,47 @@ class ExtendedDefaultParserTests {
 		assertThat(parse.words()).as("words").hasSize(words);
 		assertThat(parse.wordIndex()).as("wordIndex").isEqualTo(wordIndex);
 		assertThat(parse.wordCursor()).as("wordCursor").isEqualTo(wordCursor);
+	}
+
+	@Test
+	void trailingBackslashDoesNotThrowOnCompleteWhenEofOnEscapedNewLine() {
+		// gh-1169 / gh-240: Windows path completion often ends with '\'
+		ExtendedDefaultParser parser = new ExtendedDefaultParser();
+		parser.setEofOnEscapedNewLine(true);
+		String line = "pselect --path target\\";
+		assertThatCode(() -> parser.parse(line, line.length(), Parser.ParseContext.COMPLETE))
+			.doesNotThrowAnyException();
+	}
+
+	@Test
+	void trailingBackslashStillThrowsEofWhenAcceptingLine() {
+		ExtendedDefaultParser parser = new ExtendedDefaultParser();
+		parser.setEofOnEscapedNewLine(true);
+		String line = "pselect --path target\\";
+		assertThatThrownBy(() -> parser.parse(line, line.length(), Parser.ParseContext.ACCEPT_LINE))
+			.isInstanceOf(EOFError.class)
+			.hasMessageContaining("Escaped new line");
+	}
+
+	@Test
+	void windowsStylePathsParseWithEscapesDisabled() {
+		// When escape chars are disabled (Windows configuration), backslashes are kept
+		// in words so multi-level path completion can continue.
+		ExtendedDefaultParser parser = new ExtendedDefaultParser();
+		parser.setEofOnEscapedNewLine(true);
+		parser.setEscapeChars(null);
+		String line = "pselect --path target\\subdir\\";
+		ParsedLine parsed = parser.parse(line, line.length(), Parser.ParseContext.COMPLETE);
+		assertThat(parsed.words()).containsExactly("pselect", "--path", "target\\subdir\\");
+		assertThat(parsed.word()).isEqualTo("target\\subdir\\");
+	}
+
+	@Test
+	void parseResultImplementsCompletingParsedLine() {
+		ParsedLine parsed = springParser.parse("one two", 3, Parser.ParseContext.COMPLETE);
+		assertThat(parsed).isInstanceOf(CompletingParsedLine.class);
+		CompletingParsedLine completing = (CompletingParsedLine) parsed;
+		assertThat(completing.escape("a b", true).toString()).isEqualTo("a\\ b");
 	}
 
 }
