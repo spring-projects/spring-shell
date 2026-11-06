@@ -136,6 +136,11 @@ public class PathSearch extends AbstractTextComponent<Path, PathSearchContext> {
 	}
 
 	@Override
+	protected boolean isInputReaderFallbackSupported() {
+		return false;
+	}
+
+	@Override
 	protected boolean read(BindingReader bindingReader, KeyMap<String> keyMap, PathSearchContext context) {
 		String operation = bindingReader.readBinding(keyMap);
 		log.debug("Binding read result " + operation);
