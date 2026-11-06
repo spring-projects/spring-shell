@@ -187,6 +187,7 @@ public abstract class AbstractCommand implements Command {
 				String errorMessage = String.format("\t--%s: %s", extractPropertyName(propertyPath), violationMessage);
 				outputWriter.println(errorMessage);
 			});
+			outputWriter.flush();
 			return ExitStatus.USAGE_ERROR;
 		}
 		catch (Exception e) {
