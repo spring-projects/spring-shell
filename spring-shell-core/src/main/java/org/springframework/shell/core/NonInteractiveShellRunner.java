@@ -102,6 +102,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		}
 		catch (IOException e) {
 			log.error("Unable to locate script file", e);
+			throw new CommandExecutionException("Unable to locate script file " + script, e);
 		}
 	}
 
@@ -113,7 +114,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			}
 			catch (Exception e) {
 				log.error("Unable to read command", e);
-				break;
+				throw new CommandExecutionException("Unable to read command from script", e);
 			}
 			if (input == null) {
 				// break on end of file
@@ -130,7 +131,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			catch (Exception exception) {
 				log.error("Command " + input + " parsed with error: " + exception.getMessage()
 						+ ". Skipping next commands in the script");
-				break;
+				throw new CommandExecutionException("Unable to parse command " + input + ": " + exception.getMessage()
+						+ ". Skipping next commands in the script", ExitStatus.USAGE_ERROR.code());
 			}
 			CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
 					this.inputReader);
@@ -151,7 +153,9 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		}
 		catch (Exception exception) {
 			log.error("Command " + primaryCommand + " parsed with error: " + exception.getMessage());
-			return;
+			throw new CommandExecutionException(
+					"Unable to parse command " + primaryCommand + ": " + exception.getMessage(),
+					ExitStatus.USAGE_ERROR.code());
 		}
 		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
 				this.inputReader);
