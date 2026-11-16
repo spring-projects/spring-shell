@@ -38,6 +38,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Andrey Litvitski
  */
 public class StringInput extends AbstractTextComponent<String, StringInputContext> {
 
@@ -130,9 +131,7 @@ public class StringInput extends AbstractTextComponent<String, StringInputContex
 				if (StringUtils.hasLength(input)) {
 					input = input.length() > 1 ? input.substring(0, input.length() - 1) : null;
 				}
-				if (input != null) {
-					context.setInput(input);
-				}
+				context.setInput(input);
 				break;
 			case OPERATION_EXIT:
 				if (StringUtils.hasText(context.getInput())) {
