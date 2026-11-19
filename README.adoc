@@ -1,7 +1,12 @@
 = Spring Shell image:https://github.com/spring-projects/spring-shell/actions/workflows/ci.yml/badge.svg["CI", link="https://github.com/spring-projects/spring-shell/actions/workflows/ci.yml"]
 
+== Project Status: Maintenance Mode
+
+As of November 19, 2026, Spring Shell is in maintenance mode for the 4.x generation. We will continue to maintain it with bug fixes, security updates and dependency upgrades until December 2027. After that, the project will only be commercially supported by VMware Tanzu for customers with an active support subscription. Please refer to the https://spring.io/projects/spring-shell#support[project's support page] for more information about support periods and maintenance.
+
 == Latest news
 
+* November 19, 2026: https://spring.io/blog/2026/11/19/spring-shell-4-0-4-available-now[Spring Shell 4.0.4 available now]
 * June 11, 2026: https://spring.io/blog/2026/06/11/spring-shell-4-0-3-and-3-4-3-are-out[Spring Shell 4.0.3 and 3.4.3 are out!]
 * April 24, 2026: https://spring.io/blog/2026/04/24/spring-shell-4-0-2-is-out[Spring Shell 4.0.2 is out!]
 * January 31, 2026: https://spring.io/blog/2026/01/31/spring-shell-4-0-1-is-out[Spring Shell 4.0.1 is out!]
