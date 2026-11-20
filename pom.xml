@@ -14,6 +14,9 @@
 				<artifactId>antora-maven-plugin</artifactId>
 				<version>1.0.0-alpha.5</version>
 				<extensions>true</extensions>
+				<configuration>
+					<nodeVersion>v24</nodeVersion>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>io.spring.maven.antora</groupId>
