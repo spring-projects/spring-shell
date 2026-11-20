@@ -37,6 +37,7 @@ import org.springframework.util.ObjectUtils;
  * file is specified by prefixing the file name with the special character {@literal @}.
  *
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  * @since 4.0.0
  */
 public class NonInteractiveShellRunner implements ShellRunner {
@@ -135,6 +136,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 			CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
 					this.inputReader);
 			ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
+			this.outputWriter.flush();
 			if (ExitStatus.OK.code() != exitStatus.code()) { // business error
 				log.error("Command " + parsedInput.commandName() + " returned an error: " + exitStatus.description()
 						+ ". Skipping next commands in the script");
@@ -156,6 +158,7 @@ public class NonInteractiveShellRunner implements ShellRunner {
 		CommandContext commandContext = new CommandContext(parsedInput, this.commandRegistry, this.outputWriter,
 				this.inputReader);
 		ExitStatus exitStatus = this.commandExecutor.execute(commandContext);
+		this.outputWriter.flush();
 		if (ExitStatus.OK.code() != exitStatus.code()) {
 			log.error("Command " + parsedInput.commandName() + " returned an error: " + exitStatus.description());
 			throw new CommandExecutionException(

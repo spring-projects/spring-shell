@@ -17,17 +17,22 @@ package org.springframework.shell.core.command.adapter;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.constraints.Min;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.shell.core.InputReader;
 import org.springframework.shell.core.command.CommandArgument;
 import org.springframework.shell.core.command.CommandContext;
 import org.springframework.shell.core.command.CommandOption;
+import org.springframework.shell.core.command.CommandRegistry;
 import org.springframework.shell.core.command.ExitStatus;
+import org.springframework.shell.core.command.ParsedInput;
 import org.springframework.shell.core.command.annotation.Arguments;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.shell.core.command.annotation.Option;
 
+import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -37,6 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Andrey Litvitski
  * @author Mahmoud Ben Hassine
+ * @author David Pilar
  */
 class MethodInvokerCommandAdapterTests {
 
@@ -127,6 +133,44 @@ class MethodInvokerCommandAdapterTests {
 		assertThat(target.base).isEqualTo(10f);
 		assertThat(target.numbers).containsExactly(1f, 2f);
 		assertThat(target.moreNumbers).containsExactly(3f, 4f, 5f);
+	}
+
+	@Test
+	void constraintViolationsAreFlushedToOutput() throws Exception {
+		// given
+		ValidatedCommand target = new ValidatedCommand();
+		Method method = ValidatedCommand.class.getDeclaredMethod("plan", int.class);
+		DefaultConversionService conversionService = new DefaultConversionService();
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		ParsedInput parsedInput = ParsedInput.builder()
+			.commandName("plan")
+			.addOption(CommandOption.with().longName("count").value("0").build())
+			.build();
+		StringWriter out = new StringWriter();
+		PrintWriter outputWriter = new PrintWriter(new BufferedWriter(out));
+		CommandContext ctx = new CommandContext(parsedInput, Mockito.mock(CommandRegistry.class), outputWriter,
+				Mockito.mock(InputReader.class));
+		MethodInvokerCommandAdapter adapter = new MethodInvokerCommandAdapter("plan", "desc", "group", "help", false,
+				method, target, conversionService, validator);
+
+		// when
+		ExitStatus status = adapter.execute(ctx);
+
+		// then
+		assertThat(status).isEqualTo(ExitStatus.USAGE_ERROR);
+		assertThat(out.toString()).contains("The following constraints were not met:")
+			.contains("--count: count must be at least 1");
+		assertThat(target.invoked).isFalse();
+	}
+
+	static class ValidatedCommand {
+
+		boolean invoked;
+
+		public void plan(@Option(longName = "count") @Min(value = 1, message = "count must be at least 1") int count) {
+			this.invoked = true;
+		}
+
 	}
 
 }
