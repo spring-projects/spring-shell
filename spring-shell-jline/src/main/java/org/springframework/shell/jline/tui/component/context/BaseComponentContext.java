@@ -28,6 +28,7 @@ import java.util.stream.Stream;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author Sharang Gupta
  */
 @SuppressWarnings("unchecked")
 public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedHashMap<Object, Object>
@@ -42,6 +43,15 @@ public class BaseComponentContext<C extends ComponentContext<C>> extends LinkedH
 			return o;
 		}
 		throw new NoSuchElementException("Context does not contain key: " + key);
+	}
+
+	/**
+	 * Mirrors {@link #get(Object)}, which treats a {@code null} value as a missing key: a
+	 * key that is reported as contained is always retrievable.
+	 */
+	@Override
+	public boolean containsKey(Object key) {
+		return super.get(key) != null;
 	}
 
 	@Override

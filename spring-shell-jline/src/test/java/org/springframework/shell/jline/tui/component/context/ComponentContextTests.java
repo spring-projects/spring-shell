@@ -16,6 +16,7 @@
 package org.springframework.shell.jline.tui.component.context;
 
 import java.util.AbstractMap;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +43,24 @@ class ComponentContextTests {
 
 		assertThat(context.get("foo", String.class)).isEqualTo("bar");
 		assertThatThrownBy(() -> context.get("foo", Integer.class)).isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@Test
+	void containsKeyIsTrueWhenValueIsStored() {
+		ComponentContext<?> context = ComponentContext.empty();
+		context.put("foo", "bar");
+
+		assertThat(context.containsKey("foo")).isTrue();
+		assertThat(context.<String>get("foo")).isEqualTo("bar");
+	}
+
+	@Test
+	void containsKeyIsFalseWhenStoredValueIsNull() {
+		ComponentContext<?> context = ComponentContext.empty();
+		context.put("id", null);
+
+		assertThat(context.containsKey("id")).isFalse();
+		assertThatThrownBy(() -> context.get("id")).isInstanceOf(NoSuchElementException.class);
 	}
 
 }
