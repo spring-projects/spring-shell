@@ -38,6 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.shell.core.InputReader;
 import org.springframework.shell.jline.tui.component.ConfirmationInput;
 import org.springframework.shell.jline.tui.component.MultiItemSelector;
 import org.springframework.shell.jline.tui.component.MultiItemSelector.MultiItemSelectorContext;
@@ -64,6 +65,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author David Pilar
  */
 public interface ComponentFlow {
 
@@ -163,6 +165,16 @@ public interface ComponentFlow {
 		Builder templateExecutor(@Nullable TemplateExecutor templateExecutor);
 
 		/**
+		 * Sets an {@link InputReader} used as a fallback source of input for single value
+		 * components when a terminal has no tty, for example in tests. Key driven
+		 * components like item selectors are not able to consume it.
+		 * @param inputReader the input reader
+		 * @return a builder
+		 * @since 4.0.4
+		 */
+		Builder inputReader(@Nullable InputReader inputReader);
+
+		/**
 		 * Clones existing builder.
 		 * @return a builder
 		 */
@@ -206,13 +218,15 @@ public interface ComponentFlow {
 
 		private @Nullable TemplateExecutor templateExecutor;
 
+		private @Nullable InputReader inputReader;
+
 		BaseBuilder() {
 		}
 
 		@Override
 		public ComponentFlow build() {
-			return new DefaultComponentFlow(terminal, resourceLoader, templateExecutor, stringInputs, numberInputs,
-					pathInputs, confirmationInputs, singleItemSelectors, multiItemSelectors);
+			return new DefaultComponentFlow(terminal, resourceLoader, templateExecutor, inputReader, stringInputs,
+					numberInputs, pathInputs, confirmationInputs, singleItemSelectors, multiItemSelectors);
 		}
 
 		@Override
@@ -260,6 +274,12 @@ public interface ComponentFlow {
 		@Override
 		public Builder templateExecutor(@Nullable TemplateExecutor templateExecutor) {
 			this.templateExecutor = templateExecutor;
+			return this;
+		}
+
+		@Override
+		public Builder inputReader(@Nullable InputReader inputReader) {
+			this.inputReader = inputReader;
 			return this;
 		}
 
@@ -329,6 +349,10 @@ public interface ComponentFlow {
 			return templateExecutor;
 		}
 
+		@Nullable InputReader getInputReader() {
+			return inputReader;
+		}
+
 		private void checkUniqueId(String id) {
 			if (uniqueIds.contains(id)) {
 				throw new IllegalArgumentException(String.format("Component with id %s is already registered", id));
@@ -348,6 +372,7 @@ public interface ComponentFlow {
 			terminal(other.getTerminal());
 			resourceLoader(other.getResourceLoader());
 			templateExecutor(other.getTemplateExecutor());
+			inputReader(other.getInputReader());
 		}
 
 	}
@@ -388,15 +413,18 @@ public interface ComponentFlow {
 
 		private final @Nullable TemplateExecutor templateExecutor;
 
+		private final @Nullable InputReader inputReader;
+
 		DefaultComponentFlow(@Nullable Terminal terminal, @Nullable ResourceLoader resourceLoader,
-				@Nullable TemplateExecutor templateExecutor, List<BaseStringInput> stringInputs,
-				List<BaseNumberInput> numberInputs, List<BasePathInput> pathInputs,
+				@Nullable TemplateExecutor templateExecutor, @Nullable InputReader inputReader,
+				List<BaseStringInput> stringInputs, List<BaseNumberInput> numberInputs, List<BasePathInput> pathInputs,
 				List<BaseConfirmationInput> confirmationInputs, List<BaseSingleItemSelector> singleInputs,
 				List<BaseMultiItemSelector> multiInputs) {
 			Assert.state(terminal != null, "'terminal' must not be null");
 			this.terminal = terminal;
 			this.resourceLoader = resourceLoader;
 			this.templateExecutor = templateExecutor;
+			this.inputReader = inputReader;
 			this.stringInputs = stringInputs;
 			this.numberInputs = numberInputs;
 			this.pathInputs = pathInputs;
@@ -510,6 +538,7 @@ public interface ComponentFlow {
 					if (templateExecutor != null) {
 						selector.setTemplateExecutor(templateExecutor);
 					}
+					selector.setInputReader(inputReader);
 					selector.setMaskCharacter(input.getMaskCharacter());
 					if (StringUtils.hasText(input.getTemplateLocation())) {
 						selector.setTemplateLocation(input.getTemplateLocation());
@@ -562,6 +591,7 @@ public interface ComponentFlow {
 					if (templateExecutor != null) {
 						selector.setTemplateExecutor(templateExecutor);
 					}
+					selector.setInputReader(inputReader);
 					selector.setNumberClass(input.getNumberClass());
 					if (StringUtils.hasText(input.getTemplateLocation())) {
 						selector.setTemplateLocation(input.getTemplateLocation());
@@ -613,6 +643,7 @@ public interface ComponentFlow {
 					if (templateExecutor != null) {
 						selector.setTemplateExecutor(templateExecutor);
 					}
+					selector.setInputReader(inputReader);
 					if (StringUtils.hasText(input.getTemplateLocation())) {
 						selector.setTemplateLocation(input.getTemplateLocation());
 					}
@@ -657,6 +688,7 @@ public interface ComponentFlow {
 					if (templateExecutor != null) {
 						selector.setTemplateExecutor(templateExecutor);
 					}
+					selector.setInputReader(inputReader);
 					if (StringUtils.hasText(input.getTemplateLocation())) {
 						selector.setTemplateLocation(input.getTemplateLocation());
 					}

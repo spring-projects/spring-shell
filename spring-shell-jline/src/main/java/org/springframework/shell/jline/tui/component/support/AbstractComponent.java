@@ -55,6 +55,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  * @author Piotr Olaszewski
+ * @author David Pilar
  */
 public abstract class AbstractComponent<T extends ComponentContext<T>> implements ResourceLoaderAware {
 
@@ -304,6 +305,22 @@ public abstract class AbstractComponent<T extends ComponentContext<T>> implement
 			terminal.puts(Capability.keypad_local);
 			terminal.puts(Capability.cursor_normal);
 			display.update(Collections.emptyList(), 0);
+		}
+	}
+
+	/**
+	 * Enter into a read loop which does not render anything and reads key bindings from a
+	 * given {@link BindingReader} instead of a terminal. Loop exits when a component
+	 * signals exit or when the reader runs out of input.
+	 * @param context the context
+	 * @param bindingReader the binding reader to read from
+	 */
+	protected void headlessLoop(ComponentContext<?> context, BindingReader bindingReader) {
+		while (true) {
+			boolean exit = read(bindingReader, keyMap, getThisContext(context));
+			if (exit) {
+				break;
+			}
 		}
 	}
 
