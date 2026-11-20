@@ -196,6 +196,29 @@ class StringInputTests extends AbstractShellTests {
 	}
 
 	@Test
+	void testBackspaceDeletesLastCharacter() {
+		ComponentContext<?> empty = ComponentContext.empty();
+		StringInput component1 = new StringInput(getTerminal());
+		component1.setResourceLoader(new DefaultResourceLoader());
+		component1.setTemplateExecutor(getTemplateExecutor());
+
+		service.execute(() -> {
+			StringInputContext run1Context = component1.run(empty);
+			result1.set(run1Context);
+		});
+
+		TestBuffer testBuffer = new TestBuffer().append("ab").backspace().backspace().cr();
+		write(testBuffer.getBytes());
+
+		await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+			StringInputContext run1Context = result1.get();
+
+			assertThat(run1Context).isNotNull();
+			assertThat(run1Context.getResultValue()).isNull();
+		});
+	}
+
+	@Test
 	void testResultUserInputUnicode() {
 		ComponentContext<?> empty = ComponentContext.empty();
 		StringInput component1 = new StringInput(getTerminal(), "component1", "component1ResultValue");
