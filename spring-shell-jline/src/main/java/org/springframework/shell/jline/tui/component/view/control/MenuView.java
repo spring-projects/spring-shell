@@ -22,19 +22,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jspecify.annotations.Nullable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
+import org.springframework.shell.jline.tui.component.TerminalEvent;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.KeyEvent.Key;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
 import org.springframework.shell.jline.tui.component.view.event.MouseEvent;
 import org.springframework.shell.jline.tui.component.view.screen.Screen;
 import org.springframework.shell.jline.tui.component.view.screen.Screen.Writer;
+import org.springframework.shell.jline.tui.component.view.screen.ScreenItem;
 import org.springframework.shell.jline.tui.geom.Dimension;
 import org.springframework.shell.jline.tui.geom.Rectangle;
 import org.springframework.shell.jline.tui.style.StyleSettings;
-import org.springframework.shell.jline.tui.component.view.screen.ScreenItem;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -249,7 +250,10 @@ public class MenuView extends BoxView {
 				return;
 			}
 			toggle(item);
-			dispatch(ShellMessageBuilder.ofView(this, MenuViewOpenSelectedItemEvent.of(this, item)));
+			MenuViewOpenSelectedItemEvent args = MenuViewOpenSelectedItemEvent.of(this, item);
+			TerminalEvent<MenuViewOpenSelectedItemEvent> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW,
+					this, null);
+			dispatch(terminalEvent);
 			if (item.getAction() != null) {
 				dispatchRunnable(item.getAction());
 			}
@@ -278,7 +282,10 @@ public class MenuView extends BoxView {
 			if (activeItemIndex != index) {
 				activeItemIndex = index;
 				MenuItem item = items.get(index);
-				dispatch(ShellMessageBuilder.ofView(this, MenuViewSelectedItemChangedEvent.of(this, item)));
+				MenuViewSelectedItemChangedEvent args = MenuViewSelectedItemChangedEvent.of(this, item);
+				TerminalEvent<MenuViewSelectedItemChangedEvent> terminalEvent = new TerminalEvent<>(args,
+						EventLoop.Type.VIEW, this, null);
+				dispatch(terminalEvent);
 			}
 		}
 	}

@@ -19,21 +19,18 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-import org.jspecify.annotations.Nullable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
 import reactor.core.publisher.Flux;
 
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
-import org.springframework.shell.jline.tui.component.message.ShellMessageHeaderAccessor;
-import org.springframework.shell.jline.tui.component.message.StaticShellMessageHeaderAccessor;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.control.cell.TextCell;
 import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.screen.Screen;
@@ -248,7 +245,10 @@ public class ProgressView extends BoxView {
 		startTime = System.currentTimeMillis();
 		ProgressState state = getState();
 		scheduleTicks();
-		dispatch(ShellMessageBuilder.ofView(this, ProgressViewStartEvent.of(this, state)));
+		ProgressViewStartEvent args = ProgressViewStartEvent.of(this, state);
+		TerminalEvent<ProgressViewStartEvent> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW, this,
+				null);
+		dispatch(terminalEvent);
 	}
 
 	private Disposable.@Nullable Composite disposables;
@@ -265,22 +265,13 @@ public class ProgressView extends BoxView {
 		if (eventLoop == null) {
 			return;
 		}
-		Flux<Message<?>> ticks = Flux.interval(Duration.ofMillis(50)).map(l -> {
-			Message<Long> message = MessageBuilder.withPayload(l)
-				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
-				.setHeader(TAG_KEY, TAG_VALUE)
-				.build();
-			return message;
-		});
-		Disposable ticksDisposable = ticks.subscribe(m -> {
-			eventLoop.dispatch(m);
-		});
+		Flux<TerminalEvent<?>> ticks = Flux.interval(Duration.ofMillis(50))
+			.map(l -> new TerminalEvent<>(l, EventLoop.Type.USER, null, Map.of(TAG_KEY, TAG_VALUE)));
+		Disposable ticksDisposable = ticks.subscribe(eventLoop::dispatch);
 		Disposable eventsDisposable = eventLoop.events()
-			.filter(m -> EventLoop.Type.USER.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
-			.filter(m -> ObjectUtils.nullSafeEquals(m.getHeaders().get(TAG_KEY), TAG_VALUE))
-			.subscribe(m -> {
-				requestRedraw();
-			});
+			.filter(m -> EventLoop.Type.USER == m.type())
+			.filter(m -> ObjectUtils.nullSafeEquals(m.attributes().get(TAG_KEY), TAG_VALUE))
+			.subscribe(m -> requestRedraw());
 		disposables = Disposables.composite();
 		disposables.add(eventsDisposable);
 		disposables.add(ticksDisposable);
@@ -289,7 +280,8 @@ public class ProgressView extends BoxView {
 	private void requestRedraw() {
 		EventLoop eventLoop = getEventLoop();
 		if (eventLoop != null) {
-			eventLoop.dispatch(ShellMessageBuilder.ofRedraw());
+			TerminalEvent<String> terminalEvent = new TerminalEvent<>("redraw", EventLoop.Type.SYSTEM);
+			eventLoop.dispatch(terminalEvent);
 		}
 	}
 
@@ -306,7 +298,9 @@ public class ProgressView extends BoxView {
 		}
 		running = false;
 		ProgressState state = getState();
-		dispatch(ShellMessageBuilder.ofView(this, ProgressViewEndEvent.of(this, state)));
+		ProgressViewEndEvent args = ProgressViewEndEvent.of(this, state);
+		TerminalEvent<ProgressViewEndEvent> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW, this, null);
+		dispatch(terminalEvent);
 	}
 
 	private static class BoxWrapper extends BoxView {
@@ -392,7 +386,10 @@ public class ProgressView extends BoxView {
 		}
 		if (changed) {
 			ProgressState state = getState();
-			dispatch(ShellMessageBuilder.ofView(this, ProgressViewStateChangeEvent.of(this, state)));
+			ProgressViewStateChangeEvent args = ProgressViewStateChangeEvent.of(this, state);
+			TerminalEvent<ProgressViewStateChangeEvent> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW,
+					this, null);
+			dispatch(terminalEvent);
 			requestRedraw();
 		}
 	}

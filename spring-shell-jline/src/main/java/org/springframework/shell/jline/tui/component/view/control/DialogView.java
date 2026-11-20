@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+
+import org.springframework.shell.jline.tui.component.TerminalEvent;
 import org.springframework.shell.jline.tui.component.view.control.ButtonView.ButtonViewSelectEvent;
 import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.MouseHandler;
@@ -143,7 +144,9 @@ public class DialogView extends WindowView {
 	}
 
 	private void dispatch() {
-		dispatch(ShellMessageBuilder.ofView(this, DialogViewCloseEvent.of(this)));
+		DialogViewCloseEvent args = DialogViewCloseEvent.of(this);
+		TerminalEvent<DialogViewCloseEvent> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW, this, null);
+		dispatch(terminalEvent);
 	}
 
 	public record DialogViewItemEventArgs() implements ViewEventArgs {

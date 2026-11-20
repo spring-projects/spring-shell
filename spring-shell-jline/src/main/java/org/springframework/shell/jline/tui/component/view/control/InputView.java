@@ -18,11 +18,12 @@ package org.springframework.shell.jline.tui.component.view.control;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import org.jspecify.annotations.Nullable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
-import org.springframework.shell.jline.tui.component.message.ShellMessageBuilder;
+import org.springframework.shell.jline.tui.component.TerminalEvent;
+import org.springframework.shell.jline.tui.component.view.event.EventLoop;
 import org.springframework.shell.jline.tui.component.view.event.KeyEvent;
 import org.springframework.shell.jline.tui.component.view.event.KeyEvent.Key;
 import org.springframework.shell.jline.tui.component.view.event.KeyHandler;
@@ -105,7 +106,10 @@ public class InputView extends BoxView {
 	}
 
 	private void dispatchTextChange(String oldText, String newText) {
-		dispatch(ShellMessageBuilder.ofView(this, InputViewTextChangeEvent.of(this, oldText, newText)));
+		InputViewTextChangeEvent args = InputViewTextChangeEvent.of(this, oldText, newText);
+		TerminalEvent<InputViewTextChangeEvent> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW, this,
+				null);
+		dispatch(terminalEvent);
 	}
 
 	private void add(@Nullable String data) {
@@ -153,7 +157,9 @@ public class InputView extends BoxView {
 	}
 
 	private void done() {
-		dispatch(ShellMessageBuilder.ofView(this, ViewDoneEvent.of(this)));
+		ViewDoneEvent args = ViewDoneEvent.of(this);
+		TerminalEvent<ViewDoneEvent> terminalEvent = new TerminalEvent<>(args, EventLoop.Type.VIEW, this, null);
+		dispatch(terminalEvent);
 	}
 
 	public record InputViewTextChangeEventArgs(String oldText, String newText) implements ViewEventArgs {
